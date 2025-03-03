@@ -754,6 +754,9 @@ class FieldTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing EntityField methods.
+ */
 class FieldTestEntityField extends EntityField {
 
   public function executePrepareItemsByDelta(array $all_values) {

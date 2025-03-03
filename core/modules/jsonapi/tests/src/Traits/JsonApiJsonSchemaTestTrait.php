@@ -11,6 +11,9 @@ use JsonSchema\Constraints\Factory;
 use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator;
 
+/**
+ * Support methods for testing JSON API schema.
+ */
 trait JsonApiJsonSchemaTestTrait {
 
   use JsonSchemaTestTrait {

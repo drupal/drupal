@@ -310,6 +310,9 @@ class SearchPageRepositoryTest extends UnitTestCase {
 
 }
 
+/**
+ * Mock for the configured search page entity.
+ */
 class TestSearchPage extends SearchPage {
 
   public function __construct(array $values) {

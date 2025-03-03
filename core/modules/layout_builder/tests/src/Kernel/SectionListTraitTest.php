@@ -33,6 +33,9 @@ class SectionListTraitTest extends SectionListTestBase {
 
 }
 
+/**
+ * Test item list class for layout section fields.
+ */
 class TestSectionList implements SectionListInterface {
 
   use SectionListTrait {

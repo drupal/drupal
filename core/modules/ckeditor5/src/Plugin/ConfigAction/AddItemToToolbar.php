@@ -12,6 +12,12 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\editor\EditorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Config action plugin to add an item to the toolbar.
+ *
+ * @internal
+ *   This API is experimental.
+ */
 #[ConfigAction(
   id: 'editor:addItemToToolbar',
   admin_label: new TranslatableMarkup('Add an item to a CKEditor 5 toolbar'),

@@ -7,6 +7,9 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
+/**
+ * Determines the settings for the profile field.
+ */
 #[MigrateProcess('profile_field_settings')]
 class ProfileFieldSettings extends ProcessPluginBase {
 

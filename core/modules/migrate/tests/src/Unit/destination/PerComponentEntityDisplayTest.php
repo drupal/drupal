@@ -47,6 +47,9 @@ class PerComponentEntityDisplayTest extends MigrateTestCase {
 
 }
 
+/**
+ * Test class used for testing per component entity display.
+ */
 class TestPerComponentEntityDisplay extends ComponentEntityDisplayBase {
   const MODE_NAME = 'view_mode';
 

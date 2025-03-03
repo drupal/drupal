@@ -7,6 +7,9 @@ use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
+/**
+ * Migrate field plugin for Drupal 7 text fields.
+ */
 #[MigrateField(
   id: 'd7_text',
   core: [7],

@@ -6,6 +6,9 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
+/**
+ * Migrate field plugin for Drupal 6 link fields.
+ */
 #[MigrateField(
   id: 'link',
   core: [6],

@@ -12,6 +12,9 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Determines the block plugin ID.
+ */
 #[MigrateProcess('block_plugin_id')]
 class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 

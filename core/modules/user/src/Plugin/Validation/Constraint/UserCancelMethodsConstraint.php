@@ -10,6 +10,9 @@ use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Choice;
 
+/**
+ * Constraint for the user cancel method.
+ */
 #[Constraint(
   id: 'UserCancelMethod',
   label: new TranslatableMarkup('UserCancelMethod', [], ['context' => 'Validation']),

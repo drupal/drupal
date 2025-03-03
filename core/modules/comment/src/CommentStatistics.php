@@ -13,6 +13,9 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\EntityOwnerInterface;
 
+/**
+ * Service for storing and retrieving comment statistics.
+ */
 class CommentStatistics implements CommentStatisticsInterface {
 
   use StringTranslationTrait;

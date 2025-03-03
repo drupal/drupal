@@ -110,6 +110,9 @@ class FiberPlaceholderTest extends UnitTestCase {
 
 }
 
+/**
+ * Test class for testing fiber placeholders.
+ */
 class TurtleLazyBuilder implements TrustedCallbackInterface {
 
   /**

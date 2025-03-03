@@ -6,6 +6,9 @@ namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Serialization\Attribute\JsonSchema;
 
+/**
+ * Interface for using reflection with the JSON object.
+ */
 trait JsonSchemaReflectionTrait {
 
   /**

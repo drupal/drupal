@@ -49,6 +49,7 @@
     <include-pattern>*/Functional/*</include-pattern>
     <include-pattern>*/tests/modules/*</include-pattern>
     <include-pattern>./core/tests/Drupal/Tests/Core/*</include-pattern>
+    <include-pattern>./core/modules/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.DataTypeNamespace"/>
   <rule ref="Drupal.Commenting.Deprecated"/>

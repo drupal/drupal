@@ -6,6 +6,9 @@ namespace Drupal\serialization_test;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * Serialization normalizer used for testing.
+ */
 class SerializationTestNormalizer implements NormalizerInterface {
 
   /**

@@ -12,6 +12,9 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Determines the field type for a field.
+ */
 #[MigrateProcess('field_type')]
 class FieldType extends StaticMap implements ContainerFactoryPluginInterface {
 

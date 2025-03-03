@@ -856,6 +856,9 @@ class FieldPluginBaseTest extends UnitTestCase {
 
 }
 
+/**
+ * Test class for testing field plugins.
+ */
 class FieldPluginBaseTestField extends FieldPluginBase {
 
   public function setLinkGenerator(LinkGeneratorInterface $link_generator): void {

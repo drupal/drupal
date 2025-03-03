@@ -7,6 +7,9 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
+/**
+ * Determines the field settings values for a field.
+ */
 #[MigrateProcess('d7_field_settings')]
 class FieldSettings extends ProcessPluginBase {
 

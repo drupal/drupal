@@ -6,6 +6,9 @@ namespace Drupal\serialization_test;
 
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 
+/**
+ * Serialization encoder used for testing.
+ */
 class SerializationTestEncoder implements EncoderInterface {
 
   /**

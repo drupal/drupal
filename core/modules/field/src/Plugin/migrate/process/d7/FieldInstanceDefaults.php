@@ -7,6 +7,9 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
+/**
+ * Determines the default values for a field instance.
+ */
 #[MigrateProcess('d7_field_instance_defaults')]
 class FieldInstanceDefaults extends ProcessPluginBase {
 

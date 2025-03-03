@@ -5,6 +5,9 @@ namespace Drupal\migrate_drupal\Plugin;
 use Drupal\migrate\Plugin\MigratePluginManagerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 
+/**
+ * Interface implemented by plugin manager for migrate field plugins.
+ */
 interface MigrateFieldPluginManagerInterface extends MigratePluginManagerInterface {
 
   /**

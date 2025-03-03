@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\serialization\Normalizer;
 
+/**
+ * Methods for normalizing JSON schema.
+ */
 trait SchematicNormalizerHelperTrait {
 
   use JsonSchemaReflectionTrait;

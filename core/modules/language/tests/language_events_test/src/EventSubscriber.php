@@ -9,6 +9,9 @@ use Drupal\language\Config\LanguageConfigOverrideEvents;
 use Drupal\language\Config\LanguageConfigOverrideCrudEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Event subscriber for testing Language events.
+ */
 class EventSubscriber implements EventSubscriberInterface {
 
   /**

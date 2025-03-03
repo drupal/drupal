@@ -8,6 +8,9 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
+/**
+ * Define a Drupal aspects of CKEditor5 plugin.
+ */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class DrupalAspectsOfCKEditor5Plugin extends Plugin {
 

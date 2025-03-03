@@ -7,6 +7,9 @@ namespace Drupal\serialization\Serializer;
 use Drupal\serialization\Normalizer\SchematicNormalizerFallbackTrait;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 
+/**
+ * Trait for normalizing the JSON schema.
+ */
 trait JsonSchemaProviderSerializerTrait {
 
   use SchematicNormalizerFallbackTrait;

@@ -13,6 +13,9 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Determines the visibility for a block.
+ */
 #[MigrateProcess('block_visibility')]
 class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 

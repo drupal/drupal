@@ -142,6 +142,9 @@ class StageBaseTest extends UnitTestCase {
 
 }
 
+/**
+ * Test class for testing the child stage.
+ */
 class ChildStage extends StageBase {
 
   public function __construct() {}

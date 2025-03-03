@@ -14,6 +14,9 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
 
+/**
+ * Deriver for moderation config actions plugins.
+ */
 final class AddModerationDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   use StringTranslationTrait;

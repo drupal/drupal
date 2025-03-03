@@ -4,6 +4,9 @@ namespace Drupal\serialization\EntityResolver;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * Interface for entity resolvers.
+ */
 interface EntityResolverInterface {
 
   /**

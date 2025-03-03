@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\serialization\Serializer;
 
+/**
+ * Interface for JSON schema provider.
+ */
 interface JsonSchemaProviderSerializerInterface {
 
   /**

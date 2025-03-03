@@ -11,6 +11,9 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Determines the settings for a Drupal 6 file field.
+ */
 #[MigrateProcess('d6_field_file')]
 class FieldFile extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 

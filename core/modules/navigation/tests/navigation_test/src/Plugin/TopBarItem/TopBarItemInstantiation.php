@@ -9,6 +9,9 @@ use Drupal\navigation\Attribute\TopBarItem;
 use Drupal\navigation\TopBarItemBase;
 use Drupal\navigation\TopBarRegion;
 
+/**
+ * Provides a top bar item plugin for testing the top bar.
+ */
 #[TopBarItem(
   id: 'test_item',
   region: TopBarRegion::Actions,

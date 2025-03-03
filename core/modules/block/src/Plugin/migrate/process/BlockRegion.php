@@ -9,6 +9,9 @@ use Drupal\migrate\Plugin\migrate\process\StaticMap;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Determines the region for a block.
+ */
 #[MigrateProcess('block_region')]
 class BlockRegion extends StaticMap implements ContainerFactoryPluginInterface {
 

@@ -6,6 +6,9 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
+/**
+ * Base class for the Migrate module migrate process unit tests.
+ */
 abstract class MigrateProcessTestCase extends MigrateTestCase {
 
   /**

@@ -6,6 +6,9 @@ namespace Drupal\ckeditor5\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;
 
+/**
+ * Defines the CKEditor5 aspect of CKEditor5 plugin.
+ */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class CKEditor5AspectsOfCKEditor5Plugin extends Plugin {
 

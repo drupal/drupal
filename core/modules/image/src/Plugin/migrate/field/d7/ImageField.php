@@ -6,6 +6,9 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
+/**
+ * Migrate field plugin for Drupal 7 image fields.
+ */
 #[MigrateField(
   id: 'image',
   core: [7],

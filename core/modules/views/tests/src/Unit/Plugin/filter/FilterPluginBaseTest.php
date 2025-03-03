@@ -63,4 +63,7 @@ class FilterPluginBaseTest extends UnitTestCase {
 
 }
 
+/**
+ * Empty class to support testing filter plugins.
+ */
 class FilterPluginBaseStub extends FilterPluginBase {}

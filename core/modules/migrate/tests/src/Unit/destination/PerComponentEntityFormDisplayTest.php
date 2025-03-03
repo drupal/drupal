@@ -47,6 +47,9 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
 
 }
 
+/**
+ * Test class for testing per component entity form display.
+ */
 class TestPerComponentEntityFormDisplay extends PerComponentEntityFormDisplay {
   const MODE_NAME = 'form_mode';
 
