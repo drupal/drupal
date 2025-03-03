@@ -102,7 +102,8 @@ class ArgumentSummaryTest extends ViewsKernelTestBase {
   /**
    * Creates a term in the tag vocabulary.
    *
-   * @return \Drupal\taxonomy\TermInterface $term
+   * @return \Drupal\taxonomy\TermInterface
+   *   The created term.
    */
   protected function createTag(): TermInterface {
     $tag = Term::create([

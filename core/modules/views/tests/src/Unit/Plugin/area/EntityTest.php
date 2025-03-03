@@ -142,6 +142,7 @@ class EntityTest extends UnitTestCase {
    * Data provider for testing different types of tokens.
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerTestTokens() {
     return [

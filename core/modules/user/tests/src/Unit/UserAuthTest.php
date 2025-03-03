@@ -107,6 +107,7 @@ class UserAuthTest extends UnitTestCase {
    * Data provider for testAuthenticateWithMissingCredentials().
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerTestAuthenticateWithMissingCredentials() {
     return [

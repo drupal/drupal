@@ -121,6 +121,7 @@ class TurtleLazyBuilder implements TrustedCallbackInterface {
    * Suspends its own execution twice to simulate long operation.
    *
    * @return array
+   *   The lazy builder callback.
    */
   public static function turtle(): array {
     if (\Fiber::getCurrent() !== NULL) {

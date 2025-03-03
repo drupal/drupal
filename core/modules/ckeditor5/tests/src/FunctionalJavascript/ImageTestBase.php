@@ -51,6 +51,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    * Provides the relevant image attributes.
    *
    * @return string[]
+   *   An associative array with the image source, width, and height.
    */
   protected function imageAttributes() {
     return [
@@ -67,6 +68,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    *   Reverse attributes when printing them.
    *
    * @return string
+   *   A space-separated string of image attributes.
    */
   protected function imageAttributesAsString($reverse = FALSE) {
     $string = [];

@@ -20,8 +20,6 @@ class UserHooksTest {
    *   The username that is displayed for a user.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The object on which the operation is being performed.
-   *
-   * @return void
    */
   #[Hook('user_format_name_alter')]
   public function userFormatNameAlter(&$name, AccountInterface $account): void {

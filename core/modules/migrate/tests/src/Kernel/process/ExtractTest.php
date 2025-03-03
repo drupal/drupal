@@ -24,6 +24,7 @@ class ExtractTest extends KernelTestBase {
    * Returns test migration definition.
    *
    * @return array
+   *   The test migration definition.
    */
   public function getDefinition() {
     return [

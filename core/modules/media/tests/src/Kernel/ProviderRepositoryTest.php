@@ -43,6 +43,7 @@ class ProviderRepositoryTest extends MediaKernelTestBase {
    * @see ::testEmptyProviderList()
    *
    * @return array
+   *   An array of test cases.
    */
   public static function providerEmptyProviderList() {
     return [
@@ -77,6 +78,7 @@ class ProviderRepositoryTest extends MediaKernelTestBase {
    * @see ::testEmptyProviderList()
    *
    * @return array
+   *   An array of test cases.
    */
   public static function providerNonExistingProviderDatabase() {
     return [

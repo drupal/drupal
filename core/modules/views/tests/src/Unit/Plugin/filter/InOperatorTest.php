@@ -33,6 +33,7 @@ class InOperatorTest extends UnitTestCase {
 
   /**
    * @return array
+   *   The options for the filter.
    */
   public static function validate_options_callback() {
     return ['Yes', 'No'];

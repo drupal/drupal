@@ -380,6 +380,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
 
   /**
    * @return \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
+   *   A functioning ResourceResponseSubscriber.
    */
   protected function getFunctioningResourceResponseSubscriber(RouteMatchInterface $route_match) {
     // Create a dummy of the renderer service.

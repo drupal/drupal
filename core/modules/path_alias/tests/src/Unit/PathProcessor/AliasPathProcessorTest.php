@@ -82,6 +82,7 @@ class AliasPathProcessorTest extends UnitTestCase {
 
   /**
    * @return array
+   *   The data provider for testProcessOutbound.
    */
   public static function providerTestProcessOutbound() {
     return [

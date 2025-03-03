@@ -132,6 +132,7 @@ class AdminTest extends BrowserTestBase {
    * Returns all top level menu links.
    *
    * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
+   *   The top level menu links.
    */
   protected function getTopLevelMenuLinks() {
     $menu_tree = \Drupal::menuTree();

@@ -43,6 +43,7 @@ class FilterSettingsTest extends MigrateTestCase {
    * The test data provider.
    *
    * @return array
+   *   An array of test data.
    */
   public static function dataProvider() {
     return [

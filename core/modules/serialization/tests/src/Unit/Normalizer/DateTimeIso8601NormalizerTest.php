@@ -155,6 +155,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    * Data provider for testNormalize.
    *
    * @return array
+   *   The data provider array.
    */
   public static function providerTestNormalize() {
     return [
@@ -199,6 +200,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    * Data provider for testDenormalizeValidFormats.
    *
    * @return array
+   *   An array of test cases.
    */
   public static function providerTestDenormalizeValidFormats() {
     $data = [];

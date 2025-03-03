@@ -58,6 +58,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
    * @see ::testRender()
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerRender() {
     return [

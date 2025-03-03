@@ -113,6 +113,7 @@ class ImageTestTestBase extends ImageTestBase {
    * Provides the relevant image attributes.
    *
    * @return string[]
+   *   Default image attributes for tests.
    */
   protected function imageAttributes(): array {
     return [

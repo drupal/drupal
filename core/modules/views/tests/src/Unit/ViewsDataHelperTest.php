@@ -18,6 +18,7 @@ class ViewsDataHelperTest extends UnitTestCase {
    * Returns the views data definition.
    *
    * @return array
+   *   The views data definition.
    */
   protected function viewsData() {
     $data = ViewTestData::viewsData();

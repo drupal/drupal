@@ -60,6 +60,8 @@ class CategoryAutocompleteTest extends UnitTestCase {
    * Data provider for testAutocompleteSuggestions().
    *
    * @return array
+   *   An array of test cases, each containing an input string and
+   *   expected autocomplete suggestions.
    */
   public static function providerTestAutocompleteSuggestions() {
     $test_parameters = [];

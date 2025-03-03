@@ -22,6 +22,7 @@ class PageCacheAcceptHeaderController {
    *   The current request object.
    *
    * @return mixed
+   *   The processed response object.
    */
   public function content(Request $request) {
     if ($request->getRequestFormat() === 'json' && $request->query->get('_wrapper_format') === 'drupal_ajax') {

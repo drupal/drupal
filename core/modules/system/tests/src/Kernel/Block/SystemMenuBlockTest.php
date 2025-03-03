@@ -313,6 +313,7 @@ class SystemMenuBlockTest extends KernelTestBase {
 
   /**
    * @return array
+   *   An array of test cases for the config expanded option.
    */
   public static function configExpandedTestCases() {
     return [

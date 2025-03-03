@@ -153,6 +153,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    * Data provider for ::testDisplayConfigurable().
    *
    * @return array
+   *   An array of test cases.
    */
   public static function provideThemes() {
     return [

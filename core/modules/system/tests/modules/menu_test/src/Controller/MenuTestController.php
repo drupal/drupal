@@ -118,6 +118,7 @@ class MenuTestController extends ControllerBase {
    * A title callback for XSS breadcrumb check.
    *
    * @return string
+   *   A string that can be used for comparison.
    */
   public function breadcrumbTitleCallback() {
     return '<script>alert(123);</script>';

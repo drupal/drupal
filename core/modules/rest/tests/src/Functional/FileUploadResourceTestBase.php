@@ -229,6 +229,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
    * Returns the normalized POST entity referencing the uploaded file.
    *
    * @return array
+   *   The normalized POST entity.
    *
    * @see ::testPostFileUpload()
    * @see \Drupal\Tests\rest\Functional\EntityResource\EntityTest\EntityTestResourceTestBase::getNormalizedPostEntity()
@@ -766,6 +767,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
    *   the header value to FALSE.
    *
    * @return \Psr\Http\Message\ResponseInterface
+   *   The response object.
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */

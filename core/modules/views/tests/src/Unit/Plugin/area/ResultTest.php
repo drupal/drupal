@@ -93,6 +93,7 @@ class ResultTest extends UnitTestCase {
    * Data provider for testResultArea.
    *
    * @return array
+   *   An array of test cases.
    */
   public static function providerTestResultArea() {
     return [

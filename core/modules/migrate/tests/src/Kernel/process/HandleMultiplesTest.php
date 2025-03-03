@@ -24,6 +24,7 @@ class HandleMultiplesTest extends KernelTestBase {
    * Provides the test migration definition.
    *
    * @return array
+   *   The test migration definition.
    */
   public function getDefinition() {
     return [
@@ -137,6 +138,7 @@ class HandleMultiplesTest extends KernelTestBase {
    * Provides the source data with scalar and multiple values.
    *
    * @return array
+   *   An array of test cases.
    */
   public static function scalarAndMultipleValuesProviderSource() {
     return [

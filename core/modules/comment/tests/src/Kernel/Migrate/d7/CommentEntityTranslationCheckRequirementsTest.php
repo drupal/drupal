@@ -47,6 +47,7 @@ class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBa
    * Provides data for testCheckRequirements.
    *
    * @return string[][]
+   *   An array of module machine names.
    */
   public static function providerTestCheckRequirements() {
     return [

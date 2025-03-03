@@ -166,6 +166,7 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
    * Returns the name.
    *
    * @return string
+   *   The name of the entity.
    */
   public function getName() {
     return $this->get('name')->value;

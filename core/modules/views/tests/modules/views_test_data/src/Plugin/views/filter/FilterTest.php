@@ -18,6 +18,7 @@ class FilterTest extends FilterPluginBase {
    * Overrides Drupal\views\Plugin\views\row\RowPluginBase::defineOptions().
    *
    * @return array
+   *   An array of options.
    */
   protected function defineOptions() {
     $options = parent::defineOptions();

@@ -101,6 +101,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
    * Provides data for the testPermissionsByProvider method.
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerTestPermissionsByProvider() {
     return [

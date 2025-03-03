@@ -81,6 +81,8 @@ JS;
    * Data provider for ensuring CKEditor 5 UI translations are loaded.
    *
    * @return string[][]
+   *   An array of language code, CKEditor 5 plugin name, and expected
+   *   translation.
    */
   public static function provider(): array {
     return [

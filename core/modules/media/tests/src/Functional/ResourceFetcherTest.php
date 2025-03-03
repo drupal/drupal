@@ -38,6 +38,7 @@ class ResourceFetcherTest extends MediaFunctionalTestBase {
    * Data provider for testFetchResource().
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerFetchResource() {
     return [

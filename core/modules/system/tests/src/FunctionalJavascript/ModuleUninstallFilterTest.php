@@ -89,6 +89,7 @@ class ModuleUninstallFilterTest extends WebDriverTestBase {
    *   An array of node elements.
    *
    * @return \Behat\Mink\Element\NodeElement[]
+   *   An array of node elements that are visible.
    */
   protected function filterVisibleElements($elements) {
     $elements = array_filter($elements, function ($element) {

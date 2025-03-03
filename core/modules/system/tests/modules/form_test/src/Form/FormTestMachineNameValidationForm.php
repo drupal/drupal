@@ -126,6 +126,7 @@ class FormTestMachineNameValidationForm extends FormBase {
    *   The machine name.
    *
    * @return bool
+   *   TRUE if the machine name is a duplicate, FALSE otherwise.
    */
   public function load($machine_name) {
     if (str_contains($machine_name, 'duplicate')) {

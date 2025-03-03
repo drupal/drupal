@@ -272,6 +272,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    *   The maximum width and height setting.
    *
    * @return array
+   *   List of field settings.
    */
   protected function getFieldSettings($min_resolution, $max_resolution): array {
     return [

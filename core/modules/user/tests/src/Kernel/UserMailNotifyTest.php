@@ -31,6 +31,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    * Data provider for user mail testing.
    *
    * @return array
+   *   An array of operations and the mail keys they should send.
    */
   public static function userMailsProvider() {
     return [

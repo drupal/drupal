@@ -91,6 +91,7 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
    * Data provider for testSettingsSummary().
    *
    * @return array[]
+   *   An array of test data.
    */
   public static function providerTestSettingsSummary(): array {
     return [

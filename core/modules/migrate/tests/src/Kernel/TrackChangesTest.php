@@ -225,6 +225,7 @@ class TrackChangesTest extends MigrateTestBase {
    *   Value to evaluate.
    *
    * @return bool
+   *   TRUE if term exists, FALSE otherwise.
    */
   protected function termExists($property, $value): bool {
     $property = $property === 'description' ? 'description__value' : $property;

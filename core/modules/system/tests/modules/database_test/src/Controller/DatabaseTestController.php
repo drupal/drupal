@@ -52,6 +52,7 @@ class DatabaseTestController extends ControllerBase {
    * test HTTP call.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A JSON response containing the names of the test entries.
    */
   public function pagerQueryEven($limit) {
     $query = $this->connection->select('test', 't');
@@ -78,6 +79,7 @@ class DatabaseTestController extends ControllerBase {
    * test HTTP call.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A JSON response containing the names of the test entries.
    */
   public function pagerQueryOdd($limit) {
     $query = $this->connection->select('test_task', 't');
@@ -104,6 +106,7 @@ class DatabaseTestController extends ControllerBase {
    * test HTTP call.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A JSON response containing the test tasks.
    */
   public function testTablesort() {
     $header = [
@@ -136,6 +139,7 @@ class DatabaseTestController extends ControllerBase {
    * test HTTP call.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A JSON response containing the test tasks.
    */
   public function testTablesortFirst() {
     $header = [

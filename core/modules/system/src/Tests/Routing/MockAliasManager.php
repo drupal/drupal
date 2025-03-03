@@ -80,6 +80,7 @@ class MockAliasManager implements AliasManagerInterface {
    *   The language code.
    *
    * @return string
+   *   The value of the alias.
    */
   public function getAliasByPath($path, $langcode = NULL) {
     if ($path[0] !== '/') {

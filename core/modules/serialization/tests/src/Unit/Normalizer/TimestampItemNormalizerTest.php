@@ -173,6 +173,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
    * Creates a TimestampItem prophecy.
    *
    * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem>
+   *   The TimestampItem prophecy.
    */
   protected function createTimestampItemProphecy(): ObjectProphecy {
     $timestamp_item = $this->prophesize(TimestampItem::class);

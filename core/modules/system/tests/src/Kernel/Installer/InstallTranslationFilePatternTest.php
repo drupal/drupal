@@ -49,6 +49,7 @@ class InstallTranslationFilePatternTest extends KernelTestBase {
 
   /**
    * @return array
+   *   Array of valid translation files.
    */
   public static function providerValidTranslationFiles() {
     return [
@@ -68,6 +69,7 @@ class InstallTranslationFilePatternTest extends KernelTestBase {
 
   /**
    * @return array
+   *   Array of invalid translation files.
    */
   public static function providerInvalidTranslationFiles() {
     return [

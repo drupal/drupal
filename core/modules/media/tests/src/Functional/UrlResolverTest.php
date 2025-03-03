@@ -39,6 +39,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    * @see ::testEndpointMatching()
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerEndpointMatching() {
     return [
@@ -103,6 +104,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    * @see ::testUrlDiscovery()
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerUrlDiscovery() {
     return [

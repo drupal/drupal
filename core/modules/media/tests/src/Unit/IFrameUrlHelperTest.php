@@ -22,6 +22,7 @@ class IFrameUrlHelperTest extends UnitTestCase {
    * @see ::testIsSecure()
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerIsSecure() {
     return [

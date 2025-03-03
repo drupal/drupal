@@ -64,6 +64,7 @@ class ConfigExportTest extends WebDriverTestBase {
    *   Title of the block.
    *
    * @return \Drupal\block_content\Entity\BlockContent
+   *   The created block content entity.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */

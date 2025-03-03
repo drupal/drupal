@@ -84,6 +84,7 @@ class StyleTest extends StylePluginBase {
    * Returns the output property.
    *
    * @return string
+   *   The output of the plugin.
    */
   public function getOutput() {
     return $this->output;

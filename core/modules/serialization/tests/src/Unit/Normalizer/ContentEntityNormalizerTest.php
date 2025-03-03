@@ -126,6 +126,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    *   The properties the will be returned.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject
+   *   The mock content entity.
    */
   public function createMockForContentEntity($definitions) {
     $content_entity_mock = $this->getMockBuilder(ContentEntityBaseMockableClass::class)
@@ -154,6 +155,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    *   The user context used for the access check.
    *
    * @return \Drupal\Core\Field\FieldItemListInterface|\PHPUnit\Framework\MockObject\MockObject
+   *   The mock field list item.
    */
   protected function createMockFieldListItem($access, $internal, ?AccountInterface $user_context = NULL) {
     $data_definition = $this->prophesize(DataDefinitionInterface::class);

@@ -32,6 +32,7 @@ class BigPipePlaceholderTestCases {
    *   Optional. Necessary to get the embedded AJAX/HTML responses.
    *
    * @return \Drupal\big_pipe_test\BigPipePlaceholderTestCase[]
+   *   An array of placeholder test cases.
    */
   public static function cases(?ContainerInterface $container = NULL, ?AccountInterface $user = NULL) {
     // Define the two types of cacheability that we expect to see. These will be

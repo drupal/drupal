@@ -103,6 +103,7 @@ class TimestampNormalizerTest extends UnitTestCase {
    * Data provider for testDenormalizeValidFormats.
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerTestDenormalizeValidFormats() {
     $expected_stamp = 1478422920;

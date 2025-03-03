@@ -73,6 +73,7 @@ class PluginBaseTest extends UnitTestCase {
    * Data provider for testUnpackOptions().
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerTestUnpackOptions() {
     $test_parameters = [];
@@ -221,6 +222,7 @@ class PluginBaseTest extends UnitTestCase {
    * Data provider for testSetOptionDefault().
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerTestSetOptionDefault() {
     $test_parameters = [];

@@ -98,6 +98,7 @@ class ComposerPluginsValidatorTestBase extends PackageManagerKernelTestBase {
    * Generates simple test cases.
    *
    * @return \Generator
+   *   The test cases.
    */
   public static function providerSimpleValidCases(): \Generator {
     yield 'no composer plugins' => [
@@ -181,6 +182,7 @@ class ComposerPluginsValidatorTestBase extends PackageManagerKernelTestBase {
    * Generates simple invalid test cases.
    *
    * @return \Generator
+   *   The test cases.
    */
   public static function providerSimpleInvalidCases(): \Generator {
     yield 'one UNsupported composer plugin — pretty package name' => [
@@ -280,6 +282,7 @@ class ComposerPluginsValidatorTestBase extends PackageManagerKernelTestBase {
    * Generates complex invalid test cases based on the simple test cases.
    *
    * @return \Generator
+   *   The test cases.
    */
   public static function providerComplexInvalidCases(): \Generator {
     $valid_cases = iterator_to_array(static::providerSimpleValidCases());

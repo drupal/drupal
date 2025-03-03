@@ -38,6 +38,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
    * Data provider for testing computeSurplusScore().
    *
    * @return \Generator
+   *   Yields the data for testSurplusScore().
    */
   public static function providerSurplusScore(): \Generator {
     $needed = new HTMLRestrictions(['code' => FALSE]);
@@ -103,6 +104,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
    * Data provider for testing getCandidates() and ::selectCandidate().
    *
    * @return \Generator
+   *   Yields the data for testCandidates().
    */
   public static function providerCandidates(): \Generator {
     $generate_definition = function (string $label_and_id, array $overrides): CKEditor5PluginDefinition {

@@ -286,6 +286,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    * Provides scenarios for testUserPasswordResetPreferredLanguage().
    *
    * @return array
+   *   An array of scenarios.
    */
   protected function languagePrefixTestProvider() {
     return [

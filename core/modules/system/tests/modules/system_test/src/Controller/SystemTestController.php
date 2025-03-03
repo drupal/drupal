@@ -357,6 +357,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    *   Any string for the {foo} slug.
    *
    * @return string
+   *   The value of title.
    */
   public function configureTitle($foo) {
     return 'Bar.' . $foo;

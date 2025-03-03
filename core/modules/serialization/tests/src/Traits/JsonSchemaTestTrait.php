@@ -36,6 +36,7 @@ trait JsonSchemaTestTrait {
    * Method to make prophecy public for use in data provider closures.
    *
    * @return \Prophecy\Prophecy\ObjectProphecy<object>
+   *   A new prophecy object.
    */
   public function doProphesize(?string $classOrInterface = NULL): ObjectProphecy {
     return $this->prophesize($classOrInterface);

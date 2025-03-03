@@ -45,6 +45,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    * Returns the configurable language manager.
    *
    * @return \Drupal\language\ConfigurableLanguageManager
+   *   The language manager.
    */
   protected function languageManager() {
     return $this->container->get('language_manager');

@@ -82,6 +82,7 @@ abstract class DateTestBase extends BrowserTestBase {
    * Returns the type of field to be tested.
    *
    * @return string
+   *   The field type to be tested.
    */
   abstract protected function getTestFieldType();
 

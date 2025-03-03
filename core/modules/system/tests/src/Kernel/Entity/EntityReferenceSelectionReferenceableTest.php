@@ -143,6 +143,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
    * Provides test cases for ::testReferenceablesWithNoLabelKey() test.
    *
    * @return array[]
+   *   An array of test cases.
    */
   public static function providerTestCases() {
     return [

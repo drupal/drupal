@@ -480,6 +480,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
 
   /**
    * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   The saved entity.
    */
   protected function saveNewEntity() {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */

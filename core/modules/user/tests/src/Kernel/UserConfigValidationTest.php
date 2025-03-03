@@ -30,6 +30,7 @@ class UserConfigValidationTest extends KernelTestBase {
    * Data provider for testUserSettings().
    *
    * @return array
+   *   An array of test cases for testUserSettings().
    */
   public static function providerTestUserSettings(): array {
     return [

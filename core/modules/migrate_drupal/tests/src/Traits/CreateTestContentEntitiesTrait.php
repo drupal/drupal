@@ -13,6 +13,7 @@ trait CreateTestContentEntitiesTrait {
    * Gets required modules.
    *
    * @return array
+   *   An array of required modules.
    */
   protected function getRequiredModules(): array {
     return [

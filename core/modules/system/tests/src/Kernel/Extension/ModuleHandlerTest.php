@@ -365,6 +365,7 @@ class ModuleHandlerTest extends KernelTestBase {
    * Returns the ModuleHandler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    */
   protected function moduleHandler() {
     return $this->container->get('module_handler');
@@ -374,6 +375,7 @@ class ModuleHandlerTest extends KernelTestBase {
    * Returns the ModuleInstaller.
    *
    * @return \Drupal\Core\Extension\ModuleInstallerInterface
+   *   The module installer service.
    */
   protected function moduleInstaller() {
     return $this->container->get('module_installer');

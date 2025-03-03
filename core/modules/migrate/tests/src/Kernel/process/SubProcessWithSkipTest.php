@@ -24,6 +24,7 @@ class SubProcessWithSkipTest extends KernelTestBase {
    * Provides the test migration definition.
    *
    * @return array
+   *   The test migration definition.
    */
   public function getDefinition() {
     return [
@@ -110,6 +111,7 @@ class SubProcessWithSkipTest extends KernelTestBase {
    * Data provider for testNotFoundSubProcess().
    *
    * @return array
+   *   The data for the testNotFoundSubProcess() test.
    */
   public static function providerTestSubProcessSkip(): array {
     return [

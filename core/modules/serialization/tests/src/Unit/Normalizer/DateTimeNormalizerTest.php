@@ -123,6 +123,7 @@ class DateTimeNormalizerTest extends UnitTestCase {
    * Data provider for testDenormalizeValidFormats.
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerTestDenormalizeValidFormats() {
     $data = [];
@@ -154,6 +155,7 @@ class DateTimeNormalizerTest extends UnitTestCase {
    * Data provider for testDenormalizeUserFormats.
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerTestDenormalizeUserFormats() {
     $data = [];

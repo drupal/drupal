@@ -68,6 +68,7 @@ class RowTest extends RowPluginBase {
    * Returns the output property.
    *
    * @return string
+   *   The string to output by this plugin.
    */
   public function getOutput() {
     return $this->output;

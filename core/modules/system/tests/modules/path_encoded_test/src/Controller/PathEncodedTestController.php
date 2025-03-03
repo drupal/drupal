@@ -15,6 +15,7 @@ class PathEncodedTestController {
    * Returns an HTML simple response.
    *
    * @return \Symfony\Component\HttpFoundation\Response
+   *   A simple HTML response.
    */
   public function simple() {
     return new Response('<html><body>PathEncodedTestController works</body></html>');

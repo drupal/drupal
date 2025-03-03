@@ -247,6 +247,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
    * Provides grouped exposed filter configuration.
    *
    * @return array
+   *   An array of grouped exposed filter configuration.
    */
   protected function getGroupedExposedFilters(): array {
     $filters = [

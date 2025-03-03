@@ -151,6 +151,7 @@ class SqlTest extends UnitTestCase {
    *   Test entities keyed by entity type and revision ID.
    *
    * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Entity\EntityTypeManagerInterface>
+   *   The mocked entity type manager.
    */
   protected function setupEntityTypes($entities_by_type = [], $entity_revisions_by_type = []): ObjectProphecy {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);

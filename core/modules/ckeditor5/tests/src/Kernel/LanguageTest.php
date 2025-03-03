@@ -99,6 +99,7 @@ class LanguageTest extends KernelTestBase {
    * Provides a list of language code pairs.
    *
    * @return string[][]
+   *   An array of language code pairs.
    */
   public static function provider(): array {
     $random_langcode = Random::machineName();

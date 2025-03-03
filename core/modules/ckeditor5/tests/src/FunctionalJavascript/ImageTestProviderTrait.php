@@ -243,6 +243,7 @@ trait ImageTestProviderTrait {
    * Data provider for ::testWidth().
    *
    * @return string[][]
+   *   An array of test cases, each with a width value.
    */
   public static function providerWidth(): array {
     return [

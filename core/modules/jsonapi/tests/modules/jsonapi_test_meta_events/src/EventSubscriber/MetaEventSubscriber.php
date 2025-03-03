@@ -29,8 +29,6 @@ class MetaEventSubscriber implements EventSubscriberInterface {
   /**
    * @param \Drupal\jsonapi\Events\CollectResourceObjectMetaEvent $event
    *   Event to be processed.
-   *
-   * @return void
    */
   public function addResourceObjectMeta(CollectResourceObjectMetaEvent $event): void {
     $config = \Drupal::state()->get('jsonapi_test_meta_events.object_meta', [
@@ -72,8 +70,6 @@ class MetaEventSubscriber implements EventSubscriberInterface {
   /**
    * @param \Drupal\jsonapi\Events\CollectRelationshipMetaEvent $event
    *   Event to be processed.
-   *
-   * @return void
    */
   public function addRelationshipMeta(CollectRelationshipMetaEvent $event): void {
     $config = \Drupal::state()->get('jsonapi_test_meta_events.relationship_meta', [
@@ -138,6 +134,8 @@ class MetaEventSubscriber implements EventSubscriberInterface {
 
   /**
    * @return string
+   *   The value 'yes' if the current user has an admin role, 'no' otherwise.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */

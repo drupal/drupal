@@ -109,8 +109,6 @@ trait UpdateSemverTestBaselineTrait {
    *
    * @param string $full_version
    *   The recommended version.
-   *
-   * @return void
    */
   protected function assertNoExtraVersion(string $full_version): void {
     $this->assertUpdateTableTextNotContains('Up to date');

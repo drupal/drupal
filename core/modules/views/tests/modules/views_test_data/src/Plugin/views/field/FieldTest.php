@@ -36,6 +36,7 @@ class FieldTest extends FieldPluginBase {
    * Returns the testValue property.
    *
    * @return string
+   *   The value of the test.
    */
   public function getTestValue() {
     return $this->testValue;

@@ -44,6 +44,7 @@ class ConnectionTest extends UnitTestCase {
    * Creates a Connection object for testing.
    *
    * @return \Drupal\mysql\Driver\Database\mysql\Connection
+   *   A Connection object.
    */
   private function createConnection(): Connection {
     $this->pdoStatement
@@ -98,6 +99,7 @@ class ConnectionTest extends UnitTestCase {
    * Provides test data.
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerVersionAndIsMariaDb(): array {
     return [

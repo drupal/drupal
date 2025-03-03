@@ -23,6 +23,7 @@ class JoinTest extends JoinPluginBase {
    * Returns the joinValue property.
    *
    * @return int
+   *   The value of the join.
    */
   public function getJoinValue() {
     return $this->joinValue;
