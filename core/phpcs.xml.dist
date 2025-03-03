@@ -259,6 +259,7 @@
       <property name="forbiddenAnnotations" type="array">
         <element value="@inheritDoc"/>
         <element value="@inheritdoc"/>
+        <element value="@returns"/>
       </property>
     </properties>
   </rule>
