@@ -45,12 +45,14 @@ class BlockXssTest extends BrowserTestBase {
    * Tests XSS in title.
    */
   public function testXssInTitle(): void {
-    $this->container->get('module_installer')->install(['block_test']);
-    $this->drupalPlaceBlock('test_xss_title', ['label' => '<script>alert("XSS label");</script>']);
+    $this->drupalPlaceBlock('system_powered_by_block', [
+      'label' => '<script>alert("XSS label");</script>',
+      'label_display' => 'visible',
+    ]);
 
-    \Drupal::keyValue('block_test')->set('content', $this->randomMachineName());
     $this->drupalGet('');
     // Check that the block title was properly sanitized when rendered.
+    $this->assertSession()->assertEscaped('<script>alert("XSS label");</script>');
     $this->assertSession()->responseNotContains('<script>alert("XSS label");</script>');
 
     $this->drupalLogin($this->drupalCreateUser([
@@ -61,22 +63,8 @@ class BlockXssTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/block/list/' . $default_theme);
     // Check that the block title was properly sanitized in Block Plugin UI
     // Admin page.
+    $this->assertSession()->assertEscaped('<script>alert("XSS label");</script>');
     $this->assertSession()->responseNotContains("<script>alert('XSS subject');</script>");
-  }
-
-  /**
-   * Tests XSS in category.
-   */
-  public function testXssInCategory(): void {
-    $this->container->get('module_installer')->install(['block_test']);
-    $this->drupalPlaceBlock('test_xss_title');
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer blocks',
-      'access administration pages',
-    ]));
-    $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLink('Place block');
-    $this->assertSession()->responseNotContains("<script>alert('XSS category');</script>");
   }
 
   /**

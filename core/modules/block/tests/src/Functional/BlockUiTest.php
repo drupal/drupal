@@ -335,12 +335,12 @@ class BlockUiTest extends BrowserTestBase {
     // block placement indicator. Click the first 'Place block' link to bring up
     // the list of blocks to place in the first available region.
     $this->clickLink('Place block');
-    // Select the first available block, which is the 'test_xss_title' plugin,
-    // with a default machine name 'scriptalertxsssubjectscript' that is used
+    // Select the first available block, which is the 'test_block_instantiation'
+    // plugin, with a default machine name 'stark-displaymessage' that is used
     // for the 'block-placement' querystring parameter.
     $this->clickLink('Place block');
     $this->submitForm([], 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/stark?block-placement=stark-scriptalertxsssubjectscript');
+    $this->assertSession()->addressEquals('admin/structure/block/list/stark?block-placement=stark-displaymessage');
 
     // Removing a block will remove the block placement indicator.
     $this->clickLink('Remove');
