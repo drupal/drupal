@@ -670,7 +670,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *   \Drupal::messenger()->addMessage($message);
  *   // Providing data for the redirected page is done through the session.
  *   foreach ($results as $result) {
- *     $items[] = t('Loaded node %title.', ['%title' => $result)];
+ *     $items[] = t('Loaded node %title.', ['%title' => $result]);
  *   }
  *   $session = \Drupal::getRequest()->getSession();
  *   $session->set('my_batch_results', $items);
@@ -702,7 +702,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *     Example:
  *     @code
  *     [
- *       ['callback_batch_operation_1', [$arg1)],
+ *       ['callback_batch_operation_1', [$arg1]],
  *       ['callback_batch_operation_2', [$arg2_1, $arg2_2]],
  *     ]
  *     @endcode
