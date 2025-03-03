@@ -9,7 +9,7 @@
   padding: 0;
 }
 
-#navigation-layout .layout-builder {
+.layout-builder.layout-builder--navigation {
   border: none;
 }
 

@@ -1,6 +1,0 @@
-services:
-  layout_builder_decoration_test.controller.entity_form:
-    decorates: controller.entity_form
-    class: Drupal\layout_builder_decoration_test\Controller\LayoutBuilderDecorationTestHtmlEntityFormController
-    public: false
-    arguments: ['@layout_builder_decoration_test.controller.entity_form.inner']

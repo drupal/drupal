@@ -57,14 +57,6 @@ services:
     class: Drupal\layout_builder\InlineBlockUsage
     arguments: ['@database']
   Drupal\layout_builder\InlineBlockUsageInterface: '@inline_block.usage'
-  layout_builder.controller.entity_form:
-    # Override the entity form controller to handle the entity layout_builder
-    # operation.
-    decorates: controller.entity_form
-    class: Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController
-    public: false
-    arguments: ['@layout_builder.controller.entity_form.inner']
-  Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController: '@layout_builder.controller.entity_form'
   layout_builder.element.prepare_layout:
     class: Drupal\layout_builder\EventSubscriber\PrepareLayout
     arguments: ['@layout_builder.tempstore_repository', '@messenger']
