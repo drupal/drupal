@@ -66,9 +66,7 @@
   <rule ref="Drupal.Commenting.DocCommentLongArraySyntax"/>
   <rule ref="Drupal.Commenting.DocCommentStar"/>
   <rule ref="Drupal.Commenting.FileComment"/>
-  <rule ref="Drupal.Commenting.FunctionComment">
-    <exclude name="Drupal.Commenting.FunctionComment.ParamCommentFullStop"/>
-  </rule>
+  <rule ref="Drupal.Commenting.FunctionComment"/>
   <rule ref="Drupal.Commenting.FunctionComment.Missing">
     <include-pattern>core/modules/*/Plugin/views/argument/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/filter/*</include-pattern>

@@ -27,7 +27,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    * Constructs the DatabaseBackendFactory object.
    *
    * @param \Drupal\Core\Database\Connection $connection
-   *   Database connection
+   *   Database connection.
    * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
    *   The cache tags checksum provider.
    * @param \Drupal\Core\Site\Settings $settings

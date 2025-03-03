@@ -242,10 +242,10 @@ class TestDiscovery {
    * @param string $namespace_prefix
    *   The namespace prefix to use for discovered classes. Must contain a
    *   trailing namespace separator (backslash).
-   *   For example: 'Drupal\\node\\Tests\\'
+   *   For example: 'Drupal\\node\\Tests\\'.
    * @param string $path
    *   The directory path to scan.
-   *   For example: '/path/to/drupal/core/modules/node/tests/src'
+   *   For example: '/path/to/drupal/core/modules/node/tests/src'.
    *
    * @return array
    *   An associative array whose keys are fully-qualified class names and whose

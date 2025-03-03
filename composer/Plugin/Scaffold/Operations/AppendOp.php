@@ -199,7 +199,7 @@ class AppendOp extends AbstractOperation {
    * @param string $contents
    *   The contents of the target file.
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $data_path
-   *   The path to the data to append or prepend
+   *   The path to the data to append or prepend.
    *
    * @return bool
    *   'TRUE' if the append/prepend data already exists in contents.

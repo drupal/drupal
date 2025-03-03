@@ -1256,7 +1256,7 @@ class MockService {
    * Provides a factory method to get a service.
    *
    * @param string $class
-   *   The class name of the class to instantiate
+   *   The class name of the class to instantiate.
    * @param array $arguments
    *   (optional) Arguments to pass to the new class.
    *

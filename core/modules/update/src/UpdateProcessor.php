@@ -90,9 +90,9 @@ class UpdateProcessor implements UpdateProcessorInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
-   *   The queue factory
+   *   The queue factory.
    * @param \Drupal\update\UpdateFetcherInterface $update_fetcher
-   *   The update fetcher service
+   *   The update fetcher service.
    * @param \Drupal\Core\State\StateInterface $state_store
    *   The state service.
    * @param \Drupal\Core\PrivateKey $private_key

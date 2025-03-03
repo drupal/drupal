@@ -23,9 +23,9 @@ use Drupal\Core\Url;
  * @param array &$context
  *   Various aspects of the context in which the comment links are going to be
  *   displayed, with the following keys:
- *   - 'view_mode': the view mode in which the comment is being viewed
- *   - 'langcode': the language in which the comment is being viewed
- *   - 'commented_entity': the entity to which the comment is attached
+ *   - 'view_mode': the view mode in which the comment is being viewed.
+ *   - 'langcode': the language in which the comment is being viewed.
+ *   - 'commented_entity': the entity to which the comment is attached.
  *
  * @see \Drupal\comment\CommentViewBuilder::renderLinks()
  * @see \Drupal\comment\CommentViewBuilder::buildLinks()

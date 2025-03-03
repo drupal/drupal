@@ -243,6 +243,7 @@ EOD;
    *   - t: constraint trigger;
    *   - x: exclusion constraint.
    *   Defaults to 'c' for a CHECK constraint.
+   *   phpcs:ignore Drupal.Commenting.FunctionComment.ParamCommentFullStop
    *   @see https://www.postgresql.org/docs/current/catalog-pg-constraint.html
    *
    * @return array

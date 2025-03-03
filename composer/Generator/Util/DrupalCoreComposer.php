@@ -92,7 +92,7 @@ class DrupalCoreComposer {
    * @param string $packageName
    *   Name of package to find, e.g. 'behat/mink-selenium2-driver'.
    * @param bool $dev
-   *   TRUE: consider only 'packages-dev'. Default: consider only 'packages'
+   *   TRUE: consider only 'packages-dev'. Default: consider only 'packages'.
    *
    * @return array
    *   Package info from composer.lock.

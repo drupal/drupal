@@ -172,7 +172,7 @@ abstract class FilterFormatFormBase extends EntityForm {
    * Determines if the format already exists.
    *
    * @param string $format_id
-   *   The format ID
+   *   The format ID.
    *
    * @return bool
    *   TRUE if the format exists, FALSE otherwise.

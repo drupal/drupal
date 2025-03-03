@@ -112,7 +112,7 @@ class Url implements TrustedCallbackInterface {
    * code more self-documenting.
    *
    * @param string $route_name
-   *   The name of the route
+   *   The name of the route.
    * @param array $route_parameters
    *   (optional) An associative array of parameter names and values.
    * @param array $options
@@ -138,7 +138,7 @@ class Url implements TrustedCallbackInterface {
    * path (like robots.txt) use Url::fromUri() with the base: scheme.
    *
    * @param string $route_name
-   *   The name of the route
+   *   The name of the route.
    * @param array $route_parameters
    *   (optional) An associative array of route parameter names and values.
    * @param array $options

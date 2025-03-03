@@ -144,10 +144,10 @@ class DbUpdateController extends ControllerBase {
    *
    * @param string $op
    *   The update operation to perform. Can be any of the below:
-   *    - info
-   *    - selection
-   *    - run
-   *    - results
+   *    - "info".
+   *    - "selection".
+   *    - "run".
+   *    - "results".
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object.
    *

@@ -686,9 +686,9 @@ use Drupal\node\Entity\NodeType;
  *   The entity to check access to.
  * @param string $operation
  *   The operation that is to be performed on $entity. Usually one of:
- *   - "view"
- *   - "update"
- *   - "delete"
+ *   - "view".
+ *   - "update".
+ *   - "delete".
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account trying to access the entity.
  *
@@ -727,7 +727,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  *   The operation that is to be performed on $entity. Usually one of:
  *   - "view"
  *   - "update"
- *   - "delete"
+ *   - "delete".
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account trying to access the entity.
  *

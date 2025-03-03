@@ -410,7 +410,7 @@ class MenuTreeStorageTest extends KernelTestBase {
    * Tests that a link's stored representation matches the expected values.
    *
    * @param string $id
-   *   The ID of the menu link to test
+   *   The ID of the menu link to test.
    * @param array $expected_properties
    *   A keyed array of column names and values like has_children and depth.
    * @param array $parents

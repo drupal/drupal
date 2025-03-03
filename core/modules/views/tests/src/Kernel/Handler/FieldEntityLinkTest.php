@@ -81,7 +81,7 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
    * Tests whether entity links behave as expected.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user account to be used to run the test;
+   *   The user account to be used to run the test.
    * @param bool[] $expected_results
    *   An associative array of expected results keyed by link template name.
    */

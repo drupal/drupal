@@ -21,11 +21,11 @@ abstract class RouteMatchTestBase extends UnitTestCase {
    * @param string $name
    *   Route name.
    * @param \Symfony\Component\Routing\Route $route
-   *   Request object
+   *   Request object.
    * @param array $parameters
-   *   Parameters array
+   *   Parameters array.
    * @param array $raw_parameters
-   *   Raw parameters array
+   *   Raw parameters array.
    *
    * @return \Drupal\Core\Routing\RouteMatchInterface
    *   The constructed route match instance.

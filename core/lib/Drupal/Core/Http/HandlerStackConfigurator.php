@@ -77,7 +77,7 @@ class HandlerStackConfigurator {
    * Configures the stack using services tagged as http_client_middleware.
    *
    * @param \GuzzleHttp\HandlerStack $handler_stack
-   *   The handler stack
+   *   The handler stack.
    */
   public function configure(HandlerStack $handler_stack) {
     $this->initializeMiddlewares();

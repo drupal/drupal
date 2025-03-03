@@ -31,7 +31,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    * Constructs the event subscriber.
    *
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
-   *   The config manager
+   *   The config manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */

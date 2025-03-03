@@ -140,7 +140,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @param array|string $ids
    *   Either a single ID or multiple ones as array.
    * @param array $old_definitions
-   *   The definitions before the deleting
+   *   The definitions before the deleting.
    * @param array $new_definitions
    *   The definitions after the deleting.
    *

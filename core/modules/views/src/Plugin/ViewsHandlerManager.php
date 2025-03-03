@@ -41,7 +41,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
    *   The plugin type, for example filter.
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\views\ViewsData $views_data
    *   The views data cache.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend

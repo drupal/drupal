@@ -25,7 +25,7 @@ interface CommentStatisticsInterface {
    * Read comment statistics records for an array of entities.
    *
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
-   *   Array of entities on which commenting is enabled, keyed by id
+   *   Array of entities on which commenting is enabled, keyed by id.
    * @param string $entity_type
    *   The entity type of the passed entities.
    * @param bool $accurate

@@ -445,7 +445,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition.
    * @param \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping
-   *   The table mapping information
+   *   The table mapping information.
    * @param array $table_data
    *   A reference to a specific entity table (for example data_table) inside
    *   the views data.

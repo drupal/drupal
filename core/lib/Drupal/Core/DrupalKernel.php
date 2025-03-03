@@ -732,9 +732,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Converts an exception into a response.
    *
    * @param \Exception $e
-   *   An exception
+   *   An exception.
    * @param \Symfony\Component\HttpFoundation\Request $request
-   *   A Request instance
+   *   A Request instance.
    * @param int $type
    *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
@@ -1262,7 +1262,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Attach synthetic values on to kernel.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   Container object
+   *   Container object.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface
    *   The container object with the kernel and the class loader added.
@@ -1587,7 +1587,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Validates the hostname supplied from the HTTP request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object
+   *   The request object.
    *
    * @return bool
    *   TRUE if the hostname is valid, or FALSE otherwise.

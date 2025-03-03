@@ -196,7 +196,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    * names.
    *
    * @param string $prefix
-   *   The prefix to search for
+   *   The prefix to search for.
    *
    * @return array
    *   An array containing matching configuration object names.

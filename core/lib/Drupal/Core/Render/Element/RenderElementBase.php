@@ -241,16 +241,16 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
    * @param array $element
    *   An associative array containing the properties of the element.
    *   Properties used:
-   *   - #ajax['event']
-   *   - #ajax['prevent']
-   *   - #ajax['url']
-   *   - #ajax['httpMethod']
-   *   - #ajax['callback']
-   *   - #ajax['options']
-   *   - #ajax['wrapper']
-   *   - #ajax['parameters']
-   *   - #ajax['effect']
-   *   - #ajax['accepts']
+   *   - "#ajax['event']".
+   *   - "#ajax['prevent']".
+   *   - "#ajax['url']".
+   *   - "#ajax['httpMethod']".
+   *   - "#ajax['callback']".
+   *   - "#ajax['options']".
+   *   - "#ajax['wrapper']".
+   *   - "#ajax['parameters']".
+   *   - "#ajax['effect']".
+   *   - "#ajax['accepts']".
    *
    * @return array
    *   The processed element with the necessary JavaScript attached to it.

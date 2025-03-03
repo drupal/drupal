@@ -384,7 +384,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    * Creates a new Entity Reference fields with a given target type.
    *
    * @param string $target_type
-   *   The name of the target type
+   *   The name of the target type.
    * @param string[] $bundles
    *   A list of bundle IDs. Defaults to [].
    *

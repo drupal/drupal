@@ -71,7 +71,7 @@ class FieldInstanceSettings extends ProcessPluginBase {
    * as D8 uses "KB" and "MB" respectively.
    *
    * @param string $size_string
-   *   The size string, eg 10M
+   *   The size string, eg "10M".
    *
    * @return string
    *   The D8 version of the size string.

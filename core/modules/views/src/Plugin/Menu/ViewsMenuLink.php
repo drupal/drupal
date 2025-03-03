@@ -61,7 +61,7 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\views\ViewExecutableFactory $view_executable_factory
-   *   The view executable factory
+   *   The view executable factory.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ViewExecutableFactory $view_executable_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);

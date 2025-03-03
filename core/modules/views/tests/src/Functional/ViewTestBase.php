@@ -100,7 +100,7 @@ abstract class ViewTestBase extends BrowserTestBase {
    * Asserts the existence of a button with a certain ID and label.
    *
    * @param string $id
-   *   The HTML ID of the button
+   *   The HTML ID of the button.
    * @param string $expected_label
    *   The expected label for the button.
    * @param string $message

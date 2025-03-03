@@ -32,10 +32,10 @@ interface NodeGrantDatabaseStorageInterface {
    *   A list of tables that need to be part of the alter.
    * @param string $operation
    *   The operation to be performed on the node. Possible values are:
-   *   - "view"
-   *   - "update"
-   *   - "delete"
-   *   - "create"
+   *   - "view".
+   *   - "update".
+   *   - "delete".
+   *   - "create".
    * @param \Drupal\Core\Session\AccountInterface $account
    *   A user object representing the user for whom the operation is to be
    *   performed.

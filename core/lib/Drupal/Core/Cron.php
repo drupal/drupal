@@ -38,7 +38,7 @@ class Cron implements CronInterface {
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler
+   *   The module handler.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
    * @param \Drupal\Core\Queue\QueueFactory $queueFactory

@@ -285,7 +285,7 @@ class UrlHelper {
    * @param string $url
    *   A string containing an external URL, such as "http://example.com/foo".
    * @param string $base_url
-   *   The base URL string to check against, such as "http://example.com/"
+   *   The base URL string to check against, such as "http://example.com/".
    *
    * @return bool
    *   TRUE if the URL has the same domain and base path.

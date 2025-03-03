@@ -60,7 +60,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler;
+   *   The module handler.
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
    *   The module extension list.
    */

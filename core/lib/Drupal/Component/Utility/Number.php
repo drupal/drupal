@@ -87,7 +87,7 @@ class Number {
    * Decodes a sorting code back to an integer.
    *
    * @param string $string
-   *   The alpha decimal value to convert
+   *   The alpha decimal value to convert.
    *
    * @return int
    *   The integer value.

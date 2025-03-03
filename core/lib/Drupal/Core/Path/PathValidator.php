@@ -60,7 +60,7 @@ class PathValidator implements PathValidatorInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
-   *   The path processor;
+   *   The path processor.
    */
   public function __construct(AccessAwareRouterInterface $access_aware_router, UrlMatcherInterface $access_unaware_router, AccountInterface $account, InboundPathProcessorInterface $path_processor) {
     $this->accessAwareRouter = $access_aware_router;

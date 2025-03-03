@@ -24,7 +24,7 @@ trait ComposerStagerTestTrait {
    *   A message containing optional placeholders corresponding to parameters (next). Example:
    *   ```php
    *   $message = 'Hello, %first_name %last_name.';
-   *   ```
+   *   ```.
    * @param \PhpTuf\ComposerStager\API\Translation\Value\TranslationParametersInterface|null $parameters
    *   Translation parameters.
    * @param string|null $domain

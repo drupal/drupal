@@ -45,19 +45,19 @@ class CompiledRoute extends SymfonyCompiledRoute {
    * @param int $num_parts
    *   The number of parts in the path.
    * @param string $staticPrefix
-   *   The static prefix of the compiled route
+   *   The static prefix of the compiled route.
    * @param string $regex
-   *   The regular expression to use to match this route
+   *   The regular expression to use to match this route.
    * @param array $tokens
-   *   An array of tokens to use to generate URL for this route
+   *   An array of tokens to use to generate URL for this route.
    * @param array $pathVariables
-   *   An array of path variables
+   *   An array of path variables.
    * @param string|null $hostRegex
-   *   Host regex
+   *   Host regex.
    * @param array $hostTokens
-   *   Host tokens
+   *   Host tokens.
    * @param array $hostVariables
-   *   An array of host variables
+   *   An array of host variables.
    * @param array $variables
    *   An array of variables (variables defined in the path and in the host
    *   patterns)

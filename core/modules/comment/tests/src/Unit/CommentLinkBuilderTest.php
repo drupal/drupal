@@ -263,9 +263,9 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * @param bool $has_field
    *   TRUE if the node has the 'comment' field.
    * @param int $comment_status
-   *   One of CommentItemInterface::OPEN|HIDDEN|CLOSED
+   *   One of CommentItemInterface::OPEN|HIDDEN|CLOSED.
    * @param int $form_location
-   *   One of CommentItemInterface::FORM_BELOW|FORM_SEPARATE_PAGE
+   *   One of CommentItemInterface::FORM_BELOW|FORM_SEPARATE_PAGE.
    * @param int $comment_count
    *   Number of comments against the field.
    *

@@ -373,7 +373,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $auto_f
  * Creates a directory with the specified permissions.
  *
  * @param string $file
- *   The name of the directory to create;
+ *   The name of the directory to create.
  * @param int $mask
  *   The permissions of the directory to create.
  * @param bool $message

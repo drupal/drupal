@@ -115,7 +115,7 @@ class ExtensionDiscovery {
    *   determines if the deprecated file cache property is set to maintain BC in
    *   Drupal 11.
    * @param string[] $profile_directories
-   *   The available profile directories
+   *   The available profile directories.
    * @param string $site_path
    *   The path to the site.
    */

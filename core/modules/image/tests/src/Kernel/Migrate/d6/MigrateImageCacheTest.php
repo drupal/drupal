@@ -145,7 +145,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
    * Assert that a given image effect is migrated.
    *
    * @param \Drupal\image\ImageEffectPluginCollection $collection
-   *   Collection of effects
+   *   Collection of effects.
    * @param string $id
    *   Id that should exist in the collection.
    * @param array $config

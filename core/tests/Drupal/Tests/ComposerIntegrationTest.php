@@ -179,11 +179,11 @@ class ComposerIntegrationTest extends UnitTestCase {
    * See https://www.drupal.org/project/drupal/issues/3075954
    *
    * @param string $destRelPath
-   *   Path to scaffold file destination location
+   *   Path to scaffold file destination location.
    * @param string $sourceRelPath
-   *   Path to scaffold file source location
+   *   Path to scaffold file source location.
    * @param string $expectedDestination
-   *   Named location to the destination path of the scaffold file
+   *   Named location to the destination path of the scaffold file.
    *
    * @dataProvider providerTestExpectedScaffoldFiles
    */

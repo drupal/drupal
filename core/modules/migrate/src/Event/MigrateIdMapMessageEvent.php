@@ -46,7 +46,7 @@ class MigrateIdMapMessageEvent extends Event {
    * @param array $source_id_values
    *   Values represent the source ID.
    * @param string $message
-   *   The message
+   *   The message.
    * @param int $level
    *   Severity level (one of the MigrationInterface::MESSAGE_* constants).
    */

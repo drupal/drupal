@@ -28,7 +28,7 @@ class NodeHooks {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler
+   *   The module handler.
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,

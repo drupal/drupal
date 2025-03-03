@@ -94,7 +94,7 @@ class Inspector {
    * in any way will cause a problem.
    *
    * @param mixed $string
-   *   Variable to be examined
+   *   Variable to be examined.
    *
    * @return bool
    *   TRUE if $string is a string or an object castable to a string.

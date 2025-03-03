@@ -170,7 +170,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * Tests invalid enforced cardinality.
    *
    * @param mixed $enforced_cardinality
-   *   Enforced cardinality
+   *   Enforced cardinality.
    *
    * @covers ::getCardinality
    * @dataProvider providerInvalidEnforcedCardinality

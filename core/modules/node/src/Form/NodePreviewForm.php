@@ -69,7 +69,7 @@ class NodePreviewForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param \Drupal\Core\Entity\EntityInterface $node
-   *   The node being previews
+   *   The node being previews.
    *
    * @return array
    *   The form structure.

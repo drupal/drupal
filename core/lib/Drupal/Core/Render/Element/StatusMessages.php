@@ -75,10 +75,10 @@ class StatusMessages extends RenderElementBase {
    *   Limit the messages returned by type. Defaults to NULL, meaning all types.
    *   Passed on to \Drupal\Core\Messenger\Messenger::deleteByType(). These
    *   values are supported:
-   *   - NULL
-   *   - 'status'
-   *   - 'warning'
-   *   - 'error'
+   *   - NULL.
+   *   - 'status'.
+   *   - 'warning'.
+   *   - 'error'.
    *
    * @return array
    *   A renderable array containing the messages.

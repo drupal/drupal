@@ -39,7 +39,7 @@ class PluginBaseTest extends UnitTestCase {
    * @param array $definition
    *   The definition array, defining default options.
    * @param array $expected
-   *   The expected array after unpacking
+   *   The expected array after unpacking.
    * @param bool $all
    *   Whether to unpack all options.
    *
@@ -59,7 +59,7 @@ class PluginBaseTest extends UnitTestCase {
    * @param array $definition
    *   The definition array, defining default options.
    * @param array $expected
-   *   The expected array after unpacking
+   *   The expected array after unpacking.
    *
    * @dataProvider providerTestSetOptionDefault
    * @covers ::setOptionDefaults

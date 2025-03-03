@@ -15,7 +15,7 @@ trait SchemaIntrospectionTestTrait {
    * @param string $table_name
    *   A non-prefixed table name.
    * @param array $column_names
-   *   An array of column names
+   *   An array of column names.
    * @param string $index_type
    *   (optional) The type of the index. Can be one of 'index', 'unique' or
    *   'primary'. Defaults to 'index'.
@@ -36,7 +36,7 @@ trait SchemaIntrospectionTestTrait {
    * @param string $table_name
    *   A non-prefixed table name.
    * @param array $column_names
-   *   An array of column names
+   *   An array of column names.
    * @param string $index_type
    *   (optional) The type of the index. Can be one of 'index', 'unique' or
    *   'primary'. Defaults to 'index'.

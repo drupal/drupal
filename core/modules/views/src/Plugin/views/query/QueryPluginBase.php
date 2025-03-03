@@ -203,7 +203,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * Control how all WHERE and HAVING groups are put together.
    *
    * @param string $type
-   *   Either 'AND' or 'OR'
+   *   Either 'AND' or 'OR'.
    */
   public function setGroupOperator($type = 'AND') {
     $this->groupOperator = strtoupper($type);

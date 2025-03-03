@@ -357,7 +357,7 @@ function template_preprocess_input(&$variables): void {
  * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #action, #method, #attributes, #children
+ *     Properties used: #action, #method, #attributes, #children.
  */
 function template_preprocess_form(&$variables): void {
   $element = $variables['element'];
@@ -711,8 +711,10 @@ function template_preprocess_form_element_label(&$variables): void {
  *   - init_message: Message displayed while the processing is initialized.
  *     Defaults to t('Initializing.').
  *   - progress_message: Message displayed while processing the batch. Available
- *     placeholders are @current, @remaining, @total, @percentage, @estimate and
- *     @elapsed. Defaults to t('Completed @current of @total.').
+ *     placeholders are "@current", "@remaining", "@total", "@percentage",
+ *     phpcs:ignore Drupal.Commenting.FunctionComment.ParamCommentFullStop
+ *     "@estimate" and "@elapsed". Defaults to "t('Completed @current of
+ *     @total.')".
  *   - error_message: Message displayed if an error occurred while processing
  *     the batch. Defaults to t('An error has occurred.').
  *   - finished: Name of an implementation of callback_batch_finished(). This is

@@ -139,7 +139,7 @@ interface ThemeManagerInterface {
    * @param string|array $type
    *   A string describing the type of the alterable $data.
    * @param mixed $data
-   *   The variable that will be passed to $theme_TYPE_alter() implementations
+   *   The variable that will be passed to $theme_TYPE_alter() implementations.
    * @param mixed $context1
    *   (optional) An additional variable that is passed by reference.
    * @param mixed $context2

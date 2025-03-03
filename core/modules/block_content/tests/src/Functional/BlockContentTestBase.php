@@ -101,7 +101,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *   If $values is a string, it will be considered that it represents the
    *   label.
    * @param bool $create_body
-   *   Whether or not to create the body field
+   *   Whether or not to create the body field.
    *
    * @return \Drupal\block_content\Entity\BlockContentType
    *   Created block type.

@@ -330,9 +330,9 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
  *
  * @param array $variables
  *   An associative array possibly containing:
- *   - attributes['timestamp']:
- *   - timestamp:
- *   - text:
+ *   - "attributes['timestamp']:".
+ *   - "timestamp:".
+ *   - "text:".
  */
 function template_preprocess_time(&$variables): void {
   /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
@@ -620,6 +620,7 @@ function template_preprocess_links(&$variables): void {
  *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - srcset: Array of multiple URIs and sizes/multipliers.
  *   - sizes: The sizes attribute for viewport-based selection of images.
+ *     phpcs:ignore
  *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
  */
 function template_preprocess_image(&$variables): void {

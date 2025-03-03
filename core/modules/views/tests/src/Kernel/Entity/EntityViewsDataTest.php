@@ -145,7 +145,7 @@ class EntityViewsDataTest extends KernelTestBase {
    * @param \Drupal\Core\Entity\EntityTypeInterface $definition
    *   An entity type definition to add to the entity type manager.
    * @param \Drupal\Core\Field\BaseFieldDefinition[] $base_fields
-   *   An array of base field definitions
+   *   An array of base field definitions.
    */
   protected function setUpEntityType(EntityTypeInterface $definition, array $base_fields = []): void {
     // Replace the cache backend in the entity type manager so it returns

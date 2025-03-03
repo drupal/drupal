@@ -27,7 +27,7 @@ trait ViewResultAssertionTrait {
    *   from the view (as keys) and the expected result set (as values).
    * @param string $message
    *   (optional) A custom message to display with the assertion. Defaults to
-   *   'Identical result set.'
+   *   'Identical result set.'.
    */
   protected function assertIdenticalResultset($view, $expected_result, $column_map = [], $message = NULL): void {
     $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertIdentical', $message);
@@ -47,7 +47,7 @@ trait ViewResultAssertionTrait {
    *   from the view (as keys) and the expected result set (as values).
    * @param string $message
    *   (optional) A custom message to display with the assertion. Defaults to
-   *   'Non-identical result set.'
+   *   'Non-identical result set.'.
    */
   protected function assertNotIdenticalResultset($view, $expected_result, $column_map = [], $message = NULL): void {
     $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertNotIdentical', $message);

@@ -27,7 +27,7 @@ class Editor extends Plugin {
    * @param string $id
    *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
-   *   The human-readable name of the text editor, translated
+   *   The human-readable name of the text editor, translated.
    * @param bool $supports_content_filtering
    *   Whether the editor supports "allowed content only" filtering.
    * @param bool $supports_inline_editing

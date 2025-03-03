@@ -289,16 +289,16 @@ class Views {
    *   If TRUE, only return views, not displays.
    * @param string $filter
    *   Filters the views on status. Can either be 'all' (default), 'enabled' or
-   *   'disabled'
+   *   'disabled'.
    * @param \Drupal\views\ViewExecutable|string $exclude_view
    *   View or current display to exclude.
    *   Either a:
-   *   - Views executable object
-   *   - views name, for example 'my_view'
-   *   - views name and display ID separated by ':', for example 'my_view:page'
+   *   - Views executable object.
+   *   - views name, for example 'my_view'.
+   *   - views name and display ID separated by ':', for example 'my_view:page'.
    * @param bool $optgroup
    *   If TRUE, returns an array with optgroups for each view (will be ignored
-   *   for $views_only = TRUE). Can be used by select
+   *   for $views_only = TRUE). Can be used by select.
    * @param bool $sort
    *   If TRUE, the list of views is sorted ascending.
    *

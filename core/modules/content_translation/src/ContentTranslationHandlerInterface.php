@@ -28,9 +28,9 @@ interface ContentTranslationHandlerInterface {
    *   The entity whose translation has to be accessed.
    * @param string $op
    *   The operation to be performed on the translation. Possible values are:
-   *   - "create"
-   *   - "update"
-   *   - "delete"
+   *   - "create".
+   *   - "update".
+   *   - "delete".
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.

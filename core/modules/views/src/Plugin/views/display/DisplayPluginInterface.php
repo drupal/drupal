@@ -414,7 +414,7 @@ interface DisplayPluginInterface {
    * #pre_render callback for view display rendering.
    *
    * @param array $element
-   *   The element to #pre_render
+   *   The element to #pre_render.
    *
    * @return array
    *   The processed element.
@@ -430,7 +430,7 @@ interface DisplayPluginInterface {
    *   Identifier of the specific area to render.
    * @param bool $empty
    *   (optional) Indicator whether or not the view result is empty. Defaults to
-   *   FALSE
+   *   FALSE.
    *
    * @return array
    *   A render array for the given area.

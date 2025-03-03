@@ -302,7 +302,7 @@ class TermParentsTest extends BrowserTestBase {
    * Creates a term, saves it and returns it.
    *
    * @param string $name
-   *   The name of the term to create
+   *   The name of the term to create.
    * @param int[] $parent_ids
    *   (optional) A list of parent term IDs.
    *

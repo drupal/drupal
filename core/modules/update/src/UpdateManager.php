@@ -89,7 +89,7 @@ class UpdateManager implements UpdateManagerInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The Module Handler service
+   *   The Module Handler service.
    * @param \Drupal\update\UpdateProcessorInterface $update_processor
    *   The Update Processor service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation

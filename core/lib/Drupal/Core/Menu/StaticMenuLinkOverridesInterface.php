@@ -68,11 +68,11 @@ interface StaticMenuLinkOverridesInterface {
    *   A menu link plugin ID.
    * @param array $definition
    *   The definition values to override. Supported keys:
-   *   - menu_name
-   *   - parent
-   *   - weight
-   *   - expanded
-   *   - enabled
+   *   - "menu_name".
+   *   - "parent".
+   *   - "weight".
+   *   - "expanded".
+   *   - "enabled".
    *
    * @return array
    *   A list of properties which got saved.

@@ -137,10 +137,10 @@ function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\R
  *   The context in which hook_tokens() was called. An associative array with
  *   the following keys, which have the same meaning as the corresponding
  *   parameters of hook_tokens():
- *   - 'type'
- *   - 'tokens'
- *   - 'data'
- *   - 'options'
+ *   - 'type'.
+ *   - 'tokens'.
+ *   - 'data'.
+ *   - 'options'.
  * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
  *   The bubbleable metadata. In case you alter an existing token based upon
  *   a data source that isn't in $context['data'], you must add that

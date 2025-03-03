@@ -63,7 +63,7 @@ class Link implements RenderableInterface {
    *   the output of \Drupal\Component\Utility\Xss::filter() or
    *   \Drupal\Component\Render\FormattableMarkup.
    * @param string $route_name
-   *   The name of the route
+   *   The name of the route.
    * @param array $route_parameters
    *   (optional) An associative array of parameter names and values.
    * @param array $options
@@ -139,7 +139,7 @@ class Link implements RenderableInterface {
    * Sets the URL of this link.
    *
    * @param Url $url
-   *   The URL object to set
+   *   The URL object to set.
    *
    * @return $this
    */

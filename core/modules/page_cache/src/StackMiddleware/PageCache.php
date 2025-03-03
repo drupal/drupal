@@ -107,7 +107,7 @@ class PageCache implements HttpKernelInterface {
    *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
    * @param bool $catch
-   *   Whether to catch exceptions or not
+   *   Whether to catch exceptions or not.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
@@ -125,7 +125,7 @@ class PageCache implements HttpKernelInterface {
    *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
    * @param bool $catch
-   *   Whether to catch exceptions or not
+   *   Whether to catch exceptions or not.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
@@ -189,7 +189,7 @@ class PageCache implements HttpKernelInterface {
    *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
    * @param bool $catch
-   *   Whether to catch exceptions or not
+   *   Whether to catch exceptions or not.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.

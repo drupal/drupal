@@ -17,7 +17,7 @@ class ViewPageController {
    * Handler a response for a given view and display.
    *
    * @param string $view_id
-   *   The ID of the view
+   *   The ID of the view.
    * @param string $display_id
    *   The ID of the display.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match

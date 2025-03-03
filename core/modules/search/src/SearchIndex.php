@@ -27,7 +27,7 @@ class SearchIndex implements SearchIndexInterface {
    * @param \Drupal\search\SearchTextProcessorInterface $textProcessor
    *   The text processor.
    * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service
+   *   The time service.
    */
   public function __construct(
     protected ConfigFactoryInterface $configFactory,

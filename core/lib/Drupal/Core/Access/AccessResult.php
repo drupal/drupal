@@ -87,7 +87,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   The condition to evaluate.
    * @param string|null $reason
    *   (optional) The reason why access is forbidden. Intended for developers,
-   *   hence not translatable
+   *   hence not translatable.
    *
    * @return \Drupal\Core\Access\AccessResult
    *   If $condition is TRUE, isForbidden() will be TRUE, otherwise isNeutral()
@@ -131,7 +131,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   The permissions to check.
    * @param string $conjunction
    *   (optional) 'AND' if all permissions are required, 'OR' in case just one.
-   *   Defaults to 'AND'
+   *   Defaults to 'AND'.
    *
    * @return \Drupal\Core\Access\AccessResult
    *   If the account has the permissions, isAllowed() will be TRUE, otherwise

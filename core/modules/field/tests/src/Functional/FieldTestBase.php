@@ -39,7 +39,7 @@ abstract class FieldTestBase extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to test.
    * @param string $field_name
-   *   The name of the field to test
+   *   The name of the field to test.
    * @param array $expected_values
    *   The array of expected values.
    * @param string $langcode

@@ -118,7 +118,7 @@ class FileTestHelper {
    * returned.
    *
    * @param string|null $filepath
-   *   File path
+   *   File path.
    * @param bool $reset
    *   (optional) If to reset the internal memory cache. If TRUE is passed, the
    *   first parameter has no effect. Defaults to FALSE.

@@ -106,7 +106,7 @@ class LocaleConfigManager {
    * @param \Drupal\locale\StringStorageInterface $locale_storage
    *   The locale storage to use for reading string translations.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory
+   *   The configuration factory.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
    * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager

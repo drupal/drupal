@@ -178,7 +178,7 @@ abstract class FormElementBase extends RenderElementBase implements FormElementI
    *   - #autocomplete_route_parameters: The parameters to be used in
    *     conjunction with the route name.
    *   - #autocomplete_query_parameters: The parameters to be used in
-   *     query string
+   *     query string.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param array $complete_form
