@@ -7,6 +7,7 @@ const selectors = {
     expanded: '[data-admin-toolbar="expanded"]',
     collapsed: '[data-admin-toolbar="collapsed"]',
   },
+  clearCacheButton: 'input[data-drupal-selector="edit-clear"]',
 };
 
 module.exports = {
@@ -15,6 +16,7 @@ module.exports = {
     browser
       .drupalInstall()
       .drupalInstallModule('navigation', true)
+      .drupalInstallModule('big_pipe')
       .setWindowSize(1220, 800);
   },
   after(browser) {
@@ -24,7 +26,8 @@ module.exports = {
   'Expand/Collapse': (browser) => {
     browser.drupalLoginAsAdmin(() => {
       browser
-        .drupalRelativeURL('/')
+        .drupalRelativeURL('/admin/config/development/performance')
+        .click(selectors.clearCacheButton)
         .waitForElementPresent(
           '[data-once="admin-toolbar-document-triggers-listener"]',
         )
