@@ -305,7 +305,10 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
     $response = new CacheableResponse();
     $response->headers->set($query['name'], $query['value']);
     $response->getCacheableMetadata()->addCacheContexts(['url.query_args:name', 'url.query_args:value']);
-    $response->setContent((string) $this->t('The following header was set: %name: %value', ['%name' => $query['name'], '%value' => $query['value']]));
+    $response->setContent((string) $this->t('The following header was set: %name: %value', [
+      '%name' => $query['name'],
+      '%value' => $query['value'],
+    ]));
 
     return $response;
   }

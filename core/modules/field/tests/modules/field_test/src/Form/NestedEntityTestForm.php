@@ -105,7 +105,11 @@ class NestedEntityTestForm extends FormBase {
     $entity_2 = $form_state->get('entity_2');
     $entity_2->save();
 
-    $this->messenger()->addStatus($this->t('test_entities @id_1 and @id_2 have been updated.', ['@id_1' => $entity_1->id(), '@id_2' => $entity_2->id()]));
+    $this->messenger()
+      ->addStatus($this->t('test_entities @id_1 and @id_2 have been updated.', [
+        '@id_1' => $entity_1->id(),
+        '@id_2' => $entity_2->id(),
+      ]));
   }
 
 }

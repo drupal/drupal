@@ -24,7 +24,12 @@ class ThemeTestHooks {
     $items['theme_test_suggestion_provided'] = ['variables' => []];
     $items['theme_test_specific_suggestions'] = ['variables' => []];
     $items['theme_test_suggestions'] = ['variables' => []];
-    $items['theme_test_general_suggestions'] = ['variables' => ['module_hook' => 'theme_test_theme', 'theme_hook' => 'none']];
+    $items['theme_test_general_suggestions'] = [
+      'variables' => [
+        'module_hook' => 'theme_test_theme',
+        'theme_hook' => 'none',
+      ],
+    ];
     $items['theme_test_foo'] = ['variables' => ['foo' => NULL]];
     $items['theme_test_render_element'] = ['render element' => 'elements'];
     $items['theme_test_render_element_children'] = ['render element' => 'element'];
@@ -61,7 +66,10 @@ class ThemeTestHooks {
    */
   #[Hook('theme_registry_alter')]
   public function themeRegistryAlter(&$registry): void {
-    $registry['theme_test_preprocess_callback']['preprocess functions'][] = ['\Drupal\theme_test\ThemeTestPreprocess', 'preprocess'];
+    $registry['theme_test_preprocess_callback']['preprocess functions'][] = [
+      '\Drupal\theme_test\ThemeTestPreprocess',
+      'preprocess',
+    ];
   }
 
   /**

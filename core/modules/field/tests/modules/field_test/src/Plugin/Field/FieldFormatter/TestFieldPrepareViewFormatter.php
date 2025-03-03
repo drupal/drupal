@@ -52,7 +52,10 @@ class TestFieldPrepareViewFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = $this->t('@setting: @value', ['@setting' => 'test_formatter_setting_additional', '@value' => $this->getSetting('test_formatter_setting_additional')]);
+    $summary[] = $this->t('@setting: @value', [
+      '@setting' => 'test_formatter_setting_additional',
+      '@value' => $this->getSetting('test_formatter_setting_additional'),
+    ]);
     return $summary;
   }
 

@@ -56,7 +56,8 @@ class UserAccessTestHooks {
   public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
     // Account with role sub-admin can view the status, init and mail fields for
     // user with no roles.
-    if ($field_definition->getTargetEntityTypeId() == 'user' && $operation === 'view' && in_array($field_definition->getName(), ['status', 'init', 'mail'])) {
+    if ($field_definition->getTargetEntityTypeId() == 'user' && $operation === 'view'
+      && in_array($field_definition->getName(), ['status', 'init', 'mail'])) {
       if ($items == NULL || count($items->getEntity()->getRoles()) == 1) {
         return AccessResult::allowedIfHasPermission($account, 'sub-admin');
       }

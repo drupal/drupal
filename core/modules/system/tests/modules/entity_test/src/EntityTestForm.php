@@ -62,10 +62,16 @@ class EntityTestForm extends ContentEntityForm {
       $status = $entity->save();
 
       if ($is_new) {
-        $message = $this->t('%entity_type @id has been created.', ['@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()]);
+        $message = $this->t('%entity_type @id has been created.', [
+          '@id' => $entity->id(),
+          '%entity_type' => $entity->getEntityTypeId(),
+        ]);
       }
       else {
-        $message = $this->t('%entity_type @id has been updated.', ['@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()]);
+        $message = $this->t('%entity_type @id has been updated.', [
+          '@id' => $entity->id(),
+          '%entity_type' => $entity->getEntityTypeId(),
+        ]);
       }
       $this->messenger()->addStatus($message);
 

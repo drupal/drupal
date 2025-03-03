@@ -86,11 +86,17 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
     $build = [];
     $build['messages'] = ['#type' => 'status_messages'];
     $build['p1'] = [
-      '#lazy_builder' => ['\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage', ['P1']],
+      '#lazy_builder' => [
+        '\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage',
+        ['P1'],
+      ],
       '#create_placeholder' => TRUE,
     ];
     $build['p2'] = [
-      '#lazy_builder' => ['\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage', ['P2']],
+      '#lazy_builder' => [
+        '\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage',
+        ['P2'],
+      ],
       '#create_placeholder' => TRUE,
     ];
 

@@ -120,7 +120,8 @@ class FixtureManipulator {
     }
 
     $repo_path = $this->addRepository($package);
-    if (is_null($extra_files) && isset($package['type']) && in_array($package['type'], ['drupal-module', 'drupal-theme', 'drupal-profile'], TRUE)) {
+    if (is_null($extra_files) && isset($package['type'])
+      && in_array($package['type'], ['drupal-module', 'drupal-theme', 'drupal-profile'], TRUE)) {
       // For Drupal projects if no files are provided create an info.yml file
       // that assumes the project and package names match.
       [, $package_name] = explode('/', $package['name']);
@@ -578,7 +579,12 @@ class FixtureManipulator {
     // Set the `extra` property in the generated composer.json file using
     // `composer config`, because `composer init` does not support it.
     foreach ($package['extra'] ?? [] as $extra_property => $extra_value) {
-      $this->runComposerCommand(['config', "extra.$extra_property", '--json', json_encode($extra_value, JSON_UNESCAPED_SLASHES)]);
+      $this->runComposerCommand([
+        'config',
+        "extra.$extra_property",
+        '--json',
+        json_encode($extra_value, JSON_UNESCAPED_SLASHES),
+      ]);
     }
     // Restore the project root as the working directory.
     $this->dir = $project_root_dir;

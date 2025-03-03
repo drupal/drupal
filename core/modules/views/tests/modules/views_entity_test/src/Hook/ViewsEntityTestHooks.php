@@ -24,7 +24,14 @@ class ViewsEntityTestHooks {
   #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     if ($entity_type->id() == 'entity_test') {
-      $definitions['test_text_access'] = BaseFieldDefinition::create('string')->setLabel('Test access')->setTranslatable(FALSE)->setSetting('max_length', 64)->setDisplayOptions('form', ['type' => 'string_textfield', 'weight' => 10]);
+      $definitions['test_text_access'] = BaseFieldDefinition::create('string')
+        ->setLabel('Test access')
+        ->setTranslatable(FALSE)
+        ->setSetting('max_length', 64)
+        ->setDisplayOptions('form', [
+          'type' => 'string_textfield',
+          'weight' => 10,
+        ]);
       return $definitions;
     }
     return [];

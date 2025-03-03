@@ -58,7 +58,10 @@ class TestFieldWidgetMultiple extends WidgetBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = $this->t('@setting: @value', ['@setting' => 'test_widget_setting_multiple', '@value' => $this->getSetting('test_widget_setting_multiple')]);
+    $summary[] = $this->t('@setting: @value', [
+      '@setting' => 'test_widget_setting_multiple',
+      '@value' => $this->getSetting('test_widget_setting_multiple'),
+    ]);
     return $summary;
   }
 

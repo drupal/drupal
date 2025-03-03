@@ -29,9 +29,9 @@
   <!-- Only include specific sniffs that pass. This ensures that, if new sniffs are added, HEAD does not fail.-->
 
   <!-- Drupal sniffs -->
-  <rule ref="Drupal.Arrays.Array">
-    <!-- Sniff for these errors: ArrayClosingIndentation, ArrayIndentation, CommaLastItem -->
-    <exclude name="Drupal.Arrays.Array.LongLineDeclaration"/>
+  <rule ref="Drupal.Arrays.Array"/>
+  <rule ref="Drupal.Arrays.Array.LongLineDeclaration">
+    <include-pattern>core/modules/*/tests/modules/*</include-pattern>
   </rule>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
   <rule ref="Drupal.CSS.ColourDefinition"/>
