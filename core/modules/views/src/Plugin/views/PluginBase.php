@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for any views plugin types.
  *
- * Via the @Plugin definition the plugin may specify a theme function or
+ * Via the plugin definition the plugin may specify a theme function or
  * template to be used for the plugin. It also can auto-register the theme
  * implementation for that file or function.
  * - theme: the theme implementation to use in the plugin. This must be the
