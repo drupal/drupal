@@ -131,7 +131,9 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * `image_upload.status = TRUE` must cause additional keys to be required.
+   * Test validation when dynamically changing image upload settings.
+   *
+   * Additional keys are required when image_upload.status is TRUE.
    */
   public function testImageUploadSettingsAreDynamicallyRequired(): void {
     // When image uploads are disabled, no other key-value pairs are needed.

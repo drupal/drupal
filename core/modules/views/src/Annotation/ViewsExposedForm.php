@@ -31,7 +31,7 @@ class ViewsExposedForm extends ViewsPluginAnnotationBase {
   public $title = '';
 
   /**
-   * (optional) The short title used in the views UI.
+   * An optional short title used in the views UI.
    *
    * @var \Drupal\Core\Annotation\Translation
    *

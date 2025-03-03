@@ -32,7 +32,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
   protected $libraryDiscovery;
 
   /**
-   * jQuery UI CSS and JS assets keyed by their weight.
+   * The jQuery UI CSS and JS assets keyed by their weight.
    *
    * For example, the value of $weightGroupedAssets[-11] would be an array
    * of every jQuery UI CSS and JS file asset configured with a weight of -11.

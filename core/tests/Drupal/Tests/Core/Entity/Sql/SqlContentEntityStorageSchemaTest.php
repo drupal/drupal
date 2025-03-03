@@ -1451,7 +1451,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   }
 
   /**
-   * ::onEntityTypeUpdate.
+   * @covers \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::onEntityTypeUpdate()
    */
   public function testonEntityTypeUpdateWithNewIndex(): void {
     $this->entityType = $original_entity_type = new ContentEntityType([

@@ -898,7 +898,7 @@ function _locale_invalidate_js($langcode = NULL) {
 }
 
 /**
- * (Re-)Creates the JavaScript translation file for a language.
+ * Creates or recreates the JavaScript translation file for a language.
  *
  * @param string|null $langcode
  *   (optional) The language that the translation file should be (re)created

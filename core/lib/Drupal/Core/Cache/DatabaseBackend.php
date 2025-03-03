@@ -30,7 +30,7 @@ class DatabaseBackend implements CacheBackendInterface {
   const DEFAULT_MAX_ROWS = 5000;
 
   /**
-   * -1 means infinite allows numbers of rows for the cache backend.
+   * Indicates that an infinite number of rows is allowed for the cache backend.
    */
   const MAXIMUM_NONE = -1;
 

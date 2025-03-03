@@ -41,7 +41,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
   public $accounts;
 
   /**
-   * entity_test entities.
+   * The entity_test entities.
    *
    * @var array
    */
