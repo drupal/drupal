@@ -5,8 +5,9 @@ namespace Drupal\datetime_range;
 /**
  * Declares constants used in the datetime range module.
  *
- * @todo Convert this to an enum in 11.0.
- * @see https://www.drupal.org/project/drupal/issues/3425141.
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ *    enum DateTimeRangeDisplayOptions instead.
+ * @see https://www.drupal.org/node/3495241
  */
 interface DateTimeRangeConstantsInterface {
 
