@@ -191,7 +191,11 @@ class GDToolkit extends ImageToolkitBase {
 
     // Invalidate the image object and return if the load fails.
     try {
-      $image = $function($this->getSource());
+      // Suppress warnings from a library action. Some functions can trigger
+      // warnings that are not actionable like loading a PNG content with
+      // certain color profiles. Actual issues with image processing will
+      // trigger exceptions that are logged later on.
+      $image = @$function($this->getSource());
     }
     catch (\Throwable $t) {
       $this->logger->error("The image toolkit '@toolkit' failed loading image '@image'. Reported error: @class - @message", [
