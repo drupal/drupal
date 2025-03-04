@@ -141,7 +141,7 @@ default:
   - cd core
   - corepack enable
   - yarn install
-  - yarn run spellcheck:core --no-must-find-files --cache --cache-strategy content
+  - yarn run spellcheck:core --no-progress --no-must-find-files --cache --cache-strategy content
 ################
 # Stages
 #
