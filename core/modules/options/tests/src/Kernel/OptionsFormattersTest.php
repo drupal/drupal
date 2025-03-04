@@ -16,13 +16,6 @@ use Drupal\entity_test\Entity\EntityTest;
 class OptionsFormattersTest extends OptionsFieldUnitTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-  }
-
-  /**
    * Tests the formatters.
    */
   public function testFormatter(): void {

@@ -30,13 +30,6 @@ class ConfigLanguageOverrideWebTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-  }
-
-  /**
    * Tests translating the site name.
    */
   public function testSiteNameTranslation(): void {

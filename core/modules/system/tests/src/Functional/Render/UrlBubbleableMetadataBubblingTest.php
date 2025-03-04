@@ -28,13 +28,6 @@ class UrlBubbleableMetadataBubblingTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-  }
-
-  /**
    * Tests that URL bubbleable metadata is correctly bubbled.
    */
   public function testUrlBubbleableMetadataBubbling(): void {

@@ -8642,12 +8642,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/KeyValueStore/DatabaseStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\KeyValueStore\\\\DatabaseStorageExpirable\\:\\:deleteMultiple\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/KeyValueStore/DatabaseStorageExpirable.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\KeyValueStore\\\\DatabaseStorageExpirable\\:\\:doSetWithExpire\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14576,12 +14570,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config_translation/src/ConfigNamesMapper.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_translation\\\\Form\\\\ConfigTranslationAddForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/src/Form/ConfigTranslationAddForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config_translation\\\\Form\\\\ConfigTranslationDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19470,12 +19458,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/src/Entity/FilterFormat.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\filter\\\\FilterFormatAddForm\\:\\:form\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/filter/src/FilterFormatAddForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\filter\\\\FilterFormatAddForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',

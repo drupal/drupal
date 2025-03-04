@@ -14,13 +14,6 @@ use PHPUnit\Framework\TestCase;
 class ArgumentsResolverTest extends TestCase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-  }
-
-  /**
    * Tests the getArgument() method.
    *
    * @dataProvider providerTestGetArgument
