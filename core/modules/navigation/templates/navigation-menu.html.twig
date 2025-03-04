@@ -140,6 +140,7 @@
           >
             <span data-toolbar-action class="toolbar-menu__link-action visually-hidden">{{ 'Extend'|t }}</span>
             <span class="toolbar-menu__link-title">{{ item.title }}</span>
+            {{ icon('navigation', 'chevron', { class: 'toolbar-menu__chevron', size: 16 }) }}
           </button>
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
             {{ menus.menu_items(item.below, attributes, menu_level + 1) }}

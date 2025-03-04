@@ -59,7 +59,7 @@
         {% include 'navigation:toolbar-button' with {
           attributes: create_attribute({ 'data-toolbar-back-control': true, 'tabindex': '-1' }),
           extra_classes: ['admin-toolbar__back-button'],
-          icon: 'back',
+          icon: 'arrow-left',
           text: 'Back'|t,
         } only %}
         {% include 'navigation:toolbar-button' with {
@@ -79,6 +79,7 @@
       <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
       {{ content.footer }}
       <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button" type="button">
+        {{ icon('navigation', 'chevron', { class: 'admin-toolbar__expand-button-chevron', size: 16 }) }}
         <span class="visually-hidden" data-toolbar-text>{{ 'Collapse sidebar'|t }}</span>
       </button>
     </nav>

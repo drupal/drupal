@@ -22,7 +22,7 @@
       once('user-block', '[data-user-block]', context).forEach((userBlock) => {
         userBlock
           .querySelectorAll(
-            '.toolbar-button--icon--navigation-user-links-user-wrapper, .toolbar-popover__header',
+            '.toolbar-popover__control, .toolbar-popover__header',
           )
           .forEach((button) => {
             const buttonLabel = button.querySelector('[data-toolbar-text]');

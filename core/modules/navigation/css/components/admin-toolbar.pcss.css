@@ -153,47 +153,35 @@ body {
     color: var(--admin-toolbar-color-blue-700);
   }
 
-  &::before {
-    display: block;
-    flex-shrink: 0;
-    width: calc(1 * var(--admin-toolbar-rem));
-    height: calc(1 * var(--admin-toolbar-rem));
-    content: "";
-    transition:
-      opacity var(--admin-toolbar-transition),
-      transform var(--admin-toolbar-transition);
-    opacity: 0;
-    background-color: currentColor;
-    mask-repeat: no-repeat;
-    mask-position: center center;
-    mask-size: 100% auto;
-    mask-image: url(../../assets/icons/chevron.svg);
-
-    [data-admin-toolbar-transitions] & {
-      opacity: 1;
-    }
-
-    [dir="rtl"] & {
-      transform: rotate(180deg);
-    }
-
-    @media (--forced-colors) {
-      background: canvastext;
-    }
-  }
-
-  &[aria-expanded="true"] {
-    &::before {
-      transform: rotate(180deg);
-
-      [dir="rtl"] & {
-        transform: none;
-      }
-    }
-  }
-
   @media (--admin-toolbar-desktop) {
     display: flex;
+  }
+}
+
+.admin-toolbar__expand-button-chevron {
+  flex-shrink: 0;
+  fill: currentColor;
+  width: calc(1 * var(--admin-toolbar-rem));
+  height: calc(1 * var(--admin-toolbar-rem));
+  transition:
+    opacity var(--admin-toolbar-transition),
+    rotate var(--admin-toolbar-transition);
+  opacity: 0;
+
+  [data-admin-toolbar-transitions] & {
+    opacity: 1;
+  }
+
+  [dir="rtl"] & {
+    rotate: 180deg;
+  }
+
+  .admin-toolbar__expand-button[aria-expanded="true"] & {
+    rotate: 180deg;
+
+    [dir="rtl"] & {
+      rotate: 0deg;
+    }
   }
 }
 

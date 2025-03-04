@@ -1,8 +1,6 @@
 /* cspell:ignore wght */
 
 .toolbar-message {
-  --icon: url(../../components/toolbar-button/assets/help.svg);
-
   z-index: 1;
   display: flex;
   align-items: start;
@@ -20,33 +18,12 @@
   padding-block: calc(0.75 * var(--admin-toolbar-rem));
   font-variation-settings: "wght" 700;
   gap: calc(0.5 * var(--admin-toolbar-rem));
-
-  &::before {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    content: attr(data-icon-text);
-    color: currentColor;
-    background-image: linear-gradient(currentColor, currentColor 50%, transparent 50%);
-    background-position-y: calc(100% - (100% * var(--icon, 0)));
-    background-size: 100% 200%;
-    font-size: calc(0.75 * var(--admin-toolbar-rem));
-    inline-size: var(--admin-toolbar-space-20);
-    block-size: var(--admin-toolbar-space-20);
-    mask-repeat: no-repeat;
-    mask-position: center center;
-    mask-size: 100% auto;
-    mask-image: var(--icon);
-  }
 }
 
-.toolbar-message--type--error {
-  --icon: url(../../assets/icons/radioactive.svg);
-}
-
-.toolbar-message--type--warning {
-  --icon: url(../../assets/icons/warning.svg);
+.toolbar-message__icon {
+  flex-shrink: 0;
+  inline-size: var(--admin-toolbar-space-20);
+  block-size: var(--admin-toolbar-space-20);
 }
 
 html:not([data-admin-toolbar="expanded"]) .toolbar-message__label {

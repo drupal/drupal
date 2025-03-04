@@ -22,33 +22,14 @@
   }
 }
 
-/* Class starts with `toolbar-title--icon`  */
-[class*="toolbar-title--icon"] {
+.toolbar-title:has(.toolbar-title__icon) {
   display: flex;
   align-items: center;
   gap: var(--admin-toolbar-space-8);
-
-  &::before {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1px;
-    content: "";
-    color: currentColor;
-    background-color: currentColor;
-    inline-size: var(--admin-toolbar-space-16);
-    block-size: var(--admin-toolbar-space-16);
-    mask-repeat: no-repeat;
-    mask-position: center center;
-    mask-size: 100% auto;
-    mask-image: var(--icon);
-  }
 }
 
-.toolbar-title--icon--file {
-  --icon: url(./assets/file.svg);
-}
-.toolbar-title--icon--database {
-  --icon: url(./assets/database.svg);
+.toolbar-title__icon {
+  flex-shrink: 0;
+  inline-size: var(--admin-toolbar-space-16);
+  block-size: var(--admin-toolbar-space-16);
 }

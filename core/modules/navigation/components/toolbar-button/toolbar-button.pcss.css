@@ -52,7 +52,10 @@
 
   &[class*="toolbar-button--icon"]:has(+ .ajax-progress--throbber),
   &[class*="toolbar-button--icon"]:has(+ .ajax-progress-throbber) {
-    --icon: url(./assets/throbber.svg);
+    .toolbar-button__icon {
+      fill: transparent;
+      background-image: url(../../assets/icons/throbber.svg);
+    }
 
     & + .ajax-progress--throbber,
     & + .ajax-progress-throbber {
@@ -111,43 +114,16 @@
 /* Class starts with `toolbar-button--icon`  */
 [class*="toolbar-button--icon"] {
   padding-inline: var(--admin-toolbar-space-10);
+}
 
+[class*="toolbar-button--icon"]:not(:has(.toolbar-button__icon)) {
   &::before {
-    display: flex;
     flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
     content: attr(data-icon-text);
+    text-align: center;
     color: currentColor;
-    background-image: linear-gradient(currentColor, currentColor 50%, transparent 50%);
-    background-position-y: calc(100% - (100% * var(--icon, 0)));
-    background-size: 100% 200%;
     font-size: calc(0.75 * var(--admin-toolbar-rem));
     inline-size: var(--toolbar-button-icon-size);
-    block-size: var(--toolbar-button-icon-size);
-    mask-repeat: no-repeat;
-    mask-position: center center;
-    mask-size: 100% auto;
-    -webkit-mask-image: var(--icon);
-    mask-image: var(--icon);
-  }
-
-  &:hover::before {
-    background-color: linear-gradient(var(--admin-toolbar-color-blue-600), var(--admin-toolbar-color-blue-600) 50%, transparent 50%);
-  }
-
-  @media (--forced-colors) {
-    &::before,
-    &:hover::before {
-      background: canvastext;
-    }
-
-    &a {
-      &::before,
-      &:hover::before {
-        background: linktext;
-      }
-    }
   }
 }
 
@@ -157,10 +133,6 @@
   --toolbar-button-hover-color: var(--admin-toolbar-color-white);
   --toolbar-button-hover-bg: var(--admin-toolbar-color-blue-600);
   --toolbar-button-focus-color: var(--admin-toolbar-color-white);
-  --toolbar-button-icon-size: var(--admin-toolbar-space-16);
-
-  font-variation-settings: "wght" 400;
-  padding: var(--admin-toolbar-space-8) var(--admin-toolbar-space-12);
 }
 
 .toolbar-button--weight--400 {
@@ -173,43 +145,8 @@
   flex-grow: 1;
 }
 
-[class*="toolbar-button--expand"] {
-  &::after {
-    flex-shrink: 0;
-    margin-inline-start: auto;
-    content: "";
-    transition: transform var(--admin-toolbar-transition);
-    background-color: currentColor;
-    block-size: var(--admin-toolbar-space-16);
-    inline-size: var(--admin-toolbar-space-16);
-    mask-size: var(--admin-toolbar-space-16);
-    mask-repeat: no-repeat;
-    mask-position: center center;
-    mask-image: url(./assets/chevron.svg);
-
-    :where([dir="rtl"]) & {
-      transform: rotate(180deg);
-    }
-
-    @media (--forced-colors) {
-      background: canvastext;
-    }
-  }
-}
-
 .toolbar-button--expand--down {
-  &::after {
-    transform: rotate(90deg);
-
-    @media (--forced-colors) {
-      background: canvastext;
-    }
-  }
-
   &[aria-expanded="true"] {
-    &::after {
-      transform: rotate(-90deg);
-    }
     &:focus,
     &:hover {
       border-bottom-right-radius: 0;
@@ -218,113 +155,12 @@
   }
 }
 
-.toolbar-button--icon--announcements-feed-announcement {
-  --icon: url(./assets/announcement.svg);
-  &::before {
-    transform: scaleX(-1);
-  }
-
-  [dir="rtl"] & {
-    &::before {
-      transform: scaleX(1);
-    }
-  }
-}
-
-.toolbar-button--icon--back {
-  --icon: url(./assets/arrow-left.svg);
-}
-
-.toolbar-button--icon--burger {
-  --icon: url(./assets/burger.svg);
-}
-
-.toolbar-button--icon--cross {
-  --icon: url(./assets/cross.svg);
-}
-
-.toolbar-button--icon--dots {
-  --icon: url(./assets/dots.svg);
-}
-
-.toolbar-button--icon--entity-user-collection {
-  --icon: url(./assets/people.svg);
-}
-
-.toolbar-button--icon--help {
-  --icon: url(./assets/help.svg);
-}
-
-.toolbar-button--icon--edit {
-  --icon: url(./assets/edit.svg);
-}
-
-.toolbar-button--icon--navigation-blocks {
-  --icon: url(./assets/blocks.svg);
-}
-
-.toolbar-button--icon--navigation-content {
-  --icon: url(./assets/content.svg);
-}
-
-.toolbar-button--icon--navigation-create {
-  --icon: url(./assets/create.svg);
-}
-
-.toolbar-button--icon--navigation-files {
-  --icon: url(./assets/files.svg);
-}
-
-.toolbar-button--icon--navigation-media {
-  --icon: url(./assets/media.svg);
-}
-
-.toolbar-button--icon--pencil {
-  --icon: url(./assets/pencil.svg);
-}
-
-.toolbar-button--icon--thin-pencil {
-  --icon: url(./assets/thin-pencil.svg);
-}
-
-.toolbar-button--icon--preview {
-  --icon: url(./assets/eye.svg);
-}
-
-.toolbar-button--icon--shortcuts {
-  --icon: url(./assets/shortcuts.svg);
-}
-
-.toolbar-button--icon--system-admin-config {
-  --icon: url(./assets/config.svg);
-}
-
-.toolbar-button--icon--system-admin-reports {
-  --icon: url(./assets/reports.svg);
-}
-
-.toolbar-button--icon--system-admin-structure {
-  --icon: url(./assets/structure.svg);
-}
-
-.toolbar-button--icon--system-modules-list {
-  --icon: url(./assets/extend.svg);
-}
-
-.toolbar-button--icon--system-themes-page {
-  --icon: url(./assets/appearance.svg);
-}
-
-.toolbar-button--icon--navigation-user-links-user-wrapper {
-  --icon: url(./assets/user.svg);
-}
-
-.toolbar-button--icon--workspaces {
-  --icon: url(./assets/workspaces.svg);
+[dir="ltr"] .toolbar-button--icon--announcements-feed-announcement .toolbar-button__icon {
+  scale: -1 1;
 }
 
 .toolbar-button--collapsible {
-  &::after {
+  & .toolbar-button__chevron {
     display: none;
   }
 
@@ -340,7 +176,7 @@
   }
 
   [data-admin-toolbar="expanded"] & {
-    &::after {
+    & .toolbar-button__chevron {
       display: block;
     }
 
@@ -360,4 +196,32 @@
       display: none;
     }
   }
+}
+
+.toolbar-button__chevron {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  transition: rotate var(--admin-toolbar-transition);
+  fill: currentColor;
+  block-size: var(--admin-toolbar-space-16);
+  inline-size: var(--admin-toolbar-space-16);
+
+  :where([dir="rtl"]) & {
+    rotate: 180deg;
+  }
+
+  .toolbar-button--expand--down & {
+    rotate: 90deg;
+  }
+
+  .toolbar-button--expand--down[aria-expanded="true"] & {
+    rotate: -90deg;
+  }
+}
+
+.toolbar-button__icon {
+  fill: currentColor;
+  flex-shrink: 0;
+  inline-size: var(--toolbar-button-icon-size);
+  block-size: var(--toolbar-button-icon-size);
 }

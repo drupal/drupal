@@ -18,12 +18,14 @@
 
 {% if url is not empty %}
   <a {{ attributes.addClass(classes).setAttribute('href', url).setAttribute('data-drupal-tooltip', content).setAttribute('data-drupal-tooltip-class', 'admin-toolbar__tooltip') }}>
+    {{ icon('navigation', type, { class: 'toolbar-message__icon', size: 20 }) }}
     <div class="toolbar-message__label">
       {{ content }}
     </div>
   </a>
 {% else %}
   <div {{ attributes.addClass(classes) }}>
+    {{ icon('navigation', type, { class: 'toolbar-message__icon', size: 20 }) }}
     <div class="toolbar-message__label">
       {{ content }}
     </div>

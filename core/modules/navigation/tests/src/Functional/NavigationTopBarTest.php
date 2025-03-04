@@ -101,7 +101,7 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
     $this->verifyDynamicPageCache($this->node->toUrl(), 'MISS');
     $this->verifyDynamicPageCache($this->node->toUrl(), 'HIT');
     $this->assertSession()->elementExists('xpath', "(//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button)[1]");
-    $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/a[contains(@class, 'toolbar-button--icon--thin-pencil')]", "Edit");
+    $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/a[contains(@class, 'toolbar-button--icon--pencil')]", "Edit");
     $this->assertSession()->elementAttributeContains('xpath', "(//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button)[1]", 'class', 'toolbar-button--icon--dots');
 
     // Find all the dropdown links and check if the top bar is there as well.

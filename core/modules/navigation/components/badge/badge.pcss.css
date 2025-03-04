@@ -5,7 +5,6 @@
  */
 
 .toolbar-badge {
-  margin-top: 3px;
   padding: var(--admin-toolbar-space-4) var(--admin-toolbar-space-8);
   border-radius: 1rem;
   background-color: var(--admin-toolbar-color-gray-100);

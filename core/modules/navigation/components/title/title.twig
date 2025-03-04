@@ -1,7 +1,6 @@
 {%
   set classes = [
     'toolbar-title',
-    icon ? 'toolbar-title--icon--' ~ icon : '',
   ]
 %}
 {% if modifiers is iterable %}
@@ -13,6 +12,9 @@
 {% endif %}
 
 <{{html_tag|default('h2')}}{{attributes.addClass(classes)}}>
+  {% if icon %}
+    {{ icon('navigation', icon, { class: 'toolbar-title__icon', size: 16 }) }}
+  {% endif %}
   <span class="toolbar-title__label">
     {% block content %}
       {{ content }}
