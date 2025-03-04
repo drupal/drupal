@@ -9,7 +9,7 @@ use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Processes the inbound path using path alias lookups.
+ * Processes the inbound and outbound path using path alias lookups.
  */
 class AliasPathProcessor implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 
