@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\navigation\Plugin\TopBarItem;
 
+use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -37,17 +39,20 @@ class PageContext extends TopBarItemBase implements ContainerFactoryPluginInterf
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager service.
    * @param \Drupal\navigation\EntityRouteHelper $entityRouteHelper
    *   The entity route helper service.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
+   *   The entity repository.
+   * @param \Drupal\content_moderation\ModerationInformationInterface|null $moderationInformation
+   *   The moderation information service.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    private EntityTypeManagerInterface $entityTypeManager,
-    private EntityRouteHelper $entityRouteHelper,
+    protected EntityRouteHelper $entityRouteHelper,
+    protected EntityRepositoryInterface $entityRepository,
+    protected ?ModerationInformationInterface $moderationInformation = NULL,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -60,8 +65,9 @@ class PageContext extends TopBarItemBase implements ContainerFactoryPluginInterf
     $configuration,
     $plugin_id,
     $plugin_definition,
-    $container->get(EntityTypeManagerInterface::class),
-    $container->get(EntityRouteHelper::class)
+    $container->get(EntityRouteHelper::class),
+    $container->get(EntityRepositoryInterface::class),
+    $container->get(ModerationInformationInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE)
     );
   }
 
@@ -122,6 +128,29 @@ class PageContext extends TopBarItemBase implements ContainerFactoryPluginInterf
    *   The status if available. NULL otherwise.
    */
   protected function getBadgeLabel(EntityInterface $entity): ?string {
+    if ($entity instanceof ContentEntityInterface && $this->moderationInformation && $this->moderationInformation->isModeratedEntity($entity)) {
+      $state_label = $this->moderationInformation
+        ->getWorkflowForEntity($entity)
+        ->getTypePlugin()
+        ->getState($entity->get('moderation_state')->value)
+        ->label();
+      if ($this->moderationInformation->hasPendingRevision($entity) && $entity->isDefaultRevision()) {
+        $active_revision = $this->entityRepository->getActive($entity->getEntityTypeId(), $entity->id());
+
+        $active_state_label = $this->moderationInformation
+          ->getWorkflowForEntity($entity)
+          ->getTypePlugin()
+          ->getState($active_revision->get('moderation_state')->value)
+          ->label();
+
+        $state_label = $this->t('@state_label (@active_state_label available)', [
+          '@state_label' => $state_label,
+          '@active_state_label' => $active_state_label,
+        ]);
+      }
+      return (string) $state_label;
+    }
+
     if (!$entity instanceof EntityPublishedInterface) {
       return NULL;
     }
