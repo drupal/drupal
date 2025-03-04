@@ -574,6 +574,15 @@ form_test.incorrect_config_target:
   requirements:
     _access: 'TRUE'
 
+form_test.textarea:
+  path: '/form-test/textarea'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestTextareaForm'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _access: 'TRUE'
+
 form_test.recipe_input:
   path: '/form-test/recipe-input'
   defaults:
