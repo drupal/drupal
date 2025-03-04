@@ -291,14 +291,16 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
    */
   protected function markAsOutdated() {
     // Clocks on a single server can drift. Multiple servers may have slightly
-    // different opinions about the current time. Given that, do not assume
-    // 'now' on this server is always later than our stored timestamp.
-    // Also add 1 millisecond, to ensure that caches written earlier in the same
-    // millisecond are invalidated. It is possible that caches will be later in
-    // the same millisecond and are then incorrectly invalidated, but that only
-    // costs one additional roundtrip to the persistent cache.
-    $now = round(microtime(TRUE) + .001, 3);
-    if ($now > $this->getLastWriteTimestamp()) {
+    // differing opinions about the current time. Given that, do not assume
+    // 'now' on this server is always later than our stored timestamp. Add 50ms
+    // to the current time each time we write it to the persistent cache, and
+    // make sure it is always at least 1ms ahead of the current time. This
+    // somewhat protects against clock drift, while also reducing the number of
+    // persistent cache writes to one every 50ms if this method is called
+    // multiple times during a request.
+    $compare = round(microtime(TRUE) + .001, 3);
+    if ($compare > $this->getLastWriteTimestamp()) {
+      $now = round(microtime(TRUE) + .050, 3);
       $this->lastWriteTimestamp = $now;
       $this->consistentBackend->set(self::LAST_WRITE_TIMESTAMP_PREFIX . $this->bin, $this->lastWriteTimestamp);
     }
