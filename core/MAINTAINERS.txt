@@ -48,6 +48,7 @@ Core JavaScript packages
 
 Committer team facilitators
 - Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
+- Griffyn Heels 'griffynh' https://www.drupal.org/u/griffynh (provisional)
 
 Core initiative facilitators
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
