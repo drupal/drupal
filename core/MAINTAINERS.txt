@@ -52,6 +52,10 @@ Committer team facilitators
 Core initiative facilitators
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
 
+General core committers
+- Drew Webber 'mcdruid' https://www.drupal.org/u/mcdruid
+- Juraj Nemec 'poker10' https://www.drupal.org/u/poker10
+
 Subsystem maintainers
 ---------------------
 
