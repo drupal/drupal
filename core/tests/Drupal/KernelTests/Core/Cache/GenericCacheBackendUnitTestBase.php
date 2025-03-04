@@ -42,6 +42,16 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   protected $defaultValue;
 
   /**
+   * Most cache backends ensure changes to objects do not affect the cache.
+   *
+   * Some caches explicitly allow this, for example,
+   * \Drupal\Core\Cache\MemoryCache\MemoryCache.
+   *
+   * @var bool
+   */
+  protected bool $testObjectProperties = TRUE;
+
+  /**
    * Gets the testing bin.
    *
    * Override this method if you want to work on a different bin than the
@@ -208,13 +218,19 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $data->this_should_not_be_in_the_cache = TRUE;
     $cached = $backend->get('test7');
     $this->assertIsObject($cached);
-    $this->assertEquals($expected_data, $cached->data);
-    $this->assertFalse(isset($cached->data->this_should_not_be_in_the_cache));
-    // Add a property to the cache data. It should not appear when we fetch
-    // the data from cache again.
-    $cached->data->this_should_not_be_in_the_cache = TRUE;
-    $fresh_cached = $backend->get('test7');
-    $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
+    if ($this->testObjectProperties) {
+      $this->assertEquals($expected_data, $cached->data);
+      $this->assertFalse(isset($cached->data->this_should_not_be_in_the_cache));
+
+      // Add a property to the cache data. It should not appear when we fetch
+      // the data from cache again.
+      $cached->data->this_should_not_be_in_the_cache = TRUE;
+      $fresh_cached = $backend->get('test7');
+      $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
+    }
+    else {
+      $this->assertSame($data, $cached->data);
+    }
 
     // Check with a long key.
     $cid = str_repeat('a', 300);
