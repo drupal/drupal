@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -16,6 +15,7 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
+use Drupal\Tests\system\Traits\CacheTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -23,6 +23,7 @@ use Drupal\user\RoleInterface;
  * Provides helper methods for Entity cache tags tests.
  */
 abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
+  use CacheTestTrait;
 
   /**
    * {@inheritdoc}
@@ -611,38 +612,21 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   }
 
   /**
-   * Verify that a given render cache entry exists, with the correct cache tags.
-   *
-   * @param string[] $keys
-   *   The render cache item keys.
-   * @param array $tags
-   *   An array of expected cache tags.
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface $cacheability
-   *   The initial cacheability the item was rendered with.
-   */
-  protected function verifyRenderCache(array $keys, array $tags, CacheableDependencyInterface $cacheability) {
-    $cache_bin = $this->getRenderCacheBackend();
-
-    // Also verify the existence of an entity render cache entry.
-    $cache_entry = $cache_bin->get($keys, $cacheability);
-    $this->assertInstanceOf(\stdClass::class, $cache_entry);
-    sort($cache_entry->tags);
-    sort($tags);
-    $this->assertSame($cache_entry->tags, $tags);
-  }
-
-  /**
    * Retrieves the render cache backend as a variation cache.
    *
    * This is how Drupal\Core\Render\RenderCache uses the render cache backend.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
+   * Use ::getRenderVariationCache() instead, which is inherited
+   * from CacheTestTrait.
+   *
+   * @see https://www.drupal.org/node/3508905
    *
    * @return \Drupal\Core\Cache\VariationCacheInterface
    *   The render cache backend as a variation cache.
    */
   protected function getRenderCacheBackend() {
-    /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $variation_cache_factory */
-    $variation_cache_factory = \Drupal::service('variation_cache_factory');
-    return $variation_cache_factory->get('render');
+    return $this->getRenderVariationCache();
   }
 
 }
