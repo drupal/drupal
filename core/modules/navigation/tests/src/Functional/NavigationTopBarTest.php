@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Functional;
 
+use Behat\Mink\Element\NodeElement;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
@@ -114,6 +116,8 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
       // Ensure that link to current page is not included in the dropdown.
       $url = $this->getSession()->getCurrentUrl();
       $this->assertSession()->linkByHrefNotExistsExact(parse_url($url, PHP_URL_PATH));
+      // Ensure that the actions are displayed in the correct order.
+      $this->assertActionsWeight($toolbar_links);
     }
 
     // Regular tabs are visible for user that cannot access to navigation.
@@ -124,6 +128,44 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
     $this->drupalGet($this->node->toUrl());
     $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button");
     $this->assertSession()->elementExists('xpath', '//div[@id="block-tabs"]');
+  }
+
+  /**
+   * Asserts that top bar actions respect local tasks weights.
+   *
+   * @param \Behat\Mink\Element\NodeElement $toolbar_links
+   *   Action links to assert.
+   */
+  protected function assertActionsWeight(NodeElement $toolbar_links): void {
+    // Displayed action links in the top bar.
+    $displayed_links = array_map(
+      fn($link) => $link->getText(),
+      $toolbar_links->findAll('css', 'li')
+    );
+
+    // Extract the route name from the URL.
+    $current_url = $this->getSession()->getCurrentUrl();
+    // Convert alias to system path.
+    $path = parse_url($current_url, PHP_URL_PATH);
+
+    if ($GLOBALS['base_path'] !== '/') {
+      $path = str_replace($GLOBALS['base_path'], '/', $path);
+    }
+
+    // Get local tasks for the current route.
+    $entity_local_tasks = \Drupal::service('plugin.manager.menu.local_task')->getLocalTasks(Url::fromUserInput($path)->getRouteName());
+
+    // Sort order of tabs based on their weights.
+    uasort($entity_local_tasks['tabs'], [SortArray::class, 'sortByWeightProperty']);
+
+    // Extract the expected order based on sorted weights.
+    $expected_order = array_values(array_map(fn($task) => $task['#link']['title'], $entity_local_tasks['tabs']));
+
+    // Filter out elements not in displayed_links.
+    $expected_order = array_values(array_filter($expected_order, fn($title) => in_array($title, $displayed_links, TRUE)));
+
+    // Ensure that the displayed links match the expected order.
+    $this->assertSame($expected_order, $displayed_links, 'Local tasks are displayed in the correct order based on their weights.');
   }
 
 }
