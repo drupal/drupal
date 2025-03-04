@@ -248,6 +248,21 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
+   * Tests custom CSS classes are added to table element.
+   */
+  public function testCssTableClass(): void {
+    // Add 2 custom CSS classes separated by a space.
+    $view = View::load('test_table');
+    $display = &$view->getDisplay('default');
+    $display['display_options']['style']['options']['class'] = 'test-css-table-class1 test-css-table-class2';
+    $view->save();
+
+    // Ensure all CSS classes are added to table element.
+    $this->drupalGet('test-table');
+    $this->assertSession()->elementExists('xpath', '//table[contains(concat(" ", @class, " "), " test-css-table-class1 test-css-table-class2 ")]');
+  }
+
+  /**
    * Tests the cacheability of the table display.
    */
   public function testTableCacheability(): void {

@@ -691,6 +691,12 @@ function template_preprocess_views_view_table(&$variables): void {
     // This is needed to target tables constructed by this function.
     $variables['responsive'] = TRUE;
   }
+
+  // Fetch classes from handler options.
+  if ($handler->options['class']) {
+    $class = explode(' ', $handler->options['class']);
+    $variables['attributes']['class'] = array_map('\Drupal\Component\Utility\Html::cleanCssIdentifier', $class);
+  }
 }
 
 /**

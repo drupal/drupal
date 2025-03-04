@@ -302,4 +302,51 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return FALSE;
   }
 
+  /**
+   * Checks for table style views needing a default CSS table class value.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view has any table styles that need to have
+   *   a default table CSS class added.
+   */
+  public function needsTableCssClassUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processTableCssClassUpdate($view);
+    });
+  }
+
+  /**
+   * Processes views and adds default CSS table class value if necessary.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view was updated with a default table CSS class value.
+   */
+  public function processTableCssClassUpdate(ViewEntityInterface $view): bool {
+    $changed = FALSE;
+    $displays = $view->get('display');
+
+    foreach ($displays as &$display) {
+      if (
+        isset($display['display_options']['style']) &&
+        $display['display_options']['style']['type'] === 'table' &&
+        !isset($display['display_options']['style']['options']['class'])
+      ) {
+        $display['display_options']['style']['options']['class'] = '';
+        $changed = TRUE;
+      }
+    }
+
+    if ($changed) {
+      $view->set('display', $displays);
+    }
+
+    return $changed;
+  }
+
 }
