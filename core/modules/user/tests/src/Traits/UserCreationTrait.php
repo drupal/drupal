@@ -251,9 +251,7 @@ trait UserCreationTrait {
     }
 
     // Check the all the permissions strings are valid.
-    if (!$this->checkPermissions($permissions)) {
-      return FALSE;
-    }
+    $this->checkPermissions($permissions);
 
     // Create new role.
     $role = Role::create([
@@ -289,18 +287,16 @@ trait UserCreationTrait {
    *   The permission names to check.
    *
    * @return bool
-   *   TRUE if the permissions are valid, FALSE otherwise.
+   *   TRUE if the permissions are valid.
    */
   protected function checkPermissions(array $permissions): bool {
     $available = array_keys(\Drupal::service('user.permissions')->getPermissions());
-    $valid = TRUE;
     foreach ($permissions as $permission) {
       if (!in_array($permission, $available)) {
         $this->fail("Invalid permission $permission.");
-        $valid = FALSE;
       }
     }
-    return $valid;
+    return TRUE;
   }
 
   /**
