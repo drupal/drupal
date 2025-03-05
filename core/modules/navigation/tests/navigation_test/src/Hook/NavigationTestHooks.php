@@ -84,4 +84,24 @@ class NavigationTestHooks {
     }
   }
 
+  /**
+   * Implements hook_navigation_menu_link_tree_alter().
+   */
+  #[Hook('navigation_menu_link_tree_alter')]
+  public function navigationMenuLinkTreeAlter(array &$tree): void {
+    foreach ($tree as $key => $item) {
+      // Skip elements where menu is not the 'admin' one.
+      $menu_name = $item->link->getMenuName();
+      // Removes all items from menu1.
+      if ($menu_name == 'menu1') {
+        unset($tree[$key]);
+      }
+
+      // Updates title for items in menu2
+      if ($menu_name == 'menu2') {
+        $item->link->updateLink(['title' => 'New Link Title'], FALSE);
+      }
+    }
+  }
+
 }

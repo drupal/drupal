@@ -28,6 +28,7 @@ services:
         '@router.route_provider',
         '@menu.active_trail',
         '@callable_resolver',
+        '@module_handler',
       ]
 
   navigation.entity_route_helper:

@@ -37,7 +37,6 @@ class NavigationContentLinksTest extends KernelTestBase {
     'media_test_source',
     'image',
     'text',
-    'help',
   ];
 
   /**
@@ -118,12 +117,6 @@ class NavigationContentLinksTest extends KernelTestBase {
     $this->assertArrayHasKey('navigation.files', $links);
     $this->assertEquals('view.files.page_1', $links['navigation.files']['route_name']);
     $this->assertEquals('Files', $links['navigation.files']['title']);
-
-    // Assert that the "Help" link is removed from the menu.
-    $this->assertArrayNotHasKey('help.main', $links);
-
-    // Assert that the "Content" link is removed from the menu.
-    $this->assertArrayNotHasKey('system.admin_content', $links);
 
     // Assert that "Blocks" link is not added.
     $this->assertArrayNotHasKey('navigation.blocks', $links);
