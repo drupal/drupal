@@ -3,7 +3,6 @@
 namespace Drupal\navigation\Hook;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -268,21 +267,6 @@ class NavigationHooks {
         '#weight' => -1000,
       ],
     ];
-  }
-
-  /**
-   * Implements hook_js_settings_alter().
-   */
-  #[Hook('js_settings_alter')]
-  public function jsSettingsAlter(array &$settings, AttachedAssetsInterface $assets): void {
-    // If Navigation's user-block library is not installed, return.
-    if (!in_array('navigation/internal.user-block', $assets->getLibraries())) {
-      return;
-    }
-    // Provide the user name in drupalSettings to allow JavaScript code to
-    // customize the experience for the end user, rather than the server side,
-    // which would break the render cache.
-    $settings['navigation']['user'] = $this->currentUser->getAccountName();
   }
 
   /**
