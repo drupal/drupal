@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\config_translation\Exception\ConfigMapperLanguageException;
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
@@ -131,6 +132,8 @@ class ConfigTranslationController extends ControllerBase {
    *   Page render array.
    */
   public function itemPage(Request $request, RouteMatchInterface $route_match, $plugin_id) {
+    $cacheable_metadata = new CacheableMetadata();
+
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
     $mapper = $this->configMapperManager->createInstance($plugin_id);
     $mapper->populateFromRouteMatch($route_match);
@@ -204,11 +207,12 @@ class ConfigTranslationController extends ControllerBase {
 
         // Check access for the path/route for editing, so we can decide to
         // include a link to edit or not.
-        $edit_access = $this->accessManager->checkNamedRoute($mapper->getBaseRouteName(), $route_match->getRawParameters()->all(), $this->account);
+        $edit_access = $this->accessManager->checkNamedRoute($mapper->getBaseRouteName(), $route_match->getRawParameters()->all(), $this->account, TRUE);
+        $cacheable_metadata->addCacheableDependency($edit_access);
 
         // Build list of operations.
         $operations = [];
-        if ($edit_access) {
+        if ($edit_access->isAllowed()) {
           $operations['edit'] = [
             'title' => $this->t('Edit'),
             'url' => Url::fromRoute($mapper->getBaseRouteName(), $mapper->getBaseRouteParameters(), ['query' => ['destination' => $mapper->getOverviewPath()]]),
@@ -217,6 +221,14 @@ class ConfigTranslationController extends ControllerBase {
       }
       else {
         $language_name = $language->getName();
+
+        // The translation check below might change if the configs change, so we
+        // need to add their cache tags.
+        $cache_tags = [];
+        foreach ($mapper->getConfigNames() as $configName) {
+          $cache_tags[] = "config:$configName";
+        }
+        $cacheable_metadata->addCacheTags($cache_tags);
 
         $operations = [];
         // If no translation exists for this language, link to add one.
@@ -274,6 +286,7 @@ class ConfigTranslationController extends ControllerBase {
         '#attached' => ['library' => ['core/drupal.dialog.ajax']],
       ];
     }
+    $cacheable_metadata->applyTo($page);
     return $page;
   }
 

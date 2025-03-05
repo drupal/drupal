@@ -392,9 +392,8 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
       'entity_type' => 'node',
       'type' => 'text',
     ]);
-
-    $field_storage->setSetting('translatable_storage_setting', 'translatable_storage_setting');
     $field_storage->save();
+
     $field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
