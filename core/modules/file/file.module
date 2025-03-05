@@ -35,13 +35,13 @@ use Drupal\file\Upload\FormUploadedFile;
  * @return array
  *   An associative array of headers, as expected by
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use Drupal\file\Entity\FileInterface::getDownloadHeaders() instead.
+ * @see https://www.drupal.org/node/3494172
  */
 function file_get_content_headers(FileInterface $file) {
-  return [
-    'Content-Type' => $file->getMimeType(),
-    'Content-Length' => $file->getSize(),
-    'Cache-Control' => 'private',
-  ];
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.  Use Drupal\file\Entity\FileInterface::getDownloadHeaders() instead. See https://www.drupal.org/node/3494172', E_USER_DEPRECATED);
+  return $file->getDownloadHeaders();
 }
 
 /**

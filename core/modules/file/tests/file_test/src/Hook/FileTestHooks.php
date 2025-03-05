@@ -38,7 +38,7 @@ class FileTestHooks {
     if (\Drupal::state()->get('file_test.allow_all', FALSE)) {
       $files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $uri]);
       $file = reset($files);
-      return file_get_content_headers($file);
+      return $file->getDownloadHeaders();
     }
     FileTestHelper::logCall('download', [$uri]);
     return $this->getReturn('download');

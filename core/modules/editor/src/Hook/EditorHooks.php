@@ -319,7 +319,7 @@ class EditorHooks {
       }
     }
     // Access is granted.
-    $headers = file_get_content_headers($file);
+    $headers = $file->getDownloadHeaders();
     return $headers;
   }
 

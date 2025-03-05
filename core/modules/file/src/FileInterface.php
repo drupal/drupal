@@ -142,4 +142,13 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface, 
    */
   public function getCreatedTime();
 
+  /**
+   * Examines a file entity and returns content headers for download.
+   *
+   * @return array
+   *   An associative array of headers, as expected by
+   *   \Symfony\Component\HttpFoundation\StreamedResponse.
+   */
+  public function getDownloadHeaders(): array;
+
 }

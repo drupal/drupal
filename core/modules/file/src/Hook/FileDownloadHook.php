@@ -58,7 +58,7 @@ class FileDownloadHook {
       return -1;
     }
     // Access is granted.
-    return file_get_content_headers($file);
+    return $file->getDownloadHeaders();
   }
 
 }
