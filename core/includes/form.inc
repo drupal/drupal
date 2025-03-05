@@ -676,7 +676,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *   foreach ($results as $result) {
  *     $items[] = t('Loaded node %title.', ['%title' => $result]);
  *   }
- *   $session = \Drupal::getRequest()->getSession();
+ *   $session = \Drupal::request()->getSession();
  *   $session->set('my_batch_results', $items);
  * }
  * @endcode
