@@ -111,6 +111,8 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('The listed configuration will be deleted.');
     $this->assertSession()->elementNotExists('xpath', '//ul[@data-drupal-selector="edit-view"]');
     $this->assertSession()->pageTextNotContains('test_view_field_delete');
+    // Test Breadcrumbs.
+    $this->assertSession()->linkExists($field_label, 0, 'Field label is correct in the breadcrumb of the field delete page.');
 
     // Delete the first field.
     $this->fieldUIDeleteField($bundle_path1, "node.$type_name1.$field_name", $field_label, $type_name1, 'content type');

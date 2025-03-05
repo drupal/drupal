@@ -162,6 +162,8 @@ class ManageFieldsTest extends BrowserTestBase {
       'field_name' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
+    // Test Breadcrumbs.
+    $this->getSession()->getPage()->findLink('Test field');
     $this->assertSession()->statusMessageNotContains('Saved');
 
     // Change the storage form values.
