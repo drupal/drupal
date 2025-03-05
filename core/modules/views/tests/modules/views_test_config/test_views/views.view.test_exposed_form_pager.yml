@@ -60,7 +60,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: bundle
+          plugin_id: in_operator
           entity_type: node
           entity_field: type
         created:

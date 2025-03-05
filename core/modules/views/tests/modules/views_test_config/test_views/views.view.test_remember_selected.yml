@@ -40,7 +40,7 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: type
-          plugin_id: bundle
+          plugin_id: in_operator
           operator: in
           value: {  }
           group: 1

@@ -2,9 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - entity_test
     - rest
-    - serialization
     - user
 id: test_serializer_display_entity
 label: 'Test serialize display entity rows'
@@ -15,60 +13,42 @@ base_table: entity_test
 base_field: id
 display:
   default:
+    display_plugin: default
     id: default
     display_title: Default
-    display_plugin: default
     position: null
     display_options:
-      title: 'Test serialize'
-      exposed_form:
-        type: basic
       access:
         type: perm
         options:
           perm: 'access content'
       cache:
         type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      style:
+        type: serializer
+      row:
+        type: data_entity
       sorts:
         id:
           id: standard
           table: entity_test
           field: id
+          order: DESC
+          plugin_id: date
           entity_type: entity_test
           entity_field: id
-          plugin_id: date
-          order: DESC
+      title: 'Test serialize'
       arguments: {  }
-      style:
-        type: serializer
-      row:
-        type: data_entity
-      query:
-        type: views_query
-      display_extenders: {  }
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - entity_test_view_grants
-        - 'languages:language_interface'
-        - request_format
-        - url.query_args
-        - user.permissions
-      tags: {  }
   rest_export_1:
+    display_plugin: rest_export
     id: rest_export_1
     display_title: serializer
-    display_plugin: rest_export
     position: null
     display_options:
       defaults:
         access: false
-      display_extenders: {  }
       path: test/serialize/entity
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - entity_test_view_grants
-        - 'languages:language_interface'
-        - request_format
-      tags: {  }

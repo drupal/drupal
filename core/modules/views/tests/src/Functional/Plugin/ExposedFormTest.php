@@ -116,7 +116,7 @@ class ExposedFormTest extends ViewTestBase {
         'field' => 'type',
         'id' => 'type',
         'table' => 'node_field_data',
-        'plugin_id' => 'bundle',
+        'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',
         'expose' => [
