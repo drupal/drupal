@@ -30,9 +30,9 @@ trait BlockCreationTrait {
    *   The following defaults are provided:
    *   - label: Random string.
    *   - id: Random string.
-   *   - region: 'sidebar_first'.
+   *   - region: 'content'.
    *   - theme: The default theme.
-   *   - visibility: Empty array.
+   *   - visibility: Empty array (block will be visible on all pages).
    *
    * @return \Drupal\block\Entity\Block
    *   The block entity.
