@@ -4,6 +4,8 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\views\Attribute\ViewsFilter;
 
+// cspell:ignore groupby
+
 /**
  * Simple filter to handle greater than/less than filters.
  *

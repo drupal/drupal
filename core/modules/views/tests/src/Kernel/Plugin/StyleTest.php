@@ -132,7 +132,7 @@ class StyleTest extends ViewsKernelTestBase {
     ];
     $view->displayHandlers->get('default')->overrideOption('fields', $fields);
 
-    // Now run the query and groupby the result.
+    // Now run the query and group by the result.
     $this->executeView($view);
 
     $expected = [];

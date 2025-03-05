@@ -63,8 +63,8 @@ class FieldUITest extends UITestBase {
     $this->assertSession()->elementNotExists('xpath', '//details[@id="edit-options-more"]');
 
     // Ensure that dialog titles are not escaped.
-    $edit_groupby_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
-    $this->assertSession()->linkByHrefNotExists($edit_groupby_url, 0, 'No aggregation link found.');
+    $edit_group_by_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
+    $this->assertSession()->linkByHrefNotExists($edit_group_by_url, 0, 'No aggregation link found.');
 
     // Enable aggregation on the view.
     $edit = [
@@ -73,7 +73,7 @@ class FieldUITest extends UITestBase {
     $this->drupalGet('/admin/structure/views/nojs/display/test_view/default/group_by');
     $this->submitForm($edit, 'Apply');
 
-    $this->assertSession()->linkByHrefExists($edit_groupby_url, 0, 'Aggregation link found.');
+    $this->assertSession()->linkByHrefExists($edit_group_by_url, 0, 'Aggregation link found.');
 
     $edit_handler_url = '/admin/structure/views/ajax/handler-group/test_view/default/field/name';
     $this->drupalGet($edit_handler_url);

@@ -4,6 +4,8 @@ namespace Drupal\user;
 
 use Drupal\views\EntityViewsData;
 
+// cspell:ignore fulldate
+
 /**
  * Provides the views data for the user entity type.
  */

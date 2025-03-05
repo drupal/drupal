@@ -1,5 +1,5 @@
 # Schema for the views filter plugins.
-
+# cspell:ignore groupby
 views.filter.*:
   type: views_filter
   label: 'Default filter'

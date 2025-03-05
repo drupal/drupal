@@ -5,7 +5,7 @@ namespace Drupal\comment;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\views\EntityViewsData;
 
-// cspell:ignore fulldata
+// cspell:ignore fulldate
 
 /**
  * Provides views data for the comment entity type.
@@ -39,7 +39,7 @@ class CommentViewsData extends EntityViewsData {
     $data['comment_field_data']['created']['title'] = $this->t('Post date');
     $data['comment_field_data']['created']['help'] = $this->t('Date and time of when the comment was created.');
 
-    $data['comment_field_data']['created_fulldata'] = [
+    $data['comment_field_data']['created_fulldate'] = [
       'title' => $this->t('Created date'),
       'help' => $this->t('Date in the form of CCYYMMDD.'),
       'argument' => [
@@ -96,7 +96,7 @@ class CommentViewsData extends EntityViewsData {
     $data['comment_field_data']['changed']['title'] = $this->t('Updated date');
     $data['comment_field_data']['changed']['help'] = $this->t('Date and time of when the comment was last updated.');
 
-    $data['comment_field_data']['changed_fulldata'] = [
+    $data['comment_field_data']['changed_fulldate'] = [
       'title' => $this->t('Changed date'),
       'help' => $this->t('Date in the form of CCYYMMDD.'),
       'argument' => [

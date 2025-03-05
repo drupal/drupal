@@ -207,7 +207,7 @@ class ViewsOperations {
       }
     }
 
-    // @todo Handle $query->orderby, $query->groupby, $query->having and
+    // @todo Handle $query->orderby, $query->groupBy, $query->having and
     //   $query->count_field in https://www.drupal.org/node/2968165.
   }
 

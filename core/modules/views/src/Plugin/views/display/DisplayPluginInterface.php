@@ -127,7 +127,7 @@ interface DisplayPluginInterface {
   public function isMoreEnabled();
 
   /**
-   * Does the display have groupby enabled?
+   * Does the display have group by enabled?
    */
   public function useGroupBy();
 

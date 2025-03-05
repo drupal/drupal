@@ -1,6 +1,7 @@
 bartik
 bubbleable
 buytaert
+daterange
 dbtng
 dependee
 dependee's
@@ -17,6 +18,8 @@ druplicon
 drush
 fapi
 fieldable
+groupwise
+itok
 jswebassert
 keyvalue
 langcode
@@ -26,10 +29,14 @@ mulrev
 mulrevpub
 olivero
 olivero's
+prerender
 renderable
 revlog
 revpub
 simpletest
+sitename
 tempstore
 umami
+unpromote
+unsticky
 validatable

@@ -8,6 +8,8 @@ use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
+// cspell:ignore groupby
+
 /**
  * Handler for GROUP BY on simple numeric fields.
  */

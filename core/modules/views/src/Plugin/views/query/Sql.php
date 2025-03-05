@@ -20,6 +20,8 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell: ignore groupby
+
 /**
  * Views query plugin for an SQL query.
  *

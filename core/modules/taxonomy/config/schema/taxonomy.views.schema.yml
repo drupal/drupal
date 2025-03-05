@@ -1,4 +1,5 @@
 # Schema for the views plugins of the Taxonomy module.
+# cspell:ignore anyall
 
 views.argument.taxonomy_index_tid:
   type: views.argument.many_to_one

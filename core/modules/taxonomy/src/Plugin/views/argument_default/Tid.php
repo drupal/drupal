@@ -14,6 +14,8 @@ use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
 
+// cspell:ignore anyall
+
 /**
  * Taxonomy tid default argument.
  */

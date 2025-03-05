@@ -26,8 +26,8 @@ class FieldBlockTest extends WebDriverTestBase {
     'datetime',
     'layout_builder',
     'user',
-    // See \Drupal\layout_builder_fieldblock_test\Plugin\Block\FieldBlock.
-    'layout_builder_fieldblock_test',
+    // See \Drupal\layout_builder_field_block_test\Plugin\Block\FieldBlock.
+    'layout_builder_field_block_test',
     'layout_builder_expose_all_field_blocks',
   ];
 

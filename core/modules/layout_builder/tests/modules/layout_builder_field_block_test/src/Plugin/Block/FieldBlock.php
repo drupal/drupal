@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\layout_builder_fieldblock_test\Plugin\Block;
+namespace Drupal\layout_builder_field_block_test\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\layout_builder\Plugin\Block\FieldBlock as LayoutBuilderFieldBlock;

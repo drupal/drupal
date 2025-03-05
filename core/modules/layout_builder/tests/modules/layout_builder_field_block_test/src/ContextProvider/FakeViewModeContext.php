@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\layout_builder_fieldblock_test\ContextProvider;
+namespace Drupal\layout_builder_field_block_test\ContextProvider;
 
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;

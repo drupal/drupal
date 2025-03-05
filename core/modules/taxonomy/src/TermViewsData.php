@@ -4,6 +4,8 @@ namespace Drupal\taxonomy;
 
 use Drupal\views\EntityViewsData;
 
+// cspell:ignore fulldate
+
 /**
  * Provides the views data for the taxonomy entity type.
  */

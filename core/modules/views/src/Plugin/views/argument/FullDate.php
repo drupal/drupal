@@ -4,6 +4,8 @@ namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\views\Attribute\ViewsArgument;
 
+// cspell:ignore fulldate
+
 /**
  * Argument handler for a full date (CCYYMMDD)
  */

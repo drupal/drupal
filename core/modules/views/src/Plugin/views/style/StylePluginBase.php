@@ -371,7 +371,7 @@ abstract class StylePluginBase extends PluginBase {
       $form['uses_fields'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Force using fields'),
-        '#description' => $this->t('If neither the row nor the style plugin supports fields, this field allows to enable them, so you can for example use groupby.'),
+        '#description' => $this->t('If neither the row nor the style plugin supports fields, this field allows to enable them, so you can for example use group by.'),
         '#default_value' => $this->options['uses_fields'],
       ];
     }

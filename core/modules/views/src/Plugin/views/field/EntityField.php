@@ -254,7 +254,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    * By default, all needed data is taken from entities loaded by the query
    * plugin. Columns are added only if they are used in groupings.
    */
-  public function query($use_groupby = FALSE) {
+  public function query($use_group_by = FALSE) {
     $fields = $this->additional_fields;
     // No need to add the entity type.
     $entity_type_key = array_search('entity_type', $fields);
@@ -262,7 +262,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       unset($fields[$entity_type_key]);
     }
 
-    if ($use_groupby) {
+    if ($use_group_by) {
       // Add the fields that we're actually grouping on.
       $options = [];
       if ($this->options['group_column'] != 'entity_id') {
@@ -284,7 +284,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     // Add additional fields (and the table join itself) if needed.
-    if ($this->add_field_table($use_groupby)) {
+    if ($this->add_field_table($use_group_by)) {
       $this->ensureMyTable();
       $this->addAdditionalFields($fields);
     }
@@ -296,9 +296,9 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   /**
    * Determine if the field table should be added to the query.
    */
-  public function add_field_table($use_groupby) {
+  public function add_field_table($use_group_by) {
     // Grouping is enabled.
-    if ($use_groupby) {
+    if ($use_group_by) {
       return TRUE;
     }
     // This a multiple value field, but "group multiple values" is not checked.
@@ -681,7 +681,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   }
 
   /**
-   * Extend the groupby form with group columns.
+   * Extend the group by form with group columns.
    */
   public function buildGroupByForm(&$form, FormStateInterface $form_state) {
     parent::buildGroupByForm($form, $form_state);

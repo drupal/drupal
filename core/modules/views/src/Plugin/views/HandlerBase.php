@@ -331,7 +331,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   }
 
   /**
-   * Provides the handler some groupby.
+   * Provides the handler some group by.
    */
   public function usesGroupBy() {
     return TRUE;

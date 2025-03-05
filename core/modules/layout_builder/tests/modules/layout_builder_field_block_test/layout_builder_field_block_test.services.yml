@@ -1,0 +1,5 @@
+services:
+  layout_builder_field_block_test.fake_view_mode_context:
+    class: Drupal\layout_builder_field_block_test\ContextProvider\FakeViewModeContext
+    tags:
+      - { name: 'context_provider' }

@@ -11,7 +11,6 @@ ajaxing
 allwords
 alphadecimal
 ampm
-anyall
 archiver
 archivers
 arrowrefresh
@@ -31,7 +30,6 @@ autoloaders
 autoloading
 autop
 autoplace
-autoplay
 autoreply
 autosubmit
 avif
@@ -123,7 +121,6 @@ csslintrc
 csstools
 cweagans
 datelist
-daterange
 datestamp
 datetimeiso
 dburl
@@ -187,7 +184,6 @@ favstar
 fcgi
 fdiv
 fieldapi
-fieldblock
 fieldgroup
 fieldgroups
 fieldnames
@@ -209,7 +205,6 @@ français
 fraîche
 frontpage
 fudgy
-fulldate
 fulltext
 gabilondo
 gids
@@ -217,8 +212,6 @@ gloop
 greeking
 gripsmall
 groupable
-groupby
-groupwise
 guzzlehttp
 hande
 hateoas
@@ -248,7 +241,6 @@ introspectable
 invalidators
 invokable
 isam
-itok
 javascripts
 jessebeach
 jqueryui
@@ -388,10 +380,8 @@ prepopulate
 prepopulates
 prepopulating
 prepopulation
-prerender
 prerendered
 presave
-pretransaction
 preuninstall
 prophesize
 protossl
@@ -447,7 +437,6 @@ shorterthan
 shortlink
 singlebyte
 sirbrillig
-sitename
 sitewide
 slatkin
 smacss
@@ -564,7 +553,6 @@ unindexed
 uninstallations
 unminified
 unmoderated
-unpromote
 unpublishing
 unrouted
 unsanitized
@@ -573,7 +561,6 @@ unserialized
 unserializes
 unserializing
 unsets
-unsticky
 untabbable
 upcasted
 upcasting

@@ -131,8 +131,8 @@ class QueryGroupByTest extends ViewsKernelTestBase {
       $results[$item->entity_test_name] = $item->id;
     }
     $aggregation_function ??= 'NULL';
-    $this->assertEquals($values[0], $results['name1'], "Aggregation with $aggregation_function and groupby name: name1 returned the expected amount of results");
-    $this->assertEquals($values[1], $results['name2'], "Aggregation with $aggregation_function and groupby name: name2 returned the expected amount of results");
+    $this->assertEquals($values[0], $results['name1'], "Aggregation with $aggregation_function and group by name: name1 returned the expected amount of results");
+    $this->assertEquals($values[1], $results['name2'], "Aggregation with $aggregation_function and group by name: name2 returned the expected amount of results");
   }
 
   /**
@@ -200,7 +200,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests groupby with filters.
+   * Tests group by with filters.
    */
   public function testGroupByCountOnlyFilters(): void {
     // Check if GROUP BY and HAVING are included when a view
@@ -314,7 +314,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests groupby with a non-existent field on some bundle.
+   * Tests group by with a non-existent field on some bundle.
    */
   public function testGroupByWithFieldsNotExistingOnBundle(): void {
     $field_storage = FieldStorageConfig::create([

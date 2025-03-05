@@ -95,7 +95,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   }
 
   /**
-   * Adds the groupby values to the actual query.
+   * Adds the group by values to the actual query.
    *
    * @return $this
    *   Returns the called object.

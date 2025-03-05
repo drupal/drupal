@@ -1,8 +1,8 @@
 langcode: en
 status: true
 dependencies: {  }
-id: test_views_groupby_save
-label: test_views_groupby_save
+id: test_views_group_by_save
+label: test_views_group_by_save
 module: views
 description: ''
 tag: ''
