@@ -218,8 +218,9 @@ function views_invalidate_cache() {
  * Set the current view that is being built/rendered so that it is
  * easy for other modules or items in drupal_eval to identify
  *
- * @return \Drupal\views\ViewExecutable
- *   The current view object, or NULL if no view is set.
+ * @return \Drupal\views\ViewExecutable|null|false
+ *   The current view object, NULL if no view is set yet,
+ *   or FALSE if the view was removed.
  */
 function &views_set_current_view($view = NULL) {
   static $cache = NULL;
@@ -236,8 +237,9 @@ function &views_set_current_view($view = NULL) {
  * Note that this returns a reference, so be careful! You can unintentionally
  * modify the $view object.
  *
- * @return \Drupal\views\ViewExecutable
- *   The current view object.
+ * @return \Drupal\views\ViewExecutable|null|false
+ *   The current view object, NULL if no view is set yet,
+ *    or FALSE if the view was removed.
  */
 function &views_get_current_view() {
   return views_set_current_view();
