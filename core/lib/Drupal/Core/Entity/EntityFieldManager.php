@@ -194,7 +194,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       else {
         // Rebuild the definitions and put it into the cache.
         $this->baseFieldDefinitions[$entity_type_id] = $this->buildBaseFieldDefinitions($entity_type_id);
-        $this->cacheSet($cid, $this->baseFieldDefinitions[$entity_type_id], Cache::PERMANENT, ['entity_types', 'entity_field_info']);
+        $this->cacheSet($cid, $this->baseFieldDefinitions[$entity_type_id], Cache::PERMANENT, [
+          'entity_types',
+          'entity_field_info',
+        ]);
       }
     }
     return $this->baseFieldDefinitions[$entity_type_id];

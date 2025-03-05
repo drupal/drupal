@@ -146,7 +146,12 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function createNew($width, $height, $extension = 'png', $transparent_color = '#ffffff') {
-    return $this->apply('create_new', ['width' => $width, 'height' => $height, 'extension' => $extension, 'transparent_color' => $transparent_color]);
+    return $this->apply('create_new', [
+      'width' => $width,
+      'height' => $height,
+      'extension' => $extension,
+      'transparent_color' => $transparent_color,
+    ]);
   }
 
   /**

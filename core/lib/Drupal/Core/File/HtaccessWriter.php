@@ -94,7 +94,10 @@ class HtaccessWriter implements HtaccessWriterInterface {
       return TRUE;
     }
 
-    $this->logger->error("Security warning: Couldn't write .htaccess file. Create a .htaccess file in your %directory directory which contains the following lines: <pre><code>@htaccess</code></pre>", ['%directory' => $directory, '@htaccess' => FileSecurity::htaccessLines($deny_public_access)]);
+    $this->logger->error("Security warning: Couldn't write .htaccess file. Create a .htaccess file in your %directory directory which contains the following lines: <pre><code>@htaccess</code></pre>", [
+      '%directory' => $directory,
+      '@htaccess' => FileSecurity::htaccessLines($deny_public_access),
+    ]);
     return FALSE;
   }
 

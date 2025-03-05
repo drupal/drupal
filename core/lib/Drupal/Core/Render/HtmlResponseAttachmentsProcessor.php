@@ -102,7 +102,16 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     // Send a message back if the render array has unsupported #attached types.
     $unsupported_types = array_diff(
       array_keys($attached),
-      ['html_head', 'feed', 'html_head_link', 'http_header', 'library', 'html_response_attachment_placeholders', 'placeholders', 'drupalSettings']
+      [
+        'html_head',
+        'feed',
+        'html_head_link',
+        'http_header',
+        'library',
+        'html_response_attachment_placeholders',
+        'placeholders',
+        'drupalSettings',
+      ]
     );
     if (!empty($unsupported_types)) {
       throw new \LogicException(sprintf('You are not allowed to use %s in #attached.', implode(', ', $unsupported_types)));

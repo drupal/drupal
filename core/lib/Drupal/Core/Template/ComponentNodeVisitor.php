@@ -62,7 +62,10 @@ class ComponentNodeVisitor implements NodeVisitorInterface {
       $line
     ), $line);
     $print_nodes[] = new PrintNode(new FunctionExpression(
-      new TwigFunction('add_component_context', [$env->getExtension(ComponentsTwigExtension::class), 'addAdditionalContext'], ['needs_context' => TRUE]),
+      new TwigFunction('add_component_context', [
+        $env->getExtension(ComponentsTwigExtension::class),
+        'addAdditionalContext',
+      ], ['needs_context' => TRUE]),
       new Nodes([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);

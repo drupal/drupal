@@ -124,7 +124,10 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
       return $this->getToolkitOperation($operation)->apply($arguments);
     }
     catch (PluginNotFoundException) {
-      $this->logger->error("The selected image handling toolkit '@toolkit' can not process operation '@operation'.", ['@toolkit' => $this->getPluginId(), '@operation' => $operation]);
+      $this->logger->error("The selected image handling toolkit '@toolkit' can not process operation '@operation'.", [
+        '@toolkit' => $this->getPluginId(),
+        '@operation' => $operation,
+      ]);
       return FALSE;
     }
     catch (\Throwable $t) {

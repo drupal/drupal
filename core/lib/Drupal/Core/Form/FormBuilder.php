@@ -1007,7 +1007,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (isset($element['#process']) && !$element['#processed']) {
       foreach ($element['#process'] as $callback) {
         $complete_form = &$form_state->getCompleteForm();
-        $element = call_user_func_array($form_state->prepareCallback($callback), [&$element, &$form_state, &$complete_form]);
+        $element = call_user_func_array($form_state->prepareCallback($callback), [
+          &$element,
+          &$form_state,
+          &$complete_form,
+        ]);
       }
       $element['#processed'] = TRUE;
     }

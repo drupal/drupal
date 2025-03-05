@@ -128,7 +128,14 @@ class TwigExtension extends AbstractExtension {
       new TwigFilter('placeholder', [$this, 'escapePlaceholder'], ['is_safe' => ['html'], 'needs_environment' => TRUE]),
 
       // Replace twig's escape filter with our own.
-      new TwigFilter('drupal_escape', [$this, 'escapeFilter'], ['needs_environment' => TRUE, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
+      new TwigFilter(
+        'drupal_escape',
+        [$this, 'escapeFilter'],
+        [
+          'needs_environment' => TRUE,
+          'is_safe_callback' => 'twig_escape_filter_is_safe',
+        ]
+      ),
 
       // Implements safe joining.
       // @todo Make that the default for |join? Upstream issue:

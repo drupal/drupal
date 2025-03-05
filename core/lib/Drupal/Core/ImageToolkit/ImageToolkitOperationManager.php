@@ -99,7 +99,10 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
         return $this->getToolkitOperationPluginId($base_toolkit, $operation);
       }
 
-      $message = new FormattableMarkup("No image operation plugin for '@toolkit' toolkit and '@operation' operation.", ['@toolkit' => $toolkit_id, '@operation' => $operation]);
+      $message = new FormattableMarkup("No image operation plugin for '@toolkit' toolkit and '@operation' operation.", [
+        '@toolkit' => $toolkit_id,
+        '@operation' => $operation,
+      ]);
       throw new PluginNotFoundException($toolkit_id . '.' . $operation, $message);
     }
     else {

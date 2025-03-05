@@ -93,7 +93,10 @@ final class EntityMethodDeriver extends DeriverBase implements ContainerDeriverI
    *   The base plugin definition that will used to create the derivative.
    */
   private function processMethod(\ReflectionMethod $method, ActionMethod $action_attribute, ConfigEntityTypeInterface $entity_type, array $derivative): void {
-    $derivative['admin_label'] = $action_attribute->adminLabel ?: $this->t('@entity_type @method', ['@entity_type' => $entity_type->getLabel(), '@method' => $method->name]);
+    $derivative['admin_label'] = $action_attribute->adminLabel ?: $this->t('@entity_type @method', [
+      '@entity_type' => $entity_type->getLabel(),
+      '@method' => $method->name,
+    ]);
     $derivative['constructor_args'] = [
       'method' => $method->name,
       'exists' => $action_attribute->exists,

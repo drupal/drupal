@@ -240,7 +240,11 @@ abstract class Tasks {
     // them or not.
     // @see https://www.php.net/manual/en/function.version-compare.php
     if ($this->minimumVersion() && version_compare(Database::getConnection()->version(), $this->minimumVersion() . '-AnyName', '<')) {
-      $this->fail($this->t("The database server version %version is less than the minimum required version %minimum_version.", ['%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion()]));
+      $this->fail($this->t("The database server version %version is less than the minimum required version %minimum_version.", [
+        '%version' => Database::getConnection()
+          ->version(),
+        '%minimum_version' => $this->minimumVersion(),
+      ]));
     }
   }
 

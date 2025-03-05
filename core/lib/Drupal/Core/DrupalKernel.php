@@ -845,7 +845,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The cache key used for the service container.
    */
   protected function getContainerCacheKey() {
-    $parts = ['service_container', $this->environment, \Drupal::VERSION, Settings::get('deployment_identifier'), PHP_OS, serialize(Settings::get('container_yamls'))];
+    $parts = [
+      'service_container',
+      $this->environment,
+      \Drupal::VERSION,
+      Settings::get('deployment_identifier'),
+      PHP_OS,
+      serialize(Settings::get('container_yamls')),
+    ];
     return implode(':', $parts);
   }
 

@@ -125,7 +125,10 @@ class TimestampFormatter extends FormatterBase {
     $date_formats = [];
     $requestTime = $this->time->getRequestTime();
     foreach ($this->dateFormatStorage->loadMultiple() as $machine_name => $value) {
-      $date_formats[$machine_name] = $this->t('@name format: @date', ['@name' => $value->label(), '@date' => $this->dateFormatter->format($requestTime, $machine_name)]);
+      $date_formats[$machine_name] = $this->t('@name format: @date', [
+        '@name' => $value->label(),
+        '@date' => $this->dateFormatter->format($requestTime, $machine_name),
+      ]);
     }
     $date_formats[static::CUSTOM_DATE_FORMAT] = $this->t('Custom');
 

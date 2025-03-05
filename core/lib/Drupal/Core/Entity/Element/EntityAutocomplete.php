@@ -258,7 +258,10 @@ class EntityAutocomplete extends Textfield {
           $valid_ids = $handler->validateReferenceableEntities($ids);
           if ($invalid_ids = array_diff($ids, $valid_ids)) {
             foreach ($invalid_ids as $invalid_id) {
-              $form_state->setError($element, t('The referenced entity (%type: %id) does not exist.', ['%type' => $element['#target_type'], '%id' => $invalid_id]));
+              $form_state->setError($element, t('The referenced entity (%type: %id) does not exist.', [
+                '%type' => $element['#target_type'],
+                '%id' => $invalid_id,
+              ]));
             }
           }
         }
@@ -284,7 +287,10 @@ class EntityAutocomplete extends Textfield {
 
           foreach ($invalid_new_entities as $entity) {
             /** @var \Drupal\Core\Entity\EntityInterface $entity */
-            $form_state->setError($element, t('This entity (%type: %label) cannot be referenced.', ['%type' => $element['#target_type'], '%label' => $entity->label()]));
+            $form_state->setError($element, t('This entity (%type: %label) cannot be referenced.', [
+              '%type' => $element['#target_type'],
+              '%label' => $entity->label(),
+            ]));
           }
         }
       }

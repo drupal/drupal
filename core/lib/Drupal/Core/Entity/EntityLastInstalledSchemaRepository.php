@@ -105,7 +105,10 @@ class EntityLastInstalledSchemaRepository implements EntityLastInstalledSchemaRe
     // isn't currently fieldable, there might be legacy definitions or an
     // empty array stored from when it was.
     $this->keyValueFactory->get('entity.definitions.installed')->delete($entity_type_id . '.field_storage_definitions');
-    $this->cacheBackend->deleteMultiple(['entity_type_definitions.installed', $entity_type_id . '.field_storage_definitions.installed']);
+    $this->cacheBackend->deleteMultiple([
+      'entity_type_definitions.installed',
+      $entity_type_id . '.field_storage_definitions.installed',
+    ]);
     $this->entityTypeDefinitions = NULL;
     return $this;
   }

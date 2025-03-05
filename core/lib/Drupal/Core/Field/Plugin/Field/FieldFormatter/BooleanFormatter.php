@@ -68,10 +68,16 @@ class BooleanFormatter extends FormatterBase {
     foreach ($this->getOutputFormats() as $format_name => $format) {
       if (is_array($format)) {
         if ($format_name == 'default') {
-          $formats[$format_name] = $this->t('Field settings (@on_label / @off_label)', ['@on_label' => $format[0], '@off_label' => $format[1]]);
+          $formats[$format_name] = $this->t('Field settings (@on_label / @off_label)', [
+            '@on_label' => $format[0],
+            '@off_label' => $format[1],
+          ]);
         }
         else {
-          $formats[$format_name] = $this->t('@on_label / @off_label', ['@on_label' => $format[0], '@off_label' => $format[1]]);
+          $formats[$format_name] = $this->t('@on_label / @off_label', [
+            '@on_label' => $format[0],
+            '@off_label' => $format[1],
+          ]);
         }
       }
       else {

@@ -24,7 +24,10 @@ class SSH extends FileTransfer implements ChmodInterface {
   public function connect() {
     $this->connection = @ssh2_connect($this->hostname, $this->port);
     if (!$this->connection) {
-      throw new FileTransferException('SSH Connection failed to @host:@port', 0, ['@host' => $this->hostname, '@port' => $this->port]);
+      throw new FileTransferException('SSH Connection failed to @host:@port', 0, [
+        '@host' => $this->hostname,
+        '@port' => $this->port,
+      ]);
     }
     if (!@ssh2_auth_password($this->connection, $this->username, $this->password)) {
       throw new FileTransferException('The supplied username/password combination was not accepted.');
@@ -47,7 +50,10 @@ class SSH extends FileTransfer implements ChmodInterface {
    */
   protected function copyFileJailed($source, $destination) {
     if (!@ssh2_scp_send($this->connection, $source, $destination)) {
-      throw new FileTransferException('Cannot copy @source_file to @destination_file.', 0, ['@source' => $source, '@destination' => $destination]);
+      throw new FileTransferException('Cannot copy @source_file to @destination_file.', 0, [
+        '@source' => $source,
+        '@destination' => $destination,
+      ]);
     }
   }
 

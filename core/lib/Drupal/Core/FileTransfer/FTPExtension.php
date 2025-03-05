@@ -26,7 +26,10 @@ class FTPExtension extends FTP implements ChmodInterface {
    */
   protected function copyFileJailed($source, $destination) {
     if (!@ftp_put($this->connection, $destination, $source, FTP_BINARY)) {
-      throw new FileTransferException("Cannot move @source to @destination", 0, ["@source" => $source, "@destination" => $destination]);
+      throw new FileTransferException("Cannot move @source to @destination", 0, [
+        "@source" => $source,
+        "@destination" => $destination,
+      ]);
     }
   }
 

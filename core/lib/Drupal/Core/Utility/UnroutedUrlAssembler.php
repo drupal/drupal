@@ -39,7 +39,11 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
    * @param string[] $filter_protocols
    *   (optional) An array of protocols allowed for URL generation.
    */
-  public function __construct(RequestStack $request_stack, OutboundPathProcessorInterface $path_processor, array $filter_protocols = ['http', 'https']) {
+  public function __construct(
+    RequestStack $request_stack,
+    OutboundPathProcessorInterface $path_processor,
+    array $filter_protocols = ['http', 'https'],
+  ) {
     UrlHelper::setAllowedProtocols($filter_protocols);
     $this->requestStack = $request_stack;
     $this->pathProcessor = $path_processor;

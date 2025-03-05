@@ -396,7 +396,13 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     }
 
     // Let other modules feedback about their own additions.
-    $weights = array_merge($weights, \Drupal::moduleHandler()->invokeAll('field_info_max_weight', [$this->targetEntityType, $this->bundle, $this->displayContext, $this->mode]));
+    $weights = array_merge($weights,
+      \Drupal::moduleHandler()->invokeAll('field_info_max_weight', [
+        $this->targetEntityType,
+        $this->bundle,
+        $this->displayContext,
+        $this->mode,
+      ]));
 
     return $weights ? max($weights) : NULL;
   }

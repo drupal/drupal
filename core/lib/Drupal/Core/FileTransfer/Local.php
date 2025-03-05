@@ -46,7 +46,10 @@ class Local extends FileTransfer implements ChmodInterface {
    */
   protected function copyFileJailed($source, $destination) {
     if (@!copy($source, $destination)) {
-      throw new FileTransferException('Cannot copy %source to %destination.', 0, ['%source' => $source, '%destination' => $destination]);
+      throw new FileTransferException('Cannot copy %source to %destination.', 0, [
+        '%source' => $source,
+        '%destination' => $destination,
+      ]);
     }
   }
 

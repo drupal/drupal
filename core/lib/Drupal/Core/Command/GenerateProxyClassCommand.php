@@ -78,7 +78,11 @@ class GenerateProxyClassCommand extends Command {
  */
 {{ proxy_class_string }}
 EOF;
-      $file_string = str_replace(['{{ proxy_class_name }}', '{{ proxy_class_string }}'], [$proxy_class_name, $proxy_class_string], $file_string);
+      $file_string = str_replace(
+        ['{{ proxy_class_name }}', '{{ proxy_class_string }}'],
+        [$proxy_class_name, $proxy_class_string],
+        $file_string
+      );
 
       mkdir(dirname($proxy_filename), 0775, TRUE);
       file_put_contents($proxy_filename, $file_string);

@@ -72,7 +72,9 @@ trait CacheTagsChecksumTrait {
     $in_transaction = $this->getDatabaseConnection()->inTransaction();
     if ($in_transaction) {
       if (empty($this->delayedTags)) {
-        $this->getDatabaseConnection()->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionEndCallback']);
+        $this->getDatabaseConnection()
+          ->transactionManager()
+          ->addPostTransactionCallback([$this, 'rootTransactionEndCallback']);
       }
       $this->delayedTags = Cache::mergeTags($this->delayedTags, $tags);
     }

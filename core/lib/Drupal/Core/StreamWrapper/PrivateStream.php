@@ -49,7 +49,11 @@ class PrivateStream extends LocalStream {
    */
   public function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());
-    return Url::fromRoute('system.private_file_download', ['filepath' => $path], ['absolute' => TRUE, 'path_processing' => FALSE])->toString();
+    return Url::fromRoute(
+      'system.private_file_download',
+      ['filepath' => $path],
+      ['absolute' => TRUE, 'path_processing' => FALSE]
+    )->toString();
   }
 
   /**

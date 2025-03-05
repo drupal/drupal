@@ -108,7 +108,10 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
-        $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
+        $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, [
+          'entity_types',
+          'entity_bundles',
+        ]);
       }
     }
 

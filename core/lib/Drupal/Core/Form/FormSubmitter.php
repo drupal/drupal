@@ -128,7 +128,10 @@ class FormSubmitter implements FormSubmitterInterface {
     // If no redirect was specified, redirect to the current path.
     elseif ($redirect === NULL) {
       $request = $this->requestStack->getCurrentRequest();
-      $url = $this->urlGenerator->generateFromRoute('<current>', [], ['query' => $request->query->all(), 'absolute' => TRUE]);
+      $url = $this->urlGenerator->generateFromRoute('<current>', [], [
+        'query' => $request->query->all(),
+        'absolute' => TRUE,
+      ]);
     }
 
     if ($url) {

@@ -97,7 +97,10 @@ trait AssertMailTrait {
       }
     }
     if (!$message) {
-      $message = new FormattableMarkup('Expected text found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $string]);
+      $message = new FormattableMarkup('Expected text found in @field of email message: "@expected".', [
+        '@field' => $field_name,
+        '@expected' => $string,
+      ]);
     }
     $this->assertTrue($string_found, $message);
   }
@@ -121,7 +124,10 @@ trait AssertMailTrait {
     $mail = end($mails);
     $regex_found = preg_match("/$regex/", $mail[$field_name]);
     if (!$message) {
-      $message = new FormattableMarkup('Expected text found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $regex]);
+      $message = new FormattableMarkup('Expected text found in @field of email message: "@expected".', [
+        '@field' => $field_name,
+        '@expected' => $regex,
+      ]);
     }
     $this->assertTrue((bool) $regex_found, $message);
   }

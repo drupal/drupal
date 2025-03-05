@@ -354,7 +354,10 @@ abstract class Updater {
           catch (FileTransferException $e) {
             // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
             $message = $this->t($e->getMessage(), $e->arguments);
-            $throw_message = $this->t('Unable to create %directory due to the following: %reason', ['%directory' => $directory, '%reason' => $message]);
+            $throw_message = $this->t('Unable to create %directory due to the following: %reason', [
+              '%directory' => $directory,
+              '%reason' => $message,
+            ]);
             throw new UpdaterException($throw_message);
           }
         }

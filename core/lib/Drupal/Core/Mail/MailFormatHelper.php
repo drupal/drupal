@@ -64,7 +64,10 @@ class MailFormatHelper {
       $text = preg_replace('/(?(?<!^--) +\n|  +\n)/m', "\n", $text);
       // Wrap each line at the needed width.
       $lines = explode("\n", $text);
-      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', ['soft' => $soft, 'length' => strlen($indent)]);
+      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', [
+        'soft' => $soft,
+        'length' => strlen($indent),
+      ]);
       $text = implode("\n", $lines);
     }
     else {

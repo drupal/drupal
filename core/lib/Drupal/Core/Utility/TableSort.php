@@ -80,7 +80,10 @@ class TableSort {
         $context['sort'] = $cell_attributes['initial_click_sort'] ?? self::ASC;
         $image = '';
       }
-      $cell_content = Link::createFromRoute(new FormattableMarkup('@cell_content@image', ['@cell_content' => $cell_content, '@image' => $image]), '<current>', [], [
+      $cell_content = Link::createFromRoute(new FormattableMarkup('@cell_content@image', [
+        '@cell_content' => $cell_content,
+        '@image' => $image,
+      ]), '<current>', [], [
         'attributes' => ['title' => $title, 'rel' => 'nofollow'],
         'query' => array_merge($context['query'], [
           'sort' => $context['sort'],

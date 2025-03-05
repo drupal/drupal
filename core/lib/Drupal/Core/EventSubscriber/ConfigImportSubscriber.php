@@ -162,7 +162,10 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
         if ($module_data[$dependent_module]->status && !in_array($dependent_module, $uninstalls, TRUE) && $dependent_module !== $install_profile) {
           $module_name = $module_data[$module]->info['name'];
           $dependent_module_name = $module_data[$dependent_module]->info['name'];
-          $config_importer->logError($this->t('Unable to uninstall the %module module since the %dependent_module module is installed.', ['%module' => $module_name, '%dependent_module' => $dependent_module_name]));
+          $config_importer->logError($this->t('Unable to uninstall the %module module since the %dependent_module module is installed.', [
+            '%module' => $module_name,
+            '%dependent_module' => $dependent_module_name,
+          ]));
         }
       }
       // Ensure that modules can be uninstalled.
@@ -209,14 +212,20 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
         if (!isset($core_extension['theme'][$required_theme])) {
           $theme_name = $theme_data[$theme]->info['name'];
           $required_theme_name = $theme_data[$required_theme]->info['name'];
-          $config_importer->logError($this->t('Unable to install the %theme theme since it requires the %required_theme theme.', ['%theme' => $theme_name, '%required_theme' => $required_theme_name]));
+          $config_importer->logError($this->t('Unable to install the %theme theme since it requires the %required_theme theme.', [
+            '%theme' => $theme_name,
+            '%required_theme' => $required_theme_name,
+          ]));
         }
       }
       foreach (array_keys($module_dependencies) as $required_module) {
         if (!isset($core_extension['module'][$required_module])) {
           $theme_name = $theme_data[$theme]->info['name'];
           $required_module_name = $module_data[$required_module]->info['name'];
-          $config_importer->logError($this->t('Unable to install the %theme theme since it requires the %required_module module.', ['%theme' => $theme_name, '%required_module' => $required_module_name]));
+          $config_importer->logError($this->t('Unable to install the %theme theme since it requires the %required_module module.', [
+            '%theme' => $theme_name,
+            '%required_module' => $required_module_name,
+          ]));
         }
       }
     }
@@ -229,7 +238,10 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
         if ($theme_data[$dependent_theme]->status && !in_array($dependent_theme, $uninstalls, TRUE)) {
           $theme_name = $theme_data[$theme]->info['name'];
           $dependent_theme_name = $theme_data[$dependent_theme]->info['name'];
-          $config_importer->logError($this->t('Unable to uninstall the %theme theme since the %dependent_theme theme is installed.', ['%theme' => $theme_name, '%dependent_theme' => $dependent_theme_name]));
+          $config_importer->logError($this->t('Unable to uninstall the %theme theme since the %dependent_theme theme is installed.', [
+            '%theme' => $theme_name,
+            '%dependent_theme' => $dependent_theme_name,
+          ]));
         }
       }
     }

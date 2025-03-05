@@ -62,7 +62,10 @@ class StringItem extends StringItemBase {
       $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
       $options['max'] = $max_length;
       if ($label = $this->getFieldDefinition()->getLabel()) {
-        $options['maxMessage'] = $this->t('%name: may not be longer than @max characters.', ['%name' => $label, '@max' => $max_length]);
+        $options['maxMessage'] = $this->t('%name: may not be longer than @max characters.', [
+          '%name' => $label,
+          '@max' => $max_length,
+        ]);
       }
       $constraints[] = $constraint_manager->create('ComplexData', [
         'value' => [

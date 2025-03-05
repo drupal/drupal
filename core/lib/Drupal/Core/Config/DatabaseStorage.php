@@ -86,7 +86,10 @@ class DatabaseStorage implements StorageInterface {
   public function read($name) {
     $data = FALSE;
     try {
-      $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [':collection' => $this->collection, ':name' => $name], $this->options)->fetchField();
+      $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [
+        ':collection' => $this->collection,
+        ':name' => $name,
+      ], $this->options)->fetchField();
       if ($raw !== FALSE) {
         $data = $this->decode($raw);
       }
@@ -111,7 +114,12 @@ class DatabaseStorage implements StorageInterface {
 
     $list = [];
     try {
-      $list = $this->connection->query('SELECT [name], [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] IN ( :names[] )', [':collection' => $this->collection, ':names[]' => $names], $this->options)->fetchAllKeyed();
+      $list = $this->connection
+        ->query('SELECT [name], [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] IN ( :names[] )', [
+          ':collection' => $this->collection,
+          ':names[]' => $names,
+        ], $this->options)
+        ->fetchAllKeyed();
       foreach ($list as &$data) {
         $data = $this->decode($data);
       }

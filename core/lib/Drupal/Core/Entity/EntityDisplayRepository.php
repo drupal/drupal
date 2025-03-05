@@ -116,7 +116,10 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
           $this->displayModeInfo[$display_type][$display_mode_entity_type][$display_mode_name] = $display_mode->toArray();
         }
         $this->moduleHandler->alter($key, $this->displayModeInfo[$display_type]);
-        $this->cacheSet("$key:$langcode", $this->displayModeInfo[$display_type], CacheBackendInterface::CACHE_PERMANENT, ['entity_types', 'entity_field_info']);
+        $this->cacheSet("$key:$langcode", $this->displayModeInfo[$display_type], CacheBackendInterface::CACHE_PERMANENT, [
+          'entity_types',
+          'entity_field_info',
+        ]);
       }
     }
 

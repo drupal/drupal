@@ -87,7 +87,13 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @param string[] $filter_protocols
    *   (optional) An array of protocols allowed for URL generation.
    */
-  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, RequestStack $request_stack, array $filter_protocols = ['http', 'https']) {
+  public function __construct(
+    RouteProviderInterface $provider,
+    OutboundPathProcessorInterface $path_processor,
+    OutboundRouteProcessorInterface $route_processor,
+    RequestStack $request_stack,
+    array $filter_protocols = ['http', 'https'],
+  ) {
     $this->provider = $provider;
     $this->context = new RequestContext();
 
