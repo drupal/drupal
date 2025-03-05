@@ -45,6 +45,11 @@ class LocaleStringIsSafeTest extends KernelTestBase {
     $string = 'Hi <a href="[current-user:url]">user</a>';
     $result = locale_string_is_safe($string);
     $this->assertTrue($result);
+
+    // Check a translatable string which includes a wbr tag.
+    $string = 'DrupalLocaleModule<wbr>Test<wbr>Example';
+    $result = locale_string_is_safe($string);
+    $this->assertTrue($result);
   }
 
   /**
