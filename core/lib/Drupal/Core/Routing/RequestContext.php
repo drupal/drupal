@@ -12,7 +12,7 @@ use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 class RequestContext extends SymfonyRequestContext {
 
   /**
-   * The scheme, host and base path, for example "http://example.com/d8".
+   * The scheme, host and base path, for example "https://example.com/d8".
    *
    * @var string
    */

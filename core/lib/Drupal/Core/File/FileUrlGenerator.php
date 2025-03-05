@@ -119,9 +119,9 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
    */
   protected function generatePath(string $base_url, string $uri): string {
     // Allow for:
-    // - root-relative URIs (e.g. /foo.jpg in http://example.com/foo.jpg)
+    // - root-relative URIs (e.g. /foo.jpg in https://example.com/foo.jpg)
     // - protocol-relative URIs (e.g. //bar.jpg, which is expanded to
-    //   http://example.com/bar.jpg by the browser when viewing a page over
+    //   https://example.com/bar.jpg by the browser when viewing a page over
     //   HTTP and to https://example.com/bar.jpg when viewing a HTTPS page)
     // Both types of relative URIs are characterized by a leading slash, hence
     // we can use a single check.
@@ -160,9 +160,9 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
 
     if (!$scheme) {
       // Allow for:
-      // - root-relative URIs (e.g. /foo.jpg in http://example.com/foo.jpg)
+      // - root-relative URIs (e.g. /foo.jpg in https://example.com/foo.jpg)
       // - protocol-relative URIs (e.g. //bar.jpg, which is expanded to
-      //   http://example.com/bar.jpg by the browser when viewing a page over
+      //   https://example.com/bar.jpg by the browser when viewing a page over
       //   HTTP and to https://example.com/bar.jpg when viewing a HTTPS page)
       // Both types of relative URIs are characterized by a leading slash, hence
       // we can use a single check.

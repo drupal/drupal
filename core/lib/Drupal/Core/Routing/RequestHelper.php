@@ -13,8 +13,8 @@ class RequestHelper {
    * Returns whether the request is using a clean URL.
    *
    * A clean URL is one that does not include the script name. For example,
-   * - http://example.com/node/1 is a clean URL.
-   * - http://example.com/index.php/node/1 is not a clean URL.
+   * - https://example.com/node/1 is a clean URL.
+   * - https://example.com/index.php/node/1 is not a clean URL.
    *
    * Unclean URLs are required on sites hosted by web servers that cannot be
    * configured to implicitly route URLs to index.php.

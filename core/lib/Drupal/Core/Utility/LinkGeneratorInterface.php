@@ -17,7 +17,7 @@ interface LinkGeneratorInterface {
    * $link_generator = \Drupal::service('link_generator');
    * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php');
    * $installer_link = $link_generator->generate($text, $installer_url);
-   * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']]);
+   * $external_url = \Drupal\Core\Url::fromUri('https://example.com', ['query' => ['foo' => 'bar']]);
    * $external_link = $link_generator->generate($text, $external_url);
    * $internal_url = \Drupal\Core\Url::fromRoute('system.admin');
    * $internal_link = $link_generator->generate($text, $internal_url);

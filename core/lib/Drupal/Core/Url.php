@@ -753,7 +753,7 @@ class Url implements TrustedCallbackInterface {
    * If this Url object was constructed from a Drupal route or from an internal
    * URI (URIs using the internal:, base:, or entity: schemes), the returned
    * string will either be a relative URL like /node/1 or an absolute URL like
-   * http://example.com/node/1 depending on the options array, plus any
+   * https://example.com/node/1 depending on the options array, plus any
    * specified query string or fragment.
    *
    * @param bool $collect_bubbleable_metadata

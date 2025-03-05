@@ -441,11 +441,11 @@ class Html {
    * change other relative URLs because they would result in different absolute
    * URLs depending on the current path. For example: when the same content
    * containing such a relative URL (for example 'image.png'), is served from
-   * its canonical URL (for example 'http://example.com/some-article') or from
-   * a listing or feed (for example 'http://example.com/all-articles') their
+   * its canonical URL (for example 'https://example.com/some-article') or from
+   * a listing or feed (for example 'https://example.com/all-articles') their
    * "current path" differs, resulting in different absolute URLs:
-   * 'http://example.com/some-article/image.png' versus
-   * 'http://example.com/all-articles/image.png'. Only one can be correct.
+   * 'https://example.com/some-article/image.png' versus
+   * 'https://example.com/all-articles/image.png'. Only one can be correct.
    * Therefore relative URLs that are not root-relative cannot be safely
    * transformed and should generally be avoided.
    *
