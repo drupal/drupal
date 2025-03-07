@@ -6,8 +6,7 @@ namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Database\Database;
-use Drupal\Tests\StreamCapturer;
-use Drupal\user\Entity\Role;
+use Drupal\TestTools\Extension\Dump\DebugDump;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
@@ -305,20 +304,19 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the dump() function provided by the var-dumper Symfony component.
    */
   public function testVarDump(): void {
-    // Append the stream capturer to the STDERR stream, so that we can test the
-    // dump() output and also prevent it from actually outputting in this
-    // particular test.
-    stream_filter_register("capture", StreamCapturer::class);
-    stream_filter_append(STDERR, "capture");
-
     // Dump some variables.
-    $this->enableModules(['system', 'user']);
-    $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
-    dump($role);
-    dump($role->id());
+    $object = (object) [
+      'Aldebaran' => 'Betelgeuse',
+    ];
+    dump($object);
+    dump('Alpheratz');
 
-    $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
-    $this->assertStringContainsString('test_role', StreamCapturer::$cache);
+    $dumpString = json_encode(DebugDump::getDumps());
+
+    $this->assertStringContainsString('KernelTestBaseTest::testVarDump', $dumpString);
+    $this->assertStringContainsString('Aldebaran', $dumpString);
+    $this->assertStringContainsString('Betelgeuse', $dumpString);
+    $this->assertStringContainsString('Alpheratz', $dumpString);
   }
 
   /**

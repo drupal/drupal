@@ -75,6 +75,11 @@
       -->
       <parameter name="verbose" value="true"/>
     </bootstrap>
+    <!-- Debug dump() printer. -->
+    <bootstrap class="Drupal\TestTools\Extension\Dump\DebugDump">
+      <parameter name="colors" value="true"/>
+      <parameter name="printCaller" value="true"/>
+    </bootstrap>
   </extensions>
   <testsuites>
     <testsuite name="unit">
