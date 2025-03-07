@@ -2,6 +2,7 @@
 
 namespace Drupal\big_pipe\Render;
 
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Session\ResponseKeepSessionOpenInterface;
 
@@ -20,6 +21,8 @@ use Drupal\Core\Session\ResponseKeepSessionOpenInterface;
  *   BigPipe should instantiate or type hint to this class.
  */
 class BigPipeResponse extends HtmlResponse implements ResponseKeepSessionOpenInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The BigPipe service.
