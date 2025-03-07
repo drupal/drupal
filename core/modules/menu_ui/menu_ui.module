@@ -20,7 +20,7 @@ use Drupal\node\NodeInterface;
 function _menu_ui_node_save(NodeInterface $node, array $values) {
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
   if (!empty($values['entity_id'])) {
-    $entity = MenuLinkContent::load($values['entity_id']);
+    $entity = \Drupal::service('entity.repository')->getActive('menu_link_content', $values['entity_id']);
     if ($entity->isTranslatable() && $node->isTranslatable()) {
       if (!$entity->hasTranslation($node->language()->getId())) {
         $entity = $entity->addTranslation($node->language()->getId(), $entity->toArray());
@@ -48,7 +48,26 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
   $entity->menu_name->value = $values['menu_name'];
   $entity->parent->value = $values['parent'];
   $entity->weight->value = $values['weight'] ?? 0;
-  $entity->isDefaultRevision($node->isDefaultRevision());
+  if ($entity->isNew()) {
+    // @todo The menu link doesn't need to be changed in a workspace context.
+    //   Fix this in https://www.drupal.org/project/drupal/issues/3511204.
+    if (!$node->isDefaultRevision() && $node->hasLinkTemplate('latest-version')) {
+      // If a new menu link is created while saving the node as a pending draft
+      // (non-default revision), store it as a link to the latest version.
+      // That ensures that there is a regular, valid link target that is
+      // only visible to users with permission to view the latest version.
+      $entity->get('link')->uri = 'internal:/node/' . $node->id() . '/latest';
+    }
+  }
+  else {
+    $entity->isDefaultRevision($node->isDefaultRevision());
+    if (!$entity->isDefaultRevision()) {
+      $entity->setNewRevision(TRUE);
+    }
+    elseif ($entity->get('link')->uri !== 'entity:node/' . $node->id()) {
+      $entity->get('link')->uri = 'entity:node/' . $node->id();
+    }
+  }
   $entity->save();
 }
 
@@ -69,12 +88,17 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
   $defaults = FALSE;
   if ($node->id()) {
     $id = FALSE;
-    // Give priority to the default menu
+    // Give priority to the default menu.
     $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', ['main']);
+    // An existing menu link either points to the canonical or the latest path,
+    // in case of a new menu link that was creating while saving as a pending
+    // draft.
+    $uri_candidates = ['entity:node/' . $node->id(), 'internal:/node/' . $node->id() . '/latest'];
+
     if (in_array($menu_name, $type_menus)) {
       $query = \Drupal::entityQuery('menu_link_content')
         ->accessCheck(TRUE)
-        ->condition('link.uri', 'entity:node/' . $node->id())
+        ->condition('link.uri', $uri_candidates, 'IN')
         ->condition('menu_name', $menu_name)
         ->sort('id', 'ASC')
         ->range(0, 1);
@@ -86,7 +110,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
     if (!$id && !empty($type_menus)) {
       $query = \Drupal::entityQuery('menu_link_content')
         ->accessCheck(TRUE)
-        ->condition('link.uri', 'entity:node/' . $node->id())
+        ->condition('link.uri', $uri_candidates, 'IN')
         ->condition('menu_name', array_values($type_menus), 'IN')
         ->sort('id', 'ASC')
         ->range(0, 1);
@@ -95,8 +119,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
       $id = (!empty($result)) ? reset($result) : FALSE;
     }
     if ($id) {
-      $menu_link = MenuLinkContent::load($id);
-      $menu_link = \Drupal::service('entity.repository')->getTranslationFromContext($menu_link);
+      $menu_link = \Drupal::service('entity.repository')->getActive('menu_link_content', $id);
       $defaults = [
         'entity_id' => $menu_link->id(),
         'id' => $menu_link->getPluginId(),
@@ -150,7 +173,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
     $values = $form_state->getValue('menu');
     if (empty($values['enabled'])) {
       if ($values['entity_id']) {
-        $entity = MenuLinkContent::load($values['entity_id']);
+        $entity = \Drupal::service('entity.repository')->getActive('menu_link_content', $values['entity_id']);
         $entity->delete();
       }
     }

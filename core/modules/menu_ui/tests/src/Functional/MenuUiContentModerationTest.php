@@ -177,8 +177,14 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("Page {$node->label()} has been updated.");
+
+    // The link is created to the latest page, which the editor is allowed
+    // see, but an anonymous visitor not.
+    $this->assertSession()->linkExists('Second test menu link');
+    $this->drupalLogout();
     $this->assertSession()->linkNotExists('Second test menu link');
 
+    $this->drupalLogin($editor);
     // Publish the content and ensure the new menu link shows up.
     $edit = [
       'moderation_state[0][state]' => 'published',

@@ -345,13 +345,13 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function isDefaultRevision($new_value = NULL) {
-    $return = $this->isDefaultRevision;
-    if (isset($new_value)) {
-      $this->isDefaultRevision = (bool) $new_value;
-    }
+    $current_value = $this->isDefaultRevision;
     // New entities should always ensure at least one default revision exists,
     // creating an entity without a default revision is an invalid state.
-    return $this->isNew() || $return;
+    if (isset($new_value) && (!$this->isNew() || $new_value === TRUE)) {
+      $this->isDefaultRevision = (bool) $new_value;
+    }
+    return (bool) $current_value;
   }
 
   /**

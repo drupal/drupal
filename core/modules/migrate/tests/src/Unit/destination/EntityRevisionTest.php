@@ -114,7 +114,7 @@ class EntityRevisionTest extends UnitTestCase {
       ->willReturn($entity->reveal());
     // Make sure its set as an update and not the default revision.
     $entity->setNewRevision(FALSE)->shouldBeCalled();
-    $entity->isDefaultRevision(FALSE)->shouldBeCalled();
+    $entity->isDefaultRevision()->shouldNotBeCalled();
 
     $row = new Row(['nid' => 1, 'vid' => 2], ['nid' => 1, 'vid' => 2]);
     $row->setDestinationProperty('vid', 2);

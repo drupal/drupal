@@ -759,6 +759,14 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
     $id = parent::doPreSave($entity);
 
+    $previously_default_revision = $entity->wasDefaultRevision();
+    $no_longer_default = !$entity->isDefaultRevision();
+    $original_same_as_current = $entity->getOriginal()?->getRevisionId() == $entity->getLoadedRevisionId();
+    $not_new_revision = !$entity->isNewRevision();
+    if ($previously_default_revision && $no_longer_default && $original_same_as_current && $not_new_revision) {
+      throw new EntityStorageException("An existing default revision of the '{$this->entityTypeId}' entity type can not be changed to a non-default revision.");
+    }
+
     if (!$entity->isNew()) {
       // If the ID changed then original can't be loaded, throw an exception
       // in that case.
