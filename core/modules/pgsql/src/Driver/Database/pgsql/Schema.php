@@ -575,7 +575,7 @@ EOD;
       // exceed the 63 chars limit of PostgreSQL, we need to take care of that.
       // cSpell:disable-next-line
       // Example (drupal_Gk7Su_T1jcBHVuvSPeP22_I3Ni4GrVEgTYlIYnBJkro_idx).
-      if (str_contains($index->indexname, 'drupal_')) {
+      if (str_starts_with($index->indexname, 'drupal_')) {
         preg_match('/^drupal_(.*)_' . preg_quote($index_type, NULL) . '/', $index->indexname, $matches);
         $index_name = $matches[1];
       }
