@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Route;
  */
 class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCallbackInterface {
 
+  use RoutePathGenerationTrait;
+
   /**
    * Constructs a RouteProcessorCsrf object.
    *
@@ -37,11 +39,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
    */
   public function processOutbound($route_name, Route $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     if ($route->hasRequirement('_csrf_token')) {
-      $path = ltrim($route->getPath(), '/');
-      // Replace the path parameters with values from the parameters array.
-      foreach ($parameters as $param => $value) {
-        $path = str_replace("{{$param}}", $value, $path);
-      }
+      $path = $this->generateRoutePath($route, $parameters);
       // Adding this to the parameters means it will get merged into the query
       // string when the route is compiled.
       if (!$bubbleable_metadata || $this->requestStack->getCurrentRequest()->getRequestFormat() !== 'html') {
