@@ -1,0 +1,4 @@
+name: 'Permission config overrider'
+type: module
+package: Testing
+version: VERSION
