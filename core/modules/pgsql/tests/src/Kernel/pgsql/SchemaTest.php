@@ -366,6 +366,35 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
+   * Tests renaming a table which name contains drupal_ with multiple indexes.
+   */
+  public function testRenameTableWithNameContainingDrupalUnderscoreAndMultipleIndexes(): void {
+    $table_name_old = 'field_drupal_foo';
+    $table_name_new = 'field_drupal_bar';
+    $table_specification = [
+      'fields' => [
+        'one'  => [
+          'type' => 'int',
+          'default' => NULL,
+        ],
+        'two'  => [
+          'type' => 'int',
+          'default' => NULL,
+        ],
+      ],
+      'indexes' => [
+        'one' => ['one'],
+        'two' => ['two'],
+      ],
+    ];
+    $this->schema->createTable($table_name_old, $table_specification);
+
+    $this->schema->renameTable($table_name_old, $table_name_new);
+
+    $this->assertTrue($this->schema->tableExists($table_name_new));
+  }
+
+  /**
    * Tests column name escaping in field constraints.
    */
   public function testUnsignedField(): void {
