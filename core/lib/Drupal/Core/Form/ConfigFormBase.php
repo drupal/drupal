@@ -120,7 +120,9 @@ abstract class ConfigFormBase extends FormBase {
   }
 
   /**
-   * #after_build callback which stores a map of element names to config keys.
+   * Render API callback: Stores a map of element names to config keys.
+   *
+   * This function is assigned as a #after_build callback.
    *
    * This will store an array in the form state whose keys are strings in the
    * form of `CONFIG_NAME:PROPERTY_PATH`, and whose values are instances of

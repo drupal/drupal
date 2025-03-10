@@ -49,7 +49,9 @@ class UnicornEditor extends EditorBase {
   }
 
   /**
-   * #element_validate handler for "image_upload" in buildConfigurationForm().
+   * Render API callback: Image upload handler for confirmation form.
+   *
+   * This function is assigned as a #element_validate callback.
    *
    * Moves the text editor's image upload settings into $editor->image_upload.
    *

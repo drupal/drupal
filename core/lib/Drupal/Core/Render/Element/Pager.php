@@ -62,7 +62,9 @@ class Pager extends RenderElementBase {
   }
 
   /**
-   * #pre_render callback to associate the appropriate cache context.
+   * Render API callback: Associates the appropriate cache context.
+   *
+   * This function is assigned as a #pre_render callback.
    *
    * @param array $pager
    *   A renderable array of #type => pager.

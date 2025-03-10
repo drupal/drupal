@@ -411,7 +411,9 @@ interface DisplayPluginInterface {
   public function render();
 
   /**
-   * #pre_render callback for view display rendering.
+   * Render API callback: Performs view display rendering.
+   *
+   * This function is assigned as a #pre_render callback.
    *
    * @param array $element
    *   The element to #pre_render.

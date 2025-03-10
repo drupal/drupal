@@ -295,7 +295,9 @@ function views_ui_build_form_url(FormStateInterface $form_state) {
 }
 
 /**
- * #process callback for a button; determines if a button is the form's triggering element.
+ * The #process callback for a button.
+ *
+ * Determines if a button is the form's triggering element.
  *
  * The Form API has logic to determine the form's triggering element based on
  * the data in POST. However, it only checks buttons based on a single #value

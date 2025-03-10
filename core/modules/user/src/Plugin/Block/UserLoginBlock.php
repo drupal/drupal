@@ -152,7 +152,9 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
   }
 
   /**
-   * #lazy_builder callback; renders a form action URL including destination.
+   * Render API callback: Renders a form action URL including destination.
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * @return array
    *   A renderable array representing the form action.

@@ -61,7 +61,9 @@
       TagsNotGrouped, ParamGroup -->
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
-    <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
+  </rule>
+  <rule ref="Drupal.Commenting.DocComment">
+    <exclude-pattern>core/tests/*</exclude-pattern>
   </rule>
   <rule ref="Drupal.Commenting.DocCommentAlignment"/>
   <rule ref="Drupal.Commenting.DocCommentLongArraySyntax"/>

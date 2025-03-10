@@ -760,7 +760,9 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
-   * #pre_render callback for view row field rendering.
+   * Render API callback: Performs view row field rendering.
+   *
+   * This function is assigned as a #pre_render callback.
    *
    * @param array $data
    *   The element to #pre_render.

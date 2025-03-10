@@ -74,7 +74,9 @@ class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterf
   }
 
   /**
-   * #lazy_builder callback; builds a node's links.
+   * Render API callback: Builds a node's links.
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * @param string $node_entity_id
    *   The node entity ID.

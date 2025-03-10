@@ -45,7 +45,9 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; builds shortcut toolbar links.
+   * Render API callback: Builds shortcut toolbar links.
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * @param bool $show_configure_link
    *   Boolean to indicate whether to include the configure link or not.

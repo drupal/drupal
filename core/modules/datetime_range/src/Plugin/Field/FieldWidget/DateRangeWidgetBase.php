@@ -102,7 +102,9 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
   }
 
   /**
-   * #element_validate callback to ensure that the start date <= the end date.
+   * Render API callback: Validates that the start date <= the end date.
+   *
+   * This function is assigned as a #element_validate callback.
    *
    * @param array $element
    *   An associative array containing the properties and children of the

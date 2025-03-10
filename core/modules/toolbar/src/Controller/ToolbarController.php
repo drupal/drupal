@@ -99,7 +99,9 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
   }
 
   /**
-   * #pre_render callback for toolbar_get_rendered_subtrees().
+   * Render API callback: Prepares the subtrees.
+   *
+   * This function is assigned as a #pre_render callback.
    *
    * @internal
    */

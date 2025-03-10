@@ -130,7 +130,9 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; builds <time> markup with current time.
+   * Render API callback: Builds <time> markup with current time.
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * Note: does not actually use current time, that would complicate testing.
    *
@@ -146,7 +148,9 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; suspends its own execution then returns markup.
+   * Render API callback: Suspends its own execution then returns markup.
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * @return array
    *   A render array with a pig-themed message wrapped in a <span>,
@@ -166,7 +170,9 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; says "hello" or "hi".
+   * Render API callback: Says "hello" or "hi".
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * @return array
    *   A render array with a marquee message using BigPipeMarkup,
@@ -183,7 +189,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; throws exception.
+   * The #lazy_builder callback; throws exception.
    *
    * @throws \Exception
    */
@@ -192,7 +198,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; returns content that will trigger an exception.
+   * The #lazy_builder callback; returns content that will trigger an exception.
    *
    * @see \Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber::onRespondTriggerException()
    *
@@ -204,7 +210,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; returns the current count.
+   * The #lazy_builder callback; returns the current count.
    *
    * @see \Drupal\Tests\big_pipe\Functional\BigPipeTest::testBigPipeMultiOccurrencePlaceholders()
    *

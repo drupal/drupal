@@ -1183,7 +1183,9 @@ EOS;
 class RecursivePlaceholdersTest implements TrustedCallbackInterface {
 
   /**
-   * #lazy_builder callback; bubbles another placeholder.
+   * Render API callback: Bubbles another placeholder.
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * @param string $animal
    *   An animal.

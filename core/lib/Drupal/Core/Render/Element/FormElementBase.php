@@ -104,7 +104,9 @@ abstract class FormElementBase extends RenderElementBase implements FormElementI
   }
 
   /**
-   * #process callback for #pattern form element property.
+   * Render API callback: Handles the #pattern form element property.
+   *
+   * This function is assigned as a #process callback.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
@@ -127,7 +129,9 @@ abstract class FormElementBase extends RenderElementBase implements FormElementI
   }
 
   /**
-   * #element_validate callback for #pattern form element property.
+   * Render API callback: Handles the #pattern form element property..
+   *
+   * This function is assigned as a #element_validate callback.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
