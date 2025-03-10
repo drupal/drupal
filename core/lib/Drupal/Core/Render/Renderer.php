@@ -652,6 +652,11 @@ class Renderer implements RendererInterface {
    */
   protected function getCurrentRenderContext() {
     $request = $this->requestStack->getCurrentRequest();
+
+    if (is_null($request)) {
+      return NULL;
+    }
+
     return static::$contextCollection[$request] ?? NULL;
   }
 
