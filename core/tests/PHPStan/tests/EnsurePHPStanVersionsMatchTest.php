@@ -7,7 +7,7 @@ namespace Drupal\PHPStan\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests that PHPStan versions match.
+ * Tests that PHPStan version used for rules testing matches core.
  */
 class EnsurePHPStanVersionsMatchTest extends TestCase {
 

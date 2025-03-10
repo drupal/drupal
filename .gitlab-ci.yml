@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide updatedb stylelintrc unshallow
+# cspell:ignore codequality Micheh micheh webide testdox updatedb stylelintrc
 
 ################
 # Drupal GitLabCI template.
@@ -102,6 +102,25 @@ default:
 .default-job-settings-lint: &default-job-settings-lint
   rules:
     - if: $PERFORMANCE_TEST != "1"
+
+.default-phpunit-job-settings: &default-phpunit-job-settings
+  stage: 🪄 Lint
+  before_script:
+    - composer validate
+    - composer install --optimize-autoloader
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+  script:
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --verbose --non-html --all
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/phpunit-*.xml
+    paths:
+      - ./sites/default/files/simpletest/phpunit-*.xml
 
 .prepare-lint-directory: &prepare-lint-directory
   # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
@@ -312,40 +331,30 @@ default:
 # Lint Jobs
 ################
 
-
-'Lint cache warming':
+'📔 Spell-checking':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
-    - when: manual
-      allow_failure: true
   variables:
-    KUBERNETES_CPU_REQUEST: "4"
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - *prepare-lint-directory
-    - *phpstan-cache
     - *cspell-cache
-    - *eslint-cache
-    - *stylelint-cache
-    - composer install
-    - vendor/bin/phpstan --version
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist
     - *core-spellcheck
-    - yarn run lint:core-js-passing --cache --cache-strategy content
-    - yarn run build:css --check
-    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content
-    - mv -f /build/core/phpstan-tmp $CI_PROJECT_DIR/core
-    - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
-    - mv -f  /build/core/.eslintcache $CI_PROJECT_DIR/core
-    - mv -f  /build/core/.stylelintcache $CI_PROJECT_DIR/core
-  artifacts:
+    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
+    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
+    - mv /build/core/node_modules $CI_PROJECT_DIR/core
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
     paths:
-      - core/phpstan-tmp/resultCache.php
-      - core/.cspellcache
-      - core/.eslintcache
-      - core/.stylelintcache
+      - ./core/node_modules
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
 
 '📔 Spell-checking':
   <<: [ *default-job-settings-lint ]
@@ -489,6 +498,48 @@ default:
     reports:
       codequality: gl-codequality.json
 
+'⚡️ PHPUnit Unit tests on PHP 8.3':
+  <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
+  variables:
+    TESTSUITE: PHPUnit-Unit
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 24
+    _TARGET_PHP: "8.3-ubuntu"
+
+'⚡️ PHPUnit Unit tests on PHP 8.4':
+  <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
+  variables:
+    TESTSUITE: PHPUnit-Unit
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 24
+    _TARGET_PHP: "8.4-ubuntu"
+
+'✅️ PHPStan rules tests':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  # Run if PHPStan files have changed, or manually.
+  rules:
+    - if: $PERFORMANCE_TEST != "1"
+      changes:
+        - core/tests/PHPStan/**/*
+        - composer/Metapackage/PinnedDevDependencies/composer.json
+    - when: manual
+      allow_failure: true
+  script:
+    - docker-php-ext-enable pcov
+    - cd core/tests/PHPStan
+    - composer install
+    - vendor/bin/phpunit tests --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
+  artifacts:
+    when: always
+    reports:
+      junit: core/tests/PHPStan/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: core/tests/PHPStan/coverage.cobertura.xml
+
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
@@ -549,3 +600,36 @@ default:
          $impact = array_map(fn (float $h, float $m) => $m-$h, $head, $mr);
          exit((int) (min($impact) < 0));
       '
+
+'Lint cache warming':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+  variables:
+    KUBERNETES_CPU_REQUEST: "4"
+  script:
+    - *prepare-lint-directory
+    - *phpstan-cache
+    - *cspell-cache
+    - *eslint-cache
+    - *stylelint-cache
+    - composer install
+    - vendor/bin/phpstan --version
+    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist
+    - *core-spellcheck
+    - yarn run lint:core-js-passing --cache --cache-strategy content
+    - yarn run build:css --check
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content
+    - mv -f /build/core/phpstan-tmp $CI_PROJECT_DIR/core
+    - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
+    - mv -f  /build/core/.eslintcache $CI_PROJECT_DIR/core
+    - mv -f  /build/core/.stylelintcache $CI_PROJECT_DIR/core
+  artifacts:
+    paths:
+      - core/phpstan-tmp/resultCache.php
+      - core/.cspellcache
+      - core/.eslintcache
+      - core/.stylelintcache
+

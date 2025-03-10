@@ -659,12 +659,9 @@ function simpletest_script_setup_database($new = FALSE) {
     $databases['default'] = Database::getConnectionInfo('default');
   }
 
-  // If there is no default database connection for tests, we cannot continue.
-  if (!isset($databases['default']['default'])) {
-    simpletest_script_print_error('Missing default database connection for tests. Use --dburl to specify one.');
-    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+  if (isset($databases['default']['default'])) {
+    Database::addConnectionInfo('default', 'default', $databases['default']['default']);
   }
-  Database::addConnectionInfo('default', 'default', $databases['default']['default']);
 }
 
 /**
