@@ -240,7 +240,7 @@ class EditorAdminTest extends BrowserTestBase {
    *   The expected value of the ponies_too setting.
    */
   protected function verifyUnicornEditorConfiguration($format_id, $ponies_too = TRUE): void {
-    $editor = editor_load($format_id);
+    $editor = \Drupal::entityTypeManager()->getStorage('editor')->load($format_id);
     $settings = $editor->getSettings();
     $this->assertSame('unicorn', $editor->getEditor(), 'The text editor is configured correctly.');
     $this->assertSame($ponies_too, $settings['ponies_too'], 'The text editor settings are stored correctly.');

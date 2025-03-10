@@ -2,6 +2,7 @@
 
 namespace Drupal\editor\Plugin;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -18,20 +19,27 @@ use Drupal\editor\Attribute\Editor;
 class EditorManager extends DefaultPluginManager {
 
   /**
-   * Constructs an EditorManager object.
+   * Static cache of attachments.
    *
-   * @param \Traversable $namespaces
-   *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   Cache backend instance to use.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke the alter hook with.
+   * @var array
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  protected array $attachments = ['library' => []];
+
+  /**
+   * Editors.
+   *
+   * @var array
+   */
+  protected array $editors = [];
+
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, protected ?EntityTypeManagerInterface $entityTypeManager = NULL) {
     parent::__construct('Plugin/Editor', $namespaces, $module_handler, EditorPluginInterface::class, Editor::class, 'Drupal\editor\Annotation\Editor');
     $this->alterInfo('editor_info');
     $this->setCacheBackend($cache_backend, 'editor_plugins');
+    if ($this->entityTypeManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3447794', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
   }
 
   /**
@@ -60,41 +68,42 @@ class EditorManager extends DefaultPluginManager {
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    */
   public function getAttachments(array $format_ids) {
-    $attachments = ['library' => []];
+    $settings = $this->attachments['drupalSettings'] ?? [];
 
-    $settings = [];
-    foreach ($format_ids as $format_id) {
-      $editor = editor_load($format_id);
-      if (!$editor) {
-        continue;
+    if (($editor_ids_to_load = array_diff($format_ids, array_keys($this->editors)))) {
+      $editors = $this->entityTypeManager->getStorage('editor')
+        ->loadMultiple($editor_ids_to_load);
+      // Statically cache the editors and include NULL entries for formats that
+      // do not have editors.
+      $this->editors += $editors + array_fill_keys($editor_ids_to_load, NULL);
+      foreach ($editors as $format_id => $editor) {
+        $plugin = $this->createInstance($editor->getEditor());
+        $plugin_definition = $plugin->getPluginDefinition();
+
+        // Libraries.
+        $this->attachments['library'] = array_merge($this->attachments['library'], $plugin->getLibraries($editor));
+
+        // Format-specific JavaScript settings.
+        $settings['editor']['formats'][$format_id] = [
+          'format' => $format_id,
+          'editor' => $editor->getEditor(),
+          'editorSettings' => $plugin->getJSSettings($editor),
+          'editorSupportsContentFiltering' => $plugin_definition['supports_content_filtering'],
+          'isXssSafe' => $plugin_definition['is_xss_safe'],
+        ];
       }
-
-      $plugin = $this->createInstance($editor->getEditor());
-      $plugin_definition = $plugin->getPluginDefinition();
-
-      // Libraries.
-      $attachments['library'] = array_merge($attachments['library'], $plugin->getLibraries($editor));
-
-      // Format-specific JavaScript settings.
-      $settings['editor']['formats'][$format_id] = [
-        'format' => $format_id,
-        'editor' => $editor->getEditor(),
-        'editorSettings' => $plugin->getJSSettings($editor),
-        'editorSupportsContentFiltering' => $plugin_definition['supports_content_filtering'],
-        'isXssSafe' => $plugin_definition['is_xss_safe'],
-      ];
     }
 
     // Allow other modules to alter all JavaScript settings.
     $this->moduleHandler->alter('editor_js_settings', $settings);
 
-    if (empty($attachments['library']) && empty($settings)) {
+    if (empty($this->attachments['library']) && empty($settings)) {
       return [];
     }
 
-    $attachments['drupalSettings'] = $settings;
+    $this->attachments['drupalSettings'] = $settings;
 
-    return $attachments;
+    return $this->attachments;
   }
 
 }

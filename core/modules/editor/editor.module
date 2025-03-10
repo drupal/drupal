@@ -80,7 +80,7 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
   // Delete the existing editor if disabling or switching between editors.
   $format = $form_state->getFormObject()->getEntity();
   $format_id = $format->isNew() ? NULL : $format->id();
-  $original_editor = editor_load($format_id);
+  $original_editor = $format_id ? Editor::load($format_id) : NULL;
   if ($original_editor && $original_editor->getEditor() != $form_state->getValue(['editor', 'editor'])) {
     $original_editor->delete();
   }
@@ -116,19 +116,24 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
 /**
  * Loads an individual configured text editor based on text format ID.
  *
- * @param int $format_id
+ * @param string $format_id
  *   A text format ID.
  *
  * @return \Drupal\editor\Entity\Editor|null
  *   A text editor object, or NULL.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal::entityTypeManager()->getStorage('editor')->load($format_id)
+ *   instead.
+ * @see https://www.drupal.org/node/3509245
  */
 function editor_load($format_id) {
-  // Load all the editors at once here, assuming that either no editors or more
-  // than one editor will be needed on a page (such as having multiple text
-  // formats for administrators). Loading a small number of editors all at once
-  // is more efficient than loading multiple editors individually.
-  $editors = Editor::loadMultiple();
-  return $editors[$format_id] ?? NULL;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal::entityTypeManager()->getStorage(\'editor\')->load($format_id) instead. See https://www.drupal.org/node/3509245', E_USER_DEPRECATED);
+  // While loading multiple editors at once is a more efficient query, on warm
+  // caches, loading editor configuration from APCu is fast and avoids a call to
+  // ConfigFactory::listAll() in a loadMultiple() call with no IDs passed.
+  // @see Drupal\Core\Config\Entity\ConfigEntityStorage::doLoadMultiple()
+  return $format_id ? Editor::load($format_id) : NULL;
 }
 
 /**
@@ -156,7 +161,7 @@ function editor_load($format_id) {
  * @see https://www.drupal.org/node/2099741
  */
 function editor_filter_xss($html, ?FilterFormatInterface $format = NULL, ?FilterFormatInterface $original_format = NULL) {
-  $editor = $format ? editor_load($format->id()) : NULL;
+  $editor = $format ? Editor::load($format->id()) : NULL;
 
   // If no text editor is associated with this text format or the previously
   // defined text format is now disabled, then we don't need text editor XSS
