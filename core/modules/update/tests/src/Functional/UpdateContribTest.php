@@ -538,12 +538,12 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Turn the altering back on and visit the Update manager UI.
     $update_test_config->set('update_status', $update_status)->save();
-    $this->drupalGet('admin/modules/update');
+    $this->drupalGet('admin/reports/updates');
     $this->assertSession()->pageTextContains('Security update');
 
     // Turn the altering back off and visit the Update manager UI.
     $update_test_config->set('update_status', [])->save();
-    $this->drupalGet('admin/modules/update');
+    $this->drupalGet('admin/reports/updates');
     $this->assertSession()->pageTextNotContains('Security update');
   }
 

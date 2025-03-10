@@ -24,6 +24,3 @@ services:
   logger.channel.update:
     parent: logger.channel_base
     arguments: [ 'update' ]
-  update.route_subscriber:
-    class: Drupal\update\Routing\UpdateRouteSubscriber
-    arguments: ['@settings']

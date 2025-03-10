@@ -28,10 +28,6 @@ class UpdateHooks {
           ':update' => 'https://www.drupal.org/documentation/modules/update',
           ':modules' => Url::fromRoute('system.modules_list')->toString(),
         ]) . '</p>';
-        // Only explain the Update manager if it has not been uninstalled.
-        if (_update_manager_access()) {
-          $output .= '<p>' . $this->t('The Update Manager also allows administrators to add and update modules and themes through the administration interface.') . '</p>';
-        }
         $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
         $output .= '<dt>' . $this->t('Checking for available updates') . '</dt>';
@@ -39,15 +35,6 @@ class UpdateHooks {
           ':update-report' => Url::fromRoute('update.status')->toString(),
           ':update-settings' => Url::fromRoute('update.settings')->toString(),
         ]) . '</dd>';
-        // Only explain the Update manager if it has not been uninstalled.
-        if (_update_manager_access()) {
-          $output .= '<dt>' . $this->t('Performing updates through the Update page') . '</dt>';
-          $output .= '<dd>' . $this->t('The Update Manager module allows administrators to perform updates directly from the <a href=":update-page">Update page</a>. It lists all available updates, and you can confirm whether you want to download them. If you don\'t have sufficient access rights to your web server, you could be prompted for your FTP/SSH password. Afterwards the files are transferred into your site installation, overwriting your old files. Direct links to the Update page are also displayed on the <a href=":modules_page">Extend page</a> and the <a href=":themes_page">Appearance page</a>.', [
-            ':modules_page' => Url::fromRoute('system.modules_list')->toString(),
-            ':themes_page' => Url::fromRoute('system.themes_page')->toString(),
-            ':update-page' => Url::fromRoute('update.report_update')->toString(),
-          ]) . '</dd>';
-        }
         $output .= '</dl>';
         return $output;
 
@@ -75,14 +62,10 @@ class UpdateHooks {
       $route_name = \Drupal::routeMatch()->getRouteName();
       switch ($route_name) {
         // These pages don't need additional nagging.
-        case 'update.theme_update':
-        case 'update.module_update':
         case 'update.status':
-        case 'update.report_update':
         case 'update.settings':
         case 'system.status':
         case 'system.theme_install':
-        case 'update.confirmation_page':
         case 'system.batch_page.html':
           return;
 
@@ -266,9 +249,6 @@ class UpdateHooks {
       $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
     }
     $message['body'][] = $this->t('See the available updates page for more information:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.status', [], ['absolute' => TRUE, 'language' => $language])->toString();
-    if (_update_manager_access()) {
-      $message['body'][] = $this->t('You can automatically download your missing updates using the Update manager:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.report_update', [], ['absolute' => TRUE, 'language' => $language])->toString();
-    }
     $settings_url = Url::fromRoute('update.settings', [], ['absolute' => TRUE])->toString();
     if (\Drupal::config('update.settings')->get('notification.threshold') == 'all') {
       $message['body'][] = $this->t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, @url.', ['@url' => $settings_url]);

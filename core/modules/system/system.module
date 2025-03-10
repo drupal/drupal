@@ -210,13 +210,6 @@ function template_preprocess_entity_add_list(&$variables): void {
  *   system_authorized_init($callback, $file, $arguments, $page_title);
  *   return new RedirectResponse(system_authorized_get_url()->toString());
  * @endcode
- * Example (Drupal\update\Form\UpdateReady::submitForm()):
- * @code
- *  system_authorized_init('update_authorize_run_update',
- *    __DIR__ . '/../../update.authorize.inc',
- *    [$updates], $this->t('Update manager'));
- *  $form_state->setRedirectUrl(system_authorized_get_url());
- * @endcode
  *
  * @param callable $callback
  *   The name of the function to invoke once the user authorizes the operation.

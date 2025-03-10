@@ -178,16 +178,12 @@ class UpdateManager implements UpdateManagerInterface {
     // On certain paths, we should clear the data and recompute the projects for
     // update status of the site to avoid presenting stale information.
     $route_names = [
-      'update.theme_update',
       'system.modules_list',
       'system.theme_install',
-      'update.module_update',
       'update.status',
-      'update.report_update',
       'update.settings',
       'system.status',
       'update.manual_status',
-      'update.confirmation_page',
       'system.themes_page',
     ];
     if (in_array(\Drupal::routeMatch()->getRouteName(), $route_names)) {

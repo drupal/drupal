@@ -8,39 +8,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
-use Drupal\Core\Url;
 use Psr\Http\Client\ClientExceptionInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
-/**
- * Batch callback: Performs actions when the download batch is completed.
- *
- * @param bool $success
- *   TRUE if the batch operation was successful, FALSE if there were errors.
- * @param array $results
- *   An associative array of results from the batch operation.
- */
-#[StopProceduralHookScan]
-function update_manager_download_batch_finished($success, $results) {
-  if (!empty($results['errors'])) {
-    $item_list = [
-      '#theme' => 'item_list',
-      '#title' => t('Downloading updates failed:'),
-      '#items' => $results['errors'],
-    ];
-    \Drupal::messenger()->addError(\Drupal::service('renderer')->render($item_list));
-  }
-  elseif ($success) {
-    \Drupal::messenger()->addStatus(t('Updates downloaded successfully.'));
-    \Drupal::request()->getSession()->set('update_manager_update_projects', $results['projects']);
-    return new RedirectResponse(Url::fromRoute('update.confirmation_page', [], ['absolute' => TRUE])->toString());
-  }
-  else {
-    // Ideally we're catching all Exceptions, so they should never see this,
-    // but just in case, we have to tell them something.
-    \Drupal::messenger()->addError(t('Fatal error trying to download.'));
-  }
-}
 
 /**
  * Checks for file transfer backends and prepares a form fragment about them.
@@ -56,6 +24,7 @@ function update_manager_download_batch_finished($success, $results) {
  *   workflow, or FALSE if we've hit a fatal configuration and must halt the
  *   workflow.
  */
+#[StopProceduralHookScan]
 function _update_manager_check_backends(&$form, $operation) {
   // If file transfers will be performed locally, we do not need to display any
   // warnings or notices to the user and should automatically continue the

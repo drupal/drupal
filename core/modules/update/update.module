@@ -13,23 +13,9 @@ use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 
 /**
- * Resolves if the current user can access updater menu items.
- *
- * It both enforces the 'administer software updates' permission and the global
- * kill switch for the authorize.php script.
- *
- * @return bool
- *   TRUE if the current user can access the updater menu items; FALSE
- *   otherwise.
- */
-#[StopProceduralHookScan]
-function _update_manager_access() {
-  return Settings::get('allow_authorize_operations', TRUE) && \Drupal::currentUser()->hasPermission('administer software updates');
-}
-
-/**
  * Returns a warning message when there is no data about available updates.
  */
+#[StopProceduralHookScan]
 function _update_no_data() {
   $destination = \Drupal::destination()->getAsArray();
   return t('No update information available. <a href=":run_cron">Run cron</a> or <a href=":check_manually">check manually</a>.', [

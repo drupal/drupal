@@ -22,35 +22,3 @@ update.manual_status:
   requirements:
     _permission: 'administer site configuration'
     _csrf_token: 'TRUE'
-
-update.report_update:
-  path: '/admin/reports/updates/update'
-  defaults:
-    _form: '\Drupal\update\Form\UpdateManagerUpdate'
-    _title: 'Update'
-  requirements:
-    _permission: 'administer software updates'
-
-update.module_update:
-  path: '/admin/modules/update'
-  defaults:
-    _form: '\Drupal\update\Form\UpdateManagerUpdate'
-    _title: 'Update'
-  requirements:
-    _permission: 'administer software updates'
-
-update.theme_update:
-  path: '/admin/appearance/update'
-  defaults:
-    _form: '\Drupal\update\Form\UpdateManagerUpdate'
-    _title: 'Update'
-  requirements:
-    _permission: 'administer software updates'
-
-update.confirmation_page:
-  path: '/admin/update/ready'
-  defaults:
-    _form: '\Drupal\update\Form\UpdateReady'
-    _title: 'Ready to update'
-  requirements:
-    _permission: 'administer software updates'
