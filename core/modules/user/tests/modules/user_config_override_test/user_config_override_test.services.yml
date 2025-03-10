@@ -1,0 +1,5 @@
+services:
+  user_config_override_test.overrider:
+    class: Drupal\user_config_override_test\ConfigOverrider
+    tags:
+      - { name: config.factory.override }

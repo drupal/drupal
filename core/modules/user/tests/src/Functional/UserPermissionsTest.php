@@ -40,6 +40,13 @@ class UserPermissionsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = [
+    'user_config_override_test',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -329,6 +336,18 @@ class UserPermissionsTest extends BrowserTestBase {
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('access denied');
     $assert_session->pageTextNotContains("Entity view display 'node.article.default': Component");
+  }
+
+  /**
+   * Verify that the permission form does not use overridden config.
+   *
+   * @see \Drupal\user_config_override_test\ConfigOverrider
+   */
+  public function testOverriddenPermission(): void {
+    $this->drupalLogin($this->adminUser);
+
+    $this->drupalGet('admin/people/permissions');
+    $this->assertSession()->checkboxNotChecked('anonymous[access content]');
   }
 
 }
