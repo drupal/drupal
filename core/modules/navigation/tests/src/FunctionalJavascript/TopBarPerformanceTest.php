@@ -74,8 +74,6 @@ class TopBarPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => $performance_data_before_top_bar->getCacheGetCount(),
       'CacheSetCount' => $performance_data_before_top_bar->getCacheSetCount(),
       'CacheDeleteCount' => $performance_data_before_top_bar->getCacheDeleteCount(),
-      'CacheTagChecksumCount' => $performance_data_before_top_bar->getCacheTagChecksumCount(),
-      'CacheTagIsValidCount' => $performance_data_before_top_bar->getCacheTagIsValidCount(),
       'CacheTagInvalidationCount' => $performance_data_before_top_bar->getCacheTagInvalidationCount(),
     ], $performance_data_after_top_bar);
   }

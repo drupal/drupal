@@ -331,8 +331,15 @@ class PerformanceData {
    *
    * @return int
    *   The number of cache tag checksum checks recorded.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+   *   no direct replacement.
+   *
+   * @see https://www.drupal.org/node/3511149
    */
   public function getCacheTagChecksumCount(): int {
+    @trigger_error(__METHOD__ . 'is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3511149', E_DEPRECATED);
+
     return $this->cacheTagChecksumCount;
   }
 
@@ -351,8 +358,14 @@ class PerformanceData {
    *
    * @return int
    *   The number of cache tag isValid checks recorded.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+   * no direct replacement.
+   *
+   * @see https://www.drupal.org/node/3511149
    */
   public function getCacheTagIsValidCount(): int {
+    @trigger_error(__METHOD__ . 'is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3511149', E_DEPRECATED);
     return $this->cacheTagIsValidCount;
   }
 

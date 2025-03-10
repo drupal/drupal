@@ -66,8 +66,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 1,
       'CacheSetCount' => 0,
       'CacheDeleteCount' => 0,
-      'CacheTagChecksumCount' => 0,
-      'CacheTagIsValidCount' => 1,
+      'CacheTagLookupQueryCount' => 1,
     ];
     $this->assertMetrics($expected, $performance_data);
   }

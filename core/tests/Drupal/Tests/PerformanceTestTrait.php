@@ -699,8 +699,7 @@ trait PerformanceTestTrait {
       'CacheGetCount' => $performance_data->getCacheGetCount(),
       'CacheSetCount' => $performance_data->getCacheSetCount(),
       'CacheDeleteCount' => $performance_data->getCacheDeleteCount(),
-      'CacheTagChecksumCount' => $performance_data->getCacheTagChecksumCount(),
-      'CacheTagIsValidCount' => $performance_data->getCacheTagIsValidCount(),
+      'CacheTagLookupQueryCount' => $performance_data->getCacheTagLookupQueryCount(),
       'CacheTagInvalidationCount' => $performance_data->getCacheTagInvalidationCount(),
     ];
   }

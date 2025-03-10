@@ -73,8 +73,6 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 1,
       'CacheSetCount' => 0,
       'CacheDeleteCount' => 0,
-      'CacheTagChecksumCount' => 0,
-      'CacheTagIsValidCount' => 1,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 1,
       'ScriptCount' => 1,
