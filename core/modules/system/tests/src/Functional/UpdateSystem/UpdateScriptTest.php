@@ -811,8 +811,9 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Updates were attempted.');
     $this->assertSession()->linkExists('logged');
     $this->assertSession()->linkExists('Administration pages');
+    $this->assertSession()->linkExists('Status report');
     $this->assertSession()->elementNotExists('xpath', '//main//a[contains(@href, "update.php")]');
-    $this->clickLink('Administration pages');
+    $this->clickLink('Status report');
     $this->assertSession()->statusCodeEquals(200);
   }
 

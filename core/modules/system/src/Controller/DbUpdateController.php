@@ -710,6 +710,12 @@ class DbUpdateController extends ControllerBase {
         'url' => Url::fromRoute('system.admin')->setOption('base_url', $base_url),
       ];
     }
+    if ($this->account->hasPermission('administer site configuration')) {
+      $links['status-report'] = [
+        'title' => $this->t('Status report'),
+        'url' => Url::fromRoute('system.status')->setOption('base_url', $base_url),
+      ];
+    }
     return $links;
   }
 
