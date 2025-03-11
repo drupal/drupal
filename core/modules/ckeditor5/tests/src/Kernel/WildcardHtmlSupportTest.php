@@ -101,6 +101,9 @@ class WildcardHtmlSupportTest extends KernelTestBase {
     $this->assertEquals($expected_ghs_configuration, $ghs_configuration);
   }
 
+  /**
+   * Provides test cases for CKEditor 5 General HTML Support (GHS) configuration.
+   */
   public static function providerGhsConfiguration(): array {
     return [
       'empty source editing' => [

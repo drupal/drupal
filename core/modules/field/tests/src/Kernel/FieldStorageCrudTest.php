@@ -372,6 +372,9 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     }
   }
 
+  /**
+   * Tests that updating a field storage type is not allowed.
+   */
   public function testUpdateFieldType(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_type',

@@ -37,6 +37,9 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
+  /**
+   * Tests the application of configuration actions on a node type.
+   */
   public function testConfigActions(): void {
     $node_type = $this->createContentType();
 

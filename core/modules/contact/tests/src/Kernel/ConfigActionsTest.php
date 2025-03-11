@@ -34,6 +34,9 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
+  /**
+   * Tests the application of configuration actions on a contact form.
+   */
   public function testConfigActions(): void {
     $form = ContactForm::load('personal');
     $this->assertSame('Your message has been sent.', $form->getMessage());

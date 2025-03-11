@@ -65,6 +65,9 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
     $view->destroy();
   }
 
+  /**
+   * Tests the entity reference field using a view for selection.
+   */
   public function testNodePathWithViewSelection(): void {
     // Change the term entity reference field to use a view as selection plugin.
     \Drupal::service('module_installer')->install(['entity_reference_test']);
@@ -87,6 +90,9 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
     $this->assertEquals($this->nodes[0]->getCacheTags(), $view->argument['tid']->getPlugin('argument_default')->getCacheTags());
   }
 
+  /**
+   * Tests the behavior of term ID argument when accessing a term path.
+   */
   public function testTermPath(): void {
     $view = $this->initViewWithRequest($this->term1->toUrl()->toString());
 

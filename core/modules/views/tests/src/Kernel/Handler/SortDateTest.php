@@ -21,6 +21,9 @@ class SortDateTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
+  /**
+   * Generates an expected result set based on the specified granularity and order.
+   */
   protected function expectedResultSet($granularity, $reverse = TRUE): array {
     $expected = [];
     if (!$reverse) {

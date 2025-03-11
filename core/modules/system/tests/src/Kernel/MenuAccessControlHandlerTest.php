@@ -65,6 +65,12 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
     static::assertEquals($create_access_result, $this->accessControlHandler->createAccess(NULL, $user, [], TRUE));
   }
 
+  /**
+   * Provides test cases for menu access control based on user permissions and menu lock status.
+   *
+   * @return array
+   *   An array of test cases.
+   */
   public static function providerTestAccess(): array {
     // RefinableCacheableDependencyTrait::addCacheContexts() only needs the
     // container to perform an assertion, but we can't use the container here,

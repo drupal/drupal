@@ -26,6 +26,9 @@ class FieldCounterTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
+  /**
+   * Tests the behavior of a simple View rendering with overridden field options.
+   */
   public function testSimple(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();

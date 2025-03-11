@@ -88,6 +88,9 @@ class TestPluginBase extends PluginBase {
     parent::__construct([], '', []);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function viewsTokenReplace($text, $tokens) {
     return parent::viewsTokenReplace($text, $tokens);
   }

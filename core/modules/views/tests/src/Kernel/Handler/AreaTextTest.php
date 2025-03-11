@@ -37,6 +37,9 @@ class AreaTextTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
   }
 
+  /**
+   * Tests the rendering of a text area.
+   */
   public function testAreaText(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');

@@ -28,12 +28,18 @@ class FieldUrlTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
+  /**
+   * Defines the Views data for the test entity.
+   */
   public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['field']['id'] = 'url';
     return $data;
   }
 
+  /**
+   * Tests the rendering of a field as a plain text value and as a link.
+   */
   public function testFieldUrl(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();

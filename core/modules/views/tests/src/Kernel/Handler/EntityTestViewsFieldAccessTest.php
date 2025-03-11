@@ -30,6 +30,9 @@ class EntityTestViewsFieldAccessTest extends FieldFieldAccessTestBase {
     ConfigurableLanguage::create(['id' => 'es', 'title' => 'Spanish title', 'label' => 'Spanish label'])->save();
   }
 
+  /**
+   * Tests field access permissions for the 'entity_test' entity in Views.
+   */
   public function testEntityTestFields(): void {
     $entity_test = EntityTest::create([
       'name' => 'test entity name',

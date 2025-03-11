@@ -32,6 +32,9 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
+  /**
+   * Tests adding an image effect using the configuration action manager.
+   */
   public function testConfigActions(): void {
     $style = ImageStyle::load('large');
     $this->assertCount(2, $style->getEffects());

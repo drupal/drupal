@@ -32,6 +32,9 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
+  /**
+   * Tests the application of configuration actions on a language.
+   */
   public function testConfigActions(): void {
     $language = ConfigurableLanguage::load('en');
     $this->assertSame('English', $language->getName());

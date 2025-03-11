@@ -44,6 +44,9 @@ class InlineBlockUsageTest extends KernelTestBase {
    */
   protected EntityTest $entity;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->database = $this->container->get('database');

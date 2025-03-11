@@ -22,6 +22,9 @@ class ArgumentValidatorTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view_argument_validate_numeric', 'test_view'];
 
+  /**
+   * Tests numeric argument validation in a view.
+   */
   public function testArgumentValidateNumeric(): void {
     $view = Views::getView('test_view_argument_validate_numeric');
     $view->initHandlers();

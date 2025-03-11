@@ -228,6 +228,9 @@ class UnknownPathExcluderTest extends PackageManagerKernelTestBase {
     $this->assertFileDoesNotExist($stage->getStageDirectory() . '/unknown/file.txt');
   }
 
+  /**
+   * Tests that path repositories are included.
+   */
   public function testPathRepositoriesAreIncluded(): void {
     $this->createTestProjectForTemplate(TRUE);
 

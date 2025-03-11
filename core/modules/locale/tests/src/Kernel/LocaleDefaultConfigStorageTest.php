@@ -23,6 +23,9 @@ class LocaleDefaultConfigStorageTest extends KernelTestBase {
     'locale_test_translate',
   ];
 
+  /**
+   * Tests retrieval of component names from locale default config storage.
+   */
   public function testGetComponentNames(): void {
     $storage = new LocaleDefaultConfigStorage(
       new NullStorage(),

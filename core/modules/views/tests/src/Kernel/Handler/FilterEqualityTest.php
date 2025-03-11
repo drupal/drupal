@@ -35,12 +35,18 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     'views_test_data_name' => 'name',
   ];
 
+  /**
+   * Defines Views data, mapping 'name' field to the equality filter.
+   */
   public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['filter']['id'] = 'equality';
     return $data;
   }
 
+  /**
+   * Tests filtering names where the value matches exactly.
+   */
   public function testEqual(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
@@ -66,6 +72,9 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
+  /**
+   * Tests grouped, exposed equality filtering.
+   */
   public function testEqualGroupedExposed(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
@@ -86,6 +95,9 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
+  /**
+   * Tests filtering names using a not-equal condition.
+   */
   public function testNotEqual(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
@@ -120,6 +132,9 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
+  /**
+   * Tests grouped, non-exposed inequality filtering.
+   */
   public function testEqualGroupedNotExposed(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
@@ -149,6 +164,9 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
+  /**
+   * Provides grouped exposed filter options for the 'name' field.
+   */
   protected function getGroupedExposedFilters(): array {
     $filters = [
       'name' => [

@@ -41,6 +41,9 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
+  /**
+   * Tests the application of configuration actions on field settings.
+   */
   public function testConfigActions(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test',

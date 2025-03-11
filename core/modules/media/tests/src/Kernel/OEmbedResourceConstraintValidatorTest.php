@@ -118,6 +118,9 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
         $this->entity = $entity;
       }
 
+      /**
+       * Returns the test entity.
+       */
       public function getEntity(): Media {
         return $this->entity;
       }

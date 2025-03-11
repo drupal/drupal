@@ -909,6 +909,9 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
     $this->assertSame([], $validator->getErrors(), 'Validation errors on object ' . print_r($normalized, TRUE) . ' with schema ' . print_r($schema, TRUE));
   }
 
+  /**
+   * Tests the serialization of a top-level JSON:API document with a single resource.
+   */
   public function testTopLevelResourceWithSingleResource(): void {
     [, $resource_object] = $this->getTestContentEntityResource();
     $serializer = $this->container->get('jsonapi.serializer');

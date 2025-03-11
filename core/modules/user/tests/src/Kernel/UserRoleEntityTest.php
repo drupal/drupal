@@ -31,6 +31,9 @@ class UserRoleEntityTest extends KernelTestBase {
       ->addTag('logger');
   }
 
+  /**
+   * Tests the order of granted permissions in a role.
+   */
   public function testOrderOfPermissions(): void {
     $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
     $role->grantPermission('b')
@@ -46,6 +49,9 @@ class UserRoleEntityTest extends KernelTestBase {
     $this->assertEquals(['a', 'b', 'c'], $role->getPermissions());
   }
 
+  /**
+   * Tests granting non-existent permissions to a role.
+   */
   public function testGrantingNonExistentPermission(): void {
     $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
 
@@ -73,6 +79,9 @@ class UserRoleEntityTest extends KernelTestBase {
     $this->assertEmpty(array_intersect(['does not exist', 'also does not exist'], $permissions));
   }
 
+  /**
+   * Tests permission revocation during a configuration synchronization.
+   */
   public function testPermissionRevokeAndConfigSync(): void {
     $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
     $role->setSyncing(TRUE);

@@ -49,6 +49,9 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
+  /**
+   * Tests the application of entity method actions on a block.
+   */
   public function testEntityMethodActions(): void {
     $block = $this->placeBlock('system_messages_block', ['theme' => 'olivero']);
     $this->assertSame('content', $block->getRegion());
@@ -80,6 +83,9 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
   }
 
+  /**
+   * Verifies placeBlockInDefaultTheme action doesn't alter an existing block.
+   */
   public function testPlaceBlockActionDoesNotChangeExistingBlock(): void {
     $extant_region = Block::load('olivero_powered')->getRegion();
     $this->assertNotSame('content', $extant_region);
@@ -139,11 +145,17 @@ class ConfigActionsTest extends KernelTestBase {
     $this->assertSame('content', $block->getRegion());
   }
 
+  /**
+   * Tests placing a block in the default theme's region.
+   */
   public function testPlaceBlockInDefaultRegion(): void {
     $this->config('system.theme')->set('default', 'umami')->save();
     $this->testPlaceBlockInDynamicRegion('placeBlockInDefaultTheme', 'umami', 'content');
   }
 
+  /**
+   * Tests placing a block at the first and last position in a region.
+   */
   public function testPlaceBlockAtPosition(): void {
     // Ensure there's at least one block already in the region.
     $block = Block::create([

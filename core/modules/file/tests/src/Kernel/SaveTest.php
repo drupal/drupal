@@ -17,6 +17,9 @@ class SaveTest extends FileManagedUnitTestBase {
 
   use UserCreationTrait;
 
+  /**
+   * Tests the saving process of file entities.
+   */
   public function testFileSave(): void {
     $account = $this->createUser();
     // Create a new file entity.
