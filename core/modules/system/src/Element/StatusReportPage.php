@@ -136,6 +136,11 @@ class StatusReportPage extends RenderElementBase {
     $element['#requirements'] = [
       '#type' => 'status_report',
       '#requirements' => $element['#requirements'],
+      '#attached' => [
+        'library' => [
+          'system/status.report',
+        ],
+      ],
     ];
 
     return $element;

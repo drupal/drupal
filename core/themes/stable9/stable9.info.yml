@@ -231,9 +231,6 @@ libraries-override:
         css/components/position-container.module.css: css/system/components/position-container.module.css
         css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
         css/components/resize.module.css: css/system/components/resize.module.css
-        css/components/system-status-counter.css: css/system/components/system-status-counter.css
-        css/components/system-status-report-counters.css: css/system/components/system-status-report-counters.css
-        css/components/system-status-report-general-info.css: css/system/components/system-status-report-general-info.css
         css/components/tablesort.module.css: css/system/components/tablesort.module.css
   system/admin:
     css:
@@ -247,6 +244,13 @@ libraries-override:
     css:
       component:
         css/system.diff.css: css/system/system.diff.css
+
+  system/status.report:
+    css:
+      component:
+        css/components/system-status-counter.css: css/system/components/system-status-counter.css
+        css/components/system-status-report-counters.css: css/system/components/system-status-report-counters.css
+        css/components/system-status-report-general-info.css: css/system/components/system-status-report-general-info.css
 
   taxonomy/drupal.taxonomy:
     css:

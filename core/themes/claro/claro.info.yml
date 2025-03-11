@@ -37,12 +37,7 @@ libraries-override:
       component:
         misc/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
 
-  system/base:
-    css:
-      component:
-        css/components/system-status-counter.css: css/components/system-status-counter.css
-        css/components/system-status-report-counters.css: css/components/system-status-report-counters.css
-        css/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
+  system/status.report: claro/status.report
 
   system/admin:
     css:
@@ -148,6 +143,8 @@ libraries-extend:
     - claro/form.password-confirm
   node/drupal.node.preview:
     - claro/drupal.node.preview
+  system/status.report:
+    - claro/status.report
   views/views.module:
     - claro/views
   views_ui/admin.styling:

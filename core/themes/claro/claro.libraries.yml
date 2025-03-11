@@ -51,10 +51,6 @@ global-styling:
       css/components/table--file-multiple-widget.css: {}
       css/components/search-admin-settings.css: {}
       css/components/tablesort-indicator.css: {}
-      css/components/system-status-report-general-info.css: {}
-      css/components/system-status-report.css: {}
-      css/components/system-status-report-counters.css: {}
-      css/components/system-status-counter.css: {}
       css/components/tableselect.css: {}
       css/components/tabs.css: {}
     theme:
@@ -219,6 +215,31 @@ form.password-confirm:
   dependencies:
     - core/drupal
     - claro/global-styling
+
+
+status.report:
+  version: VERSION
+  css:
+    component:
+      css/components/system-status-report-general-info.css: {}
+      css/components/system-status-report.css: {}
+      css/components/system-status-report-counters.css: {}
+      css/components/system-status-counter.css: {}
+  moved_files:
+    claro/global-styling:
+      deprecation_version: 11.2.0
+      removed_version: 12.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/system-status-report.css:
+            base: css/components/system-status-report.css
+          css/components/system-status-counter.css:
+            base: css/components/system-status-counter.css
+          css/components/system-status-report-counters.css:
+            base: css/components/system-status-report-counters.css
+          css/components/system-status-report-general-info.css:
+            base: css/components/system-status-report-general-info.css
 
 views:
   css:

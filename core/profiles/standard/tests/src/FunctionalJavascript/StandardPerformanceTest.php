@@ -168,7 +168,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:user.role.anonymous'],
       ],
       'StylesheetCount' => 1,
-      'StylesheetBytes' => 3450,
+      'StylesheetBytes' => 2250,
     ];
     $this->assertMetrics($expected, $performance_data);
     $expected_default_cache_cids = [
@@ -228,7 +228,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:user.role.anonymous'],
       ],
       'StylesheetCount' => 1,
-      'StylesheetBytes' => 3150,
+      'StylesheetBytes' => 2250,
     ];
     $this->assertMetrics($expected, $performance_data);
 
@@ -265,7 +265,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 16,
       'StylesheetCount' => 1,
-      'StylesheetBytes' => 3150,
+      'StylesheetBytes' => 1950,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
