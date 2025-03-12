@@ -23,6 +23,7 @@ use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\file\IconMimeTypes;
+use Drupal\file\Plugin\Field\FieldFormatter\FileVideoFormatter;
 use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\file\Upload\FormUploadedFile;
 
@@ -764,4 +765,13 @@ function file_system_settings_submit(array &$form, FormStateInterface $form_stat
   $config = \Drupal::configFactory()->getEditable('file.settings')
     ->set('filename_sanitization', $form_state->getValue('filename_sanitization'));
   $config->save();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function file_file_video_presave(FileVideoFormatter $formatter): void {
+  if ($formatter->getSetting('playsinline') === NULL) {
+    $formatter->setSetting('playsinline', FALSE);
+  }
 }
