@@ -2,7 +2,7 @@
 
 namespace Drupal\views\Ajax;
 
-use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Cache\CacheableAjaxResponse;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\views\ViewExecutable;
  *
  * We use a special response object to be able to fire a proper alter hook.
  */
-class ViewAjaxResponse extends AjaxResponse {
+class ViewAjaxResponse extends CacheableAjaxResponse {
 
   /**
    * The view executed on this ajax request.
