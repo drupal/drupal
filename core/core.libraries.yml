@@ -756,7 +756,12 @@ jquery:
     url: https://raw.githubusercontent.com/jquery/jquery/4.0.0-beta.2/LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
+    # jquery.min.js is explicitly set to preprocess: false to prevent its
+    # inclusion in JavaScript aggregates. This prevents it being duplicated
+    # across different aggregates which can include different combinations of
+    # libraries that depend on jQuery, so that it is only downloaded once per
+    # browser instead of potentially multiple times from different pages.
+    assets/vendor/jquery/jquery.min.js: { preprocess: false, minified: true, weight: -20 }
 
 internal.jquery.form:
   # Internal library. Do not depend on it outside core nor add new core usage.

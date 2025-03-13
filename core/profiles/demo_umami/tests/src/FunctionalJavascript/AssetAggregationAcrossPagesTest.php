@@ -36,7 +36,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   }
 
   /**
-   * Checks the asset requests made when the front and recipe pages are visited.
+   * Checks the front and recipe page asset requests as an authenticated user.
    */
   public function testFrontAndRecipesPagesAuthenticated(): void {
     $user = $this->createUser();
@@ -47,12 +47,33 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     }, 'umamiFrontAndRecipePagesAuthenticated');
 
     $expected = [
-      'ScriptCount' => 2,
-      'ScriptBytes' => 249700,
+      'ScriptCount' => 3,
+      'ScriptBytes' => 170500,
       'StylesheetCount' => 6,
     ];
     $this->assertMetrics($expected, $performance_data);
 
+  }
+
+  /**
+   * Checks the front and recipe page asset requests as an editor.
+   */
+  public function testFrontAndRecipesPagesEditor(): void {
+    $user = $this->createUser();
+    $user->addRole('editor');
+    $user->save();
+    $this->drupalLogin($user);
+    sleep(2);
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePagesEditor');
+    $expected = [
+      'ScriptCount' => 5,
+      'ScriptBytes' => 338200,
+      'StylesheetCount' => 6,
+      'StylesheetBytes' => 308500,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
   /**
