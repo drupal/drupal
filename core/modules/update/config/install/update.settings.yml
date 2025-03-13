@@ -1,5 +1,5 @@
 check:
-  disabled_extensions: false
+  disabled_extensions: true
   interval_days: 1
 fetch:
   url: ~
