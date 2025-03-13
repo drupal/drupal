@@ -70,6 +70,27 @@ class BlockViewBuilderTest extends KernelTestBase {
   }
 
   /**
+   * Tests rendering a block plugin that returns an empty array.
+   */
+  public function testEmptyRender(): void {
+    \Drupal::keyValue('block_test')->set('content', '');
+
+    $entity = $this->controller->create([
+      'id' => 'test_block1',
+      'theme' => 'stark',
+      'plugin' => 'test_empty',
+    ]);
+    $entity->save();
+
+    // Test the rendering of a block.
+    $entity = Block::load('test_block1');
+    $builder = \Drupal::entityTypeManager()->getViewBuilder('block');
+    $output = $builder->view($entity, 'block');
+    $expected_output = '';
+    $this->assertSame($expected_output, (string) $this->renderer->renderRoot($output));
+  }
+
+  /**
    * Tests the rendering of blocks.
    */
   public function testBasicRendering(): void {

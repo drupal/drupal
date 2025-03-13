@@ -502,6 +502,29 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   /**
    * @covers ::onBuildRender
    */
+  public function testOnBuildRenderNullBuild(): void {
+    $block = $this->prophesize(BlockPluginInterface::class);
+
+    $access_result = AccessResult::allowed();
+    $block->access($this->account->reveal(), TRUE)->willReturn($access_result)->shouldBeCalled();
+    $block->getCacheContexts()->willReturn([]);
+    $block->getCacheTags()->willReturn(['test']);
+    $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+
+    $block->build()->willReturn(NULL);
+    $this->expectException(\UnexpectedValueException::class);
+    $this->expectExceptionMessage(sprintf('The block "%s" did not return an array', get_class($block->reveal())));
+    $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
+
+    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $event = new SectionComponentBuildRenderArrayEvent($component, [], FALSE);
+    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber->onBuildRender($event);
+  }
+
+  /**
+   * @covers ::onBuildRender
+   */
   public function testOnBuildRenderNoBlock(): void {
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn(NULL);
 
