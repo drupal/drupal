@@ -2,15 +2,12 @@
 
 namespace Drupal\Core\Session;
 
+use Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy;
+
 /**
  * Wraps the session handler to prevent writes when not necessary or allowed.
  */
-class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSessionHandlerInterface {
-
-  /**
-   * @var \SessionHandlerInterface
-   */
-  protected $wrappedSessionHandler;
+class WriteSafeSessionHandler extends SessionHandlerProxy implements \SessionHandlerInterface, WriteSafeSessionHandlerInterface, \SessionUpdateTimestampHandlerInterface {
 
   /**
    * Whether or not the session is enabled for writing.
@@ -30,49 +27,21 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
   /**
    * Constructs a new write safe session handler.
    *
-   * @param \SessionHandlerInterface $wrapped_session_handler
+   * @param \SessionHandlerInterface $handler
    *   The underlying session handler.
    * @param bool $session_writable
    *   Whether or not the session should be initially writable.
    */
-  public function __construct(\SessionHandlerInterface $wrapped_session_handler, $session_writable = TRUE) {
-    $this->wrappedSessionHandler = $wrapped_session_handler;
+  public function __construct(\SessionHandlerInterface $handler, $session_writable = TRUE) {
+    parent::__construct($handler);
     $this->sessionWritable = $session_writable;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function close(): bool {
-    return $this->wrappedSessionHandler->close();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function destroy($session_id): bool {
-    return $this->wrappedSessionHandler->destroy($session_id);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function gc($max_lifetime): int|FALSE {
-    return $this->wrappedSessionHandler->gc($max_lifetime);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function open($save_path, $session_id): bool {
-    return $this->wrappedSessionHandler->open($save_path, $session_id);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function read($session_id): string|FALSE {
-    $value = $this->wrappedSessionHandler->read($session_id);
+  public function read(#[\SensitiveParameter] string $session_id): string {
+    $value = $this->handler->read($session_id);
     $this->readSessions[$session_id] = $value;
     return $value;
   }
@@ -80,13 +49,13 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
   /**
    * {@inheritdoc}
    */
-  public function write($session_id, $session_data): bool {
+  public function write(#[\SensitiveParameter] string $session_id, string $session_data): bool {
     // Only write the session when it has been modified.
     if (isset($this->readSessions[$session_id]) && $this->readSessions[$session_id] === $session_data) {
       return TRUE;
     }
     if ($this->isSessionWritable()) {
-      return $this->wrappedSessionHandler->write($session_id, $session_data);
+      return $this->handler->write($session_id, $session_data);
     }
     return TRUE;
   }

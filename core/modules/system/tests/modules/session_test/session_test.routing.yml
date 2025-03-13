@@ -98,6 +98,14 @@ session_test.trace_handler:
   requirements:
     _access: 'TRUE'
 
+session_test.trace_handler_rewrite_unmodified:
+  path: '/session-test/trace-handler-rewrite-unmodified'
+  defaults:
+    _title: 'Returns a trace of rewritten but unmodified session data recorded by test proxy session handlers as JSON'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::traceHandlerRewriteUnmodified'
+  requirements:
+    _access: 'TRUE'
+
 session_test.get_session_basic_auth:
   path: '/session-test/get-session'
   defaults:

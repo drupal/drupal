@@ -7,12 +7,12 @@ namespace Drupal\session_test\Session;
 /**
  * Provides a test session handler proxy.
  */
-class TestSessionHandlerProxy implements \SessionHandlerInterface {
+class TestSessionHandlerProxy implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface {
 
   /**
    * The decorated session handler.
    *
-   * @var \SessionHandlerInterface
+   * @var \SessionHandlerInterface&\SessionUpdateTimestampHandlerInterface
    */
   protected $sessionHandler;
 
@@ -31,7 +31,7 @@ class TestSessionHandlerProxy implements \SessionHandlerInterface {
    * @param mixed $optional_argument
    *   (optional) An optional argument.
    */
-  public function __construct(\SessionHandlerInterface $session_handler, $optional_argument = NULL) {
+  public function __construct(\SessionHandlerInterface&\SessionUpdateTimestampHandlerInterface $session_handler, $optional_argument = NULL) {
     $this->sessionHandler = $session_handler;
     $this->optionalArgument = $optional_argument;
   }
@@ -92,6 +92,28 @@ class TestSessionHandlerProxy implements \SessionHandlerInterface {
    */
   public function gc($max_lifetime): int|FALSE {
     return $this->sessionHandler->gc($max_lifetime);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateId($session_id): bool {
+    $trace = \Drupal::service('session_test.session_handler_proxy_trace');
+    $trace[] = ['BEGIN', $this->optionalArgument, __FUNCTION__, $session_id];
+    $result = $this->sessionHandler->validateId($session_id);
+    $trace[] = ['END', $this->optionalArgument, __FUNCTION__, $session_id];
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateTimestamp($session_id, $session_data): bool {
+    $trace = \Drupal::service('session_test.session_handler_proxy_trace');
+    $trace[] = ['BEGIN', $this->optionalArgument, __FUNCTION__, $session_id];
+    $result = $this->sessionHandler->updateTimestamp($session_id, $session_data);
+    $trace[] = ['END', $this->optionalArgument, __FUNCTION__, $session_id];
+    return $result;
   }
 
 }

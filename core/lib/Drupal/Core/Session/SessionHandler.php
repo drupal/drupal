@@ -8,12 +8,12 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
 
 /**
  * Default session handler.
  */
-class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
+class SessionHandler extends AbstractSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface {
 
   use DependencySerializationTrait;
 
@@ -44,13 +44,13 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function read(#[\SensitiveParameter] string $sid): string|false {
+  public function doRead(#[\SensitiveParameter] string $sessionId): string {
     $data = '';
-    if (!empty($sid)) {
+    if (!empty($sessionId)) {
       try {
         // Read the session data from the database.
         $query = $this->connection
-          ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
+          ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sessionId)]);
         $data = (string) $query->fetchField();
       }
       // Swallow the error if the table hasn't been created yet.
@@ -63,18 +63,18 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function write(#[\SensitiveParameter] string $sid, string $value): bool {
+  public function doWrite(#[\SensitiveParameter] string $sessionId, string $data): bool {
     $try_again = FALSE;
     $request = $this->requestStack->getCurrentRequest();
     $fields = [
       'uid' => $request->getSession()->get('uid', 0),
       'hostname' => $request->getClientIP(),
-      'session' => $value,
+      'session' => $data,
       'timestamp' => $this->time->getRequestTime(),
     ];
     $doWrite = fn() =>
       $this->connection->merge('sessions')
-        ->keys(['sid' => Crypt::hashBase64($sid)])
+        ->keys(['sid' => Crypt::hashBase64($sessionId)])
         ->fields($fields)
         ->execute();
     try {
@@ -106,11 +106,18 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function destroy(#[\SensitiveParameter] string $sid): bool {
+  public function destroy(#[\SensitiveParameter] string $sessionId): bool {
+    return $this->doDestroy($sessionId);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doDestroy(#[\SensitiveParameter] string $sessionId): bool {
     try {
       // Delete session data.
       $this->connection->delete('sessions')
-        ->condition('sid', Crypt::hashBase64($sid))
+        ->condition('sid', Crypt::hashBase64($sessionId))
         ->execute();
     }
     // Swallow the error if the table hasn't been created yet.
@@ -138,6 +145,16 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     catch (\Exception) {
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateTimestamp(#[\SensitiveParameter] string $sessionId, string $data): bool {
+    // This function is intentionally a no-op. Drupal manages session expiry in
+    // the MetadataBag, and the timestamp should not be updated here.
+    // @see \Drupal\Core\Session\MetadataBag::__construct()
+    return TRUE;
   }
 
   /**
