@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests the authorize.php script and related API.
  *
+ * @group legacy
  * @group system
  */
 class SystemAuthorizeTest extends BrowserTestBase {

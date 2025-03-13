@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests recursive file copy operations with the file transfer jail.
  *
  * @group FileTransfer
+ * @group legacy
  */
 class FileTransferTest extends BrowserTestBase {
 

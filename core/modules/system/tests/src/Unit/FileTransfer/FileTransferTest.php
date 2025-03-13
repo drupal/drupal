@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @group FileTransfer
+ * @group legacy
  */
 class FileTransferTest extends UnitTestCase {
 

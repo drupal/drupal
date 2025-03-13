@@ -30,6 +30,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 
+@trigger_error('authorize.php is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
 // Change the directory to the Drupal root.
 chdir('..');
 

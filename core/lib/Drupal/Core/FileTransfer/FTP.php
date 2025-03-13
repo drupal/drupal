@@ -4,6 +4,11 @@ namespace Drupal\Core\FileTransfer;
 
 /**
  * Defines the base class for FTP implementations.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3512364
  */
 abstract class FTP extends FileTransfer {
 
@@ -11,6 +16,8 @@ abstract class FTP extends FileTransfer {
    * {@inheritdoc}
    */
   public function __construct($jail, $username, #[\SensitiveParameter] $password, $hostname, $port) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
     $this->username = $username;
     $this->password = $password;
     $this->hostname = $hostname;

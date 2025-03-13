@@ -223,6 +223,8 @@ function template_preprocess_entity_add_list(&$variables): void {
  *   Optional string to use as the page title once redirected to authorize.php.
  */
 function system_authorized_init($callback, $file, $arguments = [], $page_title = NULL) {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
   $session = \Drupal::request()->getSession();
   // First, figure out what file transfer backends the site supports, and put
   // all of those in the SESSION so that authorize.php has access to all of
@@ -253,6 +255,8 @@ function system_authorized_init($callback, $file, $arguments = [], $page_title =
  * @see system_authorized_init()
  */
 function system_authorized_get_url(array $options = []) {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
   // core/authorize.php is an unrouted URL, so using the base: scheme is
   // the correct usage for this case.
   $url = Url::fromUri('base:core/authorize.php');
@@ -271,6 +275,8 @@ function system_authorized_get_url(array $options = []) {
  *   The full URL for the authorize.php script with batch processing options.
  */
 function system_authorized_batch_processing_url(array $options = []) {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
   $options['query'] = ['batch' => '1'];
   return system_authorized_get_url($options);
 }
@@ -281,6 +287,8 @@ function system_authorized_batch_processing_url(array $options = []) {
  * @see system_authorized_init()
  */
 function system_authorized_run($callback, $file, $arguments = [], $page_title = NULL) {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
   system_authorized_init($callback, $file, $arguments, $page_title);
   return new RedirectResponse(system_authorized_get_url()->toString());
 }
@@ -291,6 +299,8 @@ function system_authorized_run($callback, $file, $arguments = [], $page_title = 
  * @see batch_process()
  */
 function system_authorized_batch_process() {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
   $finish_url = system_authorized_get_url();
   $process_url = system_authorized_batch_processing_url();
   return batch_process($finish_url->setAbsolute()->toString(), $process_url);

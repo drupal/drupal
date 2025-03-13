@@ -15,6 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  * extensions.
  *
  * @group Extension
+ * @group legacy
  */
 class UpdaterTest extends KernelTestBase {
 

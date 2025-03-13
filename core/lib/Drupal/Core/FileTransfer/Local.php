@@ -7,6 +7,11 @@ use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Defines the local connection class for copying files as the httpd user.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3512364
  */
 class Local extends FileTransfer implements ChmodInterface {
 
@@ -23,6 +28,8 @@ class Local extends FileTransfer implements ChmodInterface {
    * {@inheritdoc}
    */
   public function __construct($jail, FileSystemInterface $file_system) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
     parent::__construct($jail);
     $this->fileSystem = $file_system;
   }

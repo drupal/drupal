@@ -1026,6 +1026,10 @@ function hook_update_last_removed(): int {
  *
  * @ingroup update_api
  *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3512364
  * @see drupal_get_updaters()
  * @see hook_updater_info_alter()
  */
@@ -1056,6 +1060,10 @@ function hook_updater_info(): array {
  *
  * @ingroup update_api
  *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3512364
  * @see drupal_get_updaters()
  * @see hook_updater_info()
  */

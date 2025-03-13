@@ -118,6 +118,10 @@ function hook_update_status_alter(&$projects) {
  *   If there are any problems, return an array of error messages. If there are
  *   no problems, return an empty array.
  *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3512364
  * @see update_manager_archive_verify()
  * @ingroup update_manager_file
  */

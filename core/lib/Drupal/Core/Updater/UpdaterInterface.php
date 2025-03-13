@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Updater;
 
+@trigger_error('The ' . __NAMESPACE__ . '\UpdaterInterface is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
+
 /**
  * Defines an interface for a class which can update a Drupal project.
  *
@@ -11,6 +13,11 @@ namespace Drupal\Core\Updater;
  *     on the system using FileTransfer classes.
  *   - It can return a list of "next steps" after an update or install.
  *   - In the future, it will most likely perform some of those steps as well.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3512364
  */
 interface UpdaterInterface {
 
