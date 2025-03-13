@@ -62,9 +62,6 @@
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
   </rule>
-  <rule ref="Drupal.Commenting.DocComment">
-    <exclude-pattern>core/tests/*</exclude-pattern>
-  </rule>
   <rule ref="Drupal.Commenting.DocCommentAlignment"/>
   <rule ref="Drupal.Commenting.DocCommentLongArraySyntax"/>
   <rule ref="Drupal.Commenting.DocCommentStar"/>

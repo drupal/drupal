@@ -92,9 +92,7 @@ class RendererRecursionTest extends RendererTestBase {
   }
 
   /**
-   * ::renderInIsolation() may be called from anywhere.
-   *
-   * Including from inside of another ::renderRoot() call.
+   * Tests that renderRoot() can be called from anywhere including recursively.
    *
    * @covers ::renderRoot
    * @covers ::renderInIsolation
