@@ -398,8 +398,16 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    *
    * @param array $option
    *   An array of options.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
+   *   This method is no longer used by Drupal core. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3486781
    */
-  public function defineExtraOptions(&$option) {}
+  public function defineExtraOptions(&$option) {
+    @trigger_error('defineExtraOptions() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. This method is no longer in use and should not be called. See https://www.drupal.org/node/3486781', E_USER_DEPRECATED);
+  }
 
   /**
    * Provide a form for setting options.
