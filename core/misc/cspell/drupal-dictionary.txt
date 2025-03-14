@@ -1,3 +1,5 @@
+anyall
+autoplay
 bartik
 bubbleable
 buytaert
@@ -18,6 +20,8 @@ druplicon
 drush
 fapi
 fieldable
+fulldate
+groupby
 groupwise
 itok
 jswebassert

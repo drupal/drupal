@@ -4,8 +4,6 @@ namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\views\Attribute\ViewsArgument;
 
-// cspell:ignore groupby
-
 /**
  * Simple handler for arguments using group by.
  *

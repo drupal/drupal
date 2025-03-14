@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
-// cspell:ignore fulldate
-
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 

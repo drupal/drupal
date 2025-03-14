@@ -5,8 +5,6 @@ namespace Drupal\comment;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\views\EntityViewsData;
 
-// cspell:ignore fulldate
-
 /**
  * Provides views data for the comment entity type.
  */
