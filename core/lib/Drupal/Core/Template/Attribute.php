@@ -95,6 +95,13 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
     if (isset($this->storage[$name])) {
       return $this->storage[$name];
     }
+    // The 'class' array key is expected to be itself an array, and therefore
+    // can be accessed using array append syntax before it has been initialized.
+    if ($name === 'class') {
+      // Initialize the class attribute as an empty array if not set.
+      $this->offsetSet('class', []);
+      return $this->storage['class'];
+    }
   }
 
   /**
