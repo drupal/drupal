@@ -514,6 +514,15 @@ default:
     CONCURRENCY: 24
     _TARGET_PHP: "8.4-ubuntu"
 
+'⚡️ PHPUnit Unit tests on PHP 8.5':
+  <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
+  allow_failure: true
+  variables:
+    TESTSUITE: PHPUnit-Unit
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 24
+    _TARGET_PHP: "8.5-ubuntu"
+
 '✅️ PHPStan rules tests':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
