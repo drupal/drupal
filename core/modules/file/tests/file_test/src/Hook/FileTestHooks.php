@@ -212,7 +212,7 @@ class FileTestHooks {
    * @see Drupal\file_test\FileTestHelper::reset()
    */
   public function getReturn($op): array|int|null {
-    $return = \Drupal::state()->get('file_test.return', [$op => NULL]);
+    $return = \Drupal::keyValue('file_test')->get('return', [$op => NULL]);
     return $return[$op];
   }
 

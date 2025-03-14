@@ -105,7 +105,7 @@ class DownloadTest extends FileManagedTestBase {
     $this->assertSession()->responseHeaderDoesNotExist('x-drupal-cache');
     $this->assertSession()->statusCodeEquals(200);
     // Ensure hook_file_download is fired correctly.
-    $this->assertEquals($file->getFileUri(), \Drupal::state()->get('file_test.results')['download'][0][0]);
+    $this->assertEquals($file->getFileUri(), FileTestHelper::getCalls('download')[0][0]);
 
     // Test that the file transferred correctly.
     $this->assertSame($contents, $this->getSession()->getPage()->getContent(), 'Contents of the file are correct.');
@@ -117,7 +117,7 @@ class DownloadTest extends FileManagedTestBase {
     $response = $http_client->head($not_found_url, ['http_errors' => FALSE]);
     $this->assertSame(404, $response->getStatusCode(), 'Correctly returned 404 response for a non-existent file.');
     // Assert that hook_file_download is not called.
-    $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
+    $this->assertEquals([], FileTestHelper::getCalls('download'));
 
     // Having tried a non-existent file, try the original file again to ensure
     // it's returned instead of a 404 response.
@@ -143,7 +143,7 @@ class DownloadTest extends FileManagedTestBase {
     $this->drupalGet('/system/files');
     $this->assertSession()->statusCodeEquals(404);
     // Assert that hook_file_download is not called.
-    $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
+    $this->assertEquals([], FileTestHelper::getCalls('download'));
   }
 
   /**

@@ -30,14 +30,14 @@ class FileTestHelper {
       'move' => [],
       'delete' => [],
     ];
-    \Drupal::state()->set('file_test.results', $results);
+    \Drupal::keyValue('file_test')->set('results', $results);
 
     // These hooks will return these values, see FileTestHelper::setReturn().
     $return = [
       'validate' => [],
       'download' => NULL,
     ];
-    \Drupal::state()->set('file_test.return', $return);
+    \Drupal::keyValue('file_test')->set('return', $return);
   }
 
   /**
@@ -57,7 +57,7 @@ class FileTestHelper {
    * @see Drupal\file_test\FileTestHelper::reset()
    */
   public static function getCalls($op): array {
-    $results = \Drupal::state()->get('file_test.results', []);
+    $results = \Drupal::keyValue('file_test')->get('results', []);
     return $results[$op];
   }
 
@@ -70,7 +70,7 @@ class FileTestHelper {
    *   parameters passed to each call.
    */
   public static function getAllCalls(): array {
-    return \Drupal::state()->get('file_test.results', []);
+    return \Drupal::keyValue('file_test')->get('results', []);
   }
 
   /**
@@ -87,9 +87,9 @@ class FileTestHelper {
    */
   public static function logCall($op, $args): void {
     if (\Drupal::state()->get('file_test.count_hook_invocations', TRUE)) {
-      $results = \Drupal::state()->get('file_test.results', []);
+      $results = \Drupal::keyValue('file_test')->get('results', []);
       $results[$op][] = $args;
-      \Drupal::state()->set('file_test.results', $results);
+      \Drupal::keyValue('file_test')->set('results', $results);
     }
   }
 
@@ -105,9 +105,10 @@ class FileTestHelper {
    * @see Drupal\file_test\FileTestHelper::reset()
    */
   public static function setReturn($op, $value): void {
-    $return = \Drupal::state()->get('file_test.return', []);
+    $return = \Drupal::keyValue('file_test')->get('return', []);
+
     $return[$op] = $value;
-    \Drupal::state()->set('file_test.return', $return);
+    \Drupal::keyValue('file_test')->set('return', $return);
   }
 
   /**
