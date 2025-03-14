@@ -44,10 +44,10 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
    *
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity that has been validated.
-   * @param array $violations
-   *   The array of violations.
+   * @param iterable $violations
+   *   The set of violations.
    */
-  public function __construct(FieldableEntityInterface $entity, array $violations = []) {
+  public function __construct(FieldableEntityInterface $entity, iterable $violations = []) {
     parent::__construct($violations);
     $this->entity = $entity;
   }

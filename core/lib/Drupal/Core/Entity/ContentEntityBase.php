@@ -516,7 +516,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   public function validate() {
     $this->validated = TRUE;
     $violations = $this->getTypedData()->validate();
-    return new EntityConstraintViolationList($this, iterator_to_array($violations));
+    return new EntityConstraintViolationList($this, $violations);
   }
 
   /**
