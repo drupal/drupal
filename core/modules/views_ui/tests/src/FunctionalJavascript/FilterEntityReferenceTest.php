@@ -110,6 +110,7 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     // Test the exposed filter options show up correctly.
     $assert->waitForField('options[expose_button][checkbox][checkbox]');
     $page->findField('options[expose_button][checkbox][checkbox]')->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertTrue($page->hasCheckedField('options[expose_button][checkbox][checkbox]'));
 
     // Check the exposed filters multiple option.
@@ -210,6 +211,7 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     // Test the exposed filter options show up correctly.
     $assert->waitForField('options[expose_button][checkbox][checkbox]');
     $page->findField('options[expose_button][checkbox][checkbox]')->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertTrue($page->hasCheckedField('options[expose_button][checkbox][checkbox]'));
 
     // Check the exposed filters multiple option.
