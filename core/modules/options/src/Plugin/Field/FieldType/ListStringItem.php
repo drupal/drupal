@@ -93,6 +93,9 @@ class ListStringItem extends ListItemBase {
     // Improve user experience by using an automatically generated machine name.
     foreach (Element::children($element['allowed_values']['table']) as $delta => $row) {
       $element['allowed_values']['table'][$delta]['item']['key']['#type'] = 'machine_name';
+      // ListItemBase::storageSettingsForm() will set the default value to an
+      // integer if the key is a decimal integer string, so cast it back here.
+      $element['allowed_values']['table'][$delta]['item']['key']['#default_value'] = (string) $element['allowed_values']['table'][$delta]['item']['key']['#default_value'];
       $element['allowed_values']['table'][$delta]['item']['key']['#machine_name'] = [
         'exists' => [static::class, 'exists'],
       ];

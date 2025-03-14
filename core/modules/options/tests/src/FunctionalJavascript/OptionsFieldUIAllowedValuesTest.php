@@ -172,42 +172,45 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
     }
     $page->pressButton('Save');
 
+    $option_labels = array_values($options);
+    $this->assertCount(3, $option_labels);
+
     // Test the order of the option list on node form.
     $this->drupalGet($this->nodeFormPath);
-    $this->assertNodeFormOrder(['- None -', 'First', 'Second', 'Third']);
+    $this->assertNodeFormOrder(['- None -', $option_labels[0], $option_labels[1], $option_labels[2]]);
 
     // Test the order of the option list on admin path.
     $this->drupalGet($this->adminPath);
-    $this->assertOrder(['First', 'Second', 'Third', ''], $is_string_option);
+    $this->assertOrder([$option_labels[0], $option_labels[1], $option_labels[2], ''], $is_string_option);
     $drag_handle = $page->find('css', '[data-drupal-selector="edit-field-storage-subform-settings-allowed-values-table-0"] .tabledrag-handle');
     $target = $page->find('css', '[data-drupal-selector="edit-field-storage-subform-settings-allowed-values-table-2"]');
 
     // Change the order the items appear.
     $drag_handle->dragTo($target);
-    $this->assertOrder(['Second', 'Third', 'First', ''], $is_string_option);
+    $this->assertOrder([$option_labels[1], $option_labels[2], $option_labels[0], ''], $is_string_option);
     $page->pressButton('Save');
 
     $this->drupalGet($this->nodeFormPath);
-    $this->assertNodeFormOrder(['- None -', 'Second', 'Third', 'First']);
+    $this->assertNodeFormOrder(['- None -', $option_labels[1], $option_labels[2], $option_labels[0]]);
 
     $this->drupalGet($this->adminPath);
 
     // Confirm the change in order was saved.
-    $this->assertOrder(['Second', 'Third', 'First', ''], $is_string_option);
+    $this->assertOrder([$option_labels[1], $option_labels[2], $option_labels[0], ''], $is_string_option);
 
     // Delete an item.
     $page->pressButton('remove_row_button__1');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertOrder(['Second', 'First', ''], $is_string_option);
+    $this->assertOrder([$option_labels[1], $option_labels[0], ''], $is_string_option);
     $page->pressButton('Save');
 
     $this->drupalGet($this->nodeFormPath);
-    $this->assertNodeFormOrder(['- None -', 'Second', 'First']);
+    $this->assertNodeFormOrder(['- None -', $option_labels[1], $option_labels[0]]);
 
     $this->drupalGet($this->adminPath);
 
     // Confirm the item removal was saved.
-    $this->assertOrder(['Second', 'First', ''], $is_string_option);
+    $this->assertOrder([$option_labels[1], $option_labels[0], ''], $is_string_option);
   }
 
   /**
@@ -314,6 +317,12 @@ JS;
       'List string' => [
         'list_string',
         ['first' => 'First', 'second' => 'Second', 'third' => 'Third'],
+        TRUE,
+      ],
+      // Example with empty key and label values like string '0'.
+      'List string with 0 value' => [
+        'list_string',
+        ['0' => '0', '1' => '1', '2' => '2'],
         TRUE,
       ],
     ];
