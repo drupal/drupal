@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\FileTransfer;
 
+use FTP\Connection;
+
 /**
  * Defines a file transfer class using the PHP FTP extension.
  *
@@ -11,6 +13,11 @@ namespace Drupal\Core\FileTransfer;
  * @see https://www.drupal.org/node/3512364
  */
 class FTPExtension extends FTP implements ChmodInterface {
+
+  /**
+   * The FTP connection.
+   */
+  protected Connection|false $connection;
 
   /**
    * {@inheritdoc}

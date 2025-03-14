@@ -13,6 +13,13 @@ namespace Drupal\Core\FileTransfer;
 class SSH extends FileTransfer implements ChmodInterface {
 
   /**
+   * The connection.
+   *
+   * @var resource|false
+   */
+  protected $connection;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct($jail, $username, #[\SensitiveParameter] $password, $hostname = "localhost", $port = 22) {

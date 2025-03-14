@@ -326,16 +326,16 @@ class ImageItem extends FileItem {
   public function preSave() {
     parent::preSave();
 
-    $width = $this->width;
-    $height = $this->height;
+    $width = $this->get('width')->getValue();
+    $height = $this->get('height')->getValue();
 
     // Determine the dimensions if necessary.
     if ($this->entity && $this->entity instanceof EntityInterface) {
-      if (empty($width) || empty($height)) {
+      if ($width === NULL || $height === NULL) {
         $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
         if ($image->isValid()) {
-          $this->width = $image->getWidth();
-          $this->height = $image->getHeight();
+          $this->set('width', $image->getWidth());
+          $this->set('height', $image->getHeight());
         }
       }
     }

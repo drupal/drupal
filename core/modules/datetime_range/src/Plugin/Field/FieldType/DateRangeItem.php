@@ -128,10 +128,10 @@ class DateRangeItem extends DateTimeItem {
   public function onChange($property_name, $notify = TRUE) {
     // Enforce that the computed date is recalculated.
     if ($property_name == 'value') {
-      $this->start_date = NULL;
+      $this->set('start_date', NULL);
     }
     elseif ($property_name == 'end_value') {
-      $this->end_date = NULL;
+      $this->set('end_date', NULL);
     }
     parent::onChange($property_name, $notify);
   }
