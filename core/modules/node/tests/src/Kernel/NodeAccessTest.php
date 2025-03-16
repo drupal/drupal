@@ -156,4 +156,19 @@ class NodeAccessTest extends NodeAccessTestBase {
     $this->assertEquals(4, $query->countQuery()->execute()->fetchField());
   }
 
+  /**
+   * Tests that multiple calls to node_access_rebuild only result in one batch.
+   */
+  public function testDuplicateBatchRebuild(): void {
+    $this->enableModules(['node_access_test']);
+    $batch = batch_get();
+    $this->assertEmpty($batch);
+    node_access_rebuild(TRUE);
+    $batch = batch_get();
+    $this->assertCount(1, $batch['sets']);
+    node_access_rebuild(TRUE);
+    $batch = batch_get();
+    $this->assertCount(1, $batch['sets']);
+  }
+
 }
