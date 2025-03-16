@@ -483,7 +483,10 @@ abstract class EntityBase implements EntityInterface {
   protected function getListCacheTagsToInvalidate() {
     $tags = $this->getEntityType()->getListCacheTags();
     if ($this->getEntityType()->hasKey('bundle')) {
-      $tags[] = $this->getEntityTypeId() . '_list:' . $this->bundle();
+      $tags = Cache::mergeTags(
+        $tags,
+        $this->getEntityType()->getBundleListCacheTags($this->bundle())
+      );
     }
     return $tags;
   }

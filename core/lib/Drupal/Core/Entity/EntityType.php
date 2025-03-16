@@ -868,6 +868,13 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function getBundleListCacheTags(string $bundle): array {
+    return [$this->id() . '_list:' . $bundle];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConfigDependencyKey() {
     // Return 'content' for the default implementation as important distinction
     // is that dependencies on other configuration entities are hard

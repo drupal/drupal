@@ -102,6 +102,10 @@ class EntityUnitTest extends UnitTestCase {
     $this->entityType->expects($this->any())
       ->method('getListCacheTags')
       ->willReturn([$this->entityTypeId . '_list']);
+    $this->entityType->expects($this->any())
+      ->method('getBundleListCacheTags')
+      ->with($this->entityTypeId)
+      ->willReturn([$this->entityTypeId . '_list:' . $this->entityTypeId]);
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())

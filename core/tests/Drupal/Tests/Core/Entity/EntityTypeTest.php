@@ -487,4 +487,15 @@ class EntityTypeTest extends UnitTestCase {
     $this->assertFalse($entity_type->entityClassImplements(\DateTimeInterface::class));
   }
 
+  /**
+   * Tests the ::getBundleListCacheTags() method.
+   *
+   * @covers ::getBundleListCacheTags
+   */
+  public function testGetBundleListCacheTags(): void {
+    $entity_type = $this->setUpEntityType(['entity_keys' => ['id' => 'id']]);
+    $bundle = $this->randomMachineName();
+    $this->assertEquals([$entity_type->id() . '_list:' . $bundle], $entity_type->getBundleListCacheTags($bundle));
+  }
+
 }
