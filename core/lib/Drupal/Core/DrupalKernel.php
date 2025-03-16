@@ -626,7 +626,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Retrieve enabled modules and register their namespaces.
     if (!isset($this->moduleList)) {
-      $extensions = $this->getConfigStorage()->read('core.extension');
+      $extensions = $this->getExtensions();
       // If core.extension configuration does not exist and we're not in the
       // installer itself, then we need to put the kernel into a pre-installer
       // mode. The container should not be dumped because Drupal is yet to be
@@ -1689,7 +1689,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   no install profile or NULL if Drupal is being installed.
    */
   protected function getInstallProfile() {
-    $config = $this->getConfigStorage()->read('core.extension');
+    $config = $this->getExtensions();
     if (is_array($config) && !array_key_exists('profile', $config)) {
       return FALSE;
     }
@@ -1713,6 +1713,16 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $session = new Session(new MockArraySessionStorage());
     $session->start();
     $request->setSession($session);
+  }
+
+  /**
+   * Get the core.extension config object.
+   *
+   * @return array|false
+   *   The core.extension config object if it exists or FALSE.
+   */
+  protected function getExtensions(): array|false {
+    return $this->getConfigStorage()->read('core.extension');
   }
 
 }

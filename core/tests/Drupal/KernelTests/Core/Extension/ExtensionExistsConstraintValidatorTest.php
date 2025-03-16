@@ -45,6 +45,7 @@ class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
     $this->assertSame("Module 'user' is not installed.", (string) $violations->get(0)->getMessage());
 
     $this->enableModules(['user']);
+    $data = $typed_data->create($definition, 'core');
     $this->assertCount(0, $data->validate());
 
     // NULL should not trigger a validation error: a value may be nullable.

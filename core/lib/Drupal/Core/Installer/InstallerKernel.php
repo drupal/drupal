@@ -97,4 +97,18 @@ class InstallerKernel extends DrupalKernel {
     $this->container?->reset();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExtensions(): array {
+    $extensions = parent::getExtensions() ?: [];
+    // Ensure that the System module is always available to the installer.
+    $extensions['module']['system'] ??= 0;
+    if (empty($extensions['profile']) && !empty($GLOBALS['install_state']) && ($profile = _install_select_profile($GLOBALS['install_state']))) {
+      $extensions['profile'] = $profile;
+      $extensions['module'][$profile] = 1000;
+    }
+    return $extensions;
+  }
+
 }

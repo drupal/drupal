@@ -98,12 +98,7 @@ trait UpdatePathTestTrait {
       $modules_installed = FALSE;
       // Modules that are in configuration but not the module handler have been
       // installed.
-      /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
-      $module_list = $this->container->get('extension.list.module');
-      foreach (array_keys(array_diff_key($config_module_list, $module_handler_list)) as $module) {
-        $module_handler->addModule($module, $module_list->getPath($module));
-        $modules_installed = TRUE;
-      }
+      $modules_installed = !empty(array_diff_key($config_module_list, $module_handler_list));
       $modules_uninstalled = FALSE;
       $module_handler_list = $module_handler->getModuleList();
       // Modules that are in the module handler but not configuration have been
