@@ -1094,7 +1094,9 @@ function node_access_needs_rebuild($rebuild = NULL) {
  *   has a large number of nodes). hook_update_N() and any form submit handler
  *   are safe contexts to use the 'batch mode'. Less decidable cases (such as
  *   calls from hook_user(), hook_taxonomy(), etc.) might consider using the
- *   non-batch mode. Defaults to FALSE.
+ *   non-batch mode. Defaults to FALSE. Calling this method multiple times in
+ *   the same request with $batch_mode set to TRUE will only result in one batch
+ *   set being added.
  *
  * @see node_access_needs_rebuild()
  */
@@ -1106,11 +1108,14 @@ function node_access_rebuild($batch_mode = FALSE) {
   // Only recalculate if the site is using a node_access module.
   if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
     if ($batch_mode) {
-      $batch_builder = (new BatchBuilder())
-        ->setTitle(t('Rebuilding content access permissions'))
-        ->addOperation('_node_access_rebuild_batch_operation', [])
-        ->setFinishCallback('_node_access_rebuild_batch_finished');
-      batch_set($batch_builder->toArray());
+      if (!BatchBuilder::isSetIdRegistered(__FUNCTION__)) {
+        $batch_builder = (new BatchBuilder())
+          ->setTitle(t('Rebuilding content access permissions'))
+          ->addOperation('_node_access_rebuild_batch_operation', [])
+          ->setFinishCallback('_node_access_rebuild_batch_finished')
+          ->registerSetId(__FUNCTION__);
+        batch_set($batch_builder->toArray());
+      }
     }
     else {
       // Try to allocate enough time to rebuild node grants
