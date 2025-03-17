@@ -8,6 +8,7 @@ parameters:
   # function properly before that runs.
   cache_default_bin_backends: []
   memory_cache_default_bin_backends: []
+  entity.memory_cache.slots: 1000
   security.enable_super_user: true
   core.moved_classes:
     'Drupal\Core\StringTranslation\TranslationWrapper':
@@ -705,8 +706,8 @@ services:
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state', '@extension.list.module', '@theme.registry', '@extension.list.theme']
   Drupal\Core\Extension\ThemeInstallerInterface: '@theme_installer'
   entity.memory_cache:
-    class: Drupal\Core\Cache\MemoryCache\MemoryCache
-    arguments: ['@datetime.time']
+    class: Drupal\Core\Cache\MemoryCache\LruMemoryCache
+    arguments: ['@datetime.time', '%entity.memory_cache.slots%']
   Drupal\Core\Cache\MemoryCache\MemoryCacheInterface: '@entity.memory_cache'
   entity_type.manager:
     class: Drupal\Core\Entity\EntityTypeManager

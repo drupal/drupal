@@ -612,9 +612,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
     // plenty of memory to continue.
     drupal_static_reset();
 
-    // Entity storage can blow up with caches, so clear it out.
-    \Drupal::service('entity.memory_cache')->deleteAll();
-
     // @todo Explore resetting the container.
 
     // Run garbage collector to further reduce memory.
