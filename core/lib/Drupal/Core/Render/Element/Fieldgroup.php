@@ -20,9 +20,18 @@ use Drupal\Core\Render\Attribute\RenderElement;
 class Fieldgroup extends Fieldset {
 
   public function getInfo() {
-    return [
-      '#attributes' => ['class' => ['fieldgroup']],
-    ] + parent::getInfo();
+    $info = parent::getInfo();
+    $info['#attributes']['class'] = ['fieldgroup'];
+    $info['#pre_render'][] = [static::class, 'preRenderAttachments'];
+    return $info;
+  }
+
+  /**
+   * Adds the fieldgroup library.
+   */
+  public static function preRenderAttachments($element): array {
+    $element['#attached']['library'][] = 'core/drupal.fieldgroup';
+    return $element;
   }
 
 }

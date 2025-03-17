@@ -589,6 +589,21 @@ drupal.entity-form:
   dependencies:
     - core/drupal.form
 
+drupal.fieldgroup:
+  version: VERSION
+  css:
+    component:
+      misc/components/fieldgroup.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 11.2.0
+      removed_version: 12.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/fieldgroup.module.css:
+            base: core/misc/components/fieldgroup.module.css
+
 drupal.form:
   version: VERSION
   js:

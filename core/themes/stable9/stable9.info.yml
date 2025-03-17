@@ -68,6 +68,11 @@ libraries-override:
       component:
         misc/dropbutton/dropbutton.css: css/core/dropbutton/dropbutton.css
 
+  core/drupal.fieldgroup:
+    css:
+      component:
+        misc/components/fieldgroup.module.css: css/core/components/fieldgroup.module.css
+
   core/drupal.progress:
     css:
       component:
@@ -220,7 +225,6 @@ libraries-override:
     css:
       component:
         css/components/align.module.css: css/system/components/align.module.css
-        css/components/fieldgroup.module.css: css/system/components/fieldgroup.module.css
         css/components/container-inline.module.css: css/system/components/container-inline.module.css
         css/components/clearfix.module.css: css/system/components/clearfix.module.css
         css/components/details.module.css: css/system/components/details.module.css
