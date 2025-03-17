@@ -65,7 +65,14 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     // Create an entity reference field and use the default 'CONTAINS' match
     // operator.
     $field_name = 'field_test';
-    $this->createEntityReferenceField('node', 'page', $field_name, $field_name, 'node', 'default', ['target_bundles' => ['page'], 'sort' => ['field' => 'title', 'direction' => 'DESC']]);
+    $this->createEntityReferenceField(
+      'node',
+      'page',
+      $field_name,
+      $field_name,
+      'node',
+      'default',
+      ['target_bundles' => ['page'], 'sort' => ['field' => 'title', 'direction' => 'DESC']]);
     $form_display = $display_repository->getFormDisplay('node', 'page');
     $form_display->setComponent($field_name, [
       'type' => 'entity_reference_autocomplete',

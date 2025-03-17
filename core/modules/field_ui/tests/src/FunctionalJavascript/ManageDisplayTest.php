@@ -183,7 +183,12 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Assert that the field added by the hook
     // FieldThirdPartyTestHooks::fieldFormatterThirdPartySettingsForm(). is
     // present. Use an exact match.
-    $field_third_party = $page->find('named_exact', ['field', 'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_field_formatter_third_party_settings_form]']);
+    $field_third_party = $page->find(
+      'named_exact',
+      [
+        'field',
+        'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_field_formatter_third_party_settings_form]',
+      ]);
     $this->assertNotEmpty($field_third_party, 'The field added in hook_field_formatter_third_party_settings_form() is present on the settings form.');
     $this->assertEquals($field_third_party->getAttribute('type'), 'text');
 
@@ -193,7 +198,12 @@ class ManageDisplayTest extends WebDriverTestBase {
     // field_formatter_third_party_settings_form
     // FieldThirdPartyTestHooks::fieldFormatterThirdPartySettingsFormAdditionalImplementation().
     // is also present. Use exact match.
-    $field_third_party_additional = $page->find('named_exact', ['field', 'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][second_field_formatter_third_party_settings_form]']);
+    $field_third_party_additional = $page->find(
+      'named_exact',
+      [
+        'field',
+        'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][second_field_formatter_third_party_settings_form]',
+      ]);
     $this->assertNotEmpty($field_third_party_additional, 'The second field added in hook_field_formatter_third_party_settings_form() is present on the settings form.');
     $this->assertEquals($field_third_party_additional->getAttribute('type'), 'number');
 
@@ -342,14 +352,22 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Assert that the field added in the hook
     // FieldThirdPartyTestHooks::fieldWidgetThirdPartySettingsForm().
     // is present. Use an exact match.
-    $field_third_party_test = $page->find('named_exact', ['field', 'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_widget_third_party_settings_form]']);
+    $field_third_party_test = $page->find('named_exact',
+      [
+        'field',
+        'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_widget_third_party_settings_form]',
+      ]);
     $this->assertNotEmpty($field_third_party_test, 'The field added in hook_field_widget_third_party_settings_form() is present on the settings form.');
     $this->assertEquals($field_third_party_test->getAttribute('type'), 'text');
 
     // Assert that the additional field added in the hook
     // FieldThirdPartyTestHooks::fieldWidgetThirdPartySettingsFormAdditionalImplementation().
     // is also present.
-    $field_third_party_test_additional = $page->find('named_exact', ['field', 'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][second_field_widget_third_party_settings_form]']);
+    $field_third_party_test_additional = $page->find('named_exact',
+      [
+        'field',
+        'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][second_field_widget_third_party_settings_form]',
+      ]);
     $this->assertNotEmpty($field_third_party_test_additional, 'The second field added in hook_field_widget_third_party_settings_form() is present on the settings form.');
     $this->assertEquals($field_third_party_test_additional->getAttribute('type'), 'number');
 

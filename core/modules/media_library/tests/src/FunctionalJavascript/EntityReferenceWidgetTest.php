@@ -181,7 +181,12 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     foreach ($links as $link) {
       $link_titles[] = $link->getText();
     }
-    $expected_link_titles = ['Show Type Three media (selected)', 'Show Type One media', 'Show Type Two media', 'Show Type Four media'];
+    $expected_link_titles = [
+      'Show Type Three media (selected)',
+      'Show Type One media',
+      'Show Type Two media',
+      'Show Type Four media',
+    ];
     $this->assertSame($link_titles, $expected_link_titles);
     $this->drupalGet('admin/structure/types/manage/basic_page/form-display');
 
@@ -203,7 +208,9 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $link_titles = array_map(function ($link) {
       return $link->getText();
     }, $links);
-    $this->assertSame($link_titles, ['Show Type One media (selected)', 'Show Type Three media', 'Show Type Four media', 'Show Type Two media']);
+    $this->assertSame(
+      $link_titles,
+      ['Show Type One media (selected)', 'Show Type Three media', 'Show Type Four media', 'Show Type Two media']);
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert the announcements for media type navigation in the media library.
