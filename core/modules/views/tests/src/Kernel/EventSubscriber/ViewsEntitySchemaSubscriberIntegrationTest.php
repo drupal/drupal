@@ -42,7 +42,12 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_view_entity_test', 'test_view_entity_test_revision', 'test_view_entity_test_data', 'test_view_entity_test_additional_base_field'];
+  public static $testViews = [
+    'test_view_entity_test',
+    'test_view_entity_test_revision',
+    'test_view_entity_test_data',
+    'test_view_entity_test_additional_base_field',
+  ];
 
   /**
    * The event dispatcher.

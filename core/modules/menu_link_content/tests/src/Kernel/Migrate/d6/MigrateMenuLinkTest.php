@@ -88,18 +88,108 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
    * Tests migration of menu links.
    */
   public function testMenuLinks(): void {
-    $this->assertEntity('138', 'Test 1', 'secondary-links', 'Test menu link 1', TRUE, FALSE, ['attributes' => ['title' => 'Test menu link 1'], 'langcode' => 'en'], 'internal:/user/login', -50);
-    $this->assertEntity('139', 'Test 2', 'secondary-links', 'Test menu link 2', TRUE, TRUE, ['query' => ['foo' => 'bar'], 'attributes' => ['title' => 'Test menu link 2']], 'internal:/admin', -49);
-    $this->assertEntity('140', 'Drupal.org', 'secondary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'https://www.drupal.org', -50);
+    $this->assertEntity(
+     '138',
+     'Test 1',
+     'secondary-links',
+     'Test menu link 1',
+     TRUE,
+     FALSE,
+      [
+        'attributes' => ['title' => 'Test menu link 1'],
+        'langcode' => 'en',
+      ],
+     'internal:/user/login',
+     -50);
+    $this->assertEntity(
+      '139',
+     'Test 2',
+     'secondary-links',
+     'Test menu link 2',
+     TRUE,
+     TRUE,
+      [
+        'query' => ['foo' => 'bar'],
+        'attributes' => ['title' => 'Test menu link 2'],
+      ],
+      'internal:/admin',
+      -49);
+    $this->assertEntity(
+      '140',
+     'Drupal.org',
+     'secondary-links',
+     NULL,
+     TRUE,
+     FALSE,
+     ['attributes' => ['title' => '']],
+     'https://www.drupal.org',
+     -50);
 
     // Assert that missing title attributes don't stop or break migration.
-    $this->assertEntity('393', 'Test 3', 'secondary-links', NULL, TRUE, FALSE, [], 'internal:/user/login', -47);
+    $this->assertEntity(
+      '393',
+     'Test 3',
+     'secondary-links',
+     NULL,
+     TRUE,
+     FALSE,
+     [],
+     'internal:/user/login',
+     -47);
 
     // Test the migration of menu links for translated nodes.
-    $this->assertEntity('459', 'The Real McCoy', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/10', 0);
-    $this->assertEntity('460', 'Le Vrai McCoy', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/10', 0);
-    $this->assertEntity('461', 'Abantu zulu', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/12', 0);
-    $this->assertEntity('462', 'The Zulu People', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/12', 0);
+    $this->assertEntity(
+      '459',
+     'The Real McCoy',
+     'primary-links',
+     NULL,
+     TRUE,
+     FALSE,
+      [
+        'attributes' => ['title' => ''],
+        'alter' => TRUE,
+      ],
+      'entity:node/10',
+      0);
+    $this->assertEntity(
+      '460',
+     'Le Vrai McCoy',
+     'primary-links',
+     NULL,
+     TRUE,
+     FALSE,
+      [
+        'attributes' => ['title' => ''],
+        'alter' => TRUE,
+      ],
+      'entity:node/10',
+      0);
+    $this->assertEntity(
+      '461',
+     'Abantu zulu',
+     'primary-links',
+     NULL,
+     TRUE,
+     FALSE,
+      [
+        'attributes' => ['title' => ''],
+        'alter' => TRUE,
+      ],
+      'entity:node/12',
+      0);
+    $this->assertEntity(
+      '462',
+     'The Zulu People',
+     'primary-links',
+     NULL,
+     TRUE,
+     FALSE,
+      [
+        'attributes' => ['title' => ''],
+        'alter' => TRUE,
+      ],
+      'entity:node/12',
+      0);
   }
 
 }

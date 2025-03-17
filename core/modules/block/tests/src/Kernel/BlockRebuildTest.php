@@ -103,7 +103,14 @@ class BlockRebuildTest extends KernelTestBase {
 
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
-    $expected = ['warning' => [new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block1->id(), '%region' => 'INVALID'])]];
+    $expected = [
+      'warning' => [
+        new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', [
+          '%info' => $block1->id(),
+          '%region' => 'INVALID',
+        ]),
+      ],
+    ];
     $this->assertEquals($expected, $messages);
 
     $default_region = system_default_region('stark');

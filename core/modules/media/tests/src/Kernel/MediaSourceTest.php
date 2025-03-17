@@ -122,8 +122,10 @@ class MediaSourceTest extends MediaKernelTestBase {
 
     // Change the default name attribute and see if it is used to set the name.
     $name = 'Old Major';
-    \Drupal::state()->set('media_source_test_attributes', ['alternative_name' => ['title' => 'Alternative name', 'value' => $name]]);
-    \Drupal::state()->set('media_source_test_definition', ['default_name_metadata_attribute' => 'alternative_name']);
+    \Drupal::state()
+      ->set('media_source_test_attributes', ['alternative_name' => ['title' => 'Alternative name', 'value' => $name]]);
+    \Drupal::state()
+      ->set('media_source_test_definition', ['default_name_metadata_attribute' => 'alternative_name']);
     /** @var \Drupal\media\MediaInterface $media */
     $media = Media::create(['bundle' => $this->testMediaType->id()]);
     $media_source = $media->getSource();

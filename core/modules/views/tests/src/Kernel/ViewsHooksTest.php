@@ -82,7 +82,15 @@ class ViewsHooksTest extends ViewsKernelTestBase {
       $this->assertTrue($this->moduleHandler->hasImplementations($hook, 'views_test_data'), "The hook $hook was registered.");
 
       if ($hook == 'views_post_render') {
-        $this->moduleHandler->invoke('views_test_data', $hook, [$view, &$view->display_handler->output, $view->display_handler->getPlugin('cache')]);
+        $this->moduleHandler->invoke(
+          'views_test_data',
+          $hook,
+          [
+            $view,
+            &$view->display_handler->output,
+            $view->display_handler->getPlugin('cache'),
+          ]
+        );
         continue;
       }
 

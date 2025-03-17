@@ -69,11 +69,23 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
    */
   public function testEntityLink(): void {
     // Anonymous users cannot see edit/delete links.
-    $expected_results = ['canonical' => TRUE, 'edit-form' => FALSE, 'delete-form' => FALSE, 'canonical_raw' => TRUE, 'canonical_raw_absolute' => TRUE];
+    $expected_results = [
+      'canonical' => TRUE,
+      'edit-form' => FALSE,
+      'delete-form' => FALSE,
+      'canonical_raw' => TRUE,
+      'canonical_raw_absolute' => TRUE,
+    ];
     $this->doTestEntityLink(\Drupal::currentUser(), $expected_results);
 
     // Admin users cannot see all links.
-    $expected_results = ['canonical' => TRUE, 'edit-form' => TRUE, 'delete-form' => TRUE, 'canonical_raw' => TRUE, 'canonical_raw_absolute' => TRUE];
+    $expected_results = [
+      'canonical' => TRUE,
+      'edit-form' => TRUE,
+      'delete-form' => TRUE,
+      'canonical_raw' => TRUE,
+      'canonical_raw_absolute' => TRUE,
+    ];
     $this->doTestEntityLink($this->adminUser, $expected_results);
   }
 

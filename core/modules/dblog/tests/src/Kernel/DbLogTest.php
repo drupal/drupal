@@ -66,7 +66,12 @@ class DbLogTest extends KernelTestBase {
    * Tests that only valid placeholders are stored in the variables column.
    */
   public function testInvalidPlaceholders(): void {
-    \Drupal::logger('my_module')->warning('Hello @string @array @object', ['@string' => '', '@array' => [], '@object' => new \stdClass()]);
+    \Drupal::logger('my_module')
+      ->warning('Hello @string @array @object', [
+        '@string' => '',
+        '@array' => [],
+        '@object' => new \stdClass(),
+      ]);
     $variables = \Drupal::database()
       ->select('watchdog', 'w')
       ->fields('w', ['variables'])

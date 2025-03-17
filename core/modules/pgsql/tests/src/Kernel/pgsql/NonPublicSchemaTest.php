@@ -128,10 +128,25 @@ class NonPublicSchemaTest extends DriverSpecificKernelTestBase {
    * @covers ::changeField
    */
   public function testField(): void {
-    $this->testingFakeConnection->schema()->addField('faking_table', 'added_field', ['type' => 'int', 'not null' => FALSE]);
+    $this->testingFakeConnection->schema()
+      ->addField(
+        'faking_table',
+        'added_field',
+        [
+          'type' => 'int',
+          'not null' => FALSE,
+        ]);
     $this->assertTrue($this->testingFakeConnection->schema()->fieldExists('faking_table', 'added_field'));
 
-    $this->testingFakeConnection->schema()->changeField('faking_table', 'added_field', 'changed_field', ['type' => 'int', 'not null' => FALSE]);
+    $this->testingFakeConnection->schema()
+      ->changeField(
+        'faking_table',
+        'added_field',
+        'changed_field',
+        [
+          'type' => 'int',
+          'not null' => FALSE,
+        ]);
     $this->assertFalse($this->testingFakeConnection->schema()->fieldExists('faking_table', 'added_field'));
     $this->assertTrue($this->testingFakeConnection->schema()->fieldExists('faking_table', 'changed_field'));
 

@@ -165,7 +165,10 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
       'entity_type' => 'node',
     ];
     FieldStorageConfig::create(['field_name' => 'field_image', 'cardinality' => 1] + $field_storage_config)->save();
-    FieldStorageConfig::create(['field_name' => 'field_images', 'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED] + $field_storage_config)->save();
+    FieldStorageConfig::create([
+      'field_name' => 'field_images',
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    ] + $field_storage_config)->save();
     $field_config = [
       'entity_type' => 'node',
       'bundle' => 'referencer',

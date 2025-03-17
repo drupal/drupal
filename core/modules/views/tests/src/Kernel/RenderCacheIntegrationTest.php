@@ -292,7 +292,16 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     $view = View::load('test_display');
     $view->save();
 
-    $this->assertEqualsCanonicalizing(['languages:' . LanguageInterface::TYPE_CONTENT, 'languages:' . LanguageInterface::TYPE_INTERFACE, 'url.query_args', 'user.node_grants:view', 'user.permissions'], $view->getDisplay('default')['cache_metadata']['contexts']);
+    $this->assertEqualsCanonicalizing(
+      [
+        'languages:' . LanguageInterface::TYPE_CONTENT,
+        'languages:' . LanguageInterface::TYPE_INTERFACE,
+        'url.query_args',
+        'user.node_grants:view',
+        'user.permissions',
+      ],
+      $view->getDisplay('default')['cache_metadata']['contexts']
+    );
   }
 
 }

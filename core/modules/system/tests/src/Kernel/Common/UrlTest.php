@@ -53,17 +53,72 @@ class UrlTest extends KernelTestBase {
     \Drupal::service('module_installer')->install(['user']);
 
     $cases = [
-      ['Regular link', 'internal:/user', [], ['contexts' => [], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
-      ['Regular link, absolute', 'internal:/user', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
-      ['Route processor link', 'route:system.run_cron', [], ['contexts' => ['session'], 'tags' => [], 'max-age' => Cache::PERMANENT], ['placeholders' => []]],
-      ['Route processor link, absolute', 'route:system.run_cron', ['absolute' => TRUE], ['contexts' => ['url.site', 'session'], 'tags' => [], 'max-age' => Cache::PERMANENT], ['placeholders' => []]],
-      ['Path processor link', 'internal:/user/1', [], ['contexts' => [], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT], []],
-      ['Path processor link, absolute', 'internal:/user/1', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT], []],
+      [
+        'Regular link',
+        'internal:/user',
+        [],
+        ['contexts' => [], 'tags' => [], 'max-age' => Cache::PERMANENT],
+        [],
+      ],
+      [
+        'Regular link, absolute',
+        'internal:/user',
+        ['absolute' => TRUE],
+        [
+          'contexts' => ['url.site'],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+        [],
+      ],
+      [
+        'Route processor link',
+        'route:system.run_cron',
+        [],
+        [
+          'contexts' => ['session'],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+        ['placeholders' => []],
+      ],
+      [
+        'Route processor link, absolute',
+        'route:system.run_cron',
+        ['absolute' => TRUE],
+        [
+          'contexts' => ['url.site', 'session'],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+        ['placeholders' => []],
+      ],
+      [
+        'Path processor link',
+        'internal:/user/1',
+        [],
+        ['contexts' => [], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT],
+        [],
+      ],
+      [
+        'Path processor link, absolute',
+        'internal:/user/1',
+        ['absolute' => TRUE],
+        [
+          'contexts' => ['url.site'],
+          'tags' => ['user:1'],
+          'max-age' => Cache::PERMANENT,
+        ],
+        [],
+      ],
     ];
 
     foreach ($cases as $case) {
       [$title, $uri, $options, $expected_cacheability, $expected_attachments] = $case;
-      $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme', 'user.permissions']);
+      $expected_cacheability['contexts'] = Cache::mergeContexts(
+        $expected_cacheability['contexts'],
+        ['languages:language_interface', 'theme', 'user.permissions']
+      );
       $link = [
         '#type' => 'link',
         '#title' => $title,

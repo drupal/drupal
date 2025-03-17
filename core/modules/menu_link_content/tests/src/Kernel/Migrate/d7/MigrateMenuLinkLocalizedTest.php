@@ -48,9 +48,48 @@ class MigrateMenuLinkLocalizedTest extends MigrateDrupal7TestBase {
    */
   public function testMenuLinkLocalized(): void {
     // A translate and localize menu, menu-test-menu.
-    $this->assertEntity(468, 'en', 'Yahoo', 'menu-test-menu', 'english description', TRUE, FALSE, ['attributes' => ['title' => 'english description'], 'alter' => TRUE], 'http://yahoo.com', 0);
-    $this->assertEntity(468, 'fr', 'fr - Yahoo', 'menu-test-menu', 'fr - description', TRUE, FALSE, ['attributes' => ['title' => 'english description'], 'alter' => TRUE], 'http://yahoo.com', 0);
-    $this->assertEntity(468, 'is', 'is - Yahoo', 'menu-test-menu', 'is - description', TRUE, FALSE, ['attributes' => ['title' => 'english description'], 'alter' => TRUE], 'http://yahoo.com', 0);
+    $this->assertEntity(
+      468,
+      'en',
+      'Yahoo',
+      'menu-test-menu',
+      'english description',
+      TRUE,
+      FALSE,
+      [
+        'attributes' => ['title' => 'english description'],
+        'alter' => TRUE,
+      ],
+      'http://yahoo.com',
+      0);
+    $this->assertEntity(
+      468,
+      'fr',
+      'fr - Yahoo',
+      'menu-test-menu',
+      'fr - description',
+      TRUE,
+      FALSE,
+      [
+        'attributes' => ['title' => 'english description'],
+        'alter' => TRUE,
+      ],
+      'http://yahoo.com',
+      0);
+    $this->assertEntity(
+      468,
+      'is',
+      'is - Yahoo',
+      'menu-test-menu',
+      'is - description',
+      TRUE,
+      FALSE,
+      [
+        'attributes' => ['title' => 'english description'],
+        'alter' => TRUE,
+      ],
+      'http://yahoo.com',
+      0);
   }
 
 }

@@ -108,7 +108,13 @@ class FileEntityFormatterTest extends KernelTestBase {
     $build = $entity_display->buildMultiple($this->files)[0]['uri'][0];
     $this->assertEquals($this->fileUrlGenerator->generateString('public://file.png'), $build['#markup']);
 
-    $entity_display->setComponent('uri', ['type' => 'file_uri', 'settings' => ['file_download_path' => TRUE, 'link_to_file' => TRUE]]);
+    $entity_display->setComponent(
+      'uri',
+      [
+        'type' => 'file_uri',
+        'settings' => ['file_download_path' => TRUE, 'link_to_file' => TRUE],
+      ]
+    );
     $build = $entity_display->buildMultiple($this->files)[0]['uri'][0];
     $this->assertEquals($this->fileUrlGenerator->generateString('public://file.png'), $build['#title']);
     $this->assertEquals($this->fileUrlGenerator->generate('public://file.png'), $build['#url']);
@@ -130,7 +136,12 @@ class FileEntityFormatterTest extends KernelTestBase {
       $this->assertEquals($expected[$i], $build['filename'][0]['#markup']);
     }
 
-    $entity_display->setComponent('filename', ['type' => 'file_extension', 'settings' => ['extension_detect_tar' => TRUE]]);
+    $entity_display->setComponent(
+      'filename',
+      [
+        'type' => 'file_extension',
+        'settings' => ['extension_detect_tar' => TRUE],
+      ]);
 
     $expected = ['png', 'tar', 'tar.gz', ''];
     foreach (array_values($this->files) as $i => $file) {

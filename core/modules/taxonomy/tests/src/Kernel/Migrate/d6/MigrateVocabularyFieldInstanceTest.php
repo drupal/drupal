@@ -63,7 +63,10 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertTargetBundles($field_id, ['tags' => 'tags']);
     $this->assertTrue($settings['handler_settings']['auto_create'], 'The "auto_create" setting is correct.');
 
-    $this->assertSame([['node', 'article', 'field_tags']], $this->getMigration('d6_vocabulary_field_instance')->getIdMap()->lookupDestinationIds([4, 'article']));
+    $this->assertSame(
+      [['node', 'article', 'field_tags']],
+      $this->getMigration('d6_vocabulary_field_instance')->getIdMap()->lookupDestinationIds([4, 'article'])
+    );
 
     // Test the field vocabulary_1_i_0_ with multilingual option,
     // 'per language terms'.

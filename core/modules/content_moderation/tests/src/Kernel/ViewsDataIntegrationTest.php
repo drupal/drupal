@@ -76,7 +76,13 @@ class ViewsDataIntegrationTest extends ViewsKernelTestBase {
         'moderation_state' => 'published',
       ],
     ];
-    $this->assertIdenticalResultset($view, $expected_result, ['title' => 'title', 'moderation_state' => 'moderation_state']);
+    $this->assertIdenticalResultset(
+      $view,
+      $expected_result,
+      [
+        'title' => 'title',
+        'moderation_state' => 'moderation_state',
+      ]);
   }
 
 }

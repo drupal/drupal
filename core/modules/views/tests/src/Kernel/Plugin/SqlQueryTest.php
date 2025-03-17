@@ -29,7 +29,10 @@ class SqlQueryTest extends ViewsKernelTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['table']['base']['access query tag'] = 'test_tag';
-    $data['views_test_data']['table']['base']['query metadata'] = ['key1' => 'test_metadata', 'key2' => 'test_metadata2'];
+    $data['views_test_data']['table']['base']['query metadata'] = [
+      'key1' => 'test_metadata',
+      'key2' => 'test_metadata2',
+    ];
 
     return $data;
   }

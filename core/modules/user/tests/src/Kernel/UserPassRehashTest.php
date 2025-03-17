@@ -31,8 +31,26 @@ class UserPassRehashTest extends KernelTestBase {
 
     $timestamp = \Drupal::time()->getRequestTime();
 
-    $user_a = $this->createUser([], NULL, FALSE, ['uid' => 12, 'mail' => '3user@example.com', 'login' => $timestamp - 1000]);
-    $user_b = $this->createUser([], NULL, FALSE, ['uid' => 123, 'mail' => 'user@example.com', 'login' => $timestamp - 1000]);
+    $user_a = $this->createUser(
+      [],
+      NULL,
+      FALSE,
+      [
+        'uid' => 12,
+        'mail' => '3user@example.com',
+        'login' => $timestamp - 1000,
+      ]
+    );
+    $user_b = $this->createUser(
+      [],
+      NULL,
+      FALSE,
+      [
+        'uid' => 123,
+        'mail' => 'user@example.com',
+        'login' => $timestamp - 1000,
+      ]
+    );
 
     // Unset passwords after the users are created in order to avoid
     // (different) password hashes being generated for the empty strings.

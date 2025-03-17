@@ -153,7 +153,14 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
         'validate' => TRUE,
       ],
     ]);
-    $this->assertSame(sprintf('1: [user]: name=%s||name=%s||mail=Email field is required.', $username_constraint->illegalMessage, new FormattableMarkup($username_constraint->tooLongMessage, ['%name' => $long_username, '%max' => 60])), $this->messages[0], 'First message should have 3 validation errors.');
+    $this->assertSame(sprintf('1: [user]: name=%s||name=%s||mail=Email field is required.',
+      $username_constraint->illegalMessage,
+      new FormattableMarkup($username_constraint->tooLongMessage, [
+        '%name' => $long_username,
+        '%max' => 60,
+      ])),
+      $this->messages[0],
+      'First message should have 3 validation errors.');
     $this->assertSame(sprintf('2: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[1], 'Second message should have 2 validation errors.');
     $this->assertSame(sprintf('3: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[2], 'Third message should have 2 validation errors.');
     $this->assertArrayNotHasKey(3, $this->messages, 'Fourth message should not exist.');

@@ -76,7 +76,11 @@ class LocaleStringTest extends KernelTestBase {
     $this->assertEquals(LOCALE_NOT_CUSTOMIZED, $translation->customized);
     $string1 = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
     $this->assertEquals($translation->translation, $string1->translation);
-    $string2 = $this->storage->findTranslation(['language' => $langcode, 'source' => $source->source, 'context' => $source->context]);
+    $string2 = $this->storage->findTranslation([
+      'language' => $langcode,
+      'source' => $source->source,
+      'context' => $source->context,
+    ]);
     $this->assertEquals($translation->translation, $string2->translation);
     $translation
       ->setCustomized()
@@ -148,14 +152,22 @@ class LocaleStringTest extends KernelTestBase {
     $this->createAllTranslations($source2, ['customized' => LOCALE_CUSTOMIZED]);
     // Try quick search function with different field combinations.
     $langcode = 'es';
-    $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source1->source, 'context' => $source1->context]);
+    $found = $this->storage->findTranslation([
+      'language' => $langcode,
+      'source' => $source1->source,
+      'context' => $source1->context,
+    ]);
     $this->assertNotNull($found, 'Translation not found searching by source and context.');
     $this->assertNotNull($found->language);
     $this->assertNotNull($found->translation);
     $this->assertFalse($found->isNew());
     $this->assertEquals($translate1[$langcode]->translation, $found->translation);
     // Now try a translation not found.
-    $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source3->source, 'context' => $source3->context]);
+    $found = $this->storage->findTranslation([
+      'language' => $langcode,
+      'source' => $source3->source,
+      'context' => $source3->context,
+    ]);
     $this->assertNotNull($found);
     $this->assertSame($source3->lid, $found->lid);
     $this->assertNull($found->translation);
@@ -171,7 +183,11 @@ class LocaleStringTest extends KernelTestBase {
     $this->assertCount($language_count, $translations);
 
     // Load all Spanish customized translations.
-    $translations = $this->storage->getTranslations(['language' => 'es', 'customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE]);
+    $translations = $this->storage->getTranslations([
+      'language' => 'es',
+      'customized' => LOCALE_CUSTOMIZED,
+      'translated' => TRUE,
+    ]);
     $this->assertCount(1, $translations);
 
     // Load all source strings without translation (1).

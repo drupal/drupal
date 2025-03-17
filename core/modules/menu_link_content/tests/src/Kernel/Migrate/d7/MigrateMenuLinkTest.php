@@ -61,25 +61,97 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
    * Tests migration of menu links.
    */
   public function testMenuLinks(): void {
-    $this->assertEntity(469, 'und', 'Bing', static::MENU_NAME, 'Bing', TRUE, FALSE, ['attributes' => ['title' => 'Bing']], 'http://bing.com', 0);
+    $this->assertEntity(
+     469,
+     'und',
+     'Bing',
+     static::MENU_NAME,
+     'Bing',
+     TRUE,
+     FALSE,
+     ['attributes' => ['title' => 'Bing']],
+     'http://bing.com',
+     0);
     // This link has an i18n translation so the language is changed to the
     // default language of the source site.
-    $this->assertEntity(467, 'en', 'Google', static::MENU_NAME, 'Google', TRUE, FALSE, ['attributes' => ['title' => 'Google']], 'http://google.com', 0);
-    $this->assertEntity(468, 'en', 'Yahoo', static::MENU_NAME, 'english description', TRUE, FALSE, ['attributes' => ['title' => 'english description'], 'alter' => TRUE], 'http://yahoo.com', 0);
+    $this->assertEntity(
+     467,
+     'en',
+     'Google',
+     static::MENU_NAME,
+     'Google',
+     TRUE,
+     FALSE,
+     ['attributes' => ['title' => 'Google']],
+     'http://google.com',
+     0);
+    $this->assertEntity(
+     468,
+     'en',
+     'Yahoo',
+     static::MENU_NAME,
+     'english description',
+     TRUE,
+     FALSE,
+      [
+        'attributes' => ['title' => 'english description'],
+        'alter' => TRUE,
+      ],
+     'http://yahoo.com',
+     0);
 
     // Tests migrating an external link with an undefined title attribute.
-    $this->assertEntity(470, 'und', 'Ask', static::MENU_NAME, NULL, TRUE, FALSE, [], 'http://ask.com', 0);
+    $this->assertEntity(
+     470,
+     'und',
+     'Ask',
+     static::MENU_NAME,
+     NULL,
+     TRUE,
+     FALSE,
+     [],
+     'http://ask.com',
+     0);
 
-    $this->assertEntity(245, 'und', 'Home', 'main', NULL, TRUE, FALSE, [], 'internal:/', 0);
-    $this->assertEntity(478, 'und', 'custom link test', 'admin', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'internal:/admin/content', 0);
-    $this->assertEntity(479, 'und', 'node link test', 'tools', 'node 2', TRUE, FALSE, [
-      'attributes' => ['title' => 'node 2'],
-      'query' => [
-        'name' => 'ferret',
-        'color' => 'purple',
-      ],
-    ],
-      'entity:node/2', 3);
+    $this->assertEntity(
+     245,
+     'und',
+     'Home',
+     'main',
+     NULL,
+     TRUE,
+     FALSE,
+     [],
+     'internal:/',
+     0);
+    $this->assertEntity(
+     478,
+     'und',
+     'custom link test',
+     'admin',
+     NULL,
+     TRUE,
+     FALSE,
+     ['attributes' => ['title' => '']],
+     'internal:/admin/content',
+     0);
+    $this->assertEntity(
+     479,
+     'und',
+     'node link test',
+     'tools',
+     'node 2',
+     TRUE,
+     FALSE,
+     [
+       'attributes' => ['title' => 'node 2'],
+       'query' => [
+         'name' => 'ferret',
+         'color' => 'purple',
+       ],
+     ],
+     'entity:node/2',
+     3);
 
     $menu_link_tree_service = \Drupal::service('menu.link_tree');
     $parameters = new MenuTreeParameters();

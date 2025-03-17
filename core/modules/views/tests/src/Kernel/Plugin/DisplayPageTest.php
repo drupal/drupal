@@ -26,7 +26,12 @@ class DisplayPageTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_page_display', 'test_page_display_route', 'test_page_display_menu', 'test_display_more'];
+  public static $testViews = [
+    'test_page_display',
+    'test_page_display_route',
+    'test_page_display_menu',
+    'test_display_more',
+  ];
 
   /**
    * {@inheritdoc}

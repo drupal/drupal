@@ -89,7 +89,11 @@ class WorkspaceEntityDeleteTest extends KernelTestBase {
     $this->switchToWorkspace('stage');
 
     $published_stage = $this->createNode(['title' => 'Test 3 published - stage', 'type' => 'page']);
-    $unpublished_stage = $this->createNode(['title' => 'Test 4 unpublished - stage', 'type' => 'page', 'status' => FALSE]);
+    $unpublished_stage = $this->createNode([
+      'title' => 'Test 4 unpublished - stage',
+      'type' => 'page',
+      'status' => FALSE,
+    ]);
     $this->assertEquals(['node' => [4 => 3, 5 => 4]], $workspace_association->getTrackedEntities('stage', 'node'));
     $this->assertTrue($published_stage->access('delete'));
     $this->assertTrue($unpublished_stage->access('delete'));

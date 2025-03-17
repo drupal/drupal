@@ -100,7 +100,16 @@ class MediaLibraryAccessTest extends KernelTestBase {
     ]);
 
     $access_result = $ui_builder->checkAccess($this->createUser(), $state);
-    $this->assertAccess($access_result, FALSE, "The following permissions are required: 'administer entity_test content' OR 'administer entity_test_with_bundle content' OR 'create test entity_test_with_bundle entities'.", [], ['url.query_args', 'user.permissions']);
+    $this->assertAccess(
+      $access_result,
+      FALSE,
+      "The following permissions are required: 'administer entity_test content' OR 'administer entity_test_with_bundle content' OR 'create test entity_test_with_bundle entities'.",
+      [],
+      [
+        'url.query_args',
+        'user.permissions',
+      ]
+    );
 
     // Create a user with the appropriate permissions and assert that access is
     // granted.
@@ -109,7 +118,16 @@ class MediaLibraryAccessTest extends KernelTestBase {
       'view media',
     ]);
     $access_result = $ui_builder->checkAccess($account, $state);
-    $this->assertAccess($access_result, TRUE, NULL, Views::getView('media_library')->storage->getCacheTags(), ['url.query_args', 'user.permissions']);
+    $this->assertAccess(
+      $access_result,
+      TRUE,
+      NULL,
+      Views::getView('media_library')->storage->getCacheTags(),
+      [
+        'url.query_args',
+        'user.permissions',
+      ]
+    );
   }
 
   /**
@@ -237,7 +255,13 @@ class MediaLibraryAccessTest extends KernelTestBase {
       'view media',
     ]);
     $access_result = $ui_builder->checkAccess($account, $state);
-    $this->assertAccess($access_result, TRUE, NULL, Views::getView('media_library')->storage->getCacheTags(), ['url.query_args', 'user.permissions']);
+    $this->assertAccess(
+      $access_result,
+      TRUE,
+      NULL,
+      Views::getView('media_library')->storage->getCacheTags(),
+      ['url.query_args', 'user.permissions']
+    );
   }
 
   /**
@@ -293,7 +317,13 @@ class MediaLibraryAccessTest extends KernelTestBase {
       'field_name' => $field_storage->getName(),
     ]);
     $access_result = $ui_builder->checkAccess($account, $state);
-    $this->assertAccess($access_result, FALSE, 'Field access denied by test module', [], ['url.query_args', 'user.permissions']);
+    $this->assertAccess(
+      $access_result,
+      FALSE,
+      'Field access denied by test module',
+      [],
+      ['url.query_args', 'user.permissions']
+    );
 
     // Assert that field access is also checked with a real entity.
     $entity = EntityTestWithBundle::create([
@@ -313,7 +343,15 @@ class MediaLibraryAccessTest extends KernelTestBase {
       $parameters
     );
     $access_result = $ui_builder->checkAccess($account, $state);
-    $this->assertAccess($access_result, FALSE, 'Field access denied by test module', [], ['url.query_args', 'user.permissions']);
+    $this->assertAccess(
+      $access_result,
+      FALSE,
+      'Field access denied by test module',
+      [],
+      [
+        'url.query_args',
+        'user.permissions',
+      ]);
   }
 
   /**
@@ -347,7 +385,12 @@ class MediaLibraryAccessTest extends KernelTestBase {
     // Assert the 'view media' permission is needed to access the library and
     // validate the cache dependencies.
     $access_result = $ui_builder->checkAccess($forbidden_account, $state);
-    $this->assertAccess($access_result, FALSE, "The 'view media' permission is required.", $view_original->storage->getCacheTags(), ['url.query_args', 'user.permissions']);
+    $this->assertAccess(
+      $access_result,
+      FALSE,
+      "The 'view media' permission is required.",
+      $view_original->storage->getCacheTags(),
+      ['url.query_args', 'user.permissions']);
 
     // Assert that the media library access is denied when the view widget
     // display is deleted.
@@ -363,13 +406,21 @@ class MediaLibraryAccessTest extends KernelTestBase {
     // works again.
     $view_original->storage->save();
     $access_result = $ui_builder->checkAccess($allowed_account, $state);
-    $this->assertAccess($access_result, TRUE, NULL, $view_original->storage->getCacheTags(), ['url.query_args', 'user.permissions']);
+    $this->assertAccess(
+      $access_result,
+      TRUE,
+      NULL,
+      $view_original->storage->getCacheTags(),
+      ['url.query_args', 'user.permissions']);
 
     // Assert that the media library access is denied when the entire media
     // library view is deleted.
     Views::getView('media_library')->storage->delete();
     $access_result = $ui_builder->checkAccess($allowed_account, $state);
-    $this->assertAccess($access_result, FALSE, 'The media library view does not exist.');
+    $this->assertAccess(
+      $access_result,
+      FALSE,
+      'The media library view does not exist.');
   }
 
   /**

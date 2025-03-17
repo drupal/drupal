@@ -71,7 +71,13 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
 
     // Replace with the clear parameter, only the valid token should remain.
     $target = Html::escape($this->config('system.site')->get('name'));
-    $result = $this->tokenService->replace($source, [], ['langcode' => $this->interfaceLanguage->getId(), 'clear' => TRUE]);
+    $result = $this->tokenService->replace(
+      $source,
+      [],
+      [
+        'langcode' => $this->interfaceLanguage->getId(),
+        'clear' => TRUE,
+      ]);
     $this->assertEquals($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
     $target .= '[user:name]';

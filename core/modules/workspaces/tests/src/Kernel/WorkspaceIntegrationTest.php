@@ -105,8 +105,18 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Create two nodes, a published and an unpublished one, so we can test the
     // behavior of the module with default/existing content.
     $this->createdTimestamp = \Drupal::time()->getRequestTime();
-    $this->nodes[] = $this->createNode(['title' => 'live - 1 - r1 - published', 'body' => 'node 1', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
-    $this->nodes[] = $this->createNode(['title' => 'live - 2 - r2 - unpublished', 'body' => 'node 2', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
+    $this->nodes[] = $this->createNode([
+      'title' => 'live - 1 - r1 - published',
+      'body' => 'node 1',
+      'created' => $this->createdTimestamp++,
+      'status' => TRUE,
+    ]);
+    $this->nodes[] = $this->createNode([
+      'title' => 'live - 2 - r2 - unpublished',
+      'body' => 'node 2',
+      'created' => $this->createdTimestamp++,
+      'status' => FALSE,
+    ]);
 
     $translation = $this->nodes[0]->addTranslation('de');
     $translation->setTitle('live - 1 - r1 - published - de');
@@ -331,13 +341,21 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     // Add a new unpublished node on 'stage'.
     $this->switchToWorkspace('stage');
-    $this->createNode(['title' => 'stage - 3 - r5 - unpublished', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
+    $this->createNode([
+      'title' => 'stage - 3 - r5 - unpublished',
+      'created' => $this->createdTimestamp++,
+      'status' => FALSE,
+    ]);
     $this->assertWorkspaceStatus($test_scenarios['add_unpublished_node_in_stage'], 'node');
     $this->assertWorkspaceAssociation($expected_workspace_association['add_unpublished_node_in_stage'], 'node');
 
     // Add a new published node on 'stage'.
     $this->switchToWorkspace('stage');
-    $this->createNode(['title' => 'stage - 4 - r6 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
+    $this->createNode([
+      'title' => 'stage - 4 - r6 - published',
+      'created' => $this->createdTimestamp++,
+      'status' => TRUE,
+    ]);
     $this->assertWorkspaceStatus($test_scenarios['add_published_node_in_stage'], 'node');
     $this->assertWorkspaceAssociation($expected_workspace_association['add_published_node_in_stage'], 'node');
 
@@ -389,7 +407,11 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Add a new unpublished node in 'stage' and check that new revision is
     // tracked in the workspace association data.
     $this->switchToWorkspace('stage');
-    $unpublished_node = $this->createNode(['title' => 'stage - 3 - r3 - unpublished', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
+    $unpublished_node = $this->createNode([
+      'title' => 'stage - 3 - r3 - unpublished',
+      'created' => $this->createdTimestamp++,
+      'status' => FALSE,
+    ]);
     $expected_workspace_association = ['stage' => [3]];
     $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
 
@@ -409,7 +431,11 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // revision is tracked in the workspace association data. Note that revision
     // '5' has been created as an unpublished default revision in Live, so it is
     // not tracked.
-    $node = $this->createNode(['title' => 'stage - 4 - r6 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
+    $node = $this->createNode([
+      'title' => 'stage - 4 - r6 - published',
+      'created' => $this->createdTimestamp++,
+      'status' => TRUE,
+    ]);
     $expected_workspace_association = ['stage' => [6]];
     $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
 
@@ -461,7 +487,11 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Create a new published node in 'stage' (which creates two revisions), and
     // check that it's tracked in all its descendants.
     $this->switchToWorkspace('stage');
-    $this->createNode(['title' => 'stage - 3 - r5 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
+    $this->createNode([
+      'title' => 'stage - 3 - r5 - published',
+      'created' => $this->createdTimestamp++,
+      'status' => TRUE,
+    ]);
     $expected_workspace_association = [
       'stage' => [3, 5],
       'dev' => [3, 5],

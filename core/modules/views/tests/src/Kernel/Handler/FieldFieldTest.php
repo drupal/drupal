@@ -42,7 +42,14 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $testViews = ['test_field_field_test', 'test_field_alias_test', 'test_field_field_complex_test', 'test_field_field_attachment_test', 'test_field_field_revision_test', 'test_field_field_revision_complex_test'];
+  public static $testViews = [
+    'test_field_field_test',
+    'test_field_alias_test',
+    'test_field_field_complex_test',
+    'test_field_field_attachment_test',
+    'test_field_field_revision_test',
+    'test_field_field_revision_complex_test',
+  ];
 
   /**
    * The stored test entities.
@@ -391,13 +398,43 @@ class FieldFieldTest extends ViewsKernelTestBase {
 
     $this->assertIdenticalResultset($executable,
       [
-        ['timezone' => $timezones[0], 'field_test_multiple' => [1, 3], 'field_test_multiple_1' => [1, 3], 'field_test_multiple_2' => [1, 3]],
-        ['timezone' => $timezones[1], 'field_test_multiple' => [7, 0], 'field_test_multiple_1' => [7, 0], 'field_test_multiple_2' => [7, 0]],
-        ['timezone' => $timezones[2], 'field_test_multiple' => [3, 5], 'field_test_multiple_1' => [3, 5], 'field_test_multiple_2' => [3, 5]],
-        ['timezone' => $timezones[3], 'field_test_multiple' => [9, 9], 'field_test_multiple_1' => [9, 9], 'field_test_multiple_2' => [9, 9]],
-        ['timezone' => $timezones[4], 'field_test_multiple' => [9, 0], 'field_test_multiple_1' => [9, 0], 'field_test_multiple_2' => [9, 0]],
+        [
+          'timezone' => $timezones[0],
+          'field_test_multiple' => [1, 3],
+          'field_test_multiple_1' => [1, 3],
+          'field_test_multiple_2' => [1, 3],
+        ],
+        [
+          'timezone' => $timezones[1],
+          'field_test_multiple' => [7, 0],
+          'field_test_multiple_1' => [7, 0],
+          'field_test_multiple_2' => [7, 0],
+        ],
+        [
+          'timezone' => $timezones[2],
+          'field_test_multiple' => [3, 5],
+          'field_test_multiple_1' => [3, 5],
+          'field_test_multiple_2' => [3, 5],
+        ],
+        [
+          'timezone' => $timezones[3],
+          'field_test_multiple' => [9, 9],
+          'field_test_multiple_1' => [9, 9],
+          'field_test_multiple_2' => [9, 9],
+        ],
+        [
+          'timezone' => $timezones[4],
+          'field_test_multiple' => [9, 0],
+          'field_test_multiple_1' => [9, 0],
+          'field_test_multiple_2' => [9, 0],
+        ],
       ],
-      ['timezone' => 'timezone', 'field_test_multiple' => 'field_test_multiple', 'field_test_multiple_1' => 'field_test_multiple_1', 'field_test_multiple_2' => 'field_test_multiple_2']
+      [
+        'timezone' => 'timezone',
+        'field_test_multiple' => 'field_test_multiple',
+        'field_test_multiple_1' => 'field_test_multiple_1',
+        'field_test_multiple_2' => 'field_test_multiple_2',
+      ]
     );
   }
 
@@ -467,7 +504,12 @@ class FieldFieldTest extends ViewsKernelTestBase {
         ['id' => 1, 'field_test' => 3, 'revision_id' => 3, 'name' => 'revision value2'],
         ['id' => 2, 'field_test' => 4, 'revision_id' => 4, 'name' => 'next entity value'],
       ],
-      ['entity_test_rev_revision_id' => 'id', 'revision_id' => 'revision_id', 'name' => 'name', 'field_test' => 'field_test']
+      [
+        'entity_test_rev_revision_id' => 'id',
+        'revision_id' => 'revision_id',
+        'name' => 'name',
+        'field_test' => 'field_test',
+      ]
     );
   }
 
@@ -533,12 +575,56 @@ class FieldFieldTest extends ViewsKernelTestBase {
 
     $this->assertIdenticalResultset($executable,
       [
-        ['id' => 1, 'field_test' => 1, 'revision_id' => 1, 'uid' => $this->testUsers[0]->id(), 'timezone' => $timezones[0], 'field_test_multiple' => [1, 3, 7], 'field_test_multiple_1' => [1, 3, 7], 'field_test_multiple_2' => [1, 3, 7]],
-        ['id' => 1, 'field_test' => 2, 'revision_id' => 2, 'uid' => $this->testUsers[1]->id(), 'timezone' => $timezones[1], 'field_test_multiple' => [0, 3, 5], 'field_test_multiple_1' => [0, 3, 5], 'field_test_multiple_2' => [0, 3, 5]],
-        ['id' => 1, 'field_test' => 3, 'revision_id' => 3, 'uid' => $this->testUsers[2]->id(), 'timezone' => $timezones[2], 'field_test_multiple' => [9, 9, 9], 'field_test_multiple_1' => [9, 9, 9], 'field_test_multiple_2' => [9, 9, 9]],
-        ['id' => 2, 'field_test' => 4, 'revision_id' => 4, 'uid' => $this->testUsers[3]->id(), 'timezone' => $timezones[3], 'field_test_multiple' => [2, 9, 9], 'field_test_multiple_1' => [2, 9, 9], 'field_test_multiple_2' => [2, 9, 9]],
+        [
+          'id' => 1,
+          'field_test' => 1,
+          'revision_id' => 1,
+          'uid' => $this->testUsers[0]->id(),
+          'timezone' => $timezones[0],
+          'field_test_multiple' => [1, 3, 7],
+          'field_test_multiple_1' => [1, 3, 7],
+          'field_test_multiple_2' => [1, 3, 7],
+        ],
+        [
+          'id' => 1,
+          'field_test' => 2,
+          'revision_id' => 2,
+          'uid' => $this->testUsers[1]->id(),
+          'timezone' => $timezones[1],
+          'field_test_multiple' => [0, 3, 5],
+          'field_test_multiple_1' => [0, 3, 5],
+          'field_test_multiple_2' => [0, 3, 5],
+        ],
+        [
+          'id' => 1,
+          'field_test' => 3,
+          'revision_id' => 3,
+          'uid' => $this->testUsers[2]->id(),
+          'timezone' => $timezones[2],
+          'field_test_multiple' => [9, 9, 9],
+          'field_test_multiple_1' => [9, 9, 9],
+          'field_test_multiple_2' => [9, 9, 9],
+        ],
+        [
+          'id' => 2,
+          'field_test' => 4,
+          'revision_id' => 4,
+          'uid' => $this->testUsers[3]->id(),
+          'timezone' => $timezones[3],
+          'field_test_multiple' => [2, 9, 9],
+          'field_test_multiple_1' => [2, 9, 9],
+          'field_test_multiple_2' => [2, 9, 9],
+        ],
       ],
-      ['entity_test_rev_revision_id' => 'id', 'revision_id' => 'revision_id', 'users_field_data_entity_test_rev_revision_uid' => 'uid', 'timezone' => 'timezone', 'field_test_multiple' => 'field_test_multiple', 'field_test_multiple_1' => 'field_test_multiple_1', 'field_test_multiple_2' => 'field_test_multiple_2']
+      [
+        'entity_test_rev_revision_id' => 'id',
+        'revision_id' => 'revision_id',
+        'users_field_data_entity_test_rev_revision_uid' => 'uid',
+        'timezone' => 'timezone',
+        'field_test_multiple' => 'field_test_multiple',
+        'field_test_multiple_1' => 'field_test_multiple_1',
+        'field_test_multiple_2' => 'field_test_multiple_2',
+      ]
     );
   }
 

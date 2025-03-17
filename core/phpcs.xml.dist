@@ -33,6 +33,7 @@
   <rule ref="Drupal.Arrays.Array.LongLineDeclaration">
     <include-pattern>core/*/Unit/*</include-pattern>
     <include-pattern>core/*/FunctionalJavascript/*</include-pattern>
+    <include-pattern>core/*/Kernel/*</include-pattern>
     <include-pattern>core/lib/*</include-pattern>
     <include-pattern>core/modules/*/tests/modules/*</include-pattern>
   </rule>

@@ -50,7 +50,13 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'type' => 'article',
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
-      'body' => [['value' => 'Regular NODE body for the test.', 'summary' => 'Fancy NODE summary.', 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => 'Regular NODE body for the test.',
+          'summary' => 'Fancy NODE summary.',
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $node->save();
 
