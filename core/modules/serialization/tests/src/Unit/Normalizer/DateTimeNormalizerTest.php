@@ -160,9 +160,21 @@ class DateTimeNormalizerTest extends UnitTestCase {
   public static function providerTestDenormalizeUserFormats() {
     $data = [];
 
-    $data['Y/m/d H:i:s P'] = ['2016/11/06 09:02:00 +00:00', 'Y/m/d H:i:s P', new \DateTimeImmutable('2016-11-06T09:02:00+00:00')];
-    $data['H:i:s Y/m/d P'] = ['09:02:00 2016/11/06  +01:00', 'H:i:s Y/m/d P', new \DateTimeImmutable('2016-11-06T09:02:00+01:00')];
-    $data['Y/m/d H:i:s'] = ['09:02:00 2016/11/06', 'H:i:s Y/m/d', new \DateTimeImmutable('2016-11-06T09:02:00+11:00')];
+    $data['Y/m/d H:i:s P'] = [
+      '2016/11/06 09:02:00 +00:00',
+      'Y/m/d H:i:s P',
+      new \DateTimeImmutable('2016-11-06T09:02:00+00:00'),
+    ];
+    $data['H:i:s Y/m/d P'] = [
+      '09:02:00 2016/11/06  +01:00',
+      'H:i:s Y/m/d P',
+      new \DateTimeImmutable('2016-11-06T09:02:00+01:00'),
+    ];
+    $data['Y/m/d H:i:s'] = [
+      '09:02:00 2016/11/06',
+      'H:i:s Y/m/d',
+      new \DateTimeImmutable('2016-11-06T09:02:00+11:00'),
+    ];
 
     return $data;
   }

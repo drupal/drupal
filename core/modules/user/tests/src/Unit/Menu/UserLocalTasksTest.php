@@ -44,9 +44,39 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public static function getUserAdminRoutes() {
     return [
-      ['entity.user.collection', [['entity.user.collection', 'user.admin_permissions', 'entity.user_role.collection', 'user.role.settings']]],
-      ['user.admin_permissions', [['entity.user.collection', 'user.admin_permissions', 'entity.user_role.collection', 'user.role.settings']]],
-      ['entity.user_role.collection', [['entity.user.collection', 'user.admin_permissions', 'entity.user_role.collection', 'user.role.settings']]],
+      [
+        'entity.user.collection',
+        [
+          [
+            'entity.user.collection',
+            'user.admin_permissions',
+            'entity.user_role.collection',
+            'user.role.settings',
+          ],
+        ],
+      ],
+      [
+        'user.admin_permissions',
+        [
+          [
+            'entity.user.collection',
+            'user.admin_permissions',
+            'entity.user_role.collection',
+            'user.role.settings',
+          ],
+        ],
+      ],
+      [
+        'entity.user_role.collection',
+        [
+          [
+            'entity.user.collection',
+            'user.admin_permissions',
+            'entity.user_role.collection',
+            'user.role.settings',
+          ],
+        ],
+      ],
       ['entity.user.admin_form', [['user.account_settings_tab']]],
     ];
   }

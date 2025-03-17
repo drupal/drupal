@@ -147,9 +147,18 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
       // The following filename would be rejected by 'FileExtension' constraint
       // and therefore remains unchanged.
       '.php is not munged when it would be rejected' => ['foo.php.php', 'jpg'],
-      '.php is not munged when it would be rejected and filename contains null byte character' => ['foo.' . chr(0) . 'php.php', 'jpg'],
-      'extension less files are not munged when they would be rejected' => ['foo', 'jpg'],
-      'dot files are not munged when they would be rejected' => ['.htaccess', 'jpg png'],
+      '.php is not munged when it would be rejected and filename contains null byte character' => [
+        'foo.' . chr(0) . 'php.php',
+        'jpg',
+      ],
+      'extension less files are not munged when they would be rejected' => [
+        'foo',
+        'jpg',
+      ],
+      'dot files are not munged when they would be rejected' => [
+        '.htaccess',
+        'jpg png',
+      ],
     ];
   }
 

@@ -674,7 +674,15 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     yield '$text-container wildcard' => [
-      new HTMLRestrictions(['$text-container' => ['class' => TRUE, 'data-llama' => TRUE], 'div' => FALSE, 'span' => FALSE, 'p' => ['id' => TRUE]]),
+      new HTMLRestrictions([
+        '$text-container' => [
+          'class' => TRUE,
+          'data-llama' => TRUE,
+        ],
+        'div' => FALSE,
+        'span' => FALSE,
+        'p' => ['id' => TRUE],
+      ]),
       ['<$text-container class data-llama>', '<div>', '<span>', '<p id>'],
       '<div class data-llama> <span> <p id class data-llama>',
       [
@@ -707,7 +715,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     yield 'realistic' => [
-      new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => ['en' => TRUE, 'fr' => TRUE]], 'p' => ['data-*' => TRUE, 'class' => ['block' => TRUE]], 'br' => FALSE]),
+      new HTMLRestrictions([
+        'a' => [
+          'href' => TRUE,
+          'hreflang' => ['en' => TRUE, 'fr' => TRUE],
+        ],
+        'p' => ['data-*' => TRUE, 'class' => ['block' => TRUE]],
+        'br' => FALSE,
+      ]),
       ['<a href hreflang="en fr">', '<p data-* class="block">', '<br>'],
       '<a href hreflang="en fr"> <p data-* class="block"> <br>',
       [
@@ -1207,28 +1222,60 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
       'expected_diff' => 'a',
       'expected_intersection' => HTMLRestrictions::emptySet(),
-      'expected_union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'p' => [
+          'class' => [
+            'text-align-center' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+        '$text-container' => ['class' => ['text-align-center' => TRUE]],
+      ]),
     ];
     yield 'wildcard + matching tag: attribute value intersection — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
       'b' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'expected_diff' => 'a',
       'expected_intersection' => HTMLRestrictions::emptySet(),
-      'expected_union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'p' => [
+          'class' => [
+            'text-align-center' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+        '$text-container' => ['class' => ['text-align-center' => TRUE]],
+      ]),
     ];
     yield 'wildcard + matching tag: attribute value intersection — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]], 'p' => FALSE]),
       'expected_diff' => new HTMLRestrictions(['p' => ['class' => ['text-align-justify' => TRUE]]]),
       'expected_intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
-      'expected_union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'p' => [
+          'class' => [
+            'text-align-center' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+        '$text-container' => ['class' => ['text-align-center' => TRUE]],
+      ]),
     ];
     yield 'wildcard + matching tag: attribute value intersection — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]], 'p' => FALSE]),
       'b' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'expected_diff' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
       'expected_intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
-      'expected_union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'p' => [
+          'class' => [
+            'text-align-center' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+        '$text-container' => ['class' => ['text-align-center' => TRUE]],
+      ]),
     ];
     yield 'wildcard + matching tag: on both sides' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE, 'foo' => TRUE], 'p' => FALSE]),
@@ -1249,14 +1296,20 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
       'expected_diff' => 'a',
       'expected_intersection' => HTMLRestrictions::emptySet(),
-      'expected_union' => new HTMLRestrictions(['p' => TRUE, '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'p' => TRUE,
+        '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]],
+      ]),
     ];
     yield 'wildcard + matching tag: wildcard resolves into matching tag, but matching tag already supports all attributes — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
       'b' => new HTMLRestrictions(['p' => TRUE]),
       'expected_diff' => 'a',
       'expected_intersection' => HTMLRestrictions::emptySet(),
-      'expected_union' => new HTMLRestrictions(['p' => TRUE, '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'p' => TRUE,
+        '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]],
+      ]),
     ];
 
     // Wildcard tag + non-matching tag cases.
@@ -1289,32 +1342,92 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'expected_union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + non-matching tag: attribute value diff — without possible resolving' => [
-      'a' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
+      'a' => new HTMLRestrictions([
+        'span' => [
+          'class' => [
+            'vertical-align-top' => TRUE,
+            'vertical-align-bottom' => TRUE,
+          ],
+        ],
+      ]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
       'expected_diff' => 'a',
       'expected_intersection' => HTMLRestrictions::emptySet(),
-      'expected_union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'span' => [
+          'class' => [
+            'vertical-align-top' => TRUE,
+            'vertical-align-bottom' => TRUE,
+          ],
+        ],
+        '$text-container' => ['class' => ['vertical-align-top' => TRUE]],
+      ]),
     ];
     yield 'wildcard + non-matching tag: attribute value diff — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
-      'b' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
+      'b' => new HTMLRestrictions([
+        'span' => [
+          'class' => [
+            'vertical-align-top' => TRUE,
+            'vertical-align-bottom' => TRUE,
+          ],
+        ],
+      ]),
       'expected_diff' => 'a',
       'expected_intersection' => HTMLRestrictions::emptySet(),
-      'expected_union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'span' => [
+          'class' => [
+            'vertical-align-top' => TRUE,
+            'vertical-align-bottom' => TRUE,
+          ],
+        ],
+        '$text-container' => ['class' => ['vertical-align-top' => TRUE]],
+      ]),
     ];
     yield 'wildcard + non-matching tag: attribute value diff — WITH possible resolving' => [
-      'a' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
+      'a' => new HTMLRestrictions([
+        'span' => [
+          'class' => [
+            'vertical-align-top' => TRUE,
+            'vertical-align-bottom' => TRUE,
+          ],
+        ],
+      ]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]], 'span' => FALSE]),
       'expected_diff' => 'a',
       'expected_intersection' => new HTMLRestrictions(['span' => FALSE]),
-      'expected_union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'span' => [
+          'class' => [
+            'vertical-align-top' => TRUE,
+            'vertical-align-bottom' => TRUE,
+          ],
+        ],
+        '$text-container' => ['class' => ['vertical-align-top' => TRUE]],
+      ]),
     ];
     yield 'wildcard + non-matching tag: attribute value diff — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]], 'span' => FALSE]),
-      'b' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
+      'b' => new HTMLRestrictions([
+        'span' => [
+          'class' => [
+            'vertical-align-top' => TRUE,
+            'vertical-align-bottom' => TRUE,
+          ],
+        ],
+      ]),
       'expected_diff' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
       'expected_intersection' => new HTMLRestrictions(['span' => FALSE]),
-      'expected_union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions([
+        'span' => [
+          'class' => [
+            'vertical-align-top' => TRUE,
+            'vertical-align-bottom' => TRUE,
+          ],
+        ],
+        '$text-container' => ['class' => ['vertical-align-top' => TRUE]],
+      ]),
     ];
 
     // Wildcard tag + wildcard tag cases.
@@ -1333,7 +1446,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'expected_union' => 'b',
     ];
     yield 'wildcard + wildcard tag: attribute values' => [
-      'a' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      'a' => new HTMLRestrictions([
+        '$text-container' => [
+          'class' => [
+            'text-align-center' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
       'expected_diff' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-justify' => TRUE]]]),
       'expected_intersection' => 'b',
@@ -1341,7 +1461,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
     yield 'wildcard + wildcard tag: attribute values — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
-      'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      'b' => new HTMLRestrictions([
+        '$text-container' => [
+          'class' => [
+            'text-align-center' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ]),
       'expected_diff' => HTMLRestrictions::emptySet(),
       'expected_intersection' => 'a',
       'expected_union' => 'b',
@@ -1371,17 +1498,39 @@ class HTMLRestrictionsTest extends UnitTestCase {
         'expected_union' => 'a',
       ];
       yield "concrete attrs + wildcard $wildcard_location attr that covers a subset" => [
-        'a' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
+        'a' => new HTMLRestrictions([
+          'img' => [
+            'data-entity-bundle-type' => TRUE,
+            'data-entity-type' => TRUE,
+            'class' => TRUE,
+          ],
+        ]),
         'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
         'expected_diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
-        'expected_intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'expected_intersection' => new HTMLRestrictions([
+          'img' => [
+            'data-entity-bundle-type' => TRUE,
+            'data-entity-type' => TRUE,
+          ],
+        ]),
         'expected_union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
       ];
       yield "concrete attrs + wildcard $wildcard_location attr that covers a subset — vice versa" => [
         'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
-        'b' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
+        'b' => new HTMLRestrictions([
+          'img' => [
+            'data-entity-bundle-type' => TRUE,
+            'data-entity-type' => TRUE,
+            'class' => TRUE,
+          ],
+        ]),
         'expected_diff' => 'a',
-        'expected_intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'expected_intersection' => new HTMLRestrictions([
+          'img' => [
+            'data-entity-bundle-type' => TRUE,
+            'data-entity-type' => TRUE,
+          ],
+        ]),
         'expected_union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
       ];
       yield "wildcard $wildcard_location attr + wildcard $wildcard_location attr" => [
@@ -1433,14 +1582,26 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'b' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
       'expected_diff' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
-      'expected_intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
+      'expected_intersection' => new HTMLRestrictions([
+        '*' => [
+          'bar' => FALSE,
+          'dir' => ['ltr' => TRUE, 'rtl' => TRUE],
+          'foo' => FALSE,
+        ],
+      ]),
       'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
     ];
     yield 'global attribute tag + global attribute tag: overlap in attributes, different attribute value restrictions — vice versa' => [
       'a' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'expected_diff' => 'a',
-      'expected_intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
+      'expected_intersection' => new HTMLRestrictions([
+        '*' => [
+          'bar' => FALSE,
+          'dir' => ['ltr' => TRUE, 'rtl' => TRUE],
+          'foo' => FALSE,
+        ],
+      ]),
       'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
     ];
 
@@ -1480,14 +1641,26 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
       'expected_diff' => 'a',
       'expected_intersection' => HTMLRestrictions::emptySet(),
-      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
+      'expected_union' => new HTMLRestrictions([
+        '*' => [
+          'foo' => TRUE,
+          'bar' => FALSE,
+        ],
+        '$text-container' => ['class' => TRUE],
+      ]),
     ];
     yield 'global attribute tag + wildcard tag — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'expected_diff' => 'a',
       'expected_intersection' => HTMLRestrictions::emptySet(),
-      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
+      'expected_union' => new HTMLRestrictions([
+        '*' => [
+          'foo' => TRUE,
+          'bar' => FALSE,
+        ],
+        '$text-container' => ['class' => TRUE],
+      ]),
     ];
   }
 
@@ -1531,7 +1704,11 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     yield 'with wildcards' => [
-      new HTMLRestrictions(['div' => FALSE, '$text-container' => ['data-llama' => TRUE], '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      new HTMLRestrictions([
+        'div' => FALSE,
+        '$text-container' => ['data-llama' => TRUE],
+        '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]],
+      ]),
       new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE]]),
       new HTMLRestrictions(['div' => FALSE, '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       new HTMLRestrictions(['div' => FALSE]),
@@ -1539,7 +1716,10 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     yield 'wildcards and global attribute tag' => [
-      new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE], '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      new HTMLRestrictions([
+        '$text-container' => ['data-llama' => TRUE],
+        '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]],
+      ]),
       new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE]]),
       new HTMLRestrictions(['*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       new HTMLRestrictions([]),

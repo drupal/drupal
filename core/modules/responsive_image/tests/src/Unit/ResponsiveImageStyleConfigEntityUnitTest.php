@@ -95,7 +95,10 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
     $entity = new ResponsiveImageStyle(['breakpoint_group' => 'test_group']);
     $entity->setBreakpointGroup('test_group');
     $entity->setFallbackImageStyle('fallback');
-    $entity->addImageStyleMapping('test_breakpoint', '1x', ['image_mapping_type' => 'image_style', 'image_mapping' => 'small']);
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
+      'image_mapping_type' => 'image_style',
+      'image_mapping' => 'small',
+    ]);
     $entity->addImageStyleMapping('test_breakpoint', '2x', [
       'image_mapping_type' => 'sizes',
       'image_mapping' => [

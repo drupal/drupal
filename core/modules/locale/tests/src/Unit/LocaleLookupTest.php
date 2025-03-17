@@ -119,7 +119,16 @@ class LocaleLookupTest extends UnitTestCase {
       ->willReturn($result);
 
     $locale_lookup = $this->getMockBuilder('Drupal\locale\LocaleLookup')
-      ->setConstructorArgs(['en', 'irrelevant', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack])
+      ->setConstructorArgs([
+        'en',
+        'irrelevant',
+        $this->storage,
+        $this->cache,
+        $this->lock,
+        $this->configFactory,
+        $this->languageManager,
+        $this->requestStack,
+      ])
       ->onlyMethods(['persist'])
       ->getMock();
     $locale_lookup->expects($this->never())
@@ -237,7 +246,16 @@ class LocaleLookupTest extends UnitTestCase {
 
     $this->configFactory = $this->getConfigFactoryStub(['locale.settings' => ['cache_strings' => TRUE]]);
     $locale_lookup = $this->getMockBuilder('Drupal\locale\LocaleLookup')
-      ->setConstructorArgs(['en', 'irrelevant', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack])
+      ->setConstructorArgs([
+        'en',
+        'irrelevant',
+        $this->storage,
+        $this->cache,
+        $this->lock,
+        $this->configFactory,
+        $this->languageManager,
+        $this->requestStack,
+      ])
       ->onlyMethods(['persist'])
       ->getMock();
     $locale_lookup->expects($this->once())
@@ -267,7 +285,16 @@ class LocaleLookupTest extends UnitTestCase {
     $this->requestStack->push($request);
 
     $locale_lookup = $this->getMockBuilder('Drupal\locale\LocaleLookup')
-      ->setConstructorArgs(['en', 'irrelevant', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack])
+      ->setConstructorArgs([
+        'en',
+        'irrelevant',
+        $this->storage,
+        $this->cache,
+        $this->lock,
+        $this->configFactory,
+        $this->languageManager,
+        $this->requestStack,
+      ])
       ->onlyMethods(['persist'])
       ->getMock();
     $locale_lookup->expects($this->never())
@@ -360,7 +387,16 @@ class LocaleLookupTest extends UnitTestCase {
     \Drupal::setContainer($container);
 
     $locale_lookup = $this->getMockBuilder('Drupal\locale\LocaleLookup')
-      ->setConstructorArgs(['en', 'irrelevant', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack])
+      ->setConstructorArgs([
+        'en',
+        'irrelevant',
+        $this->storage,
+        $this->cache,
+        $this->lock,
+        $this->configFactory,
+        $this->languageManager,
+        $this->requestStack,
+      ])
       ->getMock();
 
     $o = new \ReflectionObject($locale_lookup);

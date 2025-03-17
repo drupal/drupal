@@ -148,7 +148,11 @@ class UserMailRequiredValidatorTest extends UnitTestCase {
     $account->getFieldDefinition("mail")->willReturn($field_definition->reveal())->shouldBeCalledTimes(1);
     $items->getEntity()->willReturn($account->reveal())->shouldBeCalledTimes(1);
     $items->isEmpty()->willReturn(TRUE);
-    $cases['Existing users without an email should be ignored if the current user is an administrator.'] = [$items->reveal(), FALSE, TRUE];
+    $cases['Existing users without an email should be ignored if the current user is an administrator.'] = [
+      $items->reveal(),
+      FALSE,
+      TRUE,
+    ];
 
     return $cases;
   }

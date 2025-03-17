@@ -60,22 +60,55 @@ class FilterHtmlTest extends UnitTestCase {
       ['<p id="first" />', '<p></p>'],
       ['<p id="first" lang="en">text</p>', '<p lang="en">text</p>'],
       ['<p style="display: none;" />', '<p></p>'],
-      ['<code class="pretty invalid">foreach ($a as $b) {}</code>', '<code class="pretty">foreach ($a as $b) {}</code>'],
-      ['<code class="boring pretty">foreach ($a as $b) {}</code>', '<code class="boring pretty">foreach ($a as $b) {}</code>'],
-      ['<code class="boring    pretty ">foreach ($a as $b) {}</code>', '<code class="boring pretty">foreach ($a as $b) {}</code>'],
-      ['<code class="invalid alpaca">foreach ($a as $b) {}</code>', '<code>foreach ($a as $b) {}</code>'],
+      [
+        '<code class="pretty invalid">foreach ($a as $b) {}</code>',
+        '<code class="pretty">foreach ($a as $b) {}</code>',
+      ],
+      [
+        '<code class="boring pretty">foreach ($a as $b) {}</code>',
+        '<code class="boring pretty">foreach ($a as $b) {}</code>',
+      ],
+      [
+        '<code class="boring    pretty ">foreach ($a as $b) {}</code>',
+        '<code class="boring pretty">foreach ($a as $b) {}</code>',
+      ],
+      [
+        '<code class="invalid alpaca">foreach ($a as $b) {}</code>',
+        '<code>foreach ($a as $b) {}</code>',
+      ],
       ['<h3 class="big">a heading</h3>', '<h3>a heading</h3>'],
       ['<h3 id="first">a heading</h3>', '<h3 id="first">a heading</h3>'],
       // Wildcard value. Case matters, so upper case doesn't match.
-      ['<code class="align-left bold">foreach ($a as $b) {}</code>', '<code class="align-left">foreach ($a as $b) {}</code>'],
-      ['<code class="align-right ">foreach ($a as $b) {}</code>', '<code class="align-right">foreach ($a as $b) {}</code>'],
-      ['<code class="Align-right ">foreach ($a as $b) {}</code>', '<code>foreach ($a as $b) {}</code>'],
+      [
+        '<code class="align-left bold">foreach ($a as $b) {}</code>',
+        '<code class="align-left">foreach ($a as $b) {}</code>',
+      ],
+      [
+        '<code class="align-right ">foreach ($a as $b) {}</code>',
+        '<code class="align-right">foreach ($a as $b) {}</code>',
+      ],
+      [
+        '<code class="Align-right ">foreach ($a as $b) {}</code>',
+        '<code>foreach ($a as $b) {}</code>',
+      ],
       // Wildcard name, case is ignored.
-      ['<ol style="display: none;" llama-wim="noble majestic"></ol>', '<ol llama-wim="noble majestic"></ol>'],
-      ['<ol style="display: none;" LlamA-Wim="majestic"></ol>', '<ol llama-wim="majestic"></ol>'],
-      ['<ol style="display: none;" llama-="noble majestic"></ol>', '<ol llama-="noble majestic"></ol>'],
+      [
+        '<ol style="display: none;" llama-wim="noble majestic"></ol>',
+        '<ol llama-wim="noble majestic"></ol>',
+      ],
+      [
+        '<ol style="display: none;" LlamA-Wim="majestic"></ol>',
+        '<ol llama-wim="majestic"></ol>',
+      ],
+      [
+        '<ol style="display: none;" llama-="noble majestic"></ol>',
+        '<ol llama-="noble majestic"></ol>',
+      ],
       // Both wildcard names and values.
-      ['<ul style="display: none;" alpaca-wool="wooly-warm strong majestic"></ul>', '<ul alpaca-wool="wooly-warm strong"></ul>'],
+      [
+        '<ul style="display: none;" alpaca-wool="wooly-warm strong majestic"></ul>',
+        '<ul alpaca-wool="wooly-warm strong"></ul>',
+      ],
     ];
   }
 

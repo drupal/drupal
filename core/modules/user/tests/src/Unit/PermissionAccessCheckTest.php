@@ -58,10 +58,20 @@ class PermissionAccessCheckTest extends UnitTestCase {
     return [
       [[], FALSE],
       [['_permission' => 'allowed'], TRUE, ['user.permissions']],
-      [['_permission' => 'denied'], FALSE, ['user.permissions'], "The 'denied' permission is required."],
+      [
+        ['_permission' => 'denied'],
+        FALSE,
+        ['user.permissions'],
+        "The 'denied' permission is required.",
+      ],
       [['_permission' => 'allowed+denied'], TRUE, ['user.permissions']],
       [['_permission' => 'allowed+denied+other'], TRUE, ['user.permissions']],
-      [['_permission' => 'allowed,denied'], FALSE, ['user.permissions'], "The following permissions are required: 'allowed' AND 'denied'."],
+      [
+        ['_permission' => 'allowed,denied'],
+        FALSE,
+        ['user.permissions'],
+        "The following permissions are required: 'allowed' AND 'denied'.",
+      ],
     ];
   }
 

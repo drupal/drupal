@@ -239,7 +239,13 @@ class CommentLinkBuilderTest extends UnitTestCase {
               }
               else {
                 // On a separate page.
-                $expected['comment-add']['url'] = Url::fromRoute('comment.reply', ['entity_type' => 'node', 'entity' => 1, 'field_name' => 'comment']);
+                $expected['comment-add']['url'] = Url::fromRoute(
+                  'comment.reply',
+                  [
+                    'entity_type' => 'node',
+                    'entity' => 1,
+                    'field_name' => 'comment',
+                  ]);
               }
             }
           }

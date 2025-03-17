@@ -31,6 +31,7 @@
   <!-- Drupal sniffs -->
   <rule ref="Drupal.Arrays.Array"/>
   <rule ref="Drupal.Arrays.Array.LongLineDeclaration">
+    <include-pattern>core/*/Unit/*</include-pattern>
     <include-pattern>core/lib/*</include-pattern>
     <include-pattern>core/modules/*/tests/modules/*</include-pattern>
   </rule>

@@ -306,10 +306,22 @@ class PluginBaseTest extends UnitTestCase {
     $data[] = [$values_2, $options_1, $values_1];
 
     // Nested options, all properly defined.
-    $data[] = [['sub1' => $values_2, 'sub2' => $values_2], ['sub1' => ['contains' => $options_2], 'sub2' => ['contains' => $options_2]], ['sub1' => $values_2, 'sub2' => $values_2]];
+    $data[] = [['sub1' => $values_2, 'sub2' => $values_2],
+      [
+        'sub1' => ['contains' => $options_2],
+        'sub2' => ['contains' => $options_2],
+      ],
+      ['sub1' => $values_2, 'sub2' => $values_2],
+    ];
 
     // Nested options, not all properly defined.
-    $data[] = [['sub1' => $values_2, 'sub2' => $values_2], ['sub1' => ['contains' => $options_2], 'sub2' => ['contains' => $options_1]], ['sub1' => $values_2, 'sub2' => $values_1]];
+    $data[] = [['sub1' => $values_2, 'sub2' => $values_2],
+      [
+        'sub1' => ['contains' => $options_2],
+        'sub2' => ['contains' => $options_1],
+      ],
+      ['sub1' => $values_2, 'sub2' => $values_1],
+    ];
 
     return $data;
   }

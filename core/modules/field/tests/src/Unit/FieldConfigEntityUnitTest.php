@@ -130,7 +130,11 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefinition')
       ->with('test_field')
-      ->willReturn(['provider' => 'test_module', 'config_dependencies' => ['module' => ['test_module2']], 'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem']);
+      ->willReturn([
+        'provider' => 'test_module',
+        'config_dependencies' => ['module' => ['test_module2']],
+        'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem',
+      ]);
 
     $this->fieldStorage->expects($this->once())
       ->method('getConfigDependencyName')
@@ -178,7 +182,11 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefinition')
       ->with('test_field')
-      ->willReturn(['provider' => 'test_module', 'config_dependencies' => ['module' => ['test_module2']], 'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem']);
+      ->willReturn([
+        'provider' => 'test_module',
+        'config_dependencies' => ['module' => ['test_module2']],
+        'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem',
+      ]);
 
     $field = new FieldConfig([
       'field_name' => $this->fieldStorage->getName(),

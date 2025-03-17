@@ -108,27 +108,97 @@ class LatestRevisionCheckTest extends UnitTestCase {
   public static function accessSituationProvider() {
     return [
       // Node with global permissions and latest version.
-      [Node::class, 'node', TRUE, ['view latest version', 'view any unpublished content'], FALSE, AccessResultAllowed::class],
+      [
+        Node::class,
+        'node',
+        TRUE,
+        ['view latest version', 'view any unpublished content'],
+        FALSE,
+        AccessResultAllowed::class,
+      ],
       // Node with global permissions and no latest version.
-      [Node::class, 'node', FALSE, ['view latest version', 'view any unpublished content'], FALSE, AccessResultForbidden::class],
+      [
+        Node::class,
+        'node',
+        FALSE,
+        ['view latest version', 'view any unpublished content'],
+        FALSE,
+        AccessResultForbidden::class,
+      ],
       // Node with own content permissions and latest version.
-      [Node::class, 'node', TRUE, ['view latest version', 'view own unpublished content'], TRUE, AccessResultAllowed::class],
+      [
+        Node::class,
+        'node',
+        TRUE,
+        ['view latest version', 'view own unpublished content'],
+        TRUE,
+        AccessResultAllowed::class,
+      ],
       // Node with own content permissions and no latest version.
-      [Node::class, 'node', FALSE, ['view latest version', 'view own unpublished content'], FALSE, AccessResultForbidden::class],
+      [
+        Node::class,
+        'node',
+        FALSE,
+        ['view latest version', 'view own unpublished content'],
+        FALSE,
+        AccessResultForbidden::class,
+      ],
       // Node with own content permissions and latest version, but no perms to
       // view latest version.
-      [Node::class, 'node', TRUE, ['view own unpublished content'], TRUE, AccessResultNeutral::class],
+      [
+        Node::class,
+        'node',
+        TRUE,
+        ['view own unpublished content'],
+        TRUE,
+        AccessResultNeutral::class,
+      ],
       // Node with own content permissions and no latest version, but no perms
       // to view latest version.
-      [Node::class, 'node', TRUE, ['view own unpublished content'], FALSE, AccessResultNeutral::class],
+      [
+        Node::class,
+        'node',
+        TRUE,
+        ['view own unpublished content'],
+        FALSE,
+        AccessResultNeutral::class,
+      ],
       // Block with pending revision, and permissions to view any.
-      [BlockContent::class, 'block_content', TRUE, ['view latest version', 'view any unpublished content'], FALSE, AccessResultAllowed::class],
+      [
+        BlockContent::class,
+        'block_content',
+        TRUE,
+        ['view latest version', 'view any unpublished content'],
+        FALSE,
+        AccessResultAllowed::class,
+      ],
       // Block with no pending revision.
-      [BlockContent::class, 'block_content', FALSE, ['view latest version', 'view any unpublished content'], FALSE, AccessResultForbidden::class],
+      [
+        BlockContent::class,
+        'block_content',
+        FALSE,
+        ['view latest version', 'view any unpublished content'],
+        FALSE,
+        AccessResultForbidden::class,
+      ],
       // Block with pending revision, but no permission to view any.
-      [BlockContent::class, 'block_content', TRUE, ['view latest version', 'view own unpublished content'], FALSE, AccessResultNeutral::class],
+      [
+        BlockContent::class,
+        'block_content',
+        TRUE,
+        ['view latest version', 'view own unpublished content'],
+        FALSE,
+        AccessResultNeutral::class,
+      ],
       // Block with no pending revision.
-      [BlockContent::class, 'block_content', FALSE, ['view latest version', 'view own unpublished content'], FALSE, AccessResultForbidden::class],
+      [
+        BlockContent::class,
+        'block_content',
+        FALSE,
+        ['view latest version', 'view own unpublished content'],
+        FALSE,
+        AccessResultForbidden::class,
+      ],
     ];
   }
 

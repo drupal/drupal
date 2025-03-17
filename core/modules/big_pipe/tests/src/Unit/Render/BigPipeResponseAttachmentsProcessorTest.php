@@ -63,7 +63,8 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
     // attachments, because it doesn't know (nor should it) how to handle them.
     $html_response_attachments_processor = $this->prophesize(AttachmentsResponseProcessorInterface::class);
     $html_response_attachments_processor->processAttachments(Argument::that(function ($response) {
-      return $response instanceof HtmlResponse && empty(array_intersect(['big_pipe_placeholders', 'big_pipe_nojs_placeholders'], array_keys($response->getAttachments())));
+      return $response instanceof HtmlResponse
+        && empty(array_intersect(['big_pipe_placeholders', 'big_pipe_nojs_placeholders'], array_keys($response->getAttachments())));
     }))
       ->will(function ($args) {
         /** @var \Symfony\Component\HttpFoundation\Response|\Drupal\Core\Render\AttachmentsInterface $response */
@@ -95,7 +96,16 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
       'libraries + drupalSettings' => [['library' => ['core/drupal'], 'drupalSettings' => ['foo' => 'bar']]],
     ];
 
-    $official_attachment_types = ['html_head', 'feed', 'html_head_link', 'http_header', 'library', 'placeholders', 'drupalSettings', 'html_response_attachment_placeholders'];
+    $official_attachment_types = [
+      'html_head',
+      'feed',
+      'html_head_link',
+      'http_header',
+      'library',
+      'placeholders',
+      'drupalSettings',
+      'html_response_attachment_placeholders',
+    ];
     $official_attachments_with_random_values = [];
     foreach ($official_attachment_types as $type) {
       $official_attachments_with_random_values[$type] = Random::machineName();

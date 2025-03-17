@@ -123,7 +123,14 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
           'data' => [
             'type' => 'lorem',
             'id' => '0676d1bf-55b3-4bbc-9fbc-3df10f4599d5',
-            'relationships' => ['field_dummy' => ['data' => ['type' => 'node', 'id' => '76dd5c18-ea1b-4150-9e75-b21958a2b836']]],
+            'relationships' => [
+              'field_dummy' => [
+                'data' => [
+                  'type' => 'node',
+                  'id' => '76dd5c18-ea1b-4150-9e75-b21958a2b836',
+                ],
+              ],
+            ],
           ],
         ],
         [

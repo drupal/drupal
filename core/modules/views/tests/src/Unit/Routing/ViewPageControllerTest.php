@@ -67,7 +67,11 @@ class ViewPageControllerTest extends UnitTestCase {
     $options = [
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
     ];
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(
+      '/test',
+      ['view_id' => 'test_page_view', 'display_id' => 'default'],
+      [],
+      $options));
     $route_match = RouteMatch::createFromRequest($request);
 
     $output = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
@@ -88,7 +92,11 @@ class ViewPageControllerTest extends UnitTestCase {
       '_view_argument_map' => ['arg_0' => 'arg_0'],
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
     ];
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{arg_0}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(
+      '/test/{arg_0}',
+      ['view_id' => 'test_page_view', 'display_id' => 'default'],
+      [],
+      $options));
     $route_match = RouteMatch::createFromRequest($request);
 
     $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
@@ -124,7 +132,11 @@ class ViewPageControllerTest extends UnitTestCase {
       ],
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
     ];
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{parameter}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(
+      '/test/{parameter}',
+      ['view_id' => 'test_page_view', 'display_id' => 'default'],
+      [],
+      $options));
     $route_match = RouteMatch::createFromRequest($request);
 
     $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
@@ -163,7 +175,11 @@ class ViewPageControllerTest extends UnitTestCase {
       ],
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
     ];
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{test_entity}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(
+      '/test/{test_entity}',
+      ['view_id' => 'test_page_view', 'display_id' => 'default'],
+      [],
+      $options));
     $route_match = RouteMatch::createFromRequest($request);
 
     $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);

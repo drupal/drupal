@@ -84,7 +84,15 @@ class ViewListBuilderTest extends UnitTestCase {
     $parent_form_selector = $this->createMock(MenuParentFormSelector::class);
     $page_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\Page')
       ->onlyMethods(['initDisplay', 'getPath'])
-      ->setConstructorArgs([[], 'default', $display_manager->getDefinition('page'), $route_provider, $state, $menu_storage, $parent_form_selector])
+      ->setConstructorArgs([
+        [],
+        'default',
+        $display_manager->getDefinition('page'),
+        $route_provider,
+        $state,
+        $menu_storage,
+        $parent_form_selector,
+      ])
       ->getMock();
     $page_display->expects($this->any())
       ->method('getPath')
