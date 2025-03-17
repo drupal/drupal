@@ -1,0 +1,5 @@
+name: 'Test Install Requirements Class'
+type: module
+description: 'Support module for testing install requirements.'
+package: Testing
+version: VERSION
