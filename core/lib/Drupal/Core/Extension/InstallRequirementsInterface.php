@@ -16,11 +16,12 @@ interface InstallRequirementsInterface {
    * During the 'install' phase, modules can for example assert that
    * library or server versions are available or sufficient.
    * Note that the installation of a module can happen during installation of
-   * Drupal itself (by install.php) with an installation profile or later by hand.
-   * As a consequence, install-time requirements must be checked without access
-   * to the full Drupal API, because it is not available during install.php.
-   * If a requirement has a severity of REQUIREMENT_ERROR, install.php will abort
-   * or at least the module will not install.
+   * Drupal itself (by install.php) with an installation profile or later by
+   * hand. As a consequence, install-time requirements must be checked without
+   * access to the full Drupal API, because it is not available during
+   * install.php.
+   * If a requirement has a severity of REQUIREMENT_ERROR, install.php will
+   * abort or at least the module will not install.
    * Other severity levels have no effect on the installation.
    * Module dependencies do not belong to these installation requirements,
    * but should be defined in the module's .info.yml file.

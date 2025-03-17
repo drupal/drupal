@@ -3,7 +3,7 @@
 namespace Drupal\Core\Entity;
 
 /**
- * Defines an interface for reacting to entity type creation, deletion, and updates.
+ * Interface for entity type create, delete and update operations.
  */
 interface EntityTypeListenerInterface {
 

@@ -36,7 +36,7 @@ interface CalculatedCacheContextInterface {
   public function getContext($parameter = NULL);
 
   /**
-   * Gets the cacheability metadata for the context based on the parameter value.
+   * Gets cacheability metadata for the context based on the parameter value.
    *
    * There are three valid cases for the returned CacheableMetadata object:
    * - An empty object means this can be optimized away safely.

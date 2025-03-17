@@ -233,7 +233,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   }
 
   /**
-   * Helper callback for uasort() to sort configuration entities by weight and label.
+   * Callback for uasort() to sort configuration entities by weight and label.
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     $a_weight = $a->weight ?? 0;

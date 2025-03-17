@@ -202,8 +202,10 @@ class ModuleHandler implements ModuleHandlerInterface {
     // A module freshly added will not be registered on the container yet.
     // ProceduralCall service does not yet know about it.
     // Note in HookCollectorPass:
+    // phpcs:ignore Drupal.Files.LineLength
     // - $container->register(ProceduralCall::class, ProceduralCall::class)->addArgument($collector->includes);
-    // Load all includes so the legacy section of invoke can handle hooks in includes.
+    // Load all includes so the legacy section of invoke can handle hooks in
+    // includes.
     $hook_collector->loadAllIncludes();
     // Register procedural implementations.
     foreach ($hook_collector->getImplementations() as $hook => $moduleImplements) {

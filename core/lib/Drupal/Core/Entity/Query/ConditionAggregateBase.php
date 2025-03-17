@@ -3,7 +3,7 @@
 namespace Drupal\Core\Entity\Query;
 
 /**
- * Defines a common base class for all aggregation entity condition implementations.
+ * A common base class for all aggregation entity condition implementations.
  */
 abstract class ConditionAggregateBase extends ConditionFundamentals implements ConditionAggregateInterface {
 

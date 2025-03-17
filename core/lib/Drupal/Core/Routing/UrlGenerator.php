@@ -196,13 +196,24 @@ class UrlGenerator implements UrlGeneratorInterface {
     // variables up to the start of the path must be supplied to there is no
     // gap.
     $optional = TRUE;
-    // Structure of $tokens from the compiled route:
-    // If the path is /admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link-inline
-    // [ [ 0 => 'text', 1 => '/add-link-inline' ], [ 0 => 'variable', 1 => '/', 2 => '[^/]++', 3 => 'shortcut_set' ], [ 0 => 'text', 1 => '/admin/config/user-interface/shortcut/manage' ] ]
+    // The structure of the tokens array varies according to the compiled route.
+    // Examples:
+    // @code
+    // [
+    //  [0 => 'text', 1 => '/add-link-inline'],
+    //  [0 => 'variable', 1 => '/', 2 => '[^/]++', 3 => 'shortcut_set'],
+    //  [0 => 'text', 1 => '/admin/config/user-interface/shortcut/manage'],
+    // ]
+    // @endcode
+    // This is the structure for the "shortcut.link_add_inline" route.
     //
-    // For a simple fixed path, there is just one token.
-    // If the path is /admin/config
-    // [ [ 0 => 'text', 1 => '/admin/config' ] ]
+    // @code
+    // [
+    //   [ 0 => 'text', 1 => '/admin/config' ]
+    // ]
+    // @endcode
+    // This is the structure for a simple fixed path, "/admin/config:. there is
+    // just one token.
     foreach ($tokens as $token) {
       if ('variable' === $token[0]) {
         if (!$optional || !array_key_exists($token[3], $defaults) || (isset($mergedParams[$token[3]]) && (string) $mergedParams[$token[3]] !== (string) $defaults[$token[3]])) {

@@ -143,7 +143,7 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
-   * Build a condition to match a table name against a standard information_schema.
+   * Builds a condition to match a table name against the information_schema.
    *
    * The information_schema is a SQL standard that provides information about
    * the database server and the databases, schemas, tables, columns and users
@@ -676,7 +676,7 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
-   * Return an array of field names from an array of key/index column specifiers.
+   * Gets an array of field names from an array of key/index column specifiers.
    *
    * This is usually an identity function but if a key/index uses a column
    * prefix specification, this function extracts just the name.

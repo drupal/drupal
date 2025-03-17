@@ -98,7 +98,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   }
 
   /**
-   * Creates an allowed access result if the permission is present, neutral otherwise.
+   * Creates an access result if the permission is present, neutral otherwise.
    *
    * Checks the permission and adds a 'user.permissions' cache context.
    *
@@ -121,7 +121,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   }
 
   /**
-   * Creates an allowed access result if the permissions are present, neutral otherwise.
+   * Creates an access result if the permissions are present, neutral otherwise.
    *
    * Checks the permission and adds a 'user.permissions' cache contexts.
    *

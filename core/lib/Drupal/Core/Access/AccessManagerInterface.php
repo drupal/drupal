@@ -12,7 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 interface AccessManagerInterface {
 
   /**
-   * Checks a named route with parameters against applicable access check services.
+   * Checks a named route with parameters against access check services.
    *
    * Determines whether the route is accessible or not.
    *

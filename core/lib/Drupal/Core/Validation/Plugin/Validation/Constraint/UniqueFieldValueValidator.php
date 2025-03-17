@@ -124,7 +124,9 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
   }
 
   /**
-   * Perform a case-insensitive array intersection, but keep original capitalization.
+   * Performs a case-insensitive array intersection.
+   *
+   * This retains the capitalization of the original string.
    *
    * @param array $orig_values
    *   The original values to be returned.

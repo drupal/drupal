@@ -625,6 +625,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    */
   protected static function getWidgetStateParents(array $parents, $field_name) {
     // Field processing data is placed at
+    // phpcs:ignore Drupal.Files.LineLength
     // $form_state->get(['field_storage', '#parents', ...$parents..., '#fields', $field_name]),
     // to avoid clashes between field names and $parents parts.
     return array_merge(['field_storage', '#parents'], $parents, ['#fields', $field_name]);

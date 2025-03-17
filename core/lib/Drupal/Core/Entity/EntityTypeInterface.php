@@ -736,8 +736,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * The list cache tags associated with a specific bundle.
    *
-   * Enables code listing entities of this type and bundle to ensure that newly created
-   * entities show up immediately.
+   * Enables code listing entities of this type and bundle to ensure that newly
+   * created entities show up immediately.
    *
    * @return string[]
    *   An array of the cache tags for this bundle.

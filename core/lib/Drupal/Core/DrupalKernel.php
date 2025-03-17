@@ -1468,7 +1468,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Returns the active configuration storage to use during building the container.
+   * Gets the active configuration storage to use during building the container.
    *
    * @return \Drupal\Core\Config\StorageInterface
    *   The configuration storage.

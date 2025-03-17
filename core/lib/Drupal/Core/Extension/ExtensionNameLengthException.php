@@ -3,6 +3,6 @@
 namespace Drupal\Core\Extension;
 
 /**
- * Exception thrown when the extension's name length exceeds the allowed maximum.
+ * Exception thrown when the extension's name length exceeds the maximum.
  */
 class ExtensionNameLengthException extends \Exception {}

@@ -36,7 +36,7 @@ interface LanguageInterface {
    * Should be used when we explicitly know that the data referred has no
    * linguistic content.
    *
-   * See https://www.w3.org/International/questions/qa-no-language#nonlinguistic.
+   * @see https://www.w3.org/International/questions/qa-no-language#nonlinguistic
    */
   const LANGCODE_NOT_APPLICABLE = 'zxx';
 

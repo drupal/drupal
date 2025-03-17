@@ -3,7 +3,7 @@
 namespace Drupal\Core\Field;
 
 /**
- * Defines an interface for reacting to field storage definition creation, deletion, and updates.
+ * Interface for field storage definition create, delete and update operations.
  */
 interface FieldStorageDefinitionListenerInterface {
 

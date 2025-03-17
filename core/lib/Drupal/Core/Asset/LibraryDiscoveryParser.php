@@ -634,8 +634,8 @@ class LibraryDiscoveryParser {
   protected function resolveThemeAssetPath($theme_path, $overriding_asset) {
     if ($overriding_asset[0] !== '/' && !$this->isValidUri($overriding_asset)) {
       // The destination is not an absolute path and it's not a URI (e.g.
-      // public://generated_js/example.js or https://example.com/js/my_js.js), so
-      // it's relative to the theme.
+      // public://generated_js/example.js or https://example.com/js/my_js.js),
+      // so it's relative to the theme.
       return '/' . $theme_path . '/' . $overriding_asset;
     }
     return $overriding_asset;

@@ -235,7 +235,7 @@ class InstallHelper implements ContainerInjectionInterface {
   }
 
   /**
-   * Retrieves the Media Image ID of a media image saved during the import process.
+   * Retrieves th ID of a media image saved during the import process.
    *
    * @param int $media_image_csv_id
    *   The media image's ID from the CSV file.

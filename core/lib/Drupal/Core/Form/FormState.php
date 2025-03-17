@@ -383,7 +383,7 @@ class FormState implements FormStateInterface {
   protected $has_file_element;
 
   /**
-   * Contains references to details elements to render them within vertical tabs.
+   * The references to details elements to render them within vertical tabs.
    *
    * This property is uncacheable.
    *

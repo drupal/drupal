@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Defines a compiler pass to merge moved classes into a single container parameter.
+ * Compiler pass to merge moved classes into a single container parameter.
  */
 class BackwardsCompatibilityClassLoaderPass implements CompilerPassInterface {
 

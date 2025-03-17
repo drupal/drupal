@@ -17,7 +17,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
 class DefaultFactory implements FactoryInterface {
 
   /**
-   * The object that retrieves the definitions of the plugins that this factory instantiates.
+   * The object that gets the plugin definitions that this factory instantiates.
    *
    * The plugin definition includes the plugin class and possibly other
    * information necessary for proper instantiation.

@@ -84,17 +84,19 @@ const CSS_BASE = -200;
 const CSS_LAYOUT = -100;
 
 /**
- * The default weight for CSS rules that style design components (and their associated states and themes.)
+ * The default weight for CSS rules that style design components.
+ *
+ * This applies to the associated states and themes of the component.
  */
 const CSS_COMPONENT = 0;
 
 /**
- * The default weight for CSS rules that style states and are not included with components.
+ * The default weight for rules that style states not included with components.
  */
 const CSS_STATE = 100;
 
 /**
- * The default weight for CSS rules that style themes and are not included with components.
+ * The default weight for rules that style themes not included with components.
  */
 const CSS_THEME = 200;
 
@@ -342,7 +344,10 @@ function show(&$element) {
 }
 
 /**
- * Rebuilds the container, flushes all persistent caches, resets all variables, and rebuilds all data structures.
+ * Re-initializes the entire system.
+ *
+ * To re-initialize the system, the container is rebuilt, all persistent caches
+ * are flushed, all variables are reset and all data structures are rebuilt.
  *
  * At times, it is necessary to re-initialize the entire system to account for
  * changed or new code. This function:

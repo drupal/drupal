@@ -18,7 +18,9 @@ use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 class Log {
 
   /**
-   * Cache of logged queries. This will only be used if the query logger is enabled.
+   * Cache of logged queries.
+   *
+   * This will only be used if the query logger is enabled.
    *
    * @var array
    * The structure for the logging array is as follows:

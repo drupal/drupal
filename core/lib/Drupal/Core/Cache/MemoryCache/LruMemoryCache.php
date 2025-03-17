@@ -79,8 +79,8 @@ class LruMemoryCache extends MemoryCache {
     }
     elseif (count($this->cache) > $this->allowedSlots - 1) {
       // Remove one item from the cache to ensure we remain within the allowed
-      // number of slots. Avoid using array_slice() because it makes a copy of the
-      // array, and avoid using array_splice() or array_shift() because they
+      // number of slots. Avoid using array_slice() because it makes a copy of
+      // the array, and avoid using array_splice() or array_shift() because they
       // re-index numeric keys.
       unset($this->cache[array_key_first($this->cache)]);
     }

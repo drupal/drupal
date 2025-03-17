@@ -109,6 +109,14 @@
   <rule ref="Drupal.ControlStructures.InlineControlStructure"/>
   <rule ref="Drupal.Files.EndFileNewline"/>
   <rule ref="Drupal.Files.FileEncoding"/>
+  <rule ref="Drupal.Files.LineLength">
+    <include-pattern>*/core/lib/*</include-pattern>
+    <exclude-pattern>*/core/lib/*/*Trait</exclude-pattern>
+    <include-pattern>*/core/includes/*</include-pattern>
+    <include-pattern>*/core/profiles/*</include-pattern>
+    <include-pattern>*/core/recipes/*</include-pattern>
+    <include-pattern>*/core/themes/*</include-pattern>
+  </rule>
   <rule ref="Drupal.Files.TxtFileLineLength"/>
   <rule ref="Drupal.Formatting.MultiLineAssignment"/>
   <rule ref="Drupal.Formatting.MultipleStatementAlignment"/>

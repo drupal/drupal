@@ -32,7 +32,7 @@ class ReflectionFactory extends DefaultFactory {
   }
 
   /**
-   * Inspects the plugin class and build a list of arguments for the constructor.
+   * Inspects the plugin class and builds a list of constructor arguments.
    *
    * This is provided as a helper method so factories extending this class can
    * replace this and insert their own reflection logic.

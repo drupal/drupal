@@ -152,7 +152,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function escapeField($string);
 
   /**
-   * Compiles and returns an associative array of the arguments for this prepared statement.
+   * Compiles and returns an array of the arguments for this prepared statement.
    *
    * @param \Drupal\Core\Database\Query\PlaceholderInterface|null $queryPlaceholder
    *   When collecting the arguments of a subquery, the main placeholder
