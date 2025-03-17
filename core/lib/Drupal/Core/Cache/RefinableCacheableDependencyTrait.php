@@ -20,6 +20,7 @@ trait RefinableCacheableDependencyTrait {
     }
     else {
       // Not a cacheable dependency, this can not be cached.
+      @trigger_error(sprintf("Calling %s() with an object that doesn't implement %s is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3232020", __METHOD__, CacheableDependencyInterface::class), E_USER_DEPRECATED);
       $this->cacheMaxAge = 0;
     }
     return $this;

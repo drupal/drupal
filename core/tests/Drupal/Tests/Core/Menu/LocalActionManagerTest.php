@@ -162,7 +162,16 @@ class LocalActionManagerTest extends UnitTestCase {
       ->willReturn($plugin_definitions);
     $map = [];
     foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
-      $plugin = $this->createMock('Drupal\Core\Menu\LocalActionInterface');
+      $plugin = $this->createMock('Drupal\Core\Menu\LocalActionDefault');
+      $plugin->expects($this->any())
+        ->method('getCacheContexts')
+        ->willReturn([]);
+      $plugin->expects($this->any())
+        ->method('getCacheTags')
+        ->willReturn([]);
+      $plugin->expects($this->any())
+        ->method('getCacheMaxAge')
+        ->willReturn(0);
       $plugin->expects($this->any())
         ->method('getRouteName')
         ->willReturn($plugin_definition['route_name']);

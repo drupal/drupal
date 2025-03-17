@@ -406,14 +406,17 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    * @return $this
    */
   public function inheritCacheability(AccessResultInterface $other) {
-    $this->addCacheableDependency($other);
     if ($other instanceof CacheableDependencyInterface) {
+      $this->addCacheableDependency($other);
       if ($this->getCacheMaxAge() !== 0 && $other->getCacheMaxAge() !== 0) {
         $this->setCacheMaxAge(Cache::mergeMaxAges($this->getCacheMaxAge(), $other->getCacheMaxAge()));
       }
       else {
         $this->setCacheMaxAge($other->getCacheMaxAge());
       }
+    }
+    else {
+      $this->setCacheMaxAge(0);
     }
     return $this;
   }

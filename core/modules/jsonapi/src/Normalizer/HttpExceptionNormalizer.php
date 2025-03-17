@@ -2,6 +2,7 @@
 
 namespace Drupal\jsonapi\Normalizer;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\jsonapi\Normalizer\Value\HttpExceptionNormalizerValue;
@@ -43,7 +44,12 @@ class HttpExceptionNormalizer extends NormalizerBase {
    */
   public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $cacheability = new CacheableMetadata();
-    $cacheability->addCacheableDependency($object);
+    if ($object instanceof CacheableDependencyInterface) {
+      $cacheability->addCacheableDependency($object);
+    }
+    else {
+      $cacheability->setCacheMaxAge(0);
+    }
 
     $cacheability->addCacheTags(['config:system.logging']);
     if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {

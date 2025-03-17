@@ -523,10 +523,6 @@ class AccessResultTest extends UnitTestCase {
     $verify($a, $tags);
     $b = AccessResult::neutral()->addCacheableDependency($node);
     $verify($b, $tags, ['user'], 600);
-
-    $non_cacheable_dependency = new \stdClass();
-    $non_cacheable = AccessResult::neutral()->addCacheableDependency($non_cacheable_dependency);
-    $verify($non_cacheable, [], [], 0);
   }
 
   /**
