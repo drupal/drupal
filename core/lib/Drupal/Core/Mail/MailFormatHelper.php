@@ -130,7 +130,7 @@ class MailFormatHelper {
     // 'See <a href="https://www.drupal.org">the Drupal site</a>' becomes
     // 'See the Drupal site [1]' with the URL included as a footnote.
     static::htmlToMailUrls(NULL, TRUE);
-    $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>(.+?)</a>)@i';
+    $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>([^<]*)</a>)@i';
     $string = preg_replace_callback($pattern, [static::class, 'htmlToMailUrls'], $string);
     $urls = static::htmlToMailUrls();
     $footnotes = '';
@@ -343,7 +343,8 @@ class MailFormatHelper {
         [, , $url, $label] = $match;
         // Ensure all URLs are absolute.
         static::$urls[] = strpos($url, '://') ? $url : preg_replace(static::$regexp, $base_url . '/', $url);
-        return $label . ' [' . count(static::$urls) . ']';
+        // Strip newlines and carriage returns from anchor text.
+        return preg_replace('/\r?\n|\r/', '', $label) . ' [' . count(static::$urls) . ']';
       }
     }
     return static::$urls;
