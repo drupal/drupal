@@ -119,7 +119,7 @@
 [class*="toolbar-button--icon"]:not(:has(.toolbar-button__icon)) {
   &::before {
     flex-shrink: 0;
-    content: attr(data-icon-text);
+    content: attr(data-icon-text) / "";
     text-align: center;
     color: currentColor;
     font-size: calc(0.75 * var(--admin-toolbar-rem));

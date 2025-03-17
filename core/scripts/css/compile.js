@@ -33,6 +33,7 @@ module.exports = (filePath, callback) => {
           'has-pseudo-class': false,
           'image-set-function': false,
           'prefers-color-scheme-query': false,
+          'content-alt-text': false,
         }
       }),
       postcssPixelsToRem({
