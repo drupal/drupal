@@ -1,5 +1,0 @@
-name: 'jQuery key event polyfill test'
-type: module
-description: 'Polyfills the event.which property, needed for tests'
-package: Testing
-version: VERSION
