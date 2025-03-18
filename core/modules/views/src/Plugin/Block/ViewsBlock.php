@@ -24,6 +24,10 @@ class ViewsBlock extends ViewsBlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    // If the block plugin is invalid, there is nothing to do.
+    if (!method_exists($this->view->display_handler, 'preBlockBuild')) {
+      return [];
+    }
     $this->view->display_handler->preBlockBuild($this);
 
     $args = [];

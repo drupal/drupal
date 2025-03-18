@@ -77,6 +77,19 @@ interface BlockPluginInterface extends ConfigurableInterface, DependentPluginInt
   public function build();
 
   /**
+   * Whether to render blocks in a placeholder.
+   *
+   * When blocks of this type are rendered, indicate whether they should be
+   * rendered in a placeholder or not. In general, blocks that attach libraries
+   * and/or render entities should be placeholdered to optimize various aspects
+   * of rendering performance.
+   *
+   * @return bool
+   *   Whether to placeholder blocks of this plugin type.
+   */
+  public function createPlaceholder(): bool;
+
+  /**
    * Sets a particular value in the block settings.
    *
    * @param string $key

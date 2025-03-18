@@ -235,4 +235,11 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     return Cache::mergeContexts(parent::getCacheContexts(), ['route.menu_active_trails:' . $menu_name]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function createPlaceholder(): bool {
+    return TRUE;
+  }
+
 }

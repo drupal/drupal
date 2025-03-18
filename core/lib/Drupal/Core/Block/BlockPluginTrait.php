@@ -296,4 +296,11 @@ trait BlockPluginTrait {
     $this->inPreview = $in_preview;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function createPlaceholder(): bool {
+    return FALSE;
+  }
+
 }

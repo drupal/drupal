@@ -165,4 +165,11 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $this->configuration['secondary'] = $levels['secondary'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function createPlaceholder(): bool {
+    return TRUE;
+  }
+
 }

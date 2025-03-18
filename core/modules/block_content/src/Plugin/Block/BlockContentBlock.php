@@ -197,6 +197,13 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function createPlaceholder(): bool {
+    return TRUE;
+  }
+
+  /**
    * Loads the block content entity of the block.
    *
    * @return \Drupal\block_content\BlockContentInterface|null

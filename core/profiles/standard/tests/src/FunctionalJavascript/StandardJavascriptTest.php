@@ -35,15 +35,13 @@ class StandardJavascriptTest extends WebDriverTestBase {
       ->setPublished();
     $node->save();
 
-    // Front page: one placeholder, for messages.
+    // Front page: Five placeholders.
     $this->drupalGet('');
-    $this->assertBigPipePlaceholderReplacementCount(1);
+    $this->assertBigPipePlaceholderReplacementCount(5);
 
-    // Node page: 2 placeholders:
-    // 1. messages
-    // 2. comment form
+    // Node page: Six placeholders:
     $this->drupalGet($node->toUrl());
-    $this->assertBigPipePlaceholderReplacementCount(2);
+    $this->assertBigPipePlaceholderReplacementCount(6);
   }
 
   /**

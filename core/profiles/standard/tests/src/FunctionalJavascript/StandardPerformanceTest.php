@@ -127,7 +127,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 36,
-      'CacheGetCount' => 122,
+      'CacheGetCount' => 132,
       'CacheGetCountByBin' => [
         'page' => 1,
         'config' => 21,
@@ -135,7 +135,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         'discovery' => 38,
         'bootstrap' => 8,
         'dynamic_page_cache' => 2,
-        'render' => 35,
+        'render' => 45,
         'default' => 5,
         'entity' => 2,
         'menu' => 2,
@@ -143,7 +143,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 45,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 21,
+      'CacheTagLookupQueryCount' => 17,
       'CacheTagGroupedLookups' => [
         [
           'route_match',
@@ -174,17 +174,17 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:block.block.stark_main_menu', 'config:system.menu.main'],
         ['config:block.block.stark_search_form_wide'],
         ['config:block.block.stark_account_menu', 'config:system.menu.account'],
-        ['config:block.block.stark_breadcrumbs'],
-        ['config:block.block.stark_primary_admin_actions'],
         ['config:block.block.stark_messages'],
-        ['config:block.block.stark_primary_local_tasks'],
-        ['config:block.block.stark_secondary_local_tasks'],
         ['config:block.block.stark_help'],
         ['config:block.block.stark_powered'],
         ['config:block.block.stark_syndicate'],
         [
+          'config:block.block.stark_breadcrumbs',
           'config:block.block.stark_content',
           'config:block.block.stark_page_title',
+          'config:block.block.stark_primary_admin_actions',
+          'config:block.block.stark_primary_local_tasks',
+          'config:block.block.stark_secondary_local_tasks',
           'config:block_list',
           'http_response',
         ],
@@ -225,11 +225,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 10,
-      'CacheGetCount' => 92,
+      'CacheGetCount' => 102,
       'CacheSetCount' => 16,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 18,
+      'CacheTagLookupQueryCount' => 14,
       'CacheTagGroupedLookups' => [
         [
           'route_match',
@@ -257,17 +257,18 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:block.block.stark_main_menu', 'config:system.menu.main'],
         ['config:block.block.stark_search_form_wide'],
         ['config:block.block.stark_account_menu', 'config:system.menu.account'],
-        ['config:block.block.stark_breadcrumbs'],
-        ['config:block.block.stark_primary_admin_actions'],
         ['config:block.block.stark_messages'],
-        ['config:block.block.stark_primary_local_tasks'],
-        ['config:block.block.stark_secondary_local_tasks'],
         ['config:block.block.stark_help'],
         ['config:block.block.stark_powered'],
         ['config:block.block.stark_syndicate'],
+
         [
+          'config:block.block.stark_breadcrumbs',
           'config:block.block.stark_content',
           'config:block.block.stark_page_title',
+          'config:block.block.stark_primary_admin_actions',
+          'config:block.block.stark_primary_local_tasks',
+          'config:block.block.stark_secondary_local_tasks',
           'config:block_list',
           'http_response',
         ],
@@ -305,11 +306,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 14,
-      'CacheGetCount' => 80,
+      'CacheGetCount' => 87,
       'CacheSetCount' => 17,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 16,
+      'CacheTagLookupQueryCount' => 13,
       'StylesheetCount' => 1,
       'StylesheetBytes' => 1950,
     ];
@@ -360,7 +361,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 17,
-      'CacheGetCount' => 84,
+      'CacheGetCount' => 83,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagInvalidationCount' => 0,
@@ -468,7 +469,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 18,
-      'CacheGetCount' => 103,
+      'CacheGetCount' => 105,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagInvalidationCount' => 0,
