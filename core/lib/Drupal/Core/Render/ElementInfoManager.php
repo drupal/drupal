@@ -5,7 +5,9 @@ namespace Drupal\Core\Render;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Plugin\PreWarmablePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\ElementInterface;
 use Drupal\Core\Render\Element\FormElementInterface;
@@ -22,7 +24,9 @@ use Drupal\Core\Theme\ThemeManagerInterface;
  * @see \Drupal\Core\Render\Element\FormElementInterface
  * @see plugin_api
  */
-class ElementInfoManager extends DefaultPluginManager implements ElementInfoManagerInterface {
+class ElementInfoManager extends DefaultPluginManager implements ElementInfoManagerInterface, PreWarmableInterface {
+
+  use PreWarmablePluginManagerTrait;
 
   /**
    * Stores the available element information.
