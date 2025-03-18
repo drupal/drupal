@@ -17,6 +17,7 @@ use Drupal\Core\DefaultContent\InvalidEntityException;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\FileExists;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -33,6 +34,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\user\UserInterface;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -78,11 +80,16 @@ class ContentImportTest extends BrowserTestBase {
   private readonly string $contentDir;
 
   /**
+   * The admin account.
+   */
+  private UserInterface $adminAccount;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->setUpCurrentUser(admin: TRUE);
+    $this->adminAccount = $this->setUpCurrentUser(admin: TRUE);
 
     BlockContentType::create(['id' => 'basic', 'label' => 'Basic'])->save();
     block_content_add_body_field('basic');
@@ -162,7 +169,7 @@ class ContentImportTest extends BrowserTestBase {
     $importer->setLogger($logger);
     $importer->importContent(new Finder($this->contentDir));
 
-    $this->assertContentWasImported();
+    $this->assertContentWasImported($this->adminAccount);
     // We should see a warning about importing a file entity associated with a
     // file that doesn't exist.
     $predicate = function (array $record): bool {
@@ -173,6 +180,16 @@ class ContentImportTest extends BrowserTestBase {
       );
     };
     $this->assertTrue($logger->hasRecordThatPasses($predicate, LogLevel::WARNING));
+  }
+
+  /**
+   * Tests importing content directly, via the API, with a different user.
+   */
+  public function testDirectContentImportWithDifferentUser(): void {
+    $user = $this->createUser();
+    $importer = $this->container->get(Importer::class);
+    $importer->importContent(new Finder($this->contentDir), account: $user);
+    $this->assertContentWasImported($user);
   }
 
   /**
@@ -196,8 +213,11 @@ class ContentImportTest extends BrowserTestBase {
 
   /**
    * Asserts that the default content was imported as expected.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account that should own the imported content.
    */
-  private function assertContentWasImported(): void {
+  private function assertContentWasImported(AccountInterface $account): void {
     /** @var \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository */
     $entity_repository = $this->container->get(EntityRepositoryInterface::class);
 
@@ -264,10 +284,10 @@ class ContentImportTest extends BrowserTestBase {
     $this->assertSame("I'd love to put some useful info here.", $block_content->body->value);
 
     // A node with a non-existent owner should be reassigned to the current
-    // user.
+    // user or the user provided to the importer.
     $node = $entity_repository->loadEntityByUuid('node', '7f1dd75a-0be2-4d3b-be5d-9d1a868b9267');
     $this->assertInstanceOf(NodeInterface::class, $node);
-    $this->assertSame(\Drupal::currentUser()->id(), $node->getOwner()->id());
+    $this->assertSame($account->id(), $node->getOwner()->id());
 
     // Ensure a node with a translation is imported properly.
     $node = $entity_repository->loadEntityByUuid('node', '2d3581c3-92c7-4600-8991-a0d4b3741198');
