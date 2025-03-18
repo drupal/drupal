@@ -39,7 +39,7 @@
   padding: var(--admin-toolbar-space-12) var(--admin-toolbar-space-8);
   letter-spacing: var(--admin-toolbar-letter-spacing-0-8);
   text-transform: uppercase;
-  color: var(--admin-toolbar-color-gray-600);
+  color: var(--admin-toolbar-color-gray-700);
   font-family: inherit;
   font-size: var(--admin-toolbar-font-size-label-xs);
   line-height: var(--admin-toolbar-line-height-label-xs);
