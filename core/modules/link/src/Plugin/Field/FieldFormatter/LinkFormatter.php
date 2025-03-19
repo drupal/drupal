@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\link\AttributeXss;
 use Drupal\link\LinkItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -255,8 +256,12 @@ class LinkFormatter extends FormatterBase {
     if (!empty($settings['target'])) {
       $options['attributes']['target'] = $settings['target'];
     }
-    $url->setOptions($options);
 
+    if (!empty($options['attributes'])) {
+      $options['attributes'] = AttributeXss::sanitizeAttributes($options['attributes']);
+    }
+
+    $url->setOptions($options);
     return $url;
   }
 
