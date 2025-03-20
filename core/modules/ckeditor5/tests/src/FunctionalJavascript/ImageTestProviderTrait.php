@@ -281,8 +281,8 @@ trait ImageTestProviderTrait {
     $this->drupalGet('node/add');
     $page->fillField('title[0][value]', 'My test content');
     $this->addImage();
-    $image_figure = $assert_session->waitForElementVisible('css', 'figure');
-    $this->assertSame($is_resize_enabled, $image_figure->hasClass('ck-widget_with-resizer'));
+    $selector = $is_resize_enabled ? 'figure.ck-widget_with-resizer' : 'figure:not(.ck-widget_with-resizer)';
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $selector));
   }
 
   /**
