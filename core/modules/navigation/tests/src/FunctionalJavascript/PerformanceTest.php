@@ -73,10 +73,10 @@ class PerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 4,
-      'CacheGetCount' => 59,
+      'CacheGetCount' => 58,
       'CacheGetCountByBin' => [
         'config' => 11,
-        'data' => 6,
+        'data' => 5,
         'discovery' => 10,
         'bootstrap' => 6,
         'dynamic_page_cache' => 2,

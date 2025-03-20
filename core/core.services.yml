@@ -1710,9 +1710,21 @@ services:
     class: Drupal\Core\Asset\LibraryDependencyResolver
     arguments: ['@library.discovery']
   Drupal\Core\Asset\LibraryDependencyResolverInterface: '@library.dependency_resolver'
+  # Set up a cache chain for asset caching as the same assets may be
+  # requested several times, non-public as they are not meant to be reused.
+  cache.asset_memory:
+    class: Drupal\Core\Cache\MemoryCache\MemoryCache
+    arguments: ['@datetime.time']
+    public: false
+  cache.asset_chain:
+    class: Drupal\Core\Cache\BackendChain
+    public: false
+    calls:
+      - [ appendBackend, [ '@cache.asset_memory' ] ]
+      - [ appendBackend, [ '@cache.data' ] ]
   asset.resolver:
     class: Drupal\Core\Asset\AssetResolver
-    arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager', '@language_manager', '@cache.data', '@theme_handler']
+    arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager', '@language_manager', '@cache.asset_chain', '@theme_handler']
   Drupal\Core\Asset\AssetResolverInterface: '@asset.resolver'
   info_parser:
     class: Drupal\Core\Extension\InfoParser
