@@ -45,6 +45,9 @@ class SecuredRedirectResponseTest extends TestCase {
 
 }
 
+/**
+ * Test class for safe redirects.
+ */
 class SecuredRedirectStub extends SecuredRedirectResponse {
 
   /**

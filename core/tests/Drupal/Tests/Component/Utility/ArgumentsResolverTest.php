@@ -197,6 +197,9 @@ class TestClass {
 
 }
 
+/**
+ * Provides a class for testing a static method.
+ */
 class TestStaticMethodClass {
 
   public static function access($foo) {

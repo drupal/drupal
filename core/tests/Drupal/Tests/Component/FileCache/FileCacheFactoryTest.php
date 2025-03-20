@@ -180,4 +180,7 @@ class FileCacheFactoryTest extends TestCase {
 
 }
 
+/**
+ * Class to help test the file cache class.
+ */
 class CustomFileCache extends FileCache {}

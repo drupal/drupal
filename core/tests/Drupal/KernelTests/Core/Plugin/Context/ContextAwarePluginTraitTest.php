@@ -97,12 +97,18 @@ class ContextAwarePluginTraitTest extends KernelTestBase {
 
 }
 
+/**
+ * A plugin definition test class.
+ */
 class TestContextAwarePluginDefinition extends PluginDefinition implements ContextAwarePluginDefinitionInterface {
 
   use ContextAwarePluginDefinitionTrait;
 
 }
 
+/**
+ * Context aware plugin test class.
+ */
 class TestContextAwarePlugin extends PluginBase implements ContextAwarePluginInterface {
 
   use ContextAwarePluginTrait {
@@ -126,6 +132,9 @@ class TestContextAwarePlugin extends PluginBase implements ContextAwarePluginInt
 
 }
 
+/**
+ * Configurable context aware plugin test class.
+ */
 class TestConfigurableContextAwarePlugin extends PluginBase implements ConfigurableInterface, ContextAwarePluginInterface {
 
   use ContextAwarePluginTrait;

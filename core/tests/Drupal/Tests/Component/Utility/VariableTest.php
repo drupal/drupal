@@ -180,6 +180,9 @@ class VariableTest extends TestCase {
 
 }
 
+/**
+ * A class for testing Variable::callableToString().
+ */
 class VariableTestMock {
 
   /**
