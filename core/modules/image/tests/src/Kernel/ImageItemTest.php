@@ -5,14 +5,20 @@ declare(strict_types=1);
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\user\Entity\Role;
 
 /**
@@ -92,6 +98,9 @@ class ImageItemTest extends FieldKernelTestBase {
     ]);
     $this->image->save();
     $this->imageFactory = $this->container->get('image.factory');
+    $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent('image_test', ['type' => 'image_image'])->save();
   }
 
   /**
@@ -196,6 +205,24 @@ class ImageItemTest extends FieldKernelTestBase {
     $this->assertEquals(serialize($arguments), $logged);
     $this->assertEmpty($entity->image_test->width);
     $this->assertEmpty($entity->image_test->height);
+  }
+
+  /**
+   * Tests display_default.
+   */
+  public function testDisplayDefaultValue(): void {
+    $entity = EntityTest::create([
+      'name' => $this->randomMachineName(),
+    ]);
+    $form_object = $this->container->get(EntityTypeManagerInterface::class)->getFormObject('entity_test', 'default');
+    \assert($form_object instanceof ContentEntityForm);
+    $form_object->setEntity($entity);
+    $form_display = EntityFormDisplay::collectRenderDisplay($entity, 'default');
+    \assert($form_display instanceof EntityFormDisplay);
+    $form_state = new FormState();
+    $form_object->setFormDisplay($form_display, $form_state);
+    $this->container->get(FormBuilderInterface::class)->buildForm($form_object, $form_state);
+    self::assertEquals(1, $form_state->getValue(['image_test', 0, 'display']));
   }
 
 }
