@@ -25,7 +25,7 @@ class NavigationTopBarContentModerationTest extends ModerationStateTestBase {
   protected static $modules = [
     'content_moderation',
     'node',
-    'navigation_top_bar',
+    'navigation',
   ];
 
   /**

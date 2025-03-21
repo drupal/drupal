@@ -26,7 +26,6 @@ class NavigationTopBarPageContextTest extends BrowserTestBase {
   protected static $modules = [
     'node',
     'navigation',
-    'navigation_top_bar',
     'test_page_test',
   ];
 

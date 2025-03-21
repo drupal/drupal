@@ -60,3 +60,14 @@ function navigation_post_update_navigation_user_links_menu(array &$sandbox): voi
       'locked' => TRUE,
     ])->save();
 }
+
+/**
+ * Uninstall the navigation_top_bar module if installed.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3507866
+ */
+function navigation_post_update_uninstall_navigation_top_bar(): void {
+  if (\Drupal::moduleHandler()->moduleExists('navigation_top_bar')) {
+    \Drupal::service('module_installer')->uninstall(['navigation_top_bar'], FALSE);
+  }
+}

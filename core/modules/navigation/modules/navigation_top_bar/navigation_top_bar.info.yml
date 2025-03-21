@@ -1,8 +1,9 @@
 name: Navigation Top Bar
 type: module
-description: 'When enabled, this module provides relevant administrative information and tasks for the current page on a top bar. It is not feature complete nor fully functional so enabling it could lead to possible inconsistencies.'
+description: 'Obsolete. All the functionality has been moved to the navigation module.'
 package: Core (Experimental)
-lifecycle: experimental
+lifecycle: obsolete
+lifecycle_link: 'https://www.drupal.org/docs/core-modules-and-themes/deprecated-and-obsolete#s-understanding-obsolete-extensions'
 version: VERSION
 dependencies:
   - navigation:navigation

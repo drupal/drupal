@@ -85,21 +85,7 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
     $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button");
 
-    $this->verifyDynamicPageCache($this->node->toUrl(), 'MISS');
-    $this->verifyDynamicPageCache($this->node->toUrl(), 'HIT');
-    // Top Bar is not visible if the feature flag module is disabled.
-    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button");
-    $this->assertSession()->elementExists('xpath', '//div[@id="block-tabs"]');
-
-    \Drupal::service('module_installer')->install(['navigation_top_bar']);
-
-    // Test page does not include the Top Bar.
-    $test_page_url = Url::fromRoute('test_page_test.test_page');
-    $this->verifyDynamicPageCache($test_page_url, 'MISS');
-    $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button");
-
-    // Top Bar is visible once the feature flag module is enabled.
+    // Top Bar is visible on node pages.
     $this->verifyDynamicPageCache($this->node->toUrl(), 'MISS');
     $this->verifyDynamicPageCache($this->node->toUrl(), 'HIT');
     $this->assertSession()->elementExists('xpath', "(//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button)[1]");

@@ -204,10 +204,6 @@ final class NavigationRenderer {
    * @see hook_page_top()
    */
   public function buildTopBar(array &$page_top): void {
-    if (!$this->moduleHandler->moduleExists('navigation_top_bar')) {
-      return;
-    }
-
     $page_top['top_bar'] = [
       '#type' => 'top_bar',
       '#access' => $this->currentUser->hasPermission('access navigation'),
@@ -236,7 +232,7 @@ final class NavigationRenderer {
     if ($block->getPluginId() !== 'local_tasks_block') {
       return;
     }
-    if ($this->hasLocalTasks() && $this->moduleHandler->moduleExists('navigation_top_bar')) {
+    if ($this->hasLocalTasks()) {
       $build['#access'] = FALSE;
     }
   }
