@@ -2,6 +2,7 @@
 
 namespace Drupal\language;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -116,13 +117,19 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    *   The language configuration override service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack object.
+   * @param \Drupal\Core\Cache\CacheBackendInterface|null $cacheBackend
+   *   The cache backend.
    */
-  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, LanguageConfigFactoryOverrideInterface $config_override, RequestStack $request_stack) {
+  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, LanguageConfigFactoryOverrideInterface $config_override, RequestStack $request_stack, protected ?CacheBackendInterface $cacheBackend = NULL) {
     $this->defaultLanguage = $default_language;
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->configFactoryOverride = $config_override;
     $this->requestStack = $request_stack;
+    if (!$cacheBackend) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $cacheBackend argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3497341', E_USER_DEPRECATED);
+      $this->cacheBackend = \Drupal::cache('bootstrap');
+    }
   }
 
   /**
@@ -246,6 +253,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       $this->languageTypes = NULL;
       $this->languageTypesInfo = NULL;
       $this->languages = [];
+      $this->cacheBackend->delete('language_config_ids');
       if ($this->negotiator) {
         $this->negotiator->reset();
       }
@@ -305,7 +313,16 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       // Having them in the array already ensures if this is invoked in the
       // middle of importing language configuration entities, the defaults are
       // always present.
-      $config_ids = $this->configFactory->listAll('language.entity.');
+      // To avoid running the query on every request, cache it in the fast
+      // chained bootstrap cache bin.
+      $cid = 'language_config_ids';
+      if ($cache = $this->cacheBackend->get($cid)) {
+        $config_ids = $cache->data;
+      }
+      else {
+        $config_ids = $this->configFactory->listAll('language.entity.');
+        $this->cacheBackend->set($cid, $config_ids);
+      }
       foreach ($this->configFactory->loadMultiple($config_ids) as $config) {
         $data = $config->get();
         $data['name'] = $data['label'];

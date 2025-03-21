@@ -110,7 +110,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     // Check the actual queries so that if a change simultaneously adds and
     // removes a query the change is detected.
     $expected_queries = [
-      'SELECT "config"."name" AS "name" FROM "config" "config" WHERE ("collection" = "") AND ("name" LIKE "language.entity.%" ESCAPE \'\\\\\') ORDER BY "collection" ASC, "name" ASC',
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/recipes/deep-mediterranean-quiche" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
       'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/node/1", "/node/%", "/node" ) AND "number_parts" >= 2',
       'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_uid" AS "revision_uid", "revision"."revision_timestamp" AS "revision_timestamp", "revision"."revision_log" AS "revision_log", "revision"."revision_default" AS "revision_default", "base"."nid" AS "nid", "base"."type" AS "type", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "node" "base" INNER JOIN "node_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."nid" IN (1)',
@@ -287,15 +286,15 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
 
     $expected = [
-      'QueryCount' => 172,
-      'CacheGetCount' => 253,
+      'QueryCount' => 171,
+      'CacheGetCount' => 255,
       'CacheGetCountByBin' => [
         'page' => 1,
         'config' => 66,
+        'bootstrap' => 10,
         'discovery' => 67,
         'data' => 13,
         'entity' => 18,
-        'bootstrap' => 8,
         'dynamic_page_cache' => 2,
         'render' => 73,
         'default' => 3,
