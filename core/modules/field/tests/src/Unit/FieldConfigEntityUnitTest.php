@@ -303,10 +303,16 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
  */
 class DependencyFieldItem {
 
+  /**
+   * Gets the dependencies for this field item.
+   */
   public static function calculateDependencies(FieldDefinitionInterface $definition) {
     return ['module' => ['test_module3']];
   }
 
+  /**
+   * Informs the entity that entities it depends on will be deleted.
+   */
   public static function onDependencyRemoval($field_config, $dependencies) {
   }
 

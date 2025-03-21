@@ -122,14 +122,23 @@ class EntityTestDestination extends EntityContentBase {
    */
   private $entity = NULL;
 
+  /**
+   * Sets the test entity.
+   */
   public function setEntity($entity): void {
     $this->entity = $entity;
   }
 
+  /**
+   * Gets the test entity.
+   */
   protected function getEntity(Row $row, array $old_destination_id_values) {
     return $this->entity;
   }
 
+  /**
+   * Gets the test entity ID.
+   */
   public static function getEntityTypeId($plugin_id) {
     return 'foo';
   }

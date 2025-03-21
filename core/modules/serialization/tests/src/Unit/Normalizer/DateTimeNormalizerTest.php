@@ -232,6 +232,9 @@ class DateTimeNormalizerTest extends UnitTestCase {
  */
 class DateTimeNormalizerTestDrupalDateTime extends DrupalDateTime {
 
+  /**
+   * Sets the timezone.
+   */
   public function setTimezone(\DateTimeZone $timezone) {
     parent::setTimezone($timezone);
   }

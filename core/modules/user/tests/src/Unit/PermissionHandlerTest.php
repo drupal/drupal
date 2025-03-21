@@ -358,12 +358,18 @@ EOF
  */
 class TestPermissionCallbacks {
 
+  /**
+   * Callback that returns a single description.
+   */
   public function singleDescription() {
     return [
       'access_module_a' => 'single_description',
     ];
   }
 
+  /**
+   * Callback that returns the title and description.
+   */
   public function titleDescription() {
     return [
       'access module b' => [
@@ -373,6 +379,9 @@ class TestPermissionCallbacks {
     ];
   }
 
+  /**
+   * Callback that returns restricted access.
+   */
   public function titleDescriptionRestrictAccess() {
     return [
       'access_module_c' => [
@@ -383,6 +392,9 @@ class TestPermissionCallbacks {
     ];
   }
 
+  /**
+   * Callback that returns the title.
+   */
   public function titleProvider() {
     return [
       'access module a via module b' => [

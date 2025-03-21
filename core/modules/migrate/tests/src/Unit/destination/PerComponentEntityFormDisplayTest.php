@@ -71,11 +71,17 @@ class TestPerComponentEntityFormDisplay extends PerComponentEntityFormDisplay {
     $this->entity = $entity;
   }
 
+  /**
+   * Gets the test entity.
+   */
   protected function getEntity($entity_type, $bundle, $form_mode) {
     $this->testValues = func_get_args();
     return $this->entity;
   }
 
+  /**
+   * Gets the test values.
+   */
   public function getTestValues() {
     return $this->testValues;
   }

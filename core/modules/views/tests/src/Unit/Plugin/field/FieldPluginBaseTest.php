@@ -972,6 +972,9 @@ class FieldPluginBaseTest extends UnitTestCase {
  */
 class FieldPluginBaseTestField extends FieldPluginBase {
 
+  /**
+   * Set the link generator.
+   */
   public function setLinkGenerator(LinkGeneratorInterface $link_generator): void {
     $this->linkGenerator = $link_generator;
   }
@@ -983,6 +986,9 @@ namespace Drupal\views\Plugin\views\field;
 
 if (!function_exists('base_path')) {
 
+  /**
+   * Returns the base path.
+   */
   function base_path() {
     return '/';
   }

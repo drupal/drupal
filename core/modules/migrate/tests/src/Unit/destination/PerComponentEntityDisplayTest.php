@@ -71,11 +71,17 @@ class TestPerComponentEntityDisplay extends ComponentEntityDisplayBase {
     $this->entity = $entity;
   }
 
+  /**
+   * Gets the test entity.
+   */
   protected function getEntity($entity_type, $bundle, $view_mode) {
     $this->testValues = func_get_args();
     return $this->entity;
   }
 
+  /**
+   * Gets the test values.
+   */
   public function getTestValues() {
     return $this->testValues;
   }

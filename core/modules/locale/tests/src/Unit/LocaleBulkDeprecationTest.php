@@ -14,6 +14,9 @@ use Drupal\Tests\UnitTestCase;
  */
 class LocaleBulkDeprecationTest extends UnitTestCase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

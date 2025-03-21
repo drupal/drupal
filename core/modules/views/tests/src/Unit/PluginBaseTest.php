@@ -290,6 +290,9 @@ class PluginBaseTest extends UnitTestCase {
     $this->assertEquals($expected_storage, $storage);
   }
 
+  /**
+   * Provides data to testFilterByDefinedOptions().
+   */
   public static function providerTestFilterByDefinedOptions() {
     $data = [];
 

@@ -108,6 +108,9 @@ class XmlEncoderTest extends UnitTestCase {
  */
 class TestObject {
 
+  /**
+   * Return the characters "A".
+   */
   public function getA() {
     return 'A';
   }

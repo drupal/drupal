@@ -202,6 +202,9 @@ class ViewListBuilderTest extends UnitTestCase {
  */
 class TestViewListBuilder extends ViewListBuilder {
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOperations(EntityInterface $entity) {
     return [];
   }

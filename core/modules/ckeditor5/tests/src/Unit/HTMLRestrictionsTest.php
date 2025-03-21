@@ -28,6 +28,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $this->assertIsArray($restrictions->getAllowedElements(FALSE));
   }
 
+  /**
+   * Provides data to testConstructor().
+   */
   public static function providerConstruct(): \Generator {
     // Fundamental structure.
     yield 'INVALID: list instead of key-value pairs' => [
@@ -167,6 +170,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $this->assertCount($expected_concrete_plus_wildcard_count, $r->getAllowedElements(FALSE));
   }
 
+  /**
+   * Provides data to testCounting().
+   */
   public static function providerCounting(): \Generator {
     yield 'empty' => [
       [],
@@ -257,6 +263,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $this->assertSame($expected_raw + $filter_html_additional_expectations, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements(FALSE));
   }
 
+  /**
+   * Provides data to testConvenienceConstructors().
+   */
   public static function providerConvenienceConstructors(): \Generator {
     // All empty cases.
     yield 'empty string' => [
@@ -639,6 +648,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $this->assertSame($expected_ghs_config, $restrictions->toGeneralHtmlSupportConfig());
   }
 
+  /**
+   * Provides data to testRepresentations().
+   */
   public static function providerRepresentations(): \Generator {
     yield 'empty set' => [
       HTMLRestrictions::emptySet(),
@@ -920,6 +932,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $this->assertEquals($expected_union, $a->merge($b));
   }
 
+  /**
+   * Provides data to testOperations().
+   */
   public static function providerOperands(): \Generator {
     // Empty set operand cases.
     yield 'any set + empty set' => [
@@ -1678,6 +1693,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $this->assertEquals($expected_extracted_plain_tags_subset, $input->extractPlainTagsSubset());
   }
 
+  /**
+   * Provides data to testSubsets().
+   */
   public static function providerSubsets(): \Generator {
     yield 'empty set' => [
       new HTMLRestrictions([]),

@@ -42,6 +42,9 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
     $big_pipe_response_attachments_processor->processAttachments($non_html_response);
   }
 
+  /**
+   * Provides data to testNonHtmlResponse().
+   */
   public static function nonHtmlResponseProvider() {
     return [
       'AjaxResponse, which implements AttachmentsInterface' => [AjaxResponse::class],
@@ -89,6 +92,9 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
     $this->assertEquals('processed', $processed_big_pipe_response->getContent(), 'Content of returned (processed) response object MUST be changed.');
   }
 
+  /**
+   * Provides data to testHtmlResponse().
+   */
   public static function attachmentsProvider() {
     $typical_cases = [
       'no attachments' => [[]],

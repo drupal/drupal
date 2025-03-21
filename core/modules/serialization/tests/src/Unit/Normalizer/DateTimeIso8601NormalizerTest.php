@@ -307,6 +307,9 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
  */
 class DateTimeIso8601NormalizerTestDrupalDateTime extends DrupalDateTime {
 
+  /**
+   * Sets the timezone.
+   */
   public function setTimezone(\DateTimeZone $timezone) {
     parent::setTimezone($timezone);
   }

@@ -55,14 +55,23 @@ class InstallTasksTest extends UnitTestCase {
         $this->connection = $connection;
       }
 
+      /**
+       * {@inheritdoc}
+       */
       protected function isConnectionActive() {
         return TRUE;
       }
 
+      /**
+       * {@inheritdoc}
+       */
       protected function getConnection() {
         return $this->connection;
       }
 
+      /**
+       * {@inheritdoc}
+       */
       protected function t($string, array $args = [], array $options = []) {
         return $string;
       }
@@ -79,14 +88,23 @@ class InstallTasksTest extends UnitTestCase {
   private function createTasksNoConnection(): Tasks {
     return new class() extends Tasks {
 
+      /**
+       * {@inheritdoc}
+       */
       protected function isConnectionActive() {
         return FALSE;
       }
 
+      /**
+       * {@inheritdoc}
+       */
       protected function getConnection() {
         return NULL;
       }
 
+      /**
+       * {@inheritdoc}
+       */
       protected function t($string, array $args = [], array $options = []) {
         return $string;
       }

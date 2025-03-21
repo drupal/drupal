@@ -18,6 +18,9 @@ use PhpTuf\ComposerStager\API\Path\Value\PathInterface;
  */
 class LoggingBeginnerTest extends UnitTestCase {
 
+  /**
+   * Tests the output of LoggingBeginner().
+   */
   public function testDecoratedBeginnerIsCalled(): void {
     $decorated = $this->createMock(BeginnerInterface::class);
 

@@ -762,6 +762,9 @@ class FieldTest extends UnitTestCase {
  */
 class FieldTestEntityField extends EntityField {
 
+  /**
+   * {@inheritdoc}
+   */
   public function executePrepareItemsByDelta(array $all_values) {
     return $this->prepareItemsByDelta($all_values);
   }

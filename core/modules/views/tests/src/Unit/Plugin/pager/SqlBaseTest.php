@@ -36,6 +36,9 @@ class SqlBaseTest extends UnitTestCase {
    */
   protected $display;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

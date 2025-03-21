@@ -649,6 +649,9 @@ class ViewsDataTest extends UnitTestCase {
     $this->viewsData->get($key);
   }
 
+  /**
+   * Provides data to testGetEmptyKey().
+   */
   public static function providerTestGetEmptyKey() {
     return [
       [NULL],

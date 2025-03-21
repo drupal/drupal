@@ -171,6 +171,9 @@ class FilterUninstallValidatorTest extends UnitTestCase {
  */
 class FilterBaseTestableClass extends FilterBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function process($text, $langcode) {
     return new FilterProcessResult();
   }

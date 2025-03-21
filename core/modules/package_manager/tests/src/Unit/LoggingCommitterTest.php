@@ -18,6 +18,9 @@ use PhpTuf\ComposerStager\API\Path\Value\PathInterface;
  */
 class LoggingCommitterTest extends UnitTestCase {
 
+  /**
+   * Tests the output of LoggingCommitter().
+   */
   public function testDecoratedCommitterIsCalled(): void {
     $decorated = $this->createMock(CommitterInterface::class);
 

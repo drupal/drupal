@@ -18,6 +18,9 @@ use PhpTuf\ComposerStager\API\Process\Value\OutputTypeEnum;
  */
 class LoggingStagerTest extends UnitTestCase {
 
+  /**
+   * Tests LoggingStager().
+   */
   public function testDecoratedStagerIsCalled(): void {
     $decorated = $this->createMock(StagerInterface::class);
 

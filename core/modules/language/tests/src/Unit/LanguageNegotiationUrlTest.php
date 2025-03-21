@@ -345,6 +345,9 @@ namespace Drupal\language\Plugin\LanguageNegotiation;
 
 if (!function_exists('base_path')) {
 
+  /**
+   * Returns the base path.
+   */
   function base_path() {
     return '/';
   }

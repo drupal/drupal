@@ -82,7 +82,7 @@ class TestSqlIdMap extends Sql implements \Iterator {
   /**
    * {@inheritdoc}
    */
-  // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod
+  // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod, Drupal.Commenting.FunctionComment.Missing
   public function ensureTables() {
     parent::ensureTables();
   }

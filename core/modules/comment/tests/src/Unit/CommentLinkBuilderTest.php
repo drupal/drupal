@@ -333,6 +333,9 @@ namespace Drupal\comment;
 
 if (!function_exists('history_read')) {
 
+  /**
+   * Gets a timestamp for the current user's last view of a specified node.
+   */
   function history_read($nid) {
     return 0;
   }

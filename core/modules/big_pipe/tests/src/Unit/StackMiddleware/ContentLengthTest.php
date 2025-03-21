@@ -37,6 +37,9 @@ final class ContentLengthTest extends UnitTestCase {
     $this->assertSame((string) $expected_header, $response->headers->get('Content-Length'));
   }
 
+  /**
+   * Provides data for testHandle().
+   */
   public static function providerTestSetContentLengthHeader() {
     $response = new Response('Test content', 200);
     $response->headers->set('Content-Length', (string) strlen('Test content'));
