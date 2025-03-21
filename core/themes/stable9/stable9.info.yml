@@ -78,6 +78,11 @@ libraries-override:
       component:
         misc/components/progress.module.css: css/core/components/progress.module.css
 
+  core/drupal.textarea-resize:
+    css:
+      component:
+        misc/components/resize.module.css: css/core/components/resize.module.css
+
   core/drupal.tabledrag:
     css:
       component:
@@ -234,7 +239,6 @@ libraries-override:
         css/components/nowrap.module.css: css/system/components/nowrap.module.css
         css/components/position-container.module.css: css/system/components/position-container.module.css
         css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
-        css/components/resize.module.css: css/system/components/resize.module.css
         css/components/tablesort.module.css: css/system/components/tablesort.module.css
   system/admin:
     css:

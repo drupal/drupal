@@ -93,7 +93,7 @@ class PerformanceTest extends PerformanceTestBase {
       'ScriptCount' => 3,
       'ScriptBytes' => 215500,
       'StylesheetCount' => 1,
-      'StylesheetBytes' => 46300,
+      'StylesheetBytes' => 46000,
     ];
     $this->assertMetrics($expected, $performance_data);
 

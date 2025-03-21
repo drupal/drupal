@@ -647,6 +647,21 @@ drupal.progress:
     - core/jquery
     - core/drupalSettings
 
+drupal.textarea-resize:
+  version: VERSION
+  css:
+    component:
+      misc/components/resize.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 11.2.0
+      removed_version: 12.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/resize.module.css:
+            component: misc/components/resize.module.css
+
 drupal.states:
   version: VERSION
   js:

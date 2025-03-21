@@ -44,10 +44,19 @@ class Textarea extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderGroup'],
+        [static::class, 'preRenderAttachments'],
       ],
       '#theme' => 'textarea',
       '#theme_wrappers' => ['form_element'],
     ];
+  }
+
+  /**
+   * Adds the textarea resize library.
+   */
+  public static function preRenderAttachments($element): array {
+    $element['#attached']['library'][] = 'core/drupal.textarea-resize';
+    return $element;
   }
 
   /**
