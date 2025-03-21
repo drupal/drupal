@@ -25,7 +25,17 @@ class FieldUITest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_view'];
+  public static $testViews = [
+    'test_view',
+    'test_aggregate_count',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'entity_test',
+  ];
 
   /**
    * Tests the UI of field handlers.
@@ -102,6 +112,25 @@ class FieldUITest extends UITestBase {
     $view = Views::getView($view['id']);
     $view->initHandlers();
     $this->assertEquals('', $view->field['title']->options['label'], 'The field label for normal styles are empty.');
+  }
+
+  /**
+   * Tests the UI of field aggregation settings.
+   */
+  public function testFieldAggregationSettings(): void {
+    $edit_handler_url = 'admin/structure/views/nojs/handler-group/test_aggregate_count/default/field/id';
+    $this->drupalGet($edit_handler_url);
+    $this->submitForm(['options[group_type]' => 'count'], 'Apply');
+    $this->assertSession()
+      ->pageTextNotContains('The website encountered an unexpected error. Try again later.');
+    $this->drupalGet($edit_handler_url);
+    $dropdown = $this->getSession()->getPage()->find('named', ['select', 'options[group_column]']);
+    // Ensure the dropdown for group column exists.
+    $this->assertNotNull($dropdown, 'The dropdown for options[group_column] does not exist.');
+    $this->submitForm(['options[group_type]' => 'count'], 'Apply');
+    // Ensure that there is no error after submitting the form.
+    $this->assertSession()
+      ->pageTextNotContains('The website encountered an unexpected error. Try again later.');
   }
 
 }
