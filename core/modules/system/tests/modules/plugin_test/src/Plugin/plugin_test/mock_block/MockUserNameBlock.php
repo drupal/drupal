@@ -17,6 +17,9 @@ class MockUserNameBlock extends PluginBase implements ContextAwarePluginInterfac
 
   use ContextAwarePluginTrait;
 
+  /**
+   * Returns the title of the block.
+   */
   public function getTitle() {
     $user = $this->getContextValue('user');
     return $user->label();

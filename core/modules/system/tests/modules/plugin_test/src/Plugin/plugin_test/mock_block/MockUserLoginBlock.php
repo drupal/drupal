@@ -25,6 +25,9 @@ class MockUserLoginBlock extends PluginBase {
     $this->title = $configuration['title'] ?? '';
   }
 
+  /**
+   * Returns the title of the block.
+   */
   public function getTitle() {
     return $this->title;
   }

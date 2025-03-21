@@ -16,6 +16,9 @@ use Drupal\views\Attribute\ViewsArgumentValidator;
 )]
 class None extends ArgumentValidatorPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateArgument($argument) {
     if (!empty($this->argument->options['must_not_be'])) {
       return !isset($argument);

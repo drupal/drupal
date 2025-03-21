@@ -26,6 +26,9 @@ class RssFields extends RowPluginBase {
    */
   protected $usesFields = TRUE;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['title_field'] = ['default' => ''];
@@ -38,6 +41,9 @@ class RssFields extends RowPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -106,6 +112,9 @@ class RssFields extends RowPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validate() {
     $errors = parent::validate();
     $required_options = ['title_field', 'link_field', 'description_field', 'creator_field', 'date_field'];
@@ -122,6 +131,9 @@ class RssFields extends RowPluginBase {
     return $errors;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function render($row) {
     static $row_index;
     if (!isset($row_index)) {

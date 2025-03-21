@@ -17,6 +17,9 @@ use Drupal\views\Attribute\ViewsArgumentValidator;
 )]
 class NumericArgumentValidator extends ArgumentValidatorPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateArgument($argument) {
     return is_numeric($argument);
   }

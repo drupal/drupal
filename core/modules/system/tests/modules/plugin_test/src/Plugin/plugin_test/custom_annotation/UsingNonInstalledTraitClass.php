@@ -13,6 +13,9 @@ use Drupal\non_installed_module\NonExistingTrait;
 class UsingNonInstalledTraitClass {
   use NonExistingTrait;
 
+  /**
+   * Provides an empty test method.
+   */
   #[TrustedCallback]
   public function testMethod() {}
 

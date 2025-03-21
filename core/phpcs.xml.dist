@@ -71,17 +71,7 @@
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment"/>
   <rule ref="Drupal.Commenting.FunctionComment.Missing">
-    <include-pattern>core/modules/*/Plugin/views/argument/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/filter/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/access/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/cache/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/query/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/sort/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/display/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/exposed_form/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/field/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/pager/*</include-pattern>
-    <include-pattern>core/modules/*/Plugin/views/style/*</include-pattern>
+    <include-pattern>core/*/src/Plugin/*</include-pattern>
     <include-pattern>*/Database/*</include-pattern>
     <include-pattern>*/FunctionalJavascript/*</include-pattern>
     <include-pattern>*/Kernel/*</include-pattern>

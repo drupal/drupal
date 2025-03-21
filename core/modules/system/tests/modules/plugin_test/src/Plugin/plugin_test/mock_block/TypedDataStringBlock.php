@@ -18,6 +18,9 @@ class TypedDataStringBlock extends PluginBase implements ContextAwarePluginInter
 
   use ContextAwarePluginTrait;
 
+  /**
+   * Returns the title of the block.
+   */
   public function getTitle() {
     return $this->getContextValue('string');
   }

@@ -56,11 +56,17 @@ class Rss extends RssPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryTitle() {
     $options = $this->buildOptionsForm_summary_options();
     return $options[$this->options['view_mode']];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function preRender($values) {
     $nids = [];
     foreach ($values as $row) {
@@ -71,6 +77,9 @@ class Rss extends RssPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function render($row) {
     global $base_url;
 

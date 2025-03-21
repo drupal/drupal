@@ -48,6 +48,9 @@ class Rss extends RssPluginBase {
    */
   protected $entityTypeId = 'comment';
 
+  /**
+   * {@inheritdoc}
+   */
   public function preRender($result) {
     $cids = [];
 
@@ -68,6 +71,9 @@ class Rss extends RssPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function render($row) {
     global $base_url;
 
