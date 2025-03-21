@@ -232,7 +232,6 @@ libraries-override:
         css/components/align.module.css: css/system/components/align.module.css
         css/components/container-inline.module.css: css/system/components/container-inline.module.css
         css/components/clearfix.module.css: css/system/components/clearfix.module.css
-        css/components/details.module.css: css/system/components/details.module.css
         css/components/hidden.module.css: css/system/components/hidden.module.css
         css/components/item-list.module.css: css/system/components/item-list.module.css
         css/components/js.module.css: css/system/components/js.module.css
