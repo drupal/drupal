@@ -7,6 +7,9 @@ use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Site\Settings;
 
+/**
+ * Defines a default cache backend factory.
+ */
 class DatabaseBackendFactory implements CacheFactoryInterface {
 
   /**

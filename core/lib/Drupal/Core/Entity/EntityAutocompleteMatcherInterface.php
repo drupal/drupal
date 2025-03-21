@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Entity;
 
+/**
+ * Provides an interface for the entity autocomplete matcher.
+ */
 interface EntityAutocompleteMatcherInterface {
 
   /**

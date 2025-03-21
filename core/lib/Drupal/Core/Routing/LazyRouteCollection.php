@@ -6,6 +6,9 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * The lazy route collection.
+ */
 class LazyRouteCollection extends RouteCollection {
   /**
    * The route provider for this generator.

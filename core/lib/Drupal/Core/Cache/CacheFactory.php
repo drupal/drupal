@@ -2,12 +2,12 @@
 
 namespace Drupal\Core\Cache;
 
-/**
- * Defines the cache backend factory.
- */
 use Drupal\Core\Site\Settings;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Defines the cache backend factory.
+ */
 class CacheFactory implements CacheFactoryInterface {
 
   /**

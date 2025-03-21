@@ -8,6 +8,9 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * Defines the storage handler class for batches.
+ */
 class BatchStorage implements BatchStorageInterface {
 
   /**

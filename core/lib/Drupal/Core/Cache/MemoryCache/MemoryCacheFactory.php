@@ -5,6 +5,9 @@ namespace Drupal\Core\Cache\MemoryCache;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheFactoryInterface;
 
+/**
+ * The memory cache factory.
+ */
 class MemoryCacheFactory implements CacheFactoryInterface {
 
   /**

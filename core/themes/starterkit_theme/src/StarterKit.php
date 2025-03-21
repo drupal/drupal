@@ -4,6 +4,9 @@ namespace Drupal\starterkit_theme;
 
 use Drupal\Core\Theme\StarterKitInterface;
 
+/**
+ * Interacts with theme generation.
+ */
 final class StarterKit implements StarterKitInterface {
 
   /**

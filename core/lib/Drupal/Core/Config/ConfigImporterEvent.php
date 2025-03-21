@@ -4,6 +4,9 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\EventDispatcher\Event;
 
+/**
+ * Configuration event fired when importing a configuration object.
+ */
 class ConfigImporterEvent extends Event {
   /**
    * Configuration import object.

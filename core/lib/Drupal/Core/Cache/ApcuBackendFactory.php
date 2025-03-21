@@ -5,6 +5,9 @@ namespace Drupal\Core\Cache;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Site\Settings;
 
+/**
+ * Defines the APCU backend factory.
+ */
 class ApcuBackendFactory implements CacheFactoryInterface {
 
   /**

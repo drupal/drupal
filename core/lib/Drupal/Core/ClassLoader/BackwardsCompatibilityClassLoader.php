@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Core\ClassLoader;
 
+/**
+ * Adds backwards compatibility support for deprecated classes.
+ */
 final class BackwardsCompatibilityClassLoader {
 
   public function __construct(protected array $movedClasses) {}

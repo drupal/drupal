@@ -8,6 +8,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
+/**
+ * Validation constraint for translatable configuration.
+ */
 #[Constraint(
   id: 'LangcodeRequiredIfTranslatableValues',
   label: new TranslatableMarkup('Translatable config has langcode', [], ['context' => 'Validation']),

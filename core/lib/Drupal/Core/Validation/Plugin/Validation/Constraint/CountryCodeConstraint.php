@@ -11,6 +11,9 @@ use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Choice;
 
+/**
+ * Validation constraint for country codes.
+ */
 #[Constraint(
   id: 'CountryCode',
   label: new TranslatableMarkup('CountryCode', [], ['context' => 'Validation']),
