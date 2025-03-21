@@ -254,4 +254,22 @@ class PaginationAJAXTest extends WebDriverTestBase {
     }
   }
 
+  /**
+   * Tests when a user navigates directly using a page number parameter.
+   */
+  public function testPaginationAjaxWithTitleFilter(): void {
+    // Visit the page url /test-content-ajax-filter?page=3.
+    $this->drupalGet('test-content-ajax-filter', ['query' => ['page' => 3]]);
+    $session_assert = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Filter by title using the exposed form.
+    $session_assert->elementExists('css', 'input[name="title"]')->setValue('Node 11 content');
+    $session_assert->elementExists('css', 'input[value="Filter"]')->click();
+    $session_assert->assertWaitOnAjaxRequest();
+
+    $rows = $page->findAll('css', 'tbody tr');
+    $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
+  }
+
 }
