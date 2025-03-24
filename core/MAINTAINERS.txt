@@ -7,11 +7,11 @@ This file lists the active maintainers. For a list of past maintainers, see:
 https://www.drupal.org/core/maintainers/past
 
 
-Core committers
----------------
+Drupal Core Leadership team
+---------------------------
 
-The Drupal core committers oversee the development of Drupal as a whole. The
-core committers for Drupal are (in alphabetical order):
+Consists of people with varied skills who make decisions about the general
+direction of the project. Members by role (in alphabetical order):
 
 Project Lead
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
@@ -46,11 +46,11 @@ Core JavaScript packages
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
-Committer team facilitators
+Team facilitators
 - Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
 - Griffyn Heels 'griffynh' https://www.drupal.org/u/griffynh (provisional)
 
-Core initiative facilitators
+Initiative facilitators
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
 
 Subsystem maintainers
