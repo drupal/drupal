@@ -37,7 +37,7 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertTrue($this->container->get('module_handler')->moduleExists('text'), 'The text module is installed');
     $this->assertTrue($this->container->get('module_handler')->moduleExists('node'), 'The node module is installed');
     $this->assertTrue($this->container->get('config.storage')->exists('node.settings'), 'The node.settings configuration has been created');
-    $this->assertFalse($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to FALSE');
+    $this->assertTrue($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to TRUE');
   }
 
   public function testModuleAndThemeInstall(): void {
@@ -75,7 +75,7 @@ class RecipeRunnerTest extends KernelTestBase {
     // Test the state after applying the recipe.
     $this->assertTrue($this->container->get('config.storage')->exists('node.settings'), 'The node.settings configuration has been created');
     $this->assertTrue($this->container->get('config.storage')->exists('node.settings'), 'The node.settings configuration has been created');
-    $this->assertTrue($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to TRUE');
+    $this->assertFalse($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to FALSE');
     $this->assertSame('Test content type', NodeType::load('test')?->label());
     $node_type_data = $this->config('node.type.test')->get();
     $this->assertGreaterThan(0, strlen($node_type_data['uuid']), 'The node type configuration has been assigned a UUID.');

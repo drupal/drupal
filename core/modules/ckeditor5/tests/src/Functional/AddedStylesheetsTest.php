@@ -104,7 +104,6 @@ class AddedStylesheetsTest extends BrowserTestBase {
     $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install(['test_ckeditor_stylesheets_relative', 'claro']);
     $this->config('system.theme')->set('admin', 'claro')->save();
-    $this->config('node.settings')->set('use_admin_theme', TRUE)->save();
 
     $this->drupalGet('node/add/article');
     $assert_session->responseNotContains('test_ckeditor_stylesheets_relative/css/yokotsoko.css');

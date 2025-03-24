@@ -171,8 +171,6 @@ class ShortcutLinksTest extends ShortcutTestBase {
   public function testShortcutQuickLink(): void {
     \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('admin', 'claro')->save();
-    $this->config('node.settings')->set('use_admin_theme', '1')->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/system/cron');
