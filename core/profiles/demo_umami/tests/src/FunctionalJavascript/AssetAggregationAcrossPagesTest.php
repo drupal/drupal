@@ -50,7 +50,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
       'ScriptCount' => 3,
       'ScriptBytes' => 170500,
       'StylesheetCount' => 5,
-      'StylesheetBytes' => 86650,
+      'StylesheetBytes' => 86000,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
@@ -71,7 +71,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
       'ScriptCount' => 5,
       'ScriptBytes' => 338200,
       'StylesheetCount' => 5,
-      'StylesheetBytes' => 206750,
+      'StylesheetBytes' => 206150,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
