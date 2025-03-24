@@ -83,8 +83,6 @@ class HistoryUserTimestamp extends Node {
    */
   public function render(ResultRow $values) {
     // Let's default to 'read' state.
-    // This code shadows node_mark, but it reads from the db directly and
-    // we already have that info.
     $mark = MARK_READ;
     if (\Drupal::currentUser()->isAuthenticated()) {
       $last_read = $this->getValue($values);

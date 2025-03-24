@@ -63,8 +63,12 @@ function node_title_list(StatementInterface $result, $title = NULL) {
  *
  * @return int
  *   One of the MARK constants.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement.
+ * @see https://www.drupal.org/node/3514189
  */
 function node_mark($nid, $timestamp) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3514189', E_USER_DEPRECATED);
   if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
     return MARK_READ;
   }
