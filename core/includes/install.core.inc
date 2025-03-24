@@ -189,7 +189,7 @@ function install_drupal($class_loader, $settings = [], ?callable $callback = NUL
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::submitForm()
  */
-function install_state_defaults() {
+function install_state_defaults(): array {
   $defaults = [
     // The current task being processed.
     'active_task' => NULL,
@@ -737,7 +737,7 @@ function install_tasks_to_perform($install_state) {
  *   A list of tasks, with associated metadata as returned by
  *   hook_install_tasks().
  */
-function install_tasks($install_state) {
+function install_tasks($install_state): array {
   // Determine whether a translation file must be imported during the
   // 'install_import_translations' task. Import when a non-English language is
   // available and selected. Also we will need translations even if the
@@ -923,7 +923,7 @@ function install_tasks($install_state) {
  *
  * @see maintenance-task-list.html.twig
  */
-function install_tasks_to_display($install_state) {
+function install_tasks_to_display($install_state): array {
   $displayed_tasks = [];
   foreach (install_tasks($install_state) as $name => $task) {
     if ($task['display']) {
@@ -1315,7 +1315,7 @@ function _install_select_profile(&$install_state) {
  *
  * @see \Drupal\Core\File\FileSystemInterface::scanDirectory()
  */
-function install_find_translations() {
+function install_find_translations(): array {
   $translations = [];
   $files = \Drupal::service('string_translator.file_translation')->findTranslationFiles();
   // English does not need a translation file.
@@ -1701,7 +1701,7 @@ function install_install_profile(&$install_state) {
  * @return array
  *   The batch definition, if there are language files to download.
  */
-function install_download_additional_translations_operations(&$install_state) {
+function install_download_additional_translations_operations(&$install_state): array {
   \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
 
   $langcode = $install_state['parameters']['langcode'];
@@ -1863,7 +1863,7 @@ function _install_prepare_import($langcodes, $server_pattern) {
  * @return array
  *   An array of batch definitions.
  */
-function install_finish_translations(&$install_state) {
+function install_finish_translations(&$install_state): array {
   \Drupal::moduleHandler()->loadInclude('locale', 'fetch.inc');
   \Drupal::moduleHandler()->loadInclude('locale', 'compare.inc');
   \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
@@ -1949,7 +1949,7 @@ function _install_module_batch(array $modules, array $module_names, array &$cont
  *   Requirements compliance array. If the translation cannot be downloaded this
  *   will contain a requirements error with detailed information.
  */
-function install_check_translations($langcode, $server_pattern) {
+function install_check_translations($langcode, $server_pattern): array {
   $requirements = [];
 
   $readable = FALSE;

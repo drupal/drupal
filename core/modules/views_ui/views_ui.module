@@ -56,7 +56,7 @@ function views_ui_theme_suggestions_views_ui_view_preview_section(array $variabl
  * @param string $title
  *   Add a bolded title of this section.
  */
-function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type, $title = FALSE) {
+function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type, $title = FALSE): array {
   $display = $view->display_handler->display;
   $handlers = $view->display_handler->getHandlers($type);
   $links = [];
@@ -88,7 +88,7 @@ function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type
 /**
  * Returns a link to editing a certain display setting.
  */
-function views_ui_view_preview_section_display_category_links(ViewExecutable $view, $type, $title) {
+function views_ui_view_preview_section_display_category_links(ViewExecutable $view, $type, $title): array {
   $display = $view->display_handler->display;
   $links = [
     $type . '-edit' => [
@@ -104,7 +104,7 @@ function views_ui_view_preview_section_display_category_links(ViewExecutable $vi
 /**
  * Returns all contextual links for the main content part of the view.
  */
-function views_ui_view_preview_section_rows_links(ViewExecutable $view) {
+function views_ui_view_preview_section_rows_links(ViewExecutable $view): array {
   $links = [];
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'filter', TRUE));
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'field', TRUE));

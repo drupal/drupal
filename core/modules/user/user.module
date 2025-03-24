@@ -458,7 +458,7 @@ function _user_cancel_session_regenerate() {
  * @see hook_user_cancel_methods_alter()
  * @see user_admin_settings()
  */
-function user_cancel_methods() {
+function user_cancel_methods(): array {
   $user_settings = \Drupal::config('user.settings');
   $anonymous_name = $user_settings->get('anonymous');
   $methods = [

@@ -153,7 +153,7 @@ function drupal_install_profile_distribution_version() {
  * @todo https://www.drupal.org/i/3005959 Rework this method as it is not only
  *   about profiles.
  */
-function drupal_verify_profile($install_state) {
+function drupal_verify_profile($install_state): array {
   $profile = $install_state['parameters']['profile'];
   if ($profile === FALSE) {
     return [];
@@ -592,7 +592,7 @@ function drupal_requirements_url($severity) {
  * @return array
  *   Array of the installation profile's requirements.
  */
-function drupal_check_profile($profile) {
+function drupal_check_profile($profile): array {
   $info = install_profile_info($profile);
   // Collect requirement testing results.
   $requirements = [];

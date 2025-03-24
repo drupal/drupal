@@ -259,7 +259,7 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
  * @return array
  *   Array of batch operations.
  */
-function _locale_translation_batch_status_operations($projects, $langcodes, $options = []) {
+function _locale_translation_batch_status_operations($projects, $langcodes, $options = []): array {
   $operations = [];
 
   foreach ($projects as $project) {

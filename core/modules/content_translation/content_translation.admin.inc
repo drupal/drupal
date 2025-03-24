@@ -27,7 +27,7 @@ use Drupal\Core\Render\Element;
  * @return array
  *   A form element to configure field synchronization.
  */
-function content_translation_field_sync_widget(FieldDefinitionInterface $field, $element_name = 'third_party_settings[content_translation][translation_sync]') {
+function content_translation_field_sync_widget(FieldDefinitionInterface $field, $element_name = 'third_party_settings[content_translation][translation_sync]'): array {
   // No way to store field sync information on this field.
   if (!($field instanceof ThirdPartySettingsInterface)) {
     return [];

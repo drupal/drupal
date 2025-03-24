@@ -596,7 +596,7 @@ function claro_preprocess_links(&$variables): void {
  * @return array
  *   The link renderable converted to action link.
  */
-function _claro_convert_link_to_action_link(array $link, $icon_name = NULL, $size = 'default', $variant = 'default') {
+function _claro_convert_link_to_action_link(array $link, $icon_name = NULL, $size = 'default', $variant = 'default'): array {
   // Early opt-out if we cannot do anything.
   if (empty($link['#type']) || $link['#type'] !== 'link' || empty($link['#url'])) {
     return $link;

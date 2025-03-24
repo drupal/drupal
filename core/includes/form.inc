@@ -67,7 +67,7 @@ function template_preprocess_select(&$variables): void {
  *     or 'optgroup'.
  *   - value: A string that contains the value attribute for the option.
  */
-function form_select_options($element, $choices = NULL) {
+function form_select_options($element, $choices = NULL): array {
   if (!isset($choices)) {
     if (empty($element['#options'])) {
       return [];

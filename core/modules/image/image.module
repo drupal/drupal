@@ -33,7 +33,7 @@ function image_path_flush($path) {
  * @return string[]
  *   Array of image styles both key and value are set to style name.
  */
-function image_style_options($include_empty = TRUE) {
+function image_style_options($include_empty = TRUE): array {
   $styles = ImageStyle::loadMultiple();
   $options = [];
   if ($include_empty && !empty($styles)) {

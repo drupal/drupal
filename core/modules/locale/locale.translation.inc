@@ -102,7 +102,7 @@ function locale_translation_clear_cache_projects() {
  *
  * @see locale_translation_source_build()
  */
-function locale_translation_load_sources(?array $projects = NULL, ?array $langcodes = NULL) {
+function locale_translation_load_sources(?array $projects = NULL, ?array $langcodes = NULL): array {
   $sources = [];
   $projects = $projects ?: array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
@@ -132,7 +132,7 @@ function locale_translation_load_sources(?array $projects = NULL, ?array $langco
  *
  * @see locale_translation_source_build()
  */
-function locale_translation_build_sources(array $projects = [], array $langcodes = []) {
+function locale_translation_build_sources(array $projects = [], array $langcodes = []): array {
   $sources = [];
   $projects = locale_translation_get_projects($projects);
   $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());

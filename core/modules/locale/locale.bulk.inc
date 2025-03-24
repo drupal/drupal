@@ -86,7 +86,7 @@ function locale_translate_batch_import_files(array $options, $force = FALSE) {
  * @return array
  *   An array of interface translation files keyed by their URI.
  */
-function locale_translate_get_interface_translation_files(array $projects = [], array $langcodes = []) {
+function locale_translate_get_interface_translation_files(array $projects = [], array $langcodes = []): array {
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
   $files = [];
   $projects = $projects ?: array_keys(locale_translation_get_projects());

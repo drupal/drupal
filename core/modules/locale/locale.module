@@ -541,7 +541,7 @@ function locale_translation_file_history_delete($projects = [], $langcodes = [])
  *
  * @todo What is 'translation status'?
  */
-function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
+function locale_translation_get_status($projects = NULL, $langcodes = NULL): array {
   $result = [];
   $status = \Drupal::keyValue('locale.translation_status')->getAll();
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');

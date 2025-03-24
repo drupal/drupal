@@ -100,7 +100,7 @@ function _contextual_links_to_id($contextual_links) {
  * @see _contextual_links_to_id()
  * @see \Drupal\contextual\ContextualController::render()
  */
-function _contextual_id_to_links($id) {
+function _contextual_id_to_links($id): array {
   $contextual_links = [];
   $contexts = explode('|', $id);
   foreach ($contexts as $context) {

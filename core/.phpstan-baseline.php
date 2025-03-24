@@ -152,12 +152,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/includes/batch.inc',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function _batch_progress_page\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/includes/batch.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function _batch_shutdown\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -237,12 +231,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function _drupal_log_error\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/includes/errors.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function drupal_error_levels\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/includes/errors.inc',
@@ -392,12 +380,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/includes/install.core.inc',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function install_state_defaults\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/includes/install.core.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function install_verify_database_ready\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -435,12 +417,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function _system_default_theme_features\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/includes/theme.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function drupal_find_theme_templates\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/includes/theme.inc',
@@ -23735,12 +23711,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function locale_translation_file_history_delete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/locale.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function locale_translation_get_status\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/locale.module',
@@ -49143,24 +49113,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function views_ui_contextual_links_suppress_push\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/views_ui.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function views_ui_view_preview_section_display_category_links\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/views_ui.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function views_ui_view_preview_section_handler_links\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/views_ui.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function views_ui_view_preview_section_rows_links\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/views_ui.module',

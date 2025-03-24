@@ -67,7 +67,7 @@ function _comment_entity_uses_integer_id($entity_type_id) {
  * @return array
  *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
  */
-function comment_preview(CommentInterface $comment, FormStateInterface $form_state) {
+function comment_preview(CommentInterface $comment, FormStateInterface $form_state): array {
   $preview_build = [];
   $entity = $comment->getCommentedEntity();
 

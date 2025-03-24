@@ -97,7 +97,7 @@ function shortcut_set_switch_access($account = NULL) {
  * @return \Drupal\shortcut\ShortcutInterface[]
  *   An array of shortcut links, in the format returned by the menu system.
  */
-function shortcut_renderable_links($shortcut_set = NULL) {
+function shortcut_renderable_links($shortcut_set = NULL): array {
   $shortcut_links = [];
 
   if (!isset($shortcut_set)) {

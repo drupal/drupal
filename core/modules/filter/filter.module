@@ -80,7 +80,7 @@ function filter_formats_reset() {
  * @return array
  *   An array of role names, keyed by role ID.
  */
-function filter_get_roles_by_format(FilterFormatInterface $format) {
+function filter_get_roles_by_format(FilterFormatInterface $format): array {
   // Handle the fallback format upfront (all roles have access to this format).
   if ($format->isFallbackFormat()) {
     return array_map(fn(RoleInterface $role) => $role->label(), Role::loadMultiple());
@@ -105,7 +105,7 @@ function filter_get_roles_by_format(FilterFormatInterface $format) {
  *   An array of text format objects that are allowed for the role, keyed by
  *   the text format ID and ordered by weight.
  */
-function filter_get_formats_by_role($rid) {
+function filter_get_formats_by_role($rid): array {
   $formats = [];
   foreach (filter_formats() as $format) {
     $roles = filter_get_roles_by_format($format);
@@ -258,7 +258,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
  *   - tip: Tip text.
  *   - id: Filter ID.
  */
-function _filter_tips($format_id, $long = FALSE) {
+function _filter_tips($format_id, $long = FALSE): array {
   $formats = filter_formats(\Drupal::currentUser());
 
   $tips = [];

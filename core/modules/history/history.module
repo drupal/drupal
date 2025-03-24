@@ -40,7 +40,7 @@ function history_read($nid) {
  *   by the user, the timestamp in seconds of when the last view occurred;
  *   otherwise, zero.
  */
-function history_read_multiple($nids) {
+function history_read_multiple($nids): array {
   $history = &drupal_static(__FUNCTION__, []);
 
   $return = [];

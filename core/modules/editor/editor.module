@@ -264,7 +264,7 @@ function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count
  * @return array
  *   An array of file entity UUIDs.
  */
-function _editor_get_file_uuids_by_field(EntityInterface $entity) {
+function _editor_get_file_uuids_by_field(EntityInterface $entity): array {
   $uuids = [];
 
   $formatted_text_fields = _editor_get_formatted_text_fields($entity);
@@ -320,7 +320,7 @@ function _editor_get_formatted_text_fields(FieldableEntityInterface $entity) {
  * @return array
  *   An array of all found UUIDs.
  */
-function _editor_parse_file_uuids($text) {
+function _editor_parse_file_uuids($text): array {
   $dom = Html::load($text);
   $xpath = new \DOMXPath($dom);
   $uuids = [];

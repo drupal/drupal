@@ -19,7 +19,7 @@ use Drupal\Core\Update\EquivalentUpdate;
  * @return array
  *   A requirements info array.
  */
-function update_system_schema_requirements() {
+function update_system_schema_requirements(): array {
   $requirements = [];
 
   $system_schema = \Drupal::service('update.update_hook_registry')->getInstalledVersion('system');
@@ -304,7 +304,7 @@ function update_invoke_post_update($function, &$context) {
  *       the update number and the description from source code comment for
  *       each update function. This array is keyed by the update number.
  */
-function update_get_update_list() {
+function update_get_update_list(): array {
   // Make sure that the system module is first in the list of updates.
   $ret = ['system' => []];
 
@@ -482,7 +482,7 @@ function update_resolve_dependencies($starting_updates) {
  *
  * @see update_resolve_dependencies()
  */
-function update_get_update_function_list($starting_updates) {
+function update_get_update_function_list($starting_updates): array {
   // Go through each module and find all updates that we need (including the
   // first update that was requested and any updates that run after it).
   $update_functions = [];
@@ -548,7 +548,7 @@ function update_get_update_function_list($starting_updates) {
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
  * @see update_resolve_dependencies()
  */
-function update_build_dependency_graph($update_functions) {
+function update_build_dependency_graph($update_functions): array {
   // Initialize an array that will define a directed graph representing the
   // dependencies between update functions.
   $graph = [];
@@ -638,7 +638,7 @@ function update_already_performed($module, $number) {
  * @see \Drupal\Core\Extension\ModuleHandlerInterface::invokeAll()
  * @see hook_update_dependencies()
  */
-function update_retrieve_dependencies() {
+function update_retrieve_dependencies(): array {
   $return = [];
   /** @var \Drupal\Core\Extension\ModuleExtensionList */
   $extension_list = \Drupal::service('extension.list.module');

@@ -110,7 +110,7 @@ function update_uninstall(): void {
  * @see update_requirements()
  * @see update_calculate_project_data()
  */
-function _update_requirement_check($project, $type) {
+function _update_requirement_check($project, $type): array {
   $requirement = [];
   if ($type == 'core') {
     $requirement['title'] = t('Drupal core update status');

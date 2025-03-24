@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @ingroup logging_severity_levels
  */
-function drupal_error_levels() {
+function drupal_error_levels(): array {
   $types = [
     E_ERROR => ['Error', RfcLogLevel::ERROR],
     E_WARNING => ['Warning', RfcLogLevel::WARNING],

@@ -387,7 +387,7 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  * @return string[]
  *   An array of regions in the form $region['name'] = 'description'.
  */
-function system_region_list($theme, $show = REGIONS_ALL) {
+function system_region_list($theme, $show = REGIONS_ALL): array {
   if (!$theme instanceof Extension) {
     $themes = \Drupal::service('theme_handler')->listInfo();
     if (!isset($themes[$theme])) {

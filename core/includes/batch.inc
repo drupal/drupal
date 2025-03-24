@@ -146,7 +146,7 @@ function _batch_do() {
  *
  * @see _batch_process()
  */
-function _batch_progress_page() {
+function _batch_progress_page(): array {
   $batch = &batch_get();
 
   $current_set = _batch_current_set();
