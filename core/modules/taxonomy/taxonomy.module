@@ -98,7 +98,7 @@ function taxonomy_term_is_page(Term $term) {
  * @param \Drupal\node\NodeInterface $node
  *   The node entity.
  */
-function taxonomy_build_node_index($node) {
+function taxonomy_build_node_index($node): void {
   // We maintain a denormalized table of term/node relationships, containing
   // only data for current, published nodes.
   if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(\Drupal::entityTypeManager()->getStorage('node') instanceof SqlContentEntityStorage)) {
@@ -145,7 +145,7 @@ function taxonomy_build_node_index($node) {
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node entity.
  */
-function taxonomy_delete_node_index(EntityInterface $node) {
+function taxonomy_delete_node_index(EntityInterface $node): void {
   if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     \Drupal::database()->delete('taxonomy_index')->condition('nid', $node->id())->execute();
   }

@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see syslog_form_system_logging_settings_alter()
  */
-function syslog_logging_settings_submit($form, FormStateInterface $form_state) {
+function syslog_logging_settings_submit($form, FormStateInterface $form_state): void {
   \Drupal::configFactory()->getEditable('syslog.settings')
     ->set('identity', $form_state->getValue('syslog_identity'))
     ->set('facility', $form_state->getValue('syslog_facility'))

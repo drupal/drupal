@@ -214,7 +214,7 @@ function template_preprocess_username(&$variables): void {
  * @see hook_user_login()
  * @see \Drupal\user\Authentication\Provider\Cookie
  */
-function user_login_finalize(UserInterface $account) {
+function user_login_finalize(UserInterface $account): void {
   \Drupal::currentUser()->setAccount($account);
   \Drupal::logger('user')->info('Session opened for %name.', ['%name' => $account->getAccountName()]);
   // Update the user table timestamp noting user has logged in.
@@ -338,7 +338,7 @@ function user_pass_rehash(UserInterface $account, $timestamp) {
  *
  * @see _user_cancel()
  */
-function user_cancel($edit, $uid, $method) {
+function user_cancel($edit, $uid, $method): void {
   $account = User::load($uid);
 
   if (!$account) {
@@ -396,7 +396,7 @@ function user_cancel($edit, $uid, $method) {
  *
  * @see user_cancel()
  */
-function _user_cancel($edit, $account, $method) {
+function _user_cancel($edit, $account, $method): void {
   $logger = \Drupal::logger('user');
 
   switch ($method) {
@@ -441,7 +441,7 @@ function _user_cancel($edit, $account, $method) {
  *
  * @see user_cancel()
  */
-function _user_cancel_session_regenerate() {
+function _user_cancel_session_regenerate(): void {
   // Regenerate the users session instead of calling session_destroy() as we
   // want to preserve any messages that might have been set.
   \Drupal::service('session')->migrate();
@@ -523,7 +523,7 @@ function user_cancel_methods(): array {
  *   A keyed array of settings and flags to control the token replacement
  *   process. See \Drupal\Core\Utility\Token::replace().
  */
-function user_mail_tokens(&$replacements, $data, $options) {
+function user_mail_tokens(&$replacements, $data, $options): void {
   if (isset($data['user'])) {
     $replacements['[user:one-time-login-url]'] = user_pass_reset_url($data['user'], $options);
     $replacements['[user:cancel-url]'] = user_cancel_url($data['user'], $options);
@@ -560,7 +560,7 @@ function user_mail_tokens(&$replacements, $data, $options) {
  * @see user_role_grant_permissions()
  * @see user_role_revoke_permissions()
  */
-function user_role_change_permissions($rid, array $permissions = []) {
+function user_role_change_permissions($rid, array $permissions = []): void {
   // Grant new permissions for the role.
   $grant = array_filter($permissions);
   if (!empty($grant)) {
@@ -584,7 +584,7 @@ function user_role_change_permissions($rid, array $permissions = []) {
  * @see user_role_change_permissions()
  * @see user_role_revoke_permissions()
  */
-function user_role_grant_permissions($rid, array $permissions = []) {
+function user_role_grant_permissions($rid, array $permissions = []): void {
   // Grant new permissions for the role.
   $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
   if ($role = $role_storage->loadOverrideFree($rid)) {
@@ -606,7 +606,7 @@ function user_role_grant_permissions($rid, array $permissions = []) {
  * @see user_role_change_permissions()
  * @see user_role_grant_permissions()
  */
-function user_role_revoke_permissions($rid, array $permissions = []) {
+function user_role_revoke_permissions($rid, array $permissions = []): void {
   // Revoke permissions for the role.
   $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
   $role = $role_storage->loadOverrideFree($rid);
@@ -712,7 +712,7 @@ function user_form_process_password_confirm($element) {
  * @param array $values
  *   An array of key/value pairs to be saved into a cookie.
  */
-function user_cookie_save(array $values) {
+function user_cookie_save(array $values): void {
   $request_time = \Drupal::time()->getRequestTime();
   foreach ($values as $field => $value) {
     // Set cookie for 365 days.
@@ -726,14 +726,14 @@ function user_cookie_save(array $values) {
  * @param string $cookie_name
  *   A cookie name such as 'homepage'.
  */
-function user_cookie_delete($cookie_name) {
+function user_cookie_delete($cookie_name): void {
   setrawcookie('Drupal.visitor.' . $cookie_name, '', \Drupal::time()->getRequestTime() - 3600, '/');
 }
 
 /**
  * Logs the current user out.
  */
-function user_logout() {
+function user_logout(): void {
   $user = \Drupal::currentUser();
 
   \Drupal::logger('user')->info('Session closed for %name.', ['%name' => $user->getAccountName()]);
@@ -773,7 +773,7 @@ function template_preprocess_user(&$variables): void {
 /**
  * Additional submit handler for \Drupal\system\Form\RegionalForm.
  */
-function user_form_system_regional_settings_submit($form, FormStateInterface $form_state) {
+function user_form_system_regional_settings_submit($form, FormStateInterface $form_state): void {
   \Drupal::configFactory()->getEditable('system.date')
     ->set('timezone.user.configurable', $form_state->getValue('configurable_timezones'))
     ->set('timezone.user.warn', $form_state->getValue('empty_timezone_message'))

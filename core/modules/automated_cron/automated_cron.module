@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form submission handler for system_cron_settings().
  */
-function automated_cron_settings_submit(array $form, FormStateInterface $form_state) {
+function automated_cron_settings_submit(array $form, FormStateInterface $form_state): void {
   \Drupal::configFactory()->getEditable('automated_cron.settings')
     ->set('interval', $form_state->getValue('interval'))
     ->save();

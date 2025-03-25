@@ -18,7 +18,7 @@ use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 /**
  * Button submit handler for filter_format_form()'s 'editor_configure' button.
  */
-function editor_form_filter_admin_format_editor_configure($form, FormStateInterface $form_state) {
+function editor_form_filter_admin_format_editor_configure($form, FormStateInterface $form_state): void {
   $editor = $form_state->get('editor');
   $editor_value = $form_state->getValue(['editor', 'editor']);
   if ($editor_value !== NULL) {
@@ -51,7 +51,7 @@ function editor_form_filter_admin_form_ajax($form, FormStateInterface $form_stat
 /**
  * Additional validate handler for filter_format_form().
  */
-function editor_form_filter_admin_format_validate($form, FormStateInterface $form_state) {
+function editor_form_filter_admin_format_validate($form, FormStateInterface $form_state): void {
   $editor_set = $form_state->getValue(['editor', 'editor']) !== "";
   $subform_array_exists = (!empty($form['editor']['settings']['subform']) && is_array($form['editor']['settings']['subform']));
   if ($editor_set && $subform_array_exists && $editor_plugin = $form_state->get('editor_plugin')) {
@@ -76,7 +76,7 @@ function editor_form_filter_admin_format_validate($form, FormStateInterface $for
 /**
  * Additional submit handler for filter_format_form().
  */
-function editor_form_filter_admin_format_submit($form, FormStateInterface $form_state) {
+function editor_form_filter_admin_format_submit($form, FormStateInterface $form_state): void {
   // Delete the existing editor if disabling or switching between editors.
   $format = $form_state->getFormObject()->getEntity();
   $format_id = $format->isNew() ? NULL : $format->id();
@@ -221,7 +221,7 @@ function editor_filter_xss($html, ?FilterFormatInterface $format = NULL, ?Filter
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   An entity whose fields to inspect for file references.
  */
-function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
+function _editor_record_file_usage(array $uuids, EntityInterface $entity): void {
   foreach ($uuids as $uuid) {
     if ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid)) {
       /** @var \Drupal\file\FileInterface $file */
@@ -247,7 +247,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
  *
  * @see \Drupal\file\FileUsage\FileUsageInterface::delete()
  */
-function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count) {
+function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count): void {
   foreach ($uuids as $uuid) {
     if ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid)) {
       \Drupal::service('file.usage')->delete($file, 'editor', $entity->getEntityTypeId(), $entity->id(), $count);

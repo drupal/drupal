@@ -17,7 +17,7 @@ use Drupal\Core\Site\Settings;
  * operations, but this can be overridden by setting a "maintenance_theme" key
  * in the $settings variable in settings.php.
  */
-function _drupal_maintenance_theme() {
+function _drupal_maintenance_theme(): void {
   // If the theme is already set, assume the others are set too, and do nothing.
   if (\Drupal::theme()->hasActiveTheme()) {
     return;

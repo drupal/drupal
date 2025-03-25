@@ -189,7 +189,7 @@ function locale_translate_batch_build(array $files, array $options) {
  * @param array|\ArrayAccess $context
  *   Contains a list of files imported.
  */
-function locale_translate_batch_import($file, array $options, &$context) {
+function locale_translate_batch_import($file, array $options, &$context): void {
   // Merge the default values in the $options array.
   $options += [
     'overwrite_options' => [],
@@ -272,7 +272,7 @@ function locale_translate_batch_import($file, array $options, &$context) {
  * @param array|\ArrayAccess $context
  *   Contains a list of imported files.
  */
-function locale_translate_batch_import_save($context) {
+function locale_translate_batch_import_save($context): void {
   if (isset($context['results']['files'])) {
     $request_time = \Drupal::time()->getRequestTime();
     foreach ($context['results']['files'] as $file) {
@@ -298,7 +298,7 @@ function locale_translate_batch_import_save($context) {
  * @param array|\ArrayAccess $context
  *   Contains a list of strings updated and information about the progress.
  */
-function locale_translate_batch_refresh(&$context) {
+function locale_translate_batch_refresh(&$context): void {
   if (!isset($context['sandbox']['refresh'])) {
     $strings = $langcodes = [];
     if (isset($context['results']['stats'])) {
@@ -366,7 +366,7 @@ function locale_translate_batch_refresh(&$context) {
  * @param array $results
  *   Batch results.
  */
-function locale_translate_batch_finished($success, array $results) {
+function locale_translate_batch_finished($success, array $results): void {
   $logger = \Drupal::logger('locale');
   if ($success) {
     $additions = $updates = $deletes = $skips = 0;
@@ -698,7 +698,7 @@ function locale_config_batch_refresh_name(array $names, array $langcodes, &$cont
  *
  * @see locale_config_batch_build()
  */
-function locale_config_batch_finished($success, array $results) {
+function locale_config_batch_finished($success, array $results): void {
   if ($success) {
     $configuration = $results['stats']['config'] ?? 0;
     if ($configuration) {

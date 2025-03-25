@@ -10,5 +10,5 @@
  *
  * The schema version is the maximum possible value for a 32-bit integer.
  */
-function package_manager_update_2147483647() {
+function package_manager_update_2147483647(): void {
 }

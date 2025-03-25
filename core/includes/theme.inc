@@ -1067,7 +1067,7 @@ function template_preprocess_maintenance_task_list(&$variables): void {
  *
  * @see https://www.drupal.org/node/2340341
  */
-function template_preprocess(&$variables, $hook, $info) {
+function template_preprocess(&$variables, $hook, $info): void {
   @trigger_error('template_preprocess() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement, default preprocess variables are added for all theme hooks directly in \Drupal\Core\Theme\ThemeManager. See https://www.drupal.org/node/2340341', E_USER_DEPRECATED);
 
   $themeManager = \Drupal::service('theme.manager');

@@ -21,7 +21,7 @@ function search_removed_post_updates(): array {
 /**
  * Updates Search Blocks' without an explicit `page_id` from '' to NULL.
  */
-function search_post_update_block_with_empty_page_id(&$sandbox = []) {
+function search_post_update_block_with_empty_page_id(&$sandbox = []): void {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   $config_entity_updater->update($sandbox, 'block', function (BlockInterface $block): bool {
     // Only update blocks using the search block plugin.

@@ -404,7 +404,7 @@ function template_preprocess_node(&$variables): void {
  *
  * @see node_form_system_themes_admin_form_alter()
  */
-function node_form_system_themes_admin_form_submit($form, FormStateInterface $form_state) {
+function node_form_system_themes_admin_form_submit($form, FormStateInterface $form_state): void {
   \Drupal::configFactory()->getEditable('node.settings')
     ->set('use_admin_theme', $form_state->getValue('use_admin_theme'))
     ->save();
@@ -542,7 +542,7 @@ function node_access_needs_rebuild($rebuild = NULL) {
  *
  * @see node_access_needs_rebuild()
  */
-function node_access_rebuild($batch_mode = FALSE) {
+function node_access_rebuild($batch_mode = FALSE): void {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
   $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
@@ -608,7 +608,7 @@ function node_access_rebuild($batch_mode = FALSE) {
  * @param array $context
  *   An array of contextual key/value information for rebuild batch process.
  */
-function _node_access_rebuild_batch_operation(&$context) {
+function _node_access_rebuild_batch_operation(&$context): void {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   if (empty($context['sandbox'])) {
     // Initiate multistep processing.
@@ -663,7 +663,7 @@ function _node_access_rebuild_batch_operation(&$context) {
  * @param array $operations
  *   An array of function calls (not used in this function).
  */
-function _node_access_rebuild_batch_finished($success, $results, $operations) {
+function _node_access_rebuild_batch_finished($success, $results, $operations): void {
   if ($success) {
     \Drupal::messenger()->addStatus(t('The content access permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
@@ -679,7 +679,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
  * @param int $nid
  *   The node ID.
  */
-function node_reindex_node_search($nid) {
+function node_reindex_node_search($nid): void {
   if (\Drupal::moduleHandler()->moduleExists('search')) {
     // Reindex node context indexed by the node module search plugin.
     \Drupal::service('search.index')->markForReindex('node_search', $nid);

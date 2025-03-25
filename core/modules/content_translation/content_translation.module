@@ -40,7 +40,7 @@ function content_translation_module_implements_alter(&$implementations, $hook): 
  *
  * @todo Generalize this code in https://www.drupal.org/node/2346013.
  */
-function _content_translation_install_field_storage_definitions($entity_type_id) {
+function _content_translation_install_field_storage_definitions($entity_type_id): void {
   /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
   $field_manager = \Drupal::service('entity_field.manager');
   /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $schema_repository */
@@ -150,7 +150,7 @@ function content_translation_language_configuration_element_process(array $eleme
  *
  * @see content_translation_language_configuration_element_submit()
  */
-function content_translation_language_configuration_element_validate($element, FormStateInterface $form_state, array $form) {
+function content_translation_language_configuration_element_validate($element, FormStateInterface $form_state, array $form): void {
   $key = $form_state->get(['content_translation', 'key']);
   $values = $form_state->getValue($key);
   if (!$values['language_alterable'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
@@ -171,7 +171,7 @@ function content_translation_language_configuration_element_validate($element, F
  *
  * @see content_translation_language_configuration_element_validate()
  */
-function content_translation_language_configuration_element_submit(array $form, FormStateInterface $form_state) {
+function content_translation_language_configuration_element_submit(array $form, FormStateInterface $form_state): void {
   $key = $form_state->get(['content_translation', 'key']);
   $context = $form_state->get(['language', $key]);
   $enabled = $form_state->getValue([$key, 'content_translation']);

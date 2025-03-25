@@ -17,7 +17,7 @@ define('IMAGE_DERIVATIVE_TOKEN', 'itok');
  * @param string $path
  *   The Drupal file path to the original image.
  */
-function image_path_flush($path) {
+function image_path_flush($path): void {
   $styles = ImageStyle::loadMultiple();
   foreach ($styles as $style) {
     $style->flush($path);

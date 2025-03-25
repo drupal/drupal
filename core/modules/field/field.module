@@ -61,7 +61,7 @@ function _field_create_entity_from_ids($ids) {
  * @see \Drupal\field_ui\Form\FieldConfigEditForm::form
  * @see \Drupal\field_ui\Form\FieldConfigEditForm::copyFormValuesToEntity
  */
-function field_form_field_config_edit_form_entity_builder($entity_type_id, $entity, &$form, FormStateInterface $form_state) {
+function field_form_field_config_edit_form_entity_builder($entity_type_id, $entity, &$form, FormStateInterface $form_state): void {
   assert($entity instanceof FieldConfigInterface);
   $previous_field_storage = $form_state->getFormObject()->getEntity()->getFieldStorageDefinition();
   assert($previous_field_storage instanceof FieldStorageConfigInterface);

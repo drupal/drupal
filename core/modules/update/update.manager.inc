@@ -211,7 +211,7 @@ function update_manager_file_get($url) {
  *
  * @see update_manager_download_page()
  */
-function update_manager_batch_project_get($project, $url, &$context) {
+function update_manager_batch_project_get($project, $url, &$context): void {
   @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
   // This is here to show the user that we are in the process of downloading.

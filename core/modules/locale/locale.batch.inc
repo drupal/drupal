@@ -38,7 +38,7 @@ require_once __DIR__ . '/locale.translation.inc';
  *   The batch context.
  */
 #[StopProceduralHookScan]
-function locale_translation_batch_version_check(string $project, string $langcode, array|\ArrayAccess &$context) {
+function locale_translation_batch_version_check(string $project, string $langcode, array|\ArrayAccess &$context): void {
   $locale_project = \Drupal::service('locale.project')->get($project);
 
   if (empty($locale_project)) {
@@ -80,7 +80,7 @@ function locale_translation_batch_version_check(string $project, string $langcod
  * @param array|\ArrayAccess $context
  *   The batch context.
  */
-function locale_translation_batch_status_check($project, $langcode, array $options, &$context) {
+function locale_translation_batch_status_check($project, $langcode, array $options, &$context): void {
   $failure = $checked = FALSE;
   $options += [
     'finish_feedback' => TRUE,
@@ -139,7 +139,7 @@ function locale_translation_batch_status_check($project, $langcode, array $optio
  * @param array $results
  *   Batch results.
  */
-function locale_translation_batch_status_finished($success, $results) {
+function locale_translation_batch_status_finished($success, $results): void {
   if ($success) {
     if (isset($results['failed_files'])) {
       if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
@@ -182,7 +182,7 @@ function locale_translation_batch_status_finished($success, $results) {
  *
  * @see locale_translation_batch_fetch_import()
  */
-function locale_translation_batch_fetch_download($project, $langcode, &$context) {
+function locale_translation_batch_fetch_download($project, $langcode, &$context): void {
   $sources = locale_translation_get_status([$project], [$langcode]);
   if (isset($sources[$project][$langcode])) {
     $source = $sources[$project][$langcode];
@@ -216,7 +216,7 @@ function locale_translation_batch_fetch_download($project, $langcode, &$context)
  * @see locale_translate_batch_import_files()
  * @see locale_translation_batch_fetch_download()
  */
-function locale_translation_batch_fetch_import($project, $langcode, $options, &$context) {
+function locale_translation_batch_fetch_import($project, $langcode, $options, &$context): void {
   $sources = locale_translation_get_status([$project], [$langcode]);
   if (isset($sources[$project][$langcode])) {
     $source = $sources[$project][$langcode];
@@ -257,12 +257,12 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
  * @param array $results
  *   Batch results.
  */
-function locale_translation_batch_fetch_finished($success, $results) {
+function locale_translation_batch_fetch_finished($success, $results): void {
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.bulk');
   if ($success) {
     \Drupal::state()->set('locale.translation_last_checked', \Drupal::time()->getRequestTime());
   }
-  return locale_translate_batch_finished($success, $results);
+  locale_translate_batch_finished($success, $results);
 }
 
 /**

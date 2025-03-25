@@ -257,7 +257,7 @@ function base_path() {
  *
  * @see MenuForm::BuildOverviewForm()
  */
-function drupal_attach_tabledrag(&$element, array $options) {
+function drupal_attach_tabledrag(&$element, array $options): void {
   // Add default values to elements.
   $options = $options + [
     'subgroup' => NULL,
@@ -411,7 +411,7 @@ function show(&$element) {
  * @todo Add a global lock to ensure that caches are not primed in concurrent
  *   requests.
  */
-function drupal_flush_all_caches($kernel = NULL) {
+function drupal_flush_all_caches($kernel = NULL): void {
   // This is executed based on old/previously known information if $kernel is
   // not passed in, which is sufficient, since new extensions cannot have any
   // primed caches yet.

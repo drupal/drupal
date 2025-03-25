@@ -30,7 +30,7 @@ function test_batch_test_install(): void {
 /**
  * Callback for batch operations.
  */
-function _test_batch_test_callback($id) {
+function _test_batch_test_callback($id): void {
   $entity = EntityTest::create(['id' => $id]);
   $entity->save();
 }

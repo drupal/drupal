@@ -99,7 +99,7 @@ function t($string, array $args = [], array $options = []) {
  * @param int $line
  *   (optional) The line number the error was raised at.
  */
-function _drupal_error_handler($error_level, $message, $filename = NULL, $line = NULL) {
+function _drupal_error_handler($error_level, $message, $filename = NULL, $line = NULL): void {
   require_once __DIR__ . '/errors.inc';
   _drupal_error_handler_real($error_level, $message, $filename, $line);
 }
@@ -114,7 +114,7 @@ function _drupal_error_handler($error_level, $message, $filename = NULL, $line =
  * @param \Exception|\Throwable $exception
  *   The exception object that was thrown.
  */
-function _drupal_exception_handler($exception) {
+function _drupal_exception_handler($exception): void {
   require_once __DIR__ . '/errors.inc';
 
   try {
@@ -135,7 +135,7 @@ function _drupal_exception_handler($exception) {
  * @param \Exception|\Throwable $exception2
  *   The second exception object that was thrown.
  */
-function _drupal_exception_handler_additional($exception, $exception2) {
+function _drupal_exception_handler_additional($exception, $exception2): void {
   // Another uncaught exception was thrown while handling the first one.
   // If we are displaying errors, then do so with no possibility of a further
   // uncaught exception being thrown.
@@ -262,7 +262,7 @@ function drupal_generate_test_ua($prefix) {
  *
  * @see _drupal_maintenance_theme()
  */
-function drupal_maintenance_theme() {
+function drupal_maintenance_theme(): void {
   require_once __DIR__ . '/theme.maintenance.inc';
   _drupal_maintenance_theme();
 }
@@ -425,7 +425,7 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *   Resetting all variables should only be used, for example, for running
  *   unit tests with a clean environment.
  */
-function drupal_static_reset($name = NULL) {
+function drupal_static_reset($name = NULL): void {
   drupal_static($name, NULL, TRUE);
 }
 
@@ -465,7 +465,7 @@ function &drupal_register_shutdown_function($callback = NULL, ...$args) {
 /**
  * Executes registered shutdown functions.
  */
-function _drupal_shutdown_function() {
+function _drupal_shutdown_function(): void {
   $callbacks = &drupal_register_shutdown_function();
 
   // Set the CWD to DRUPAL_ROOT as it is not guaranteed to be the same as it
@@ -495,7 +495,7 @@ function _drupal_shutdown_function() {
  *
  * @see _drupal_shutdown_function()
  */
-function _drupal_shutdown_function_handle_exception($exception) {
+function _drupal_shutdown_function_handle_exception($exception): void {
   // If using PHP-FPM then fastcgi_finish_request() will have been fired
   // preventing further output to the browser.
   if (!function_exists('fastcgi_finish_request')) {

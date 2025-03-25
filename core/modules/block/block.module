@@ -15,7 +15,7 @@ use Drupal\Core\Installer\InstallerKernel;
  *
  * @see block_modules_installed()
  */
-function block_themes_installed($theme_list) {
+function block_themes_installed($theme_list): void {
   // Disable this functionality prior to install profile installation because
   // block configuration is often optional or provided by the install profile
   // itself. block_theme_initialize() will be called when the install profile is
@@ -43,7 +43,7 @@ function block_themes_installed($theme_list) {
  * @param string $theme
  *   The name of a theme.
  */
-function block_theme_initialize($theme) {
+function block_theme_initialize($theme): void {
   // Initialize theme's blocks if none already registered.
   $has_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $theme]);
   if (!$has_blocks) {

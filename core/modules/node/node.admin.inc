@@ -30,7 +30,7 @@ use Drupal\node\NodeInterface;
  *   (optional) TRUE if $nodes contains an array of revision IDs instead of
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  */
-function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE) {
+function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE): void {
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
   if (count($nodes) > 10) {
@@ -112,7 +112,7 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
  * @param array|\ArrayAccess $context
  *   An array of contextual key/values.
  */
-function _node_mass_update_batch_process(array $nodes, array $updates, $langcode, $load, $revisions, &$context) {
+function _node_mass_update_batch_process(array $nodes, array $updates, $langcode, $load, $revisions, &$context): void {
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($nodes);
@@ -160,7 +160,7 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $langcode
  *
  * @see _node_mass_update_batch_process()
  */
-function _node_mass_update_batch_finished($success, $results, $operations) {
+function _node_mass_update_batch_finished($success, $results, $operations): void {
   if ($success) {
     \Drupal::messenger()->addStatus(t('The update has been performed.'));
   }

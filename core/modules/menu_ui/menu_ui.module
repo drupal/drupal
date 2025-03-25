@@ -17,7 +17,7 @@ use Drupal\node\NodeInterface;
  * @param array $values
  *   Values for the menu link.
  */
-function _menu_ui_node_save(NodeInterface $node, array $values) {
+function _menu_ui_node_save(NodeInterface $node, array $values): void {
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
   if (!empty($values['entity_id'])) {
     $entity = \Drupal::service('entity.repository')->getActive('menu_link_content', $values['entity_id']);
@@ -158,7 +158,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
 /**
  * Entity form builder to add the menu information to the node.
  */
-function menu_ui_node_builder($entity_type, NodeInterface $entity, &$form, FormStateInterface $form_state) {
+function menu_ui_node_builder($entity_type, NodeInterface $entity, &$form, FormStateInterface $form_state): void {
   $entity->menu = $form_state->getValue('menu');
 }
 
@@ -167,7 +167,7 @@ function menu_ui_node_builder($entity_type, NodeInterface $entity, &$form, FormS
  *
  * @see menu_ui_form_node_form_alter()
  */
-function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
+function menu_ui_form_node_form_submit($form, FormStateInterface $form_state): void {
   $node = $form_state->getFormObject()->getEntity();
   if (!$form_state->isValueEmpty('menu')) {
     $values = $form_state->getValue('menu');
@@ -199,7 +199,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
  *
  * @see menu_ui_form_node_type_form_alter()
  */
-function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state) {
+function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state): void {
   $available_menus = array_filter($form_state->getValue('menu_options'));
   // If there is at least one menu allowed, the selected item should be in
   // one of them.
@@ -219,7 +219,7 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
  *
  * @see menu_ui_form_node_type_form_alter()
  */
-function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
+function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state): void {
   $type->setThirdPartySetting('menu_ui', 'available_menus', array_values(array_filter($form_state->getValue('menu_options'))));
   $type->setThirdPartySetting('menu_ui', 'parent', $form_state->getValue('menu_parent'));
 }

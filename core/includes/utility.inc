@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @see rebuild.php
  */
-function drupal_rebuild($class_loader, Request $request) {
+function drupal_rebuild($class_loader, Request $request): void {
   // Remove Drupal's error and exception handlers; they rely on a working
   // service container and other subsystems and will only cause a fatal error
   // that hides the actual error.

@@ -43,7 +43,7 @@ function test_theme_settings_form_system_theme_settings_alter(&$form, FormStateI
 /**
  * Test theme form settings submission handler.
  */
-function test_theme_settings_form_system_theme_settings_submit(&$form, FormStateInterface $form_state) {
+function test_theme_settings_form_system_theme_settings_submit(&$form, FormStateInterface $form_state): void {
   if ($file_id = $form_state->getValue(['custom_logo', '0'])) {
     $file = File::load($file_id);
     $file->setPermanent();

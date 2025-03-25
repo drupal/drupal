@@ -114,7 +114,7 @@ function views_preprocess_comment(&$variables): void {
  * @see \Drupal\views\Plugin\Block\ViewsBlock::addContextualLinks()
  * @see template_preprocess_views_view()
  */
-function views_add_contextual_links(&$render_element, $location, $display_id, ?array $view_element = NULL) {
+function views_add_contextual_links(&$render_element, $location, $display_id, ?array $view_element = NULL): void {
   if (!isset($view_element)) {
     $view_element = $render_element;
   }
@@ -194,7 +194,7 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ?a
 /**
  * Invalidate the views cache, forcing a rebuild on the next grab of table data.
  */
-function views_invalidate_cache() {
+function views_invalidate_cache(): void {
   // Set the menu as needed to be rebuilt.
   \Drupal::service('router.builder')->setRebuildNeeded();
 
@@ -320,7 +320,7 @@ function views_view_is_disabled(View $view) {
  * @param \Drupal\views\Entity\View $view
  *   The View object to disable.
  */
-function views_enable_view(View $view) {
+function views_enable_view(View $view): void {
   $view->enable()->save();
 }
 
@@ -330,14 +330,14 @@ function views_enable_view(View $view) {
  * @param \Drupal\views\Entity\View $view
  *   The View object to disable.
  */
-function views_disable_view(View $view) {
+function views_disable_view(View $view): void {
   $view->disable()->save();
 }
 
 /**
  * Replaces the substitutions recursive foreach condition.
  */
-function _views_query_tag_alter_condition(AlterableInterface $query, &$conditions, $substitutions) {
+function _views_query_tag_alter_condition(AlterableInterface $query, &$conditions, $substitutions): void {
   foreach ($conditions as $condition_id => &$condition) {
     if (is_numeric($condition_id)) {
       if (is_string($condition['field'])) {
@@ -452,7 +452,7 @@ function views_get_view_result($name, $display_id = NULL, ...$args) {
 /**
  * Validation callback for query tags.
  */
-function views_element_validate_tags($element, FormStateInterface $form_state) {
+function views_element_validate_tags($element, FormStateInterface $form_state): void {
   $values = array_map('trim', explode(',', $element['#value']));
   foreach ($values as $value) {
     if (preg_match("/[^a-z_]/", $value)) {

@@ -105,7 +105,7 @@ function _media_library_views_form_media_library_after_build(array $form, FormSt
 /**
  * Submit callback for media type form.
  */
-function _media_library_media_type_form_submit(array &$form, FormStateInterface $form_state) {
+function _media_library_media_type_form_submit(array &$form, FormStateInterface $form_state): void {
   $form_object = $form_state->getFormObject();
   if ($form_object->getOperation() === 'add') {
     $type = $form_object->getEntity();

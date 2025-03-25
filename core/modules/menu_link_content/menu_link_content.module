@@ -10,7 +10,7 @@
  * @param string $path
  *   The path alias.
  */
-function _menu_link_content_update_path_alias($path) {
+function _menu_link_content_update_path_alias($path): void {
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */

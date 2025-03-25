@@ -109,14 +109,14 @@ function update_get_available($refresh = FALSE) {
  *
  * @see \Drupal\update\UpdateFetcher::createFetchTask()
  */
-function update_create_fetch_task($project) {
+function update_create_fetch_task($project): void {
   \Drupal::service('update.processor')->createFetchTask($project);
 }
 
 /**
  * Refreshes the release data after loading the necessary include file.
  */
-function update_refresh() {
+function update_refresh(): void {
   \Drupal::service('update.manager')->refreshUpdateData();
 }
 
@@ -125,7 +125,7 @@ function update_refresh() {
  *
  * @see \Drupal\update\UpdateProcessor::fetchData()
  */
-function update_fetch_data() {
+function update_fetch_data(): void {
   \Drupal::service('update.processor')->fetchData();
 }
 
@@ -139,7 +139,7 @@ function update_fetch_data() {
  *   'updated' which holds the total number of projects we fetched available
  *   update data for.
  */
-function update_fetch_data_finished($success, $results) {
+function update_fetch_data_finished($success, $results): void {
   if ($success) {
     if (!empty($results)) {
       if (!empty($results['updated'])) {
@@ -266,7 +266,7 @@ function template_preprocess_update_last_check(&$variables): void {
 /**
  * Invalidates stored data relating to update status.
  */
-function update_storage_clear() {
+function update_storage_clear(): void {
   \Drupal::keyValueExpirable('update')->deleteAll();
   \Drupal::keyValueExpirable('update_available_release')->deleteAll();
 }
@@ -332,7 +332,7 @@ function _update_manager_cache_directory($create = TRUE) {
 /**
  * Clears the temporary files and directories based on file age from disk.
  */
-function update_clear_update_disk_cache() {
+function update_clear_update_disk_cache(): void {
   // List of update module cache directories. Do not create the directories if
   // they do not exist.
   $directories = [

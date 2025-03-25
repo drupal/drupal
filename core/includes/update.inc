@@ -73,7 +73,7 @@ function update_check_requirements() {
  * @todo remove in a major version after
  * https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
  */
-function _update_fix_missing_schema() {
+function _update_fix_missing_schema(): void {
   /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
   $update_registry = \Drupal::service('update.update_hook_registry');
   $versions = $update_registry->getAllInstalledVersions();
@@ -162,7 +162,7 @@ function _update_fix_missing_schema() {
  *
  * @see update_resolve_dependencies()
  */
-function update_do_one($module, $number, $dependency_map, &$context) {
+function update_do_one($module, $number, $dependency_map, &$context): void {
   $function = $module . '_update_' . $number;
 
   // If this update was aborted in a previous step, or has a dependency that
@@ -231,7 +231,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
  * @param array $context
  *   The batch context array.
  */
-function update_invoke_post_update($function, &$context) {
+function update_invoke_post_update($function, &$context): void {
   $ret = [];
 
   // If this update was aborted in a previous step, or has a dependency that was

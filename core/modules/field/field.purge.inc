@@ -70,7 +70,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * @param string $field_storage_unique_id
  *   (optional) Limit the purge to a specific field storage. Defaults to NULL.
  */
-function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
+function field_purge_batch($batch_size, $field_storage_unique_id = NULL): void {
   /** @var \Drupal\Core\Field\DeletedFieldsRepositoryInterface $deleted_fields_repository */
   $deleted_fields_repository = \Drupal::service('entity_field.deleted_fields_repository');
 
@@ -114,7 +114,7 @@ function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
  * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   The field to purge.
  */
-function field_purge_field(FieldDefinitionInterface $field) {
+function field_purge_field(FieldDefinitionInterface $field): void {
   /** @var \Drupal\Core\Field\DeletedFieldsRepositoryInterface $deleted_fields_repository */
   $deleted_fields_repository = \Drupal::service('entity_field.deleted_fields_repository');
   $deleted_fields_repository->removeFieldDefinition($field);
@@ -134,7 +134,7 @@ function field_purge_field(FieldDefinitionInterface $field) {
  *
  * @throws \Drupal\Core\Field\FieldException
  */
-function field_purge_field_storage(FieldStorageDefinitionInterface $field_storage) {
+function field_purge_field_storage(FieldStorageDefinitionInterface $field_storage): void {
   /** @var \Drupal\Core\Field\DeletedFieldsRepositoryInterface $deleted_fields_repository */
   $deleted_fields_repository = \Drupal::service('entity_field.deleted_fields_repository');
 

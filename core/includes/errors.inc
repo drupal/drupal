@@ -54,7 +54,7 @@ function drupal_error_levels(): array {
  * @param int $line
  *   The line number the error was raised at.
  */
-function _drupal_error_handler_real($error_level, $message, $filename, $line) {
+function _drupal_error_handler_real($error_level, $message, $filename, $line): void {
   if ($error_level & error_reporting()) {
     $types = drupal_error_levels();
     [$severity_msg, $severity_level] = $types[$error_level];
@@ -145,7 +145,7 @@ function error_displayable($error = NULL) {
  *   - A recoverable fatal error, which is a fatal error.
  *   Non-recoverable fatal errors cannot be logged by Drupal.
  */
-function _drupal_log_error($error, $fatal = FALSE) {
+function _drupal_log_error($error, $fatal = FALSE): void {
   $is_installer = InstallerKernel::installationAttempted() && \Drupal::hasContainer();
 
   // Backtrace, exception and 'severity_level' are not valid replacement values
@@ -353,7 +353,7 @@ function _drupal_get_error_level() {
  * @param int $line
  *   The line number in file that emitted the error.
  */
-function _drupal_error_header($message, $type, $function, $file, $line) {
+function _drupal_error_header($message, $type, $function, $file, $line): void {
   // $number does not use drupal_static as it should not be reset
   // as it uniquely identifies each PHP error.
   static $number = 0;

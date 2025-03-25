@@ -39,7 +39,7 @@ use Drupal\Core\Url;
  *   cause $form['dynamic_content']['section'] to be refreshed, you would pass
  *   ['dynamic_content', 'section'] for this parameter.
  */
-function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_parents) {
+function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_parents): void {
   $seen_ids = &drupal_static(__FUNCTION__ . ':seen_ids', []);
   $seen_buttons = &drupal_static(__FUNCTION__ . ':seen_buttons', []);
 
@@ -194,14 +194,14 @@ function views_ui_ajax_update_form($form, FormStateInterface $form_state) {
 /**
  * Non-JavaScript fallback for updating the add view form.
  */
-function views_ui_nojs_submit($form, FormStateInterface $form_state) {
+function views_ui_nojs_submit($form, FormStateInterface $form_state): void {
   $form_state->setRebuild();
 }
 
 /**
  * Adds an element to select either the default display or the current display.
  */
-function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_state, $section) {
+function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_state, $section): void {
   $view = $form_state->get('view');
   $display_id = $form_state->get('display_id');
   $executable = $view->getExecutable();

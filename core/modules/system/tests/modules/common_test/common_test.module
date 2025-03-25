@@ -64,7 +64,7 @@ function common_test_module_implements_alter(&$implementations, $hook): void {
  *
  * @see RenderTest::testDrupalRenderThemePreprocessAttached()
  */
-function common_test_preprocess(&$variables, $hook) {
+function common_test_preprocess(&$variables, $hook): void {
   if (!\Drupal::state()->get('theme_preprocess_attached_test', FALSE)) {
     return;
   }

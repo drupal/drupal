@@ -33,7 +33,7 @@ function language_process_language_select($element) {
 /**
  * Submit handler for the forms that have a language_configuration element.
  */
-function language_configuration_element_submit(&$form, FormStateInterface $form_state) {
+function language_configuration_element_submit(&$form, FormStateInterface $form_state): void {
   // Iterate through all the language_configuration elements and save their
   // values.
   // In case we are editing a bundle, we must check the new bundle name,
@@ -110,7 +110,7 @@ function language_get_default_langcode($entity_type, $bundle) {
 /**
  * Update the list of prefixes from the installed languages.
  */
-function language_negotiation_url_prefixes_update() {
+function language_negotiation_url_prefixes_update(): void {
   $config = \Drupal::configFactory()->getEditable('language.negotiation');
   $prefixes = $config->get('url.prefixes');
   foreach (\Drupal::languageManager()->getLanguages() as $language) {

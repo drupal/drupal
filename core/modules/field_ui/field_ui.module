@@ -35,7 +35,7 @@ function field_ui_preprocess_form_element__new_storage_type(&$variables): void {
  *
  * @see field_ui_form_alter()
  */
-function field_ui_form_manage_field_form_submit($form, FormStateInterface $form_state) {
+function field_ui_form_manage_field_form_submit($form, FormStateInterface $form_state): void {
   $provider = $form_state->getFormObject()->getEntity()->getEntityType()->getProvider();
   $id = $form_state->getFormObject()->getEntity()->id();
   if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo($provider, $id)) {

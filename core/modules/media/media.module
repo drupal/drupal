@@ -92,7 +92,7 @@ function _media_get_add_url($allowed_bundles) {
 /**
  * Validate callback to ensure filter order and allowed_html are compatible.
  */
-function media_filter_format_edit_form_validate($form, FormStateInterface $form_state) {
+function media_filter_format_edit_form_validate($form, FormStateInterface $form_state): void {
   if ($form_state->getTriggeringElement()['#name'] !== 'op') {
     return;
   }

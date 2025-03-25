@@ -67,7 +67,7 @@ function filter_formats(?AccountInterface $account = NULL) {
  *
  * @see filter_formats()
  */
-function filter_formats_reset() {
+function filter_formats_reset(): void {
   drupal_static_reset('filter_formats');
 }
 

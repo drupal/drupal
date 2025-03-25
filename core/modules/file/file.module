@@ -285,7 +285,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
  *
  * @see \Drupal\file\Element\ManagedFile::processManagedFile()
  */
-function file_managed_file_submit($form, FormStateInterface $form_state) {
+function file_managed_file_submit($form, FormStateInterface $form_state): void {
   // Determine whether it was the upload or the remove button that was clicked,
   // and set $element to the managed_file element that contains that button.
   $parents = $form_state->getTriggeringElement()['#array_parents'];
@@ -761,7 +761,7 @@ function file_field_find_file_reference_column(FieldDefinitionInterface $field) 
 /**
  * Form submission handler for file system settings form.
  */
-function file_system_settings_submit(array &$form, FormStateInterface $form_state) {
+function file_system_settings_submit(array &$form, FormStateInterface $form_state): void {
   $config = \Drupal::configFactory()->getEditable('file.settings')
     ->set('filename_sanitization', $form_state->getValue('filename_sanitization'));
   $config->save();

@@ -747,7 +747,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *       \Drupal\Core\Queue\BatchMemory. Defaults to Batch if progressive is
  *       TRUE, or to BatchMemory if progressive is FALSE.
  */
-function batch_set($batch_definition) {
+function batch_set($batch_definition): void {
   if ($batch_definition) {
     $batch =& batch_get();
 
@@ -809,7 +809,7 @@ function batch_set($batch_definition) {
  * @param array $batch_set
  *   The batch set.
  */
-function _batch_append_set(&$batch, $batch_set) {
+function _batch_append_set(&$batch, $batch_set): void {
   $append_after_index = $batch['current_set'];
   $reached_current_set = FALSE;
   foreach ($batch['sets'] as $index => $set) {
@@ -995,7 +995,7 @@ function &batch_get() {
  * @param string $set_id
  *   The id of the set to process.
  */
-function _batch_populate_queue(&$batch, $set_id) {
+function _batch_populate_queue(&$batch, $set_id): void {
   $batch_set = &$batch['sets'][$set_id];
 
   if (isset($batch_set['operations'])) {

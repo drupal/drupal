@@ -140,7 +140,7 @@ function views_ui_contextual_links_suppress($set = NULL) {
  *
  * @see views_ui_contextual_links_suppress_pop()
  */
-function views_ui_contextual_links_suppress_push() {
+function views_ui_contextual_links_suppress_push(): void {
   views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress()) + 1);
 }
 
@@ -149,6 +149,6 @@ function views_ui_contextual_links_suppress_push() {
  *
  * @see views_ui_contextual_links_suppress_push()
  */
-function views_ui_contextual_links_suppress_pop() {
+function views_ui_contextual_links_suppress_pop(): void {
   views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress()) - 1);
 }

@@ -8,5 +8,5 @@
 /**
  * Here is a fake post-update hook.
  */
-function package_manager_post_update_test() {
+function package_manager_post_update_test(): void {
 }

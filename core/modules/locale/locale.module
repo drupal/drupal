@@ -210,7 +210,7 @@ function locale_get_plural($count, $langcode = NULL) {
 /**
  * Updates default configuration when new modules or themes are installed.
  */
-function locale_system_set_config_langcodes() {
+function locale_system_set_config_langcodes(): void {
   \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes();
 }
 
@@ -224,7 +224,7 @@ function locale_system_set_config_langcodes() {
  *   An array of arrays of component (theme and/or module) names to import
  *   translations for, indexed by type.
  */
-function locale_system_update(array $components) {
+function locale_system_update(array $components): void {
   $components += ['module' => [], 'theme' => []];
   $list = array_merge($components['module'], $components['theme']);
 
@@ -272,7 +272,7 @@ function locale_system_update(array $components) {
  *   An array of arrays of component (theme and/or module) names to import
  *   translations for, indexed by type.
  */
-function locale_system_remove($components) {
+function locale_system_remove($components): void {
   $components += ['module' => [], 'theme' => []];
   $list = array_merge($components['module'], $components['theme']);
   if (locale_translatable_language_list()) {
@@ -377,7 +377,7 @@ function locale_js_translate(array $files = [], $language_interface = NULL) {
  *
  * Set a batch for a newly-added language.
  */
-function locale_form_language_admin_add_form_alter_submit($form, FormStateInterface $form_state) {
+function locale_form_language_admin_add_form_alter_submit($form, FormStateInterface $form_state): void {
   \Drupal::moduleHandler()->loadInclude('locale', 'fetch.inc');
   $options = _locale_translation_default_update_options();
 
@@ -408,7 +408,7 @@ function locale_form_language_admin_add_form_alter_submit($form, FormStateInterf
 /**
  * Form submission handler for language_admin_edit_form().
  */
-function locale_form_language_admin_edit_form_alter_submit($form, FormStateInterface $form_state) {
+function locale_form_language_admin_edit_form_alter_submit($form, FormStateInterface $form_state): void {
   \Drupal::configFactory()->getEditable('locale.settings')->set('translate_english', intval($form_state->getValue('locale_translate_english')))->save();
 }
 
@@ -432,7 +432,7 @@ function locale_is_translatable($langcode) {
  * changes. Without a translations directory local po files in the directory
  * should be ignored. The old translation status is no longer valid.
  */
-function locale_system_file_system_settings_submit(&$form, FormStateInterface $form_state) {
+function locale_system_file_system_settings_submit(&$form, FormStateInterface $form_state): void {
   if ($form['translation_path']['#default_value'] != $form_state->getValue('translation_path')) {
     locale_translation_clear_status();
   }
@@ -525,7 +525,7 @@ function locale_translation_update_file_history($file) {
  * @param array $langcodes
  *   Language code(s) to be deleted from the file history.
  */
-function locale_translation_file_history_delete($projects = [], $langcodes = []) {
+function locale_translation_file_history_delete($projects = [], $langcodes = []): void {
   $query = \Drupal::database()->delete('locale_file');
   if (!empty($projects)) {
     $query->condition('project', $projects, 'IN');
@@ -578,7 +578,7 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL): arr
  * @param object $data
  *   File object also containing timestamp when the translation is last updated.
  */
-function locale_translation_status_save($project, $langcode, $type, $data) {
+function locale_translation_status_save($project, $langcode, $type, $data): void {
   // Load the translation status or build it if not already available.
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
   $status = locale_translation_get_status([$project]);
@@ -629,7 +629,7 @@ function locale_translation_status_save($project, $langcode, $type, $data) {
  * @param array $langcodes
  *   Language code(s) to be deleted from the cache.
  */
-function locale_translation_status_delete_languages($langcodes) {
+function locale_translation_status_delete_languages($langcodes): void {
   if ($status = locale_translation_get_status()) {
     foreach ($status as $project => $languages) {
       foreach ($languages as $langcode => $source) {
@@ -648,14 +648,14 @@ function locale_translation_status_delete_languages($langcodes) {
  * @param array $projects
  *   Project name(s) to be deleted from the cache.
  */
-function locale_translation_status_delete_projects($projects) {
+function locale_translation_status_delete_projects($projects): void {
   \Drupal::keyValue('locale.translation_status')->deleteMultiple($projects);
 }
 
 /**
  * Clear the translation status cache.
  */
-function locale_translation_clear_status() {
+function locale_translation_clear_status(): void {
   \Drupal::keyValue('locale.translation_status')->deleteAll();
   \Drupal::state()->delete('locale.translation_last_checked');
 }
@@ -729,7 +729,7 @@ function locale_string_is_safe($string) {
  *   (optional) List of string identifiers that have been updated / created.
  *   If not provided, all caches for the affected languages are cleared.
  */
-function _locale_refresh_translations($langcodes, $lids = []) {
+function _locale_refresh_translations($langcodes, $lids = []): void {
   if (!empty($langcodes)) {
     // Update javascript translations if any of the strings has a javascript
     // location, or if no string ids were provided, update all languages.
@@ -750,7 +750,7 @@ function _locale_refresh_translations($langcodes, $lids = []) {
  * @param array $lids
  *   List of string identifiers that have been updated / created.
  */
-function _locale_refresh_configuration(array $langcodes, array $lids) {
+function _locale_refresh_configuration(array $langcodes, array $lids): void {
   $locale_config_manager = \Drupal::service('locale.config_manager');
   if ($lids && $langcodes && $names = $locale_config_manager->getStringNames($lids)) {
     $locale_config_manager->updateConfigTranslations($names, $langcodes);
@@ -781,7 +781,7 @@ function _locale_strip_quotes($string) {
  * @throws Exception
  *   If a non-local file is attempted to be parsed.
  */
-function _locale_parse_js_file($filepath) {
+function _locale_parse_js_file($filepath): void {
   // The file path might contain a query string, so make sure we only use the
   // actual file.
   $parsed_url = UrlHelper::parse($filepath);

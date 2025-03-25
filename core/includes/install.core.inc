@@ -104,7 +104,7 @@ const INSTALL_TASK_RUN_IF_NOT_COMPLETED = 3;
  *
  * @see install_state_defaults()
  */
-function install_drupal($class_loader, $settings = [], ?callable $callback = NULL) {
+function install_drupal($class_loader, $settings = [], ?callable $callback = NULL): void {
   global $install_state;
   // Initialize the installation state with the settings that were passed in,
   // as well as a boolean indicating whether or not this is an interactive
@@ -294,7 +294,7 @@ function install_state_defaults(): array {
  *
  * @see install_drupal()
  */
-function install_begin_request($class_loader, &$install_state) {
+function install_begin_request($class_loader, &$install_state): void {
   $request = Request::createFromGlobals();
 
   // Add any installation parameters passed in via the URL.
@@ -1027,7 +1027,7 @@ function install_full_redirect_url($install_state) {
  * @param array $install_state
  *   An array of information about the current installation state.
  */
-function install_display_output($output, $install_state) {
+function install_display_output($output, $install_state): void {
   // Ensure the maintenance theme is initialized.
   // The regular initialization call in install_begin_request() may not be
   // reached in case of an early installer error.
@@ -1102,7 +1102,7 @@ function install_verify_requirements(&$install_state) {
  * @param array $install_state
  *   An array of information about the current installation state.
  */
-function install_base_system(&$install_state) {
+function install_base_system(&$install_state): void {
   // Install system.module.
   drupal_install_system($install_state);
 
@@ -1169,7 +1169,7 @@ function install_verify_database_settings($site_path) {
  *   Thrown when the database already has a table that would be created by
  *   installing the System module.
  */
-function install_verify_database_ready() {
+function install_verify_database_ready(): void {
   $system_schema = system_schema();
   $table = array_key_last($system_schema);
 
@@ -1524,7 +1524,7 @@ function _install_get_version_info($version) {
  *   An array of information about the current installation state. The loaded
  *   profile information will be added here.
  */
-function install_load_profile(&$install_state) {
+function install_load_profile(&$install_state): void {
   $profile = $install_state['parameters']['profile'];
   if ($profile !== FALSE) {
     $install_state['profiles'][$profile]->load();
@@ -1550,7 +1550,7 @@ function install_load_profile(&$install_state) {
 /**
  * Performs a full bootstrap of Drupal during installation.
  */
-function install_bootstrap_full() {
+function install_bootstrap_full(): void {
   // Store the session on the request object and start it.
   /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
   $session = \Drupal::service('session');
@@ -1640,7 +1640,7 @@ function install_profile_modules(&$install_state) {
 /**
  * Installs entity type definitions provided by core.
  */
-function install_core_entity_type_definitions() {
+function install_core_entity_type_definitions(): void {
   $update_manager = \Drupal::entityDefinitionUpdateManager();
   foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type) {
     if ($entity_type->getProvider() == 'core') {
@@ -1659,7 +1659,7 @@ function install_core_entity_type_definitions() {
  * @param array $install_state
  *   An array of information about the current installation state.
  */
-function install_profile_themes(&$install_state) {
+function install_profile_themes(&$install_state): void {
   // Install the themes specified by the installation profile.
   $themes = $install_state['profile_info']['themes'];
   \Drupal::service('theme_installer')->install($themes);
@@ -1675,7 +1675,7 @@ function install_profile_themes(&$install_state) {
  * @param array $install_state
  *   An array of information about the current installation state.
  */
-function install_install_profile(&$install_state) {
+function install_install_profile(&$install_state): void {
   // Install all available optional config. During installation the module order
   // is determined by dependencies. If there are no dependencies between modules
   // then the order in which they are installed is dependent on random factors
@@ -1810,7 +1810,7 @@ function install_import_translations(&$install_state) {
  * @param string $server_pattern
  *   Server access pattern (to replace language code, version number, etc. in).
  */
-function _install_prepare_import($langcodes, $server_pattern) {
+function _install_prepare_import($langcodes, $server_pattern): void {
   $module_handler = \Drupal::moduleHandler();
   $module_handler->loadInclude('locale', 'inc', 'locale.bulk');
   $matches = [];
@@ -1898,7 +1898,7 @@ function install_finish_translations(&$install_state): array {
  * @param array $install_state
  *   An array of information about the current installation state.
  */
-function install_finished(&$install_state) {
+function install_finished(&$install_state): void {
   $profile = $install_state['parameters']['profile'];
 
   // Installation profiles are always loaded last.
@@ -1931,7 +1931,7 @@ function install_finished(&$install_state) {
  *
  * Performs batch installation of modules.
  */
-function _install_module_batch(array $modules, array $module_names, array &$context) {
+function _install_module_batch(array $modules, array $module_names, array &$context): void {
   \Drupal::service('module_installer')->install($modules, FALSE);
   $context['results'] = array_merge($context['results'], $modules);
   $context['message'] = \Drupal::translation()->formatPlural(count($module_names), 'Installed %module module.', 'Installed %module modules.', ['%module' => implode(', ', $module_names)]);
@@ -2456,7 +2456,7 @@ function install_config_download_translations(&$install_state) {
  * This step ensures that the final configuration matches the configuration
  * provided to the installer.
  */
-function install_config_revert_install_changes() {
+function install_config_revert_install_changes(): void {
   global $install_state;
 
   $storage_comparer = new StorageComparer(\Drupal::service('config.storage.sync'), \Drupal::service('config.storage'));
@@ -2563,7 +2563,7 @@ function _install_config_locale_overrides() {
  * @param array $context
  *   The batch context.
  */
-function _install_config_locale_overrides_process_batch(array $names, array $langcodes, &$context) {
+function _install_config_locale_overrides_process_batch(array $names, array $langcodes, &$context): void {
   // Get the services we need.
   $language_manager = \Drupal::languageManager();
   /** @var \Drupal\locale\LocaleConfigManager $locale_config_manager */

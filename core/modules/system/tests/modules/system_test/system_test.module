@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Dummy shutdown function which registers another shutdown function.
  */
-function _system_test_first_shutdown_function($arg1, $arg2) {
+function _system_test_first_shutdown_function($arg1, $arg2): void {
   // Set something to ensure that this function got called.
   \Drupal::state()->set('_system_test_first_shutdown_function', [$arg1, $arg2]);
   drupal_register_shutdown_function('_system_test_second_shutdown_function', $arg1, $arg2);
@@ -19,7 +19,7 @@ function _system_test_first_shutdown_function($arg1, $arg2) {
 /**
  * Dummy shutdown function.
  */
-function _system_test_second_shutdown_function($arg1, $arg2) {
+function _system_test_second_shutdown_function($arg1, $arg2): void {
   // Set something to ensure that this function got called.
   \Drupal::state()->set('_system_test_second_shutdown_function', [$arg1, $arg2]);
 

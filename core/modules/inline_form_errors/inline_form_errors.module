@@ -35,7 +35,7 @@ function inline_form_errors_preprocess_datetime_wrapper(&$variables): void {
 /**
  * Populates form errors in the template.
  */
-function _inline_form_errors_set_errors(&$variables) {
+function _inline_form_errors_set_errors(&$variables): void {
   $element = $variables['element'];
   if (!empty($element['#errors']) && empty($element['#error_no_message'])) {
     $variables['errors'] = $element['#errors'];

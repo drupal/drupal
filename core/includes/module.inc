@@ -15,7 +15,7 @@
  * @param int $weight
  *   An integer representing the weight of the module.
  */
-function module_set_weight($module, $weight) {
+function module_set_weight($module, $weight): void {
   $extension_config = \Drupal::configFactory()->getEditable('core.extension');
   if ($extension_config->get("module.$module") !== NULL) {
     // Pre-cast the $weight to an integer so that we can save this without using

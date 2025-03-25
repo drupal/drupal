@@ -82,7 +82,7 @@ function history_read_multiple($nids): array {
  *   (optional) The user account to update the history for. Defaults to the
  *   current user.
  */
-function history_write($nid, $account = NULL) {
+function history_write($nid, $account = NULL): void {
 
   if (!isset($account)) {
     $account = \Drupal::currentUser();

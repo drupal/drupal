@@ -85,7 +85,7 @@ function locale_translation_get_projects(array $project_names = []) {
 /**
  * Clears the projects cache.
  */
-function locale_translation_clear_cache_projects() {
+function locale_translation_clear_cache_projects(): void {
   drupal_static_reset('locale_translation_get_projects');
 }
 
@@ -327,7 +327,7 @@ function locale_translation_build_server_pattern($project, $template) {
 /**
  * Populate a queue with project to check for translation updates.
  */
-function locale_cron_fill_queue() {
+function locale_cron_fill_queue(): void {
   $updates = [];
   $config = \Drupal::config('locale.settings');
 

@@ -24,7 +24,7 @@ use Drupal\update\ProjectCoreCompatibility;
  *   \Drupal\update\UpdateManager::getProjects().
  */
 #[StopProceduralHookScan]
-function update_process_project_info(&$projects) {
+function update_process_project_info(&$projects): void {
   foreach ($projects as $key => $project) {
     // Assume an official release until we see otherwise.
     $install_type = 'official';
@@ -207,7 +207,7 @@ function update_calculate_project_data($available) {
  * @param array $available
  *   Data about available project releases of a specific project.
  */
-function update_calculate_project_update_status(&$project_data, $available) {
+function update_calculate_project_update_status(&$project_data, $available): void {
   foreach (['title', 'link'] as $attribute) {
     if (!isset($project_data[$attribute]) && isset($available[$attribute])) {
       $project_data[$attribute] = $available[$attribute];
