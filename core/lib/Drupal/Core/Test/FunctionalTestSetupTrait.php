@@ -167,6 +167,17 @@ trait FunctionalTestSetupTrait {
         'tags' => [['name' => 'event_subscriber']],
       ];
     }
+    // Register test middleware.
+    $services['services']['testing.http_client.middleware'] = [
+      'class' => 'Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware',
+      'tags' => [['name' => 'http_client_middleware']],
+    ];
+    $services['services']['testing.http_middleware.wait_terminate_middleware'] = [
+      'class' => 'Drupal\Core\Test\StackMiddleware\TestWaitTerminateMiddleware',
+      'arguments' => ['@lock', '%drupal.test_wait_terminate%'],
+      'tags' => [['name' => 'http_middleware', 'priority' => -1024]],
+    ];
+    $services['parameters']['drupal.test_wait_terminate'] = FALSE;
     file_put_contents($directory . '/services.yml', $yaml->dump($services));
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap again. Hence, we have to reload the newly written custom

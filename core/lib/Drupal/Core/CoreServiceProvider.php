@@ -34,7 +34,6 @@ use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -56,8 +55,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
-    $this->registerTest($container);
-
     // Only register the private file stream wrapper if a file path has been
     // set.
     if (Settings::get('file_private_path')) {
@@ -160,34 +157,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     elseif (function_exists('com_create_guid')) {
       $uuid_service->setClass('Drupal\Component\Uuid\Com');
     }
-  }
-
-  /**
-   * Registers services and event subscribers for a site under test.
-   *
-   * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
-   *   The container builder.
-   */
-  protected function registerTest(ContainerBuilder $container) {
-    // Do nothing if we are not in a test environment.
-    if (!drupal_valid_test_ua()) {
-      return;
-    }
-    // The test middleware is not required for kernel tests as there is no child
-    // site. DRUPAL_TEST_IN_CHILD_SITE is not defined in this case.
-    if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
-      return;
-    }
-    // Add the HTTP request middleware to Guzzle.
-    $container
-      ->register('test.http_client.middleware', 'Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware')
-      ->addTag('http_client_middleware');
-    // Add the wait terminate middleware which acquires a lock to signal request
-    // termination to the test runner.
-    $container
-      ->register('test.http_middleware.wait_terminate_middleware', 'Drupal\Core\Test\StackMiddleware\TestWaitTerminateMiddleware')
-      ->setArguments([new Reference('state'), new Reference('lock')])
-      ->addTag('http_middleware', ['priority' => -1024]);
   }
 
 }
