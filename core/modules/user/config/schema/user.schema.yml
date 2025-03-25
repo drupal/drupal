@@ -154,10 +154,14 @@ user.role.*:
 action.configuration.user_add_role_action:
   type: mapping
   label: 'Configuration for the add role action'
+  constraints:
+    FullyValidatable: ~
   mapping:
     rid:
       type: string
       label: 'The ID of the role to add'
+      constraints:
+        RoleExists: ~
 
 action.configuration.user_block_user_action:
   type: action_configuration_default
@@ -170,10 +174,14 @@ action.configuration.user_cancel_user_action:
 action.configuration.user_remove_role_action:
   type: mapping
   label: 'Configuration for the remove role action'
+  constraints:
+    FullyValidatable: ~
   mapping:
     rid:
       type: string
       label: 'The ID of the role to remove'
+      constraints:
+        RoleExists: ~
 
 action.configuration.user_unblock_user_action:
   type: action_configuration_default
