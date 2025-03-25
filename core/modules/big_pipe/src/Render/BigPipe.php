@@ -11,6 +11,7 @@ use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -188,6 +189,7 @@ class BigPipe {
     protected MessengerInterface $messenger,
     protected RequestContext $requestContext,
     protected LoggerInterface $logger,
+    protected bool $debugCacheabilityHeaders = FALSE,
   ) {
   }
 
@@ -487,6 +489,9 @@ class BigPipe {
 
     // Create a Fiber for each placeholder.
     $fibers = [];
+
+    $cacheable_metadata = new CacheableMetadata();
+
     foreach ($placeholder_order as $placeholder_id) {
       if (!isset($placeholders[$placeholder_id])) {
         continue;
@@ -520,6 +525,11 @@ class BigPipe {
           }
           $elements = $fiber->getReturn();
           unset($fibers[$placeholder_id]);
+
+          if ($this->debugCacheabilityHeaders) {
+            $cacheable_metadata->addCacheableDependency(CacheableMetadata::createFromRenderArray($elements));
+          }
+
           // Create a new AjaxResponse.
           $ajax_response = new AjaxResponse();
           // JavaScript's querySelector automatically decodes HTML entities in
@@ -626,6 +636,11 @@ EOF;
         }
       }
       $iterations++;
+    }
+
+    if ($this->debugCacheabilityHeaders) {
+      $this->sendChunk("\n<!-- big_pipe cache tags: " . implode(' ', $cacheable_metadata->getCacheTags()) . " -->\n");
+      $this->sendChunk("\n<!-- big_pipe cache contexts: " . implode(' ', $cacheable_metadata->getCacheContexts()) . " -->\n");
     }
 
     // Send the stop signal.
