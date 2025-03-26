@@ -135,7 +135,7 @@ class DrupalDateTime extends DateTimePlus {
       // Paired backslashes are isolated to prevent errors in
       // read-ahead evaluation. The read-ahead expression ensures that
       // A matches, but not \A.
-      $format = preg_replace(['/\\\\\\\\/', '/(?<!\\\\)([AaeDlMTF])/'], ["\xEF\\\\\\\\\xFF", "\xEF\\\\\$1\$1\xFF"], $format);
+      $format = preg_replace(['/\\\\\\\\/', '/(?<!\\\\)([SAaeDlMTF])/'], ["\xEF\\\\\\\\\xFF", "\xEF\\\\\$1\$1\xFF"], $format);
 
       // Call date_format().
       $format = parent::format($format, $settings);
@@ -151,6 +151,12 @@ class DrupalDateTime extends DateTimePlus {
             if ($code == 'F') {
               $options['context'] = 'Long month name';
             }
+            if ($code == 'M') {
+              $options['context'] = 'Abbreviated month name';
+            }
+            if ($code == 'S') {
+              $options['context'] = 'Day ordinal suffix';
+            }
 
             if ($code == '') {
               $this->formatTranslationCache[$langcode][$code][$string] = $string;
@@ -164,7 +170,7 @@ class DrupalDateTime extends DateTimePlus {
         };
 
         // Translate the marked sequences.
-        $value = preg_replace_callback('/\xEF([AaeDlMTF]?)(.*?)\xFF/', $translation_callback, $format);
+        $value = preg_replace_callback('/\xEF([SAaeDlMTF]?)(.*?)\xFF/', $translation_callback, $format);
       }
     }
     catch (\Exception $e) {

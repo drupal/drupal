@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 // cspell:ignore chien chiens deutsch januari lundi montag moutons műveletek
-// cspell:ignore svibanj räme
+// cspell:ignore svibanj svib räme
 
 /**
  * Tests the import of locale files.
@@ -270,7 +270,14 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     // We cast the return value of t() to string so as to retrieve the
     // translated value, rendered as a string.
     $this->assertSame('Svibanj', (string) $this->t('May', [], ['langcode' => 'hr', 'context' => 'Long month name']), 'Long month name context is working.');
+    $this->assertSame('Svib.', (string) $this->t('May', [], ['langcode' => 'hr', 'context' => 'Abbreviated month name']), 'Abbreviated month name context is working.');
     $this->assertSame('Svi.', (string) $this->t('May', [], ['langcode' => 'hr']), 'Default context is working.');
+    $this->assertSame('sv', (string) $this->t('st', [], ['langcode' => 'hr']), 'Default context for "saint" is working.');
+    $this->assertSame('.', (string) $this->t('st', [], ['langcode' => 'hr', 'context' => 'Day ordinal suffix']), 'Day ordinal suffix context is working.');
+
+    // Ensure that the date formatter applies the right translation context.
+    $formatted_date = $this->container->get('date.formatter')->format(483820620, 'custom', 'jS F Y', 'America/New_York', 'hr');
+    $this->assertEquals('1. Svibanj 1985', $formatted_date, 'Got the right formatted date using the date format translation pattern.');
   }
 
   /**
@@ -596,8 +603,19 @@ msgctxt "Long month name"
 msgid "May"
 msgstr "Svibanj"
 
+msgctxt "Abbreviated month name"
+msgid "May"
+msgstr "Svib."
+
 msgid "May"
 msgstr "Svi."
+
+msgctxt "Day ordinal suffix"
+msgid "st"
+msgstr "."
+
+msgid "st"
+msgstr "sv"
 EOF;
   }
 
