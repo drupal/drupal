@@ -1113,11 +1113,6 @@ function claro_preprocess_field_multiple_value_form(&$variables): void {
         }
       }
     }
-
-    // Make add-more button smaller.
-    if (!empty($variables['button'])) {
-      $variables['button']['#attributes']['class'][] = 'button--small';
-    }
   }
 }
 
