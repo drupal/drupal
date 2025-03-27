@@ -152,14 +152,11 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Create comment field in account settings.
     $edit = [
-      'new_storage_type' => 'comment',
-    ];
-    $this->drupalGet('admin/config/people/accounts/fields/add-field');
-    $this->submitForm($edit, 'Continue');
-    $edit = [
       'label' => 'User comment',
       'field_name' => 'user_comment',
     ];
+    $this->drupalGet('admin/config/people/accounts/fields/add-field');
+    $this->clickLink('Comments');
     $this->submitForm($edit, 'Continue');
 
     // Try to save the comment field without selecting a comment type.
@@ -192,7 +189,7 @@ class CommentFieldsTest extends CommentTestBase {
       'settings[per_page]' => 0,
     ];
     $this->drupalGet('admin/config/people/accounts/add-field/user/field_user_comment');
-    $this->submitForm($edit, 'Save settings');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusMessageContains('Saved User comment configuration.', 'status');
   }
 

@@ -173,15 +173,14 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
     // Add an email field.
     $this->drupalGet("admin/structure/types/manage/{$type}/fields/add-field");
-    $this->submitForm([
-      'new_storage_type' => 'email',
-    ], 'Continue');
+    $this->clickLink('Email');
+    $this->submitForm([], 'Continue');
     $this->submitForm([
       'label' => 'Email',
       'field_name' => 'email',
     ], 'Continue');
     $this->submitForm([], 'Update settings');
-    $this->submitForm([], 'Save settings');
+    $this->submitForm([], 'Save');
 
     $type = $this->randomMachineName(16);
     $name = $this->randomString();

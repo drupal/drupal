@@ -2,6 +2,10 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
@@ -296,7 +300,31 @@ class FieldConfigEditForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->t('Save settings');
+    $actions['submit']['#value'] = $this->entity->isNew() ? $this->t('Save') : $this->t('Save settings');
+    $actions['submit']['#ajax'] = [
+      'callback' => '::ajaxSubmit',
+    ];
+    if ($this->entity->isNew()) {
+      $entity_type = $this->entity->getTargetEntityTypeId();
+      $route_parameters = [
+        'field_name' => $this->entity->getName(),
+        'entity_type' => $entity_type,
+      ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($entity_type), $this->entity->getTargetBundle());
+      $actions['back'] = [
+        '#type' => 'link',
+        '#weight' => 1,
+        '#title' => $this->t('Change field type'),
+        '#limit_validation_errors' => [],
+        '#attributes' => [
+          'class' => ['button', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '1100',
+          ]),
+        ],
+        '#url' => Url::fromRoute("field_ui.field_storage_config_reset_add_$entity_type", $route_parameters),
+      ];
+    }
 
     if (!$this->entity->isNew()) {
       $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
@@ -305,18 +333,17 @@ class FieldConfigEditForm extends EntityForm {
       ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
       $url = new Url('entity.field_config.' . $target_entity_type->id() . '_field_delete_form', $route_parameters);
 
-      if ($this->getRequest()->query->has('destination')) {
-        $query = $url->getOption('query');
-        $query['destination'] = $this->getRequest()->query->get('destination');
-        $url->setOption('query', $query);
-      }
       $actions['delete'] = [
         '#type' => 'link',
         '#title' => $this->t('Delete'),
         '#url' => $url,
         '#access' => $this->entity->access('delete'),
         '#attributes' => [
-          'class' => ['button', 'button--danger'],
+          'class' => ['button', 'button--danger', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '1100',
+          ]),
         ],
       ];
     }
@@ -325,10 +352,62 @@ class FieldConfigEditForm extends EntityForm {
   }
 
   /**
+   * Submit form #ajax callback.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response that display validation error messages or represents a
+   *   successful submission.
+   *
+   * @see \Drupal\Core\Ajax\AjaxFormHelperTrait
+   */
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state): AjaxResponse {
+    if ($form_state->hasAnyErrors()) {
+      $form['status_messages'] = [
+        '#type' => 'status_messages',
+        '#weight' => -1000,
+      ];
+      $form['#sorted'] = FALSE;
+      $response = new AjaxResponse();
+      $response->addCommand(new ReplaceCommand('#field-combined', $form));
+    }
+    else {
+      $response = $this->successfulAjaxSubmit($form, $form_state);
+    }
+    return $response;
+  }
+
+  /**
+   * Respond to a successful AJAX submission.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response.
+   */
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
+    $response = new AjaxResponse();
+    $response->addCommand(new RedirectCommand(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle())->toString()));
+
+    return $response;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+    // Additional validation to work when JS is disabled.
+    if (!$form_state->getValue('label')) {
+      $form_state->setErrorByName('label', $this->t('Label field is required.'));
+    }
 
     $field_storage_form = $this->entityTypeManager->getFormObject('field_storage_config', $this->operation);
     $field_storage_form->setEntity($this->entity->getFieldStorageDefinition());

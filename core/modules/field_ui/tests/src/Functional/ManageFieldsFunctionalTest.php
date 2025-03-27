@@ -148,8 +148,8 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   public function testHiddenFields(): void {
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='hidden_test_field']");
-    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='shape']");
+    $this->assertSession()->elementNotExists('xpath', "//a//span[text()='Hidden from UI test field']");
+    $this->assertSession()->elementExists('xpath', "//a//span[text()='Shape']");
 
     // Create a field storage and a field programmatically.
     $field_name = 'hidden_test_field';
@@ -184,26 +184,26 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 
     // Check that non-configurable fields are not available.
     $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
-    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
     foreach ($field_types as $field_type => $definition) {
+      $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
+      $label = (string) $definition['label'];
       if (empty($definition['no_ui'])) {
         try {
-          $this->assertSession()
-            ->elementExists('css', "[name='new_storage_type'][value='$field_type']");
+          $this->assertSession()->elementExists('xpath', "//a//span[text()='$label']");
         }
         catch (ElementNotFoundException) {
           if ($group = $this->getFieldFromGroup($field_type)) {
-            $this->assertSession()
-              ->elementExists('css', "[name='new_storage_type'][value='$group']");
-            $this->submitForm(['new_storage_type' => $group], 'Continue');
-            $this->assertSession()
-              ->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
-            $this->submitForm([], 'Back');
+            if ($group !== 'General') {
+              $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$group']]");
+              $link->click();
+              $this->assertSession()
+                ->elementExists('css', "[name='field_options_wrapper'][value='$field_type']");
+            }
           }
         }
       }
       else {
-        $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='$field_type']");
+        $this->assertSession()->elementNotExists('xpath', "//a//span[text()='$label']");
       }
     }
   }
@@ -216,10 +216,8 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     // create a new field with the same name.
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalGet($url);
-    $edit = [
-      'new_storage_type' => 'boolean',
-    ];
-    $this->submitForm($edit, 'Continue');
+    $this->clickLink('Boolean');
+    $this->submitForm([], 'Continue');
     $edit = [
       'label' => $this->randomMachineName(),
       'field_name' => 'tags',
@@ -232,29 +230,28 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->config('field_ui.settings')->set('field_prefix', '')->save();
 
     $label = 'Disallowed field';
-    $edit1 = [
-      'new_storage_type' => 'test_field',
-    ];
-    $edit2 = [
+    $edit = [
       'label' => $label,
     ];
 
     // Try with an entity key.
-    $edit2['field_name'] = 'title';
+    $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit1, 'Continue');
-    $this->submitForm($edit2, 'Continue');
+    $this->clickLink('Test field');
+    $this->submitForm([], 'Continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
-    $edit2['field_name'] = 'sticky';
+    $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit1, 'Continue');
-    $this->submitForm($edit2, 'Continue');
+    $this->clickLink('Test field');
+    $this->submitForm([], 'Continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
-    $this->assertSession()->addressEquals($url);
+    $this->assertSession()->addressEquals($url . '/test_field/false');
   }
 
   /**
@@ -332,8 +329,8 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 
     // Check that the preconfigured field option exist alongside the regular
     // field type option.
-    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='field_ui:test_field_with_preconfigured_options:custom_options']");
-    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='test_field_with_preconfigured_options']");
+    $this->assertSession()->elementExists('xpath', "//a//span[text()='All custom options']");
+    $this->assertSession()->elementExists('xpath', "//a//span[text()='Test field with preconfigured options']");
 
     // Add a field with every possible preconfigured value.
     $this->fieldUIAddNewField(NULL, 'test_custom_options', 'Test label', 'field_ui:test_field_with_preconfigured_options:custom_options');
@@ -368,16 +365,13 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $field_exceed_max_length_input = $this->randomMachineName(23);
 
     // Try to create the field.
-    $edit1 = [
-      'new_storage_type' => 'test_field',
-    ];
-    $edit2 = [
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
+    $this->clickLink('Test field');
+    $edit = [
       'label' => $field_exceed_max_length_label,
       'field_name' => $field_exceed_max_length_input,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->submitForm($edit1, 'Continue');
-    $this->submitForm($edit2, 'Continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.

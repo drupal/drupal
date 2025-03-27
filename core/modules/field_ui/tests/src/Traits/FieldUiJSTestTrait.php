@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Traits;
 
+use Behat\Mink\Exception\ElementNotFoundException;
+
 /**
  * Provides common functionality for the Field UI tests that depend on JS.
  */
 trait FieldUiJSTestTrait {
+  use FieldUiTestTrait;
 
   /**
    * Creates a new field through the Field UI.
@@ -28,13 +31,16 @@ trait FieldUiJSTestTrait {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function fieldUIAddNewFieldJS(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field', bool $save_settings = TRUE): void {
+    $this->getSession()->resizeWindow(1200, 800);
     $label = $label ?: $field_name;
 
     // Allow the caller to set a NULL path in case they navigated to the right
     // page before calling this method.
     if ($bundle_path !== NULL) {
-      $bundle_path = "$bundle_path/fields/add-field";
+      $bundle_path = "$bundle_path/fields";
       $this->drupalGet($bundle_path);
+      $this->getSession()->getPage()->clickLink('Create a new field');
+      $this->assertSession()->assertWaitOnAjaxRequest();
     }
 
     // First step: 'Add field' page.
@@ -43,16 +49,27 @@ trait FieldUiJSTestTrait {
     $page = $session->getPage();
     $assert_session = $this->assertSession();
 
-    if ($assert_session->waitForElementVisible('css', "[name='new_storage_type'][value='$field_type']")) {
-      $page = $this->getSession()->getPage();
-      $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']")->getParent();
+    try {
+      /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+      $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+      $field_definitions = $field_type_plugin_manager->getUiDefinitions();
+      $field_type_label = (string) $field_definitions[$field_type]['label'];
+      $this->getSession()->getPage()->clickLink($field_type_label);
+      $this->assertSession()->assertWaitOnAjaxRequest();
+
+      if ($this->getSession()->getPage()->hasField('field_options_wrapper')) {
+        $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);
+      }
     }
-    else {
-      $field_card = $this->getFieldFromGroupJS($field_type);
+    // If the element could not be found then it is probably in a group.
+    catch (ElementNotFoundException) {
+      // Call the helper function to confirm it is in a group.
+      $field_group = $this->getFieldFromGroup($field_type);
+      $this->clickLink($field_group);
+      $this->assertSession()->assertWaitOnAjaxRequest();
+      $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);
     }
-    $field_card?->click();
-    $page->findButton('Continue')->click();
-    $field_label = $page->findField('edit-label');
+    $field_label = $page->findField('label');
     $this->assertTrue($field_label->isVisible());
     $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
     $field_label->setValue($label);
@@ -64,12 +81,16 @@ trait FieldUiJSTestTrait {
     $this->assertTrue($field_field_name->isVisible());
     $field_field_name->setValue($field_name);
 
-    $page->findButton('Continue')->click();
+    $this->assertSession()->elementExists('xpath', '//button[text()="Continue"]')->press();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->waitForElementVisible('css', '#drupal-modal');
+
     $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
     if ($save_settings) {
       // Second step: Save field settings.
-      $page->findButton('Save settings')->click();
-      $assert_session->pageTextContains("Saved $label configuration.");
+      $save_button = $page->find('css', '.ui-dialog-buttonpane')->findButton('Save');
+      $save_button->click();
+      $assert_session->assert($assert_session->waitForText("Saved $label configuration."), 'text not found');
 
       // Check that the field appears in the overview form.
       $row = $page->find('css', '#field-' . $field_name);
@@ -113,42 +134,13 @@ trait FieldUiJSTestTrait {
 
     // Second step: 'Field settings' form.
     $this->submitForm($field_edit, 'Save settings');
-    $this->assertSession()->pageTextContains("Saved $label configuration.");
+    $this->assertSession()->assert($this->assertSession()->waitForText("Saved $label configuration."), 'text not found');
 
     // Check that the field appears in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
       ':label' => $label,
     ]);
     $this->assertSession()->elementExists('xpath', $xpath);
-  }
-
-  /**
-   * Helper function that returns the field card element if it is in a group.
-   *
-   * @param string $field_type
-   *   The name of the field type.
-   *
-   * @return \Behat\Mink\Element\NodeElement|false|mixed|null
-   *   Field card element within a group.
-   */
-  public function getFieldFromGroupJS($field_type) {
-    $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
-    $groups = [];
-    foreach ($group_elements as $group_element) {
-      $groups[] = $group_element->getAttribute('value');
-    }
-    $field_card = NULL;
-    foreach ($groups as $group) {
-      $group_field_card = $this->getSession()->getPage()->find('css', "[name='new_storage_type'][value='$group']")->getParent();
-      $group_field_card->click();
-      $this->getSession()->getPage()->pressButton('Continue');
-      $field_card = $this->getSession()->getPage()->find('css', "[name='group_field_options_wrapper'][value='$field_type']");
-      if ($field_card) {
-        break;
-      }
-      $this->getSession()->getPage()->pressButton('Back');
-    }
-    return $field_card->getParent();
   }
 
 }

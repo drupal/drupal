@@ -15,8 +15,7 @@
     attach() {
       once(
         'keyboardNavigation',
-        'input[type="text"], input[type="number"]',
-        document.querySelector('[data-field-list-table]'),
+        '[data-field-list-table] :is(input[type="text"], input[type="number"])',
       ).forEach((element) =>
         element.addEventListener('keypress', (event) => {
           if (event.key !== 'Enter') {

@@ -154,8 +154,8 @@ class MediaHooks {
       ]);
     }
     $field_types = ['file_upload', 'field_ui:entity_reference:media'];
-    if (in_array($form_state->getValue('new_storage_type'), $field_types)) {
-      $form['group_field_options_wrapper']['description_wrapper'] = ['#type' => 'item', '#markup' => $description_text];
+    if (in_array($form_state->getStorage()['field_type'], $field_types)) {
+      $form['field_options_wrapper']['description_wrapper'] = ['#type' => 'item', '#markup' => $description_text];
     }
   }
 

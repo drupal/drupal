@@ -33,6 +33,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'node',
+    'block',
     'field_ui',
     'path',
     'taxonomy',
@@ -65,6 +66,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_actions_block');
 
     // Create a content type, with underscores.
     $type_name = $this->randomMachineName(8) . '_test';
@@ -121,16 +123,18 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
 
     // First step: 'Add new field' on the 'Manage fields' page.
-    $this->drupalGet($bundle_path . '/fields/add-field');
-
+    $this->drupalGet($bundle_path . '/fields');
+    $this->clickLink('Create a new field');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     // Check if the commonly referenced entity types appear in the list.
-    $page->find('css', "[name='new_storage_type'][value='reference']")->getParent()->click();
-    $page->pressButton('Continue');
-    $assert_session->pageTextContains('Choose an option below');
-    $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:node']");
-    $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:user']");
+    $this->clickLink('Reference');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->waitForText('Choose a field type'));
+    $this->assertSession()->elementExists('css', "[name='field_options_wrapper'][value='field_ui:entity_reference:node']");
+    $this->assertSession()->elementExists('css', "[name='field_options_wrapper'][value='field_ui:entity_reference:user']");
 
-    $page->pressButton('Back');
+    $this->assertSession()->buttonExists('Change field type')->press();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->fieldUIAddNewFieldJS(NULL, 'test', 'Test', 'entity_reference', FALSE);
 
     // Node should be selected by default.
@@ -254,7 +258,13 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Third step: confirm.
     $page->findField('settings[handler_settings][target_bundles][' . $this->targetType . ']')->setValue($this->targetType);
     $assert_session->assertWaitOnAjaxRequest();
-    $this->submitForm(['required' => '1'], 'Save settings');
+    // @todo remove after https://www.drupal.org/i/3395590 has been fixed.
+    $this->getSession()->resizeWindow(1200, 1500);
+    usleep(5000);
+
+    $page->find('css', '.ui-dialog-buttonset')->pressButton('Save');
+
+    $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Check that the field appears in the overview form.
     $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', "Test");
@@ -262,13 +272,19 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Check that the field settings form can be submitted again, even when the
     // field is required.
     // The first 'Edit' link is for the Body field.
+    $this->drupalGet($bundle_path . '/fields');
     $this->clickLink('Edit', 1);
-    $this->submitForm([], 'Save settings');
+
+    $assert_session->assertExpectedAjaxRequest(1);
+    $this->assertNotNull($button_set = $assert_session->waitForElement('css', '.ui-dialog-buttonset'));
+    $button_set->pressButton('Save settings');
+    $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Switch the target type to 'taxonomy_term' and check that the settings
     // specific to its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
+    $this->assertTrue($assert_session->waitForText('These settings apply to the Test field everywhere it is used.'));
     $page->findField('field_storage[subform][settings][target_type]')->setValue('taxonomy_term');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldExists('settings[handler_settings][auto_create]');
@@ -310,7 +326,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
 
     $this->submitForm([], 'Save settings');
     // If no eligible view is available we should see a message.
-    $assert_session->pageTextContains('The views entity selection mode requires a view.');
+    $this->assertTrue($assert_session->waitForText('The views entity selection mode requires a view.'));
 
     // Enable the entity_reference_test module which creates an eligible view.
     $this->container->get('module_installer')
@@ -322,21 +338,20 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       ->waitForField('settings[handler_settings][view][view_and_display]')
       ->setValue('test_entity_reference:entity_reference_1');
     $this->submitForm([], 'Save settings');
-    $assert_session->pageTextContains('Saved Test configuration.');
+    $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
 
     // Switch the target type to 'entity_test'.
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $page->findField('field_storage[subform][settings][target_type]')->setValue('entity_test');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $page->findField('settings[handler]')->setValue('views');
+    $assert_session->waitForField('settings[handler_settings][view][view_and_display]');
     $page
       ->findField('settings[handler_settings][view][view_and_display]')
       ->selectOption('test_entity_reference_entity_test:entity_reference_1');
-    $edit = [
-      'required' => FALSE,
-    ];
-    $this->submitForm($edit, 'Save settings');
-    $assert_session->pageTextContains('Saved Test configuration.');
+    $this->assertSession()->fieldExists('required')->check();
+    $this->submitForm([], 'Save settings');
+    $this->assertTrue($assert_session->waitForText('Saved Test configuration.'));
   }
 
   /**

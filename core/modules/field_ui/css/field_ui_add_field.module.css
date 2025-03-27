@@ -9,7 +9,7 @@
  * @file field_ui_add_field.module.css
  */
 
-.field-ui-field-storage-add-form {
+.add-field-container {
   --thumb-size: 4.5rem;
   --color-focus: #26a769;
   --color-gray: #232429;
@@ -47,21 +47,27 @@
   }
 }
 
-@media (min-width: 87.5rem) {
-  .add-field-container {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 .field-option {
   display: grid;
   grid-template-columns: var(--thumb-size) auto;
   align-items: center;
   padding: 0.25rem;
   padding-inline-end: 0.75rem;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: unset;
   border: 1px solid #dedfe4;
   gap: 0.75rem;
   border-radius: 0.25rem;
+}
+
+.field-option:hover {
+  color: unset;
+}
+
+.group-field-options {
+  display: table;
+  min-width: 100%;
 }
 
 .field-option__item {
@@ -104,6 +110,10 @@
 
 .subfield-option .item-list ul {
   margin-inline: 0;
+}
+
+.subfield-option .item-list {
+  padding-left: 1.4rem;
 }
 
 .field-option,
