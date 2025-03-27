@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Controller;
 
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Utility\CallableResolver;
@@ -366,8 +365,6 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->assertEquals('.js-view-dom-id-' . $dom_id, $commands[0]['selector']);
 
     $this->assertViewResultCommand($response, 1);
-
-    $this->assertInstanceOf(CacheableMetadata::class, $response->getCacheableMetadata());
   }
 
   /**
