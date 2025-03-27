@@ -8,6 +8,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\WaitTerminateTestTrait;
 
 /**
  * General functional test class.
@@ -17,6 +18,8 @@ use Drupal\node\Entity\Node;
  * @internal
  */
 class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
+
+  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -517,6 +520,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertCount(0, $collection_output['data']);
 
     // Request in maintenance mode returns valid JSON.
+    $this->setWaitForTerminate();
     $this->container->get('state')->set('system.maintenance_mode', TRUE);
     $response = $this->drupalGet('/jsonapi/taxonomy_term/tags');
     $this->assertSession()->statusCodeEquals(503);
