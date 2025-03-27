@@ -513,6 +513,7 @@ tablesorts
 tabset
 tabwidth
 tbachert
+tenderwolf
 testbot
 testlogger
 textareas
