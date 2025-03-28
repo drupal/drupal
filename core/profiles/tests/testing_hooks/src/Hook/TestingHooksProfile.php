@@ -12,7 +12,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 class TestingHooksProfile {
 
   /**
-   * Implements hook_module_preinstall().
+   * Implements hook_cache_flush().
    */
   #[Hook('cache_flush')]
   public function flush(): void {
