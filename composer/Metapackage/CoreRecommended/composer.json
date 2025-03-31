@@ -8,7 +8,7 @@
     },
     "require": {
         "drupal/core": "11.x-dev",
-        "asm89/stack-cors": "~v2.2.0",
+        "asm89/stack-cors": "~v2.3.0",
         "composer/semver": "~3.4.3",
         "doctrine/annotations": "~2.0.2",
         "doctrine/deprecations": "~1.1.3",
