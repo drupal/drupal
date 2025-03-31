@@ -1,0 +1,4 @@
+name: 'Testing - No Version'
+type: profile
+description: 'A profile with no version key in its info.yml file.'
+hidden: true

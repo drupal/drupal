@@ -182,6 +182,10 @@ class StatusTest extends BrowserTestBase {
     $session->pageTextNotContains('Deprecated themes found: Test deprecated theme.');
     $this->assertSession()->elementNotExists('xpath', "//a[contains(@href, 'http://example.com/deprecated_theme')]");
 
+    // Check that the installation profile information is displayed.
+    $this->drupalGet('admin/reports/status');
+    $this->assertSession()->pageTextContains('Testing (testing-' . \Drupal::VERSION . ')');
+
     // Check if pg_trgm extension is enabled on postgres.
     if (\Drupal::database()->databaseType() == 'pgsql') {
       $this->assertSession()->pageTextContains('PostgreSQL pg_trgm extension');
