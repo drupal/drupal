@@ -276,7 +276,14 @@ class Renderer implements RendererInterface {
 
     // Try to fetch the prerendered element from cache, replace any placeholders
     // and return the final markup.
-    if (isset($elements['#cache']['keys'])) {
+    //
+    // If the element was set to create a placeholder, we do not try to load it
+    // from the cache, as \Drupal\Core\Render\Placeholder\CachedStrategy has an
+    // optimization to load them all in one go, rather than individually here.
+    // If the current request method is not cacheable, no placeholders are
+    // generated, in that case, it's still better to fetch render cached
+    // elements individually instead of fully building them again.
+    if (isset($elements['#cache']['keys']) && (empty($elements['#create_placeholder']) || !$this->requestStack->getCurrentRequest()->isMethodCacheable())) {
       $cached_element = $this->renderCache->get($elements);
       if ($cached_element !== FALSE) {
         $elements = $cached_element;
