@@ -105,8 +105,7 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
    */
   public function sortSearchPages($search_pages) {
     $entity_type = $this->storage->getEntityType();
-    // Sort the entities using the entity class's sortEntities() method.
-    $entity_type->getClass()::sortEntities($search_pages);
+    uasort($search_pages, [$entity_type->getClass(), 'sort']);
     return $search_pages;
   }
 

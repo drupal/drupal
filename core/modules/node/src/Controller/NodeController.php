@@ -79,8 +79,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $content = [];
 
     $types = $this->entityTypeManager()->getStorage('node_type')->loadMultiple();
-    // Sort the entities using the entity class's sortEntities() method.
-    $definition->getClass()::sortEntities($types);
+    uasort($types, [$definition->getClass(), 'sort']);
     // Only use node types the user has access to.
     foreach ($types as $type) {
       $access = $this->entityTypeManager()->getAccessControlHandler('node')->createAccess($type->id(), NULL, [], TRUE);

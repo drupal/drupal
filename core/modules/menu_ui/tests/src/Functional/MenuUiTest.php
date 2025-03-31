@@ -193,8 +193,7 @@ class MenuUiTest extends BrowserTestBase {
       $menu_entities[] = $menu_entity;
       $menu_entity->save();
     }
-    // Sort the entities using the entity class's sortEntities() method.
-    Menu::sortEntities($menu_entities);
+    uasort($menu_entities, [Menu::class, 'sort']);
     $menu_entities = array_values($menu_entities);
     $this->drupalGet('/admin/structure/menu');
     $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
@@ -218,8 +217,7 @@ class MenuUiTest extends BrowserTestBase {
     // natural-sort on the ones that are on page 1.
     sort($menu_entities);
     $menu_entities_page_one = array_slice($menu_entities, 50, 64, TRUE);
-    // Sort the entities using the entity class's sortEntities() method.
-    Menu::sortEntities($menu_entities_page_one);
+    uasort($menu_entities_page_one, [Menu::class, 'sort']);
     $menu_entities_page_one = array_values($menu_entities_page_one);
 
     $this->drupalGet('/admin/structure/menu', [

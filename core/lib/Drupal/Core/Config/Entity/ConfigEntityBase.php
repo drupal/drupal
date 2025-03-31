@@ -233,39 +233,9 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   }
 
   /**
-   * Sorts entities using collator.
-   */
-  public static function sortEntities(array &$entities): bool {
-    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
-    return uasort($entities, function ($a, $b) use ($collator) {
-      return static::compare($a, $b, $collator);
-    });
-  }
-
-  /**
-   * Callback for uasort() to compare configuration entities.
-   */
-  public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator): int {
-    $a_weight = $a->weight ?? 0;
-    $b_weight = $b->weight ?? 0;
-    if ($a_weight == $b_weight) {
-      $a_label = $a->label() ?? '';
-      $b_label = $b->label() ?? '';
-      return $collator->compare($a_label, $b_label);
-    }
-    return $a_weight <=> $b_weight;
-  }
-
-  /**
    * Callback for uasort() to sort configuration entities by weight and label.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * \Drupal\Core\Config\Entity\ConfigEntityBase::sortEntities() instead.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2265487
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
-    @trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::sortEntities() instead. See https://www.drupal.org/project/drupal/issues/2265487', E_USER_DEPRECATED);
     $a_weight = $a->weight ?? 0;
     $b_weight = $b->weight ?? 0;
     if ($a_weight == $b_weight) {

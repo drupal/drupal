@@ -101,25 +101,11 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   protected array $array_property = [];
 
   /**
-   * Helper callback for uasort() to sort configuration entities.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * \Drupal\Core\Config\Entity\ConfigEntityBase::sortEntities() instead.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2265487
-   */
-  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
-    @trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::sortEntities() instead. See https://www.drupal.org/project/drupal/issues/2265487', E_USER_DEPRECATED);
-    \Drupal::state()->set('config_entity_sort', TRUE);
-    return parent::sort($a, $b);
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public static function sortEntities(array &$entities): bool {
-    \Drupal::state()->set('config_entity_sortEntities', TRUE);
-    return parent::sortEntities($entities);
+  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
+    \Drupal::state()->set('config_entity_sort', TRUE);
+    return parent::sort($a, $b);
   }
 
   /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Datetime;
 
-use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
@@ -16,17 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * @group Datetime
  */
 class DrupalDateTimeTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $container = new ContainerBuilder();
-    $container->set('Drupal\Component\DependencyInjection\ReverseContainer', new ReverseContainer($container));
-    \Drupal::setContainer($container);
-  }
 
   /**
    * Tests date diffs.

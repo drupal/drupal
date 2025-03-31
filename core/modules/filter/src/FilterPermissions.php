@@ -2,7 +2,6 @@
 
 namespace Drupal\filter;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -51,8 +50,7 @@ class FilterPermissions implements ContainerInjectionInterface {
     // any of them are potentially unsafe.
     /** @var \Drupal\filter\FilterFormatInterface[] $formats */
     $formats = $this->entityTypeManager->getStorage('filter_format')->loadByProperties(['status' => TRUE]);
-    // Sort the entities using the entity class's sortEntities() method.
-    ConfigEntityBase::sortEntities($formats);
+    uasort($formats, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
     foreach ($formats as $format) {
       if ($permission = $format->getPermissionName()) {
         $permissions[$permission] = [

@@ -130,8 +130,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
 
     $responsive_image_options = [];
     $responsive_image_styles = $this->responsiveImageStyleStorage->loadMultiple();
-    // Sort the entities using the entity class's sortEntities() method.
-    ResponsiveImageStyle::sortEntities($responsive_image_styles);
+    uasort($responsive_image_styles, '\Drupal\responsive_image\Entity\ResponsiveImageStyle::sort');
     if ($responsive_image_styles && !empty($responsive_image_styles)) {
       foreach ($responsive_image_styles as $machine_name => $responsive_image_style) {
         if ($responsive_image_style->hasImageStyleMappings()) {

@@ -123,9 +123,8 @@ final class NavigationContentLinks implements ContainerInjectionInterface {
     // Sort all types within an entity type alphabetically.
     $definition = $this->entityTypeManager->getDefinition($entity_type);
     $types = $this->entityTypeManager->getStorage($entity_type)->loadMultiple();
-    if (method_exists($definition->getClass(), 'sortEntities')) {
-      // Sort the entities using the entity class's sortEntities() method.
-      $definition->getClass()::sortEntities($types);
+    if (method_exists($definition->getClass(), 'sort')) {
+      uasort($types, [$definition->getClass(), 'sort']);
     }
 
     $add_content_links = [];

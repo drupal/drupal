@@ -85,8 +85,7 @@ class BlockContentController extends ControllerBase {
         $types[$type->id()] = $type;
       }
     }
-    // Sort the entities using the entity class's sortEntities() method.
-    $this->blockContentTypeStorage->getEntityType()->getClass()::sortEntities($types);
+    uasort($types, [$this->blockContentTypeStorage->getEntityType()->getClass(), 'sort']);
     if ($types && count($types) == 1) {
       $type = reset($types);
       return $this->addForm($type, $request);

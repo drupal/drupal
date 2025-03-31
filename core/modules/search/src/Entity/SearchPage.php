@@ -214,24 +214,9 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
   }
 
   /**
-   * Helper callback for uasort() to compare configuration entities by weight and label.
-   */
-  public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator): int {
-    /** @var \Drupal\search\SearchPageInterface $a */
-    /** @var \Drupal\search\SearchPageInterface $b */
-    $a_status = (int) $a->status();
-    $b_status = (int) $b->status();
-    if ($a_status != $b_status) {
-      return $b_status <=> $a_status;
-    }
-    return parent::compare($a, $b, $collator);
-  }
-
-  /**
    * Helper callback for uasort() to sort search page entities by status, weight and label.
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
-    @trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::sortEntities() instead. See https://www.drupal.org/project/drupal/issues/2265487', E_USER_DEPRECATED);
     /** @var \Drupal\search\SearchPageInterface $a */
     /** @var \Drupal\search\SearchPageInterface $b */
     $a_status = (int) $a->status();

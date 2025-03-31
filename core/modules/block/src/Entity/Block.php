@@ -219,35 +219,9 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   }
 
   /**
-   * Helper callback for uasort() to compare configuration entities by weight and label.
-   */
-  public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator): int {
-    // Separate enabled from disabled.
-    $status = (int) $b->status() - (int) $a->status();
-    if ($status !== 0) {
-      return $status;
-    }
-
-    // Sort by weight.
-    $weight = $a->getWeight() - $b->getWeight();
-    if ($weight) {
-      return $weight;
-    }
-
-    // Sort by label.
-    return $collator->compare($a->label(), $b->label());
-  }
-
-  /**
-   * Helper callback for uasort() to sort configuration entities.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * \Drupal\Core\Config\Entity\ConfigEntityBase::sortEntities() instead.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2265487
+   * Sorts active blocks by weight; sorts inactive blocks by name.
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
-    @trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::sortEntities() instead. See https://www.drupal.org/project/drupal/issues/2265487', E_USER_DEPRECATED);
     // Separate enabled from disabled.
     $status = (int) $b->status() - (int) $a->status();
     if ($status !== 0) {
