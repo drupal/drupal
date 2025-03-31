@@ -43,17 +43,13 @@ class JSWebAssertTest extends WebDriverTestBase {
     $assert_session->assertNoElementAfterWait('css', '[data-drupal-selector="edit-test-assert-no-element-after-wait-pass"]', 1000);
 
     $assert_session->elementExists('css', '[data-drupal-selector="edit-test-assert-no-element-after-wait-fail"]');
+    Timer::start('js_test');
     $page->findButton('Test assertNoElementAfterWait: fail')->press();
+    $press_time = Timer::read('js_test');
     try {
-      Timer::start('JSWebAssertTest');
       $assert_session->assertNoElementAfterWait('css', '[data-drupal-selector="edit-test-assert-no-element-after-wait-fail"]', 500, 'Element exists on page after too short wait.');
-      // This test is fragile if webdriver responses are very slow for some
-      // reason. If they are, do not fail the test.
-      // @todo https://www.drupal.org/project/drupal/issues/3316317 remove this
-      //   workaround.
-      if (Timer::read('JSWebAssertTest') < 1000) {
-        $this->fail("Element not exists on page after too short wait.");
-      }
+      $wait_time = Timer::read('js_test');
+      $this->fail("Element not exists on page after too short wait. Press time: $press_time ms. Press + Wait time: $wait_time ms. Timestamp: " . microtime(TRUE));
     }
     catch (ElementHtmlException $e) {
       $this->assertSame('Element exists on page after too short wait.', $e->getMessage());
