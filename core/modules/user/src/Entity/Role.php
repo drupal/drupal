@@ -175,9 +175,8 @@ class Role extends ConfigEntityBase implements RoleInterface {
    */
   public static function postLoad(EntityStorageInterface $storage, array &$entities) {
     parent::postLoad($storage, $entities);
-    // Sort the queried roles by their weight.
-    // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
-    uasort($entities, [static::class, 'sort']);
+    // Sort the entities using the entity class's sortEntities() method.
+    static::class::sortEntities($entities);
   }
 
   /**

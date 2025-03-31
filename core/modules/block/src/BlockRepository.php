@@ -2,6 +2,7 @@
 
 namespace Drupal\block;
 
+use Drupal\block\Entity\Block;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
@@ -78,7 +79,8 @@ class BlockRepository implements BlockRepositoryInterface {
     // Merge it with the actual values to maintain the region ordering.
     $assignments = array_intersect_key(array_merge($empty, $full), $empty);
     foreach ($assignments as &$assignment) {
-      uasort($assignment, 'Drupal\block\Entity\Block::sort');
+      // Sort the entities using the entity class's sortEntities() method.
+      Block::sortEntities($assignment);
     }
     return $assignments;
   }

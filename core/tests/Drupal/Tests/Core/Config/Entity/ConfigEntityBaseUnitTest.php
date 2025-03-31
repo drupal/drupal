@@ -142,6 +142,10 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('getLanguage')
       ->with('en')
       ->willReturn(new Language(['id' => 'en']));
+    $this->languageManager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->with()
+      ->willReturn(new Language(['id' => 'en']));
 
     $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
 
@@ -529,23 +533,23 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
     // Test sorting by label.
     $list = [$entity_a, $entity_b];
-    usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-    $this->assertSame($entity_b, $list[0]);
+    ConfigEntityBase::sortEntities($list);
+    $this->assertSame($entity_b, reset($list));
 
     $list = [$entity_b, $entity_a];
-    usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-    $this->assertSame($entity_b, $list[0]);
+    ConfigEntityBase::sortEntities($list);
+    $this->assertSame($entity_b, reset($list));
 
     // Test sorting by weight.
     $entity_a->weight = 0;
     $entity_b->weight = 1;
     $list = [$entity_b, $entity_a];
-    usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-    $this->assertSame($entity_a, $list[0]);
+    ConfigEntityBase::sortEntities($list);
+    $this->assertSame($entity_a, reset($list));
 
     $list = [$entity_a, $entity_b];
-    usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-    $this->assertSame($entity_a, $list[0]);
+    ConfigEntityBase::sortEntities($list);
+    $this->assertSame($entity_a, reset($list));
   }
 
   /**
