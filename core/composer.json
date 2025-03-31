@@ -42,7 +42,7 @@
         "symfony/psr-http-message-bridge": "^2.1|^6.4",
         "composer-runtime-api": "^2.1",
         "composer/semver": "^3.3",
-        "asm89/stack-cors": "^2.1",
+        "asm89/stack-cors": "^2.3",
         "pear/archive_tar": "^1.4.14",
         "psr/log": "^3.0",
         "mck89/peast": "^1.14",
