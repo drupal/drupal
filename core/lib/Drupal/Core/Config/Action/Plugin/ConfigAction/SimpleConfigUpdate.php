@@ -8,6 +8,7 @@ use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,31 +23,31 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 )]
 final class SimpleConfigUpdate implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
-  /**
-   * Constructs a SimpleConfigUpdate object.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory.
-   */
   public function __construct(
-    protected readonly ConfigFactoryInterface $configFactory,
-  ) {
-  }
+    private readonly ConfigFactoryInterface $configFactory,
+    private readonly ConfigManagerInterface $configManager,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
-    return new static($container->get('config.factory'));
+    return new static(
+      $container->get(ConfigFactoryInterface::class),
+      $container->get(ConfigManagerInterface::class),
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function apply(string $configName, mixed $value): void {
+    if ($this->configManager->getEntityTypeIdByName($configName)) {
+      // @todo Make this an exception in https://www.drupal.org/node/3515544.
+      @trigger_error('Using the simpleConfigUpdate config action on config entities is deprecated in drupal:11.2.0 and throws an exception in drupal:12.0.0. Use the setProperties action instead. See https://www.drupal.org/node/3515543', E_USER_DEPRECATED);
+    }
+
     $config = $this->configFactory->getEditable($configName);
-    // @todo https://www.drupal.org/i/3439713 Should we error if this is a
-    //   config entity?
     if ($config->isNew()) {
       throw new ConfigActionException(sprintf('Config %s does not exist so can not be updated', $configName));
     }

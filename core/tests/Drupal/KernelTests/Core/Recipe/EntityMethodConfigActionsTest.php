@@ -4,21 +4,27 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Recipe;
 
+use Drupal\block\Entity\Block;
+use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
  * @group Recipe
  */
 class EntityMethodConfigActionsTest extends KernelTestBase {
 
+  use BlockCreationTrait;
+
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['config_test', 'entity_test', 'system'];
+  protected static $modules = ['block', 'config_test', 'entity_test', 'system'];
 
   /**
    * The configuration action manager.
@@ -170,6 +176,92 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     // by the alias.
     $plugin_id = str_replace('hide', 'remove', $action_name);
     $this->assertFalse($this->configActionManager->hasDefinition($plugin_id));
+  }
+
+  /**
+   * Test setting a nested property on a config entity.
+   */
+  public function testSetNestedProperty(): void {
+    $this->container->get(ThemeInstallerInterface::class)
+      ->install(['claro']);
+    $block = $this->placeBlock('local_tasks_block', ['theme' => 'claro']);
+
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['settings.label' => 'Magic!'],
+    );
+    $settings = Block::load($block->id())->get('settings');
+    $this->assertSame('Magic!', $settings['label']);
+
+    // If the property is not nested, it should still work.
+    $settings['label'] = 'Mundane';
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['settings' => $settings],
+    );
+    $settings = Block::load($block->id())->get('settings');
+    $this->assertSame('Mundane', $settings['label']);
+
+    // We can use this to set a scalar property normally.
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['region' => 'highlighted'],
+    );
+    $this->assertSame('highlighted', Block::load($block->id())->getRegion());
+
+    // We should get an exception if we try to set a nested value on a property
+    // that isn't an array.
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('The setProperties config action can only set nested values on arrays.');
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['theme.name' => 'stark'],
+    );
+  }
+
+  /**
+   * Tests that the setProperties action refuses to modify entity IDs or UUIDs.
+   *
+   * @testWith ["id"]
+   *   ["uuid"]
+   */
+  public function testSetPropertiesWillNotChangeEntityKeys(string $key): void {
+    $view_display = $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getViewDisplay('entity_test_with_bundle', 'test');
+    $this->assertFalse($view_display->isNew());
+
+    $property_name = $view_display->getEntityType()->getKey($key);
+    $this->assertNotEmpty($property_name);
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage("Entity key '$property_name' cannot be changed by the setProperties config action.");
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $view_display->getConfigDependencyName(),
+      [$property_name => '12345'],
+    );
+  }
+
+  /**
+   * Tests that the simpleConfigUpdate action cannot be used on entities.
+   *
+   * @group legacy
+   */
+  public function testSimpleConfigUpdateFailsOnEntities(): void {
+    $view_display = $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getViewDisplay('entity_test_with_bundle', 'test');
+    $view_display->save();
+
+    $this->expectDeprecation('Using the simpleConfigUpdate config action on config entities is deprecated in drupal:11.2.0 and throws an exception in drupal:12.0.0. Use the setProperties action instead. See https://www.drupal.org/node/3515543');
+    $this->configActionManager->applyAction(
+      'simpleConfigUpdate',
+      $view_display->getConfigDependencyName(),
+      ['hidden.uid' => TRUE],
+    );
   }
 
 }
