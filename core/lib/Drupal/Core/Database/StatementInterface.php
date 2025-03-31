@@ -78,6 +78,9 @@ interface StatementInterface extends \Traversable {
    *   - for \PDO::FETCH_CLASS, the name of the class to create.
    *   - for \PDO::FETCH_INTO, the object to add the data to.
    *   constructor.
+   *
+   * @return bool
+   *   TRUE if successful, FALSE if not.
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []);
 

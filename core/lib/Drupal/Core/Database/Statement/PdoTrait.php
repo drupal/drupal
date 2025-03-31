@@ -201,7 +201,7 @@ trait PdoTrait {
         $constructorArguments ?? $this->fetchOptions['constructor_args'],
       ),
       default => $this->getClientStatement()->fetchAll(
-        $this->fetchAsToPdo($mode ?? $this->defaultFetchMode),
+        $this->fetchAsToPdo($mode ?? $this->fetchMode),
       ),
     };
   }
