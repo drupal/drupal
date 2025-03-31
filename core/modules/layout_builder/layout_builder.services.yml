@@ -7,6 +7,7 @@ services:
   Drupal\layout_builder\LayoutTempstoreRepositoryInterface: '@layout_builder.tempstore_repository'
   access_check.entity.layout_builder_access:
     class: Drupal\layout_builder\Access\LayoutBuilderAccessCheck
+    arguments: ['@current_route_match']
     tags:
       - { name: access_check, applies_to: _layout_builder_access }
   plugin.manager.layout_builder.section_storage:
