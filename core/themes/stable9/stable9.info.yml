@@ -235,7 +235,6 @@ libraries-override:
         css/components/hidden.module.css: css/system/components/hidden.module.css
         css/components/item-list.module.css: css/system/components/item-list.module.css
         css/components/js.module.css: css/system/components/js.module.css
-        css/components/nowrap.module.css: css/system/components/nowrap.module.css
         css/components/position-container.module.css: css/system/components/position-container.module.css
         css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
         css/components/tablesort.module.css: css/system/components/tablesort.module.css
