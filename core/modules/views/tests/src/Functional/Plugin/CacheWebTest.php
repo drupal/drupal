@@ -62,6 +62,10 @@ class CacheWebTest extends ViewTestBase {
     $view->save();
     $this->container->get('router.builder')->rebuildIfNeeded();
 
+    /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $vc_factory */
+    $variation_cache_factory = \Drupal::service('variation_cache_factory');
+    $variation_cache = $variation_cache_factory->get('render');
+
     /** @var \Drupal\Core\Render\RenderCacheInterface $render_cache */
     $render_cache = \Drupal::service('render_cache');
     $cache_element = DisplayPluginBase::buildBasicRenderable('test_display', 'page_1');
@@ -70,6 +74,11 @@ class CacheWebTest extends ViewTestBase {
 
     $this->drupalGet('test-display');
     $this->assertSession()->statusCodeEquals(200);
+
+    // Because we warm caches in different requests, we do not properly populate
+    // the internal properties of our variation cache. Reset it.
+    $variation_cache->reset();
+
     $this->assertNotEmpty($render_cache->get($cache_element));
     $cache_tags = [
       'config:user.role.anonymous',

@@ -220,6 +220,11 @@ class StyleSerializerEntityTest extends ViewTestBase {
    */
   public function testRestRenderCaching(): void {
     $this->drupalLogin($this->adminUser);
+
+    /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $vc_factory */
+    $variation_cache_factory = \Drupal::service('variation_cache_factory');
+    $variation_cache = $variation_cache_factory->get('render');
+
     /** @var \Drupal\Core\Render\RenderCacheInterface $render_cache */
     $render_cache = \Drupal::service('render_cache');
 
@@ -268,6 +273,10 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
     $this->assertCacheContexts($cache_contexts);
     $this->assertCacheTags($cache_tags);
+
+    // Because we warm caches in different requests, we do not properly populate
+    // the internal properties of our variation cache. Reset it.
+    $variation_cache->reset();
     $this->assertNotEmpty($render_cache->get($original));
 
     $result_xml = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'xml']]);
