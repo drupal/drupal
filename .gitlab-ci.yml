@@ -56,7 +56,7 @@ workflow:
 ################
 
 variables:
-  _CONFIG_DOCKERHUB_ROOT: "drupalci"
+  _CONFIG_DOCKERHUB_ROOT: "registry.gitlab.com/drupal-infrastructure/drupalci/drupalci-environments"
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   COMPOSER_ALLOW_SUPERUSER: 1
