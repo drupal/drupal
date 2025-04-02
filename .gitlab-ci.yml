@@ -56,7 +56,7 @@ workflow:
 ################
 
 variables:
-  _CONFIG_DOCKERHUB_ROOT: "drupalci"
+  _CONFIG_DOCKERHUB_ROOT: "registry.gitlab.com/drupal-infrastructure/drupalci/drupalci-environments"
   CACHE_TARGET: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}"
   CORE_GITLAB_PROJECT_ID: 59858
   # Let composer know what self.version means.
