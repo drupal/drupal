@@ -275,7 +275,7 @@ class Xss {
    * @param string $attributes
    *   The html attribute to process.
    *
-   * @return string
+   * @return array
    *   Cleaned up version of the HTML attributes.
    */
   protected static function attributes($attributes) {
