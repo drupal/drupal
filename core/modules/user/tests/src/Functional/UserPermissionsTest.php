@@ -352,4 +352,20 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertSession()->checkboxNotChecked('anonymous[access content]');
   }
 
+  /**
+   * Tests that module header rows in the permissions table have a single cell.
+   */
+  public function testPermissionTableHtml(): void {
+    $this->drupalLogin($this->adminUser);
+
+    \Drupal::service('module_installer')->install(['user_permissions_test']);
+    $this->drupalGet('admin/people/permissions');
+
+    // Verify that if a permission has the same name as a module, that its
+    // table cells aren't combined into the module's header row. The header row
+    // should have a single cell in that case.
+    $header_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-module-user-permissions-test\'][count(td)=1]');
+    $this->assertNotEmpty($header_row);
+  }
+
 }

@@ -4,3 +4,5 @@ a:
   title: 'Test permission'
 b:
   title: 'Test permission'
+user_permissions_test:
+  title: 'Permission with the same name as the module'
