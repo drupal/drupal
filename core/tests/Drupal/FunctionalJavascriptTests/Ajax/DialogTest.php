@@ -53,15 +53,16 @@ class DialogTest extends WebDriverTestBase {
     // Clicking the link triggers an AJAX request/response.
     // Opens a Dialog panel.
     $link1_dialog_div = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
+    $this->assertEquals('true', $link1_dialog_div->getAttribute('aria-modal'), 'Dialog modal has aria-modal attribute');
     $this->assertNotNull($link1_dialog_div, 'Link was used to open a dialog ( modal )');
 
     $link1_modal = $link1_dialog_div->find('css', '#drupal-modal');
     $this->assertNotNull($link1_modal, 'Link was used to open a dialog ( non-modal )');
     $this->assertSession()->responseContains($dialog_contents);
 
-    $dialog_title = $link1_dialog_div->find('css', "span.ui-dialog-title:contains('AJAX Dialog & contents')");
+    $dialog_title = $link1_dialog_div->find('css', "h1.ui-dialog-title:contains('AJAX Dialog & contents')");
     $this->assertNotNull($dialog_title);
-    $dialog_title_amp = $link1_dialog_div->find('css', "span.ui-dialog-title:contains('AJAX Dialog &amp; contents')");
+    $dialog_title_amp = $link1_dialog_div->find('css', "h1.ui-dialog-title:contains('AJAX Dialog &amp; contents')");
     $this->assertNull($dialog_title_amp);
 
     // Close open dialog, return to the dialog links page.
@@ -84,7 +85,10 @@ class DialogTest extends WebDriverTestBase {
     // Test a non-modal dialog ( with target ).
     $this->clickLink('Link 3 (non-modal)');
     $non_modal_dialog = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
+    $this->assertNull($non_modal_dialog->getAttribute('aria-modal'), 'Dialog modal has no aria-modal attribute');
     $this->assertNotNull($non_modal_dialog, 'Link opens a non-modal dialog.');
+    $non_modal_dialog_title = $non_modal_dialog->find('css', "h2.ui-dialog-title:contains('AJAX Dialog & contents')");
+    $this->assertNotNull($non_modal_dialog_title);
 
     // Tests the dialog contains a target element specified in the AJAX request.
     $non_modal_dialog->find('css', 'div#ajax-test-dialog-wrapper-1');
@@ -116,9 +120,9 @@ class DialogTest extends WebDriverTestBase {
     $this->assertNotNull($button1_dialog_content, 'Button opens a modal dialog.');
 
     // Test the HTML escaping of & character.
-    $button1_dialog_title = $button1_dialog->find('css', "span.ui-dialog-title:contains('AJAX Dialog & contents')");
+    $button1_dialog_title = $button1_dialog->find('css', "h1.ui-dialog-title:contains('AJAX Dialog & contents')");
     $this->assertNotNull($button1_dialog_title);
-    $button1_dialog_title_amp = $button1_dialog->find('css', "span.ui-dialog-title:contains('AJAX Dialog &amp; contents')");
+    $button1_dialog_title_amp = $button1_dialog->find('css', "h1.ui-dialog-title:contains('AJAX Dialog &amp; contents')");
     $this->assertNull($button1_dialog_title_amp);
 
     // Reset: Close the dialog.
@@ -136,7 +140,7 @@ class DialogTest extends WebDriverTestBase {
     $this->getSession()->getPage()->findButton('Button 3 (modal from url)')->press();
     // Check that title was fetched properly.
     // @see \Drupal\ajax_test\Form\AjaxTestDialogForm::dialog.
-    $form_dialog_title = $this->assertSession()->waitForElement('css', "span.ui-dialog-title:contains('Ajax Form contents')");
+    $form_dialog_title = $this->assertSession()->waitForElement('css', "h1.ui-dialog-title:contains('Ajax Form contents')");
     $this->assertNotNull($form_dialog_title, 'Dialog form has the expected title.');
     $button1_dialog->findButton('Close')->press();
     // Test external URL.
@@ -152,7 +156,7 @@ class DialogTest extends WebDriverTestBase {
     $this->clickLink('Link 5 (form)');
     // Two links have been clicked in succession - This time wait for a change
     // in the title as the previous closing dialog may temporarily be open.
-    $form_dialog_title = $this->assertSession()->waitForElementVisible('css', "span.ui-dialog-title:contains('Ajax Form contents')");
+    $form_dialog_title = $this->assertSession()->waitForElementVisible('css', "h1.ui-dialog-title:contains('Ajax Form contents')");
     $this->assertNotNull($form_dialog_title, 'Dialog form has the expected title.');
     // Locate the newly opened dialog.
     $form_dialog = $this->getSession()->getPage()->find('css', 'div.ui-dialog');
@@ -214,7 +218,7 @@ class DialogTest extends WebDriverTestBase {
     $form_add = $dialog_add->find('css', 'form.contact-form-add-form');
     $this->assertNotNull($form_add, 'Modal dialog JSON contains entity form.');
 
-    $form_title = $dialog_add->find('css', "span.ui-dialog-title:contains('Add contact form')");
+    $form_title = $dialog_add->find('css', "h1.ui-dialog-title:contains('Add contact form')");
     $this->assertNotNull($form_title, 'The add form title is as expected.');
 
     // Test: dialog link opener with title callback.
