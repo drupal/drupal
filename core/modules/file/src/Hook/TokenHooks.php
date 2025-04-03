@@ -7,7 +7,6 @@ namespace Drupal\file\Hook;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -22,7 +21,6 @@ class TokenHooks {
 
   public function __construct(
     private readonly Token $token,
-    private readonly LanguageManagerInterface $languageManager,
     private readonly DateFormatterInterface $dateFormatter,
     private readonly EntityTypeManagerInterface $entityTypeManager,
   ) {}
@@ -32,14 +30,7 @@ class TokenHooks {
    */
   #[Hook('tokens')]
   public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
-    $url_options = ['absolute' => TRUE];
-    if (isset($options['langcode'])) {
-      $url_options['language'] = $this->languageManager->getLanguage($options['langcode']);
-      $langcode = $options['langcode'];
-    }
-    else {
-      $langcode = NULL;
-    }
+    $langcode = $options['langcode'] ?? NULL;
     $replacements = [];
     if ($type == 'file' && !empty($data['file'])) {
       $dateFormatStorage = $this->entityTypeManager->getStorage('date_format');
