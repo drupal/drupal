@@ -102,6 +102,22 @@ class ComponentValidatorTest extends TestCase {
     // allowed as the allowed type.
     $cta_with_non_string_prop_type['props']['properties']['text']['type'] = ['string', []];
     yield 'non string type (Array)' => [$cta_with_non_string_prop_type];
+
+    $cta_with_invalid_slot_type = $valid_cta;
+    $cta_with_invalid_slot_type['slots'] = [
+      'valid_slot' => [
+        'title' => 'Valid slot',
+        'description' => 'Valid slot description',
+      ],
+      'invalid_slot' => [
+        'title' => [
+          'hello' => 'Invalid slot',
+          'world' => 'Invalid slot',
+        ],
+        'description' => 'Title must be string',
+      ],
+    ];
+    yield 'invalid slot (type)' => [$cta_with_invalid_slot_type];
   }
 
   /**
