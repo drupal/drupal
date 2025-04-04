@@ -92,3 +92,14 @@ function system_post_update_sdc_uninstall(): void {
 function system_post_update_remove_rss_cdata_subscriber(): void {
   // Empty update to trigger container rebuild.
 }
+
+/**
+ * Remove path key in system.file.
+ */
+function system_post_update_remove_path_key(): void {
+  if (\Drupal::config('system.file')->get('path') !== NULL) {
+    \Drupal::configFactory()->getEditable('system.file')
+      ->clear('path')
+      ->save();
+  }
+}

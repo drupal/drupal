@@ -344,6 +344,7 @@ system.file:
     path:
       type: mapping
       label: 'Path settings'
+      deprecated: "The 'path' config schema is deprecated in drupal:11.2.0 and will be removed from drupal 12.0.0. Use 'file_temp_path' key in settings.php instead. See https://www.drupal.org/node/3039255."
     temporary_maximum_age:
       type: integer
       label: 'Maximum age for temporary files'
