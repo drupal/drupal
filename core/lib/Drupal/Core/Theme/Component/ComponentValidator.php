@@ -101,6 +101,7 @@ class ComponentValidator {
     );
 
     $definition_object = Validator::arrayToObjectRecursive($definition);
+    $this->validator->reset();
     $this->validator->validate(
       $definition_object,
       (object) ['$ref' => 'file://' . dirname(__DIR__, 5) . '/assets/schemas/v1/metadata-full.schema.json']
@@ -166,15 +167,15 @@ class ComponentValidator {
     ] = $this->validateClassProps($schema, $props_raw, $component_id);
     $schema = Validator::arrayToObjectRecursive($schema);
     $props = Validator::arrayToObjectRecursive($props_raw);
-    $validator = new Validator();
-    $validator->validate($props, $schema, Constraint::CHECK_MODE_TYPE_CAST);
-    $validator->getErrors();
-    if ($validator->isValid()) {
+    $this->validator->reset();
+    $this->validator->validate($props, $schema, Constraint::CHECK_MODE_TYPE_CAST);
+    $this->validator->getErrors();
+    if ($this->validator->isValid()) {
       return TRUE;
     }
     // Dismiss type errors if the prop received a render array.
     $errors = array_filter(
-      $validator->getErrors(),
+      $this->validator->getErrors(),
       function (array $error) use ($context): bool {
         if (($error['constraint'] ?? '') !== 'type') {
           return TRUE;
