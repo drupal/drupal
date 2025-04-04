@@ -67,7 +67,7 @@ final class NavigationLinkBlock extends BlockBase {
       '#default_value' => $display_uri,
       '#element_validate' => [[static::class, 'validateUriElement']],
       '#attributes' => [
-        'data-autocomplete-first-character-blacklist' => '/#?',
+        'data-autocomplete-first-character-denylist' => '/#?',
       ],
       // @todo The user should be able to select an entity type. Will be fixed
       //   in https://www.drupal.org/node/2423093.

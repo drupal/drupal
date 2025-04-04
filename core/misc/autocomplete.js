@@ -78,8 +78,8 @@
     }
 
     const term = autocomplete.extractLastTerm(event.target.value);
-    // Abort search if the first character is in firstCharacterBlacklist.
-    if (term.length > 0 && options.firstCharacterBlacklist.includes(term[0])) {
+    // Abort search if the first character is in firstCharacterDenyList.
+    if (term.length > 0 && options.firstCharacterDenyList.includes(term[0])) {
       return false;
     }
     // Only search when the term is at least the minimum length.
@@ -215,8 +215,23 @@
           const blacklist = $autocomplete.attr(
             'data-autocomplete-first-character-blacklist',
           );
+          if (blacklist !== undefined) {
+            Drupal.deprecationError({
+              message:
+                'The data-autocomplete-first-character-blocklist attribute is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use firstCharacterDenyList instead. See https://www.drupal.org/node/3472016.',
+            });
+          }
+          const denyList = $autocomplete.attr(
+            'data-autocomplete-first-character-denylist',
+          );
+          Drupal.deprecatedProperty({
+            target: autocomplete.options,
+            deprecatedProperty: 'firstCharacterBlacklist',
+            message:
+              'The firstCharacterBlacklist property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use firstCharacterDenyList instead. See https://www.drupal.org/node/3472016.',
+          });
           $.extend(autocomplete.options, {
-            firstCharacterBlacklist: blacklist || '',
+            firstCharacterDenyList: denyList || blacklist,
           });
           // Use jQuery UI Autocomplete on the textfield.
           $autocomplete.autocomplete(autocomplete.options).each(function () {
@@ -268,7 +283,7 @@
       renderItem,
       minLength: 1,
       // Custom options, used by Drupal.autocomplete.
-      firstCharacterBlacklist: '',
+      firstCharacterDenyList: '',
       // Custom options, indicate IME usage status.
       isComposing: false,
     },

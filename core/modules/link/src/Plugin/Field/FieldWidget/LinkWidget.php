@@ -219,7 +219,7 @@ class LinkWidget extends WidgetBase {
       //   in https://www.drupal.org/node/2423093.
       $element['uri']['#target_type'] = 'node';
       // Disable autocompletion when the first character is '/', '#' or '?'.
-      $element['uri']['#attributes']['data-autocomplete-first-character-blacklist'] = '/#?';
+      $element['uri']['#attributes']['data-autocomplete-first-character-denylist'] = '/#?';
 
       // The link widget is doing its own processing in
       // static::getUriAsDisplayableString().
