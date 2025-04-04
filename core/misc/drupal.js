@@ -616,9 +616,13 @@ window.Drupal = { behaviors: {}, locale: {} };
    *   but also a complex object.
    */
   Drupal.theme = function (func, ...args) {
-    if (func in Drupal.theme) {
+    if (typeof Drupal.theme?.[func] === 'function') {
       return Drupal.theme[func](...args);
     }
+
+    Drupal.throwError(
+      new TypeError(`Drupal.theme.${func} must be function type.`),
+    );
   };
 
   /**
