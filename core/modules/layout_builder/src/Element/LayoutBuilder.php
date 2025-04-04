@@ -123,6 +123,8 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
    *   The rendered form.
    *
    * @return array
+   *   Renders the layout builder element, if it exists, and adds it to the
+   *   form.
    *
    * @see ::addRenderedLayoutBuilder()
    */
@@ -150,6 +152,7 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
    *   The form render array.
    *
    * @return string
+   *   The render string with any layout builder markup added.
    */
   #[TrustedCallback]
   public static function addRenderedLayoutBuilder(string $html, array $form): string {
