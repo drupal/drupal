@@ -36,6 +36,11 @@ class RecipeTest extends KernelTestBase {
     $this->assertSame($expected_description, $recipe->description);
   }
 
+  /**
+   * Tests creating a recipe from an empty directory.
+   *
+   * @covers ::createFromDirectory
+   */
   public function testCreateFromDirectoryNoRecipe(): void {
     $dir = uniqid('public://');
     mkdir($dir);
@@ -45,6 +50,11 @@ class RecipeTest extends KernelTestBase {
     Recipe::createFromDirectory($dir);
   }
 
+  /**
+   * Tests creating a pre-existing configuration with a different configuration.
+   *
+   * @covers ::createFromDirectory
+   */
   public function testPreExistingDifferentConfiguration(): void {
     // Install the node module, its dependencies and configuration.
     $this->container->get('module_installer')->install(['node']);
@@ -60,6 +70,11 @@ class RecipeTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests creating an existing configuration with the same configuration.
+   *
+   * @covers ::createFromDirectory
+   */
   public function testPreExistingMatchingConfiguration(): void {
     // Install the node module, its dependencies and configuration.
     $this->container->get('module_installer')->install(['node']);
@@ -71,6 +86,9 @@ class RecipeTest extends KernelTestBase {
     $this->assertSame('core/tests/fixtures/recipes/install_node_with_config/config', $recipe->config->recipeConfigDirectory);
   }
 
+  /**
+   * Tests processing a recipe.
+   */
   public function testExampleRecipe(): void {
     // The example recipe imports all the configurations from the node module
     // including optional configurations associated with the search and view
@@ -83,6 +101,9 @@ class RecipeTest extends KernelTestBase {
     $this->assertSame($this->config('text.settings')->get('default_summary_length'), 700);
   }
 
+  /**
+   * Tests creating a recipe with a missing implicitly required module.
+   */
   public function testImplicitlyRequiredModule(): void {
     $this->disableModules(['user']);
     $recipe = $this->createRecipe([

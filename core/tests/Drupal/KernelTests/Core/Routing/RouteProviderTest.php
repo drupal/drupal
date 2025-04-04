@@ -781,6 +781,9 @@ class RouteProviderTest extends KernelTestBase {
  */
 class TestRouteProvider extends RouteProvider {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getCandidateOutlines(array $parts) {
     return parent::getCandidateOutlines($parts);
   }

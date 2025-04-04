@@ -22,6 +22,9 @@ class RecipeRunnerTest extends KernelTestBase {
 
   use RecipeTestTrait;
 
+  /**
+   * Tests modules installed after processing a recipe.
+   */
   public function testModuleInstall(): void {
     // Test the state prior to applying the recipe.
     $this->assertFalse($this->container->get('module_handler')->moduleExists('filter'), 'The filter module is not installed');
@@ -40,6 +43,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertTrue($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to TRUE');
   }
 
+  /**
+   * Tests modules and themes installed after processing a recipe.
+   */
   public function testModuleAndThemeInstall(): void {
     $recipe = Recipe::createFromDirectory('core/tests/fixtures/recipes/base_theme_and_views');
     RecipeRunner::processRecipe($recipe);
@@ -55,6 +61,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertEmpty(View::loadMultiple(), "No views exist");
   }
 
+  /**
+   * Tests module and theme dependencies installed after processing a recipe.
+   */
   public function testThemeModuleDependenciesInstall(): void {
     $recipe = Recipe::createFromDirectory('core/tests/fixtures/recipes/theme_with_module_dependencies');
     RecipeRunner::processRecipe($recipe);
@@ -65,6 +74,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertTrue($this->container->get('theme_handler')->themeExists('test_theme_depending_on_modules'), 'The test_theme_depending_on_modules theme is installed');
   }
 
+  /**
+   * Tests configuration override after processing a recipe.
+   */
   public function testModuleConfigurationOverride(): void {
     // Test the state prior to applying the recipe.
     $this->assertEmpty($this->container->get('config.factory')->listAll('node.'), 'There is no node configuration');
@@ -83,6 +95,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertSame('8Jlq8CmNXHVtNIHBHgFGpnAKthlUz0XoW_D0g56QXqY', $node_type_data['_core']['default_config_hash']);
   }
 
+  /**
+   * Tests applying a recipe multiple times.
+   */
   public function testApplySameRecipe(): void {
     // Test the state prior to applying the recipe.
     $this->assertEmpty($this->container->get('config.factory')->listAll('node.'), 'There is no node configuration');
@@ -106,6 +121,9 @@ class RecipeRunnerTest extends KernelTestBase {
     Recipe::createFromDirectory('core/tests/fixtures/recipes/install_node_with_config');
   }
 
+  /**
+   * Tests module configuration after processing a recipe.
+   */
   public function testConfigFromModule(): void {
     // Test the state prior to applying the recipe.
     $this->assertEmpty($this->container->get('config.factory')->listAll('config_test.'), 'There is no config_test configuration');
@@ -119,6 +137,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertSame(['dotted.default', 'override'], array_keys($config_test_entities));
   }
 
+  /**
+   * Tests processing a recipe with a wildcard configuration.
+   */
   public function testConfigWildcard(): void {
     // Test the state prior to applying the recipe.
     $this->assertEmpty($this->container->get('config.factory')->listAll('config_test.'), 'There is no config_test configuration');
@@ -134,6 +155,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertSame('herp', $this->config('config_test.system')->get('404'));
   }
 
+  /**
+   * Tests installing config from a module and a recipe.
+   */
   public function testConfigFromModuleAndRecipe(): void {
     // Test the state prior to applying the recipe.
     $this->assertEmpty($this->container->get('config.factory')->listAll('config_test.'), 'There is no config_test configuration');
@@ -149,6 +173,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertSame('foo', $this->config('config_test.system')->get('404'));
   }
 
+  /**
+   * Tests processing a recipe that includes another recipe.
+   */
   public function testRecipeInclude(): void {
     // Test the state prior to applying the recipe.
     $this->assertEmpty($this->container->get('config.factory')->listAll('node.'), 'There is no node configuration');
@@ -163,6 +190,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertSame('Another test content type', NodeType::load('another_test')?->label());
   }
 
+  /**
+   * Tests a recipe that has actions.
+   */
   public function testConfigActions() :void {
     // Test the state prior to applying the recipe.
     $this->assertEmpty($this->container->get('config.factory')->listAll('config_test.'), 'There is no config_test configuration');
@@ -179,6 +209,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertSame('not bar', $this->config('config_test.system')->get('foo'));
   }
 
+  /**
+   * Tests a recipe that has actions and with pre-existing configuration.
+   */
   public function testConfigActionsPreExistingConfig() :void {
     $this->enableModules(['config_test']);
     $this->installConfig(['config_test']);
@@ -200,6 +233,9 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertSame('not bar', $this->config('config_test.system')->get('foo'));
   }
 
+  /**
+   * Tests a recipe with an invalid configuration action.
+   */
   public function testInvalidConfigAction() :void {
     $recipe_data = <<<YAML
 name: Invalid config action
@@ -217,6 +253,9 @@ YAML;
     RecipeRunner::processRecipe($recipe);
   }
 
+  /**
+   * Tests a recipe with an invalid action configuration.
+   */
   public function testInvalidConfigActionAppliedOnConfigEntity() :void {
     $recipe_data = <<<YAML
 name: Invalid config action
@@ -257,6 +296,9 @@ YAML;
     RecipeRunner::processRecipe($recipe);
   }
 
+  /**
+   * Tests recipes are distinguished by the file path.
+   */
   public function testRecipesAreDisambiguatedByPath(): void {
     $recipe_data = <<<YAML
 name: 'Recipe include'

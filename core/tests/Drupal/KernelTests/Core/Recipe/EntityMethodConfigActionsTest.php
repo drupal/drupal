@@ -49,6 +49,9 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
+  /**
+   *  @covers \Drupal\Core\Config\Entity\ConfigEntityBase::getThirdPartySetting
+   */
   public function testSetSingleThirdPartySetting(): void {
     $this->configActionManager->applyAction(
       'entity_method:core.entity_view_display:setThirdPartySetting',
@@ -66,6 +69,9 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     $this->assertSame('Save', $display->getThirdPartySetting('entity_test', 'verb'));
   }
 
+  /**
+   * Tests setting multiple third party settings.
+   */
   public function testSetMultipleThirdPartySettings(): void {
     $this->configActionManager->applyAction(
       'entity_method:core.entity_view_display:setThirdPartySettings',

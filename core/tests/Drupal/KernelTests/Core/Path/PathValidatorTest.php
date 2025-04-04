@@ -35,6 +35,9 @@ class PathValidatorTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
   }
 
+  /**
+   * Tests getting a Url for CLI and HTTP methods.
+   */
   public function testGetUrlIfValidWithoutAccessCheck(): void {
     $requestContext = \Drupal::service('router.request_context');
     $pathValidator = \Drupal::service('path.validator');

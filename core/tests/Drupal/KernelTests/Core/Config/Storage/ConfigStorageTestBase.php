@@ -274,12 +274,24 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $this->assertSame(['collection.sub.another', 'collection.sub.new'], $this->storage->getAllCollectionNames());
   }
 
+  /**
+   * Reads configuration data from the storage.
+   */
   abstract protected function read($name);
 
+  /**
+   * Inserts configuration data in the storage.
+   */
   abstract protected function insert($name, $data);
 
+  /**
+   * Updates configuration data in the storage.
+   */
   abstract protected function update($name, $data);
 
+  /**
+   * Deletes configuration data from the storage.
+   */
   abstract protected function delete($name);
 
 }

@@ -34,6 +34,9 @@ class IconBuilderTest extends KernelTestBase {
     $this->assertSame($expected, $output);
   }
 
+  /**
+   * Returns data for testing the icon builder.
+   */
   public static function providerTestBuild() {
     $data = [];
     $data['empty'][] = (new SvgIconBuilder());

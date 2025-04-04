@@ -18,6 +18,9 @@ class ConfigModuleOverridesTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'config', 'config_override_test'];
 
+  /**
+   * Tests simple module overrides of configuration using event subscribers.
+   */
   public function testSimpleModuleOverrides(): void {
     $GLOBALS['config_test_run_module_overrides'] = TRUE;
     $name = 'system.site';

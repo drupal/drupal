@@ -859,6 +859,9 @@ class ConfigSchemaTest extends KernelTestBase {
     ], $definition['mapping']['breed']);
   }
 
+  /**
+   * Tests exception is thrown for the root object.
+   */
   public function testLangcodeRequiredIfTranslatableValuesConstraintError(): void {
     $config = \Drupal::configFactory()->getEditable('config_test.foo');
 

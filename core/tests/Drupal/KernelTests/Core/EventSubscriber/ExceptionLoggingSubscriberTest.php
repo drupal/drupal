@@ -61,6 +61,9 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Returns data for testing exception logging.
+   */
   public static function exceptionDataProvider(): array {
     return [
       [400, 'client error', RfcLogLevel::WARNING],

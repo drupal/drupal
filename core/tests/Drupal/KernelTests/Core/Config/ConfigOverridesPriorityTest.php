@@ -30,6 +30,9 @@ class ConfigOverridesPriorityTest extends KernelTestBase {
     'language',
   ];
 
+  /**
+   * Tests the order of config overrides.
+   */
   public function testOverridePriorities(): void {
     $GLOBALS['config_test_run_module_overrides'] = FALSE;
 

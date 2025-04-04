@@ -34,6 +34,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->configManager = $this->container->get(TypedConfigManagerInterface::class);
   }
 
+  /**
+   * Tests the validation of the mailer scheme.
+   */
   public function testMailerSchemeValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());
@@ -90,6 +93,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
   }
 
+  /**
+   * Tests the validation of the mailer host.
+   */
   public function testMailerHostValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());
@@ -152,6 +158,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
   }
 
+  /**
+   * Tests the validation of the password for the mailer user.
+   */
   public function testMailerUserPasswordValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());
@@ -170,6 +179,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
   }
 
+  /**
+   * Tests the validation of the port used by the mailer.
+   */
   public function testMailerPortValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());
@@ -198,6 +210,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
   }
 
+  /**
+   * Tests the validation of the default options of the mailer.
+   */
   public function testMailerTransportDefaultOptionsValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());
@@ -218,6 +233,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
   }
 
+  /**
+   * Tests the validation of the options for the 'native' mailer scheme.
+   */
   public function testMailerTransportNativeOptionsValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());
@@ -241,6 +259,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
   }
 
+  /**
+   * Tests the validation of the options for the 'null' mailer scheme.
+   */
   public function testMailerTransportNullOptionsValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());
@@ -264,6 +285,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
   }
 
+  /**
+   * Tests the validation of the options for the 'sendmail' mailer scheme.
+   */
   public function testMailerTransportSendmailOptionsValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());
@@ -301,6 +325,9 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
   }
 
+  /**
+   * Tests the validation of the options for the 'smtps' mailer scheme.
+   */
   public function testMailerTransportSMTPOptionsValidation(): void {
     $config = $this->config('system.mail');
     $this->assertFalse($config->isNew());

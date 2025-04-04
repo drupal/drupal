@@ -23,6 +23,9 @@ class ConfigConfiguratorTest extends KernelTestBase {
 
   use RecipeTestTrait;
 
+  /**
+   * Tests creating an existing configuration with a difference key order.
+   */
   public function testExistingConfigWithKeysInDifferentOrder(): void {
     $recipe_dir = uniqid('public://recipe_test_');
     mkdir($recipe_dir . '/config', recursive: TRUE);
@@ -74,6 +77,9 @@ class ConfigConfiguratorTest extends KernelTestBase {
     $this->assertEmpty($recipe->config->getConfigStorage()->listAll());
   }
 
+  /**
+   * Tests with strict mode on part of the configuration.
+   */
   public function testSelectiveStrictness(): void {
     $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
     RecipeRunner::processRecipe($recipe);
@@ -129,6 +135,9 @@ class ConfigConfiguratorTest extends KernelTestBase {
     $this->assertInstanceOf(BaseFieldOverride::class, BaseFieldOverride::loadByName('node', 'page', 'promote'));
   }
 
+  /**
+   * Tests strict mode.
+   */
   public function testFullStrictness(): void {
     $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
     RecipeRunner::processRecipe($recipe);
@@ -150,6 +159,9 @@ class ConfigConfiguratorTest extends KernelTestBase {
     Recipe::createFromDirectory($clone_dir);
   }
 
+  /**
+   * Clones a recipes.
+   */
   private function cloneRecipe(string $original_dir): string {
     // Clone the recipe into the virtual file system.
     $name = uniqid();

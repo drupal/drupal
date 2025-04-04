@@ -34,6 +34,9 @@ class DatabaseBackendTagTest extends KernelTestBase {
       ->addMethodCall('setContainer', [new Reference('service_container')]);
   }
 
+  /**
+   * Test tag invalidation.
+   */
   public function testTagInvalidations(): void {
     // Create cache entry in multiple bins.
     $tags = ['test_tag:1', 'test_tag:2', 'test_tag:3'];

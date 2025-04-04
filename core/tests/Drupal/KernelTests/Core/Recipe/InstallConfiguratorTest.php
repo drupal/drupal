@@ -15,6 +15,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class InstallConfiguratorTest extends KernelTestBase {
 
+  /**
+   * Tests the modules and themes to be installed.
+   */
   public function testDependenciesAreAutomaticallyIncluded(): void {
     $configurator = new InstallConfigurator(
       ['node', 'test_theme_depending_on_modules'],

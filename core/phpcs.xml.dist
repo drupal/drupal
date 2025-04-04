@@ -69,6 +69,7 @@
     <include-pattern>*/Database/*</include-pattern>
     <include-pattern>*/FunctionalJavascript/*</include-pattern>
     <include-pattern>*/Kernel/*</include-pattern>
+    <include-pattern>*/KernelTests/*</include-pattern>
     <include-pattern>*/Functional/*</include-pattern>
     <include-pattern>*/Unit/*</include-pattern>
   </rule>
