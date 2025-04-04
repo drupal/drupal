@@ -17,11 +17,15 @@ use Drupal\views\Plugin\ViewsHandlerManager;
 class ViewsHandlerManagerTest extends UnitTestCase {
 
   /**
+   * The views handler manager.
+   *
    * @var \Drupal\views\Plugin\ViewsHandlerManager
    */
   protected $handlerManager;
 
   /**
+   * The module handler service.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;

@@ -9,12 +9,16 @@ use Drupal\Tests\system\Functional\FileTransfer\TestFileTransfer;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Tests for the file transfer system.
+ *
  * @group FileTransfer
  * @group legacy
  */
 class FileTransferTest extends UnitTestCase {
 
   /**
+   * The test file transfer object.
+   *
    * @var \Drupal\Tests\system\Functional\FileTransfer\TestFileTransfer
    */
   protected TestFileTransfer $testConnection;

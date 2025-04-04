@@ -19,6 +19,8 @@ use Drupal\user\Theme\AdminNegotiator;
 class AdminNegotiatorTest extends UnitTestCase {
 
   /**
+   * Tests determining the active theme.
+   *
    * @dataProvider getThemes
    */
   public function testDetermineActiveTheme($admin_theme, $expected): void {

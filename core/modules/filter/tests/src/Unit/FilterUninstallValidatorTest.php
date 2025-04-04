@@ -15,6 +15,8 @@ use Drupal\Tests\UnitTestCase;
 class FilterUninstallValidatorTest extends UnitTestCase {
 
   /**
+   * The filter uninstall validator.
+   *
    * @var \Drupal\filter\FilterUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $filterUninstallValidator;

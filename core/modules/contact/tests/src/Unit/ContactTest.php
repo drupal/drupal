@@ -8,6 +8,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\contact\Hook\ContactHooks;
 
 /**
+ * Tests for Contact hooks.
+ *
  * @group contact
  */
 class ContactTest extends UnitTestCase {

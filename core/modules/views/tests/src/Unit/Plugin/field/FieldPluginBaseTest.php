@@ -822,9 +822,9 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider providerTestGetRenderTokensWithQuery
    * @covers ::getRenderTokens
    * @covers ::getTokenValuesRecursive
+   * @dataProvider providerTestGetRenderTokensWithQuery
    */
   public function testGetRenderTokensWithQuery(array $query_params, array $expected): void {
     $request = new Request($query_params);

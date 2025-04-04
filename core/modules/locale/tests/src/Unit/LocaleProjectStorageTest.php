@@ -16,11 +16,15 @@ use Drupal\Tests\UnitTestCase;
 class LocaleProjectStorageTest extends UnitTestCase {
 
   /**
+   * The local project storage.
+   *
    * @var \Drupal\locale\LocaleProjectStorage
    */
   private LocaleProjectStorage $projectStorage;
 
   /**
+   * The key value memory factory.
+   *
    * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
    */
   private KeyValueMemoryFactory $keyValueMemoryFactory;

@@ -7,6 +7,8 @@ namespace Drupal\Tests\image\Unit;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Tests deprecation of image_filter_keyword().
+ *
  * @group Image
  * @group legacy
  */

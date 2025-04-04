@@ -29,31 +29,43 @@ use Prophecy\Prophecy\ObjectProphecy;
 class EntityRevisionTest extends UnitTestCase {
 
   /**
+   * The migration.
+   *
    * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected MigrationInterface $migration;
 
   /**
+   * The destination storage.
+   *
    * @var \Prophecy\Prophecy\ObjectProphecy
    */
   protected ObjectProphecy $storage;
 
   /**
+   * The entity field manager.
+   *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected EntityFieldManagerInterface $entityFieldManager;
 
   /**
+   * The field type manager.
+   *
    * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
    */
   protected FieldTypePluginManagerInterface $fieldTypeManager;
 
   /**
+   * The account switcher.
+   *
    * @var \Drupal\Core\Session\AccountSwitcherInterface
    */
   protected AccountSwitcherInterface $accountSwitcher;
 
   /**
+   * The entity type bundle information.
+   *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected EntityTypeBundleInfoInterface $entityTypeBundle;

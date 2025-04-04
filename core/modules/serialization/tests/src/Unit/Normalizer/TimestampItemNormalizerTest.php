@@ -27,6 +27,8 @@ use Symfony\Component\Serializer\Serializer;
 class TimestampItemNormalizerTest extends UnitTestCase {
 
   /**
+   * The time stamp normalizer.
+   *
    * @var \Drupal\serialization\Normalizer\TimestampItemNormalizer
    */
   protected $normalizer;

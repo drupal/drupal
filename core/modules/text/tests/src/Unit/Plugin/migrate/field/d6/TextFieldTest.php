@@ -19,11 +19,15 @@ use Prophecy\Argument;
 class TextFieldTest extends UnitTestCase {
 
   /**
+   * The migration field plugin to test.
+   *
    * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
    */
   protected $plugin;
 
   /**
+   * The migration object.
+   *
    * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $migration;

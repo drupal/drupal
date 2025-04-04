@@ -30,6 +30,8 @@ class ViewsLocalTaskTest extends UnitTestCase {
   protected $state;
 
   /**
+   * The views storage.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewStorage;

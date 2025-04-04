@@ -281,8 +281,8 @@ class PluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider providerTestFilterByDefinedOptions
    * @covers ::filterByDefinedOptions
+   * @dataProvider providerTestFilterByDefinedOptions
    */
   public function testFilterByDefinedOptions($storage, $options, $expected_storage): void {
     $this->testHelperPlugin->setDefinedOptions($options);

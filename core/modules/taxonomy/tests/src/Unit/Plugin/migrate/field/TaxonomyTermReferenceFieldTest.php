@@ -16,11 +16,15 @@ use Prophecy\Argument;
 class TaxonomyTermReferenceFieldTest extends UnitTestCase {
 
   /**
+   * The migrate field plugin.
+   *
    * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
    */
   protected $plugin;
 
   /**
+   * The migration.
+   *
    * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $migration;

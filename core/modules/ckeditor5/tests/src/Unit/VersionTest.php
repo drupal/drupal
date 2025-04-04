@@ -7,6 +7,8 @@ namespace Drupal\Tests\ckeditor5\Unit;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Test the CKEditor version.
+ *
  * @group ckeditor5
  * @internal
  */

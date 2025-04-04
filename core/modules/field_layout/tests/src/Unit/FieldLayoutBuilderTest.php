@@ -21,26 +21,36 @@ use Prophecy\Argument;
 class FieldLayoutBuilderTest extends UnitTestCase {
 
   /**
+   * The layout plugin manager.
+   *
    * @var \Drupal\Core\Layout\LayoutPluginManager|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $layoutPluginManager;
 
   /**
+   * The entity field manager.
+   *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $entityFieldManager;
 
   /**
+   * The field layout builder.
+   *
    * @var \Drupal\field_layout\FieldLayoutBuilder
    */
   protected $fieldLayoutBuilder;
 
   /**
+   * The layout plugin.
+   *
    * @var \Drupal\Core\Layout\LayoutInterface
    */
   protected $layoutPlugin;
 
   /**
+   * The layout plugin definition.
+   *
    * @var \Drupal\Core\Layout\LayoutDefinition
    */
   protected $pluginDefinition;

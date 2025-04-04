@@ -16,21 +16,29 @@ use Drupal\Tests\UnitTestCase;
 class BlockRepositoryTest extends UnitTestCase {
 
   /**
+   * The block repository.
+   *
    * @var \Drupal\block\BlockRepository
    */
   protected $blockRepository;
 
   /**
+   * The block storage or a mock.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $blockStorage;
 
   /**
+   * The theme for the test.
+   *
    * @var string
    */
   protected $theme;
 
   /**
+   * The context handler of a mock.
+   *
    * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $contextHandler;

@@ -212,6 +212,8 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
+   * Provides data for testing the response format.
+   *
    * @return array
    *   0. methods to test
    *   1. supported formats for route requirements
@@ -382,6 +384,8 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
+   * Gets the resource response subscriber.
+   *
    * @return \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
    *   A functioning ResourceResponseSubscriber.
    */

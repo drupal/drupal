@@ -316,10 +316,12 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider providerSortOrders
+   * Tests the click sort order.
    *
    * @param string $order
    *   The sort order.
+   *
+   * @dataProvider providerSortOrders
    */
   public function testClickSortWithOutConfiguredColumn($order): void {
     $definition = [
@@ -336,12 +338,11 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::clickSort
    * @dataProvider providerSortOrders
    *
    * @param string $order
    *   The sort order.
-   *
-   * @covers ::clickSort
    */
   public function testClickSortWithBaseField($order): void {
     $definition = [
@@ -396,12 +397,11 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::clickSort
    * @dataProvider providerSortOrders
    *
    * @param string $order
    *   The sort order.
-   *
-   * @covers ::clickSort
    */
   public function testClickSortWithConfiguredField($order): void {
     $definition = [

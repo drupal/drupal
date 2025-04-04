@@ -81,6 +81,8 @@ class AliasPathProcessorTest extends UnitTestCase {
   }
 
   /**
+   * Provides data for testing outbound processing.
+   *
    * @return array
    *   The data provider for testProcessOutbound.
    */

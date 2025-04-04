@@ -25,6 +25,8 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   ];
 
   /**
+   * The DrupalSqlBase object.
+   *
    * @var \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
    */
   protected $base;

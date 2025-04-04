@@ -14,6 +14,8 @@ use Drupal\filter\Plugin\Filter\FilterHtml;
 class FilterHtmlTest extends UnitTestCase {
 
   /**
+   * The filter to test.
+   *
    * @var \Drupal\filter\Plugin\Filter\FilterHtml
    */
   protected $filter;

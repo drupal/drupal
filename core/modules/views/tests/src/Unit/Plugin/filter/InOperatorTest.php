@@ -32,6 +32,10 @@ class InOperatorTest extends UnitTestCase {
   }
 
   /**
+   * Views filter callback: Generate the values for the options.
+   *
+   * Returns 'yes' and 'no' options.
+   *
    * @return array
    *   The options for the filter.
    */

@@ -61,6 +61,8 @@ class BigPipeStrategyTest extends UnitTestCase {
   }
 
   /**
+   * Provides the test data for testProcessPlaceholders().
+   *
    * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
   public static function placeholdersProvider() {

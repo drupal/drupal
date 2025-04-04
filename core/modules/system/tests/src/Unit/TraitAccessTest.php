@@ -18,6 +18,8 @@ class TraitAccessTest extends UnitTestCase {
   use TestTrait;
 
   /**
+   * Tests \Drupal\Tests\system\Traits\TestTrait::getStuff().
+   *
    * @coversNothing
    */
   public function testSimpleStuff(): void {
