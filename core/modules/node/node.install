@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the node module.
  */
 
+use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
 use Drupal\user\RoleInterface;
@@ -19,7 +21,8 @@ function node_requirements($phase): array {
     // in the {node_access} table, or if there are modules that
     // implement hook_node_grants().
     $grant_count = \Drupal::entityTypeManager()->getAccessControlHandler('node')->countGrants();
-    if ($grant_count != 1 || \Drupal::moduleHandler()->hasImplementations('node_grants')) {
+    $has_node_grants_implementations = \Drupal::moduleHandler()->hasImplementations('node_grants');
+    if ($grant_count != 1 || $has_node_grants_implementations) {
       $value = \Drupal::translation()->formatPlural($grant_count, 'One permission in use', '@count permissions in use', ['@count' => $grant_count]);
     }
     else {
@@ -33,6 +36,101 @@ function node_requirements($phase): array {
         ':rebuild' => Url::fromRoute('node.configure_rebuild_confirm')->toString(),
       ]),
     ];
+
+    // Report when the "Published status or admin user" has no impact on the
+    // result of dependent views due to active node access modules.
+    // @see https://www.drupal.org/node/3472976
+    if ($has_node_grants_implementations && \Drupal::moduleHandler()->moduleExists('views')) {
+      $node_status_filter_problematic_views = [];
+      $active_view_ids = \Drupal::entityQuery('view')
+        ->condition('status', TRUE)
+        ->accessCheck(FALSE)
+        ->execute();
+
+      $views_storage = \Drupal::entityTypeManager()->getStorage('view');
+      foreach ($views_storage->loadMultiple($active_view_ids) as $view) {
+        foreach ($view->get('display') as $display_id => $display) {
+          if (array_key_exists('filters', $display['display_options'])) {
+            foreach ($display['display_options']['filters'] as $filter) {
+              if (array_key_exists('plugin_id', $filter) && $filter['plugin_id'] === 'node_status') {
+                $node_status_filter_problematic_views[$view->id()][$display_id] = [
+                  'view_label' => $view->label(),
+                  'display_name' => $display['display_title'] ?? $display_id,
+                ];
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      if ($node_status_filter_problematic_views !== []) {
+        $node_access_implementations = [];
+        $module_data = \Drupal::service('extension.list.module')->getAllInstalledInfo();
+        foreach (['node_grants', 'node_grants_alter'] as $hook) {
+          \Drupal::moduleHandler()->invokeAllWith(
+            $hook,
+            static function (callable $hook, string $module) use (&$node_access_implementations, $module_data) {
+              $node_access_implementations[$module] = $module_data[$module]['name'];
+            }
+          );
+        }
+        uasort($node_access_implementations, 'strnatcasecmp');
+        $views_ui_enabled = \Drupal::moduleHandler()->moduleExists('views_ui');
+        $node_status_filter_problematic_views_list = [];
+        foreach ($node_status_filter_problematic_views as $view_id => $displays) {
+          foreach ($displays as $display_id => $info) {
+            $text = "{$info['view_label']} ({$info['display_name']})";
+            if ($views_ui_enabled) {
+              $url = Url::fromRoute('entity.view.edit_display_form', [
+                'view' => $view_id,
+                'display_id' => $display_id,
+              ]);
+              if ($url->access()) {
+                $node_status_filter_problematic_views_list[] = Link::fromTextAndUrl($text, $url)->toString();
+              }
+              else {
+                $node_status_filter_problematic_views_list[] = $text;
+              }
+            }
+            else {
+              $node_status_filter_problematic_views_list[] = $text;
+            }
+          }
+        }
+
+        $node_status_filter_problematic_views_count = count($node_status_filter_problematic_views_list);
+        $node_status_filter_description_arguments = [
+          '%modules' => implode(', ', $node_access_implementations),
+          '%status_filter' => t('Published status or admin user'),
+        ];
+
+        if ($node_status_filter_problematic_views_count > 1) {
+          $node_status_filter_problematic_views_list = [
+            '#theme' => 'item_list',
+            '#items' => $node_status_filter_problematic_views_list,
+          ];
+          $node_status_filter_description_arguments['@views'] = \Drupal::service('renderer')->renderInIsolation($node_status_filter_problematic_views_list);
+        }
+        else {
+          $node_status_filter_description_arguments['%view'] = reset($node_status_filter_problematic_views_list);
+        }
+
+        $node_status_filter_description = new PluralTranslatableMarkup(
+          $node_status_filter_problematic_views_count,
+          'The %view view uses the %status_filter filter but it has no effect because the following module(s) control access: %modules. Review and consider removing the filter.',
+          'The following views use the %status_filter filter but it has no effect because the following module(s) control access: %modules. Review and consider removing the filter from these views: @views',
+          $node_status_filter_description_arguments,
+        );
+
+        $requirements['node_status_filter'] = [
+          'title' => t('Content status filter'),
+          'value' => t('Redundant filters detected'),
+          'description' => $node_status_filter_description,
+          'severity' => REQUIREMENT_WARNING,
+        ];
+      }
+    }
   }
   return $requirements;
 }

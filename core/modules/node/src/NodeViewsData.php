@@ -2,12 +2,70 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\views\EntityViewsData;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the views data for the node entity type.
  */
 class NodeViewsData extends EntityViewsData {
+
+  /**
+   * Constructs an NodeViewsData object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type to provide views integration for.
+   * @param \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage_controller
+   *   The storage handler used for this entity type.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   *   The translation manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
+   *   The module extension list.
+   */
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    SqlEntityStorageInterface $storage_controller,
+    EntityTypeManagerInterface $entity_type_manager,
+    ModuleHandlerInterface $module_handler,
+    TranslationInterface $translation_manager,
+    EntityFieldManagerInterface $entity_field_manager,
+    protected ?ModuleExtensionList $moduleExtensionList = NULL,
+  ) {
+    parent::__construct($entity_type, $storage_controller, $entity_type_manager, $module_handler, $translation_manager, $entity_field_manager);
+    if ($this->moduleExtensionList === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3493129', E_USER_DEPRECATED);
+      $this->moduleExtensionList = \Drupal::service('extension.list.module');
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('entity_type.manager')->getStorage($entity_type->id()),
+      $container->get('entity_type.manager'),
+      $container->get('module_handler'),
+      $container->get('string_translation'),
+      $container->get('entity_field.manager'),
+      $container->get('extension.list.module')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -36,9 +94,26 @@ class NodeViewsData extends EntityViewsData {
     // Use status = 1 instead of status <> 0 in WHERE statement.
     $data['node_field_data']['status']['filter']['use_equal'] = TRUE;
 
+    // Check for any extensions that use node grants and block the use of this
+    // filter. If this filter is blocked then provide a helpful message.
+    $node_access_implementations = $this->getNodeAccessImplementations();
+    $node_access_implementation_count = count($node_access_implementations);
+    if ($node_access_implementation_count === 0) {
+      $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it.');
+    }
+    else {
+      uasort($node_access_implementations, 'strnatcasecmp');
+      $status_extra_help_text = new PluralTranslatableMarkup(
+        $node_access_implementation_count,
+        'This filter has no effect because the %module module controls access.',
+        'This filter has no effect because these modules control access: %modules.',
+        ['%module' => reset($node_access_implementations), '%modules' => implode(', ', $node_access_implementations)]
+      );
+    }
+
     $data['node_field_data']['status_extra'] = [
       'title' => $this->t('Published status or admin user'),
-      'help' => $this->t('Filters out unpublished content if the current user cannot view it.'),
+      'help' => $status_extra_help_text,
       'filter' => [
         'field' => 'status',
         'id' => 'node_status',
@@ -64,7 +139,6 @@ class NodeViewsData extends EntityViewsData {
     ];
 
     // Bogus fields for aliasing purposes.
-
     // @todo Add similar support to any date field
     // @see https://www.drupal.org/node/2337507
     $data['node_field_data']['created_fulldate'] = [
@@ -348,6 +422,29 @@ class NodeViewsData extends EntityViewsData {
     }
 
     return $data;
+  }
+
+  /**
+   * Returns a list of modules that implements a node access hook.
+   *
+   * @return array<string,string>
+   *   An associative array where keys are module machine names and values are
+   *   the human-readable names.
+   */
+  private function getNodeAccessImplementations(): array {
+    $implementations = [];
+    if ($this->moduleHandler->hasImplementations('node_grants')) {
+      $module_data = $this->moduleExtensionList->getAllInstalledInfo();
+      foreach (['node_grants', 'node_grants_alter'] as $hook) {
+        $this->moduleHandler->invokeAllWith(
+          $hook,
+          static function (callable $hook, string $module) use (&$implementations, $module_data) {
+            $implementations[$module] = $module_data[$module]['name'];
+          }
+        );
+      }
+    }
+    return $implementations;
   }
 
 }

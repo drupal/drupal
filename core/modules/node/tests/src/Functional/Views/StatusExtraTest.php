@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional\Views;
 
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\node\Traits\NodeAccessTrait;
 
 /**
  * Tests the node.status_extra field handler.
@@ -13,6 +15,8 @@ use Drupal\node\NodeInterface;
  * @see \Drupal\node\Plugin\views\filter\Status
  */
 class StatusExtraTest extends NodeTestBase {
+
+  use NodeAccessTrait;
 
   /**
    * {@inheritdoc}
@@ -92,6 +96,32 @@ class StatusExtraTest extends NodeTestBase {
     $this->assertSession()->pageTextNotContains($node_unpublished->label());
     $this->assertSession()->pageTextNotContains($node_unpublished2->label());
     $this->assertSession()->pageTextNotContains($node_unpublished3->label());
+
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    NodeType::create(['type' => 'page', 'name' => 'page'])->save();
+    $this->addPrivateField(NodeType::load('page'));
+    node_access_rebuild();
+    $node_published_private = $this->drupalCreateNode(['uid' => $admin_user->id(), 'private' => ['value' => 1]]);
+    $node_unpublished_private = $this->drupalCreateNode(['uid' => $admin_user->id(), 'status' => NodeInterface::NOT_PUBLISHED, 'private' => ['value' => 1]]);
+
+    // An unprivileged user must not see the published and unpublished content
+    // when access is granted via hook_node_access_grants().
+    $this->drupalLogin($this->drupalCreateUser());
+    $this->drupalGet('test_status_extra');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains($node_published_private->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished_private->label());
+
+    // A privileged user must see the published and unpublished content
+    // when access is granted via hook_node_access_grants().
+    $this->drupalLogin($this->drupalCreateUser(values: [
+      'roles' => $this->drupalCreateRole([
+        'node test view',
+      ]),
+    ]));
+    $this->drupalGet('test_status_extra');
+    $this->assertSession()->pageTextContains($node_published_private->label());
+    $this->assertSession()->pageTextContains($node_unpublished_private->label());
   }
 
 }
