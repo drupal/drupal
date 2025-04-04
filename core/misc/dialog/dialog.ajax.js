@@ -14,40 +14,41 @@
    */
   Drupal.behaviors.dialog = {
     attach(context, settings) {
-      const $context = $(context);
-
       // Provide a known 'drupal-modal' DOM element for Drupal-based modal
       // dialogs. Non-modal dialogs are responsible for creating their own
       // elements, since there can be multiple non-modal dialogs at a time.
-      if (!$('#drupal-modal').length) {
+      if (!document.querySelector('#drupal-modal')) {
         // Add 'ui-front' jQuery UI class so jQuery UI widgets like autocomplete
         // sit on top of dialogs. For more information see
         // http://api.jqueryui.com/theming/stacking-elements/.
-        $('<div id="drupal-modal" class="ui-front"></div>')
-          .hide()
-          .appendTo('body');
+        document.body.insertAdjacentHTML(
+          'beforeend',
+          '<div id="drupal-modal" class="ui-front" style="display:none"></div>',
+        );
       }
 
       // Special behaviors specific when attaching content within a dialog.
       // These behaviors usually fire after a validation error inside a dialog.
-      const $dialog = $context.closest('.ui-dialog-content');
-      if ($dialog.length) {
-        // Remove and replace the dialog buttons with those from the new form.
-        if ($dialog.dialog('option', 'drupalAutoButtons')) {
-          // Trigger an event to detect/sync changes to buttons.
-          $dialog.trigger('dialogButtonsChange');
-        }
-
-        setTimeout(function () {
-          // Account for pre-existing focus handling that may have already moved
-          // the focus inside the dialog.
-          if (!$dialog[0].contains(document.activeElement)) {
-            // Move focus to the first focusable element in the next event loop
-            // to allow dialog buttons to be changed first.
-            $dialog.dialog('instance')._focusedElement = null;
-            $dialog.dialog('instance')._focusTabbable();
+      if (context !== document) {
+        const dialog = context.closest('.ui-dialog-content');
+        if (dialog) {
+          // Remove and replace the dialog buttons with those from the new form.
+          if ($(dialog).dialog('option', 'drupalAutoButtons')) {
+            // Trigger an event to detect/sync changes to buttons.
+            dialog.dispatchEvent(new CustomEvent('dialogButtonsChange'));
           }
-        }, 0);
+
+          setTimeout(function () {
+            // Account for pre-existing focus handling that may have already moved
+            // the focus inside the dialog.
+            if (!dialog.contains(document.activeElement)) {
+              // Move focus to the first focusable element in the next event loop
+              // to allow dialog buttons to be changed first.
+              $(dialog).dialog('instance')._focusedElement = null;
+              $(dialog).dialog('instance')._focusTabbable();
+            }
+          }, 0);
+        }
       }
 
       const originalClose = settings.dialog.close;
@@ -77,7 +78,6 @@
             }, 0);
           }
         }
-
         $(event.target).remove();
       };
     },
@@ -93,26 +93,23 @@
      */
     prepareDialogButtons($dialog) {
       const buttons = [];
-      const $buttons = $dialog.find(
-        '.form-actions input[type=submit], .form-actions a.button, .form-actions a.action-link',
-      );
-      $buttons.each(function () {
-        const $originalButton = $(this);
-        this.style.display = 'none';
+      const buttonSelectors =
+        '.form-actions input[type=submit], .form-actions a.button, .form-actions a.action-link';
+      const buttonElements = $dialog[0].querySelectorAll(buttonSelectors);
+
+      buttonElements.forEach((button) => {
+        button.style.display = 'none';
         buttons.push({
-          text: $originalButton.html() || $originalButton.attr('value'),
-          class: $originalButton.attr('class'),
-          'data-once': $originalButton.data('once'),
+          text: button.innerHTML || button.getAttribute('value'),
+          class: button.getAttribute('class'),
+          'data-once': button.dataset.once,
           click(e) {
-            // If the original button is an anchor tag, triggering the "click"
-            // event will not simulate a click. Use the click method instead.
-            if ($originalButton[0].tagName === 'A') {
-              $originalButton[0].click();
+            if (button.tagName === 'A') {
+              button.click();
             } else {
-              $originalButton
-                .trigger('mousedown')
-                .trigger('mouseup')
-                .trigger('click');
+              ['mousedown', 'mouseup', 'click'].forEach((event) =>
+                button.dispatchEvent(new MouseEvent(event)),
+              );
             }
             e.preventDefault();
           },
@@ -139,19 +136,17 @@
     if (!response.selector) {
       return false;
     }
-    let $dialog = $(response.selector);
-    if (!$dialog.length) {
+    let dialog = document.querySelector(response.selector);
+    if (!dialog) {
       // Create the element if needed.
-      $dialog = $(
-        `<div id="${response.selector.replace(
-          /^#/,
-          '',
-        )}" class="ui-front"></div>`,
-      ).appendTo('body');
+      dialog = document.createElement('div');
+      dialog.id = response.selector.replace(/^#/, '');
+      dialog.classList.add('ui-front');
+      document.body.appendChild(dialog);
     }
     // Set up the wrapper, if there isn't one.
     if (!ajax.wrapper) {
-      ajax.wrapper = $dialog.attr('id');
+      ajax.wrapper = dialog.id;
     }
 
     // Use the ajax.js insert command to populate the dialog contents.
@@ -174,26 +169,32 @@
       response.dialogOptions.drupalAutoButtons
     ) {
       response.dialogOptions.buttons =
-        Drupal.behaviors.dialog.prepareDialogButtons($dialog);
+        Drupal.behaviors.dialog.prepareDialogButtons($(dialog));
     }
 
+    const dialogButtonsChange = () => {
+      const buttons = Drupal.behaviors.dialog.prepareDialogButtons($(dialog));
+      $(dialog).dialog('option', 'buttons', buttons);
+    };
+
     // Bind dialogButtonsChange.
-    $dialog.on('dialogButtonsChange', () => {
-      const buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
-      $dialog.dialog('option', 'buttons', buttons);
+    dialog.addEventListener('dialogButtonsChange', dialogButtonsChange);
+    dialog.addEventListener('dialog:beforeclose', (event) => {
+      dialog.removeEventListener('dialogButtonsChange', dialogButtonsChange);
     });
 
     // Open the dialog itself.
-    response.dialogOptions = response.dialogOptions || {};
-    const dialog = Drupal.dialog($dialog.get(0), response.dialogOptions);
+    const createdDialog = Drupal.dialog(dialog, response.dialogOptions);
     if (response.dialogOptions.modal) {
-      dialog.showModal();
+      createdDialog.showModal();
     } else {
-      dialog.show();
+      createdDialog.show();
     }
 
     // Add the standard Drupal class for buttons for style consistency.
-    $dialog.parent().find('.ui-dialog-buttonset').addClass('form-actions');
+    dialog.parentElement
+      ?.querySelector('.ui-dialog-buttonset')
+      ?.classList.add('form-actions');
   };
 
   /**
@@ -217,16 +218,13 @@
     response,
     status,
   ) {
-    const $dialog = $(response.selector);
-    if ($dialog.length) {
-      Drupal.dialog($dialog.get(0)).close();
+    const dialog = document.querySelector(response.selector);
+    if (dialog) {
+      Drupal.dialog(dialog).close();
       if (!response.persist) {
-        $dialog.remove();
+        dialog.remove();
       }
     }
-
-    // Unbind dialogButtonsChange.
-    $dialog.off('dialogButtonsChange');
   };
 
   /**
@@ -252,47 +250,32 @@
     response,
     status,
   ) {
-    const $dialog = $(response.selector);
-    if ($dialog.length) {
-      $dialog.dialog('option', response.optionName, response.optionValue);
+    const dialog = document.querySelector(response.selector);
+    if (dialog) {
+      $(dialog).dialog('option', response.optionName, response.optionValue);
     }
   };
 
   /**
    * Binds a listener on dialog creation to handle the cancel link.
    *
-   * @param {jQuery.Event} e
+   * @param {DrupalDialogEvent} e
    *   The event triggered.
    * @param {Drupal.dialog~dialogDefinition} dialog
    *   The dialog instance.
-   * @param {jQuery} $element
-   *   The jQuery collection of the dialog element.
    * @param {object} [settings]
    *   Dialog settings.
    */
   window.addEventListener('dialog:aftercreate', (event) => {
-    const $element = $(event.target);
     const dialog = event.dialog;
-    $element.on('click.dialog', '.dialog-cancel', (e) => {
+    const cancelButton = event.target.querySelector('.dialog-cancel');
+    const cancelClick = (e) => {
       dialog.close('cancel');
       e.preventDefault();
       e.stopPropagation();
-    });
-  });
-
-  /**
-   * Removes all 'dialog' listeners.
-   *
-   * @param {jQuery.Event} e
-   *   The event triggered.
-   * @param {Drupal.dialog~dialogDefinition} dialog
-   *   The dialog instance.
-   * @param {jQuery} $element
-   *   jQuery collection of the dialog element.
-   */
-  window.addEventListener('dialog:beforeclose', (e) => {
-    const $element = $(e.target);
-    $element.off('.dialog');
+    };
+    cancelButton?.removeEventListener('click', cancelClick);
+    cancelButton?.addEventListener('click', cancelClick);
   });
 
   /**

@@ -1249,7 +1249,6 @@
         context,
       ).forEach((dropdown) => {
         // Closures! :(
-        const $context = $(context);
         const submit = context.querySelector('[id^=edit-submit]');
         const oldValue = submit ? submit.value : '';
 
@@ -1273,8 +1272,10 @@
             } else {
               submit.value = Drupal.t('Apply (this display)');
             }
-            const $dialog = $context.closest('.ui-dialog-content');
-            $dialog.trigger('dialogButtonsChange');
+            if (context !== document) {
+              const dialog = context.closest('.ui-dialog-content');
+              dialog?.dispatchEvent(new CustomEvent('dialogButtonsChange'));
+            }
           })
           .trigger('change');
       });

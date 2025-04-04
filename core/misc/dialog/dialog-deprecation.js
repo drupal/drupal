@@ -36,5 +36,23 @@
       'dialog:beforeclose',
       'dialog:afterclose',
     ].forEach((e) => window.addEventListener(e, listenDialogEvent));
+
+    window.addEventListener('dialog:beforecreate', (event) => {
+      const dialog = event.target;
+      $(dialog).on('dialogButtonsChange.dialogDeprecation', (e) => {
+        // If triggered by jQuery.
+        if (!e?.originalEvent) {
+          Drupal.deprecationError({
+            message: `jQuery event dialogButtonsChange is deprecated in 11.2.0 and is removed from Drupal:12.0.0. See https://www.drupal.org/node/3464202`,
+          });
+          dialog.dispatchEvent(new CustomEvent('dialogButtonsChange'));
+        }
+      });
+    });
+
+    window.addEventListener('dialog:beforeclose', (event) => {
+      const dialog = event.target;
+      $(dialog).off(`dialogButtonsChange.dialogDeprecation`);
+    });
   }
 })(jQuery, Drupal, once);
