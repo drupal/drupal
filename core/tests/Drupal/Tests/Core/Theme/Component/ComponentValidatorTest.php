@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Component;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Component\ComponentValidator;
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\Plugin\Component;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\Constraints\FormatConstraint;
+use JsonSchema\Entity\JsonPointer;
+use JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
@@ -169,6 +174,33 @@ class ComponentValidatorTest extends TestCase {
   }
 
   /**
+   * Tests we can use a custom validator to validate props.
+   */
+  public function testCustomValidator(): void {
+    $component = new Component(
+      ['app_root' => '/fake/path/root'],
+      'sdc_test:my-cta',
+      static::loadComponentDefinitionFromFs('my-cta'),
+    );
+    $component_validator = new ComponentValidator();
+    // A validator with a constraint factory that uses a custom constraint for
+    // checking format.
+    $component_validator->setValidator(new Validator((new Factory())->setConstraintClass('format', UrlHelperFormatConstraint::class)));
+    self::assertTrue(
+      $component_validator->validateProps([
+        'text' => 'Can Pica',
+        // This is a valid URI but for v5.2 of justinrainbow/json-schema it
+        // does not pass validation without a custom constraint for format.
+        // We pass a custom factory and it should be used.
+        'href' => 'entity:node/1',
+        'target' => '_blank',
+        'attributes' => new Attribute(['key' => 'value']),
+      ], $component),
+      'The valid component props threw an error.'
+    );
+  }
+
+  /**
    * Tests that invalid props are handled properly.
    *
    * @dataProvider dataProviderValidatePropsInvalid
@@ -252,6 +284,29 @@ class ComponentValidatorTest extends TestCase {
         'description' => 'My description',
       ]
     );
+  }
+
+}
+
+/**
+ * Defines a custom format constraint for json-schema.
+ */
+class UrlHelperFormatConstraint extends FormatConstraint {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function check(&$element, $schema = NULL, ?JsonPointer $path = NULL, $i = NULL): void {
+    if (!isset($schema->format) || $this->factory->getConfig(self::CHECK_MODE_DISABLE_FORMAT)) {
+      return;
+    }
+    if ($schema->format === 'uri') {
+      if (\is_string($element) && !UrlHelper::isValid($element)) {
+        $this->addError($path, 'Invalid URL format', 'format', ['format' => $schema->format]);
+      }
+      return;
+    }
+    parent::check($element, $schema, $path, $i);
   }
 
 }
