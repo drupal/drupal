@@ -159,19 +159,16 @@
   behaviors.layoutBuilderBlockDrag = {
     attach(context) {
       const regionSelector = '.js-layout-builder-region';
-      Array.prototype.forEach.call(
-        context.querySelectorAll(regionSelector),
-        (region) => {
-          Sortable.create(region, {
-            draggable: '.js-layout-builder-block',
-            ghostClass: 'ui-state-drop',
-            group: 'builder-region',
-            filter: '.contextual',
-            onEnd: (event) =>
-              Drupal.layoutBuilderBlockUpdate(event.item, event.from, event.to),
-          });
-        },
-      );
+      context.querySelectorAll(regionSelector).forEach((region) => {
+        Sortable.create(region, {
+          draggable: '.js-layout-builder-block',
+          ghostClass: 'ui-state-drop',
+          group: 'builder-region',
+          filter: '.contextual',
+          onEnd: (event) =>
+            Drupal.layoutBuilderBlockUpdate(event.item, event.from, event.to),
+        });
+      });
     },
   };
 
