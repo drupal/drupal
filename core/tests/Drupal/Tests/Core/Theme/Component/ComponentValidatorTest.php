@@ -78,10 +78,26 @@ class ComponentValidatorTest extends TestCase {
       $valid_cta,
       ['extension_type' => 'invalid'],
     );
+    $cta_with_invalid_slot_type = $valid_cta;
+    $cta_with_invalid_slot_type['slots'] = [
+      'valid_slot' => [
+        'title' => 'Valid slot',
+        'description' => 'Valid slot description',
+      ],
+      'invalid_slot' => [
+        'title' => [
+          'hello' => 'Invalid slot',
+          'world' => 'Invalid slot',
+        ],
+        'description' => 'Title must be string',
+      ],
+    ];
+
     return [
       [$cta_with_missing_required],
       [$cta_with_invalid_class],
       [$cta_with_invalid_enum],
+      [$cta_with_invalid_slot_type],
     ];
   }
 
