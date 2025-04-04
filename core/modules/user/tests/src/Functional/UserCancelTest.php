@@ -514,27 +514,40 @@ class UserCancelTest extends BrowserTestBase {
   }
 
   /**
-   * Create an administrative user and delete another user.
+   * Create an administrative user and delete other users.
    */
   public function testUserCancelByAdmin(): void {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
-
-    // Create a regular user.
-    $account = $this->drupalCreateUser([]);
 
     // Create administrative user.
     $admin_user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($admin_user);
 
+    // Test deletion of a user account without email confirmation.
+    $account1 = $this->drupalCreateUser([]);
+
     // Delete regular user.
-    $this->drupalGet('user/' . $account->id() . '/cancel');
-    $this->assertSession()->pageTextContains("Are you sure you want to cancel the account {$account->getAccountName()}?");
+    $this->drupalGet('user/' . $account1->id() . '/cancel');
+    $this->assertSession()->pageTextContains("Are you sure you want to cancel the account {$account1->getAccountName()}?");
     $this->assertSession()->pageTextContains('Cancellation method');
 
     // Confirm deletion.
     $this->submitForm([], 'Confirm');
-    $this->assertSession()->pageTextContains("Account {$account->getAccountName()} has been deleted.");
-    $this->assertNull(User::load($account->id()), 'User is not found in the database.');
+    $this->assertSession()->pageTextContains("Account {$account1->getAccountName()} has been deleted.");
+    $this->assertNull(User::load($account1->id()), 'User is not found in the database.');
+
+    // Test deletion of a user account with email confirmation.
+    $account2 = $this->drupalCreateUser([]);
+
+    // Delete regular user.
+    $this->drupalGet('user/' . $account2->id() . '/cancel');
+    $this->assertSession()->pageTextContains("Are you sure you want to cancel the account {$account2->getAccountName()}?");
+    $this->assertSession()->pageTextContains('Cancellation method');
+
+    // Confirm deletion.
+    $this->submitForm(['edit-user-cancel-confirm' => 1], 'Confirm');
+    $this->assertSession()->pageTextContains("A confirmation request to cancel the account {$account2->getAccountName()} has been sent to the user's email address.");
+    $this->assertNotNull(User::load($account2->id()), 'User is found in the database.');
   }
 
   /**
