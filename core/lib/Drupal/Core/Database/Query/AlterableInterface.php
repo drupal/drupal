@@ -40,28 +40,36 @@ interface AlterableInterface {
    *
    * Each tag to check should be supplied as a separate argument.
    *
-   * @todo Restore PHPDoc of variadic argument in Drupal 8.8, see
-   * https://www.drupal.org/project/drupal/issues/3029729
+   * phpcs:ignore
+   * @param string ...$tags
+   *   A variable number of arguments, one for each tag to check.
    *
    * @return bool
    *   TRUE if this query has been marked with all specified tags, FALSE
    *   otherwise.
+   *
+   * @todo Remove PHPCS ignore and uncomment new method parameters before
+   *   drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3501046.
    */
-  public function hasAllTags();
+  public function hasAllTags(/* string ...$tags*/);
 
   /**
    * Determines if a given query has any specified tag.
    *
    * Each tag to check should be supplied as a separate argument.
    *
-   * @todo Restore PHPDoc of variadic argument in Drupal 8.8, see
-   * https://www.drupal.org/project/drupal/issues/3029729
+   * phpcs:ignore
+   * @param string ...$tags
+   *   A variable number of arguments, one for each tag to check.
    *
    * @return bool
    *   TRUE if this query has been marked with at least one of the specified
    *   tags, FALSE otherwise.
+   *
+   * @todo Remove PHPCS ignore and uncomment new method parameters before
+   *   drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3501046.
    */
-  public function hasAnyTag();
+  public function hasAnyTag(/* string ...$tags*/);
 
   /**
    * Adds additional metadata to the query.
