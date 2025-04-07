@@ -319,7 +319,7 @@ Navigation
 - Pablo López 'plopesc' https://www.drupal.org/u/plopesc
 
 Node
-- ?
+- Adam Bramley 'acbramley' https://www.drupal.org/u/acbramley
 
 Node Access
 - Ken Rickard 'agentrickard' https://www.drupal.org/u/agentrickard
