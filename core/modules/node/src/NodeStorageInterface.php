@@ -54,6 +54,11 @@ interface NodeStorageInterface extends ContentEntityStorageInterface {
    *
    * @return int
    *   The number of nodes whose node type field was modified.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3515214
    */
   public function updateType($old_type, $new_type);
 

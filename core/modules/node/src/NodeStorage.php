@@ -45,6 +45,7 @@ class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterfac
    * {@inheritdoc}
    */
   public function updateType($old_type, $new_type) {
+    @trigger_error(__CLASS__ . "::" . __FUNCTION__ . " is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3515214", E_USER_DEPRECATED);
     return $this->database->update($this->getBaseTable())
       ->fields(['type' => $new_type])
       ->condition('type', $old_type)
