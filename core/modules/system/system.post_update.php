@@ -5,6 +5,9 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Entity\EntityFormModeInterface;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -102,4 +105,21 @@ function system_post_update_remove_path_key(): void {
       ->clear('path')
       ->save();
   }
+}
+
+/**
+ * Updates all entity_form_mode configuration entities to set description from empty string to null.
+ */
+function system_post_update_convert_empty_description_entity_form_modes_to_null(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'entity_form_mode', function (EntityFormModeInterface $form_mode): bool {
+      // Entity form mode's `description` field must be stored as NULL at the
+      // config level if they are empty.
+      if ($form_mode->get('description') !== NULL && trim($form_mode->get('description')) === '') {
+        $form_mode->set('description', NULL);
+        return TRUE;
+      }
+      return FALSE;
+    });
+
 }

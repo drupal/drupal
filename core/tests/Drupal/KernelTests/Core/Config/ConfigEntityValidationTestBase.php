@@ -182,7 +182,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * Tests that the entity ID's length is validated if it is a machine name.
    */
-  public function testMachineNameLength(): void {
+  public function testMachineNameLength(string $prefix = ''): void {
     $constraints = $this->getMachineNameConstraints();
 
     $max_length = $constraints['Length']['max'];
@@ -195,7 +195,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       // Config entity IDs are immutable by default.
       '' => "The '$id_key' property cannot be changed.",
     ];
-    $this->entity->set($id_key, $this->randomMachineName($max_length + 2));
+    $this->entity->set($id_key, $prefix . $this->randomMachineName($max_length + 2));
     $this->assertValidationErrors($expected_errors);
   }
 

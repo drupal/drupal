@@ -43,7 +43,7 @@ abstract class EntityFormModeResourceTestBase extends ConfigEntityResourceTestBa
     $entity_form_mode = EntityFormMode::create([
       'id' => 'user.test',
       'label' => 'Test',
-      'description' => '',
+      'description' => NULL,
       'targetEntityType' => 'user',
     ]);
     $entity_form_mode->save();

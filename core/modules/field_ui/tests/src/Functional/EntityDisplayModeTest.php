@@ -133,6 +133,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $edit = [
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
+      'description' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("Saved the {$edit['label']} form mode.");

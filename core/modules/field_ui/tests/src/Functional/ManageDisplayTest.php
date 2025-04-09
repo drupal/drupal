@@ -270,6 +270,7 @@ class ManageDisplayTest extends BrowserTestBase {
       'id' => 'node.big',
       'label' => 'Big Form',
       'targetEntityType' => 'node',
+      'description' => 'Test description',
     ])->save();
     EntityFormMode::create([
       'id' => 'node.little',

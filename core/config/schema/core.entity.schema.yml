@@ -23,19 +23,36 @@ core.entity_view_mode.*.*:
 core.entity_form_mode.*.*:
   type: config_entity
   label: 'Entity form mode settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: string
       label: 'ID'
+      # Form mode IDs can only contain lowercase letters, numbers, and underscores
+      # prefixed by entity type name this form mode is used for and a dot.
+      # @see \Drupal\field_ui\Form\EntityDisplayModeFormBase::form()
+      constraints:
+        Regex:
+          pattern: '/^[a-z0-9_]+\.[a-z0-9_]+$/'
+          message: "The ID %value is not valid."
     label:
       type: required_label
       label: 'Label'
     description:
       type: text
       label: 'Description'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
     targetEntityType:
       type: string
       label: 'Target entity type'
+      constraints:
+        PluginExists:
+          manager: entity_type.manager
+          interface: Drupal\Core\Entity\ContentEntityInterface
     cache:
       type: boolean
       label: 'Cache'

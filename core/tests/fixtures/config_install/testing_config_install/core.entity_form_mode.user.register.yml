@@ -8,6 +8,6 @@ _core:
   default_config_hash: flXhTcp55yLcyy7ZLOhPGKGZobZQJdkAFVWV3LseiuI
 id: user.register
 label: Register
-description: ''
+description: null
 targetEntityType: user
 cache: true

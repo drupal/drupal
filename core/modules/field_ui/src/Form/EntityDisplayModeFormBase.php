@@ -6,6 +6,7 @@ use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -296,6 +297,18 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       'view' => $this->getViewDisplay($bundle, $display_mode_name),
       'form' => $this->getFormDisplay($bundle, $display_mode_name),
     };
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state): void {
+    // Config schema dictates that the description value
+    // cannot be empty string. So, if it is empty, make it NULL.
+    if ($form_state->hasValue('description') && trim($form_state->getValue('description')) === '') {
+      $form_state->setValue('description', NULL);
+    }
+    parent::copyFormValuesToEntity($entity, $form, $form_state);
   }
 
 }
