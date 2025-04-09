@@ -11,3 +11,12 @@
 function migrate_drupal_update_last_removed(): int {
   return 8901;
 }
+
+/**
+ * Implements hook_uninstall().
+ */
+function migrate_drupal_uninstall($is_syncing): void {
+  $state = \Drupal::state();
+  $state->delete('migrate_drupal_6');
+  $state->delete('migrate_drupal_7');
+}
