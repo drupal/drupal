@@ -302,10 +302,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     $action = Action::load('test_action');
     $this->assertEquals('Test action', $action->label());
 
-    // Make sure our ban still exists.
-    $this->drupalGet('admin/config/people/ban');
-    $this->assertSession()->pageTextContains('8.8.8.8');
-
     // Make sure our vocabulary exists.
     $this->drupalGet('admin/structure/taxonomy/manage/test_vocabulary/overview');
 
@@ -331,7 +327,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
 
     // Make sure our modules are still enabled.
     $expected_enabled_modules = [
-      'ban',
       'basic_auth',
       'block',
       'block_content',

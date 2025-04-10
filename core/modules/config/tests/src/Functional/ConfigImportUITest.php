@@ -84,13 +84,13 @@ class ConfigImportUITest extends BrowserTestBase {
     $sync->write($dynamic_name, $original_dynamic_data);
     $this->assertTrue($sync->exists($dynamic_name), $dynamic_name . ' found.');
 
-    // Enable the Automated Cron and Ban modules during import. The Ban
-    // module is used because it creates a table during the install.
-    // The Automated Cron module is used because it creates a single simple
-    // configuration file during the install.
+    // Enable the Automated Cron and config_install_schema_test modules during
+    // import. The config_install_schema_test module is used because it creates
+    // a table during the install. The Automated Cron module is used because it
+    // creates a single simple configuration file during the install.
     $core_extension = $this->config('core.extension')->get();
     $core_extension['module']['automated_cron'] = 0;
-    $core_extension['module']['ban'] = 0;
+    $core_extension['module']['config_install_schema_test'] = 0;
     $core_extension['module'] = module_config_sort($core_extension['module']);
     $core_extension['theme']['olivero'] = 0;
     $sync->write('core.extension', $core_extension);
@@ -154,8 +154,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertTrue(isset($GLOBALS['hook_cache_flush']));
 
     $this->rebuildContainer();
-    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('ban'), 'Ban module installed during import.');
-    $this->assertTrue(\Drupal::database()->schema()->tableExists('ban_ip'), 'The database table ban_ip exists.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('config_install_schema_test'), 'config_install_schema_test module installed during import.');
+    $this->assertTrue(\Drupal::database()->schema()->tableExists('config_install_schema_test_ip'), 'The database table config_install_schema_test_ip exists.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('automated_cron'), 'Automated Cron module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('options'), 'Options module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('text'), 'Text module installed during import.');
@@ -163,9 +163,9 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Ensure installations and uninstallation occur as expected.
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
-    $expected = ['automated_cron', 'ban', 'text', 'options'];
+    $expected = ['automated_cron', 'config_install_schema_test', 'text', 'options'];
     $installed = \Drupal::state()->get('config_import_test_modules_installed.list');
-    $this->assertSame($expected, $installed, 'Automated Cron, Ban, Text and Options modules installed in the correct order.');
+    $this->assertSame($expected, $installed, 'Automated Cron, config_install_schema_test, Text and Options modules installed in the correct order.');
     $this->assertEmpty($uninstalled, 'No modules uninstalled during import');
 
     // Verify that the automated_cron configuration object was only written
@@ -178,7 +178,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['automated_cron']);
-    unset($core_extension['module']['ban']);
+    unset($core_extension['module']['config_install_schema_test']);
     unset($core_extension['module']['options']);
     unset($core_extension['module']['text']);
     unset($core_extension['theme']['olivero']);
@@ -212,8 +212,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('<td>automated_cron.settings');
 
     $this->rebuildContainer();
-    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('ban'), 'Ban module uninstalled during import.');
-    $this->assertFalse(\Drupal::database()->schema()->tableExists('ban_ip'), 'The database table ban_ip does not exist.');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('config_install_schema_test'), 'config_install_schema_test module uninstalled during import.');
+    $this->assertFalse(\Drupal::database()->schema()->tableExists('config_install_schema_test_ip'), 'The database table config_install_schema_test_ip does not exist.');
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('automated_cron'), 'Automated cron module uninstalled during import.');
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('options'), 'Options module uninstalled during import.');
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('text'), 'Text module uninstalled during import.');
@@ -221,8 +221,8 @@ class ConfigImportUITest extends BrowserTestBase {
     // Ensure installations and uninstallation occur as expected.
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', []);
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
-    $expected = ['options', 'text', 'ban', 'automated_cron'];
-    $this->assertSame($expected, $uninstalled, 'Options, Text, Ban and Automated Cron modules uninstalled in the correct order.');
+    $expected = ['options', 'text', 'config_install_schema_test', 'automated_cron'];
+    $this->assertSame($expected, $uninstalled, 'Options, Text, config_install_schema_test and Automated Cron modules uninstalled in the correct order.');
     $this->assertEmpty($installed, 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();

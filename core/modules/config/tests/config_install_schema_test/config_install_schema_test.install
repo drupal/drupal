@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Install function for the config_install_schema_test module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ */
+function config_install_schema_test_schema(): array {
+  $schema['config_install_schema_test_ip'] = [
+    'description' => 'Stores banned IP addresses.',
+    'fields' => [
+      'iid' => [
+        'description' => 'Primary Key: unique ID for IP addresses.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'ip' => [
+        'description' => 'IP address',
+        'type' => 'varchar_ascii',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+    ],
+    'indexes' => [
+      'ip' => ['ip'],
+    ],
+    'primary key' => ['iid'],
+  ];
+  return $schema;
+}
