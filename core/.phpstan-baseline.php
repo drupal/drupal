@@ -56410,5 +56410,11 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/themes/olivero/src/OliveroPreRender.php',
 ];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$render_start might not be defined\\.$#',
+	'identifier' => 'variable.undefined',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
+];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
