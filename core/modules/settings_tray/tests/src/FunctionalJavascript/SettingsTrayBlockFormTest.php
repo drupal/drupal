@@ -6,6 +6,7 @@ namespace Drupal\Tests\settings_tray\FunctionalJavascript;
 
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBlock;
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationNoneBlock;
+use Drupal\Tests\WaitTerminateTestTrait;
 use Drupal\user\Entity\Role;
 
 /**
@@ -14,6 +15,8 @@ use Drupal\user\Entity\Role;
  * @group settings_tray
  */
 class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
+
+  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -44,6 +47,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
       'search content',
     ]);
     $this->drupalLogin($user);
+    $this->setWaitForTerminate();
   }
 
   /**
@@ -231,7 +235,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    * Tests enabling and disabling Edit Mode.
    */
   public function testEditModeEnableDisable(): void {
-    $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3317520");
     foreach (static::getTestThemes() as $theme) {
       $this->enableTheme($theme);
       $block = $this->placeBlock('system_powered_by_block');

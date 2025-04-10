@@ -49,11 +49,10 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
     // When page first loads Edit Mode is not triggered until first contextual
     // link is added.
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode'));
-    // @todo https://www.drupal.org/project/drupal/issues/3317520 Work why the
-    //   sleep is necessary in.
-    usleep(100000);
 
-    $block = $this->getSession()->getPage()->find('css', $block_selector);
+    $block = $this->assertSession()->waitForElementVisible('css', $block_selector);
+    $this->assertNotEmpty($block);
+
     $block->mouseOver();
     $block->click();
     $this->waitForOffCanvasToOpen();
