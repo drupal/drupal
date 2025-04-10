@@ -359,11 +359,7 @@ class Renderer implements RendererInterface {
       '#create_placeholder' => TRUE,
     ]);
 
-    // If the default values for this element have not been loaded yet, populate
-    // them.
-    if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
-      $elements += $this->elementInfo->getInfo($elements['#type']);
-    }
+    $this->loadElementDefaults($elements);
 
     // First validate the usage of #lazy_builder; both of the next if-statements
     // use it if available.
@@ -412,6 +408,9 @@ class Renderer implements RendererInterface {
       // Throw an exception if #lazy_builder callback does not return an array;
       // provide helpful details for troubleshooting.
       assert(is_array($new_elements), "#lazy_builder callbacks must return a valid renderable array, got " . gettype($new_elements) . " from " . Variable::callableToString($elements['#lazy_builder'][0]));
+
+      // The lazy builder could have set a #type, load its defaults.
+      $this->loadElementDefaults($new_elements);
 
       // Retain the original cacheability metadata, plus cache keys.
       CacheableMetadata::createFromRenderArray($elements)
@@ -642,6 +641,18 @@ class Renderer implements RendererInterface {
     $this->setCurrentRenderContext($previous_context);
 
     return $result;
+  }
+
+  /**
+   * Loads an element's default values based on its type.
+   *
+   * @param array $element
+   *   The render array representing the element.
+   */
+  protected function loadElementDefaults(array &$element): void {
+    if (isset($element['#type']) && empty($element['#defaults_loaded'])) {
+      $element += $this->elementInfo->getInfo($element['#type']);
+    }
   }
 
   /**

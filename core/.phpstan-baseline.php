@@ -3075,5 +3075,11 @@ in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
 	'count' => 1,
 	'path' => __DIR__ . '/tests/TestSuites/UnitTestSuite.php',
 ];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$render_start might not be defined\\.$#',
+	'identifier' => 'variable.undefined',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
+];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

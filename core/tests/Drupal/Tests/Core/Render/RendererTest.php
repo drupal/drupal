@@ -545,6 +545,40 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
+   * Tests that element defaults are added.
+   *
+   * @covers ::render
+   * @covers ::doRender
+   */
+  public function testElementDefaultsAdded(): void {
+    $build = ['#type' => 'details'];
+    $this->renderer->renderInIsolation($build);
+    $this->assertTrue($build['#defaults_loaded'], "An element with a type had said type's defaults loaded.");
+
+    $build = [
+      '#lazy_builder' => [
+        'Drupal\Tests\Core\Render\TestCallables::lazyBuilder',
+        [FALSE],
+      ],
+      '#create_placeholder' => FALSE,
+    ];
+
+    $this->renderer->renderInIsolation($build);
+    $this->assertArrayNotHasKey('#defaults_loaded', $build, "A lazy builder that did not set a type had no type defaults loaded.");
+
+    $build = [
+      '#lazy_builder' => [
+        'Drupal\Tests\Core\Render\TestCallables::lazyBuilder',
+        [TRUE],
+      ],
+      '#create_placeholder' => FALSE,
+    ];
+
+    $this->renderer->renderInIsolation($build);
+    $this->assertTrue($build['#defaults_loaded'], "A lazy builder that set a type had said type's defaults loaded.");
+  }
+
+  /**
    * @covers ::render
    * @covers ::doRender
    *
@@ -1117,11 +1151,19 @@ class TestCallables implements TrustedCallbackInterface {
     return $elements;
   }
 
+  public static function lazyBuilder(bool $set_type): array {
+    $build['content'] = ['#markup' => 'Content'];
+    if ($set_type) {
+      $build['#type'] = 'details';
+    }
+    return $build;
+  }
+
   /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['preRenderPrinted'];
+    return ['preRenderPrinted', 'lazyBuilder'];
   }
 
 }
