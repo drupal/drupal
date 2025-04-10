@@ -266,7 +266,7 @@ class UserHooks {
     $mail_config = \Drupal::config('user.mail');
     $token_options = ['langcode' => $langcode, 'callback' => 'user_mail_tokens', 'clear' => TRUE];
     $message['subject'] .= PlainTextOutput::renderFromHtml($token_service->replace($mail_config->get($key . '.subject'), $variables, $token_options));
-    $message['body'][] = $token_service->replace($mail_config->get($key . '.body'), $variables, $token_options);
+    $message['body'][] = $token_service->replacePlain($mail_config->get($key . '.body'), $variables, $token_options);
     $language_manager->setConfigOverrideLanguage($original_language);
   }
 

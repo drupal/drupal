@@ -7,6 +7,7 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\user\Hook\UserHooks;
 
 /**
  * Tests _user_mail_notify() use of user.settings.notify.*.
@@ -184,6 +185,32 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $this->assertMailString('body', 'fr body', 1);
     $this->assertMailString('body', 'fr/user/reset', 1);
 
+  }
+
+  /**
+   * Tests the mail hook implementation from the user module.
+   */
+  public function testUserMailHook(): void {
+    $this->installConfig('user');
+    $config = $this->config('system.site');
+    $config->set('langcode', 'en');
+    // Use a name that could trigger HTML entity replacements.
+    // cspell:ignore L'Equipe de l'Agriculture
+    $config->set('name', "L'Equipe de l'Agriculture")->save();
+
+    $hooks = new UserHooks();
+    $user = $this->createUser();
+    $message = ['langcode' => 'en', 'subject' => 'Test subject: '];
+    $hooks->mail('password_reset', $message, ['account' => $user]);
+    $this->assertSame('Test subject: Replacement login information for ' . $user->label() . " at L'Equipe de l'Agriculture", $message['subject']);
+    $this->assertStringContainsString(
+      "A request to reset the password for your account has been made at L'Equipe de l'Agriculture",
+      $message['body'][0]
+    );
+    $this->assertStringContainsString(
+      "--  L'Equipe de l'Agriculture team",
+      $message['body'][0]
+    );
   }
 
 }

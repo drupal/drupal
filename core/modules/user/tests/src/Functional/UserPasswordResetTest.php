@@ -168,6 +168,24 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertValidPasswordReset($edit['name']);
     $this->assertCount($before + 1, $this->drupalGetMails(['id' => 'user_password_reset']), 'Email sent when requesting password reset using email address.');
 
+    // Change the site name.
+    // The site name token in the email will be replaced by this one.
+    // cspell:ignore L'Equipe de l'Agriculture
+    $config = $this->config('system.site');
+    $config->set('name', "L'Equipe de l'Agriculture")->save();
+    $this->rebuildContainer();
+    // Request a new password using the email address.
+    $this->drupalGet('user/password');
+    $edit = ['name' => $this->account->getEmail()];
+    $this->submitForm($edit, 'Submit');
+    // Check that the email message body does not contain HTML entities
+    // Assume the most recent email.
+    $_emails = $this->drupalGetMails();
+    $email = end($_emails);
+    $this->assertEquals(htmlspecialchars_decode($email['body']), $email['body'], 'Email body contains HTML entities');
+    // Change site name to 'Drupal'
+    $config->set('name', "Drupal")->save();
+    $this->rebuildContainer();
     // Visit the user edit page without pass-reset-token and make sure it does
     // not cause an error.
     $resetURL = $this->getResetURL();
