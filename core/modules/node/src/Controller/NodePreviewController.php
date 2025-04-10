@@ -70,8 +70,13 @@ class NodePreviewController extends EntityViewController {
    *
    * @return string
    *   The page title.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+   * replacement.
+   * @see https://www.drupal.org/node/3518065
    */
   public function title(EntityInterface $node_preview) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3518065', E_USER_DEPRECATED);
     return $this->entityRepository->getTranslationFromContext($node_preview)->label();
   }
 

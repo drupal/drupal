@@ -42,7 +42,6 @@ entity.node.preview:
   path: '/node/preview/{node_preview}/{view_mode_id}'
   defaults:
     _controller: '\Drupal\node\Controller\NodePreviewController::view'
-    _title_callback: '\Drupal\node\Controller\NodePreviewController::title'
   requirements:
     _node_preview_access: '{node_preview}'
   options:
