@@ -167,6 +167,31 @@ class WorkspaceAssociationTest extends KernelTestBase {
   }
 
   /**
+   * Tests the count of revisions returned for tracked entities listing.
+   *
+   * @covers ::getTrackedEntitiesForListing
+   */
+  public function testWorkspaceAssociationForListing(): void {
+    $this->switchToWorkspace($this->workspaces['stage']->id());
+    $entity_type_id = 'entity_test_mulrevpub';
+
+    for ($i = 1; $i <= 51; ++$i) {
+      $this->createEntity($entity_type_id, ['name' => "Test entity {$i}"]);
+    }
+
+    /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
+    $workspace_association = \Drupal::service('workspaces.association');
+
+    // The default behavior uses a pager with 50 items per page.
+    $tracked_items = $workspace_association->getTrackedEntitiesForListing($this->workspaces['stage']->id());
+    $this->assertEquals(50, count($tracked_items[$entity_type_id]));
+
+    // Verifies that all items are returned, not broken into pages.
+    $tracked_items_no_pager = $workspace_association->getTrackedEntitiesForListing($this->workspaces['stage']->id(), NULL, FALSE);
+    $this->assertEquals(51, count($tracked_items_no_pager[$entity_type_id]));
+  }
+
+  /**
    * Checks the workspace associations for a test scenario.
    *
    * @param string $entity_type_id
