@@ -35,12 +35,6 @@ class RegisterForm extends AccountForm {
 
     $form['#attached']['library'][] = 'core/drupal.form';
 
-    // For non-admin users, populate the form fields using data from the
-    // browser.
-    if (!$admin) {
-      $form['#attributes']['data-user-info-from-browser'] = TRUE;
-    }
-
     // Because the user status has security implications, users are blocked by
     // default when created programmatically and need to be actively activated
     // if needed. When administrators create users from the user interface,

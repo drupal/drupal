@@ -120,11 +120,6 @@ class CommentForm extends ContentEntityForm {
     $anonymous_contact = $field_definition->getSetting('anonymous');
     $is_admin = $comment->id() && $this->currentUser->hasPermission('administer comments');
 
-    if (!$this->currentUser->isAuthenticated() && $anonymous_contact != CommentInterface::ANONYMOUS_MAYNOT_CONTACT) {
-      $form['#attached']['library'][] = 'core/drupal.form';
-      $form['#attributes']['data-user-info-from-browser'] = TRUE;
-    }
-
     // If not replying to a comment, use our dedicated page callback for new
     // Comments on entities.
     if (!$comment->id() && !$comment->hasParentComment()) {
@@ -194,9 +189,6 @@ class CommentForm extends ContentEntityForm {
       '#maxlength' => 60,
       '#access' => $this->currentUser->isAnonymous() || $is_admin,
       '#size' => 30,
-      '#attributes' => [
-        'data-drupal-default-value' => $config->get('anonymous'),
-      ],
     ];
 
     if ($is_admin) {
