@@ -291,17 +291,11 @@
           const viewportMiddle = (viewportBottom + viewportTop) / 2;
           const scrollAmount = targetTop - viewportMiddle;
 
-          // Check whether the browser supports scrollBy(options). If it does
-          // not, use scrollBy(x-coord, y-coord) instead.
-          if ('scrollBehavior' in document.documentElement.style) {
-            window.scrollBy({
-              top: scrollAmount,
-              left: 0,
-              behavior: 'smooth',
-            });
-          } else {
-            window.scrollBy(0, scrollAmount);
-          }
+          window.scrollBy({
+            top: scrollAmount,
+            left: 0,
+            behavior: 'smooth',
+          });
         }
       }
     });
