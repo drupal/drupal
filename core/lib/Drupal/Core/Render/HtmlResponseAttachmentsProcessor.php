@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Drupal\Core\Render\HtmlResponse object. Then use its getContent(),
  * getStatusCode(), and/or the headers property to access the result.
  *
- * @see template_preprocess_html()
+ * @see \Drupal\Core\Theme\ThemePreprocess::preprocessHtml()
  * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface
  * @see \Drupal\Core\Render\BareHtmlPageRenderer
  * @see \Drupal\Core\Render\HtmlResponse

@@ -8,6 +8,7 @@ use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
+use Drupal\Core\Utility\CallableResolver;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -74,8 +75,10 @@ class ThemeManager implements ThemeManagerInterface {
    *   The theme initialization.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
+   *   The callable resolver.
    */
-  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler, protected CallableResolver $callableResolver) {
     $this->root = $root;
     $this->themeNegotiator = $theme_negotiator;
     $this->themeInitialization = $theme_initialization;
@@ -270,6 +273,20 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
+    // Invoke initial preprocess callbacks.
+    if (!empty($info['initial preprocess'])) {
+      $callable = $info['initial preprocess'];
+      try {
+        if (!is_callable($callable)) {
+          $callable = $this->callableResolver->getCallableFromDefinition($callable);
+        }
+        $callable($variables, $hook, $info);
+      }
+      catch (\InvalidArgumentException $e) {
+        \Drupal::logger('theme')->warning('Preprocess callback is not valid: %error.', ['%error' => $e->getMessage()]);
+      }
+    }
+
     // Invoke preprocess hooks.
     // By default $info['preprocess functions'] should always be set, but it's
     // good to check it if default Registry service implementation is
@@ -280,24 +297,24 @@ class ThemeManager implements ThemeManagerInterface {
           call_user_func_array($preprocessor_function, [&$variables, $hook, $info]);
         }
       }
-      // Allow theme preprocess functions to set $variables['#attached'] and
-      // $variables['#cache'] and use them like the corresponding element
-      // properties on render arrays. In Drupal 8, this is the (only) officially
-      // supported method of attaching bubbleable metadata from preprocess
-      // functions. Assets attached here should be associated with the template
-      // that we are preprocessing variables for.
-      $preprocess_bubbleable = [];
-      foreach (['#attached', '#cache'] as $key) {
-        if (isset($variables[$key])) {
-          $preprocess_bubbleable[$key] = $variables[$key];
-        }
+    }
+    // Allow theme preprocess functions to set $variables['#attached'] and
+    // $variables['#cache'] and use them like the corresponding element
+    // properties on render arrays. This is the officially supported
+    // method of attaching bubbleable metadata from preprocess functions.
+    // Assets attached here should be associated with the template
+    // that we are preprocessing variables for.
+    $preprocess_bubbleable = [];
+    foreach (['#attached', '#cache'] as $key) {
+      if (isset($variables[$key])) {
+        $preprocess_bubbleable[$key] = $variables[$key];
       }
-      // We do not allow preprocess functions to define cacheable elements.
-      unset($preprocess_bubbleable['#cache']['keys']);
-      if ($preprocess_bubbleable) {
-        // @todo Inject the Renderer in https://www.drupal.org/node/2529438.
-        \Drupal::service('renderer')->render($preprocess_bubbleable);
-      }
+    }
+    // We do not allow preprocess functions to define cacheable elements.
+    unset($preprocess_bubbleable['#cache']['keys']);
+    if ($preprocess_bubbleable) {
+      // @todo Inject the Renderer in https://www.drupal.org/node/2529438.
+      \Drupal::service('renderer')->render($preprocess_bubbleable);
     }
 
     // Generate the output using a template.

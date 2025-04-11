@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
  * \Drupal\Core\Render\AttachmentsResponseProcessorInterface and
  * \Drupal\Core\Render\HtmlResponseAttachmentsProcessor
  *
- * @see template_preprocess_html()
+ * @see \Drupal\Core\Theme\ThemePreprocess::preprocessHtml()
  * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface
  * @see \Drupal\Core\Render\BareHtmlPageRenderer
  * @see \Drupal\Core\Render\HtmlResponse

@@ -107,8 +107,9 @@
  * the data is preprocessed, before it is passed to the theme template:
  * - ThemeManager::addDefaultTemplateVariables(&$variables): Creates a default
  *   set of variables for all theme hooks. Provided by Drupal Core.
- * - template_preprocess_HOOK(&$variables): Should be implemented by the module
- *   that registers the theme hook, to set up default variables.
+ * - initial preprocess: A callback set on the theme hook definition,
+ *   to set up default variables. Supports services with the service:method
+ *   syntax, see \Drupal\Core\Utility\CallableResolver and hook_theme().
  * - MODULE_preprocess(&$variables, $hook): hook_preprocess() is invoked on all
  *   implementing modules.
  * - MODULE_preprocess_HOOK(&$variables): hook_preprocess_HOOK() is invoked on
@@ -1231,9 +1232,13 @@ function hook_page_bottom(array &$page_bottom): void {
  *     implementation to have a dynamic name. The default is to use __ to
  *     differentiate the dynamic portion of the theme. Implementations
  *     can specify a different pattern if required.
+ *   - initial preprocess: A string or array callback supported by
+ *     \Drupal\Core\Utility\CallableResolver to set up the initial and default
+ *     variables for the template. Replaces automatically discovered
+ *     template_preprocess_HOOK functions. Can be set as
+ *     static::class . ':preprocessSomething' on hook classes.
  *   - preprocess functions: A list of functions used to preprocess this data.
- *     Ordinarily this won't be used; it's automatically filled in. By default,
- *     for a module this will be filled in as template_preprocess_HOOK. For
+ *     Ordinarily this won't be used; it's automatically filled in. For
  *     a theme this will be filled in as twig_preprocess and
  *     twig_preprocess_HOOK as well as themename_preprocess and
  *     themename_preprocess_HOOK.
@@ -1265,6 +1270,7 @@ function hook_theme($existing, $type, $theme, $path): array {
         'sortby' => NULL,
         'my_module_per_page' => NULL,
       ],
+      'initial preprocess' => 'PreprocessClass::preprocessDisplay',
     ],
     'my_module_list' => [
       'variables' => [
@@ -1272,6 +1278,7 @@ function hook_theme($existing, $type, $theme, $path): array {
         'parents' => NULL,
         'tid' => NULL,
       ],
+      'initial preprocess' => 'service.name:preprocessList',
     ],
     'my_module_icon' => [
       'variables' => [

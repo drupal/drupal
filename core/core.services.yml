@@ -1553,7 +1553,7 @@ services:
   Drupal\Core\Datetime\DateFormatterInterface: '@date.formatter'
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
-    arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler']
+    arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler', '@callable_resolver']
     calls:
       - [setThemeRegistry, ['@theme.registry']]
   Drupal\Core\Theme\ThemeManagerInterface: '@theme.manager'
@@ -1569,6 +1569,12 @@ services:
     calls:
       - [setThemeManager, ['@theme.manager']]
   Drupal\Core\Theme\Registry: '@theme.registry'
+  Drupal\Core\Theme\ThemePreprocess:
+    class: Drupal\Core\Theme\ThemePreprocess
+    autowire: true
+  Drupal\Core\Datetime\DatePreprocess:
+    class: Drupal\Core\Datetime\DatePreprocess
+    autowire: true
   authentication:
     class: Drupal\Core\Authentication\AuthenticationManager
     arguments: ['@authentication_collector']
