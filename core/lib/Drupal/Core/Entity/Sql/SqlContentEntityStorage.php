@@ -792,9 +792,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         ->execute();
     }
 
-    foreach ($entities as $entity) {
-      $this->deleteFromDedicatedTables($entity);
-    }
+    $this->deleteFromDedicatedTables($ids);
   }
 
   /**
@@ -1401,10 +1399,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * Deletes values of fields in dedicated tables for all revisions.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity.
+   * @param array $ids
+   *   An array of entity IDs.
    */
-  protected function deleteFromDedicatedTables(ContentEntityInterface $entity) {
+  protected function deleteFromDedicatedTables(array $ids) {
     $table_mapping = $this->getTableMapping();
     foreach ($this->fieldStorageDefinitions as $storage_definition) {
       if (!$table_mapping->requiresDedicatedTableStorage($storage_definition)) {
@@ -1413,11 +1411,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $table_name = $table_mapping->getDedicatedDataTableName($storage_definition);
       $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
       $this->database->delete($table_name)
-        ->condition('entity_id', $entity->id())
+        ->condition('entity_id', $ids, 'IN')
         ->execute();
       if ($this->entityType->isRevisionable()) {
         $this->database->delete($revision_name)
-          ->condition('entity_id', $entity->id())
+          ->condition('entity_id', $ids, 'IN')
           ->execute();
       }
     }
