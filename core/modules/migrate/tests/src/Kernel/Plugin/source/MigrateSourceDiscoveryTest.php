@@ -28,7 +28,7 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
    */
   public function testGetDefinitions(): void {
     // First, check the expected plugins are provided by migrate only.
-    $expected = ['embedded_data', 'empty'];
+    $expected = ['config_entity', 'embedded_data', 'empty'];
     $source_plugins = \Drupal::service('plugin.manager.migrate.source')->getDefinitions();
     ksort($source_plugins);
     $this->assertSame($expected, array_keys($source_plugins));
@@ -37,7 +37,7 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
     // which depend on migrate_drupal. Since migrate_drupal is not installed,
     // none of the source plugins from file should be discovered. However, the
     // content_entity source for the file entity type should be discovered.
-    $expected = ['content_entity:file', 'embedded_data', 'empty'];
+    $expected = ['config_entity', 'content_entity:file', 'embedded_data', 'empty'];
     $this->enableModules(['file']);
     $source_plugins = \Drupal::service('plugin.manager.migrate.source')->getDefinitions();
     ksort($source_plugins);
@@ -46,6 +46,7 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
     // Install migrate_drupal and now the source plugins from the file modules
     // should be found.
     $expected = [
+      'config_entity',
       'd6_file',
       'd6_upload',
       'd6_upload_instance',
@@ -63,7 +64,7 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
    */
   public function testAnnotationGetDefinitionsBackwardsCompatibility(): void {
     // First, test attribute-only discovery.
-    $expected = ['embedded_data', 'empty'];
+    $expected = ['config_entity', 'embedded_data', 'empty'];
     $source_plugins = \Drupal::service('plugin.manager.migrate.source')->getDefinitions();
     ksort($source_plugins);
     $this->assertSame($expected, array_keys($source_plugins));
@@ -71,7 +72,7 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
     // Next, test discovery of both attributed and annotated plugins. The
     // annotated plugin with multiple providers depends on migrate_drupal and
     // should not be discovered with it uninstalled.
-    $expected = ['annotated', 'embedded_data', 'empty'];
+    $expected = ['annotated', 'config_entity', 'embedded_data', 'empty'];
     $this->enableModules(['migrate_source_annotation_bc_test']);
     $source_plugins = \Drupal::service('plugin.manager.migrate.source')->getDefinitions();
     ksort($source_plugins);
@@ -82,6 +83,7 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
     $expected = [
       'annotated',
       'annotated_multiple_providers',
+      'config_entity',
       'embedded_data',
       'empty',
     ];

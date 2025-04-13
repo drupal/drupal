@@ -2,23 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\d8;
+namespace Drupal\Tests\migrate\Kernel\Plugin\source;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests the config source plugin.
  *
- * @covers \Drupal\migrate_drupal\Plugin\migrate\source\d8\Config
- * @group legacy
- * @group migrate_drupal
+ * @covers \Drupal\migrate\Plugin\migrate\source\ConfigEntity
+ * @group migrate
  */
-class ConfigTest extends MigrateSqlSourceTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['migrate_drupal'];
+class ConfigEntityTest extends MigrateSqlSourceTestBase {
 
   /**
    * {@inheritdoc}
