@@ -49,14 +49,14 @@ class EntityQueryAccessTest extends ViewTestBase {
       // view.
       // @see views_test_access_query_media_access_alter()
       'uuid' => 'hidden-media',
-      'name' => $this->randomString(),
+      'name' => 'Test hidden media title',
       $source_field => $this->randomString(),
     ]);
     $hidden_media->save();
 
     $accessible_media = Media::create([
       'bundle' => $media_type->id(),
-      'name' => $this->randomString(),
+      'name' => 'Test accessible media title',
       $source_field => $this->randomString(),
     ]);
     $accessible_media->save();

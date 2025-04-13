@@ -147,7 +147,7 @@ class DisplayTest extends ViewTestBase {
 
     $this->clickLink('Test option title');
 
-    $test_option = $this->randomString();
+    $test_option = $this->randomMachineName();
     $this->submitForm(['test_option' => $test_option], 'Apply');
 
     // Check the new value has been saved by checking the UI summary text.
