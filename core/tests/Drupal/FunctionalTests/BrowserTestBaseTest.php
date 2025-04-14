@@ -186,6 +186,12 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('purple', $value);
 
+    // Submit using the form attribute of a button.
+    $this->drupalGet('form-test/button-form-attribute');
+    $this->submitForm(['bananas' => 'purple'], 'Attribute Button');
+    $value = $config_factory->get('form_test.object')->get('bananas');
+    $this->assertSame('purple', $value);
+
     // Test submitForm() with no-html response.
     $this->drupalGet('form_test/form-state-values-clean');
     $this->submitForm([], 'Submit');

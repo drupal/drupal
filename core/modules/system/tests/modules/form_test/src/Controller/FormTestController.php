@@ -7,6 +7,7 @@ namespace Drupal\form_test\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\form_test\FormTestObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -55,6 +56,24 @@ class FormTestController extends ControllerBase {
     $form_state->set('poisoned', TRUE);
     $this->formBuilder()->setCache($form_build_id, $form, $form_state);
     return new JsonResponse($result);
+  }
+
+  /**
+   * Returns a form and a button that has the form attribute.
+   *
+   * @return array
+   *   A render array containing the form and the button.
+   */
+  public function buttonWithFormAttribute(): array {
+    $return['form'] = $this->formBuilder()->getForm(FormTestObject::class);
+    $return['button'] = [
+      '#type' => 'submit',
+      '#value' => 'Attribute Button',
+      '#attributes' => [
+        'form' => 'form-test-form-test-object',
+      ],
+    ];
+    return $return;
   }
 
 }

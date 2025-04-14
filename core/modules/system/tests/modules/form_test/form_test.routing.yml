@@ -589,3 +589,10 @@ form_test.recipe_input:
     _form: '\Drupal\form_test\Form\FormTestRecipeInputForm'
   requirements:
     _access: 'TRUE'
+
+form_test.button_attribute:
+  path: '/form-test/button-form-attribute'
+  defaults:
+    _controller: '\Drupal\form_test\Controller\FormTestController::buttonWithFormAttribute'
+  requirements:
+    _access: 'TRUE'
