@@ -1,0 +1,4 @@
+name: 'Tests menu link access'
+type: module
+package: Testing
+version: VERSION
