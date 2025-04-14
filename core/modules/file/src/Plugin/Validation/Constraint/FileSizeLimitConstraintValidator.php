@@ -49,7 +49,7 @@ class FileSizeLimitConstraintValidator extends BaseFileConstraintValidator imple
 
     $fileLimit = $constraint->fileLimit;
 
-    if ($fileLimit && $file->getSize() > $fileLimit) {
+    if ($file->isNew() && $fileLimit && $file->getSize() > $fileLimit) {
       $this->context->addViolation($constraint->maxFileSizeMessage, [
         '%filesize' => ByteSizeMarkup::create($file->getSize()),
         '%maxsize' => ByteSizeMarkup::create($fileLimit),
