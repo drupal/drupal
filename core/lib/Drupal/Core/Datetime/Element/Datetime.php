@@ -357,7 +357,12 @@ class Datetime extends DateElementBase {
       // If there's empty input and the field is required, set an error. A
       // reminder of the required format in the message provides a good UX.
       elseif (empty($input['date']) && empty($input['time']) && $element['#required']) {
-        $form_state->setError($element, t('The %field date is required.', ['%field' => $title]));
+        if (isset($element['#required_error'])) {
+          $form_state->setError($element, $element['#required_error']);
+        }
+        else {
+          $form_state->setError($element, t('The %field date is required.', ['%field' => $title]));
+        }
       }
       else {
         // If the date is valid, set it.
