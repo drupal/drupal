@@ -78,12 +78,6 @@ services:
     decoration_priority: 50
     tags:
       - { name: backend_overridable }
-  pgsql.workspaces.entity.query.sql:
-    decorates: pgsql.entity.query.sql
-    class: Drupal\workspaces\EntityQuery\PgsqlQueryFactory
-    arguments: ['@database', '@workspaces.manager', '@workspaces.information']
-    public: false
-    decoration_priority: 50
 
   workspaces.menu.tree_storage:
     decorates: menu.tree_storage

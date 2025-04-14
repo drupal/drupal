@@ -15,6 +15,23 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
+  public function register(ContainerBuilder $container): void {
+    $modules = $container->getParameter('container.modules');
+
+    // Add the entity query override only when the pgsql module is enabled.
+    if (isset($modules['pgsql'])) {
+      $container->register('pgsql.workspaces.entity.query.sql', 'Drupal\workspaces\EntityQuery\PgsqlQueryFactory')
+        ->addArgument(new Reference(('database')))
+        ->addArgument(new Reference(('workspaces.manager')))
+        ->addArgument(new Reference(('workspaces.information')))
+        ->setPublic(FALSE)
+        ->setDecoratedService('pgsql.entity.query.sql', NULL, 50);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function alter(ContainerBuilder $container) {
     // Add the 'workspace' cache context as required.
     $renderer_config = $container->getParameter('renderer.config');

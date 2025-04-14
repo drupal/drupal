@@ -1,26 +1,19 @@
 <?php
 
-namespace Drupal\Core\Entity\Query\Sql\pgsql;
+namespace Drupal\pgsql\EntityQuery;
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Query\Sql\Condition as BaseCondition;
 
-@trigger_error('\Drupal\Core\Entity\Query\Sql\pgsql\Condition is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. The PostgreSQL override of the entity query has been moved to the pgsql module. See https://www.drupal.org/node/3488580', E_USER_DEPRECATED);
-
 /**
  * Implements entity query conditions for PostgreSQL databases.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. The
- *   PostgreSQL override of the entity query has been moved to the pgsql module.
- *
- * @see https://www.drupal.org/node/3488580
  */
 class Condition extends BaseCondition {
 
   /**
    * {@inheritdoc}
    */
-  public static function translateCondition(&$condition, SelectInterface $sql_query, $case_sensitive) {
+  public static function translateCondition(&$condition, SelectInterface $sql_query, $case_sensitive): void {
     if (is_array($condition['value']) && $case_sensitive === FALSE) {
       $condition['where'] = 'LOWER(' . $sql_query->escapeField($condition['real_field']) . ') ' . $condition['operator'] . ' (';
       $condition['where_args'] = [];

@@ -2,23 +2,25 @@
 
 namespace Drupal\Core\Entity\Query\Sql\pgsql;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\Query\Sql\QueryFactory as BaseQueryFactory;
 
 /**
  * PostgreSQL specific entity query implementation.
  *
- * To add a new query implementation extending the default SQL one, add
- * a service definition like pgsql.entity.query.sql and a factory class like
- * this. The system will automatically find the relevant Query, QueryAggregate,
- * Condition, ConditionAggregate, Tables classes in this namespace, in the
- * namespace of the parent class and so on. So after creating an empty query
- * factory class like this, it is possible to just drop in a class extending
- * the base class in this namespace and it will be used automatically but it
- * is optional: if a class is not extended the relevant default is used.
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. The
+ *   PostgreSQL override of the entity query has been moved to the pgsql module.
  *
- * @see \Drupal\Core\Entity\Query\QueryBase::getNamespaces()
- * @see \Drupal\Core\Entity\Query\QueryBase::getClass()
+ * @see https://www.drupal.org/node/3488580
  */
 class QueryFactory extends BaseQueryFactory {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(Connection $connection) {
+    @trigger_error('\Drupal\Core\Entity\Query\Sql\pgsql\QueryFactory is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. The PostgreSQL override of the entity query has been moved to the pgsql module. See https://www.drupal.org/node/3488580', E_USER_DEPRECATED);
+    parent::__construct($connection);
+  }
 
 }
