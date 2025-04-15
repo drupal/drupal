@@ -201,7 +201,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#title' => $this->t('Status'),
       '#default_value' => $status,
       '#options' => [$this->t('Blocked'), $this->t('Active')],
-      '#access' => $account->status->access('edit'),
+      '#access' => $account->status->access('edit') && $user->id() !== $account->id(),
     ];
 
     $roles = Role::loadMultiple();
