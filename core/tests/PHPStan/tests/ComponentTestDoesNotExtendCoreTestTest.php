@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Drupal\PHPStan\Tests;
 
 use Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
@@ -18,7 +19,9 @@ class ComponentTestDoesNotExtendCoreTestTest extends RuleTestCase {
    * {@inheritdoc}
    */
   protected function getRule(): Rule {
-    return new ComponentTestDoesNotExtendCoreTest();
+    return new ComponentTestDoesNotExtendCoreTest(
+      self::getContainer()->getByType(ReflectionProvider::class),
+    );
   }
 
   /**
