@@ -35,28 +35,32 @@ class FormTestClickedButtonForm extends FormBase {
       '#type' => 'textfield',
     ];
 
-    // Get button configurations, filter out NULL values.
-    $args = array_filter([$first, $second, $third]);
-
-    // Define button types for each argument.
-    $button_types = [
-      'submit',
-      'image_button',
-      'button',
-    ];
-
     // Loop through each path argument, adding buttons based on the information
     // in the argument. For example, if the path is
     // form-test/clicked-button/s/i/rb, then 3 buttons are added: a 'submit', an
     // 'image_button', and a 'button' with #access=FALSE. This enables form.test
     // to test a variety of combinations.
-    foreach ($args as $index => $arg) {
-      // Get the button type based on the index of the argument.
-      $type = $button_types[$index] ?? NULL;
-      $name = 'button' . ($index + 1);
-
-      if ($type) {
-        // Define the button.
+    $i = 0;
+    $args = [$first, $second, $third];
+    foreach ($args as $arg) {
+      $name = 'button' . ++$i;
+      // 's', 'b', or 'i' in the argument define the button type wanted.
+      if (!is_string($arg)) {
+        $type = NULL;
+      }
+      elseif (str_contains($arg, 's')) {
+        $type = 'submit';
+      }
+      elseif (str_contains($arg, 'b')) {
+        $type = 'button';
+      }
+      elseif (str_contains($arg, 'i')) {
+        $type = 'image_button';
+      }
+      else {
+        $type = NULL;
+      }
+      if (isset($type)) {
         $form[$name] = [
           '#type' => $type,
           '#name' => $name,
