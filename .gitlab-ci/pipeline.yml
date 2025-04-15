@@ -113,7 +113,7 @@ variables:
         echo '   "Key" to "REPEAT_TEST_CLASS" and "Value" to "Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest"';
         exit 1;
       else
-        sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
+        sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "$REPEAT_COUNT" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
       fi
 
 ################
@@ -242,8 +242,10 @@ variables:
   allow_failure: true
   variables:
     REPEAT_TEST_CLASS: 'Drupal\Tests\Change\Me'
+    REPEAT_COUNT: 100
   services:
     - <<: *with-database
+    - <<: *with-selenium-chrome
 
 '🚲 Performance tests':
   <<: [ *default-job-settings ]
