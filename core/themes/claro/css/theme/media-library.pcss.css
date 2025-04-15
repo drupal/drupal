@@ -369,7 +369,8 @@
 /**
  * Style the media library grid items.
  */
-.media-library-item {
+.media-library-item,
+.media-library-item__preview-wrapper {
   position: relative;
 }
 
