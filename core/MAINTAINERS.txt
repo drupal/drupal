@@ -31,10 +31,11 @@ Framework managers
   - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
   Frontend
-  - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
   - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
   - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
+  - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
   - Sally Young 'justafish' https://www.drupal.org/u/justafish
+  - (provisional) Pierre Dureau 'pdureau' https://www.drupal.org/u/pdureau
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
