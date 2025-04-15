@@ -171,4 +171,15 @@ class NodeAccessTest extends NodeAccessTestBase {
     $this->assertCount(1, $batch['sets']);
   }
 
+  /**
+   * Tests node_access_needs_rebuild is set when node_access_rebuild is called.
+   */
+  public function testNodeAccessRebuildNeedsRebuild(): void {
+    $this->assertFalse(node_access_needs_rebuild());
+    $this->enableModules(['node_access_test']);
+    // Call as batch so rebuild is not run immediately.
+    node_access_rebuild(TRUE);
+    $this->assertTrue(node_access_needs_rebuild());
+  }
+
 }

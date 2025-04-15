@@ -546,7 +546,15 @@ function node_access_rebuild($batch_mode = FALSE): void {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
   $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
+
+  // If node_access_rebuild() fails to complete, and node_access_needs_rebuild
+  // is not set to TRUE, the node_access table is left in an incomplete state.
+  // Force node_access_needs_rebuild to TRUE once existing grants are deleted,
+  // to signal that the node access table still needs to be rebuilt if this
+  // function does not finish.
+  node_access_needs_rebuild(TRUE);
   $access_control_handler->deleteGrants();
+
   // Only recalculate if the site is using a node_access module.
   if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
     if ($batch_mode) {
