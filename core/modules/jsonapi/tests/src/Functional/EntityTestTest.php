@@ -197,7 +197,7 @@ class EntityTestTest extends ResourceTestBase {
   protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     $cacheability = parent::getExpectedCollectionCacheability($account, $collection, $sparse_fieldset, $filtered);
     if ($filtered) {
-      $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_blacklist']);
+      $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_deny_list']);
     }
     return $cacheability;
   }

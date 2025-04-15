@@ -362,8 +362,8 @@ class CommentTest extends ResourceTestBase {
     $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(1, $doc['data']);
     // Mark the commented entity as inaccessible.
-    \Drupal::state()->set('jsonapi__entity_test_filter_access_blacklist', [$this->entity->getCommentedEntityId()]);
-    Cache::invalidateTags(['state:jsonapi__entity_test_filter_access_blacklist']);
+    \Drupal::state()->set('jsonapi__entity_test_filter_access_deny_list', [$this->entity->getCommentedEntityId()]);
+    Cache::invalidateTags(['state:jsonapi__entity_test_filter_access_deny_list']);
     // ?filter[spotlight.LABEL]: 0 results.
     $response = $this->request('GET', $collection_filter_url, $request_options);
     $doc = $this->getDocumentFromResponse($response);
@@ -376,7 +376,7 @@ class CommentTest extends ResourceTestBase {
   protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     $cacheability = parent::getExpectedCollectionCacheability($account, $collection, $sparse_fieldset, $filtered);
     if ($filtered) {
-      $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_blacklist']);
+      $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_deny_list']);
     }
     return $cacheability;
   }

@@ -267,10 +267,10 @@ class TemporaryQueryGuard {
       case 'entity_test':
         // This case is only necessary for testing comment access controls.
         // @see \Drupal\jsonapi\Tests\Functional\CommentTest::testCollectionFilterAccess()
-        $blacklist = \Drupal::state()->get('jsonapi__entity_test_filter_access_blacklist', []);
-        $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_blacklist']);
+        $deny_list = \Drupal::state()->get('jsonapi__entity_test_filter_access_deny_list', []);
+        $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_deny_list']);
         $specific_conditions = [];
-        foreach ($blacklist as $id) {
+        foreach ($deny_list as $id) {
           $specific_conditions[] = new EntityCondition('id', $id, '<>');
         }
         if ($specific_conditions) {
