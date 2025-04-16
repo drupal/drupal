@@ -376,6 +376,14 @@ class UrlHelperTest extends TestCase {
           'fragment' => 'footer',
         ],
       ],
+      'Malformed URL should not trigger PHP warnings' => [
+        "#/://#",
+        [
+          'path' => NULL,
+          'query' => [],
+          'fragment' => "/://#",
+        ],
+      ],
     ];
   }
 
