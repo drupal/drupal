@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Drupal\file\Element\ManagedFile;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -60,6 +61,15 @@ class FileWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element['notice'] = [
+      '#type' => 'container',
+      '#markup' => $this->t('The UploadProgress PHP extension must be enabled to configure the progress indicator. Check the <a href=":status">status report</a> for more information.', [':status' => Url::fromRoute('system.status')->toString()]),
+      '#weight' => 16,
+      '#access' => !extension_loaded('uploadprogress'),
+      '#attributes' => [
+        'role' => 'status',
+      ],
+    ];
     $element['progress_indicator'] = [
       '#type' => 'radios',
       '#title' => $this->t('Progress indicator'),
@@ -70,7 +80,7 @@ class FileWidget extends WidgetBase {
       '#default_value' => $this->getSetting('progress_indicator'),
       '#description' => $this->t('The throbber display does not show the status of uploads but takes up less space. The progress bar is helpful for monitoring progress on large uploads.'),
       '#weight' => 16,
-      '#access' => extension_loaded('uploadprogress'),
+      '#disabled' => !extension_loaded('uploadprogress'),
     ];
     return $element;
   }
