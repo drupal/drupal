@@ -391,8 +391,11 @@ default:
         php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=$CI_PROJECT_DIR/core/.phpstan-baseline.php || true
         sed -i "s/ '\\/\\/build\\/core/ '/g" $CI_PROJECT_DIR/core/.phpstan-baseline.php
         sed -i "s/ '\\/\\/build/ '\\/../g" $CI_PROJECT_DIR/core/.phpstan-baseline.php
+        php $CI_PROJECT_DIR/.gitlab-ci/scripts/phpstan-baseline-statistics.php
         exit $EXIT_CODE
       fi
+    # Generate baseline statistics.
+    - php $CI_PROJECT_DIR/.gitlab-ci/scripts/phpstan-baseline-statistics.php
 
   artifacts:
     # Only store the baseline if the job fails.
@@ -400,6 +403,7 @@ default:
     reports:
       codequality: phpstan-quality-report.json
       junit: phpstan-junit.xml
+      metrics: phpstan-metrics.txt
     paths:
       - $CI_PROJECT_DIR/core/.phpstan-baseline.php
 
