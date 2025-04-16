@@ -77,7 +77,7 @@ variables:
   alias: database
 
 .with-chrome: &with-chrome
-  name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
+  name: $_CONFIG_DOCKERHUB_ROOT/webdriver-chromedriver:production
   alias: chrome
   entrypoint:
     - chromedriver
