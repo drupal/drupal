@@ -38,7 +38,6 @@ global-styling:
       css/components/hero.css: {}
       css/components/links.css: {}
       css/components/layout-field.css: {}
-      css/components/messages.css: {}
       css/components/navigation/nav-button-mobile.css: {}
       css/components/node.css: {}
       css/components/node-teaser.css: {}
@@ -198,6 +197,9 @@ messages:
   version: VERSION
   js:
     js/messages.js: {}
+  css:
+    component:
+      css/components/messages.css: {}
   dependencies:
     - olivero/global-styling
 
