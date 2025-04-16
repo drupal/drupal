@@ -274,6 +274,9 @@ final class NavigationLinkBlock extends BlockBase {
           'title' => $config['title'],
           'class' => $config['icon_class'],
           'url' => $url,
+          'icon' => [
+            'icon_id' => $config['icon_class'],
+          ],
         ],
       ],
     ];

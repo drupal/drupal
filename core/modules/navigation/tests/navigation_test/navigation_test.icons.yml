@@ -1,0 +1,36 @@
+navigation_test:
+  enabled: true
+  label: "Drupal Navigation Test"
+  description: "Icons available within Drupal Navigation Test module."
+  version: 11.x
+  license:
+    name: GPL2-or-later
+    url: https://api.drupal.org/api/drupal/core%21LICENSE.txt/11.x
+    gpl-compatible: true
+  extractor: svg
+  config:
+    sources:
+      - assets/icons/*.svg
+  settings:
+    size:
+      title: "Size"
+      description: "Set a size for this icon."
+      type: "integer"
+      default: 20
+    class:
+      title: "Class"
+      description: "Set a class for this icon."
+      type: "string"
+      default: ""
+  template: >
+    <svg
+      {{ attributes
+          .setAttribute('viewBox', attributes.viewBox|default('0 0 24 24'))
+          .setAttribute('class', class)
+          .setAttribute('width', size|default('20'))
+          .setAttribute('height', size|default('20'))
+          .setAttribute('aria-hidden', 'true')
+      }}
+    >
+      {{ content }}
+    </svg>

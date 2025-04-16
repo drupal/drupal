@@ -3,7 +3,7 @@ appear after main classes #}
 {%
   set classes = [
     'toolbar-button',
-    icon ? 'toolbar-button--icon--' ~ icon : '',
+    icon.icon_id ? 'toolbar-button--icon--' ~ icon.icon_id : '',
   ]
 %}
 
@@ -24,8 +24,8 @@ appear after main classes #}
 
 <{{ html_tag|default('button') }} {{ attributes.addClass(classes) }}>
 
-  {% if icon %}
-    {{ icon('navigation', icon, { class: 'toolbar-button__icon', size: 20 }) }}
+  {% if icon.icon_id %}
+    {{ icon(icon.pack_id|default('navigation'), icon.icon_id, icon.settings|default({ class: 'toolbar-button__icon', size: 20 })) }}
   {% endif %}
 
   {% if action %}

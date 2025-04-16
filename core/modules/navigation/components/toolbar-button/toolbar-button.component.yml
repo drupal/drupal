@@ -57,7 +57,23 @@ props:
       default: button
     icon:
       title: Icon
-      type: string
+      type: object
+      properties:
+        pack_id:
+          title: Icon Pack
+          type: string
+          default: navigation
+        icon_id:
+          title: Icon ID
+          type: string
+        settings:
+          title: Icon Settings
+          type: object
+          default:
+            class: toolbar-button__icon
+            size: 20
+      required:
+        - icon_id
     text:
       title: Text
       description: Text of button.

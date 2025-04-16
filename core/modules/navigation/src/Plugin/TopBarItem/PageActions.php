@@ -119,7 +119,9 @@ final class PageActions extends TopBarItemBase implements ContainerFactoryPlugin
       if (isset($page_actions['page_actions'][$edit_route]) && $page_actions['page_actions'][$edit_route]['#access']?->isAllowed()) {
         $featured_page_actions[$edit_route] = [
           'page_action' => $page_actions['page_actions'][$edit_route],
-          'icon' => 'pencil',
+          'icon' => [
+            'icon_id' => 'pencil',
+          ],
         ];
       }
     }

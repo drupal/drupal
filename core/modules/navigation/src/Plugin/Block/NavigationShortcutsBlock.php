@@ -89,6 +89,9 @@ final class NavigationShortcutsBlock extends BlockBase implements ContainerFacto
               [
                 'title' => $this->configuration['label'],
                 'class' => 'shortcuts',
+                'icon' => [
+                  'icon_id' => 'shortcuts',
+                ],
               ],
             ],
           ],

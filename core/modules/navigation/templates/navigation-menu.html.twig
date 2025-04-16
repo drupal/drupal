@@ -31,7 +31,7 @@
         <li id="{{ item_id }}" class="toolbar-block__list-item">
           {% include 'navigation:toolbar-button' with {
             attributes: item_link_attributes.setAttribute('href', item.url|render|default(null)).setAttribute('data-drupal-tooltip', item.title).setAttribute('data-drupal-tooltip-class', 'admin-toolbar__tooltip'),
-            icon: item.class|clean_class,
+            icon: item.icon,
             html_tag: item_link_tag,
             text: item.title,
             modifiers: [
@@ -50,7 +50,7 @@
               'data-toolbar-popover-control': true,
               'data-has-safe-triangle': true,
             }),
-            icon: item.class|clean_class,
+            icon: item.icon,
             text: item.title,
             modifiers: [
               'expand--side',

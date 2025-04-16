@@ -1,0 +1,37 @@
+navigation_test.navigation__custom_item:
+  title: "Test Custom Icon"
+  weight: 0
+  menu_name: admin
+  parent: system.admin
+  route_name: "<front>"
+  options:
+    icon:
+      pack_id: navigation_test
+      icon_id: star
+      settings:
+        class: 'toolbar-button__icon foo'
+        size: 25
+
+navigation_test.navigation__default_item:
+  title: "Test Default Icon"
+  weight: 1
+  menu_name: admin
+  parent: system.admin
+  route_name: "<front>"
+  options:
+    icon:
+      icon_id: pencil
+
+navigation_test.navigation__no_icon:
+  title: "Test No Icon"
+  weight: 2
+  menu_name: admin
+  parent: system.admin
+  route_name: "<front>"
+
+navigation.media:
+  title: "Test Default Logic Icon"
+  weight: 3
+  menu_name: admin
+  parent: system.admin
+  route_name: "<front>"

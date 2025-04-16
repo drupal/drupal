@@ -35,6 +35,9 @@ final class NavigationTestBlock extends BlockBase {
         [
           'title' => 'Test Navigation Block',
           'class' => 'test-block',
+          'icon' => [
+            'icon_id' => 'test-block',
+          ],
           'url' => Url::fromRoute('<front>'),
         ],
       ],

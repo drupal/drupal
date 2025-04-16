@@ -22,7 +22,7 @@
   <div class="admin-toolbar-control-bar__content">
     {% include 'navigation:toolbar-button' with {
       attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar', 'type': 'button'}),
-      icon: 'burger',
+      icon: { icon_id: 'burger' },
       text: 'Expand sidebar'|t,
       modifiers: ['small-offset'],
       extra_classes: [
@@ -59,14 +59,14 @@
         {% include 'navigation:toolbar-button' with {
           attributes: create_attribute({ 'data-toolbar-back-control': true, 'tabindex': '-1' }),
           extra_classes: ['admin-toolbar__back-button'],
-          icon: 'arrow-left',
+          icon: { icon_id: 'arrow-left' },
           text: 'Back'|t,
         } only %}
         {% include 'navigation:toolbar-button' with {
           action: 'Collapse sidebar'|t,
           attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'tabindex': '-1', 'type': 'button' }),
           extra_classes: ['admin-toolbar__close-button'],
-          icon: 'cross',
+          icon: { icon_id: 'cross' },
         } only %}
       </div>
 
