@@ -609,9 +609,8 @@ abstract class BrowserTestBase extends TestCase {
    *   The JSON decoded drupalSettings value from the current page.
    */
   protected function getDrupalSettings() {
-    $html = $this->getSession()->getPage()->getContent();
-    if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
-      $settings = Json::decode($matches[1]);
+    if ($elements = $this->xpath('//script[@type="application/json" and @data-drupal-selector="drupal-settings-json"]')) {
+      $settings = Json::decode($elements[0]->getText());
       if (isset($settings['ajaxPageState']['libraries'])) {
         $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
       }
