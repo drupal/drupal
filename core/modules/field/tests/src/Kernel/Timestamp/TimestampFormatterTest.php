@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel\Timestamp;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
@@ -146,29 +145,17 @@ class TimestampFormatterTest extends KernelTestBase {
    * Tests TimestampAgoFormatter.
    */
   public function testTimestampAgoFormatter(): void {
-    $data = [];
-
-    foreach ([1, 2, 3, 4, 5, 6, 7] as $granularity) {
-      $data[] = [
-        'future_format' => '@interval hence',
-        'past_format' => '@interval ago',
-        'granularity' => $granularity,
-      ];
-    }
-
-    foreach ($data as $settings) {
-      $future_format = $settings['future_format'];
-      $past_format = $settings['past_format'];
-      $granularity = $settings['granularity'];
+    foreach (range(1, 7) as $granularity) {
       $request_time = \Drupal::requestStack()->getCurrentRequest()->server->get('REQUEST_TIME');
 
       // Test a timestamp in the past
       $value = $request_time - 87654321;
-      $expected = new FormattableMarkup($past_format, ['@interval' => \Drupal::service('date.formatter')->formatTimeDiffSince($value, ['granularity' => $granularity])]);
+      $interval = \Drupal::service('date.formatter')->formatTimeDiffSince($value, ['granularity' => $granularity]);
+      $expected = $interval . ' ago';
 
       $component = $this->display->getComponent($this->fieldName);
       $component['type'] = 'timestamp_ago';
-      $component['settings'] = $settings;
+      $component['settings'] = ['granularity' => $granularity];
       $this->display->setComponent($this->fieldName, $component);
 
       $entity = EntityTest::create([]);
@@ -179,11 +166,12 @@ class TimestampFormatterTest extends KernelTestBase {
 
       // Test a timestamp in the future
       $value = $request_time + 87654321;
-      $expected = new FormattableMarkup($future_format, ['@interval' => \Drupal::service('date.formatter')->formatTimeDiffUntil($value, ['granularity' => $granularity])]);
+      $interval = \Drupal::service('date.formatter')->formatTimeDiffUntil($value, ['granularity' => $granularity]);
+      $expected = $interval . ' hence';
 
       $component = $this->display->getComponent($this->fieldName);
       $component['type'] = 'timestamp_ago';
-      $component['settings'] = $settings;
+      $component['settings'] = ['granularity' => $granularity];
       $this->display->setComponent($this->fieldName, $component);
 
       $entity = EntityTest::create([]);

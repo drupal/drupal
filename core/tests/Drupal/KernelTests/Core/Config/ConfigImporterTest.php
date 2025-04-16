@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporter;
@@ -234,7 +233,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $config_importer->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEquals(new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]), $logs[0]);
+    $this->assertEquals('Deleted and replaced configuration entity "' . $name_secondary . '"', $logs[0]);
   }
 
   /**
@@ -364,7 +363,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $config_importer->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEquals(new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_dependent]), $logs[0]);
+    $this->assertEquals('Update target "' . $name_dependent . '" is missing.', $logs[0]);
   }
 
   /**
