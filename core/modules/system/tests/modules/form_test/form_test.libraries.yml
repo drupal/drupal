@@ -1,0 +1,10 @@
+form_test:
+  version: VERSION
+  js:
+    # Weight is set to a negative number to ensure that details summaries
+    # are loaded before vertical-tabs.js to simulate what happens on
+    # entity forms.
+    js/form_test.js: { weight: -1 }
+  dependencies:
+    - core/jquery
+    - core/drupal

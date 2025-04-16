@@ -180,6 +180,14 @@ form_test.vertical_tabs:
   requirements:
     _access: 'TRUE'
 
+form_test.vertical_tabs_with_summary:
+  path: '/form_test/vertical-tabs-with-summary'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestVerticalTabsWithSummaryForm'
+    _title: 'Vertical tabs with Summary tests'
+  requirements:
+    _access: 'TRUE'
+
 form_test.storage:
   path: '/form_test/form-storage'
   defaults:
