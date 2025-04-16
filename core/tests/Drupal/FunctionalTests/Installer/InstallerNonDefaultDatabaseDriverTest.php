@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Extension\Extension;
-use Drupal\Core\Extension\ModuleUninstallValidatorException;
 
 // cspell:ignore drupaldriver testdriverdatabasedrivertestmysql
 // cspell:ignore testdriverdatabasedrivertestpgsql
@@ -85,31 +83,20 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
       "  )," . PHP_EOL;
     $this->assertStringContainsString($dependencies, $contents);
 
-    // Assert that the module "driver_test" has been installed.
-    $this->assertEquals(\Drupal::service('module_handler')->getModule('driver_test'), new Extension($this->root, 'module', 'core/modules/system/tests/modules/driver_test/driver_test.info.yml'));
+    // Assert that the module "driver_test" and its dependencies have been
+    // installed.
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->checkboxChecked('modules[driver_test][enable]');
+    $this->assertSession()->checkboxChecked('modules[mysql][enable]');
+    $this->assertSession()->checkboxChecked('modules[pgsql][enable]');
 
-    // Change the default database connection to use the database driver from
-    // the module "driver_test".
-    $connection_info = Database::getConnectionInfo();
-    $driver_test_connection = $connection_info['default'];
-    $driver_test_connection['driver'] = $this->testDriverName;
-    $driver_test_connection['namespace'] = 'Drupal\\driver_test\\Driver\\Database\\' . $this->testDriverName;
-    $driver_test_connection['autoload'] = "core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/";
-    Database::renameConnection('default', 'original_database_connection');
-    Database::addConnectionInfo('default', 'default', $driver_test_connection);
-
-    // The module "driver_test" should not be uninstallable, because it is
-    // providing the database driver.
-    try {
-      $this->container->get('module_installer')->uninstall(['driver_test']);
-      $this->fail('Uninstalled driver_test module.');
-    }
-    catch (ModuleUninstallValidatorException $e) {
-      $this->assertStringContainsString("The module 'Contrib database driver test' is providing the database driver '{$this->testDriverName}'.", $e->getMessage());
-    }
-
-    // Restore the old database connection.
-    Database::addConnectionInfo('default', 'default', $connection_info['default']);
+    // The module "driver_test" can not be uninstalled, because it is providing
+    // the database driver. Also, the "mysql" and "pgsql" modules can not be
+    // uninstalled being dependencies of the "driver_test" module.
+    $this->drupalGet('admin/modules/uninstall');
+    $this->assertSession()->elementTextContains('xpath', '//tr[@data-drupal-selector="edit-driver-test"]', "The following reason prevents Contrib database driver test from being uninstalled: The module 'Contrib database driver test' is providing the database driver '{$this->testDriverName}'.");
+    $this->assertSession()->elementTextContains('xpath', '//tr[@data-drupal-selector="edit-mysql"]', "The following reason prevents MySQL from being uninstalled: Required by: driver_test");
+    $this->assertSession()->elementTextContains('xpath', '//tr[@data-drupal-selector="edit-pgsql"]', "The following reason prevents PostgreSQL from being uninstalled: Required by: driver_test");
   }
 
 }
