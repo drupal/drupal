@@ -241,4 +241,11 @@ class ExecutionContext implements ExecutionContextInterface {
     throw new \LogicException(ExecutionContextInterface::class . '::isObjectInitialized is unsupported.');
   }
 
+  /**
+   * Clone this context.
+   */
+  public function __clone(): void {
+    $this->violations = clone $this->violations;
+  }
+
 }
