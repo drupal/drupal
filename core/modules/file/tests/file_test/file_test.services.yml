@@ -20,3 +20,6 @@ services:
     tags:
       - { name: stream_wrapper, scheme: dummy1 }
       - { name: stream_wrapper, scheme: dummy2 }
+  Drupal\file_test\EventSubscriber\DummyMimeTypeMapLoadedSubscriber:
+    autowire: true
+    public: false

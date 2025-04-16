@@ -1,32 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\File\MimeType;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\File\Event\MimeTypeMapLoadedEvent;
-use Drupal\Core\File\FileSystemInterface;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
-
 /**
- * Makes possible to guess the MIME type of a file using its extension.
+ * Provides a sensible mapping between filename extensions and MIME types.
  */
-class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
-  use DeprecatedServicePropertyTrait;
+class MimeTypeMap implements MimeTypeMapInterface {
 
   /**
-   * Default MIME extension mapping.
+   * The MIME extension mapping.
    *
-   * @var array
-   *   Array of mimetypes correlated to the extensions that relate to them.
+   * @var array{'mimetypes': array{int,string}, 'extensions': array{string,int}}
+   *   An array consisting of two arrays:
+   *     - mimetypes: MIME types, keyed by a unique number.
+   *     - extensions: an associative array with the MIME type key numbers as
+   *       values. The keys are file extensions, in lower case and without any
+   *       preceding dot.
    *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a
-   *   MimeTypeMapInterface $map to the constructor instead.
-   *
-   * @see https://www.drupal.org/node/3494040
+   * cspell:disable.
    */
-  protected $defaultMapping = [
-    // cspell:disable
+  protected array $mapping = [
     'mimetypes' => [
       0 => 'application/andrew-inset',
       1 => 'application/atom',
@@ -879,148 +874,145 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'json' => 361,
       'avif' => 362,
     ],
-    // cspell:enable
   ];
 
-  /**
-   * The MIME types mapping array after going through the module handler.
-   *
-   * @var array
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a
-   *   MimeTypeMapInterface $map to the constructor instead.
-   *
-   * @see https://www.drupal.org/node/3494040
-   */
-  protected $mapping;
+  // cspell:enable
 
   /**
-   * Deprecated service properties.
-   *
-   * @var string[]
-   *
-   * @see https://www.drupal.org/node/3494040
+   * {@inheritdoc}
    */
-  protected $deprecatedProperties = [
-    'moduleHandler' => 'module_handler',
-  ];
-
-  /**
-   * The MIME type map.
-   */
-  protected MimeTypeMapInterface $map;
-
-  /**
-   * The file system.
-   */
-  protected FileSystemInterface $fileSystem;
-
-  /**
-   * Constructs a new ExtensionMimeTypeGuesser.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\File\MimeType\MimeTypeMapInterface $map
-   *   The MIME type map.
-   * @param \Drupal\Core\File\FileSystemInterface|null $fileSystem
-   *   The file system.
-   */
-  public function __construct(
-    MimeTypeMapInterface|ModuleHandlerInterface $map,
-    ?FileSystemInterface $fileSystem = NULL,
-  ) {
-    if ($map instanceof ModuleHandlerInterface) {
-      @trigger_error(
-        'Calling ' . __METHOD__ . '() with the $map argument as an instance of \Drupal\Core\Extension\ModuleHandlerInterface is deprecated in drupal:11.2.0 and an instance of \Drupal\Core\File\MimeType\MimeTypeMapInterface is required in drupal:12.0.0. See https://www.drupal.org/node/3494040',
-        E_USER_DEPRECATED
-      );
-      $map = \Drupal::service(MimeTypeMapInterface::class);
+  public function addMapping(string $mimetype, string $extension): static {
+    $mimetype = strtolower($mimetype);
+    $extension = strtolower($extension);
+    $this->mapping['mimetypes'] ??= [];
+    $key = array_search($mimetype, $this->mapping['mimetypes'], TRUE);
+    if ($key === FALSE) {
+      $key = count($this->mapping['mimetypes']);
+      $this->mapping['mimetypes'][] = $mimetype;
     }
-    $this->map = $map;
-    if (!$fileSystem) {
-      @trigger_error(
-        'Calling ' . __METHOD__ . '() without the $fileSystem argument is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3494040',
-        E_USER_DEPRECATED
-      );
-      $fileSystem = \Drupal::service(FileSystemInterface::class);
-    }
-    $this->fileSystem = $fileSystem;
+    $this->mapping['extensions'][$extension] = $key;
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function guessMimeType($path): ?string {
-    if (!isset($this->fileSystem)) {
-      @trigger_error(
-        'Calling ' . __METHOD__ . '() without the file_system service already injected is deprecated in drupal:11.2.0 and throws an exception in drupal:12.0.0. See https://www.drupal.org/node/3494040',
-        E_USER_DEPRECATED
-      );
-      $this->fileSystem = \Drupal::service(FileSystemInterface::class);
+  public function removeMapping(string $mimetype, string $extension): bool {
+    $extension = strtolower($extension);
+    if (isset($this->mapping['extensions'][$extension])) {
+      unset($this->mapping['extensions'][$extension]);
+      return TRUE;
     }
-    if (!isset($this->map)) {
-      @trigger_error(
-        'Calling ' . __METHOD__ . '() without the MimeTypeMapInterface service already injected is deprecated in drupal:11.2.0 and throws an exception in drupal:12.0.0. See https://www.drupal.org/node/3494040',
-        E_USER_DEPRECATED
-      );
-      $this->map = \Drupal::service(MimeTypeMapInterface::class);
-    }
-
-    $extension = '';
-    $file_parts = explode('.', $this->fileSystem->basename($path));
-
-    // Remove the first part: a full filename should not match an extension,
-    // then iterate over the file parts, trying to find a match.
-    // For 'my.awesome.image.jpeg', we try: 'awesome.image.jpeg', then
-    // 'image.jpeg', then 'jpeg'.
-    // We explicitly check for NULL because that indicates that the array is
-    // empty.
-    while (array_shift($file_parts) !== NULL) {
-      $extension = strtolower(implode('.', $file_parts));
-      if ($mimeType = $this->map->getMimeTypeForExtension($extension)) {
-        return $mimeType;
-      }
-    }
-
-    return NULL;
-  }
-
-  /**
-   * Sets the mimetypes/extension mapping to use when guessing mimetype.
-   *
-   * @param array|null $mapping
-   *   Passing a NULL mapping will cause guess() to use self::$defaultMapping.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\Core\File\MimeType\MimeTypeMapInterface::addMapping() instead.
-   *
-   * @see https://www.drupal.org/node/3494040
-   */
-  public function setMapping(?array $mapping = NULL): void {
-    @trigger_error(
-      __METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapInterface::addMapping() instead or define your own MimeTypeMapInterface implementation. See https://www.drupal.org/node/3494040',
-      E_USER_DEPRECATED
-    );
-    // Convert the mapping to be keyed by type.
-    $typeMapping = [];
-    foreach ($mapping['mimetypes'] as $index => $mimetype) {
-      $typeMapping[$mimetype] = array_keys($mapping['extensions'], $index);
-    }
-
-    $this->map = new MimeTypeMap();
-    foreach ($typeMapping as $type => $extensions) {
-      foreach ($extensions as $extension) {
-        $this->map->addMapping($type, $extension);
-      }
-    }
-    \Drupal::service('event_dispatcher')->dispatch(
-      new MimeTypeMapLoadedEvent($this->map)
-    );
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isGuesserSupported(): bool {
+  public function removeMimeType(string $mimetype): bool {
+    $mimetype = strtolower($mimetype);
+    $key = array_search($mimetype, $this->mapping['mimetypes'], TRUE);
+    if ($key === FALSE) {
+      return FALSE;
+    }
+    foreach ($this->getExtensionsForMimeType($mimetype) as $extension) {
+      $this->removeMapping($mimetype, $extension);
+    }
+    unset($this->mapping['mimetypes'][$key]);
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listMimeTypes(): array {
+    $mimeTypes = array_values($this->mapping['mimetypes']);
+    sort($mimeTypes);
+
+    return $mimeTypes;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listExtensions(): array {
+    $extensions = array_keys($this->mapping['extensions']);
+    sort($extensions);
+
+    return $extensions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasMimeType(string $mimetype): bool {
+    return in_array(
+      strtolower($mimetype),
+      $this->mapping['mimetypes'],
+      TRUE
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasExtension(string $extension): bool {
+    return isset($this->mapping['extensions'][strtolower($extension)]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMimeTypeForExtension($extension): ?string {
+    $extension = strtolower($extension);
+    $extensions = $this->mapping['extensions'] ?? [];
+
+    return isset($extensions[$extension]) ? $this->mapping['mimetypes'][$extensions[$extension]] : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExtensionsForMimeType($mimetype): array {
+    $mimetype = strtolower($mimetype);
+    $key = array_search($mimetype, $this->mapping['mimetypes'], TRUE);
+    if ($key === FALSE) {
+      return [];
+    }
+    $extensions = array_keys($this->mapping['extensions'], $key, TRUE);
+    sort($extensions);
+    return $extensions;
+  }
+
+  /**
+   * Gets the underlying mapping array.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+   *   replacement for this method.
+   *
+   * @see https://www.drupal.org/node/3494040
+   * @see \Drupal\Core\File\EventSubscriber\LegacyMimeTypeMapLoadedSubscriber
+   */
+  public function getMapping(): array {
+    // We do not trigger a deprecation error as this method is needed for
+    // calling the deprecated hook_file_mimetype_mapping_alter() in
+    // LegacyMimeTypeMapLoadedSubscriber::onMimeTypeMapLoaded().
+    return $this->mapping;
+  }
+
+  /**
+   * Sets the underlying mapping array.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+   *   replacement for this method.
+   *
+   * @see https://www.drupal.org/node/3494040
+   */
+  public function setMapping(array $mapping): void {
+    // We do not trigger a deprecation error as this method is needed for
+    // calling the deprecated hook_file_mimetype_mapping_alter() in
+    // LegacyMimeTypeMapLoadedSubscriber::onMimeTypeMapLoaded().
+    $this->mapping = $mapping;
   }
 
 }

@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\File\MimeType\MimeTypeMapInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Template\Attribute;
 
@@ -75,12 +76,12 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
     if (!parent::isApplicable($field_definition)) {
       return FALSE;
     }
-    /** @var \Symfony\Component\Mime\MimeTypeGuesserInterface $extension_mime_type_guesser */
-    $extension_mime_type_guesser = \Drupal::service('file.mime_type.guesser.extension');
+    /** @var \Drupal\Core\File\MimeType\MimeTypeMapInterface $mime_type_map */
+    $mime_type_map = \Drupal::service(MimeTypeMapInterface::class);
     $extension_list = array_filter(preg_split('/\s+/', $field_definition->getSetting('file_extensions')));
 
     foreach ($extension_list as $extension) {
-      $mime_type = $extension_mime_type_guesser->guessMimeType('fakedFile.' . $extension);
+      $mime_type = $mime_type_map->getMimeTypeForExtension($extension);
       if ($mime_type !== NULL && static::mimeTypeApplies($mime_type)) {
         return TRUE;
       }

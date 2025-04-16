@@ -122,7 +122,9 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
    *
    * @see \Symfony\Component\Mime\MimeTypes
    */
-  public static function registerWithSymfonyGuesser(ContainerInterface $container) {
+  public static function registerWithSymfonyGuesser(
+    ContainerInterface $container,
+  ): void {
     $guesser = new MimeTypes();
     $guesser->registerGuesser($container->get('file.mime_type.guesser'));
     MimeTypes::setDefault($guesser);

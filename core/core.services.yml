@@ -1805,10 +1805,17 @@ services:
     lazy: true
   file.mime_type.guesser.extension:
     class: Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
-    arguments: ['@module_handler']
+    arguments: ['@Drupal\Core\File\MimeType\MimeTypeMapInterface', '@file_system']
     tags:
       - { name: mime_type_guesser }
     lazy: true
+  Drupal\Core\File\MimeType\MimeTypeMapFactory:
+    autowire: true
+    public: false
+  Drupal\Core\File\MimeType\MimeTypeMapInterface:
+    factory: ['@Drupal\Core\File\MimeType\MimeTypeMapFactory', create]
+  Drupal\Core\File\EventSubscriber\LegacyMimeTypeMapLoadedSubscriber:
+    autowire: true
   # Currently needs to be public as it is called by
   # \Drupal\Core\Render\Element\StatusMessages.
   # @todo Consider making this service private again after

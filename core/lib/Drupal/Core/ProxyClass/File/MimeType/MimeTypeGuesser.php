@@ -91,6 +91,14 @@ namespace Drupal\Core\ProxyClass\File\MimeType {
             return $this->lazyLoadItself()->isGuesserSupported();
         }
 
+        /**
+         * {@inheritdoc}
+         */
+        public static function registerWithSymfonyGuesser(\Symfony\Component\DependencyInjection\ContainerInterface $container): void
+        {
+            \Drupal\Core\File\MimeType\MimeTypeGuesser::registerWithSymfonyGuesser($container);
+        }
+
     }
 
 }

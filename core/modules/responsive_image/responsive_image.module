@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\File\MimeType\MimeTypeMapInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\image\Entity\ImageStyle;
@@ -435,22 +436,25 @@ function responsive_image_get_image_dimensions($image_style_name, array $dimensi
  * @param string $extension
  *   The original extension of the image (without the leading dot).
  *
- * @return string
- *   The MIME type of the image after the image style is applied.
+ * @return string|null
+ *   The MIME type of the image after the image style is applied, or NULL if not
+ *   found.
  */
 function responsive_image_get_mime_type($image_style_name, $extension) {
-  if ($image_style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
-    return 'image/gif';
-  }
-  // The MIME type guesser needs a full path, not just an extension, but the
-  // file doesn't have to exist.
-  if ($image_style_name === ResponsiveImageStyleInterface::ORIGINAL_IMAGE) {
-    $fake_path = 'responsive_image.' . $extension;
-  }
-  else {
-    $fake_path = 'responsive_image.' . ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
-  }
-  return \Drupal::service('file.mime_type.guesser.extension')->guessMimeType($fake_path);
+  $extension = match ($image_style_name) {
+    // The file extension for the empty image is 'gif'.
+    ResponsiveImageStyleInterface::EMPTY_IMAGE => 'gif',
+    // If using the original image, the file extension is just passed on to the
+    // MIME type mapper.
+    ResponsiveImageStyleInterface::ORIGINAL_IMAGE => $extension,
+    // In all other cases, get the file extension of the derivative image from
+    // the image style configuration.
+    default => ImageStyle::load($image_style_name)->getDerivativeExtension($extension),
+  };
+
+  return \Drupal::service(MimeTypeMapInterface::class)->getMimeTypeForExtension(
+    $extension
+  );
 }
 
 /**
