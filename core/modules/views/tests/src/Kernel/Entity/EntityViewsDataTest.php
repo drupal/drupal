@@ -428,6 +428,14 @@ class EntityViewsDataTest extends KernelTestBase {
         ],
       ],
     ], $data['entity_test__string']['table']['join']['entity_test']);
+
+    // Check the "allow empty" option for non-required fields.
+    $this->assertArrayHasKey('allow empty', $data['entity_test']['name']['filter']);
+    $this->assertTrue($data['entity_test']['name']['filter']['allow empty']);
+    // Reconfigure the field to be required.
+    $this->commonBaseFields['name']->setRequired(TRUE);
+    $data = $this->entityTypeManager->getHandler('entity_test', 'views_data')->getViewsData();
+    $this->assertArrayNotHasKey('allow empty', $data['entity_test']['name']['filter']);
   }
 
   /**
