@@ -25,7 +25,7 @@ trait BasicAuthResourceTestTrait {
   protected function getAuthenticationRequestOptions($method): array {
     return [
       'headers' => [
-        'Authorization' => 'Basic ' . base64_encode($this->account->name->value . ':' . $this->account->passRaw),
+        'Authorization' => 'Basic ' . base64_encode($this->account->getAccountName() . ':' . $this->account->passRaw),
       ],
     ];
   }

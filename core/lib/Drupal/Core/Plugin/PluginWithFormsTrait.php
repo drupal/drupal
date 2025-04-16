@@ -17,6 +17,7 @@ trait PluginWithFormsTrait {
     elseif ($operation === 'configure' && $this instanceof PluginFormInterface) {
       return static::class;
     }
+    return NULL;
   }
 
   /**

@@ -202,7 +202,13 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Returns WebAssert object.
+   *
+   * @param string $name
+   *   (optional) Name of the session. Defaults to the active session.
+   *
+   * @return \Drupal\FunctionalJavascriptTests\WebDriverWebAssert
+   *   A new web-assert option for asserting the presence of elements with.
    */
   public function assertSession($name = NULL) {
     return new WebDriverWebAssert($this->getSession($name), $this->baseUrl);
