@@ -11,7 +11,6 @@ base:
       css/components/js.module.css: { weight: -10 }
       css/components/position-container.module.css: { weight: -10 }
       css/components/reset-appearance.module.css: { weight: -10 }
-      css/components/tablesort.module.css: { weight: -10 }
 
 admin:
   version: VERSION

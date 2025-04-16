@@ -18,3 +18,5 @@ libraries-extend:
     - starterkit_theme/file
   core/drupal.progress:
     - starterkit_theme/progress
+  core/drupal.tablesort:
+    - starterkit_theme/drupal.tablesort

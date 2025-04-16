@@ -38,8 +38,6 @@ base:
         weight: -10
       css/components/tableselect.css:
         weight: -10
-      css/components/tablesort.css:
-        weight: -10
       css/components/tabs.css:
         weight: -10
       css/components/textarea.css:
@@ -92,6 +90,14 @@ progress:
     component:
       css/components/progress.css:
         weight: -10
+
+drupal.tablesort:
+  version: VERSION
+  css:
+    component:
+      css/components/tablesort.css:
+        weight: -10
+
 search-results:
   version: VERSION
   css:

@@ -12,8 +12,8 @@
   background-size: 100%;
 }
 .tablesort--asc {
-  background-image: url(../../../../misc/icons/787878/twistie-down.svg);
+  background-image: url(../icons/787878/twistie-down.svg);
 }
 .tablesort--desc {
-  background-image: url(../../../../misc/icons/787878/twistie-up.svg);
+  background-image: url(../icons/787878/twistie-up.svg);
 }

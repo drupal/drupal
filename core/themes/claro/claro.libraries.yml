@@ -17,7 +17,6 @@ global-styling:
       css/classy/components/links.css: {}
       css/classy/components/menu.css: {}
       css/classy/components/more-link.css: {}
-      css/classy/components/tablesort.css: {}
       css/classy/components/textarea.css: {}
       css/classy/components/ui-dialog.css: {}
       css/components/accordion.css: {}
@@ -50,7 +49,6 @@ global-styling:
       css/components/tables.css: {}
       css/components/table--file-multiple-widget.css: {}
       css/components/search-admin-settings.css: {}
-      css/components/tablesort-indicator.css: {}
       css/components/tableselect.css: {}
       css/components/tabs.css: {}
     theme:
@@ -134,6 +132,13 @@ drupal.node.preview:
   css:
     theme:
       css/components/node-preview.css: {}
+
+drupal.tablesort:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/tablesort.css: {}
+      css/components/tablesort-indicator.css: {}
 
 media-form:
   version: VERSION

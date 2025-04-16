@@ -1047,6 +1047,15 @@ function theme_get_suggestions($args, $base, $delimiter = '__'): array {
 }
 
 /**
+ * Prepares variables for tablesort indicators.
+ *
+ * Default template: tablesort-indicator.html.twig.
+ */
+function template_preprocess_tablesort_indicator(&$variables): void {
+  $variables['#attached']['library'][] = 'core/drupal.tablesort';
+}
+
+/**
  * Prepares variables for maintenance page templates.
  *
  * Default template: maintenance-page.html.twig.

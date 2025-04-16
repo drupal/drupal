@@ -123,6 +123,8 @@ libraries-extend:
     - claro/claro.tabledrag
   core/drupal.tableselect:
     - claro/tableselect
+  core/drupal.tablesort:
+    - claro/drupal.tablesort
   core/drupal.vertical-tabs:
     - claro/vertical-tabs
   file/drupal.file:
