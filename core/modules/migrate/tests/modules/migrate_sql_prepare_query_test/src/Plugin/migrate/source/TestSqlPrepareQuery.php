@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\migrate_sql_prepare_query_test\Plugin\migrate\source;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 
 /**
  * Source plugin for prepare query test.
- *
- * @MigrateSource(
- *   id = "test_sql_prepare_query"
- * )
  */
+#[MigrateSource('test_sql_prepare_query')]
 class TestSqlPrepareQuery extends SqlBase {
 
   /**
