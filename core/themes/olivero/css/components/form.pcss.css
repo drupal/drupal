@@ -137,7 +137,10 @@ tr .form-item,
   margin-block: var(--sp0-5);
 }
 
-.form-actions .button,
+.form-actions .button {
+  margin-block: 0;
+}
+
 .form-actions .action-link {
   margin-block: var(--sp0-5);
 }
