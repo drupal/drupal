@@ -14,6 +14,16 @@ use Drupal\KernelTests\KernelTestBase;
 class UpdateDeleteFileIfStaleTest extends KernelTestBase {
 
   /**
+   * Disable strict config schema checking.
+   *
+   * This test requires saving invalid configuration. This allows for the
+   * simulation of a temporary file becoming stale.
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [

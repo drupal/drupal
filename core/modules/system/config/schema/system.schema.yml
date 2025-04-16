@@ -334,6 +334,8 @@ system.action.*:
 system.file:
   type: config_object
   label: 'File system'
+  constraints:
+    FullyValidatable: ~
   mapping:
     allow_insecure_uploads:
       type: boolean
@@ -341,6 +343,10 @@ system.file:
     default_scheme:
       type: string
       label: 'Default download method'
+      constraints:
+        ClassResolver:
+          classOrService: 'stream_wrapper_manager'
+          method: 'isValidScheme'
     path:
       type: mapping
       label: 'Path settings'
@@ -348,6 +354,9 @@ system.file:
     temporary_maximum_age:
       type: integer
       label: 'Maximum age for temporary files'
+      constraints:
+        Range:
+          min: 0
 
 system.image:
   type: config_object
