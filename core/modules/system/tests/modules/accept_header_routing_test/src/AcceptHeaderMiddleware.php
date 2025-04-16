@@ -16,16 +16,16 @@ class AcceptHeaderMiddleware implements HttpKernelInterface {
   /**
    * The app kernel.
    */
-  protected HttpKernelInterface $app;
+  protected HttpKernelInterface $httpKernel;
 
   /**
    * Constructs a new AcceptHeaderMiddleware instance.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The app.
    */
-  public function __construct(HttpKernelInterface $app) {
-    $this->app = $app;
+  public function __construct(HttpKernelInterface $http_kernel) {
+    $this->httpKernel = $http_kernel;
   }
 
   /**
@@ -43,7 +43,7 @@ class AcceptHeaderMiddleware implements HttpKernelInterface {
       $request->setRequestFormat($mapping[$accept[0]]);
     }
 
-    return $this->app->handle($request, $type, $catch);
+    return $this->httpKernel->handle($request, $type, $catch);
   }
 
 }

@@ -16,7 +16,7 @@ class NegotiationMiddleware implements HttpKernelInterface {
    *
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
-  protected $app;
+  protected $httpKernel;
 
   /**
    * Contains a hashmap of format as key and mimetype as value.
@@ -28,11 +28,11 @@ class NegotiationMiddleware implements HttpKernelInterface {
   /**
    * Constructs a new NegotiationMiddleware.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The wrapper HTTP kernel.
    */
-  public function __construct(HttpKernelInterface $app) {
-    $this->app = $app;
+  public function __construct(HttpKernelInterface $http_kernel) {
+    $this->httpKernel = $http_kernel;
   }
 
   /**
@@ -48,7 +48,7 @@ class NegotiationMiddleware implements HttpKernelInterface {
     if ($requested_format = $this->getContentType($request)) {
       $request->setRequestFormat($requested_format);
     }
-    return $this->app->handle($request, $type, $catch);
+    return $this->httpKernel->handle($request, $type, $catch);
   }
 
   /**

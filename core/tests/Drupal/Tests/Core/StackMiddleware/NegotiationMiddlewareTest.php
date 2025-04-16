@@ -20,7 +20,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
-  protected $app;
+  protected $httpKernel;
 
   /**
    * @var \Drupal\Tests\Core\StackMiddleware\StubNegotiationMiddleware
@@ -33,8 +33,8 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->app = $this->prophesize(HttpKernelInterface::class);
-    $this->contentNegotiation = new StubNegotiationMiddleware($this->app->reveal());
+    $this->httpKernel = $this->prophesize(HttpKernelInterface::class);
+    $this->contentNegotiation = new StubNegotiationMiddleware($this->httpKernel->reveal());
   }
 
   /**
@@ -104,14 +104,14 @@ class NegotiationMiddlewareTest extends UnitTestCase {
     $request_mock->request = new InputBag();
 
     // Calling kernel app with default arguments.
-    $this->app->handle($request_mock, HttpKernelInterface::MAIN_REQUEST, TRUE)
+    $this->httpKernel->handle($request_mock, HttpKernelInterface::MAIN_REQUEST, TRUE)
       ->shouldBeCalled()
       ->willReturn(
         $this->createMock(Response::class)
       );
     $this->contentNegotiation->handle($request_mock);
     // Calling kernel app with specified arguments.
-    $this->app->handle($request_mock, HttpKernelInterface::SUB_REQUEST, FALSE)
+    $this->httpKernel->handle($request_mock, HttpKernelInterface::SUB_REQUEST, FALSE)
       ->shouldBeCalled()
       ->willReturn(
         $this->createMock(Response::class)
@@ -123,12 +123,12 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    * @covers ::registerFormat
    */
   public function testSetFormat(): void {
-    $app = $this->createMock(HttpKernelInterface::class);
-    $app->expects($this->once())
+    $httpKernel = $this->createMock(HttpKernelInterface::class);
+    $httpKernel->expects($this->once())
       ->method('handle')
       ->willReturn($this->createMock(Response::class));
 
-    $content_negotiation = new StubNegotiationMiddleware($app);
+    $content_negotiation = new StubNegotiationMiddleware($httpKernel);
 
     $request = $this->prophesize(Request::class);
 
