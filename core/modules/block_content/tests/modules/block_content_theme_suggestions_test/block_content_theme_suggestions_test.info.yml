@@ -1,0 +1,5 @@
+name: 'Block Content Theme Suggestions Test'
+type: module
+description: 'Support module for testing.'
+package: Testing
+version: VERSION
