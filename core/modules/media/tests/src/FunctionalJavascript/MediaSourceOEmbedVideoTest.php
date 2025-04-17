@@ -150,6 +150,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // correctly, regardless of whatever its width attribute may be (the fixture
     // hard-codes it to 480).
     $inner_frame = 'frames[0].document.querySelector("iframe")';
+    $page->waitFor(10, fn () => $session->evaluateScript("$inner_frame !== null"));
     $this->assertSame('480', $session->evaluateScript("$inner_frame.getAttribute('width')"));
     $this->assertLessThanOrEqual(240, $session->evaluateScript("$inner_frame.clientWidth"));
 
