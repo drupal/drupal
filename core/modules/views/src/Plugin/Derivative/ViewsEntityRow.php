@@ -95,7 +95,7 @@ class ViewsEntityRow implements ContainerDeriverInterface {
         $this->derivatives[$entity_type_id] = [
           'id' => 'entity:' . $entity_type_id,
           'provider' => 'views',
-          'title' => $entity_type->getLabel(),
+          'title' => $this->t('@label view mode', ['@label' => $entity_type->getLabel()]),
           'help' => $this->t('Display the @label', ['@label' => $entity_type->getLabel()]),
           'base' => [$entity_type->getDataTable() ?: $entity_type->getBaseTable()],
           'entity_type' => $entity_type_id,

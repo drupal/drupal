@@ -583,7 +583,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       $options = $this->rowStyleOptions();
       $style_form['row_plugin'] = [
         '#type' => 'select',
-        '#title' => $this->t('of'),
+        '#title' => $this->t('output as'),
         '#options' => $options,
         '#access' => count($options) > 1,
       ];

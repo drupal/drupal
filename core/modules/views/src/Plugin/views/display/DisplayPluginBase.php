@@ -1700,7 +1700,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         break;
 
       case 'row':
-        $form['#title'] .= $this->t('How should each row in this view be styled');
+        $form['#title'] .= $this->t('How should each row in this view be output');
         $row_plugin_instance = $this->getPlugin('row');
         $form['row'] = [
           '#prefix' => '<div class="clearfix">',
