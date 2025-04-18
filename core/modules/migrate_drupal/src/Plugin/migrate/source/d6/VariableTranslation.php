@@ -4,7 +4,6 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
@@ -30,11 +29,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_variable_translation",
+ *   source_module = "i18n",
+ * )
  */
-#[MigrateSource(
-  id: 'd6_variable_translation',
-  source_module: 'i18n',
-)]
 class VariableTranslation extends DrupalSqlBase {
 
   /**

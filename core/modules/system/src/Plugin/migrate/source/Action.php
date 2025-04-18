@@ -2,17 +2,17 @@
 
 namespace Drupal\system\Plugin\migrate\source;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
 /**
  * Drupal action source from database.
+ *
+ * @MigrateSource(
+ *   id = "action",
+ *   source_module = "system"
+ * )
  */
-#[MigrateSource(
-  id: 'action',
-  source_module: 'system',
-)]
 class Action extends DrupalSqlBase {
 
   /**

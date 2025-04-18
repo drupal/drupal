@@ -2,7 +2,6 @@
 
 namespace Drupal\update\Plugin\migrate\source;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
 
 /**
@@ -13,11 +12,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\Variable
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "update_settings",
+ *   source_module = "update"
+ * )
  */
-#[MigrateSource(
-  id: 'update_settings',
-  source_module: 'update',
-)]
 class UpdateSettings extends Variable {
 
   /**

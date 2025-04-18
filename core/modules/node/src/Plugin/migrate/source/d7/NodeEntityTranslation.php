@@ -2,7 +2,6 @@
 
 namespace Drupal\node\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
@@ -36,11 +35,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d7_node_entity_translation",
+ *   source_module = "entity_translation"
+ * )
  */
-#[MigrateSource(
-  id: 'd7_node_entity_translation',
-  source_module: 'entity_translation',
-)]
 class NodeEntityTranslation extends FieldableEntity {
 
   /**

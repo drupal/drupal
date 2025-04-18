@@ -3,7 +3,6 @@
 namespace Drupal\node\Plugin\migrate\source\d7;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -44,11 +43,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d7_node",
+ *   source_module = "node"
+ * )
  */
-#[MigrateSource(
-  id: 'd7_node',
-  source_module: 'node',
-)]
 class Node extends FieldableEntity {
   /**
    * The module handler.

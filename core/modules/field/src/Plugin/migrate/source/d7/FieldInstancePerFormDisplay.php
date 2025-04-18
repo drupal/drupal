@@ -2,8 +2,6 @@
 
 namespace Drupal\field\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
-
 /**
  * Drupal 7 field instance per form display source from database.
  *
@@ -12,11 +10,12 @@ use Drupal\migrate\Attribute\MigrateSource;
  * @see \Drupal\field\Plugin\migrate\source\d7\FieldInstance
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d7_field_instance_per_form_display",
+ *   source_module = "field"
+ * )
  */
-#[MigrateSource(
-  id: 'd7_field_instance_per_form_display',
-  source_module: 'field',
-)]
 class FieldInstancePerFormDisplay extends FieldInstance {
 
   /**

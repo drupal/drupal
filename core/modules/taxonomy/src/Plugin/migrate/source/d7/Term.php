@@ -2,7 +2,6 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
@@ -40,11 +39,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @todo Support term_relation, term_synonym table if possible.
+ *
+ * @MigrateSource(
+ *   id = "d7_taxonomy_term",
+ *   source_module = "taxonomy"
+ * )
  */
-#[MigrateSource(
-  id: 'd7_taxonomy_term',
-  source_module: 'taxonomy',
-)]
 class Term extends FieldableEntity {
 
   /**

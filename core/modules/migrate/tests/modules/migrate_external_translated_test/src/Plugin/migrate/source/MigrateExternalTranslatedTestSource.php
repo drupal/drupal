@@ -10,10 +10,7 @@ use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 /**
  * A simple migrate source for our tests.
  */
-#[MigrateSource(
-  id: 'migrate_external_translated_test',
-  source_module: 'migrate_external_translated_test',
-)]
+#[MigrateSource('migrate_external_translated_test')]
 class MigrateExternalTranslatedTestSource extends SourcePluginBase {
 
   /**

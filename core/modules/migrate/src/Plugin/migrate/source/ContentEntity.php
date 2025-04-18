@@ -65,7 +65,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 #[MigrateSource(
   id: "content_entity",
-  source_module: "migrate",
   deriver: ContentEntityDeriver::class,
 )]
 class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginInterface {

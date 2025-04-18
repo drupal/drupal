@@ -1,0 +1,5 @@
+name: 'Migration source_module test'
+type: module
+description: 'Add migration that define source_module.'
+package: Testing
+version: VERSION

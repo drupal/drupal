@@ -2,8 +2,6 @@
 
 namespace Drupal\node\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
-
 // cspell:ignore cnfi
 
 /**
@@ -13,11 +11,12 @@ use Drupal\migrate\Attribute\MigrateSource;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_view_mode",
+ *   source_module = "content"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_view_mode',
-  source_module: 'content',
-)]
 class ViewMode extends ViewModeBase {
 
   /**

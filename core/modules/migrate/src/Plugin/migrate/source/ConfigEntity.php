@@ -49,10 +49,7 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
-  id: 'config_entity',
-  source_module: 'system',
-)]
+#[MigrateSource('config_entity')]
 class ConfigEntity extends SqlBase {
 
   /**

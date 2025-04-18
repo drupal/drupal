@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 
 // cspell:ignore multirow
@@ -34,11 +33,12 @@ use Drupal\migrate\Row;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "variable_multirow",
+ *   source_module = "system",
+ * )
  */
-#[MigrateSource(
-  id: 'variable_multirow',
-  source_module: 'system',
-)]
 class VariableMultiRow extends DrupalSqlBase {
 
   /**

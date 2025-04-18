@@ -2,7 +2,6 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 
 // cspell:ignore ltlanguage objectid
@@ -15,11 +14,12 @@ use Drupal\migrate\Row;
  * @see \Drupal\taxonomy\Plugin\migrate\source\d6\Term
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_term_localized_translation",
+ *   source_module = "i18ntaxonomy"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_term_localized_translation',
-  source_module: 'i18ntaxonomy',
-)]
 class TermLocalizedTranslation extends Term {
 
   /**

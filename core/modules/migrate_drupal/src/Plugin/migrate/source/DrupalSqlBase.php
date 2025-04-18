@@ -190,4 +190,11 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
     return $this->dependencies;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSourceModule(): ?string {
+    return parent::getSourceModule() ?? $this->pluginDefinition['source_module'] ?? NULL;
+  }
+
 }

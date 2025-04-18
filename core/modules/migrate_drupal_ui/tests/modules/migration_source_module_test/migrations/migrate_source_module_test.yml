@@ -1,0 +1,12 @@
+id: migrate_source_module_test
+label: Test source_module
+migration_tags:
+  - Drupal 6
+  - Configuration
+source:
+  plugin: no_source_module
+  source_module: foo
+process: []
+destination:
+  plugin: config
+  config_name: test.settings

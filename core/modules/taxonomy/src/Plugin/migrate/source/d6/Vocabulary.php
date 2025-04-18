@@ -2,7 +2,6 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -14,11 +13,12 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_taxonomy_vocabulary",
+ *   source_module = "taxonomy"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_taxonomy_vocabulary',
-  source_module: 'taxonomy',
-)]
 class Vocabulary extends DrupalSqlBase {
 
   /**

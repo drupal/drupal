@@ -13,7 +13,6 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  *
  * For a working example, see
  * \Drupal\migrate\Plugin\migrate\source\EmptySource
- * \Drupal\migrate_drupal\Plugin\migrate\source\UrlAlias
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Plugin\MigrateSourceInterface
@@ -37,12 +36,6 @@ class MigrateSource extends Plugin implements MultipleProviderAttributeInterface
    *
    * @param string $id
    *   A unique identifier for the source plugin.
-   * @param string|null $source_module
-   *   (optional) Identifies the system providing the data the source plugin
-   *   will read. The source plugin itself determines how the value is used. For
-   *   example, Migrate Drupal's source plugins expect source_module to be the
-   *   name of a module that must be installed and enabled in the source
-   *   database.
    * @param bool $requirements_met
    *   (optional) Whether requirements are met. Defaults to true. The source
    *   plugin itself determines how the value is used. For example, Migrate
@@ -61,7 +54,6 @@ class MigrateSource extends Plugin implements MultipleProviderAttributeInterface
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?string $source_module = NULL,
     public bool $requirements_met = TRUE,
     public readonly mixed $minimum_version = NULL,
     public readonly ?string $deriver = NULL,

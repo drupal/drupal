@@ -3,7 +3,6 @@
 namespace Drupal\block\Plugin\migrate\source\d6;
 
 use Drupal\block\Plugin\migrate\source\Block;
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Row;
 
@@ -14,11 +13,12 @@ use Drupal\migrate\Row;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_block_translation",
+ *   source_module = "i18nblocks"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_block_translation',
-  source_module: 'i18nblocks',
-)]
 class BlockTranslation extends Block {
 
   /**

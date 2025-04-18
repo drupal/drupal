@@ -2,7 +2,6 @@
 
 namespace Drupal\block_content\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -12,11 +11,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d7_block_custom",
+ *   source_module = "block"
+ * )
  */
-#[MigrateSource(
-  id: 'd7_block_custom',
-  source_module: 'block',
-)]
 class BlockCustom extends DrupalSqlBase {
 
   /**

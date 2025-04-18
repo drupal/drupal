@@ -97,6 +97,7 @@ class MigrationPluginListTest extends KernelTestBase {
 
     // Enable migrate_drupal to test that the plugins can now be discovered.
     $this->enableModules(['migrate_drupal']);
+    $this->installConfig(['migrate_drupal']);
 
     // Make sure retrieving these migration plugins in the absence of a database
     // connection does not throw any errors.

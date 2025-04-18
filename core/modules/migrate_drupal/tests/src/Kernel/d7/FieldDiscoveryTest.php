@@ -350,18 +350,16 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    */
   public function testGetSourcePlugin(): void {
     $this->assertSourcePlugin('7', FieldInstance::class, [
-      'class' => 'Drupal\\field\\Plugin\\migrate\\source\\d7\\FieldInstance',
-      'provider' => 'field',
+      'requirements_met' => TRUE,
       'id' => 'd7_field_instance',
-      'providers' => [
+      'source_module' => 'field',
+      'class' => 'Drupal\\field\\Plugin\\migrate\\source\\d7\\FieldInstance',
+      'provider' => [
         0 => 'field',
         1 => 'migrate_drupal',
         2 => 'migrate',
         4 => 'core',
       ],
-      'source_module' => 'field',
-      'requirements_met' => TRUE,
-      'minimum_version' => NULL,
     ]);
   }
 

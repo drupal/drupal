@@ -13,7 +13,6 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
  */
 #[MigrateSource(
   id: 'migrate_missing_database_test',
-  source_module: 'migrate_missing_database_test',
   requirements_met: TRUE,
 )]
 class MigrateMissingDatabaseSource extends SqlBase {

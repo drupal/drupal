@@ -2,9 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
-use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait;
+use Drupal\migrate\Row;
 
 // cspell:ignore ltlanguage objectid
 
@@ -16,11 +15,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait;
  * @see \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d7_term_localized_translation",
+ *   source_module = "i18n_taxonomy"
+ * )
  */
-#[MigrateSource(
-  id: 'd7_term_localized_translation',
-  source_module: 'i18n_taxonomy',
-)]
 class TermLocalizedTranslation extends Term {
 
   use I18nQueryTrait;

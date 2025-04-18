@@ -2,7 +2,6 @@
 
 namespace Drupal\language\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\taxonomy\Plugin\migrate\source\d7\Vocabulary;
 
 /**
@@ -12,11 +11,12 @@ use Drupal\taxonomy\Plugin\migrate\source\d7\Vocabulary;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBas
+ *
+ * @MigrateSource(
+ *   id = "d7_language_content_settings_taxonomy_vocabulary",
+ *   source_module = "i18n_taxonomy"
+ * )
  */
-#[MigrateSource(
-  id: 'd7_language_content_settings_taxonomy_vocabulary',
-  source_module: 'i18n_taxonomy',
-)]
 class LanguageContentSettingsTaxonomyVocabulary extends Vocabulary {
 
   /**

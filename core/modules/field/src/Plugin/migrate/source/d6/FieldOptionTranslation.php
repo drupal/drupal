@@ -4,8 +4,6 @@ namespace Drupal\field\Plugin\migrate\source\d6;
 
 // cspell:ignore objectid objectindex plid
 
-use Drupal\migrate\Attribute\MigrateSource;
-
 /**
  * Drupal 6 i18n field option labels source from database.
  *
@@ -13,11 +11,12 @@ use Drupal\migrate\Attribute\MigrateSource;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_field_option_translation",
+ *   source_module = "i18ncck"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_field_option_translation',
-  source_module: 'i18ncck',
-)]
 class FieldOptionTranslation extends Field {
 
   /**

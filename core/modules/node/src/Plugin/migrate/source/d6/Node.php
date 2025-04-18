@@ -6,7 +6,6 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
@@ -44,11 +43,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_node",
+ *   source_module = "node"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_node',
-  source_module: 'node',
-)]
 class Node extends DrupalSqlBase {
 
   /**

@@ -24,10 +24,7 @@ use Drupal\migrate\Attribute\MigrateSource;
  * For additional configuration keys, refer to the parent class:
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
-  id: 'empty',
-  source_module: 'migrate',
-)]
+#[MigrateSource('empty')]
 class EmptySource extends SourcePluginBase {
 
   /**

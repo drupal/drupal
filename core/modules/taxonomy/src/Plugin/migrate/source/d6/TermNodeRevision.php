@@ -2,8 +2,6 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
-
 /**
  * Drupal 6 term/node relationships (non-current revision) source from database.
  *
@@ -12,11 +10,12 @@ use Drupal\migrate\Attribute\MigrateSource;
  * @see \Drupal\taxonomy\Plugin\migrate\source\d6\TermNode
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_term_node_revision",
+ *   source_module = "taxonomy"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_term_node_revision',
-  source_module: 'taxonomy',
-)]
 class TermNodeRevision extends TermNode {
 
   /**
