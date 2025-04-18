@@ -215,4 +215,20 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->assertSession()->elementsCount('xpath', $xpath, 1);
   }
 
+  /**
+   * Tests the node revisions page is cacheable by dynamic page cache.
+   */
+  public function testNodeRevisionsCacheability(): void {
+    $this->drupalLogin($this->editor);
+    $node = $this->drupalCreateNode();
+    // Admin paths are always uncacheable by dynamic page cache, swap node
+    // to non admin theme to test cacheability.
+    $this->config('node.settings')->set('use_admin_theme', FALSE)->save();
+    \Drupal::service('router.builder')->rebuild();
+    $this->drupalGet($node->toUrl('version-history'));
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
+    $this->drupalGet($node->toUrl('version-history'));
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
+  }
+
 }
