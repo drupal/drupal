@@ -169,6 +169,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($details->hasAttribute('open'));
     $this->assertFalse($textfield_in_details->isVisible());
     $this->assertFalse($textfield_required_element->hasAttribute('required'));
+    $this->assertFalse($textfield_required_element->hasAttribute('aria-required'));
     $this->assertFalse($textfield_readonly_element->hasAttribute('readonly'));
     $this->assertFalse($textarea_readonly_element->hasAttribute('readonly'));
     $this->assertFalse($checkbox_checked_element->isChecked());
@@ -204,6 +205,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Verify triggered state.
     $this->assertFalse($textfield_invisible_element->isVisible());
     $this->assertEquals('required', $textfield_required_element->getAttribute('required'));
+    $this->assertFalse($textfield_required_element->hasAttribute('aria-required'));
     $this->assertTrue($textfield_readonly_element->hasAttribute('readonly'));
     $this->assertTrue($textarea_readonly_element->hasAttribute('readonly'));
     $this->assertTrue($details->hasAttribute('open'));
@@ -350,6 +352,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertTrue($select_invisible_target->isVisible());
     $this->assertFalse($select_visible_target->isVisible());
     $this->assertFalse($textfield_required_target->hasAttribute('required'));
+    $this->assertFalse($textfield_required_target->hasAttribute('aria-required'));
     $this->assertFalse($details->hasAttribute('open'));
     $this->assertFalse($textfield_in_details->isVisible());
 
@@ -361,6 +364,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($select_invisible_target->isVisible());
     $this->assertTrue($select_visible_target->isVisible());
     $this->assertEquals('required', $textfield_required_target->getAttribute('required'));
+    $this->assertFalse($textfield_required_target->hasAttribute('aria-required'));
     $this->assertTrue($details->hasAttribute('open'));
     $this->assertTrue($textfield_in_details->isVisible());
   }
@@ -397,6 +401,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertTrue($checkbox_unchecked_target->isChecked());
     $this->assertTrue($textfield_invisible_target->isVisible());
     $this->assertFalse($select_required_target->hasAttribute('required'));
+    $this->assertFalse($select_required_target->hasAttribute('aria-required'));
     $this->assertFalse($details->hasAttribute('open'));
     $this->assertFalse($textfield_in_details->isVisible());
 
@@ -407,6 +412,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertTrue($textfield_in_fieldset->isVisible());
     $this->assertFalse($textfield_invisible_target->isVisible());
     $this->assertTrue($select_required_target->hasAttribute('required'));
+    $this->assertFalse($select_required_target->hasAttribute('aria-required'));
     // Checkboxes and details should not have changed state, yet.
     $this->assertFalse($checkbox_checked_target->isChecked());
     $this->assertTrue($checkbox_unchecked_target->isChecked());
@@ -420,6 +426,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Textfield and select should revert to initial state.
     $this->assertTrue($textfield_invisible_target->isVisible());
     $this->assertFalse($select_required_target->hasAttribute('required'));
+    $this->assertFalse($select_required_target->hasAttribute('aria-required'));
     // Checkbox states should now change.
     $this->assertTrue($checkbox_checked_target->isChecked());
     $this->assertFalse($checkbox_unchecked_target->isChecked());

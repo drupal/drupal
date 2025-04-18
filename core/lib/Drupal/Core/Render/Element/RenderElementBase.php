@@ -142,7 +142,6 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
     if (!empty($element['#required'])) {
       $element['#attributes']['class'][] = 'required';
       $element['#attributes']['required'] = 'required';
-      $element['#attributes']['aria-required'] = 'true';
     }
     if (isset($element['#parents']) && isset($element['#errors']) && !empty($element['#validated'])) {
       $element['#attributes']['class'][] = 'error';
