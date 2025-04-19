@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Url;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\views\Attribute\ViewsField;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   Plugin classes are internal.
  */
 #[ViewsField("media_library_select_form")]
-class MediaLibrarySelectForm extends FieldPluginBase {
+class MediaLibrarySelectForm extends FieldPluginBase implements WorkspaceSafeFormInterface {
 
   /**
    * {@inheritdoc}
