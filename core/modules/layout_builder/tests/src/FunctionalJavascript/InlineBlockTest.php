@@ -597,6 +597,8 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     // Confirm that Create Content block opt out logic works for Navigation.
     $this->drupalGet('/admin/config/user-interface/navigation-block');
+    $this->getSession()->getPage()->pressButton('Enable edit mode');
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $page->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Choose a block');

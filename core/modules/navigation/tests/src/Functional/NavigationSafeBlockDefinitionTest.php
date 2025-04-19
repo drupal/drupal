@@ -51,9 +51,8 @@ class NavigationSafeBlockDefinitionTest extends BrowserTestBase {
    */
   public function testNavigationSafeBlockDefinition(): void {
     // Confirm that default blocks are available.
-    $layout_url = '/admin/config/user-interface/navigation-block';
+    $layout_url = '/layout_builder/choose/block/navigation/navigation.block_layout/0/content';
     $this->drupalGet($layout_url);
-    $this->clickLink('Add block');
 
     $this->assertSession()->linkExists('Administration');
     $this->assertSession()->linkExists('Content');
