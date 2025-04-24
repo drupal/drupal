@@ -6,13 +6,14 @@
  * Available variables:
  * - content: The content for this layout.
  * - attributes: HTML attributes for the layout <div>.
- * - content.settings.hide_logo: Whether to hide the logo.
- * - content.settings.logo_path: The path to the logo image if logo_managed
- *   in navigation.settings configuration has been set.
- * - content.settings.logo_width: The width of the logo image. Available if
- *   logo_path points to a valid image file.
- * - content.settings.logo_height: The height of the logo image. Available if
- *   logo_path points to a valid image file.
+ * - settings: layout settings. The following are related to the logo:
+ *   - hide_logo: Whether to hide the logo.
+ *   - logo_path: The path to the logo image if logo_managed
+ *     in navigation.settings configuration has been set.
+ *   - logo_width: The width of the logo image. Available if
+ *     logo_path points to a valid image file.
+ *   - settings.logo_height: The height of the logo image. Available if
+ *     logo_path points to a valid image file.
  * @ingroup themeable
  */
 #}
@@ -45,10 +46,10 @@
       <h3 id="{{ title_menu }}" class="visually-hidden">{{ 'Administrative toolbar content'|t }}</h3>
       {# @todo - Needs to be placed here so we can have the header footer on mobile. #}
       <div class="admin-toolbar__header">
-        {% if not content.settings.hide_logo %}
+        {% if not settings.hide_logo %}
           <a class="admin-toolbar__logo" href="{{ path('<front>') }}">
-            {% if content.settings.logo_path is not null %}
-              <img alt="{{ 'Navigation logo'|t }}" src="{{ content.settings.logo_path }}" loading="eager" width="{{ content.settings.logo_width|default(40) }}" height="{{ content.settings.logo_height|default(40) }}">
+            {% if settings.logo_path is not null %}
+              <img alt="{{ 'Navigation logo'|t }}" src="{{ settings.logo_path }}" loading="eager" width="{{ settings.logo_width|default(40) }}" height="{{ settings.logo_height|default(40) }}">
             {% else %}
               {% include '@navigation/logo.svg.twig' with {
                 label: 'Navigation logo'|t
