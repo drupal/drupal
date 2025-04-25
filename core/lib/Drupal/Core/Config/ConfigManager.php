@@ -294,17 +294,21 @@ class ConfigManager implements ConfigManagerInterface {
       // a UUID key.
       if ($entity_type_id) {
         $id = substr($config_name, strlen($definitions[$entity_type_id]->getConfigPrefix()) + 1);
-        $entities[$entity_type_id][] = $id;
+        $entities[$entity_type_id][$config_name] = $id;
       }
     }
-    $entities_to_return = [];
+    // Align the order of entities returned to the dependency order by first
+    // populating the keys in the same order.
+    $entities_to_return = array_fill_keys(array_keys($dependencies), NULL);
     foreach ($entities as $entity_type_id => $entities_to_load) {
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
-      // Remove the keys since there are potential ID clashes from different
-      // configuration entity types.
-      $entities_to_return[] = array_values($storage->loadMultiple($entities_to_load));
+      $loaded_entities = $storage->loadMultiple($entities_to_load);
+      foreach ($loaded_entities as $loaded_entity) {
+        $entities_to_return[$loaded_entity->getConfigDependencyName()] = $loaded_entity;
+      }
     }
-    return array_merge(...$entities_to_return);
+    // Return entities list with NULL entries removed.
+    return array_filter($entities_to_return);
   }
 
   /**
