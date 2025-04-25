@@ -1,0 +1,2 @@
+permission_callbacks:
+  - \Drupal\config_test\ConfigTestPermissions::configTestPermissions
