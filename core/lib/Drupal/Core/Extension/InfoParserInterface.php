@@ -35,7 +35,7 @@ interface InfoParserInterface {
    *     If omitted, also omit the : that follows. The project name is currently
    *     ignored by Drupal core but is used for automated testing.
    *   - module: (required) Module shortname within the project.
-   *   - (versions): Version information, consisting of one or more
+   *   - versions: (optional) Version information, consisting of one or more
    *     comma-separated operator/value pairs or simply version numbers, which
    *     can contain "x" as a wildcard. Examples: (>=8.22, <8.28), (8.x-3.x).
    * - package: The name of the package of modules this module belongs to.
