@@ -540,3 +540,4 @@ participate in mentoring.
 - Elli Ludwigson 'ekl1773' https://www.drupal.org/u/ekl1773
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
+- James Shields 'lostcarpark' https://www.drupal.org/u/lostcarpark
