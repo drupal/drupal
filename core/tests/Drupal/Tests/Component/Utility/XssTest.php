@@ -434,6 +434,12 @@ class XssTest extends TestCase {
         'HTML filter -- invalid UTF-8.',
         ['p'],
       ],
+      [
+        '<iframe srcdoc="&lt;script&gt;alert(document.cookie)&lt;/script&gt;"></iframe>',
+        'srcdoc',
+        'HTML filter attributes removal -- srcdoc attribute.',
+        ['iframe'],
+      ],
     ];
     return $cases;
   }
