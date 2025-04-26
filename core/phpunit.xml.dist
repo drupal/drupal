@@ -82,8 +82,12 @@
     </bootstrap>
   </extensions>
   <testsuites>
+    <testsuite name="unit-component">
+      <directory>tests/Drupal/Tests/Component</directory>
+    </testsuite>
     <testsuite name="unit">
       <directory>tests/Drupal/Tests</directory>
+      <exclude>tests/Drupal/Tests/Component</exclude>
       <directory>modules/**/tests/src/Unit</directory>
       <directory>profiles/**/tests/src/Unit</directory>
       <directory>themes/**/tests/src/Unit</directory>
@@ -141,6 +145,7 @@
       <directory>../sites</directory>
     </include>
     <exclude>
+      <directory>./lib/Drupal/Component</directory>
       <directory>./modules/*/src/Tests</directory>
       <directory>./modules/*/tests</directory>
       <directory>../modules/*/src/Tests</directory>

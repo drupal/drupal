@@ -122,6 +122,29 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
 
+.default-component-unit-test-job-settings: &default-component-unit-test-job-settings
+  stage: 🪄 Lint
+  before_script:
+    - composer validate
+    - composer install --optimize-autoloader
+    - docker-php-ext-enable pcov
+  script:
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=component-coverage-report.txt --coverage-cobertura=component-coverage-cobertura.xml --log-junit junit.xml --fail-on-deprecation --fail-on-phpunit-deprecation
+    # Process the coverage text report to produce an OpenMetrics report.
+    - php .gitlab-ci/scripts/component-coverage-metrics.php
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: junit.xml
+      metrics: component-coverage-metrics.txt
+      coverage_report:
+        coverage_format: cobertura
+        path: component-coverage-cobertura.xml
+    paths:
+      - junit.xml
+      - component-coverage*
+
 .prepare-lint-directory: &prepare-lint-directory
   # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
   # working directories are not consistent, work around this by running linting in a separate,
@@ -509,6 +532,25 @@ default:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "8"
     CONCURRENCY: 24
+    _TARGET_PHP: "8.5-ubuntu"
+
+'⚡️ Component unit tests on PHP 8.3':
+  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    _TARGET_PHP: "8.3-ubuntu"
+
+'⚡️ Component unit tests on PHP 8.4':
+  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    _TARGET_PHP: "8.4-ubuntu"
+
+'⚡️ Component unit tests on PHP 8.5':
+  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  allow_failure: true
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
     _TARGET_PHP: "8.5-ubuntu"
 
 '✅️ PHPStan rules tests':

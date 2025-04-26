@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="../../../bootstrap.php"
+         colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         cacheResult="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         cacheDirectory=".phpunit.cache">
+  <php>
+    <!-- Set error reporting to E_ALL. -->
+    <ini name="error_reporting" value="32767"/>
+    <!-- Do not limit the amount of memory tests take to run. -->
+    <ini name="memory_limit" value="-1"/>
+    <!-- To disable deprecation testing completely uncomment the next line. -->
+    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
+    <!-- Deprecation errors can be selectively ignored by specifying a file of
+      regular expression patterns for exclusion.
+      Uncomment the line below to specify a custom deprecations ignore file.
+      NOTE: it may be required to specify the full path to the file to run tests
+      correctly.
+    -->
+    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="ignoreFile=.deprecation-ignore.txt"/> -->
+  </php>
+  <testsuites>
+    <testsuite name="unit-component">
+      <directory>.</directory>
+    </testsuite>
+  </testsuites>
+  <!-- Settings for coverage reports. -->
+  <source ignoreSuppressionOfDeprecations="true">
+    <include>
+      <directory>../../../../lib/Drupal/Component</directory>
+    </include>
+  </source>
+</phpunit>

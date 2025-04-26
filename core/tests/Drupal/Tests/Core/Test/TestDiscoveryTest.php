@@ -58,6 +58,20 @@ class TestDiscoveryTest extends UnitTestCase {
       'Drupal\Tests\Core\DrupalTest',
     ];
 
+    // A component unit test.
+    $tests[] = [
+      // Expected result.
+      [
+        'name' => 'Drupal\Tests\Component\Plugin\PluginBaseTest',
+        'group' => 'Plugin',
+        'groups' => ['Plugin'],
+        'description' => 'Tests \Drupal\Component\Plugin\PluginBase.',
+        'type' => 'PHPUnit-Unit-Component',
+      ],
+      // Classname.
+      'Drupal\Tests\Component\Plugin\PluginBaseTest',
+    ];
+
     // Functional PHPUnit test.
     $tests[] = [
       // Expected result.
