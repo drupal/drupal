@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseConnectionRefusedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
@@ -189,10 +190,7 @@ class MigrateMessageController extends ControllerBase {
     $query->leftJoin($map_table, 'map', 'msg.source_ids_hash = map.source_ids_hash');
     $query->fields('msg');
     $query->fields('map');
-    $filter = $this->buildFilterQuery($request);
-    if (!empty($filter['where'])) {
-      $query->where($filter['where'], $filter['args']);
-    }
+    $this->addFilterToQuery($request, $query);
     $result = $query
       ->limit(50)
       ->orderByHeader($header)
@@ -238,54 +236,45 @@ class MigrateMessageController extends ControllerBase {
   }
 
   /**
-   * Builds a query for migrate message administration.
+   * Adds a filter to the query for migrate message administration.
+   *
+   * This method retrieves the session-based filters from the request and
+   * applies them to the provided query object. If no filters are present, the
+   * query is left unchanged.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   *
-   * @return array|null
-   *   An associative array with keys 'where' and 'args' or NULL if there were
-   *   no filters set.
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   The database query.
    */
-  protected function buildFilterQuery(Request $request): ?array {
+  protected function addFilterToQuery(Request $request, SelectInterface $query): void {
     $session_filters = $request->getSession()->get('migration_messages_overview_filter', []);
     if (empty($session_filters)) {
-      return NULL;
+      return;
     }
 
-    // Build query.
-    $where = $args = [];
+    // Build the condition.
     foreach ($session_filters as $filter) {
-      $filter_where = [];
-
+      if (empty($filter['value'])) {
+        continue;
+      }
       switch ($filter['type']) {
         case 'array':
-          foreach ($filter['value'] as $value) {
-            $filter_where[] = $filter['where'];
-            $args[] = $value;
+          $values = array_values($filter['value']);
+          if ($filter['field'] === 'msg.level') {
+            $values = array_map(fn($x) => (int) $x, $values);
           }
+          $query->condition($filter['field'], $values, 'IN');
           break;
 
         case 'string':
-          $filter_where[] = $filter['where'];
-          $args[] = '%' . $filter['value'] . '%';
+          $query->condition($filter['field'], "%{$filter['value']}%", 'LIKE');
           break;
 
         default:
-          $filter_where[] = $filter['where'];
-          $args[] = $filter['value'];
-      }
-
-      if (!empty($filter_where)) {
-        $where[] = '(' . implode(' OR ', $filter_where) . ')';
+          $query->condition($filter['field'], $filter['value']);
       }
     }
-    $where = !empty($where) ? implode(' AND ', $where) : '';
-
-    return [
-      'where' => $where,
-      'args' => $args,
-    ];
   }
 
   /**
