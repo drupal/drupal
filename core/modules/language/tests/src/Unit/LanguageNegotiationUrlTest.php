@@ -338,6 +338,51 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     return $domain_configuration;
   }
 
+  /**
+   * Tests path outbound processing correctly setting relative/absolute paths.
+   */
+  public function testProcessOutboundOutputsRelativePathsForSameDomain(): void {
+    $this->languageManager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->willReturn($this->languages['en']);
+
+    $config = $this->getConfigFactoryStub([
+      'language.negotiation' => [
+        'url' => [
+          'source' => LanguageNegotiationUrl::CONFIG_DOMAIN,
+          'domains' => [
+            'de' => 'example.de',
+            'en' => 'example.com',
+          ],
+        ],
+      ],
+    ]);
+
+    $request = Request::create('', 'GET', [], [], [], ['HTTP_HOST' => 'example.com']);
+    $method = new LanguageNegotiationUrl();
+    $method->setLanguageManager($this->languageManager);
+    $method->setConfig($config);
+    $method->setCurrentUser($this->user);
+
+    // Check relative paths are used when the language
+    // is the current language.
+    $options = [
+      'language' => $this->languages['en'],
+    ];
+    $method->processOutbound('foo', $options, $request);
+    // $options['absolute'] not set or null equals to FALSE.
+    $this->assertFalse($options['absolute'] ?? FALSE);
+
+    // Check absolute paths are used when the language
+    // is not the current language.
+    $options = [
+      'language' => $this->languages['de'],
+    ];
+    $method->processOutbound('foo', $options, $request);
+    $this->assertTrue($options['absolute']);
+
+  }
+
 }
 
 // @todo Remove as part of https://www.drupal.org/node/2481833.
