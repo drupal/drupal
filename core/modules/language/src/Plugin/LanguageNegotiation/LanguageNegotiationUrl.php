@@ -152,6 +152,11 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
     elseif ($config['source'] == LanguageNegotiationUrl::CONFIG_DOMAIN) {
       if (is_object($options['language']) && !empty($config['domains'][$options['language']->getId()])) {
 
+        // Check if the base URLs match, return early if they do.
+        if (isset($options['base_url']) && $request && $request->getHost() === parse_url($options['base_url'], PHP_URL_HOST)) {
+          return $path;
+        }
+
         // Save the original base URL. If it contains a port, we need to
         // retain it below.
         if (!empty($options['base_url'])) {
@@ -159,33 +164,36 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
           $normalized_base_url = str_replace(['https://', 'http://'], '', $options['base_url']);
         }
 
-        // Ask for an absolute URL with our modified base URL.
-        $options['absolute'] = TRUE;
-        $options['base_url'] = $url_scheme . '://' . $config['domains'][$options['language']->getId()];
+        // Ask for an absolute URL with our modified base URL only if the domain
+        // is different from the current request domain.
+        if ($request && $request->getHost() !== $config['domains'][$options['language']->getId()]) {
+          $options['absolute'] = TRUE;
+          $options['base_url'] = $url_scheme . '://' . $config['domains'][$options['language']->getId()];
 
-        // In case either the original base URL or the HTTP host contains a
-        // port, retain it.
-        if (isset($normalized_base_url) && str_contains($normalized_base_url, ':')) {
-          [, $port] = explode(':', $normalized_base_url);
-          $options['base_url'] .= ':' . $port;
-        }
-        elseif (($url_scheme == 'http' && $port != 80) || ($url_scheme == 'https' && $port != 443)) {
-          $options['base_url'] .= ':' . $port;
-        }
-
-        if (isset($options['https'])) {
-          if ($options['https'] === TRUE) {
-            $options['base_url'] = str_replace('http://', 'https://', $options['base_url']);
+          // In case either the original base URL or the HTTP host contains a
+          // port, retain it.
+          if (isset($normalized_base_url) && str_contains($normalized_base_url, ':')) {
+            [, $port] = explode(':', $normalized_base_url);
+            $options['base_url'] .= ':' . $port;
           }
-          elseif ($options['https'] === FALSE) {
-            $options['base_url'] = str_replace('https://', 'http://', $options['base_url']);
+          elseif (($url_scheme == 'http' && $port != 80) || ($url_scheme == 'https' && $port != 443)) {
+            $options['base_url'] .= ':' . $port;
           }
-        }
 
-        // Add Drupal's subfolder from the base_path if there is one.
-        $options['base_url'] .= rtrim(base_path(), '/');
-        if ($bubbleable_metadata) {
-          $bubbleable_metadata->addCacheContexts(['languages:' . LanguageInterface::TYPE_URL, 'url.site']);
+          if (isset($options['https'])) {
+            if ($options['https'] === TRUE) {
+              $options['base_url'] = str_replace('http://', 'https://', $options['base_url']);
+            }
+            elseif ($options['https'] === FALSE) {
+              $options['base_url'] = str_replace('https://', 'http://', $options['base_url']);
+            }
+          }
+
+          // Add Drupal's subfolder from the base_path if there is one.
+          $options['base_url'] .= rtrim(base_path(), '/');
+          if ($bubbleable_metadata) {
+            $bubbleable_metadata->addCacheContexts(['languages:' . LanguageInterface::TYPE_URL, 'url.site']);
+          }
         }
       }
     }
