@@ -50,17 +50,17 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     ConfigurableLanguage::createFromLangcode('it')->save();
 
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => '1'];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->config('language.types')->set('negotiation.language_interface.enabled', [
+      'language-url' => -8,
+      'language-selected' => 12,
+    ])->save();
 
     // Set "Basic page" content type to use multilingual support.
-    $edit = [
-      'language_configuration[language_alterable]' => TRUE,
-    ];
-    $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
+    \Drupal::entityTypeManager()->getStorage('language_content_settings')->create([
+      'target_entity_type_id' => 'node',
+      'target_bundle' => 'page',
+      'language_alterable' => TRUE,
+    ])->save();
 
     // Make node body translatable.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
