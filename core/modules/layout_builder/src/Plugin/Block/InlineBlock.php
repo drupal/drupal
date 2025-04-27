@@ -6,6 +6,7 @@ use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\block_content\Access\RefinableDependentAccessTrait;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
@@ -14,21 +15,22 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\layout_builder\Plugin\Derivative\InlineBlockDeriver;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines an inline block plugin type.
  *
- * @Block(
- *  id = "inline_block",
- *  admin_label = @Translation("Inline block"),
- *  category = @Translation("Inline blocks"),
- *  deriver = "Drupal\layout_builder\Plugin\Derivative\InlineBlockDeriver",
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[Block(
+   id: 'inline_block',
+   admin_label: new TranslatableMarkup('Inline block'),
+   category: new TranslatableMarkup('Inline blocks'),
+   deriver: InlineBlockDeriver::class,
+)]
 class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, RefinableDependentAccessInterface {
 
   use RefinableDependentAccessTrait;

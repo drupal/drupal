@@ -1,3 +1,10 @@
+parameters:
+  content_translation.moved_classes:
+    'Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait':
+      class: 'Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait'
+      deprecation_version: drupal:11.2.0
+      removed_version: drupal:12.0.0
+      change_record: https://www.drupal.org/node/3439256
 services:
   _defaults:
     autoconfigure: true
