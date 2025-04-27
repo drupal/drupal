@@ -6,7 +6,7 @@ namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
 use PhpTuf\ComposerStager\API\Environment\Service\EnvironmentInterface;
@@ -112,7 +112,7 @@ class SymlinkValidatorTest extends PackageManagerKernelTestBase {
     $stage->create();
     $stage->require(['ext-json:*']);
 
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
     $parent_dir = dirname($stage_dir);
     touch($parent_dir . '/hello.txt');
     // Relative symlinks must be made from their actual directory to be
@@ -131,7 +131,7 @@ class SymlinkValidatorTest extends PackageManagerKernelTestBase {
       $stage->apply();
       $this->fail('Expected an exception, but none was thrown.');
     }
-    catch (StageEventException $e) {
+    catch (SandboxEventException $e) {
       $this->assertExpectedResultsFromException([$result], $e);
     }
   }

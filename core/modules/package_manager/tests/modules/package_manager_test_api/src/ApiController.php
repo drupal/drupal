@@ -9,7 +9,7 @@ use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Url;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
-use Drupal\package_manager\StageBase;
+use Drupal\package_manager\SandboxManagerBase;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Core\StagerInterface;
@@ -31,14 +31,14 @@ class ApiController extends ControllerBase {
    */
   protected $finishedRoute = 'package_manager_test_api.finish';
 
-  public function __construct(protected StageBase $stage) {
+  public function __construct(protected SandboxManagerBase $stage) {
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $stage = new ControllerStage(
+    $stage = new ControllerSandboxManager(
       $container->get(PathLocator::class),
       $container->get(BeginnerInterface::class),
       $container->get(StagerInterface::class),
@@ -140,9 +140,9 @@ class ApiController extends ControllerBase {
  * always unique for every request which will create problem while claiming the
  * stage as the stored lock will be different from current lock.
  *
- * @see \Drupal\package_manager\StageBase::claim()
+ * @see \Drupal\package_manager\SandboxManagerBase::claim()
  */
-final class ControllerStage extends StageBase {
+final class ControllerSandboxManager extends SandboxManagerBase {
 
   /**
    * {@inheritdoc}

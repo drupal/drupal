@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\package_manager\Event;
 
-use Drupal\package_manager\StageBase;
+use Drupal\package_manager\SandboxManagerBase;
 
 /**
  * Common methods for pre- and post-require events.
@@ -14,7 +14,7 @@ use Drupal\package_manager\StageBase;
  *   \Drupal\package_manager\Event\PreRequireEvent and
  *   \Drupal\package_manager\Event\PostRequireEvent.
  */
-trait RequireEventTrait {
+trait EventWithPackageListTrait {
 
   /**
    * The runtime packages, in the form 'vendor/name:constraint'.
@@ -33,7 +33,7 @@ trait RequireEventTrait {
   /**
    * Constructs the object.
    *
-   * @param \Drupal\package_manager\StageBase $stage
+   * @param \Drupal\package_manager\SandboxManagerBase $sandboxManager
    *   The stage.
    * @param string[] $runtime_packages
    *   The runtime (i.e., non-dev) packages to be required, in the form
@@ -41,10 +41,10 @@ trait RequireEventTrait {
    * @param string[] $dev_packages
    *   The dev packages to be required, in the form 'vendor/name:constraint'.
    */
-  public function __construct(StageBase $stage, array $runtime_packages, array $dev_packages = []) {
+  public function __construct(SandboxManagerBase $sandboxManager, array $runtime_packages, array $dev_packages = []) {
     $this->runtimePackages = $runtime_packages;
     $this->devPackages = $dev_packages;
-    parent::__construct($stage);
+    parent::__construct($sandboxManager);
   }
 
   /**

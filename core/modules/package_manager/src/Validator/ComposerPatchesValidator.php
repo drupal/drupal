@@ -13,7 +13,7 @@ use Drupal\Core\Url;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\PathLocator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -57,15 +57,15 @@ final class ComposerPatchesValidator implements EventSubscriberInterface {
   /**
    * Validates the status of the patcher plugin.
    *
-   * @param \Drupal\package_manager\Event\PreOperationStageEvent $event
+   * @param \Drupal\package_manager\Event\SandboxValidationEvent $event
    *   The event object.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     $messages = [];
 
     [$plugin_installed_in_active, $is_active_root_requirement, $active_configuration_ok] = $this->computePatcherStatus($this->pathLocator->getProjectRoot());
     if ($event instanceof PreApplyEvent) {
-      [$plugin_installed_in_stage, $is_stage_root_requirement, $stage_configuration_ok] = $this->computePatcherStatus($event->stage->getStageDirectory());
+      [$plugin_installed_in_stage, $is_stage_root_requirement, $stage_configuration_ok] = $this->computePatcherStatus($event->sandboxManager->getSandboxDirectory());
       $has_staged_update = TRUE;
     }
     else {

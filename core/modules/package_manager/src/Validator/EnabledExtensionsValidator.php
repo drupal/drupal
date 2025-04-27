@@ -39,7 +39,7 @@ final class EnabledExtensionsValidator implements EventSubscriberInterface {
    */
   public function validate(PreApplyEvent $event): void {
     $active_packages_list = $this->composerInspector->getInstalledPackagesList($this->pathLocator->getProjectRoot());
-    $stage_packages_list = $this->composerInspector->getInstalledPackagesList($event->stage->getStageDirectory());
+    $stage_packages_list = $this->composerInspector->getInstalledPackagesList($event->sandboxManager->getSandboxDirectory());
 
     $extensions_list = $this->moduleHandler->getModuleList() + $this->themeHandler->listInfo();
     foreach ($extensions_list as $extension) {

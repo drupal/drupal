@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Unit;
 
-use Drupal\package_manager\StageBase;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\StageBase
+ * @coversDefaultClass \Drupal\package_manager\SandboxManagerBase
  * @group package_manager
  * @internal
  */
-class StageBaseTest extends UnitTestCase {
+class SandboxManagerBaseTest extends UnitTestCase {
 
   /**
    * @covers ::validateRequirements
@@ -26,7 +26,7 @@ class StageBaseTest extends UnitTestCase {
    * @dataProvider providerValidateRequirements
    */
   public function testValidateRequirements(?string $expected_exception, string $requirement): void {
-    $reflector = new \ReflectionClass(StageBase::class);
+    $reflector = new \ReflectionClass(SandboxManagerBase::class);
     $method = $reflector->getMethod('validateRequirements');
 
     if ($expected_exception) {
@@ -123,7 +123,7 @@ class StageBaseTest extends UnitTestCase {
    * @covers ::getType
    */
   public function testTypeMustBeExplicitlyOverridden(): void {
-    $good_grandchild = new class () extends ChildStage {
+    $good_grandchild = new class () extends ChildSandboxManager {
 
       /**
        * {@inheritdoc}
@@ -134,7 +134,7 @@ class StageBaseTest extends UnitTestCase {
     };
     $this->assertSame('package_manager:good_grandchild', $good_grandchild->getType());
 
-    $bad_grandchild = new class () extends ChildStage {};
+    $bad_grandchild = new class () extends ChildSandboxManager {};
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage(get_class($bad_grandchild) . ' must explicitly override the $type property.');
     $bad_grandchild->getType();
@@ -145,7 +145,7 @@ class StageBaseTest extends UnitTestCase {
 /**
  * Test class for testing the child stage.
  */
-class ChildStage extends StageBase {
+class ChildSandboxManager extends SandboxManagerBase {
 
   public function __construct() {}
 

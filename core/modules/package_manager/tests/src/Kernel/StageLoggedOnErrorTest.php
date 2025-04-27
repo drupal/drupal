@@ -11,13 +11,13 @@ use Drupal\package_manager\Event\PostRequireEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager_test_validation\EventSubscriber\TestSubscriber;
 use Psr\Log\LogLevel;
 use ColinODell\PsrTestLogger\TestLogger;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\StageBase
+ * @coversDefaultClass \Drupal\package_manager\SandboxManagerBase
  * @covers \Drupal\package_manager\PackageManagerUninstallValidator
  * @group package_manager
  * @internal
@@ -59,7 +59,7 @@ class StageLoggedOnErrorTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\package_manager\StageBase::dispatch
+   * @covers \Drupal\package_manager\SandboxManagerBase::dispatch
    *
    * @dataProvider providerLoggedOnError
    *
@@ -81,7 +81,7 @@ class StageLoggedOnErrorTest extends PackageManagerKernelTestBase {
       $stage->postApply();
       $this->fail('Expected an exception to be thrown, but none was.');
     }
-    catch (StageEventException $e) {
+    catch (SandboxEventException $e) {
       $this->assertInstanceOf($event_class, $e->event);
 
       $predicate = function (array $record) use ($e): bool {

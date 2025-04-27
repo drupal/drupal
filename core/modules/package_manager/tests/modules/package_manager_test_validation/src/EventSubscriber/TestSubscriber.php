@@ -11,7 +11,7 @@ use Drupal\package_manager\Event\PostRequireEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
-use Drupal\package_manager\Event\StageEvent;
+use Drupal\package_manager\Event\SandboxEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -120,10 +120,10 @@ class TestSubscriber implements EventSubscriberInterface {
   /**
    * Adds validation results to a stage event.
    *
-   * @param \Drupal\package_manager\Event\StageEvent $event
+   * @param \Drupal\package_manager\Event\SandboxEvent $event
    *   The event object.
    */
-  public function handleEvent(StageEvent $event): void {
+  public function handleEvent(SandboxEvent $event): void {
     $results = $this->state->get(self::getStateKey(get_class($event)), []);
 
     // Record that value of maintenance mode for each event.

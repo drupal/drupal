@@ -38,7 +38,7 @@ class NodeModulesExcluderTest extends PackageManagerKernelTestBase {
     $stage = $this->createStage();
     $stage->create();
     $stage->require(['ext-json:*']);
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
 
     foreach ($excluded as $path) {
       $this->assertFileExists("$active_dir/$path");

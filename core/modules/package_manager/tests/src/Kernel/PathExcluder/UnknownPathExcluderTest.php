@@ -180,7 +180,7 @@ class UnknownPathExcluderTest extends PackageManagerKernelTestBase {
 
     $stage->create();
     $stage->require(['ext-json:*']);
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
 
     foreach ($unknown_files as $path) {
       $this->assertFileExists("$active_dir/$path");
@@ -219,13 +219,13 @@ class UnknownPathExcluderTest extends PackageManagerKernelTestBase {
 
     $stage = $this->createStage();
     $stage->create();
-    $this->assertFileExists($stage->getStageDirectory() . '/unknown/file.txt');
+    $this->assertFileExists($stage->getSandboxDirectory() . '/unknown/file.txt');
     $stage->destroy();
 
     $config->set('include_unknown_files_in_project_root', FALSE)->save();
     $this->assertFileExists($project_root . '/unknown/file.txt');
     $stage->create();
-    $this->assertFileDoesNotExist($stage->getStageDirectory() . '/unknown/file.txt');
+    $this->assertFileDoesNotExist($stage->getSandboxDirectory() . '/unknown/file.txt');
   }
 
   /**
@@ -240,7 +240,7 @@ class UnknownPathExcluderTest extends PackageManagerKernelTestBase {
 
     $stage = $this->createStage();
     $stage->create();
-    $this->assertDirectoryExists($stage->getStageDirectory() . '/custom');
+    $this->assertDirectoryExists($stage->getSandboxDirectory() . '/custom');
     $stage->require(['ext-json:*']);
     $stage->apply();
     $this->assertDirectoryExists($project_root . '/custom');

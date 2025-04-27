@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\package_manager\Validator;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\PathLocator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -28,7 +28,7 @@ final class MultisiteValidator implements EventSubscriberInterface {
   /**
    * Validates that the current site is not part of a multisite.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     if ($this->isMultisite()) {
       $event->addError([
         $this->t('Drupal multisite is not supported by Package Manager.'),

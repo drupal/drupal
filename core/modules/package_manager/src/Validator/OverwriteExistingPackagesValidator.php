@@ -46,7 +46,7 @@ final class OverwriteExistingPackagesValidator implements EventSubscriberInterfa
    */
   public function validate(PreApplyEvent $event): void {
     $active_dir = $this->pathLocator->getProjectRoot();
-    $stage_dir = $event->stage->getStageDirectory();
+    $stage_dir = $event->sandboxManager->getSandboxDirectory();
     $active_packages = $this->composerInspector->getInstalledPackagesList($active_dir);
     $new_packages = $this->composerInspector->getInstalledPackagesList($stage_dir)
       ->getPackagesNotIn($active_packages);

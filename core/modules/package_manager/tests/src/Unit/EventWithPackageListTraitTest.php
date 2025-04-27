@@ -7,11 +7,11 @@ namespace Drupal\Tests\package_manager\Unit;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @covers \Drupal\package_manager\Event\RequireEventTrait
+ * @covers \Drupal\package_manager\Event\EventWithPackageListTrait
  * @group package_manager
  * @internal
  */
-class RequireEventTraitTest extends UnitTestCase {
+class EventWithPackageListTraitTest extends UnitTestCase {
 
   /**
    * Tests that runtime and dev packages are keyed correctly.
@@ -29,14 +29,14 @@ class RequireEventTraitTest extends UnitTestCase {
    * @dataProvider providerGetPackages
    */
   public function testGetPackages(array $runtime_packages, array $dev_packages, array $expected_runtime_packages, array $expected_dev_packages): void {
-    $stage = $this->createMock('\Drupal\package_manager\StageBase');
+    $stage = $this->createMock('\Drupal\package_manager\SandboxManagerBase');
 
     $events = [
       '\Drupal\package_manager\Event\PostRequireEvent',
       '\Drupal\package_manager\Event\PreRequireEvent',
     ];
     foreach ($events as $event) {
-      /** @var \Drupal\package_manager\Event\RequireEventTrait $event */
+      /** @var \Drupal\package_manager\Event\EventWithPackageListTrait $event */
       $event = new $event($stage, $runtime_packages, $dev_packages);
       $this->assertSame($expected_runtime_packages, $event->getRuntimePackages());
       $this->assertSame($expected_dev_packages, $event->getDevPackages());

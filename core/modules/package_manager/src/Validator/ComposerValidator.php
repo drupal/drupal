@@ -8,7 +8,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Url;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Event\PreApplyEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\PathLocator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -35,7 +35,7 @@ final class ComposerValidator implements EventSubscriberInterface {
   /**
    * Validates that the Composer executable is the correct version.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     // If we can't stat processes, there's nothing else we can possibly do here.
     // @see \Symfony\Component\Process\Process::__construct()
     if (!\function_exists('proc_open')) {
@@ -52,7 +52,7 @@ final class ComposerValidator implements EventSubscriberInterface {
 
     $messages = [];
     $dir = $event instanceof PreApplyEvent
-      ? $event->stage->getStageDirectory()
+      ? $event->sandboxManager->getSandboxDirectory()
       : $this->pathLocator->getProjectRoot();
     try {
       $this->composerInspector->validate($dir);

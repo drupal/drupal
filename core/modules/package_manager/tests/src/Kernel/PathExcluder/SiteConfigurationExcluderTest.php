@@ -47,7 +47,7 @@ class SiteConfigurationExcluderTest extends PackageManagerKernelTestBase {
     $stage = $this->createStage();
     $stage->create();
     $stage->require(['ext-json:*']);
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
 
     $excluded = [
       "$site_path/settings.php",
@@ -98,7 +98,7 @@ class SiteConfigurationExcluderTest extends PackageManagerKernelTestBase {
     $stage->create();
     // The staged `sites/default` will be made world-writable, because we want
     // to ensure the scaffold plugin can copy certain files into there.
-    $staged_dir = str_replace($project_root, $stage->getStageDirectory(), $live_dir);
+    $staged_dir = str_replace($project_root, $stage->getSandboxDirectory(), $live_dir);
     $this->assertDirectoryIsWritable($staged_dir);
 
     $stage->require(['ext-json:*']);

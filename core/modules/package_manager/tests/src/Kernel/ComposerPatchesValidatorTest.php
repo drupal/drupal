@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
 
 /**
@@ -242,7 +242,7 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
 
     $stage = $this->createStage();
     $stage->create();
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
     $stage->require(['drupal/core:9.8.1']);
 
     try {
@@ -250,7 +250,7 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
       // If we didn't get an exception, ensure we didn't expect any errors.
       $this->assertSame([], $expected_results);
     }
-    catch (StageEventException $e) {
+    catch (SandboxEventException $e) {
       $this->assertNotEmpty($expected_results);
       $this->assertValidationResultsEqual($expected_results, $e->event->getResults(), NULL, $stage_dir);
     }

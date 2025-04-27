@@ -6,7 +6,7 @@ namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
-use Drupal\package_manager\Exception\StageFailureMarkerException;
+use Drupal\package_manager\Exception\FailureMarkerExistsException;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
@@ -67,7 +67,7 @@ REGEXP
     // Write the failure marker with invalid YAML.
     file_put_contents($failure_marker->getPath(), 'message : something message : something1');
 
-    $this->expectException(StageFailureMarkerException::class);
+    $this->expectException(FailureMarkerExistsException::class);
     $this->expectExceptionMessage('Failure marker file exists but cannot be decoded.');
     $failure_marker->assertNotExists();
   }
@@ -81,7 +81,7 @@ REGEXP
     $failure_marker = $this->container->get(FailureMarker::class);
     $failure_marker->write($this->createStage(), $this->t('Something wicked occurred here.'), new \Exception('Witchcraft!'));
 
-    $this->expectException(StageFailureMarkerException::class);
+    $this->expectException(FailureMarkerExistsException::class);
     $this->expectExceptionMessageMatches('/^Something wicked occurred here. Caused by Exception, with this message: Witchcraft!\nBacktrace:\n#0 .*/');
     $failure_marker->assertNotExists();
   }

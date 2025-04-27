@@ -6,14 +6,14 @@ namespace Drupal\package_manager\Event;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\package_manager\ImmutablePathList;
-use Drupal\package_manager\StageBase;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager\ValidationResult;
 use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
 
 /**
  * Event fired to check the status of the system to use Package Manager.
  */
-final class StatusCheckEvent extends PreOperationStageEvent {
+final class StatusCheckEvent extends SandboxValidationEvent {
 
   /**
    * The paths to exclude, or NULL if there was an error collecting them.
@@ -27,15 +27,15 @@ final class StatusCheckEvent extends PreOperationStageEvent {
   /**
    * Constructs a StatusCheckEvent object.
    *
-   * @param \Drupal\package_manager\StageBase $stage
+   * @param \Drupal\package_manager\SandboxManagerBase $sandboxManager
    *   The stage which fired this event.
    * @param \PhpTuf\ComposerStager\API\Path\Value\PathListInterface|\Throwable $excluded_paths
    *   The list of paths to exclude or, if an error occurred while they were
    *   being collected, the throwable from that error. If this is a throwable,
    *   it will be converted to a validation error.
    */
-  public function __construct(StageBase $stage, PathListInterface|\Throwable $excluded_paths) {
-    parent::__construct($stage);
+  public function __construct(SandboxManagerBase $sandboxManager, PathListInterface|\Throwable $excluded_paths) {
+    parent::__construct($sandboxManager);
 
     // If there was an error collecting the excluded paths, convert it to a
     // validation error so we can still run status checks that don't need to

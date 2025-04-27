@@ -19,13 +19,13 @@ use Drupal\package_manager\Event\PostCreateEvent;
 use Drupal\package_manager\Event\PostRequireEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
-use Drupal\package_manager\Event\StageEvent;
+use Drupal\package_manager\Event\SandboxEvent;
 use Drupal\package_manager\Exception\ApplyFailedException;
-use Drupal\package_manager\Exception\StageEventException;
-use Drupal\package_manager\Exception\StageException;
-use Drupal\package_manager\Exception\StageOwnershipException;
+use Drupal\package_manager\Exception\SandboxEventException;
+use Drupal\package_manager\Exception\SandboxException;
+use Drupal\package_manager\Exception\SandboxOwnershipException;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Core\StagerInterface;
@@ -61,7 +61,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * site (e.g. `/tmp/.package_managerSITE_UUID`), which is deleted when any stage
  * created by that site is destroyed.
  */
-abstract class StageBase implements LoggerAwareInterface {
+abstract class SandboxManagerBase implements LoggerAwareInterface {
 
   use LoggerAwareTrait;
   use StringTranslationTrait;
@@ -266,7 +266,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *   A list of paths that Composer Stager should exclude when creating the
    *   stage directory and applying staged changes to the active directory.
    *
-   * @throws \Drupal\package_manager\Exception\StageException
+   * @throws \Drupal\package_manager\Exception\SandboxException
    *   Thrown if an exception occurs while collecting paths to exclude.
    *
    * @see ::create()
@@ -299,7 +299,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *   performing other operations on it. Calling code should store this ID for
    *   as long as the stage needs to exist.
    *
-   * @throws \Drupal\package_manager\Exception\StageException
+   * @throws \Drupal\package_manager\Exception\SandboxException
    *   Thrown if a stage directory already exists, or if an error occurs while
    *   creating the stage directory. In the latter situation, the stage
    *   directory will be destroyed.
@@ -310,7 +310,7 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->failureMarker->assertNotExists();
 
     if (!$this->isAvailable()) {
-      throw new StageException($this, 'Cannot create a new stage because one already exists.');
+      throw new SandboxException($this, 'Cannot create a new stage because one already exists.');
     }
     // Mark the stage as unavailable as early as possible, before dispatching
     // the pre-create event. The idea is to prevent a race condition if the
@@ -342,7 +342,7 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->claim($id);
 
     $active_dir = $this->pathFactory->create($this->pathLocator->getProjectRoot());
-    $stage_dir = $this->pathFactory->create($this->getStageDirectory());
+    $stage_dir = $this->pathFactory->create($this->getSandboxDirectory());
 
     $excluded_paths = $this->getPathsToExclude();
     $event = new PreCreateEvent($this, $excluded_paths);
@@ -368,7 +368,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *   The throwable to wrap.
    */
   private function rethrowAsStageException(\Throwable $e): never {
-    throw new StageException($this, $e->getMessage(), $e->getCode(), $e);
+    throw new SandboxException($this, $e->getMessage(), $e->getCode(), $e);
   }
 
   /**
@@ -384,7 +384,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *   (optional) How long to allow the Composer operation to run before timing
    *   out, in seconds, or NULL to never time out. Defaults to 300 seconds.
    *
-   * @throws \Drupal\package_manager\Exception\StageException
+   * @throws \Drupal\package_manager\Exception\SandboxException
    *   Thrown if the Composer operation cannot be started, or if an error occurs
    *   during the operation. In the latter situation, the stage directory will
    *   be destroyed.
@@ -398,7 +398,7 @@ abstract class StageBase implements LoggerAwareInterface {
     // exception occurs in the middle of a Composer operation.
     $do_stage = function (array $command) use ($timeout): void {
       $active_dir = $this->pathFactory->create($this->pathLocator->getProjectRoot());
-      $stage_dir = $this->pathFactory->create($this->getStageDirectory());
+      $stage_dir = $this->pathFactory->create($this->getSandboxDirectory());
 
       try {
         $this->stager->stage($command, $active_dir, $stage_dir, NULL, $timeout);
@@ -461,7 +461,7 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->checkOwnership();
 
     $active_dir = $this->pathFactory->create($this->pathLocator->getProjectRoot());
-    $stage_dir = $this->pathFactory->create($this->getStageDirectory());
+    $stage_dir = $this->pathFactory->create($this->getSandboxDirectory());
 
     $excluded_paths = $this->getPathsToExclude();
     $event = new PreApplyEvent($this, $excluded_paths);
@@ -541,7 +541,7 @@ abstract class StageBase implements LoggerAwareInterface {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $message
    *   (optional) A message about why the stage was destroyed.
    *
-   * @throws \Drupal\package_manager\Exception\StageException
+   * @throws \Drupal\package_manager\Exception\SandboxException
    *   If the staged changes are being applied to the active directory.
    * @throws \Drupal\Core\TempStore\TempStoreException
    */
@@ -550,15 +550,15 @@ abstract class StageBase implements LoggerAwareInterface {
       $this->checkOwnership();
     }
     if ($this->isApplying()) {
-      throw new StageException($this, 'Cannot destroy the stage directory while it is being applied to the active directory.');
+      throw new SandboxException($this, 'Cannot destroy the stage directory while it is being applied to the active directory.');
     }
 
     // If the stage directory exists, queue it to be automatically cleaned up
     // later by a queue (which may or may not happen during cron).
     // @see \Drupal\package_manager\Plugin\QueueWorker\Cleaner
-    if ($this->stageDirectoryExists()) {
+    if ($this->sandboxDirectoryExists()) {
       $this->queueFactory->get('package_manager_cleanup')
-        ->createItem($this->getStageDirectory());
+        ->createItem($this->getSandboxDirectory());
     }
 
     $this->storeDestroyInfo($force, $message);
@@ -578,27 +578,27 @@ abstract class StageBase implements LoggerAwareInterface {
   /**
    * Dispatches an event and handles any errors that it collects.
    *
-   * @param \Drupal\package_manager\Event\StageEvent $event
+   * @param \Drupal\package_manager\Event\SandboxEvent $event
    *   The event object.
    * @param callable|null $on_error
    *   (optional) A callback function to call if an error occurs, before any
    *   exceptions are thrown.
    *
-   * @throws \Drupal\package_manager\Exception\StageEventException
+   * @throws \Drupal\package_manager\Exception\SandboxEventException
    *   If the event collects any validation errors.
    */
-  protected function dispatch(StageEvent $event, ?callable $on_error = NULL): void {
+  protected function dispatch(SandboxEvent $event, ?callable $on_error = NULL): void {
     try {
       $this->eventDispatcher->dispatch($event);
 
-      if ($event instanceof PreOperationStageEvent) {
+      if ($event instanceof SandboxValidationEvent) {
         if ($event->getResults()) {
-          $error = new StageEventException($event);
+          $error = new SandboxEventException($event);
         }
       }
     }
     catch (\Throwable $error) {
-      $error = new StageEventException($event, $error->getMessage(), $error->getCode(), $error);
+      $error = new SandboxEventException($event, $error->getMessage(), $error->getCode(), $error);
     }
 
     if (isset($error)) {
@@ -631,7 +631,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *
    * @return $this
    *
-   * @throws \Drupal\package_manager\Exception\StageOwnershipException
+   * @throws \Drupal\package_manager\Exception\SandboxOwnershipException
    *   If the stage cannot be claimed. This can happen if the current user or
    *   session did not originally create the stage, if $unique_id doesn't match
    *   the unique ID that was generated when the stage was created, or the
@@ -645,7 +645,7 @@ abstract class StageBase implements LoggerAwareInterface {
     if ($this->isAvailable()) {
       // phpcs:disable DrupalPractice.General.ExceptionT.ExceptionT
       // @see https://www.drupal.org/project/auto_updates/issues/3338651
-      throw new StageException($this, $this->computeDestroyMessage(
+      throw new SandboxException($this, $this->computeDestroyMessage(
         $unique_id,
         $this->t('Cannot claim the stage because no stage has been created.')
       )->render());
@@ -653,7 +653,7 @@ abstract class StageBase implements LoggerAwareInterface {
 
     $stored_lock = $this->tempStore->getIfOwner(static::TEMPSTORE_LOCK_KEY);
     if (!$stored_lock) {
-      throw new StageOwnershipException($this, $this->computeDestroyMessage(
+      throw new SandboxOwnershipException($this, $this->computeDestroyMessage(
         $unique_id,
         $this->t('Cannot claim the stage because it is not owned by the current user or session.')
       )->render());
@@ -664,7 +664,7 @@ abstract class StageBase implements LoggerAwareInterface {
       return $this;
     }
 
-    throw new StageOwnershipException($this, $this->computeDestroyMessage(
+    throw new SandboxOwnershipException($this, $this->computeDestroyMessage(
       $unique_id,
       $this->t('Cannot claim the stage because the current lock does not match the stored lock.')
     )->render());
@@ -698,7 +698,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *
    * @throws \LogicException
    *   If ::claim() has not been previously called.
-   * @throws \Drupal\package_manager\Exception\StageOwnershipException
+   * @throws \Drupal\package_manager\Exception\SandboxOwnershipException
    *   If the current user or session does not own the stage directory, or it
    *   was created by a different class.
    */
@@ -709,7 +709,7 @@ abstract class StageBase implements LoggerAwareInterface {
 
     $stored_lock = $this->tempStore->getIfOwner(static::TEMPSTORE_LOCK_KEY);
     if ($stored_lock !== $this->lock) {
-      throw new StageOwnershipException($this, 'Stage is not owned by the current user or session.');
+      throw new SandboxOwnershipException($this, 'Stage is not owned by the current user or session.');
     }
   }
 
@@ -722,7 +722,7 @@ abstract class StageBase implements LoggerAwareInterface {
    * @throws \LogicException
    *   If this method is called before the stage has been created or claimed.
    */
-  public function getStageDirectory(): string {
+  public function getSandboxDirectory(): string {
     if (!$this->lock) {
       throw new \LogicException(__METHOD__ . '() cannot be called because the stage has not been created or claimed.');
     }
@@ -754,9 +754,9 @@ abstract class StageBase implements LoggerAwareInterface {
    * @return bool
    *   TRUE if the directory exists, otherwise FALSE.
    */
-  public function stageDirectoryExists(): bool {
+  public function sandboxDirectoryExists(): bool {
     try {
-      return is_dir($this->getStageDirectory());
+      return is_dir($this->getSandboxDirectory());
     }
     catch (\LogicException) {
       return FALSE;

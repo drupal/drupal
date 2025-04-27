@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\package_manager\Validator;
 
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -88,7 +88,7 @@ class DiskSpaceValidator implements EventSubscriberInterface {
   /**
    * Validates that there is enough free disk space to do stage operations.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     $root_path = $this->pathLocator->getProjectRoot();
     $vendor_path = $this->pathLocator->getVendorDirectory();
     $messages = [];

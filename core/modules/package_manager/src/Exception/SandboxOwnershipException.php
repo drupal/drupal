@@ -9,5 +9,5 @@ namespace Drupal\package_manager\Exception;
  *
  * Should not be thrown by external code.
  */
-final class StageOwnershipException extends StageException {
+final class SandboxOwnershipException extends SandboxException {
 }

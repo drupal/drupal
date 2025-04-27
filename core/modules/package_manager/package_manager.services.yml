@@ -69,7 +69,7 @@ services:
   Drupal\package_manager\Validator\EnabledExtensionsValidator: {}
   Drupal\package_manager\Validator\OverwriteExistingPackagesValidator: {}
   Drupal\package_manager\Validator\AllowedScaffoldPackagesValidator: {}
-  Drupal\package_manager\Validator\StagedDBUpdateValidator: {}
+  Drupal\package_manager\Validator\SandboxDatabaseUpdatesValidator: {}
   Drupal\package_manager\PathExcluder\TestSiteExcluder: {}
   Drupal\package_manager\PathExcluder\VendorHardeningExcluder: {}
   Drupal\package_manager\PathExcluder\SiteFilesExcluder:
@@ -91,7 +91,7 @@ services:
   Drupal\package_manager\Validator\ComposerPatchesValidator: {}
   Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator: {}
   Drupal\package_manager\Validator\SupportedReleaseValidator: {}
-  Drupal\package_manager\Validator\StageNotInActiveValidator: {}
+  Drupal\package_manager\Validator\SandboxDirectoryValidator: {}
   Drupal\package_manager\Validator\PhpExtensionsValidator: {}
   Drupal\package_manager\Validator\PhpTufValidator:
     arguments:

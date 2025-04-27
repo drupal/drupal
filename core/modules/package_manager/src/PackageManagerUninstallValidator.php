@@ -44,7 +44,7 @@ final class PackageManagerUninstallValidator implements ModuleUninstallValidator
    * {@inheritdoc}
    */
   public function validate($module) {
-    $stage = new class(
+    $sandbox_manager = new class(
       $this->pathLocator,
       $this->beginner,
       $this->stager,
@@ -54,9 +54,9 @@ final class PackageManagerUninstallValidator implements ModuleUninstallValidator
       $this->sharedTempStoreFactory,
       $this->time,
       $this->pathFactory,
-      $this->failureMarker) extends StageBase {};
+      $this->failureMarker) extends SandboxManagerBase {};
     $reasons = [];
-    if (!$stage->isAvailable() && $stage->isApplying()) {
+    if (!$sandbox_manager->isAvailable() && $sandbox_manager->isApplying()) {
       $reasons[] = $this->t('Modules cannot be uninstalled while Package Manager is applying staged changes to the active code base.');
     }
     return $reasons;

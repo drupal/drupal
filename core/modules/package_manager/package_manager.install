@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 use Drupal\Core\Site\Settings;
 use Drupal\package_manager\ComposerInspector;
-use Drupal\package_manager\Exception\StageFailureMarkerException;
+use Drupal\package_manager\Exception\FailureMarkerExistsException;
 use Drupal\package_manager\FailureMarker;
 use PhpTuf\ComposerStager\API\Exception\ExceptionInterface;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
@@ -37,7 +37,7 @@ function package_manager_requirements(string $phase): array {
     try {
       \Drupal::service($service_id)->assertNotExists(NULL);
     }
-    catch (StageFailureMarkerException $exception) {
+    catch (FailureMarkerExistsException $exception) {
       $requirements['package_manager_failure_marker'] = [
         'title' => t('Failed Package Manager update detected'),
         'description' => $exception->getMessage(),

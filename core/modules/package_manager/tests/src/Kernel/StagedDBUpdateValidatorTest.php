@@ -8,7 +8,7 @@ use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
 
 /**
- * @covers \Drupal\package_manager\Validator\StagedDBUpdateValidator
+ * @covers \Drupal\package_manager\Validator\SandboxDatabaseUpdatesValidator
  * @group package_manager
  * @internal
  */
@@ -150,7 +150,7 @@ class StagedDBUpdateValidatorTest extends PackageManagerKernelTestBase {
     // detect any changes.
     $this->assertStatusCheckResults([], $stage);
 
-    $staged_update_file = $stage->getStageDirectory() . '/' . $relative_file_path;
+    $staged_update_file = $stage->getSandboxDirectory() . '/' . $relative_file_path;
     $this->assertFileIsWritable($staged_update_file);
 
     // Now add a "real" update function -- either a schema update or a

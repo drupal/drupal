@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\package_manager\Validator;
 
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\PathLocator;
 use PhpTuf\ComposerStager\API\Exception\PreconditionException;
@@ -37,7 +37,7 @@ final class SymlinkValidator implements EventSubscriberInterface {
   /**
    * Flags errors if the project root or stage directory contain symbolic links.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     if ($event instanceof PreRequireEvent) {
       // We don't need to check symlinks again during PreRequireEvent; this was
       // already just validated during PreCreateEvent.
@@ -51,8 +51,8 @@ final class SymlinkValidator implements EventSubscriberInterface {
     // as the stage directory. The precondition itself doesn't care if the
     // directory actually exists or not.
     $stage_dir = __DIR__;
-    if ($event->stage->stageDirectoryExists()) {
-      $stage_dir = $event->stage->getStageDirectory();
+    if ($event->sandboxManager->sandboxDirectoryExists()) {
+      $stage_dir = $event->sandboxManager->getSandboxDirectory();
     }
     $stage_dir = $this->pathFactory->create($stage_dir);
 

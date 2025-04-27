@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\PathLocator;
 
 /**
@@ -34,10 +34,10 @@ final class AllowedScaffoldPackagesValidator implements EventSubscriberInterface
   /**
    * Validates that only the implicitly allowed packages can use scaffolding.
    */
-  public function validate(PreOperationStageEvent $event): void {
-    $stage = $event->stage;
+  public function validate(SandboxValidationEvent $event): void {
+    $sandbox_manager = $event->sandboxManager;
     $path = $event instanceof PreApplyEvent
-      ? $stage->getStageDirectory()
+      ? $sandbox_manager->getSandboxDirectory()
       : $this->pathLocator->getProjectRoot();
 
     // @see https://www.drupal.org/docs/develop/using-composer/using-drupals-composer-scaffold

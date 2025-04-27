@@ -13,13 +13,13 @@ use Drupal\Core\Site\Settings;
 use Drupal\fixture_manipulator\StageFixtureManipulator;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\package_manager\Event\PreApplyEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Event\SandboxValidationEvent;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\StatusCheckTrait;
 use Drupal\package_manager\Validator\DiskSpaceValidator;
-use Drupal\package_manager\StageBase;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
 use Drupal\Tests\package_manager\Traits\ComposerStagerTestTrait;
 use Drupal\Tests\package_manager\Traits\FixtureManipulatorTrait;
@@ -173,11 +173,11 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
   /**
    * Creates a stage object for testing purposes.
    *
-   * @return \Drupal\Tests\package_manager\Kernel\TestStage
+   * @return \Drupal\Tests\package_manager\Kernel\TestSandboxManager
    *   A stage object, with test-only modifications.
    */
-  protected function createStage(): TestStage {
-    return new TestStage(
+  protected function createStage(): TestSandboxManager {
+    return new TestSandboxManager(
       $this->container->get(PathLocator::class),
       $this->container->get(BeginnerInterface::class),
       $this->container->get(StagerInterface::class),
@@ -200,10 +200,10 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *   (optional) The class of the event which should return the results. Must
    *   be passed if $expected_results is not empty.
    *
-   * @return \Drupal\package_manager\StageBase
+   * @return \Drupal\package_manager\SandboxManagerBase
    *   The stage that was used to collect the validation results.
    */
-  protected function assertResults(array $expected_results, ?string $event_class = NULL): StageBase {
+  protected function assertResults(array $expected_results, ?string $event_class = NULL): SandboxManagerBase {
     $stage = $this->createStage();
 
     try {
@@ -216,7 +216,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
       // If we did not get an exception, ensure we didn't expect any results.
       $this->assertValidationResultsEqual([], $expected_results);
     }
-    catch (StageEventException $e) {
+    catch (SandboxEventException $e) {
       $this->assertNotEmpty($expected_results);
       $this->assertInstanceOf($event_class, $e->event);
       $this->assertExpectedResultsFromException($expected_results, $e);
@@ -229,11 +229,11 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   The expected validation results.
-   * @param \Drupal\Tests\package_manager\Kernel\TestStage|null $stage
+   * @param \Drupal\Tests\package_manager\Kernel\TestSandboxManager|null $stage
    *   (optional) The test stage to use to create the status check event. If
    *   none is provided a new stage will be created.
    */
-  protected function assertStatusCheckResults(array $expected_results, ?StageBase $stage = NULL): void {
+  protected function assertStatusCheckResults(array $expected_results, ?SandboxManagerBase $stage = NULL): void {
     $actual_results = $this->runStatusCheck($stage ?? $this->createStage(), $this->container->get('event_dispatcher'));
     $this->assertValidationResultsEqual($expected_results, $actual_results);
   }
@@ -436,15 +436,15 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *
    * @param array $expected_results
    *   The expected results.
-   * @param \Drupal\package_manager\Exception\StageEventException $exception
+   * @param \Drupal\package_manager\Exception\SandboxEventException $exception
    *   The exception.
    */
-  protected function assertExpectedResultsFromException(array $expected_results, StageEventException $exception): void {
+  protected function assertExpectedResultsFromException(array $expected_results, SandboxEventException $exception): void {
     $event = $exception->event;
-    $this->assertInstanceOf(PreOperationStageEvent::class, $event);
+    $this->assertInstanceOf(SandboxValidationEvent::class, $event);
 
-    $stage = $event->stage;
-    $stage_dir = $stage->stageDirectoryExists() ? $stage->getStageDirectory() : NULL;
+    $stage = $event->sandboxManager;
+    $stage_dir = $stage->sandboxDirectoryExists() ? $stage->getSandboxDirectory() : NULL;
     $this->assertValidationResultsEqual($expected_results, $event->getResults(), NULL, $stage_dir);
   }
 
@@ -453,7 +453,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
 /**
  * Defines a stage specifically for testing purposes.
  */
-class TestStage extends StageBase {
+class TestSandboxManager extends SandboxManagerBase {
 
   /**
    * {@inheritdoc}

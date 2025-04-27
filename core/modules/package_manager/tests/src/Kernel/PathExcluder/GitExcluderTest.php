@@ -101,7 +101,7 @@ class GitExcluderTest extends PackageManagerKernelTestBase {
     $stage = $this->createStage();
     $stage->create();
     $stage->require(['ext-json:*']);
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
 
     // Adding a module with .git in stage which is unknown to composer, we
     // expect it to not be copied to the active directory.

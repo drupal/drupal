@@ -75,7 +75,7 @@ class SiteConfigurationExcluder implements EventSubscriberInterface {
    * @see ::excludeSiteConfiguration()
    */
   public function makeDefaultSiteDirectoryWritable(PostCreateEvent $event): void {
-    $dir = $this->getDefaultSiteDirectoryPath($event->stage->getStageDirectory());
+    $dir = $this->getDefaultSiteDirectoryPath($event->sandboxManager->getSandboxDirectory());
     // If the directory doesn't even exist, there's nothing to do here.
     if (!is_dir($dir)) {
       return;
@@ -96,7 +96,7 @@ class SiteConfigurationExcluder implements EventSubscriberInterface {
    *   cannot be changed on the staged `sites/default`.
    */
   public function syncDefaultSiteDirectoryPermissions(PreApplyEvent $event): void {
-    $staged_dir = $this->getDefaultSiteDirectoryPath($event->stage->getStageDirectory());
+    $staged_dir = $this->getDefaultSiteDirectoryPath($event->sandboxManager->getSandboxDirectory());
     // If the directory doesn't even exist, there's nothing to do here.
     if (!is_dir($staged_dir)) {
       return;

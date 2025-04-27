@@ -6,7 +6,7 @@ namespace Drupal\package_manager\Validator;
 
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Update\UpdateRegistry;
 use Drupal\Core\Url;
@@ -33,7 +33,7 @@ final class PendingUpdatesValidator implements EventSubscriberInterface {
   /**
    * Validates that there are no pending database updates.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     if ($this->updatesExist()) {
       $message = $this->t('Some modules have database updates pending. You should run the <a href=":update">database update script</a> immediately.', [
         ':update' => Url::fromRoute('system.db_update')->toString(),

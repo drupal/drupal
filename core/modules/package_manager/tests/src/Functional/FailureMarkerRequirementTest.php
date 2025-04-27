@@ -7,7 +7,7 @@ namespace Drupal\Tests\package_manager\Functional;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
-use Drupal\package_manager\StageBase;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
 
 /**
@@ -44,7 +44,7 @@ class FailureMarkerRequirementTest extends PackageManagerTestBase {
 
     $failure_marker = $this->container->get(FailureMarker::class);
     $message = $this->t('Package Manager is here to wreck your day.');
-    $stage = new class() extends StageBase {
+    $stage = new class() extends SandboxManagerBase {
 
       public function __construct() {}
 

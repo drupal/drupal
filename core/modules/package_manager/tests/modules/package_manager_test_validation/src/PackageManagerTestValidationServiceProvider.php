@@ -6,7 +6,7 @@ namespace Drupal\package_manager_test_validation;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
-use Drupal\package_manager\Validator\StagedDBUpdateValidator;
+use Drupal\package_manager\Validator\SandboxDatabaseUpdatesValidator;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -20,10 +20,10 @@ class PackageManagerTestValidationServiceProvider extends ServiceProviderBase {
   public function alter(ContainerBuilder $container): void {
     parent::alter($container);
 
-    $service_id = StagedDBUpdateValidator::class;
+    $service_id = SandboxDatabaseUpdatesValidator::class;
     if ($container->hasDefinition($service_id)) {
       $container->getDefinition($service_id)
-        ->setClass(StagedDatabaseUpdateValidator::class)
+        ->setClass(TestSandboxDatabaseUpdatesValidator::class)
         ->addMethodCall('setState', [
           new Reference('state'),
         ]);

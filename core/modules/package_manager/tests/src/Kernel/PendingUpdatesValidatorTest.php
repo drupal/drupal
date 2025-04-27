@@ -6,7 +6,7 @@ namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
 
 /**
@@ -84,7 +84,7 @@ class PendingUpdatesValidatorTest extends PackageManagerKernelTestBase {
       $stage->apply();
       $this->fail('Able to apply update even though there is pending update.');
     }
-    catch (StageEventException $exception) {
+    catch (SandboxEventException $exception) {
       $this->assertExpectedResultsFromException([$result], $exception);
     }
   }

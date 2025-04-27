@@ -9,12 +9,13 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\StageEvent;
+use Drupal\package_manager\Event\SandboxEvent;
 use Drupal\package_manager\Exception\ApplyFailedException;
-use Drupal\package_manager\Exception\StageException;
-use Drupal\package_manager\Exception\StageFailureMarkerException;
+use Drupal\package_manager\Exception\SandboxException;
+use Drupal\package_manager\Exception\FailureMarkerExistsException;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager\Validator\WritableFileSystemValidator;
 use Drupal\package_manager_bypass\LoggingBeginner;
 use Drupal\package_manager_bypass\LoggingCommitter;
@@ -24,12 +25,12 @@ use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Core\StagerInterface;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\StageBase
+ * @coversDefaultClass \Drupal\package_manager\SandboxManagerBase
  * @group package_manager
  * @group #slow
  * @internal
  */
-class StageBaseTest extends PackageManagerKernelTestBase {
+class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;
 
@@ -89,9 +90,9 @@ class StageBaseTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers ::getStageDirectory
+   * @covers ::getSandboxDirectory
    */
-  public function testGetStageDirectory(): void {
+  public function testGetSandboxDirectory(): void {
     // In this test, we're working with paths that (probably) don't exist in
     // the file system at all, so we don't want to validate that the file system
     // is writable when creating stages.
@@ -103,7 +104,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
 
     $stage = $this->createStage();
     $id = $stage->create();
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
     $this->assertStringStartsWith($path_locator->getStagingRoot() . '/', $stage_dir);
     $this->assertStringEndsWith("/$id", $stage_dir);
     // If the stage root directory is changed, the existing stage shouldn't be
@@ -114,24 +115,24 @@ class StageBaseTest extends PackageManagerKernelTestBase {
       mkdir($new_staging_root);
     }
     $path_locator->setPaths($active_dir, "$active_dir/vendor", '', $new_staging_root);
-    $this->assertSame($stage_dir, $stage->getStageDirectory());
+    $this->assertSame($stage_dir, $stage->getSandboxDirectory());
     $stage->destroy();
     // ...but a new stage should be.
     $stage = $this->createStage();
     $another_id = $stage->create();
     $this->assertNotSame($id, $another_id);
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
     $this->assertStringStartsWith(realpath($new_staging_root), $stage_dir);
     $this->assertStringEndsWith("/$another_id", $stage_dir);
   }
 
   /**
-   * @covers ::getStageDirectory
+   * @covers ::getSandboxDirectory
    */
-  public function testUncreatedGetStageDirectory(): void {
+  public function testUncreatedGetSandboxDirectory(): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Drupal\package_manager\StageBase::getStageDirectory() cannot be called because the stage has not been created or claimed.');
-    $this->createStage()->getStageDirectory();
+    $this->expectExceptionMessage(SandboxManagerBase::class . '::getSandboxDirectory() cannot be called because the stage has not been created or claimed.');
+    $this->createStage()->getSandboxDirectory();
   }
 
   /**
@@ -198,7 +199,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
       $stage->create();
       $this->fail('Expected an exception.');
     }
-    catch (StageFailureMarkerException $e) {
+    catch (FailureMarkerExistsException $e) {
       $this->assertMatchesRegularExpression('/^Staged changes failed to apply, and the site is in an indeterminate state. It is strongly recommended to restore the code and database from a backup. Caused by Exception, with this message: ' . $thrown_message . "\nBacktrace:\n#0 .*/", $e->getMessage());
       $this->assertFalse($stage->isApplying());
     }
@@ -302,7 +303,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
 
     // Claiming the first stage always fails in this test because it was
     // destroyed, but the exception message depends on why it was destroyed.
-    $this->expectException(StageException::class);
+    $this->expectException(SandboxException::class);
     $this->expectExceptionMessage($expected_exception_message);
     $stage->claim($stage_id);
   }
@@ -324,7 +325,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
     // Claiming the stage will fail, but we won't get the message we set in
     // \Drupal\package_manager\Stage::storeDestroyInfo() as we are deleting it
     // above.
-    $this->expectException(StageException::class);
+    $this->expectException(SandboxException::class);
     $this->expectExceptionMessage('Cannot claim the stage because no stage has been created.');
     $stage->claim($stage_id);
   }
@@ -372,7 +373,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
       $stage->apply();
       $this->fail('Expected an exception to be thrown, but it was not.');
     }
-    catch (StageException $e) {
+    catch (SandboxException $e) {
       $this->assertMatchesRegularExpression($expected_message, $e->getMessage());
       $this->assertSame(1024, $e->getCode());
       $this->assertInstanceOf(\Exception::class, $e->getPrevious());
@@ -425,7 +426,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
   public function testFailureCollectPathsToExclude(): void {
     $project_root = $this->container->get(PathLocator::class)->getProjectRoot();
     unlink($project_root . '/composer.json');
-    $this->expectException(StageException::class);
+    $this->expectException(SandboxException::class);
     $this->expectExceptionMessage("composer.json not found.");
     $this->createStage()->create();
   }
@@ -437,30 +438,30 @@ class StageBaseTest extends PackageManagerKernelTestBase {
     $stage = $this->createStage();
     $stage->create();
     $stage->require(['drupal/random']);
-    $this->expectException(StageException::class);
+    $this->expectException(SandboxException::class);
     $this->expectExceptionMessage("composer.json not found.");
-    unlink($stage->getStageDirectory() . '/composer.json');
+    unlink($stage->getSandboxDirectory() . '/composer.json');
     $stage->apply();
   }
 
   /**
-   * @covers ::stageDirectoryExists
+   * @covers ::sandboxDirectoryExists
    */
   public function testStageDirectoryExists(): void {
     // Ensure that stageDirectoryExists() returns an accurate result during
     // pre-create.
-    $listener = function (StageEvent $event): void {
-      $stage = $event->stage;
+    $listener = function (SandboxEvent $event): void {
+      $stage = $event->sandboxManager;
       // The directory should not exist yet, because we are still in pre-create.
-      $this->assertDirectoryDoesNotExist($stage->getStageDirectory());
-      $this->assertFalse($stage->stageDirectoryExists());
+      $this->assertDirectoryDoesNotExist($stage->getSandboxDirectory());
+      $this->assertFalse($stage->sandboxDirectoryExists());
     };
     $this->addEventTestListener($listener, PreCreateEvent::class);
 
     $stage = $this->createStage();
-    $this->assertFalse($stage->stageDirectoryExists());
+    $this->assertFalse($stage->sandboxDirectoryExists());
     $stage->create();
-    $this->assertTrue($stage->stageDirectoryExists());
+    $this->assertTrue($stage->sandboxDirectoryExists());
   }
 
   /**
@@ -472,7 +473,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
   public function testStageDirectoryDeletedDuringCron(): void {
     $stage = $this->createStage();
     $stage->create();
-    $dir = $stage->getStageDirectory();
+    $dir = $stage->getSandboxDirectory();
     $this->assertDirectoryExists($dir);
     $stage->destroy();
     // The stage directory should still exist, but the stage should be

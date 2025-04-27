@@ -6,7 +6,7 @@ namespace Drupal\package_manager\Validator;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreApplyEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\PathLocator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -18,7 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *   at any time without warning. External code should not interact with this
  *   class.
  */
-final class StageNotInActiveValidator implements EventSubscriberInterface {
+final class SandboxDirectoryValidator implements EventSubscriberInterface {
 
   use BaseRequirementValidatorTrait {
     getSubscribedEvents as private getSubscribedEventsFromTrait;
@@ -31,11 +31,11 @@ final class StageNotInActiveValidator implements EventSubscriberInterface {
   /**
    * Check if staging root is a subdirectory of active.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     $project_root = $this->pathLocator->getProjectRoot();
     $staging_root = $this->pathLocator->getStagingRoot();
     if (str_starts_with($staging_root, $project_root)) {
-      $message = $this->t("Stage directory is a subdirectory of the active directory.");
+      $message = $this->t("The sandbox directory is a subdirectory of the active directory.");
       $event->addError([$message]);
     }
   }

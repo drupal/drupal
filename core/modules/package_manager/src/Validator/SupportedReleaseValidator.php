@@ -76,7 +76,7 @@ final class SupportedReleaseValidator implements EventSubscriberInterface {
    */
   public function validate(PreApplyEvent $event): void {
     $active = $this->composerInspector->getInstalledPackagesList($this->pathLocator->getProjectRoot());
-    $staged = $this->composerInspector->getInstalledPackagesList($event->stage->getStageDirectory());
+    $staged = $this->composerInspector->getInstalledPackagesList($event->sandboxManager->getSandboxDirectory());
     $updated_packages = array_merge(
       $staged->getPackagesNotIn($active)->getArrayCopy(),
       $staged->getPackagesWithDifferentVersionsIn($active)->getArrayCopy()

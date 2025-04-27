@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\package_manager\Event;
 
-use Drupal\package_manager\StageBase;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager\PathLocator;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use PhpTuf\ComposerStager\API\Path\Factory\PathListFactoryInterface;
@@ -16,12 +16,12 @@ use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
  * These paths are excluded by Composer Stager and are never copied into the
  * stage directory from the active directory, or vice versa.
  */
-final class CollectPathsToExcludeEvent extends StageEvent implements PathListInterface {
+final class CollectPathsToExcludeEvent extends SandboxEvent implements PathListInterface {
 
   /**
    * Constructs a CollectPathsToExcludeEvent object.
    *
-   * @param \Drupal\package_manager\StageBase $stage
+   * @param \Drupal\package_manager\SandboxManagerBase $sandboxManager
    *   The stage which fired this event.
    * @param \Drupal\package_manager\PathLocator $pathLocator
    *   The path locator service.
@@ -31,12 +31,12 @@ final class CollectPathsToExcludeEvent extends StageEvent implements PathListInt
    *   (optional) The list of paths to exclude.
    */
   public function __construct(
-    StageBase $stage,
+    SandboxManagerBase $sandboxManager,
     private readonly PathLocator $pathLocator,
     private readonly PathFactoryInterface $pathFactory,
     private ?PathListInterface $pathList = NULL,
   ) {
-    parent::__construct($stage);
+    parent::__construct($sandboxManager);
 
     $this->pathList ??= \Drupal::service(PathListFactoryInterface::class)
       ->create();

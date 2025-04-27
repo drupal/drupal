@@ -22,7 +22,7 @@ trait StatusCheckTrait {
   /**
    * Runs a status check for a stage and returns the results, if any.
    *
-   * @param \Drupal\package_manager\StageBase $stage
+   * @param \Drupal\package_manager\SandboxManagerBase $sandbox_manager
    *   The stage to run the status check for.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|null $event_dispatcher
    *   (optional) The event dispatcher service.
@@ -35,18 +35,18 @@ trait StatusCheckTrait {
    *   The results of the status check. If a readiness check was also done,
    *   its results will be included.
    */
-  protected function runStatusCheck(StageBase $stage, ?EventDispatcherInterface $event_dispatcher = NULL, ?PathLocator $path_locator = NULL, ?PathFactoryInterface $path_factory = NULL): array {
+  protected function runStatusCheck(SandboxManagerBase $sandbox_manager, ?EventDispatcherInterface $event_dispatcher = NULL, ?PathLocator $path_locator = NULL, ?PathFactoryInterface $path_factory = NULL): array {
     $event_dispatcher ??= \Drupal::service('event_dispatcher');
     $path_locator ??= \Drupal::service(PathLocator::class);
     $path_factory ??= \Drupal::service(PathFactoryInterface::class);
     try {
-      $paths_to_exclude_event = new CollectPathsToExcludeEvent($stage, $path_locator, $path_factory);
+      $paths_to_exclude_event = new CollectPathsToExcludeEvent($sandbox_manager, $path_locator, $path_factory);
       $event_dispatcher->dispatch($paths_to_exclude_event);
     }
     catch (\Throwable $throwable) {
       $paths_to_exclude_event = $throwable;
     }
-    $event = new StatusCheckEvent($stage, $paths_to_exclude_event);
+    $event = new StatusCheckEvent($sandbox_manager, $paths_to_exclude_event);
     return $event_dispatcher->dispatch($event)->getResults();
   }
 

@@ -253,10 +253,10 @@
  * which can then be added to the event using ::addResult().
  *
  * @see \Drupal\package_manager\ValidationResult
- * @see \Drupal\package_manager\Event\PreOperationStageEvent::addError()
- * @see \Drupal\package_manager\Event\PreOperationStageEvent::addErrorFromThrowable()
+ * @see \Drupal\package_manager\Event\SandboxValidationEvent::addError()
+ * @see \Drupal\package_manager\Event\SandboxValidationEvent::addErrorFromThrowable()
  * @see \Drupal\package_manager\Event\StatusCheckEvent::addWarning()
- * @see \Drupal\package_manager\Event\PreOperationStageEvent::addResult()
+ * @see \Drupal\package_manager\Event\SandboxValidationEvent::addResult()
  *
  * @section sec_excluded_paths Excluding files from stage operations
  * Certain files are never copied into the stage directory because they are

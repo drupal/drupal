@@ -11,7 +11,7 @@ use Drupal\package_manager\Event\PostRequireEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
-use Drupal\package_manager\Event\StageEvent;
+use Drupal\package_manager\Event\SandboxEvent;
 use Drupal\package_manager\PathLocator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -40,10 +40,10 @@ final class EventLogSubscriber implements EventSubscriberInterface {
   /**
    * Logs all events in the stage life cycle.
    *
-   * @param \Drupal\package_manager\Event\StageEvent $event
+   * @param \Drupal\package_manager\Event\SandboxEvent $event
    *   The event object.
    */
-  public function logEventInfo(StageEvent $event): void {
+  public function logEventInfo(SandboxEvent $event): void {
     $log_file = \Drupal::service(PathLocator::class)->getProjectRoot() . '/' . self::LOG_FILE_NAME;
 
     if (file_exists($log_file)) {
@@ -56,7 +56,7 @@ final class EventLogSubscriber implements EventSubscriberInterface {
 
     $log_data[] = [
       'event' => $event::class,
-      'stage' => $event->stage::class,
+      'stage' => $event->sandboxManager::class,
     ];
     file_put_contents($log_file, json_encode($log_data, JSON_UNESCAPED_SLASHES));
   }

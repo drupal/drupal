@@ -18,5 +18,5 @@ namespace Drupal\package_manager\Exception;
  * This exception is different from ApplyFailedException as it focuses on
  * the failure marker being detected outside the stage lifecycle.
  */
-final class StageFailureMarkerException extends \RuntimeException {
+final class FailureMarkerExistsException extends \RuntimeException {
 }

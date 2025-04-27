@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *   at any time without warning. External code should not interact with this
  *   class.
  */
-class StagedDBUpdateValidator implements EventSubscriberInterface {
+class SandboxDatabaseUpdatesValidator implements EventSubscriberInterface {
 
   use StringTranslationTrait;
 
@@ -38,10 +38,10 @@ class StagedDBUpdateValidator implements EventSubscriberInterface {
    *   The event object.
    */
   public function checkForStagedDatabaseUpdates(StatusCheckEvent $event): void {
-    if (!$event->stage->stageDirectoryExists()) {
+    if (!$event->sandboxManager->sandboxDirectoryExists()) {
       return;
     }
-    $stage_dir = $event->stage->getStageDirectory();
+    $stage_dir = $event->sandboxManager->getSandboxDirectory();
     $extensions_with_updates = $this->getExtensionsWithDatabaseUpdates($stage_dir);
     if ($extensions_with_updates) {
       // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString

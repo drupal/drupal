@@ -18,5 +18,5 @@ namespace Drupal\package_manager\Exception;
  *
  * Should not be thrown by external code.
  */
-final class ApplyFailedException extends StageException {
+final class ApplyFailedException extends SandboxException {
 }

@@ -10,7 +10,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\PathLocator;
@@ -105,14 +105,14 @@ final class LockFileValidator implements EventSubscriberInterface {
   /**
    * Checks that the active lock file is unchanged during stage operations.
    *
-   * @param \Drupal\package_manager\Event\PreOperationStageEvent $event
+   * @param \Drupal\package_manager\Event\SandboxValidationEvent $event
    *   The event being handled.
    */
-  public function validate(PreOperationStageEvent $event): void {
-    $stage = $event->stage;
+  public function validate(SandboxValidationEvent $event): void {
+    $sandbox_manager = $event->sandboxManager;
 
     // Early return if the stage is not already created.
-    if ($event instanceof StatusCheckEvent && $stage->isAvailable()) {
+    if ($event instanceof StatusCheckEvent && $sandbox_manager->isAvailable()) {
       return;
     }
 
@@ -142,7 +142,7 @@ final class LockFileValidator implements EventSubscriberInterface {
     // Don't allow staged changes to be applied if the staged lock file has no
     // apparent changes.
     if (empty($messages) && $event instanceof PreApplyEvent) {
-      $staged_lock_file_path = $stage->getStageDirectory() . DIRECTORY_SEPARATOR . 'composer.lock';
+      $staged_lock_file_path = $sandbox_manager->getSandboxDirectory() . DIRECTORY_SEPARATOR . 'composer.lock';
       $staged_lock_file_hash = $this->getHash($staged_lock_file_path);
       if ($staged_lock_file_hash && hash_equals($active_lock_file_hash, $staged_lock_file_hash)) {
         $messages[] = $this->t('There appear to be no pending Composer operations because the active lock file (@active_file) and the staged lock file (@staged_file) are identical.', [

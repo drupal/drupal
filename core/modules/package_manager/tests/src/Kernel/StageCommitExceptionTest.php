@@ -6,7 +6,7 @@ namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\package_manager\Exception\ApplyFailedException;
-use Drupal\package_manager\Exception\StageException;
+use Drupal\package_manager\Exception\SandboxException;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager_bypass\LoggingCommitter;
 use PhpTuf\ComposerStager\API\Exception\ExceptionInterface;
@@ -15,7 +15,7 @@ use PhpTuf\ComposerStager\API\Exception\PreconditionException;
 use PhpTuf\ComposerStager\API\Precondition\Service\PreconditionInterface;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\StageBase
+ * @coversDefaultClass \Drupal\package_manager\SandboxManagerBase
  * @covers \Drupal\package_manager\PackageManagerUninstallValidator
  * @group package_manager
  * @internal
@@ -53,11 +53,11 @@ class StageCommitExceptionTest extends PackageManagerKernelTestBase {
       ],
       'InvalidArgumentException' => [
         InvalidArgumentException::class,
-        StageException::class,
+        SandboxException::class,
       ],
       'PreconditionException' => [
         PreconditionException::class,
-        StageException::class,
+        SandboxException::class,
       ],
       'Exception' => [
         'Exception',

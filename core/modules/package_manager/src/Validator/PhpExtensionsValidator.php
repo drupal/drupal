@@ -8,7 +8,7 @@ use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -64,10 +64,10 @@ class PhpExtensionsValidator implements EventSubscriberInterface {
   /**
    * Flags an error if the OpenSSL extension is not installed.
    *
-   * @param \Drupal\package_manager\Event\PreOperationStageEvent $event
+   * @param \Drupal\package_manager\Event\SandboxValidationEvent $event
    *   The event object.
    */
-  public function validateOpenSsl(PreOperationStageEvent $event): void {
+  public function validateOpenSsl(SandboxValidationEvent $event): void {
     if (!$this->isExtensionLoaded('openssl')) {
       $message = $this->t('The OpenSSL extension is not enabled, which is a security risk. See <a href=":url">the PHP documentation</a> for information on how to enable this extension.', [
         ':url' => 'https://www.php.net/manual/en/openssl.installation.php',

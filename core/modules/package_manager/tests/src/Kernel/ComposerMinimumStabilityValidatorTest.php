@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
 
 /**
@@ -30,7 +30,7 @@ class ComposerMinimumStabilityValidatorTest extends PackageManagerKernelTestBase
       $stage->require(['drupal/core:9.8.1-beta1']);
       $this->fail('Able to require a package even though it did not meet minimum stability.');
     }
-    catch (StageEventException $exception) {
+    catch (SandboxEventException $exception) {
       $this->assertValidationResultsEqual([$result], $exception->event->getResults());
     }
     $stage->destroy();
@@ -49,7 +49,7 @@ class ComposerMinimumStabilityValidatorTest extends PackageManagerKernelTestBase
       $stage->require([], ['drupal/core-dev:9.8.x-dev']);
       $this->fail('Able to require a package even though it did not meet minimum stability.');
     }
-    catch (StageEventException $exception) {
+    catch (SandboxEventException $exception) {
       $this->assertValidationResultsEqual([$result], $exception->event->getResults());
     }
   }

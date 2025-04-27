@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Build;
 
-use Drupal\package_manager_test_api\ControllerStage;
+use Drupal\package_manager_test_api\ControllerSandboxManager;
 
 /**
  * Tests updating packages in a stage directory.
@@ -67,7 +67,7 @@ class PackageUpdateTest extends TemplateProjectTestBase {
     // @see \Drupal\updated_module\PostApplySubscriber::postApply()
     $this->assertSame('Bravo!', file_get_contents($this->getWorkspaceDirectory() . '/project/bravo.txt'));
 
-    $this->assertExpectedStageEventsFired(ControllerStage::class);
+    $this->assertExpectedStageEventsFired(ControllerSandboxManager::class);
     $this->assertRequestedChangesWereLogged(['Update drupal/updated_module from 1.0.0 to 1.1.0']);
     $this->assertAppliedChangesWereLogged(['Updated drupal/updated_module from 1.0.0 to 1.1.0']);
   }

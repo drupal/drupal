@@ -11,7 +11,7 @@ use Drupal\system\SystemManager;
 /**
  * Base class for events dispatched before a stage life cycle operation.
  */
-abstract class PreOperationStageEvent extends StageEvent {
+abstract class SandboxValidationEvent extends SandboxEvent {
 
   /**
    * The validation results.

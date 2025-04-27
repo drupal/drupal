@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\package_manager\Exception\StageFailureMarkerException;
+use Drupal\package_manager\Exception\FailureMarkerExistsException;
 
 /**
  * Handles failure marker file operation.
@@ -50,18 +50,18 @@ final class FailureMarker implements EventSubscriberInterface {
   /**
    * Writes data to marker file.
    *
-   * @param \Drupal\package_manager\StageBase $stage
+   * @param \Drupal\package_manager\SandboxManagerBase $sandbox_manager
    *   The stage.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $message
    *   Failure message to be added.
    * @param \Throwable|null $throwable
    *   (optional) The throwable that caused the failure.
    */
-  public function write(StageBase $stage, TranslatableMarkup $message, ?\Throwable $throwable = NULL): void {
+  public function write(SandboxManagerBase $sandbox_manager, TranslatableMarkup $message, ?\Throwable $throwable = NULL): void {
     $data = [
-      'stage_class' => get_class($stage),
-      'stage_type' => $stage->getType(),
-      'stage_file' => (new \ReflectionObject($stage))->getFileName(),
+      'stage_class' => get_class($sandbox_manager),
+      'stage_type' => $sandbox_manager->getType(),
+      'stage_file' => (new \ReflectionObject($sandbox_manager))->getFileName(),
       'message' => (string) $message,
       'throwable_class' => $throwable ? get_class($throwable) : FALSE,
       'throwable_message' => $throwable?->getMessage() ?? 'Not available',
@@ -76,7 +76,7 @@ final class FailureMarker implements EventSubscriberInterface {
    * @return array|null
    *   The data from the file if it exists.
    *
-   * @throws \Drupal\package_manager\Exception\StageFailureMarkerException
+   * @throws \Drupal\package_manager\Exception\FailureMarkerExistsException
    *   Thrown if failure marker exists but cannot be decoded.
    */
   private function getData(): ?array {
@@ -88,7 +88,7 @@ final class FailureMarker implements EventSubscriberInterface {
 
       }
       catch (ParseException $exception) {
-        throw new StageFailureMarkerException('Failure marker file exists but cannot be decoded.', $exception->getCode(), $exception);
+        throw new FailureMarkerExistsException('Failure marker file exists but cannot be decoded.', $exception->getCode(), $exception);
       }
     }
     return NULL;
@@ -105,7 +105,7 @@ final class FailureMarker implements EventSubscriberInterface {
    * @return string|null
    *   The message from the file if it exists, otherwise NULL.
    *
-   * @throws \Drupal\package_manager\Exception\StageFailureMarkerException
+   * @throws \Drupal\package_manager\Exception\FailureMarkerExistsException
    *   Thrown if failure marker exists but cannot be decoded.
    */
   public function getMessage(bool $include_backtrace = TRUE): ?string {
@@ -130,12 +130,12 @@ final class FailureMarker implements EventSubscriberInterface {
   /**
    * Asserts the failure file doesn't exist.
    *
-   * @throws \Drupal\package_manager\Exception\StageFailureMarkerException
+   * @throws \Drupal\package_manager\Exception\FailureMarkerExistsException
    *   Thrown if the marker file exists.
    */
   public function assertNotExists(): void {
     if ($message = $this->getMessage()) {
-      throw new StageFailureMarkerException($message);
+      throw new FailureMarkerExistsException($message);
     }
   }
 

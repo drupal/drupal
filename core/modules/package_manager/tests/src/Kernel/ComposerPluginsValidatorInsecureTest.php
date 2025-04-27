@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
 
 /**
@@ -86,7 +86,7 @@ class ComposerPluginsValidatorInsecureTest extends PackageManagerKernelTestBase 
       // so we expect the operation to fail on PreApplyEvent.
       $stage->apply();
     }
-    catch (StageEventException $e) {
+    catch (SandboxEventException $e) {
       // Processing is required because the error message we get from Composer
       // contains multiple white spaces at the start or end of line.
       $this->assertStringContainsString($expected_message, preg_replace('/\s\s+/', '', $e->getMessage()));

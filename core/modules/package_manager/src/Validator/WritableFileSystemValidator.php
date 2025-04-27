@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\package_manager\Validator;
 
 use Drupal\package_manager\Event\PreApplyEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\PathLocator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -32,7 +32,7 @@ class WritableFileSystemValidator implements EventSubscriberInterface {
    * @todo Determine if 'is_writable()' is a sufficiently robust test across
    *   different operating systems in https://drupal.org/i/3348253.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     $messages = [];
 
     $project_root = $this->pathLocator->getProjectRoot();

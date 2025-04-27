@@ -7,7 +7,7 @@ namespace Drupal\Tests\package_manager\Kernel;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\ValidationResult;
@@ -36,7 +36,7 @@ class BaseRequirementsFulfilledValidatorTest extends PackageManagerKernelTestBas
   /**
    * {@inheritdoc}
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     if (get_class($event) === $this->eventClass) {
       $event->addError([
         $this->t('This will not stand!'),

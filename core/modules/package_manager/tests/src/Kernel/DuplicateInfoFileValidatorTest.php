@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
 use Symfony\Component\Filesystem\Filesystem;
@@ -203,7 +203,7 @@ class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
     $stage->require(['composer/semver:^3']);
 
     $active_dir = $this->container->get(PathLocator::class)->getProjectRoot();
-    $stage_dir = $stage->getStageDirectory();
+    $stage_dir = $stage->getSandboxDirectory();
     foreach ($active_info_files as $active_info_file) {
       $this->createFileAtPath($active_dir, $active_info_file);
     }
@@ -214,7 +214,7 @@ class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
       $stage->apply();
       $this->assertEmpty($expected_results);
     }
-    catch (StageEventException $e) {
+    catch (SandboxEventException $e) {
       $this->assertNotEmpty($expected_results);
       $this->assertValidationResultsEqual($expected_results, $e->event->getResults());
     }

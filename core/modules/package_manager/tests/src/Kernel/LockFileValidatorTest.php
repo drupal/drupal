@@ -10,7 +10,7 @@ use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
-use Drupal\package_manager\Exception\StageException;
+use Drupal\package_manager\Exception\SandboxException;
 use Drupal\package_manager\InstalledPackagesList;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\Validator\LockFileValidator;
@@ -170,7 +170,7 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
       $stage->require(['drupal/core:9.8.1']);
       $stage->apply();
     }
-    catch (StageException $e) {
+    catch (SandboxException $e) {
       $this->assertSame(\LogicException::class, $e->getPrevious()::class);
       $this->assertSame('Stored hash key deleted.', $e->getMessage());
     }

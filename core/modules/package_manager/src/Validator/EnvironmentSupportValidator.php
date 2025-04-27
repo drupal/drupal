@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\package_manager\Validator;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -38,7 +38,7 @@ final class EnvironmentSupportValidator implements EventSubscriberInterface {
   /**
    * Checks that this environment supports Package Manager.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     $message = $this->t('Package Manager is not supported by your environment.');
 
     $help_url = getenv(static::VARIABLE_NAME);

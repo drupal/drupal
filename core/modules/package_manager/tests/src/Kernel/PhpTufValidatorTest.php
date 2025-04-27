@@ -10,7 +10,7 @@ use Drupal\fixture_manipulator\FixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
-use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
 use Drupal\package_manager\Validator\LockFileValidator;
 use Drupal\package_manager\Validator\PhpTufValidator;
@@ -112,7 +112,7 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
 
     (new FixtureManipulator())
       ->removePackage(PhpTufValidator::PLUGIN_NAME)
-      ->commitChanges($stage->getStageDirectory());
+      ->commitChanges($stage->getSandboxDirectory());
 
     $messages = [
       $this->t('The <code>php-tuf/composer-integration</code> plugin is not installed.'),
@@ -125,7 +125,7 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
       $stage->apply();
       $this->fail('Expected an exception but none was thrown.');
     }
-    catch (StageEventException $e) {
+    catch (SandboxEventException $e) {
       $this->assertInstanceOf(PreApplyEvent::class, $e->event);
       $this->assertValidationResultsEqual([$result], $e->event->getResults());
     }
@@ -219,7 +219,7 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
     $listener = function (PreRequireEvent|PreApplyEvent $event) use ($config): void {
       (new FixtureManipulator())
         ->addConfig($config)
-        ->commitChanges($event->stage->getStageDirectory())
+        ->commitChanges($event->sandboxManager->getSandboxDirectory())
         ->updateLock();
     };
     $this->addEventTestListener($listener, $event_class);

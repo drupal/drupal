@@ -13,7 +13,7 @@ use Drupal\Core\Url;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\PathLocator;
@@ -74,18 +74,18 @@ final class PhpTufValidator implements EventSubscriberInterface {
   /**
    * Reacts to a stage event by validating PHP-TUF configuration as needed.
    *
-   * @param \Drupal\package_manager\Event\PreOperationStageEvent $event
+   * @param \Drupal\package_manager\Event\SandboxValidationEvent $event
    *   The event object.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     $messages = $this->validateTuf($this->pathLocator->getProjectRoot());
     if ($messages) {
       $event->addError($messages, $this->t('The active directory is not protected by PHP-TUF, which is required to use Package Manager securely.'));
     }
 
-    $stage = $event->stage;
-    if ($stage->stageDirectoryExists()) {
-      $messages = $this->validateTuf($stage->getStageDirectory());
+    $sandbox_manager = $event->sandboxManager;
+    if ($sandbox_manager->sandboxDirectoryExists()) {
+      $messages = $this->validateTuf($sandbox_manager->getSandboxDirectory());
       if ($messages) {
         $event->addError($messages, $this->t('The stage directory is not protected by PHP-TUF, which is required to use Package Manager securely.'));
       }

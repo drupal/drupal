@@ -8,7 +8,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreOperationStageEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,7 +27,7 @@ final class SettingsValidator implements EventSubscriberInterface {
   /**
    * Checks that Drupal's settings are valid for Package Manager.
    */
-  public function validate(PreOperationStageEvent $event): void {
+  public function validate(SandboxValidationEvent $event): void {
     if (Settings::get('update_fetch_with_http_fallback')) {
       $event->addError([
         $this->t('The <code>update_fetch_with_http_fallback</code> setting must be disabled.'),
