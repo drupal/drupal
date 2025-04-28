@@ -65,7 +65,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  _TARGET_PHP: "8.3-ubuntu"
+  _TARGET_PHP: "8.4-ubuntu"
 
 #############
 # Stages    #
@@ -219,11 +219,11 @@ default:
       allow_failure: true
 
 # Default configuration.
-'DEFAULT: PHP 8.3 MySQL 8.0':
+'DEFAULT: PHP 8.4 MySQL 8.4':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mysql-8"
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mysql-8.4"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
   # Run on MR, schedule, push, parent pipeline and performance test.
   rules:
@@ -236,7 +236,7 @@ default:
     - if: $PERFORMANCE_TEST == "1"
 
 # Re-run the pipeline, but with Composer updates.
-'DEFAULT: Updated dependencies (PHP 8.3 MySQL 8.0)':
+'DEFAULT: Updated dependencies (PHP 8.4 MySQL 8.4)':
   <<: *default-stage
   # Run daily and allow manual runs on MRs.
   rules:
@@ -251,13 +251,13 @@ default:
     include: .gitlab-ci.yml
 
 # Special job for MRs for test-only checks.
-'DEFAULT: Test-only (PHP 8.3 MySQL 8.0)':
+'DEFAULT: Test-only (PHP 8.4 MySQL 8.4)':
   <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mysql-8"
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mysql-8.4"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   trigger:
@@ -275,11 +275,11 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mariadb-10.6"
 
-'PHP 8.3 MySQL 8.4':
+'PHP 8.3 MySQL 8.0':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mysql-8.4"
+    _TARGET_DB: "mysql-8"
 
 'PHP 8.4 MySQL 9.2':
   <<: [ *default-stage, *run-on-mr ]
@@ -305,17 +305,17 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "sqlite-3"
 
-'PHP 8.4 MySQL 8.4':
+'PHP 8.4 MySQL 8.0':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "mysql-8.4"
+    _TARGET_DB: "mysql-8"
 
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.3 PostgreSQL 16':
   extends: 'PHP 8.3 PostgreSQL 16'
-  needs: [ 'DEFAULT: PHP 8.3 MySQL 8.0' ]
+  needs: [ 'DEFAULT: PHP 8.4 MySQL 8.4' ]
   <<: [ *run-on-commit ]
 
 '[Commit] PHP 8.3 SQLite 3.45':
@@ -327,7 +327,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Daily] PHP 8.3 PostgreSQL 16':
   extends: 'PHP 8.3 PostgreSQL 16'
-  needs: [ 'DEFAULT: PHP 8.3 MySQL 8.0' ]
+  needs: [ 'DEFAULT: PHP 8.4 MySQL 8.4' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.3 SQLite 3.45':
@@ -340,14 +340,14 @@ default:
   needs: [ '[Daily] PHP 8.3 SQLite 3.45' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.4 MySQL 8.4':
-  extends: 'PHP 8.4 MySQL 8.4'
+'[Daily] PHP 8.4 MySQL 8.0':
+  extends: 'PHP 8.4 MySQL 8.0'
   needs: [ '[Daily] PHP 8.3 MariaDB 10.6' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.4 PostgreSQL 17':
   extends: 'PHP 8.4 PostgreSQL 17'
-  needs: [ '[Daily] PHP 8.4 MySQL 8.4' ]
+  needs: [ '[Daily] PHP 8.4 MySQL 8.0' ]
   <<: [ *run-daily ]
 
 ################
@@ -584,7 +584,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_PHP: "8.4-ubuntu"
   # Run on MRs if config schema files have changed, or manually.
   rules:
     - if: $PERFORMANCE_TEST != "1"
