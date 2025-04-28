@@ -10,7 +10,7 @@ namespace Drupal\Tests\update\Functional;
 trait UpdateSemverTestSecurityAvailabilityTrait {
 
   /**
-   * Tests the update manager when a security update is available.
+   * Tests Update Status when a security update is available.
    */
   public function testSecurityUpdateAvailability(): void {
     foreach (static::securityUpdateAvailabilityProvider() as $case) {
@@ -19,7 +19,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
   }
 
   /**
-   * Tests the Update Manager module when a security update is available.
+   * Tests the Update Status module when a security update is available.
    *
    * @param string $site_patch_version
    *   The patch version to set the site to for testing.

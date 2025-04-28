@@ -8,7 +8,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
- * Tests general functionality of the Update module.
+ * Tests general functionality of the Update Status module.
  *
  * @group update
  */
@@ -58,7 +58,7 @@ class UpdateMiscTest extends UpdateTestBase {
   }
 
   /**
-   * Tests the Update Manager module when the update server returns 503 errors.
+   * Tests the Update Status module when the update server returns 503 errors.
    */
   public function testServiceUnavailable(): void {
     $admin_user = $this->drupalCreateUser([

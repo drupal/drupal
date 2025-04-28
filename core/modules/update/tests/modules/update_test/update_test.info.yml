@@ -1,4 +1,4 @@
 name: 'Update test'
 type: module
-description: 'Support module for update module testing.'
+description: 'Support module for Update Status module testing.'
 package: Testing

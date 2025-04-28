@@ -70,7 +70,7 @@ final class InstalledPackage {
    */
   public function getProjectName(): ?string {
     // Only consider packages which are packaged by drupal.org and will be
-    // known to the core Update module.
+    // known to the core Update Status module.
     $drupal_package_types = [
       'drupal-module',
       'drupal-theme',

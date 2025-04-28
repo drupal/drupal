@@ -24,7 +24,7 @@ class TestingProfileInstallTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Ensure the Update module is installed.
+   * Ensure the Update Status module is installed.
    */
   public function testUpdateModuleInstall(): void {
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('update'));

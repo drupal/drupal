@@ -28,7 +28,7 @@ class UpdateTestController extends ControllerBase {
   }
 
   /**
-   * Page callback: Prints mock XML for the Update Manager module.
+   * Page callback: Prints mock XML for the Update Status module.
    *
    * The specific XML file to print depends on two things: the project we're
    * trying to fetch data for, and the desired "availability scenario" for that
@@ -38,7 +38,7 @@ class UpdateTestController extends ControllerBase {
    * name, indicating which availability scenario to use for that project.
    *
    * @param string $project_name
-   *   The project short name the update manager is trying to fetch data for
+   *   The project short name Update Status is trying to fetch data for
    *   (the fetch URLs are of the form:
    *   [base_url]/[project_name]/[core_version]).
    * @param string $version

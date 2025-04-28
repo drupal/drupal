@@ -8,7 +8,7 @@ use Drupal\Core\Utility\ProjectInfo;
 use Drupal\update\UpdateManagerInterface;
 
 /**
- * Tests how the Update Manager handles contributed modules and themes.
+ * Tests how Update Status handles contributed modules and themes.
  *
  * @group update
  * @group #slow
@@ -241,7 +241,7 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Tests the Update Manager module when one normal update is available.
+   * Tests the Update Status module when one normal update is available.
    */
   public function testNormalUpdateAvailable(): void {
     $assert_session = $this->assertSession();
@@ -536,12 +536,12 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertSession()->linkExists('AAA Update test');
     $this->assertSession()->linkByHrefExists('http://example.com/project/aaa_update_test');
 
-    // Turn the altering back on and visit the Update manager UI.
+    // Turn the altering back on and visit the Update Status UI.
     $update_test_config->set('update_status', $update_status)->save();
     $this->drupalGet('admin/reports/updates');
     $this->assertSession()->pageTextContains('Security update');
 
-    // Turn the altering back off and visit the Update manager UI.
+    // Turn the altering back off and visit the Update Status UI.
     $update_test_config->set('update_status', [])->save();
     $this->drupalGet('admin/reports/updates');
     $this->assertSession()->pageTextNotContains('Security update');

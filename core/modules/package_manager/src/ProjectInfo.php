@@ -12,11 +12,11 @@ use Drupal\Core\Utility\Error;
 use Drupal\update\UpdateManagerInterface;
 
 /**
- * Defines a class for retrieving project information from Update module.
+ * Retrieves project information from the Update Status module.
  *
  * @internal
  *   This is an internal part of Automatic Updates and may be changed or removed
- *   at any time without warning. External code should use the Update API
+ *   at any time without warning. External code should use the Update Status API
  *   directly.
  */
 final class ProjectInfo {
@@ -136,11 +136,11 @@ final class ProjectInfo {
   }
 
   /**
-   * Returns the installed project version, according to the Update module.
+   * Returns the installed project version via the Update Status module.
    *
    * @return string|null
-   *   The installed project version as known to the Update module or NULL if
-   *   the project information is not available.
+   *   The installed project version as known to the Update Status module, or
+   *   NULL if the project information is not available.
    */
   public function getInstalledVersion(): ?string {
     $project_data = $this->getProjectInfo();

@@ -118,9 +118,9 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
     $this->fileSystem = new Filesystem();
     $this->createTestProject();
 
-    // The Update module's default configuration must be installed for our
-    // fake release metadata to be fetched, and the System module's to ensure
-    // the site has a name.
+    // The Update Status module's default configuration must be installed for
+    // our fake release metadata to be fetched, and the System module's to
+    // ensure the site has a name.
     $this->installConfig(['system', 'update']);
 
     // Make the update system think that all of System's post-update functions
@@ -328,10 +328,10 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
   }
 
   /**
-   * Sets the current (running) version of core, as known to the Update module.
+   * Sets the current (running) version of core for the Update Status module.
    *
-   * @todo Remove this function with use of the trait from the Update module in
-   *   https://drupal.org/i/3348234.
+   * @todo Remove this function with use of the trait from the Update Status
+   *   module in https://drupal.org/i/3348234.
    *
    * @param string $version
    *   The current version of core.

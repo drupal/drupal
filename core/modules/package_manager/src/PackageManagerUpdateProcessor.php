@@ -15,15 +15,15 @@ use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateProcessor;
 
 /**
- * Extends the Update module's update processor allow fetching any project.
+ * Extends the Update Status update processor allow fetching any project.
  *
- * The Update module's update processor service is intended to only fetch
+ * The Update Status module's update processor service is intended to only fetch
  * information for projects in the active codebase. Although it would be
- * possible to use the Update module's update processor service to fetch
+ * possible to use the Update Status module's update processor service to fetch
  * information for projects not in the active code base this would add the
- * project information to Update module's cache which would result in these
- * projects being returned from the Update module's global functions such as
- * update_get_available().
+ * project information to Update Status module's cache which would result in
+ * these projects being returned from the Update Status module's global
+ * functions such as update_get_available().
  *
  * @internal
  *   This is an internal part of Package Manager and may be changed or removed

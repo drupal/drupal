@@ -39,11 +39,11 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
         'version' => $installed_version,
         'project' => 'package_manager_test_update',
       ];
-      // @todo Replace with use of the trait from the Update module in https://drupal.org/i/3348234.
+      // @todo Replace with use of the trait from the Update Status module in https://drupal.org/i/3348234.
       $this->config('update_test.settings')
         ->set("system_info.$project", $extension_info_update)
         ->save();
-      // The Update module will always request Drupal core's update XML.
+      // The Update Status module will always request Drupal core's update XML.
       $metadata_fixtures['drupal'] = $fixtures_directory . 'drupal.9.8.2.xml';
     }
     $metadata_fixtures[$project] = "$fixtures_directory$fixture";
@@ -138,8 +138,8 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
     $this->assertSame(['drupal'], array_keys($available));
     $this->setReleaseMetadata($metadata_fixtures);
     $state = $this->container->get('state');
-    // Set the state that the update module uses to store last checked time
-    // ensure our calls do not affect it.
+    // Set the state that the Update Status module uses to store last checked
+    // time ensure our calls do not affect it.
     $state->set('update.last_check', 123);
     $project_info = new ProjectInfo('package_manager_test_update');
     $project_data = $project_info->getProjectInfo();
@@ -168,8 +168,8 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
       array_keys($project_info->getInstallableReleases())
     );
     $this->assertNull($project_info->getInstalledVersion());
-    // Ensure we have not changed the state the update module uses to store
-    // the last checked time.
+    // Ensure we have not changed the state the Update Status module uses to
+    // store the last checked time.
     $this->assertSame(123, $state->get('update.last_check'));
 
     $this->assertTrue($this->failureLogger->hasRecordThatContains('Invalid project format: Array', (string) RfcLogLevel::ERROR));

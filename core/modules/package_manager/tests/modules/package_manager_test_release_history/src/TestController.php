@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class TestController extends ControllerBase {
 
   /**
-   * Page callback: Prints mock XML for the Update Manager module.
+   * Page callback: Prints mock XML for the Update Status module.
    *
    * @todo This is a wholesale copy of
    *   \Drupal\update_test\Controller\UpdateTestController::updateTest() for

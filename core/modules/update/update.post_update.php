@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Post update functions for Update Manager.
+ * Post update functions for Update Status.
  */
 
 /**

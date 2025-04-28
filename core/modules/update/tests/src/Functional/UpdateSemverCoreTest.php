@@ -39,7 +39,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   }
 
   /**
-   * Tests the Update Manager module when the update server returns 503 errors.
+   * Tests the Update Status module when the update server returns 503 errors.
    */
   public function testServiceUnavailable(): void {
     $this->refreshUpdateStatus([], '503-error');

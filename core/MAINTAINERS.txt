@@ -434,7 +434,7 @@ Umami demo
 - Ofer Shaal 'shaal' https://www.drupal.org/u/shaal
 - Ivan Berdinsky 'finnsky' https://www.drupal.org/u/finnsky
 
-Update Manager
+Update Status
 - Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
 - Derek Wright 'dww' https://www.drupal.org/u/dww
 

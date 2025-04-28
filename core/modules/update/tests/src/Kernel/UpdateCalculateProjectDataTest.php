@@ -37,8 +37,8 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // The Update module's default configuration must be installed for our
-    // fake release metadata to be fetched.
+    // The Update Status module's default configuration must be installed for
+    // our fake release metadata to be fetched.
     $this->installConfig('update');
     $this->installConfig('update_test');
     $this->setCoreVersion('8.0.1');
@@ -46,7 +46,7 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
   }
 
   /**
-   * Sets the installed version of core, as known to the Update module.
+   * Sets the installed version of core, as known to the Update Status module.
    *
    * @param string $version
    *   The core version.

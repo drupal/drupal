@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hooks provided by the Update Manager module.
+ * Hooks provided by the Update Status module.
  */
 
 use Drupal\update\UpdateFetcherInterface;
@@ -16,7 +16,7 @@ use Drupal\update\UpdateFetcherInterface;
  * Alter the list of projects before fetching data and comparing versions.
  *
  * Most modules will never need to implement this hook. It is for advanced
- * interaction with the Update Manager module. The primary use-case for this
+ * interaction with the Update Status module. The primary use-case for this
  * hook is to add projects to the list; for example, to provide update status
  * data on uninstalled modules and themes. A contributed module might want to
  * hide projects from the list; for example, if there is a site-specific module

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update, and uninstall functions for the Update Manager module.
+ * Install, update, and uninstall functions for the Update Status module.
  */
 
 use Drupal\Core\Hook\Attribute\StopProceduralHookScan;

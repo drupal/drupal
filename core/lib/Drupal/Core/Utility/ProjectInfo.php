@@ -170,7 +170,7 @@ class ProjectInfo {
    *   .info.yml file. Defaults to [].
    *
    * @return array
-   *   Array of .info.yml file data we need for the update manager.
+   *   Array of .info.yml file data we need for Update Status.
    *
    * @see \Drupal\Core\Utility\ProjectInfo::processInfoList()
    */

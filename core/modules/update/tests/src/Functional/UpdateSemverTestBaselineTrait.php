@@ -16,7 +16,7 @@ use Drupal\Core\Url;
 trait UpdateSemverTestBaselineTrait {
 
   /**
-   * Tests the Update Manager module when no updates are available.
+   * Tests the Update Status module when no updates are available.
    *
    * The XML fixture file 'drupal.8.1.0.xml' which is one of the XML files this
    * test uses also contains 2 extra releases that are newer than '8.0.1'. These
@@ -46,7 +46,7 @@ trait UpdateSemverTestBaselineTrait {
   }
 
   /**
-   * Tests the Update Manager module when one normal update is available.
+   * Tests the Update Status module when one normal update is available.
    */
   public function testNormalUpdateAvailable(): void {
     $this->setProjectInstalledVersion('8.0.0');
@@ -119,7 +119,7 @@ trait UpdateSemverTestBaselineTrait {
   }
 
   /**
-   * Tests the Update Manager module when major updates are available.
+   * Tests the Update Status module when major updates are available.
    *
    * This includes testing when the next major is available as well as when both
    * the current major version and the next major version are supported. There

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\update\Functional;
 
 /**
- * Base class for Update manager semantic versioning tests of Drupal core.
+ * Base class for Update Status semantic versioning tests of Drupal core.
  *
  * This wires up the protected data from UpdateSemverTestBase for Drupal core
  * with semantic version releases.

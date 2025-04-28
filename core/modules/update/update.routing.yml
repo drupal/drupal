@@ -2,7 +2,7 @@ update.settings:
   path: '/admin/reports/updates/settings'
   defaults:
     _form: '\Drupal\update\UpdateSettingsForm'
-    _title: 'Update Manager settings'
+    _title: 'Update Status settings'
   requirements:
     _permission: 'administer site configuration'
 

@@ -12,8 +12,8 @@
  *
  * For modules hosted on drupal.org, a project definition is automatically added
  * to the .info.yml file. Only modules with this project definition are
- * discovered by the update module and use it to check for new releases. Locale
- * module uses the same data to build a list of modules to check for new
+ * discovered by the Update Status module and use it to check for new releases.
+ * Locale module uses the same data to build a list of modules to check for new
  * translations. Therefore modules not hosted at drupal.org, such as custom
  * modules, custom themes, features and distributions, need a way to identify
  * themselves to the Locale module if they have translations that require to be

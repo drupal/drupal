@@ -1,4 +1,4 @@
-# Schema for the configuration files of the Update module.
+# Schema for the configuration files of the Update Status module.
 
 update.settings:
   type: config_object

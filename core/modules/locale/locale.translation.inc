@@ -40,11 +40,12 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
  * This project data contains all projects which will be checked for available
  * interface translations.
  *
- * For full functionality this function depends on Update module.
- * When Update module is enabled the project data will contain the most recent
- * module status; both in enabled status as in version. When Update module is
- * disabled this function will return the last known module state. The status
- * will only be updated once Update module is enabled.
+ * For full functionality this function depends on the Update Status module.
+ * When the Update Status module is enabled the project data will contain the
+ * most recent module status; both in enabled status as in version. When the
+ * Update Status module is disabled this function will return the last known
+ * module state. The status will only be updated once the Update Status module
+ * is enabled.
  *
  * @param array $project_names
  *   Array of names of the projects to get.
