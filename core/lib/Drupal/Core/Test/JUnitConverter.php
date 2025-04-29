@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\TestTools\PhpUnitTestCaseJUnitResult;
+
 /**
  * Converts JUnit XML to Drupal's {simpletest} schema.
  *
@@ -69,29 +71,16 @@ class JUnitConverter {
    *
    * @internal
    */
-  public static function findTestCases(\SimpleXMLElement $element, ?\SimpleXMLElement $parent = NULL) {
-    if (!isset($parent)) {
-      $parent = $element;
-    }
-
-    if ($element->getName() === 'testcase' && (int) $parent->attributes()->tests > 0) {
-      // Add the class attribute if the test case does not have one. This is the
-      // case for tests using a data provider. The name of the parent testsuite
-      // will be in the format class::method.
-      if (!$element->attributes()->class) {
-        $name = explode('::', $parent->attributes()->name, 2);
-        $element->addAttribute('class', $name[0]);
-      }
+  public static function findTestCases(\SimpleXMLElement $element, ?\SimpleXMLElement $parent = NULL): array {
+    if ($element->getName() === 'testcase') {
       return [$element];
     }
+
     $test_cases = [];
     foreach ($element as $child) {
-      $file = (string) $parent->attributes()->file;
-      if ($file && !$child->attributes()->file) {
-        $child->addAttribute('file', $file);
-      }
       $test_cases[] = static::findTestCases($child, $element);
     }
+
     return array_merge(...$test_cases);
   }
 
@@ -108,32 +97,49 @@ class JUnitConverter {
    *
    * @internal
    */
-  public static function convertTestCaseToSimpletestRow($test_id, \SimpleXMLElement $test_case) {
-    $message = '';
-    $pass = TRUE;
-    if ($test_case->failure) {
-      $lines = explode("\n", $test_case->failure);
-      $message = $lines[2];
-      $pass = FALSE;
-    }
-    if ($test_case->error) {
-      $message = $test_case->error;
-      $pass = FALSE;
-    }
-
+  public static function convertTestCaseToSimpletestRow($test_id, \SimpleXMLElement $test_case): array {
+    $status = static::getTestCaseResult($test_case);
     $attributes = $test_case->attributes();
 
-    $record = [
+    $message = match ($status) {
+      PhpUnitTestCaseJUnitResult::Fail => (string) $test_case->failure[0],
+      PhpUnitTestCaseJUnitResult::Error => (string) $test_case->error[0],
+      default => '',
+    };
+
+    return [
       'test_id' => $test_id,
       'test_class' => (string) $attributes->class,
-      'status' => $pass ? 'pass' : 'fail',
+      'status' => $status->value,
       'message' => $message,
       'message_group' => 'Other',
-      'function' => $attributes->class . '->' . $attributes->name . '()',
+      'function' => $attributes->name,
       'line' => (int) $attributes->line ?: 0,
       'file' => (string) $attributes->file,
+      'time' => (float) $attributes->time,
     ];
-    return $record;
+  }
+
+  /**
+   * Determine a status string for the given testcase.
+   *
+   * @param \SimpleXMLElement $test_case
+   *   The test case XML element.
+   *
+   * @return \Drupal\TestTools\PhpUnitTestCaseJUnitResult
+   *   The status value to insert into the {simpletest} record.
+   */
+  protected static function getTestCaseResult(\SimpleXMLElement $test_case): PhpUnitTestCaseJUnitResult {
+    if ($test_case->error) {
+      return PhpUnitTestCaseJUnitResult::Error;
+    }
+    if ($test_case->failure) {
+      return PhpUnitTestCaseJUnitResult::Fail;
+    }
+    if ($test_case->skipped) {
+      return PhpUnitTestCaseJUnitResult::Skip;
+    }
+    return PhpUnitTestCaseJUnitResult::Pass;
   }
 
 }

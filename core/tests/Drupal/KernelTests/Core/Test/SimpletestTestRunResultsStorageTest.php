@@ -145,26 +145,28 @@ class SimpletestTestRunResultsStorageTest extends KernelTestBase {
     $this->assertEquals(2, $this->testRunResultsStorage->insertLogEntry($test_run, $this->getTestLogEntry('Test\GroundControl')));
     $this->assertEquals([
       0 => (object) [
-        'message_id' => 2,
-        'test_id' => 1,
+        'message_id' => '2',
+        'test_id' => '1',
         'test_class' => 'Test\GroundControl',
         'status' => 'pass',
         'message' => 'Major Tom',
         'message_group' => 'other',
         'function' => 'Unknown',
-        'line' => 0,
+        'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
       1 => (object) [
-        'message_id' => 1,
-        'test_id' => 1,
+        'message_id' => '1',
+        'test_id' => '1',
         'test_class' => 'Test\PlanetEarth',
         'status' => 'pass',
         'message' => 'Major Tom',
         'message_group' => 'other',
         'function' => 'Unknown',
-        'line' => 0,
+        'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
     ], $this->testRunResultsStorage->getLogEntriesByTestClass($test_run));
   }

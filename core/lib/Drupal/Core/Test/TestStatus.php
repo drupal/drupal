@@ -6,7 +6,7 @@ namespace Drupal\Core\Test;
  * Consolidates test result status information.
  *
  * For our test runners, a $status of 0 = passed test, 1 = failed test,
- * 2 = exception, >2 indicates segfault timeout, or other type of system
+ * 2 = errored test, >2 indicates segfault timeout, or other type of system
  * failure.
  */
 class TestStatus {
@@ -22,11 +22,11 @@ class TestStatus {
   const FAIL = 1;
 
   /**
-   * Signify that the test result was an exception or code error.
+   * Signify that the test result was a code error.
    *
    * This means that the test runner was able to exit and report an error.
    */
-  const EXCEPTION = 2;
+  const ERROR = 2;
 
   /**
    * Signify a system error where the test runner was unable to complete.
@@ -52,10 +52,10 @@ class TestStatus {
     $statusMap = [
       static::PASS => 'pass',
       static::FAIL => 'fail',
-      static::EXCEPTION => 'exception',
-      static::SYSTEM => 'error',
+      static::ERROR => 'error',
+      static::SYSTEM => 'exception',
     ];
-    // For status 3 and higher, we want 'error.'
+    // For status 3 and higher, we want 'exception.'
     $label = $statusMap[$status > static::SYSTEM ? static::SYSTEM : $status];
     return $label;
   }

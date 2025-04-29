@@ -45,13 +45,18 @@ const SIMPLETEST_SCRIPT_COLOR_PASS = 32;
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31;
 // An annoying brown.
 const SIMPLETEST_SCRIPT_COLOR_EXCEPTION = 33;
+// An appeasing yellow.
+const SIMPLETEST_SCRIPT_COLOR_YELLOW = 33;
+// A refreshing cyan.
+const SIMPLETEST_SCRIPT_COLOR_CYAN = 36;
 
 // Restricting the chunk of queries prevents memory exhaustion.
 const SIMPLETEST_SCRIPT_SQLITE_VARIABLE_LIMIT = 350;
 
 const SIMPLETEST_SCRIPT_EXIT_SUCCESS = 0;
 const SIMPLETEST_SCRIPT_EXIT_FAILURE = 1;
-const SIMPLETEST_SCRIPT_EXIT_EXCEPTION = 2;
+const SIMPLETEST_SCRIPT_EXIT_ERROR = 2;
+const SIMPLETEST_SCRIPT_EXIT_EXCEPTION = 3;
 
 // Set defaults and get overrides.
 [$args, $count] = simpletest_script_parse_args();
@@ -793,28 +798,13 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
         if ($errorOutput) {
           echo 'ERROR: ' . $errorOutput;
         }
-        if ($child['process']->getExitCode() === SIMPLETEST_SCRIPT_EXIT_FAILURE) {
+        if (in_array($child['process']->getExitCode(), [SIMPLETEST_SCRIPT_EXIT_FAILURE, SIMPLETEST_SCRIPT_EXIT_ERROR])) {
           $total_status = max($child['process']->getExitCode(), $total_status);
         }
         elseif ($child['process']->getExitCode()) {
-          $message = 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $child['process']->getExitCode() . ').';
+          $message = 'FATAL ' . $child['class'] . ': test runner returned an unexpected error code (' . $child['process']->getExitCode() . ').';
           echo $message . "\n";
-          // @todo Return SIMPLETEST_SCRIPT_EXIT_EXCEPTION instead, when
-          // DrupalCI supports this.
-          // @see https://www.drupal.org/node/2780087
-          $total_status = max(SIMPLETEST_SCRIPT_EXIT_FAILURE, $total_status);
-          // Insert a fail for xml results.
-          $child['test_run']->insertLogEntry([
-            'test_class' => $child['class'],
-            'status' => 'fail',
-            'message' => $message,
-            'message_group' => 'run-tests.sh check',
-          ]);
-          // Ensure that an error line is displayed for the class.
-          simpletest_script_reporter_display_summary(
-            $child['class'],
-            ['#pass' => 0, '#fail' => 1, '#exception' => 0, '#debug' => 0]
-          );
+          $total_status = max(SIMPLETEST_SCRIPT_EXIT_EXCEPTION, $total_status);
           if ($args['die-on-fail']) {
             $test_db = new TestDatabase($child['test_run']->getDatabasePrefix());
             $test_directory = $test_db->getTestSitePath();
@@ -1174,7 +1164,10 @@ function simpletest_script_reporter_init(): void {
   $results_map = [
     'pass' => 'Pass',
     'fail' => 'Fail',
+    'error' => 'Error',
+    'skipped' => 'Skipped',
     'exception' => 'Exception',
+    'debug' => 'Log',
   ];
 
   echo "\n";
@@ -1212,23 +1205,37 @@ function simpletest_script_reporter_init(): void {
  *   The test class name that was run.
  * @param array $results
  *   The assertion results using #pass, #fail, #exception, #debug array keys.
- * @param int|null $duration
+ * @param float|null $duration
  *   The time taken for the test to complete.
  */
 function simpletest_script_reporter_display_summary($class, $results, $duration = NULL): void {
   // Output all test results vertically aligned.
-  // Cut off the class name after 60 chars, and pad each group with 3 digits
-  // by default (more than 999 assertions are rare).
-  $output = vsprintf('%-60.60s %10s %5s %9s %14s %12s', [
-    $class,
-    $results['#pass'] . ' passes',
-    isset($duration) ? ceil($duration) . 's' : '',
-    !$results['#fail'] ? '' : $results['#fail'] . ' fails',
-    !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
-    !$results['#debug'] ? '' : $results['#debug'] . ' messages',
-  ]);
+  $summary = [str_pad($results['#pass'], 4, " ", STR_PAD_LEFT) . ' passed'];
+  if ($results['#fail']) {
+    $summary[] = $results['#fail'] . ' failed';
+  }
+  if ($results['#error']) {
+    $summary[] = $results['#error'] . ' errored';
+  }
+  if ($results['#skipped']) {
+    $summary[] = $results['#skipped'] . ' skipped';
+  }
+  if ($results['#exception']) {
+    $summary[] = $results['#exception'] . ' exception(s)';
+  }
+  if ($results['#debug']) {
+    $summary[] = $results['#debug'] . ' log(s)';
+  }
 
-  $status = ($results['#fail'] || $results['#exception'] ? 'fail' : 'pass');
+  if ($results['#time']) {
+    $time = sprintf('%8.3fs', $results['#time']);
+  }
+  else {
+    $time = sprintf('%8.3fs', $duration);
+  }
+
+  $output = vsprintf('%s %s %s', [$time, trim_with_ellipsis($class, 70, STR_PAD_LEFT), implode(', ', $summary)]);
+  $status = ($results['#fail'] || $results['#exception'] || $results['#error'] ? 'fail' : 'pass');
   simpletest_script_print($output . "\n", simpletest_script_color_code($status));
 }
 
@@ -1352,8 +1359,8 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
           $test_class = $result->test_class;
 
           // Print table header.
-          echo "Status    Group      Filename          Line Function                            \n";
-          echo "--------------------------------------------------------------------------------\n";
+          echo "Status      Duration Info                                                                               \n";
+          echo "--------------------------------------------------------------------------------------------------------\n";
         }
 
         simpletest_script_format_result($result);
@@ -1371,10 +1378,13 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result): void {
   global $args, $results_map, $color;
 
-  $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
-    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
+  $summary = sprintf("%-9.9s %9.3fs %-80.80s\n", $results_map[$result->status], $result->time, trim_with_ellipsis($result->function, 80, STR_PAD_LEFT));
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
+
+  if ($result->message === '' || in_array($result->status, ['pass', 'fail', 'error'])) {
+    return;
+  }
 
   $message = trim(strip_tags($result->message));
   if ($args['non-html']) {
@@ -1428,18 +1438,13 @@ function simpletest_script_print($message, $color_code): void {
  *   Color code. Returns 0 for default case.
  */
 function simpletest_script_color_code($status) {
-  switch ($status) {
-    case 'pass':
-      return SIMPLETEST_SCRIPT_COLOR_PASS;
-
-    case 'fail':
-      return SIMPLETEST_SCRIPT_COLOR_FAIL;
-
-    case 'exception':
-      return SIMPLETEST_SCRIPT_COLOR_EXCEPTION;
-  }
-  // Default formatting.
-  return 0;
+  return match ($status) {
+    'pass' => SIMPLETEST_SCRIPT_COLOR_PASS,
+    'fail', 'error', 'exception' => SIMPLETEST_SCRIPT_COLOR_FAIL,
+    'skipped' => SIMPLETEST_SCRIPT_COLOR_YELLOW,
+    'debug' => SIMPLETEST_SCRIPT_COLOR_CYAN,
+    default => 0,
+  };
 }
 
 /**
@@ -1518,4 +1523,30 @@ function simpletest_script_load_messages_by_test_id(TestRunResultsStorageInterfa
   }
 
   return $results;
+}
+
+/**
+ * Trims a string adding a leading or trailing ellipsis.
+ *
+ * @param string $input
+ *   The input string.
+ * @param int $length
+ *   The exact trimmed string length.
+ * @param int $side
+ *   Leading or trailing ellipsis.
+ *
+ * @return string
+ *   The trimmed string.
+ */
+function trim_with_ellipsis(string $input, int $length, int $side): string {
+  if (strlen($input) < $length) {
+      return str_pad($input, $length, ' ', STR_PAD_RIGHT);
+  }
+  elseif (strlen($input) > $length) {
+      return match($side) {
+        STR_PAD_RIGHT => substr($input, 0, $length - 3) . '...',
+        default => '...' . substr($input, -$length + 3),
+      };
+  }
+  return $input;
 }

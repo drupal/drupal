@@ -108,6 +108,10 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @param string[]|null $output
    *   (optional) The output by running the phpunit command. If provided, this
    *   array will contain the lines output by the command.
+   * @param string[]|null $error
+   *   (optional) The error returned by running the phpunit command. If
+   *   provided, this array will contain the error lines output by the
+   *   command.
    * @param bool $colors
    *   (optional) Whether to use colors in output. Defaults to FALSE.
    *
@@ -118,6 +122,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     string $log_junit_file_path,
     ?int &$status = NULL,
     ?array &$output = NULL,
+    ?array &$error = NULL,
     bool $colors = FALSE,
   ): void {
     global $base_url;
@@ -168,6 +173,10 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     $process->setTimeout(NULL);
     $process->run();
     $output = explode("\n", $process->getOutput());
+    $errorOutput = $process->getErrorOutput();
+    if (!empty($errorOutput)) {
+      $error = explode("\n", $process->getErrorOutput());
+    }
     $status = $process->getExitCode();
   }
 
@@ -199,23 +208,40 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
     // Store output from our test run.
     $output = [];
-    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $colors);
+    $error = [];
+    $start = microtime(TRUE);
+    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $error, $colors);
+    $time = microtime(TRUE) - $start;
 
-    if ($status == TestStatus::PASS) {
-      return JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
+    if (file_exists($log_junit_file_path)) {
+      $results = JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
     }
-    return [
-      [
+    else {
+      $results = [];
+    }
+
+    // If not passed, add full PHPUnit run output since individual test cases
+    // messages may not give full clarity (deprecations, warnings, etc.).
+    if ($status > TestStatus::PASS) {
+      $message = implode("\n", $output);
+      if (!empty($error)) {
+        $message .= "\nERROR:\n";
+        $message .= implode("\n", $error);
+      }
+      $results[] = [
         'test_id' => $test_run->id(),
         'test_class' => $test_class_name,
-        'status' => TestStatus::label($status),
-        'message' => 'PHPUnit Test failed to complete; Error: ' . implode("\n", $output),
+        'status' => $status < TestStatus::SYSTEM ? 'debug' : 'exception',
+        'message' => $message,
         'message_group' => 'Other',
-        'function' => $test_class_name,
+        'function' => '*** Process execution output ***',
         'line' => '0',
         'file' => $log_junit_file_path,
-      ],
-    ];
+        'time' => $time,
+      ];
+    }
+
+    return $results;
   }
 
   /**
@@ -253,10 +279,15 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         $summaries[$result['test_class']] = [
           '#pass' => 0,
           '#fail' => 0,
+          '#error' => 0,
+          '#skipped' => 0,
           '#exception' => 0,
           '#debug' => 0,
+          '#time' => 0,
         ];
       }
+
+      $summaries[$result['test_class']]['#time'] += $result['time'];
 
       switch ($result['status']) {
         case 'pass':
@@ -267,6 +298,14 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
           $summaries[$result['test_class']]['#fail']++;
           break;
 
+        case 'error':
+          $summaries[$result['test_class']]['#error']++;
+          break;
+
+        case 'skipped':
+          $summaries[$result['test_class']]['#skipped']++;
+          break;
+
         case 'exception':
           $summaries[$result['test_class']]['#exception']++;
           break;
@@ -274,6 +313,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         case 'debug':
           $summaries[$result['test_class']]['#debug']++;
           break;
+
       }
     }
     return $summaries;

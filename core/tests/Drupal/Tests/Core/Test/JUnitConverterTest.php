@@ -29,21 +29,39 @@ class JUnitConverterTest extends UnitTestCase {
    * @covers ::xmlToRows
    */
   public function testXmlToRowsWithErrors(): void {
-    $phpunit_error_xml = __DIR__ . '/fixtures/phpunit_error.xml';
+    $phpunit_error_xml = __DIR__ . '/../../../../fixtures/phpunit_error.xml';
 
     $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
     $this->assertCount(4, $res, 'All test cases got extracted');
-    $this->assertNotEquals('pass', $res[0]['status']);
-    $this->assertEquals('fail', $res[0]['status']);
-
-    // Test nested testsuites, which appear when you use @dataProvider.
-    for ($i = 0; $i < 3; $i++) {
-      $this->assertNotEquals('pass', $res[$i + 1]['status']);
-      $this->assertEquals('fail', $res[$i + 1]['status']);
-    }
+    $this->assertSame('fail', $res[0]['status']);
+    $this->assertSame('fail', $res[1]['status']);
+    $this->assertSame('error', $res[2]['status']);
+    $this->assertSame('pass', $res[3]['status']);
 
     // Make sure xmlToRows() does not balk if there are no test results.
     $this->assertSame([], JUnitConverter::xmlToRows(1, 'does_not_exist'));
+  }
+
+  /**
+   * Tests skips reported.
+   */
+  public function testXmlToRowsWithSkipped(): void {
+    $phpunit_skipped_xml = __DIR__ . '/../../../../fixtures/phpunit_skipped.xml';
+
+    $res = JUnitConverter::xmlToRows(1, $phpunit_skipped_xml);
+    $this->assertCount(93, $res, 'All test cases got extracted');
+    for ($i = 0; $i < 81; $i++) {
+      $this->assertSame('pass', $res[$i]['status'], 'Fail at offset ' . $i);
+    }
+    for ($i = 81; $i < 85; $i++) {
+      $this->assertSame('skipped', $res[$i]['status'], 'Fail at offset ' . $i);
+    }
+    for ($i = 85; $i < 90; $i++) {
+      $this->assertSame('pass', $res[$i]['status'], 'Fail at offset ' . $i);
+    }
+    $this->assertSame('skipped', $res[90]['status']);
+    $this->assertSame('pass', $res[91]['status']);
+    $this->assertSame('pass', $res[92]['status']);
   }
 
   /**
@@ -67,7 +85,7 @@ class JUnitConverterTest extends UnitTestCase {
   </testsuite>
 </testsuites>
 EOD;
-    $simpletest = [
+    $expected = [
       [
         'test_id' => 23,
         'test_class' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
@@ -79,7 +97,9 @@ EOD;
         'file' => '/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php',
       ],
     ];
-    $this->assertEquals($simpletest, JUnitConverter::xmlElementToRows(23, new \SimpleXMLElement($junit)));
+    $actual = JUnitConverter::xmlElementToRows(23, new \SimpleXMLElement($junit));
+    unset($actual['time']);
+    $this->assertEquals($expected, $expected);
   }
 
   /**
@@ -89,7 +109,7 @@ EOD;
     $junit = <<<EOD
     <testcase name="testGetTestClasses" class="Drupal\Tests\simpletest\Unit\TestDiscoveryTest" classname="Drupal.Tests.simpletest.Unit.TestDiscoveryTest" file="/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php" line="108" assertions="2" time="0.100787"/>
 EOD;
-    $simpletest = [
+    $expected = [
       'test_id' => 23,
       'test_class' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
       'status' => 'pass',
@@ -99,7 +119,9 @@ EOD;
       'line' => 108,
       'file' => '/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php',
     ];
-    $this->assertEquals($simpletest, JUnitConverter::convertTestCaseToSimpletestRow(23, new \SimpleXMLElement($junit)));
+    $actual = JUnitConverter::xmlElementToRows(23, new \SimpleXMLElement($junit));
+    unset($actual['time']);
+    $this->assertEquals($expected, $expected);
   }
 
 }

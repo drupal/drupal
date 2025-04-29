@@ -121,26 +121,28 @@ class TestRunTest extends KernelTestBase {
     $this->assertEquals(2, $test_run->insertLogEntry($this->getTestLogEntry('Test\GroundControl')));
     $this->assertEquals([
       0 => (object) [
-        'message_id' => 2,
-        'test_id' => 1,
+        'message_id' => '2',
+        'test_id' => '1',
         'test_class' => 'Test\GroundControl',
         'status' => 'pass',
         'message' => 'Major Tom',
         'message_group' => 'other',
         'function' => 'Unknown',
-        'line' => 0,
+        'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
       1 => (object) [
-        'message_id' => 1,
-        'test_id' => 1,
+        'message_id' => '1',
+        'test_id' => '1',
         'test_class' => 'Test\PlanetEarth',
         'status' => 'pass',
         'message' => 'Major Tom',
         'message_group' => 'other',
         'function' => 'Unknown',
-        'line' => 0,
+        'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
     ], $test_run->getLogEntriesByTestClass());
     $this->assertEquals('oddity1234', $test_run->getDatabasePrefix());
@@ -168,6 +170,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '18',
         'file' => '/var/www/core/tests/Drupal/FunctionalTests/Bootstrap/ErrorContainer.php on line 20 in /var/www/core/tests/Drupal/FunctionalTests/Bootstrap/ErrorContainer.php',
+        'time' => '0',
       ],
       1 => (object) [
         'message_id' => '2',
@@ -179,6 +182,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
       2 => (object) [
         'message_id' => '3',
@@ -190,6 +194,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
       3 => (object) [
         'message_id' => '4',
@@ -201,6 +206,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
       4 => (object) [
         'message_id' => '5',
@@ -212,6 +218,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
       5 => (object) [
         'message_id' => '6',
@@ -223,6 +230,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '17',
         'file' => '/var/www/core/tests/Drupal/FunctionalTests/Bootstrap/ExceptionContainer.php',
+        'time' => '0',
       ],
       6 => (object) [
         'message_id' => '7',
@@ -234,6 +242,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
       7 => (object) [
         'message_id' => '8',
@@ -245,6 +254,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
       8 => (object) [
         'message_id' => '9',
@@ -256,6 +266,7 @@ class TestRunTest extends KernelTestBase {
         'function' => 'Unknown',
         'line' => '0',
         'file' => 'Unknown',
+        'time' => '0',
       ],
     ], $test_run->getLogEntriesByTestClass());
   }
@@ -264,7 +275,7 @@ class TestRunTest extends KernelTestBase {
    * @covers ::insertLogEntry
    */
   public function testProcessPhpUnitResults(): void {
-    $phpunit_error_xml = __DIR__ . '/../../../Tests/Core/Test/fixtures/phpunit_error.xml';
+    $phpunit_error_xml = __DIR__ . '/../../../../fixtures/phpunit_error.xml';
     $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
 
     $runner = PhpUnitTestRunner::create(\Drupal::getContainer());

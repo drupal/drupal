@@ -208,7 +208,7 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
           'length' => 9,
           'not null' => TRUE,
           'default' => '',
-          'description' => 'Message status. Core understands pass, fail, exception.',
+          'description' => 'Message status.',
         ],
         'message' => [
           'type' => 'text',
@@ -241,6 +241,12 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
           'not null' => TRUE,
           'default' => '',
           'description' => 'Name of the file where the function is called.',
+        ],
+        'time' => [
+          'type' => 'float',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Time elapsed for the execution of the test.',
         ],
       ],
       'primary key' => ['message_id'],

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest" file="/var/www/lab01/core/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php" tests="4" assertions="7" errors="1" failures="2" skipped="0" time="3.305914">
+    <testsuite name="Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest::testGetClass" tests="2" assertions="2" errors="0" failures="2" skipped="0" time="1.650937">
+      <testcase name="testGetClass with data set &quot;String (default class)&quot;" file="/var/www/lab01/core/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php" line="43" class="Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest" classname="Drupal.KernelTests.Core.Field.Entity.BaseFieldOverrideTest" assertions="1" time="0.829654">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest::testGetClass with data set "String (default class)"
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'Drupal\Core\Field\FieldItemListfoo'
++'Drupal\Core\Field\FieldItemList'
+
+/var/www/lab01/core/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php:51</failure>
+      </testcase>
+      <testcase name="testGetClass with data set &quot;String (overridden class)&quot;" file="/var/www/lab01/core/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php" line="43" class="Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest" classname="Drupal.KernelTests.Core.Field.Entity.BaseFieldOverrideTest" assertions="1" time="0.821283">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest::testGetClass with data set "String (overridden class)"
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTestfoo'
++'Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest'
+
+/var/www/lab01/core/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php:51</failure>
+      </testcase>
+    </testsuite>
+    <testcase name="testDefaultValueCallback" file="/var/www/lab01/core/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php" line="75" class="Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest" classname="Drupal.KernelTests.Core.Field.Entity.BaseFieldOverrideTest" assertions="0" time="0.837052">
+      <error type="TypeError">Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest::testDefaultValueCallback
+TypeError: call_user_func(): Argument #1 ($callback) must be a valid callback, class Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest does not have a method "defaultValueCallbackPrimitiveBar"
+
+/var/www/lab01/core/lib/Drupal/Core/Field/BaseFieldDefinition.php:442
+/var/www/lab01/core/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php:83</error>
+    </testcase>
+    <testcase name="testInheritedProperties" file="/var/www/lab01/core/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php" line="95" class="Drupal\KernelTests\Core\Field\Entity\BaseFieldOverrideTest" classname="Drupal.KernelTests.Core.Field.Entity.BaseFieldOverrideTest" assertions="5" time="0.817925"/>
+  </testsuite>
+</testsuites>

@@ -1670,6 +1670,21 @@ function system_update_last_removed(): int {
 }
 
 /**
+ * Add a [time] column to the {simpletest} table, if existing.
+ */
+function system_update_11200(): void {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('simpletest') && !$schema->fieldExists('simpletest', 'time')) {
+    $schema->addField('simpletest', 'time', [
+      'type' => 'float',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'Time elapsed for the execution of the test.',
+    ]);
+  }
+}
+
+/**
  * Display requirements from security advisories.
  *
  * @param array[] $requirements

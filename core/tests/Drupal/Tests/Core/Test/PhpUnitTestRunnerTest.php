@@ -53,9 +53,9 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $runner->expects($this->once())
       ->method('runCommand')
       ->willReturnCallback(
-        function (string $test_class_name, string $log_junit_file_path, int &$status): string {
-          $status = TestStatus::EXCEPTION;
-          return ' ';
+        function (string $test_class_name, string $log_junit_file_path, int &$status, array &$output): void {
+          $status = TestStatus::SYSTEM;
+          $output = ['A most serious error occurred.'];
         }
       );
 
@@ -66,17 +66,18 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $results = $runner->execute($test_run, 'SomeTest', $status);
 
     // Make sure our status code made the round trip.
-    $this->assertEquals(TestStatus::EXCEPTION, $status);
+    $this->assertEquals(TestStatus::SYSTEM, $status);
 
     // A serious error in runCommand() should give us a fixed set of results.
     $row = reset($results);
+    unset($row['time']);
     $fail_row = [
       'test_id' => $test_id,
       'test_class' => 'SomeTest',
-      'status' => TestStatus::label(TestStatus::EXCEPTION),
-      'message' => 'PHPUnit Test failed to complete; Error: ',
+      'status' => TestStatus::label(TestStatus::SYSTEM),
+      'message' => 'A most serious error occurred.',
       'message_group' => 'Other',
-      'function' => 'SomeTest',
+      'function' => '*** Process execution output ***',
       'line' => '0',
       'file' => $log_path,
     ];
@@ -106,6 +107,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
           [
             'test_class' => static::class,
             'status' => 'pass',
+            'time' => 0.010001,
           ],
         ],
         '#pass',
@@ -115,6 +117,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
           [
             'test_class' => static::class,
             'status' => 'fail',
+            'time' => 0.010002,
           ],
         ],
         '#fail',
@@ -124,6 +127,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
           [
             'test_class' => static::class,
             'status' => 'exception',
+            'time' => 0.010003,
           ],
         ],
         '#exception',
@@ -133,6 +137,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
           [
             'test_class' => static::class,
             'status' => 'debug',
+            'time' => 0.010004,
           ],
         ],
         '#debug',
