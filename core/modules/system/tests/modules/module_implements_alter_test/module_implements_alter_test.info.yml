@@ -1,0 +1,6 @@
+name: 'Test hook_module_implements_alter'
+type: module
+description: 'Support module for module system testing.'
+package: Testing
+version: VERSION
+core_version_requirement: '*'

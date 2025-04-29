@@ -26,6 +26,7 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Order\Order;
 
 /**
  * Hook implementations for layout_builder.
@@ -151,7 +152,7 @@ class LayoutBuilderHooks {
    * @see \Drupal\layout_builder\Plugin\Block\ExtraFieldBlock::build()
    * @see layout_builder_module_implements_alter()
    */
-  #[Hook('entity_view_alter')]
+  #[Hook('entity_view_alter', order: Order::Last)]
   public function entityViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
     // Only replace extra fields when Layout Builder has been used to alter the
     // build. See \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::buildMultiple().

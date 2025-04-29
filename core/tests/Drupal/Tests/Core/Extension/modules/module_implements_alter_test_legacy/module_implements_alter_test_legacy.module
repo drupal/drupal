@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Module file for test module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
+ */
+#[LegacyModuleImplementsAlter]
+function module_implements_alter_test_legacy_module_implements_alter(&$implementations, $hook): void {
+  $GLOBALS['ShouldNotRunLegacyModuleImplementsAlter'] = TRUE;
+}

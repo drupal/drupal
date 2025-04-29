@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Contains procedural hook implementations.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_test_hook().
+ */
+function bbb_hook_order_test_test_hook(): string {
+  return __FUNCTION__;
+}
+
+/**
+ * Implements hook_procedural_alter().
+ */
+function bbb_hook_order_test_procedural_alter(array &$calls): void {
+  $calls[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_procedural_subtype_alter().
+ */
+function bbb_hook_order_test_procedural_subtype_alter(array &$calls): void {
+  $calls[] = __FUNCTION__;
+}

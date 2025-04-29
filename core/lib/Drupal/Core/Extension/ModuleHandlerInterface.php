@@ -225,7 +225,7 @@ interface ModuleHandlerInterface {
    *
    * @param string $hook
    *   The name of the hook to invoke.
-   * @param callable $callback
+   * @param callable(callable, string): mixed $callback
    *   A callable that invokes a hook implementation. Such that
    *   $callback is callable(callable, string): mixed.
    *   Arguments:

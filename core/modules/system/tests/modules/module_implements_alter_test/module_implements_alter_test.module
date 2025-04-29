@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Module file for test module.
+ */
+
+declare(strict_types=1);
+
+function test_auto_include(): void {}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
+ * @see module_implements_alter_test_module_implements_alter()
+ */
+function module_implements_alter_test_module_implements_alter(&$implementations, $hook): void {
+  if ($hook === 'altered_test_hook') {
+    // Add a hook implementation, that will be found in
+    // module_implements_alter_test.implementation.inc.
+    $implementations['module_implements_alter_test'] = 'implementations';
+  }
+  if ($hook === 'unimplemented_test_hook') {
+    // Add the non-existing function module_implements_alter_test_unimplemented_test_hook(). This
+    // should cause an exception to be thrown in
+    // \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo('unimplemented_test_hook').
+    $implementations['module_implements_alter_test'] = FALSE;
+  }
+
+  // For
+  // \Drupal::moduleHandler()->alter(['drupal_alter', 'drupal_alter_foo'], ...),
+  // make the block module implementations run after all the other modules. Note
+  // that when \Drupal::moduleHandler->alter() is called with an array of types,
+  // the first type is considered primary and controls the module order.
+  if ($hook == 'drupal_alter_alter' && isset($implementations['block'])) {
+    $group = $implementations['block'];
+    unset($implementations['block']);
+    $implementations['block'] = $group;
+  }
+}

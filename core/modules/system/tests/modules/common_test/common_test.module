@@ -42,24 +42,6 @@ function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL): void 
 }
 
 /**
- * Implements hook_module_implements_alter().
- *
- * @see block_drupal_alter_foo_alter()
- */
-function common_test_module_implements_alter(&$implementations, $hook): void {
-  // For
-  // \Drupal::moduleHandler()->alter(['drupal_alter', 'drupal_alter_foo'], ...),
-  // make the block module implementations run after all the other modules. Note
-  // that when \Drupal::moduleHandler->alter() is called with an array of types,
-  // the first type is considered primary and controls the module order.
-  if ($hook == 'drupal_alter_alter' && isset($implementations['block'])) {
-    $group = $implementations['block'];
-    unset($implementations['block']);
-    $implementations['block'] = $group;
-  }
-}
-
-/**
  * Implements MODULE_preprocess().
  *
  * @see RenderTest::testDrupalRenderThemePreprocessAttached()

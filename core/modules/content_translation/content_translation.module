@@ -11,28 +11,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Implements hook_module_implements_alter().
- */
-function content_translation_module_implements_alter(&$implementations, $hook): void {
-  switch ($hook) {
-    // Move our hook_entity_type_alter() implementation to the end of the list.
-    case 'entity_type_alter':
-      $group = $implementations['content_translation'];
-      unset($implementations['content_translation']);
-      $implementations['content_translation'] = $group;
-      break;
-
-    // Move our hook_entity_bundle_info_alter() implementation to the top of the
-    // list, so that any other hook implementation can rely on bundles being
-    // correctly marked as translatable.
-    case 'entity_bundle_info_alter':
-      $group = $implementations['content_translation'];
-      $implementations = ['content_translation' => $group] + $implementations;
-      break;
-  }
-}
-
-/**
  * Installs Content Translation's fields for a given entity type.
  *
  * @param string $entity_type_id

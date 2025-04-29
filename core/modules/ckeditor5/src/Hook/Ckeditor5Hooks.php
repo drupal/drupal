@@ -2,6 +2,7 @@
 
 namespace Drupal\ckeditor5\Hook;
 
+use Drupal\Core\Hook\Order\OrderAfter;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Render\Element;
@@ -100,8 +101,19 @@ class Ckeditor5Hooks {
 
   /**
    * Implements hook_form_FORM_ID_alter().
+   *
+   * This module's implementation of form_filter_format_form_alter() must
+   * happen after the editor module's implementation, as that implementation
+   * adds the active editor to $form_state. It must also happen after the media
+   * module's implementation so media_filter_format_edit_form_validate can be
+   * removed from the validation chain, as that validator is not needed with
+   * CKEditor 5 and will trigger a false error.
    */
-  #[Hook('form_filter_format_form_alter')]
+  #[Hook('form_filter_format_form_alter',
+    order: new OrderAfter(
+      modules: ['editor', 'media'],
+    )
+  )]
   public function formFilterFormatFormAlter(array &$form, FormStateInterface $form_state, $form_id) : void {
     $editor = $form_state->get('editor');
     // CKEditor 5 plugin config determines the available HTML tags. If an HTML

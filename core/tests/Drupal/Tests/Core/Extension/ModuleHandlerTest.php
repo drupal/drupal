@@ -102,6 +102,8 @@ class ModuleHandlerTest extends UnitTestCase {
    * Tests loading all modules.
    *
    * @covers ::loadAll
+   *
+   * @group legacy
    */
   public function testLoadAllModules(): void {
     $moduleList = [
@@ -352,6 +354,8 @@ class ModuleHandlerTest extends UnitTestCase {
    * Tests invoke all.
    *
    * @covers ::invokeAll
+   *
+   * @group legacy
    */
   public function testInvokeAll(): void {
     $implementations = [
@@ -382,7 +386,7 @@ class ModuleHandlerTest extends UnitTestCase {
 
     };
     $implementations['some_hook'][get_class($c)]['some_method'] = 'some_module';
-    $module_handler = new ModuleHandler($this->root, [], $this->eventDispatcher, $implementations, []);
+    $module_handler = new ModuleHandler($this->root, [], $this->eventDispatcher, $implementations);
     $module_handler->setModuleList(['some_module' => TRUE]);
     $r = new \ReflectionObject($module_handler);
 

@@ -19,11 +19,14 @@ class AlterTest extends KernelTestBase {
   protected static $modules = [
     'block',
     'common_test',
+    'module_implements_alter_test',
     'system',
   ];
 
   /**
    * Tests if the theme has been altered.
+   *
+   * @group legacy
    */
   public function testDrupalAlter(): void {
     // This test depends on Olivero, so make sure that it is always the current

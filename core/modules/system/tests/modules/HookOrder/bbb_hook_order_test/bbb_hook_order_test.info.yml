@@ -1,0 +1,6 @@
+name: BBB Hook order test
+type: module
+description: 'Test module used to test hook ordering.'
+package: Testing
+version: VERSION
+core_version_requirement: '*'

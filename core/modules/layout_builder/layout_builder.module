@@ -7,20 +7,6 @@
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
- * Implements hook_module_implements_alter().
- */
-function layout_builder_module_implements_alter(&$implementations, $hook): void {
-  if ($hook === 'entity_view_alter') {
-    // Ensure that this module's implementation of hook_entity_view_alter() runs
-    // last so that other modules that use this hook to render extra fields will
-    // run before it.
-    $group = $implementations['layout_builder'];
-    unset($implementations['layout_builder']);
-    $implementations['layout_builder'] = $group;
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for language-content-settings-table.html.twig.
  */
 function layout_builder_preprocess_language_content_settings_table(&$variables): void {

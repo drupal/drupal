@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Contains procedural hook implementations.
+ */
+
+declare(strict_types=1);
+
+use Drupal\aaa_hook_order_test\Hook\ModuleImplementsAlter;
+
+/**
+ * Implements hook_test_hook().
+ */
+function aaa_hook_order_test_test_hook(): string {
+  return __FUNCTION__;
+}
+
+/**
+ * Implements hook_sparse_test_hook().
+ */
+function aaa_hook_order_test_sparse_test_hook(): string {
+  return __FUNCTION__;
+}
+
+/**
+ * Implements hook_procedural_alter().
+ */
+function aaa_hook_order_test_procedural_alter(array &$calls): void {
+  $calls[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_procedural_subtype_alter().
+ */
+function aaa_hook_order_test_procedural_subtype_alter(array &$calls): void {
+  $calls[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function aaa_hook_order_test_module_implements_alter(array &$implementations, string $hook): void {
+  ModuleImplementsAlter::call($implementations, $hook);
+}

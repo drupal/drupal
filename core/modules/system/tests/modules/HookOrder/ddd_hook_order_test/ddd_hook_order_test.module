@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains procedural hook implementations.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_test_hook().
+ */
+function ddd_hook_order_test_test_hook(): string {
+  return __FUNCTION__;
+}

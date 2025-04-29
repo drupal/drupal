@@ -1606,6 +1606,14 @@
  * modules that they interact with. Your modules can also define their own
  * hooks, in order to let other modules interact with them.
  *
+ * Hook implementations will execute in the following order.
+ * order.
+ * - Module weight.
+ * - Alphabetical by module name.
+ * - This order can be modified by using the order parameter on the #[Hook]
+ *   attribute, using the #[ReorderHook] attribute, or implementing the legacy
+ *   hook_module_implements_alter.
+ *
  * @section implementing Implementing a hook
  *
  * There are two ways to implement a hook:
@@ -1657,6 +1665,7 @@
  * Legacy meta hooks:
  * - hook_hook_info()
  * - hook_module_implements_alter()
+ * @see \Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter
  *
  * Install hooks:
  * - hook_install()
@@ -1709,6 +1718,90 @@
  * @see \Drupal\Core\Hook\Attribute\Hook
  * @see \Drupal::moduleHandler()
  *
+ * @section ordering_hooks Ordering hook implementations
+ *
+ * The order in which hook implementations are executed can be modified. A hook
+ * can be placed first or last in the order of execution. It can also be placed
+ * before or after the execution of another module's implementation of the same
+ * hook. When changing the order of execution in relation to a specific module
+ * either the module name or the class and method can be used.
+ *
+ * Use the order argument of the Hook attribute to order the execution of
+ * hooks.
+ *
+ * Example of executing 'entity_type_alter' of my_module first:
+ * @code
+ * #[Hook('entity_type_alter', order: Order::First)]
+ * @endcode
+ *
+ * Example of executing 'entity_type_alter' of my_module last:
+ * @code
+ * #[Hook('entity_type_alter', order: Order::Last)]
+ * @endcode
+ *
+ * Example of executing 'entity_type_alter' before the execution of the
+ * implementation in the foo module:
+ * @code
+ * #[Hook('entity_type_alter', order: new OrderBefore(['foo']))]
+ * @endcode
+ *
+ * Example of executing 'entity_type_alter' after the execution of the
+ * implementation in the foo module:
+ * @code
+ * #[Hook('entity_type_alter', order: new OrderAfter(['foo']))]
+ * @endcode
+ *
+ * Example of executing 'entity_type_alter' before two methods. One in the Foo
+ * class and one in the Bar class.
+ * @code
+ * #[Hook('entity_type_alter',
+ *   order: new OrderBefore(
+ *     classesAndMethods: [
+ *       [Foo::class, 'someMethod'],
+ *       [Bar::class, 'someOtherMethod'],
+ *     ]
+ *   )
+ * )]
+ * @endcode
+ *
+ * @see \Drupal\Core\Hook\Attribute\Hook
+ * @see \Drupal\Core\Hook\Order\Order
+ * @see \Drupal\Core\Hook\Order\OrderBefore
+ * @see \Drupal\Core\Hook\Order\OrderAfter
+ *
+ * @section ordering_other_module_hooks Ordering other module hook implementations
+ *
+ * The order in which hooks implemented in other modules are executed can be
+ * reordered. The reordering of the targeted hook is done relative to other
+ * implementations. The reordering process executes after the ordering defined
+ * in the Hook attribute.
+ *
+ * Example of reordering the execution of the 'entity_presave' hook so that
+ * Content Moderation module hook executes before the Workspaces module hook.
+ * @code
+ * #[ReorderHook('entity_presave',
+ *   class: ContentModerationHooks::class,
+ *   method: 'entityPresave',
+ *   order: new OrderBefore(['workspaces'])
+ * )]
+ * @endcode
+ *
+ * @see \Drupal\Core\Hook\Attribute\ReorderHook
+ *
+ * @section removing_hooks Removing hook implementations
+ *
+ * The execution of a hooks implemented by other modules can be skipped. This
+ * is done by removing the targeted hook, use the RemoveHook attribute.
+ *
+ * Example of removing the 'help' hook of the Layout Builder module.
+ * @code
+ * #[RemoveHook('help',
+ *   class: LayoutBuilderHooks::class,
+ *   method: 'help'
+ * )]
+ * @endcode
+ *
+ * @see \Drupal\Core\Hook\Attribute\RemoveHook
  * @}
  */
 
