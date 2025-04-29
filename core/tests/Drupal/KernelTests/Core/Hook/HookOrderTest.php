@@ -9,12 +9,11 @@ use Drupal\bbb_hook_order_test\Hook\BHooks;
 use Drupal\ccc_hook_order_test\Hook\CHooks;
 use Drupal\ddd_hook_order_test\Hook\DHooks;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * @group Hook
+ * @group legacy
  */
-#[IgnoreDeprecations]
 class HookOrderTest extends KernelTestBase {
 
   use HookOrderTestTrait;
