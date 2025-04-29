@@ -222,6 +222,7 @@ hmac
 hookname
 hrefs
 htmlcorrector
+htmx
 httpheader
 httponly
 icann

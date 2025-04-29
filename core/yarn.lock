@@ -2479,6 +2479,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.2.1"
     eslint-plugin-yml: "npm:^1.16.0"
     glob: "npm:11.0.0"
+    htmx.org: "npm:2.0.4"
     jquery: "npm:^4.0.0-beta.2"
     jquery-ui: "npm:^1.14.1"
     js-cookie: "npm:^3.0.5"
@@ -5501,6 +5502,13 @@ __metadata:
   version: 3.3.1
   resolution: "html-tags@npm:3.3.1"
   checksum: 10c0/680165e12baa51bad7397452d247dbcc5a5c29dac0e6754b1187eee3bf26f514bc1907a431dd2f7eb56207611ae595ee76a0acc8eaa0d931e72c791dd6463d79
+  languageName: node
+  linkType: hard
+
+"htmx.org@npm:2.0.4":
+  version: 2.0.4
+  resolution: "htmx.org@npm:2.0.4"
+  checksum: 10c0/15c5405f28d9768eb343569af940ec1bc6ff3181925c105611a053699ef53f05af3c4e0709790339139f0633f50b7c7a959f85b38366f6ec3149a62ead5dd2b1
   languageName: node
   linkType: hard
 

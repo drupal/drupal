@@ -74,6 +74,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-yml": "^1.16.0",
     "glob": "11.0.0",
+    "htmx.org": "2.0.4",
     "jquery": "^4.0.0-beta.2",
     "jquery-ui": "^1.14.1",
     "js-cookie": "^3.0.5",
