@@ -75,6 +75,12 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
    * {@inheritdoc}
    */
   protected function parseClass(string $class, \SplFileInfo $fileinfo): array {
+    // Parse using attributes first.
+    $definition = parent::parseClass($class, $fileinfo);
+    if (isset($definition['id'])) {
+      return $definition;
+    }
+
     // The filename is already known, so there is no need to find the
     // file. However, StaticReflectionParser needs a finder, so use a
     // mock version.
@@ -90,13 +96,6 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
       return ['id' => $annotation->getId(), 'content' => $annotation->get()];
     }
 
-    // Annotations use static reflection and are able to analyze a class that
-    // extends classes or uses traits that do not exist. Attribute discovery
-    // will trigger a fatal error with such classes, so only call it if the
-    // class has a class attribute.
-    if ($reflection_class->hasClassAttribute($this->pluginDefinitionAttributeName)) {
-      return parent::parseClass($class, $fileinfo);
-    }
     return ['id' => NULL, 'content' => NULL];
   }
 

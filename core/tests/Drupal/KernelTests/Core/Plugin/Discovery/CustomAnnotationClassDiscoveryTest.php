@@ -33,6 +33,12 @@ class CustomAnnotationClassDiscoveryTest extends DiscoveryTestBase {
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\custom_annotation\Example2',
         'provider' => 'plugin_test',
       ],
+      'example_annotation_not_attribute' => [
+        'id' => 'example_annotation_not_attribute',
+        'custom' => NULL,
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\custom_annotation\ExampleWithAttributeAndAnnotation',
+        'provider' => 'plugin_test',
+      ],
     ];
 
     $base_directory = $this->root . '/core/modules/system/tests/modules/plugin_test/src';

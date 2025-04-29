@@ -53,6 +53,10 @@ class DefaultPluginManagerTest extends KernelTestBase {
     $this->assertArrayNotHasKey('example_3', $definitions);
     $this->assertArrayNotHasKey('example_4', $definitions);
     $this->assertArrayNotHasKey('example_5', $definitions);
+    // For the plugin class with both an annotation and attribute, the
+    // annotation should be picked up.
+    $this->assertArrayHasKey('example_annotation_not_attribute', $definitions);
+    $this->assertArrayNotHasKey('example_attribute_not_annotation', $definitions);
 
     // Annotations and attributes together.
     $manager = new DefaultPluginManager($subdir, $namespaces, $module_handler, NULL, AttributePluginExample::class, AnnotationPluginExample::class);
@@ -62,6 +66,10 @@ class DefaultPluginManagerTest extends KernelTestBase {
     $this->assertArrayHasKey('example_3', $definitions);
     $this->assertArrayHasKey('example_4', $definitions);
     $this->assertArrayHasKey('example_5', $definitions);
+    // For the plugin class with both an annotation and attribute, the
+    // attribute should be picked up.
+    $this->assertArrayHasKey('example_attribute_not_annotation', $definitions);
+    $this->assertArrayNotHasKey('example_annotation_not_attribute', $definitions);
 
     // Attributes only.
     // \Drupal\Component\Plugin\Discovery\AttributeClassDiscovery does not
@@ -85,6 +93,10 @@ class DefaultPluginManagerTest extends KernelTestBase {
     $this->assertArrayHasKey('example_5', $definitions);
     $this->assertArrayNotHasKey('extending_non_installed_class', $definitions);
     $this->assertArrayNotHasKey('using_non_installed_trait', $definitions);
+    // For the plugin class with both an annotation and attribute, the
+    // attribute should be picked up.
+    $this->assertArrayHasKey('example_attribute_not_annotation', $definitions);
+    $this->assertArrayNotHasKey('example_annotation_not_attribute', $definitions);
   }
 
 }
