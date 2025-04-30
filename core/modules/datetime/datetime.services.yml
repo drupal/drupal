@@ -1,5 +1,5 @@
 parameters:
-  datetime.hooks_converted: true
+  datetime.skip_procedural_hook_scan: true
 
 services:
   datetime.views_helper:

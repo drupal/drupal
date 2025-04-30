@@ -1,5 +1,5 @@
 parameters:
-  syslog.hooks_converted: true
+  syslog.skip_procedural_hook_scan: true
 
 services:
   _defaults:

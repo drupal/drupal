@@ -7,7 +7,7 @@
 
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 
@@ -78,7 +78,7 @@ function locale_requirements($phase): array {
 /**
  * Implements hook_install().
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function locale_install(): void {
   // Create the interface translations directory and ensure it's writable.
   if (!$directory = \Drupal::config('locale.settings')->get('translation.path')) {

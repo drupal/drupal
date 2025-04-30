@@ -1,0 +1,5 @@
+name: test oop preprocess functions
+type: module
+description: 'Test module used to test oop preprocess hooks are executed.'
+package: Testing
+version: VERSION

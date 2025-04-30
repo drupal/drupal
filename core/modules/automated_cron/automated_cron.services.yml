@@ -1,5 +1,5 @@
 parameters:
-  automated_cron.hooks_converted: true
+  automated_cron.skip_procedural_hook_scan: true
 
 services:
   _defaults:

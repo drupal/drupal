@@ -1,5 +1,5 @@
 parameters:
-  content_moderation.hooks_converted: true
+  content_moderation.skip_procedural_hook_scan: false
 
 services:
   _defaults:

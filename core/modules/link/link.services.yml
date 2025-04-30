@@ -1,2 +1,2 @@
 parameters:
-  link.hooks_converted: true
+  link.skip_procedural_hook_scan: false

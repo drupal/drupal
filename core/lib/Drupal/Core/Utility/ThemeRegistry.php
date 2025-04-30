@@ -168,4 +168,16 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
     }
   }
 
+  /**
+   * Gets preprocess invoke map.
+   *
+   * @return array
+   *   An array of preprocess invokes for preprocess functions in modules.
+   *
+   * @internal
+   */
+  public function getPreprocessInvokes() {
+    return $this->get('preprocess invokes');
+  }
+
 }

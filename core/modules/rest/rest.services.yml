@@ -1,5 +1,5 @@
 parameters:
-  rest.hooks_converted: true
+  rest.skip_procedural_hook_scan: true
 
 services:
   _defaults:

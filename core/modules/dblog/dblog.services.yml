@@ -1,5 +1,5 @@
 parameters:
-  dblog.hooks_converted: true
+  dblog.skip_procedural_hook_scan: true
 
 services:
   _defaults:

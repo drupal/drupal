@@ -1,5 +1,5 @@
 parameters:
-  serialization.hooks_converted: true
+  serialization.skip_procedural_hook_scan: true
 
 services:
   _defaults:

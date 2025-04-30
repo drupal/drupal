@@ -7,7 +7,7 @@
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -37,7 +37,7 @@ require_once __DIR__ . '/locale.translation.inc';
  * @param array|\ArrayAccess $context
  *   The batch context.
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function locale_translation_batch_version_check(string $project, string $langcode, array|\ArrayAccess &$context): void {
   $locale_project = \Drupal::service('locale.project')->get($project);
 

@@ -1,5 +1,5 @@
 parameters:
-  ban.hooks_converted: true
+  ban.skip_procedural_hook_scan: true
 
 services:
   _defaults:

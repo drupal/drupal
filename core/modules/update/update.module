@@ -5,7 +5,7 @@
  */
 
 use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
@@ -15,7 +15,7 @@ use Drupal\update\UpdateManagerInterface;
 /**
  * Returns a warning message when there is no data about available updates.
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function _update_no_data() {
   $destination = \Drupal::destination()->getAsArray();
   return t('No update information available. <a href=":run_cron">Run cron</a> or <a href=":check_manually">check manually</a>.', [

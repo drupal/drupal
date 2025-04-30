@@ -1,5 +1,5 @@
 parameters:
-  contact.hooks_converted: true
+  contact.skip_procedural_hook_scan: true
 
 services:
   _defaults:

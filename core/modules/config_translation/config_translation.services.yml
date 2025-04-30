@@ -1,5 +1,5 @@
 parameters:
-  config_translation.hooks_converted: true
+  config_translation.skip_procedural_hook_scan: true
 
 services:
   _defaults:

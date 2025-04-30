@@ -83,8 +83,7 @@ use Drupal\Core\Hook\Order\OrderInterface;
  * - hook_update_last_removed()
  * - hook_update_N()
  *
- * Theme hooks:
- * - hook_preprocess_HOOK()
+ * Hooks implemented by themes must remain procedural.
  *
  * @section sec_backwards_compatibility Backwards-compatibility
  *
@@ -97,12 +96,28 @@ use Drupal\Core\Hook\Order\OrderInterface;
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class Hook implements HookAttributeInterface {
+  /**
+   * The hook prefix such as `form`.
+   *
+   * @var string
+   */
+  public const string PREFIX = '';
+
+  /**
+   * The hook suffix such as `alter`.
+   *
+   * @var string
+   */
+  public const string SUFFIX = '';
 
   /**
    * Constructs a Hook attribute object.
    *
    * @param string $hook
    *   The short hook name, without the 'hook_' prefix.
+   *   $hook is only optional when Hook is extended and a PREFIX or SUFFIX is
+   *   defined. When using the [#Hook] attribute directly $hook is required.
+   *   See Drupal\Core\Hook\Attribute\Preprocess.
    * @param string $method
    *   (optional) The method name. If this attribute is on a method, this
    *   parameter is not required. If this attribute is on a class and this
@@ -116,10 +131,15 @@ class Hook implements HookAttributeInterface {
    *   (optional) Set the order of the implementation.
    */
   public function __construct(
-    public string $hook,
+    public string $hook = '',
     public string $method = '',
     public ?string $module = NULL,
     public OrderInterface|null $order = NULL,
-  ) {}
+  ) {
+    $this->hook = implode('_', array_filter([static::PREFIX, $hook, static::SUFFIX]));
+    if ($this->hook === '') {
+      throw new \LogicException('The Hook attribute or an attribute extending the Hook attribute must provide the $hook parameter, a PREFIX or a SUFFIX.');
+    }
+  }
 
 }

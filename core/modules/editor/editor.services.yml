@@ -1,5 +1,5 @@
 parameters:
-  editor.hooks_converted: true
+  editor.skip_procedural_hook_scan: true
 
 services:
   _defaults:

@@ -1,5 +1,5 @@
 parameters:
-  breakpoint.hooks_converted: true
+  breakpoint.skip_procedural_hook_scan: true
 
 services:
   _defaults:

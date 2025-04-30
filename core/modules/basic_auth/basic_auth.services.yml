@@ -1,5 +1,5 @@
 parameters:
-  basic_auth.hooks_converted: true
+  basic_auth.skip_procedural_hook_scan: true
 
 services:
   _defaults:

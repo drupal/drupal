@@ -1,2 +1,2 @@
 parameters:
-  contextual.hooks_converted: true
+  contextual.skip_procedural_hook_scan: true

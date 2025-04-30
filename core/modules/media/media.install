@@ -8,7 +8,7 @@
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
@@ -112,7 +112,7 @@ function media_requirements($phase): array {
 /**
  * Implements hook_install().
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function media_install(): void {
   $source = \Drupal::service('extension.list.module')->getPath('media') . '/images/icons';
   $destination = \Drupal::config('media.settings')->get('icon_base_uri');

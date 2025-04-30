@@ -5,7 +5,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Template\Attribute;
@@ -23,7 +23,6 @@ use Drupal\Core\Url;
  *   - name: The label for the media item.
  *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
  */
-#[StopProceduralHookScan]
 function template_preprocess_media(array &$variables): void {
   $variables['media'] = $variables['elements']['#media'];
   $variables['view_mode'] = $variables['elements']['#view_mode'];
@@ -74,6 +73,7 @@ function media_preprocess_media_reference_help(&$variables): void {
  * @internal
  *   This function is internal and may be removed in a minor release.
  */
+#[ProceduralHookScanStop]
 function _media_get_add_url($allowed_bundles) {
   $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('media');
   $create_bundles = array_filter($allowed_bundles, [$access_handler, 'createAccess']);

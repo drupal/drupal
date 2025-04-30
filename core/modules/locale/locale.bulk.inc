@@ -6,7 +6,7 @@
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
@@ -37,7 +37,7 @@ use Drupal\locale\Gettext;
  *   l10n_update functionality to feed in translation files alike.
  *   https://www.drupal.org/node/1191488
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function locale_translate_batch_import_files(array $options, $force = FALSE) {
   $options += [
     'overwrite_options' => [],

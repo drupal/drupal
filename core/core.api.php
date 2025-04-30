@@ -1677,8 +1677,7 @@
  * - hook_update_last_removed()
  * - hook_update_N()
  *
- * Theme hooks:
- * - hook_preprocess_HOOK()
+ * Hooks implemented by themes must remain procedural.
  *
  * @subsection procedural-hooks Procedural hook implementation
  *

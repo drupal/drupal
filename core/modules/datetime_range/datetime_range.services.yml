@@ -1,2 +1,2 @@
 parameters:
-  datetime_range.hooks_converted: true
+  datetime_range.skip_procedural_hook_scan: true

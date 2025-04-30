@@ -1,2 +1,2 @@
 parameters:
-  field_layout.hooks_converted: true
+  field_layout.skip_procedural_hook_scan: true

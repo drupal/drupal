@@ -1,5 +1,5 @@
 parameters:
-  field.hooks_converted: true
+  field.skip_procedural_hook_scan: true
 
 services:
   _defaults:

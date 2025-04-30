@@ -1,0 +1,5 @@
+name: test procedural preprocess functions
+type: module
+description: 'Test module used to test procedural preprocess hooks are executed.'
+package: Testing
+version: VERSION

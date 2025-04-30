@@ -1,5 +1,5 @@
 parameters:
-  shortcut.hooks_converted: true
+  shortcut.skip_procedural_hook_scan: false
 
 services:
   _defaults:

@@ -1,5 +1,5 @@
 parameters:
-  workflows.hooks_converted: true
+  workflows.skip_procedural_hook_scan: true
 
 services:
   _defaults:

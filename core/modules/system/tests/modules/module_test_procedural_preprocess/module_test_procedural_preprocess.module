@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+declare(strict_types=1);
+
+function template_preprocess_test($arg): mixed {
+  return $arg;
+}
+
+function module_test_procedural_preprocess_preprocess($arg): mixed {
+  return $arg;
+}
+
+function module_test_procedural_preprocess_preprocess_test($arg): mixed {
+  return $arg;
+}

@@ -1,2 +1,2 @@
 parameters:
-  path.hooks_converted: true
+  path.skip_procedural_hook_scan: true

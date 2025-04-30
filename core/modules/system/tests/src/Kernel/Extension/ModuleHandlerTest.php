@@ -362,6 +362,56 @@ class ModuleHandlerTest extends KernelTestBase {
   }
 
   /**
+   * Tests procedural preprocess functions.
+   */
+  public function testProceduralPreprocess(): void {
+    $this->moduleInstaller()->install(['module_test_procedural_preprocess']);
+    $preprocess_function = [];
+    $preprocess_invoke = [];
+    $prefix = 'module_test_procedural_preprocess';
+    $hook = 'test';
+    if ($this->moduleHandler()->hasImplementations('preprocess', [$prefix], TRUE)) {
+      $function = "{$prefix}_preprocess";
+      $preprocess_function[] = $function;
+      $preprocess_invoke[$function] = ['module' => $prefix, 'hook' => 'preprocess'];
+    }
+    if ($this->moduleHandler()->hasImplementations('preprocess_' . $hook, [$prefix], TRUE)) {
+      $function = "{$prefix}_preprocess_{$hook}";
+      $preprocess_function[] = $function;
+      $preprocess_invoke[$function] = ['module' => $prefix, 'hook' => 'preprocess_' . $hook];
+    }
+
+    foreach ($preprocess_function as $function) {
+      $this->assertTrue($this->moduleHandler()->invoke(... $preprocess_invoke[$function], args: [TRUE]), 'Procedural hook_preprocess runs.');
+    }
+  }
+
+  /**
+   * Tests Oop preprocess functions.
+   */
+  public function testOopPreprocess(): void {
+    $this->moduleInstaller()->install(['module_test_oop_preprocess']);
+    $preprocess_function = [];
+    $preprocess_invoke = [];
+    $prefix = 'module_test_oop_preprocess';
+    $hook = 'test';
+    if ($this->moduleHandler()->hasImplementations('preprocess', [$prefix], TRUE)) {
+      $function = "{$prefix}_preprocess";
+      $preprocess_function[] = $function;
+      $preprocess_invoke[$function] = ['module' => $prefix, 'hook' => 'preprocess'];
+    }
+    if ($this->moduleHandler()->hasImplementations('preprocess_' . $hook, [$prefix], TRUE)) {
+      $function = "{$prefix}_preprocess_{$hook}";
+      $preprocess_function[] = $function;
+      $preprocess_invoke[$function] = ['module' => $prefix, 'hook' => 'preprocess_' . $hook];
+    }
+
+    foreach ($preprocess_function as $function) {
+      $this->assertTrue($this->moduleHandler()->invoke(... $preprocess_invoke[$function], args: [TRUE]), 'Procedural hook_preprocess runs.');
+    }
+  }
+
+  /**
    * Returns the ModuleHandler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface

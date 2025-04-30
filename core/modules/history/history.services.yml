@@ -1,2 +1,2 @@
 parameters:
-  history.hooks_converted: true
+  history.skip_procedural_hook_scan: true

@@ -5,7 +5,7 @@
  */
 
 use Drupal\Core\Extension\ExtensionVersion;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Utility\Error;
 use Drupal\update\ProjectRelease;
 use Drupal\update\UpdateFetcherInterface;
@@ -23,7 +23,7 @@ use Drupal\update\ProjectCoreCompatibility;
  *   Array of project information from
  *   \Drupal\update\UpdateManager::getProjects().
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function update_process_project_info(&$projects): void {
   foreach ($projects as $key => $project) {
     // Assume an official release until we see otherwise.

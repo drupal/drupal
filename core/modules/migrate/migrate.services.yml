@@ -1,5 +1,5 @@
 parameters:
-  migrate.hooks_converted: true
+  migrate.skip_procedural_hook_scan: true
 
 services:
   _defaults:

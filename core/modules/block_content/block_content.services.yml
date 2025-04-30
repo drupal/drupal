@@ -1,5 +1,5 @@
 parameters:
-  block_content.hooks_converted: true
+  block_content.skip_procedural_hook_scan: false
 
 services:
   _defaults:

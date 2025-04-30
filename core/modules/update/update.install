@@ -5,7 +5,7 @@
  * Install, update, and uninstall functions for the Update Status module.
  */
 
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\update\ProjectSecurityData;
@@ -74,7 +74,7 @@ function update_requirements($phase): array {
 /**
  * Implements hook_install().
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function update_install(): void {
   $queue = \Drupal::queue('update_fetch_tasks', TRUE);
   $queue->createQueue();

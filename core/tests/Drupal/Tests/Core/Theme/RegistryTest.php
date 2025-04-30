@@ -157,19 +157,21 @@ class RegistryTest extends UnitTestCase {
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
     include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
     $themeTestTheme = new ThemeTestHooks();
-    $this->moduleHandler->expects($this->atLeastOnce())
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('invoke')
       ->with('theme_test', 'theme')
       ->willReturn($themeTestTheme->theme(NULL, NULL, NULL, NULL));
-    $this->moduleHandler->expects($this->atLeastOnce())
+    $this->moduleHandler->expects($this->atMost(50))
       ->method('invokeAllWith')
-      ->with('theme')
-      ->willReturnCallback(function (string $hook, callable $callback) {
-        $callback(function () {}, 'theme_test');
-      });
-    $this->moduleHandler->expects($this->atLeastOnce())
+      // $callback is documented on ModuleHandlerInterface::invokeAllWith().
+      // The first argument expects a callable, but it doesn't matter what it
+      // is, use pi() as a canary in case code changes, and it begins to use it.
+      // The second argument is the module name and for that theme_test is
+      // always correct here.
+      ->willReturnCallback(fn (string $hook, callable $callback) => $callback('pi', 'theme_test'));
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('getModuleList')
-      ->willReturn([]);
+      ->willReturn(['theme_test' => NULL]);
     $this->moduleList->expects($this->exactly(2))
       ->method('getPath')
       ->with('theme_test')

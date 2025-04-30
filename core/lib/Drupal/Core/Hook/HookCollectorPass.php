@@ -14,7 +14,7 @@ use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
 use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\ReorderHook;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Hook\OrderOperation\OrderOperation;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -97,6 +97,16 @@ class HookCollectorPass implements CompilerPassInterface {
   private array $hookInfo = [];
 
   /**
+   * Preprocess suggestions discovered in modules.
+   *
+   * These are stored to prevent adding preprocess suggestions to the invoke map
+   * that are not discovered in modules.
+   *
+   * @var array<string, true>
+   */
+  protected array $preprocessForSuggestions;
+
+  /**
    * Include files, keyed by the $group part of "/$module.$group.inc".
    *
    * @var array<string, list<string>>
@@ -122,7 +132,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $parameters = $container->getParameterBag()->all();
     $skip_procedural_modules = array_filter(
       array_keys($module_list),
-      static fn (string $module) => !empty($parameters["$module.hooks_converted"]),
+      static fn (string $module) => !empty($parameters["$module.skip_procedural_hook_scan"]),
     );
     $collector = static::collectAllHookImplementations($module_list, $skip_procedural_modules);
 
@@ -154,6 +164,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $implementationsByHook = $this->calculateImplementations();
 
     static::writeImplementationsToContainer($container, $implementationsByHook);
+    $container->setParameter('preprocess_for_suggestions', $this->preprocessForSuggestions ?? []);
 
     // Update the module handler definition.
     $definition = $container->getDefinition('module_handler');
@@ -228,6 +239,9 @@ class HookCollectorPass implements CompilerPassInterface {
         $alter($moduleImplements, $hook);
       }
       foreach ($moduleImplements as $module => $v) {
+        if (is_string($hook) && str_starts_with($hook, 'preprocess_') && str_contains($hook, '__')) {
+          $this->preprocessForSuggestions[$module . '_' . $hook] = TRUE;
+        }
         foreach (array_keys($implementationsByHookOrig[$hook], $module, TRUE) as $identifier) {
           $implementationsByHook[$hook][$identifier] = $module;
         }
@@ -354,7 +368,7 @@ class HookCollectorPass implements CompilerPassInterface {
       static fn ($x) => preg_quote($x, '/'),
       $modules_by_length,
     ));
-    $module_preg = '/^(?<function>(?<module>' . $known_modules_pattern . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
+    $module_preg = '/^(?<function>(?<module>' . $known_modules_pattern . ')_(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static($modules);
     foreach ($module_list as $module => $info) {
       $skip_procedural = in_array($module, $skipProceduralModules);
@@ -441,7 +455,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $parser = new StaticReflectionParser('', $finder);
           $implementations = [];
           foreach ($parser->getMethodAttributes() as $function => $attributes) {
-            if (StaticReflectionParser::hasAttribute($attributes, StopProceduralHookScan::class)) {
+            if (StaticReflectionParser::hasAttribute($attributes, ProceduralHookScanStop::class)) {
               break;
             }
             if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches) && !StaticReflectionParser::hasAttribute($attributes, LegacyModuleImplementsAlter::class)) {
@@ -572,7 +586,7 @@ class HookCollectorPass implements CompilerPassInterface {
       'install_tasks_alter',
     ];
 
-    if (in_array($hookAttribute->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|update_\d+$)/', $hookAttribute->hook)) {
+    if (in_array($hookAttribute->hook, $staticDenyHooks) || preg_match('/^(post_update_|update_\d+$)/', $hookAttribute->hook)) {
       throw new \LogicException("The hook $hookAttribute->hook on class $class does not support attributes and must remain procedural.");
     }
   }

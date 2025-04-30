@@ -1,2 +1,2 @@
 parameters:
-  text.hooks_converted: true
+  text.skip_procedural_hook_scan: true

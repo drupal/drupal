@@ -1,5 +1,5 @@
 parameters:
-  migrate_drupal_ui.hooks_converted: true
+  migrate_drupal_ui.skip_procedural_hook_scan: true
 
 services:
   _defaults:

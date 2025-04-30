@@ -5,7 +5,7 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Updater\UpdaterException;
 use Drupal\Core\Url;
 
@@ -31,7 +31,7 @@ use Drupal\Core\Url;
  *   an instance of \Symfony\Component\HttpFoundation\Response the calling code
  *   should use that response for the current page request.
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function update_authorize_run_update($filetransfer, $projects) {
   @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 

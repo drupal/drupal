@@ -111,15 +111,6 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block templates.
- */
-function comment_preprocess_block(&$variables): void {
-  if ($variables['configuration']['provider'] == 'comment') {
-    $variables['attributes']['role'] = 'navigation';
-  }
-}
-
-/**
  * Prepares variables for comment templates.
  *
  * By default this function performs special preprocessing of some base fields

@@ -1,5 +1,5 @@
 parameters:
-  dynamic_page_cache.hooks_converted: true
+  dynamic_page_cache.skip_procedural_hook_scan: true
 
 services:
   _defaults:

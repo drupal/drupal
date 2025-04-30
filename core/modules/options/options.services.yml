@@ -1,2 +1,2 @@
 parameters:
-  options.hooks_converted: true
+  options.skip_procedural_hook_scan: true

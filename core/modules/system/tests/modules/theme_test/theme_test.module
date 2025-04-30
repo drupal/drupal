@@ -32,13 +32,6 @@ function theme_test_preprocess_theme_test_preprocess_suggestions(&$variables): v
 }
 
 /**
- * Tests a module overriding a default hook with a suggestion.
- */
-function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$variables): void {
-  $variables['foo'] = 'Monkey';
-}
-
-/**
  * Prepares variables for test render element templates.
  *
  * Default template: theme-test-render-element.html.twig.
