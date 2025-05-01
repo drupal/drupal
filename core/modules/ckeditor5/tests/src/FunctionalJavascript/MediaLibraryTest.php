@@ -62,6 +62,10 @@ class MediaLibraryTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    if ($this->name() === 'testButton') {
+      $this->markTestSkipped('Skipped due to frequent random test failures. See https://www.drupal.org/i/3351597');
+    }
+
     parent::setUp();
 
     FilterFormat::create([
@@ -156,9 +160,6 @@ class MediaLibraryTest extends WebDriverTestBase {
    * Tests using drupalMedia button to embed media into CKEditor 5.
    */
   public function testButton(): void {
-    // Skipped due to frequent random test failures.
-    // @todo Fix this and stop skipping it at https://www.drupal.org/i/3351597.
-    $this->markTestSkipped();
     $media_preview_selector = '.ck-content .ck-widget.drupal-media .media';
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();

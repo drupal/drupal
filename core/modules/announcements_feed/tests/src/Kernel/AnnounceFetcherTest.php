@@ -17,6 +17,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
     parent::setUp();
     $this->installConfig(['announcements_feed']);
   }
@@ -31,7 +32,6 @@ class AnnounceFetcherTest extends AnnounceTestBase {
    * @dataProvider providerShowAnnouncements
    */
   public function testShowAnnouncements(array $feed_item): void {
-    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
     $this->setFeedItems([$feed_item]);
     $feeds = $this->fetchFeedItems();
     $this->assertCount(1, $feeds);
@@ -45,7 +45,6 @@ class AnnounceFetcherTest extends AnnounceTestBase {
    * Tests feed fields.
    */
   public function testFeedFields(): void {
-    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
     $feed_item_1 = [
       'id' => '1001',
       'content_html' => 'Test teaser 1',

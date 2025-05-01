@@ -39,6 +39,10 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    if ($this->name() === 'testNoRefreshInterval') {
+      $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3400150");
+    }
+
     parent::setUp();
 
     FieldStorageConfig::create([
@@ -138,7 +142,6 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
    * Tests the 'timestamp' formatter without refresh interval.
    */
   public function testNoRefreshInterval(): void {
-    $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3400150");
     // Set the refresh interval to zero, meaning "no refresh".
     $display = EntityViewDisplay::load('entity_test.entity_test.default');
     $component = $display->getComponent('time_field');

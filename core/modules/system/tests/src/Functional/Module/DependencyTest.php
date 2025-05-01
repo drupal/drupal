@@ -20,6 +20,16 @@ class DependencyTest extends ModuleTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    if ($this->name() === 'testCoreCompatibility') {
+      $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
+    }
+    parent::setUp();
+  }
+
+  /**
    * Checks functionality of project namespaces for dependencies.
    */
   public function testProjectNamespaceForDependencies(): void {
@@ -173,7 +183,6 @@ class DependencyTest extends ModuleTestBase {
    * Tests enabling modules with different core version specifications.
    */
   public function testCoreCompatibility(): void {
-    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
     $assert_session = $this->assertSession();
 
     // Test incompatible 'core_version_requirement'.
