@@ -45,6 +45,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
       'd6_filter_format',
       'block_content_type',
       'block_content_body_field',
+      'd6_menu',
       'd6_custom_block',
       'd6_user_role',
       'd6_block',

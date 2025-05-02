@@ -311,7 +311,11 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($label);
 
     // Enable the block.
-    $block = $this->drupalPlaceBlock('system_menu_block:' . $menu_name);
+    $block = $this->drupalPlaceBlock('system_menu_block:' . $menu_name, [
+      'level' => 1,
+      'depth' => NULL,
+      'expand_all_items' => FALSE,
+    ]);
     $this->blockPlacements[$menu_name] = $block->id();
     return Menu::load($menu_name);
   }
@@ -1184,7 +1188,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertEquals(3, $settings['depth']);
     $this->assertEquals(2, $settings['level']);
     // Reset settings.
-    $block->getPlugin()->setConfigurationValue('depth', 0);
+    $block->getPlugin()->setConfigurationValue('depth', NULL);
     $block->getPlugin()->setConfigurationValue('level', 1);
     $block->save();
   }

@@ -243,13 +243,13 @@ class SystemMenuBlockTest extends KernelTestBase {
 
     // All the different block instances we're going to test.
     $blocks = [
-      'all' => $place_block(1, 0),
+      'all' => $place_block(1, NULL),
       'level_1_only' => $place_block(1, 1),
       'level_2_only' => $place_block(2, 1),
       'level_3_only' => $place_block(3, 1),
-      'level_1_and_beyond' => $place_block(1, 0),
-      'level_2_and_beyond' => $place_block(2, 0),
-      'level_3_and_beyond' => $place_block(3, 0),
+      'level_1_and_beyond' => $place_block(1, NULL),
+      'level_2_and_beyond' => $place_block(2, NULL),
+      'level_3_and_beyond' => $place_block(3, NULL),
     ];
 
     // Scenario 1: test all block instances when there's no active trail.
@@ -346,7 +346,7 @@ class SystemMenuBlockTest extends KernelTestBase {
       'id' => 'machine_name',
       'theme' => 'stark',
       'level' => $menu_block_level,
-      'depth' => 0,
+      'depth' => NULL,
       'expand_all_items' => TRUE,
     ]);
 

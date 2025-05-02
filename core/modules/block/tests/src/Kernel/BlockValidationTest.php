@@ -180,4 +180,92 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Data provider for ::testMenuBlockLevelAndDepth().
+   */
+  public static function providerMenuBlockLevelAndDepth(): iterable {
+    yield 'OK: entire tree from first level' => [0, NULL, []];
+
+    yield 'OK: entire tree from third level' => [2, NULL, []];
+
+    yield 'OK: first three levels' => [0, 3, []];
+
+    yield 'INVALID: level is less than 0' => [
+      -2,
+      NULL,
+      [
+        'settings.level' => 'This value should be between <em class="placeholder">0</em> and <em class="placeholder">9</em>.',
+      ],
+    ];
+
+    yield 'INVALID: level is greater than 9' => [
+      11,
+      NULL,
+      [
+        'settings.level' => 'This value should be between <em class="placeholder">0</em> and <em class="placeholder">9</em>.',
+      ],
+    ];
+
+    yield 'INVALID: depth too high' => [
+      0,
+      12,
+      [
+        'settings.depth' => 'This value should be between <em class="placeholder">1</em> and <em class="placeholder">9</em>.',
+      ],
+    ];
+
+    yield 'INVALID: depth too low' => [
+      0,
+      0,
+      [
+        'settings.depth' => 'This value should be between <em class="placeholder">1</em> and <em class="placeholder">9</em>.',
+      ],
+    ];
+
+    yield 'INVALID: start at third level, depth too high' => [
+      2,
+      9,
+      [
+        'settings.depth' => 'This value should be between <em class="placeholder">1</em> and <em class="placeholder">7</em>.',
+      ],
+    ];
+
+    yield 'OK: deepest level only' => [9, 1, []];
+
+    yield 'INVALID: start at deepest level, depth too high' => [
+      9,
+      2,
+      [
+        'settings.depth' => 'This value should be between <em class="placeholder">1</em> and <em class="placeholder">1</em>.',
+      ],
+    ];
+  }
+
+  /**
+   * Tests validating menu block `level` and `depth` settings.
+   *
+   * @dataProvider providerMenuBlockLevelAndDepth
+   */
+  public function testMenuBlockLevelAndDepth(int $level, ?int $depth, array $expected_errors): void {
+    $this->installConfig('system');
+
+    $this->entity = Block::create([
+      'id' => 'account_menu',
+      'theme' => 'stark',
+      'plugin' => 'system_menu_block:account',
+      'settings' => [
+        'id' => 'system_menu_block:account',
+        'label' => 'Account Menu',
+        'label_display' => FALSE,
+        'provider' => 'system',
+        'level' => $level,
+        'depth' => $depth,
+        'expand_all_items' => FALSE,
+      ],
+      'region' => 'content',
+    ]);
+
+    $this->assertValidationErrors($expected_errors);
+  }
+
 }

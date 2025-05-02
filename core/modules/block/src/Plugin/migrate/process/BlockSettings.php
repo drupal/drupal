@@ -2,11 +2,14 @@
 
 namespace Drupal\block\Plugin\migrate\process;
 
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore whois
 
@@ -14,7 +17,36 @@ use Drupal\migrate\Row;
  * Determines the block settings.
  */
 #[MigrateProcess('block_settings')]
-class BlockSettings extends ProcessPluginBase {
+class BlockSettings extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The block manager service.
+   *
+   * @var \Drupal\Core\Block\BlockManagerInterface
+   */
+  protected readonly BlockManagerInterface $blockManager;
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ?BlockManagerInterface $blockManager = NULL) {
+    if (empty($blockManager)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $blockManager parameter is deprecated in drupal:11.2.0 and must be provided in drupal:12.0.0. See https://www.drupal.org/node/3522023', E_USER_DEPRECATED);
+      $blockManager = \Drupal::service(BlockManagerInterface::class);
+    }
+    $this->blockManager = $blockManager;
+
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get(BlockManagerInterface::class),
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -61,6 +93,11 @@ class BlockSettings extends ProcessPluginBase {
         $settings['items_per_page'] = $old_settings['user']['max_list_count'];
         break;
     }
+
+    // Let the block plugin fill in any missing settings.
+    $settings = $this->blockManager->createInstance($plugin, $settings)
+      ->getConfiguration();
+
     return $settings;
   }
 

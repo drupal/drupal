@@ -448,13 +448,23 @@ block.settings.system_branding_block:
 block.settings.system_menu_block:*:
   type: block_settings
   label: 'Menu block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     level:
       type: integer
       label: 'Starting level'
+      constraints:
+        MenuLinkDepth:
+          min: 0
     depth:
       type: integer
       label: 'Maximum number of levels'
+      nullable: true
+      constraints:
+        MenuLinkDepth:
+          baseLevel: '[%parent.level]'
+          min: 1
     expand_all_items:
       type: boolean
       label: 'Expand all items'

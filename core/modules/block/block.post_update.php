@@ -34,3 +34,22 @@ function block_post_update_make_weight_integer(array &$sandbox = []): void {
       return FALSE;
     });
 }
+
+/**
+ * Updates the `depth` setting to NULL if it is 0 in any menu blocks.
+ */
+function block_post_update_set_menu_block_depth_to_null_if_zero(array &$sandbox = []): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'block', function (BlockInterface $block): bool {
+      if ($block->getPlugin()->getBaseId() === 'system_menu_block') {
+        $settings = $block->get('settings');
+        // Use `empty()` to account for either integer 0, or '0'.
+        if (empty($settings['depth'])) {
+          $settings['depth'] = NULL;
+        }
+        $block->set('settings', $settings);
+        return TRUE;
+      }
+      return FALSE;
+    });
+}
