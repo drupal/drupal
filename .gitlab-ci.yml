@@ -281,7 +281,7 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8.4"
 
-'PHP 8.4 MySQL 9.2':
+'PHP 8.4 MySQL 9.3':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.4-ubuntu"
