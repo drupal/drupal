@@ -1315,8 +1315,8 @@ abstract class Connection {
    * @param string $url
    *   The URL.
    * @param string $root
-   *   The root directory of the Drupal installation. Some database drivers,
-   *   like for example SQLite, need this information.
+   *   (deprecated) The root directory of the Drupal installation. Some
+   *   database drivers, like for example SQLite, need this information.
    *
    * @return array
    *   The connection options.
@@ -1332,6 +1332,10 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Database::convertDbUrlToConnectionInfo()
    */
   public static function createConnectionOptionsFromUrl($url, $root) {
+    if ($root !== NULL) {
+      @trigger_error("Passing the \$root value to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3511287", E_USER_DEPRECATED);
+    }
+
     $url_components = parse_url($url);
     if (!isset($url_components['scheme'], $url_components['host'], $url_components['path'])) {
       throw new \InvalidArgumentException("The database connection URL '$url' is invalid. The minimum requirement is: 'driver://host/database'");
