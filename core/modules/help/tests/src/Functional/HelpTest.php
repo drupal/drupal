@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\help\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -99,7 +98,7 @@ class HelpTest extends BrowserTestBase {
 
     // Make sure links are properly added for modules implementing hook_help().
     foreach ($this->getModuleList() as $module => $name) {
-      $this->assertSession()->linkExists($name, 0, new FormattableMarkup('Link properly added to @name (admin/help/@module)', ['@module' => $module, '@name' => $name]));
+      $this->assertSession()->linkExists($name, 0, "Link properly added to $name (admin/help/$module)");
     }
 
     // Ensure a module which does not provide a module overview page is handled
