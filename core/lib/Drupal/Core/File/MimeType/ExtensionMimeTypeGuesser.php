@@ -949,21 +949,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    * {@inheritdoc}
    */
   public function guessMimeType($path): ?string {
-    if (!isset($this->fileSystem)) {
-      @trigger_error(
-        'Calling ' . __METHOD__ . '() without the file_system service already injected is deprecated in drupal:11.2.0 and throws an exception in drupal:12.0.0. See https://www.drupal.org/node/3494040',
-        E_USER_DEPRECATED
-      );
-      $this->fileSystem = \Drupal::service(FileSystemInterface::class);
-    }
-    if (!isset($this->map)) {
-      @trigger_error(
-        'Calling ' . __METHOD__ . '() without the MimeTypeMapInterface service already injected is deprecated in drupal:11.2.0 and throws an exception in drupal:12.0.0. See https://www.drupal.org/node/3494040',
-        E_USER_DEPRECATED
-      );
-      $this->map = \Drupal::service(MimeTypeMapInterface::class);
-    }
-
     $extension = '';
     $file_parts = explode('.', $this->fileSystem->basename($path));
 
