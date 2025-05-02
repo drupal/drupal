@@ -33,7 +33,7 @@
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_length" option is deprecated and will be ignored in Symfony 8.0.%
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_bits_per_character" option is deprecated and will be ignored in Symfony 8.0.%
 
-# PHPUnit 12.
+# Drupal 12.
 %The "Drupal\\Core\\Database\\Query\\Select::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 %The "Drupal\\Core\\Database\\Query\\Select::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 %The "Drupal\\Core\\Database\\Query\\SelectExtender::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
