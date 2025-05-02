@@ -36,4 +36,20 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertNotNull(\Drupal::service('module_handler')->getName('module_test'));
   }
 
+  /**
+   * Tests that resetImplementations clears the invokeMap memory cache.
+   *
+   * @covers ::resetImplementations
+   */
+  public function testResetImplementationsClearsInvokeMap(): void {
+    /** @var \Drupal\Core\Extension\ModuleInstallerInterface $moduleInstaller */
+    $moduleInstaller = \Drupal::service('module_installer');
+    $moduleInstaller->install(['module_test']);
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler */
+    $moduleHandler = \Drupal::service('module_handler');
+    $this->assertTrue($moduleHandler->hasImplementations('system_info_alter'));
+    $moduleInstaller->uninstall(['module_test']);
+    $this->assertFalse($moduleHandler->hasImplementations('system_info_alter'));
+  }
+
 }
