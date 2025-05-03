@@ -333,7 +333,6 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function resetImplementations() {
     $this->alterEventListeners = [];
-    $this->invokeMap = [];
   }
 
   /**
