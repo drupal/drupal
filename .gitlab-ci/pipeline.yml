@@ -83,7 +83,7 @@ variables:
     - chromedriver
     - "--no-sandbox"
     - "--log-path=/builds/chromedriver.log"
-    - "--whitelisted-ips="
+    - "--allowed-ips="
     - "--allowed-origins=*"
 
 .with-selenium-chrome: &with-selenium-chrome

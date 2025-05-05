@@ -260,6 +260,8 @@ class AliasManager implements AliasManagerInterface {
    *  Use \Drupal\path_alias\AliasManager::pathAliasPrefixListRebuild instead.
    *
    * @see https://www.drupal.org/node/3467559
+   *
+   * cspell:ignore whitelist
    */
   protected function pathAliasWhitelistRebuild($path = NULL) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\path_alias\AliasManager::pathAliasPrefixListRebuild() instead. See https://www.drupal.org/node/3467559', E_USER_DEPRECATED);

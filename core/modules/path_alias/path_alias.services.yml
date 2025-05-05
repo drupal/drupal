@@ -20,6 +20,7 @@ services:
     tags:
       - { name: backend_overridable }
   Drupal\path_alias\AliasRepositoryInterface: '@path_alias.repository'
+  # cspell:ignore whitelist
   path_alias.whitelist:
     class: Drupal\path_alias\AliasWhitelist
     tags:

@@ -2,6 +2,8 @@
 
 namespace Drupal\path_alias;
 
+// cspell:ignore whitelist
+
 /**
  * Cache a list of valid alias prefixes.
  *

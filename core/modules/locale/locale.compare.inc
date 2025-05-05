@@ -99,15 +99,15 @@ function locale_translation_project_list() {
   if (empty($projects)) {
     $projects = [];
 
-    $additional_whitelist = [
+    $additional_allow_list = [
       'interface translation project',
       'interface translation server pattern',
     ];
     $module_data = _locale_translation_prepare_project_list(\Drupal::service('extension.list.module')->getList(), 'module');
     $theme_data = _locale_translation_prepare_project_list(\Drupal::service('extension.list.theme')->reset()->getList(), 'theme');
     $project_info = new ProjectInfo();
-    $project_info->processInfoList($projects, $module_data, 'module', TRUE, $additional_whitelist);
-    $project_info->processInfoList($projects, $theme_data, 'theme', TRUE, $additional_whitelist);
+    $project_info->processInfoList($projects, $module_data, 'module', TRUE, $additional_allow_list);
+    $project_info->processInfoList($projects, $theme_data, 'theme', TRUE, $additional_allow_list);
 
     // Allow other modules to alter projects before fetching and comparing.
     \Drupal::moduleHandler()->alter('locale_translation_projects', $projects);

@@ -66,12 +66,16 @@
       }
      ],
     "flagWords": [
+      "blacklist",
+      "blacklisted",
       "e-mail",
       "grey",
       "hte",
       "ist",
       "please",
       "queuing",
+      "whitelist",
+      "whitelisted",
       "writeable"
     ],
     "overrides": [

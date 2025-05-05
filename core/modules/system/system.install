@@ -478,7 +478,7 @@ function system_requirements($phase): array {
         '%exception_message' => $e->getMessage(),
       ];
       if ($open_basedir_blocks_urandom) {
-        $requirements['php_random_bytes']['description'] = t('Drupal is unable to generate highly randomized numbers, which means certain security features like password reset URLs are not as secure as they should be. Instead, only a slow, less-secure fallback generator is available. The most likely cause is that open_basedir restrictions are in effect and /dev/urandom is not on the whitelist. See the <a href=":drupal-php">system requirements</a> page for more information. %exception_message', $args);
+        $requirements['php_random_bytes']['description'] = t('Drupal is unable to generate highly randomized numbers, which means certain security features like password reset URLs are not as secure as they should be. Instead, only a slow, less-secure fallback generator is available. The most likely cause is that open_basedir restrictions are in effect and /dev/urandom is not on the allowed list. See the <a href=":drupal-php">system requirements</a> page for more information. %exception_message', $args);
       }
       else {
         $requirements['php_random_bytes']['description'] = t('Drupal is unable to generate highly randomized numbers, which means certain security features like password reset URLs are not as secure as they should be. Instead, only a slow, less-secure fallback generator is available. See the <a href=":drupal-php">system requirements</a> page for more information. %exception_message', $args);

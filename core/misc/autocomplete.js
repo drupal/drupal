@@ -211,6 +211,7 @@
       once('autocomplete', 'input.form-autocomplete', context).forEach(
         (element) => {
           const $autocomplete = $(element);
+          // cspell:ignore blacklist
           // Allow options to be overridden per instance.
           const blacklist = $autocomplete.attr(
             'data-autocomplete-first-character-blacklist',
