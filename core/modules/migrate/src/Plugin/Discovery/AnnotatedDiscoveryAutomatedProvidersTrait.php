@@ -11,7 +11,7 @@ use Drupal\migrate\Annotation\MultipleProviderAnnotationInterface;
  *
  * @internal
  *   This trait is a temporary solution until annotation discovery is removed.
- *   @see https://www.drupal.org/project/drupal/issues/3265945
+ *   @see https://www.drupal.org/project/drupal/issues/3521472
  */
 trait AnnotatedDiscoveryAutomatedProvidersTrait {
 

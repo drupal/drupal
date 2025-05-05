@@ -88,12 +88,16 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
     $parser = new StaticReflectionParser($class, $finder, TRUE);
 
     $reflection_class = $parser->getReflectionClass();
-    // @todo Handle deprecating definitions discovery via annotations in
-    // https://www.drupal.org/project/drupal/issues/3265945.
     /** @var \Drupal\Component\Annotation\AnnotationInterface $annotation */
     if ($annotation = $this->getAnnotationReader()->getClassAnnotation($reflection_class, $this->pluginDefinitionAnnotationName)) {
       $this->prepareAnnotationDefinition($annotation, $class);
-      return ['id' => $annotation->getId(), 'content' => $annotation->get()];
+
+      $id = $annotation->getId();
+      $shortened_annotation_name = '@' . substr($this->pluginDefinitionAnnotationName, strrpos($this->pluginDefinitionAnnotationName, '\\') + 1);
+      // phpcs:ignore
+      @trigger_error(sprintf('Using %s annotation for plugin with ID %s is deprecated and is removed from drupal:13.0.0. Use a %s attribute instead. See https://www.drupal.org/node/3395575', $shortened_annotation_name, $id, $this->pluginDefinitionAttributeName), E_USER_DEPRECATED);
+
+      return ['id' => $id, 'content' => $annotation->get()];
     }
 
     return ['id' => NULL, 'content' => NULL];
