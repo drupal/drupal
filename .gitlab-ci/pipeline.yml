@@ -1,4 +1,4 @@
-# cspell:ignore drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB
+# cspell:ignore drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB fastzip
 
 stages:
   - 🗜️ Test
@@ -58,6 +58,7 @@ default:
 
 variables:
   FF_NETWORK_PER_BUILD: 1
+  FF_USE_FASTZIP: 1
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
   DB_DRIVER: mysql
   MYSQL_ROOT_PASSWORD: root
