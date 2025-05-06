@@ -39,7 +39,7 @@ class ExtensionNameConstraintTest extends KernelTestBase {
     $data->setValue('invalid-name');
     $violations = $data->validate();
     $this->assertCount(1, $violations);
-    $this->assertSame('This value is not valid.', (string) $violations->get(0)->getMessage());
+    $this->assertSame('This value is not a valid extension name.', (string) $violations->get(0)->getMessage());
   }
 
 }

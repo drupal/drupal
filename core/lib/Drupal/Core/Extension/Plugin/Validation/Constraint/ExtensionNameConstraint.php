@@ -19,6 +19,13 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
 class ExtensionNameConstraint extends RegexConstraint {
 
   /**
+   * The default violation message.
+   *
+   * @var string
+   */
+  public string $message = 'This value is not a valid extension name.';
+
+  /**
    * Constructs an ExtensionNameConstraint object.
    *
    * @param string|array|null $pattern
