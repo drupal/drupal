@@ -4,7 +4,6 @@
   "$defs": {
     "slotDefinition": {
       "type": "object",
-      "additionalProperties": false,
       "patternProperties": {
         "^[a-zA-Z0-9_-]+$": {
           "type": "object",
