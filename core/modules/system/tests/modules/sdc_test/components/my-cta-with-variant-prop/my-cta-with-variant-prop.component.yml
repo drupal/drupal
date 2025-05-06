@@ -1,5 +1,5 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
-name: Call to Action
+name: Call to Action With Existing Variant Prop
 description: Call to action link.
 props:
   type: object
@@ -23,16 +23,13 @@ props:
       enum:
         - ''
         - _blank
+    variant:
+      type: string
+      title: Variant Prop
+      enum:
+        - primary
+        - secondary
+        - tertiary
     attributes:
       type: Drupal\Core\Template\Attribute
       name: Attributes
-variants:
-  primary:
-    title: Primary
-    description: My primary variant
-  secondary:
-    title: Secondary
-    description: My secondary variant
-  tertiary:
-    title: Tertiary
-    description: My tertiary variant

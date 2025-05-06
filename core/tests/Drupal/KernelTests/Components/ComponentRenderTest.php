@@ -96,7 +96,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     $build = [
       '#type' => 'inline_template',
       '#context' => ['content' => $content],
-      '#template' => "{% embed 'sdc_theme_test:my-card' with { header: 'Card header', content: content } only %}{% block card_body %}This is a card with a CTA {{ include('sdc_test:my-cta', { text: content.heading, href: 'https://www.example.org', target: '_blank' }, with_context = false) }}{% endblock %}{% endembed %}",
+      '#template' => "{% embed 'sdc_theme_test:my-card' with { variant: 'horizontal', header: 'Card header', content: content } only %}{% block card_body %}This is a card with a CTA {{ include('sdc_test:my-cta', { text: content.heading, href: 'https://www.example.org', target: '_blank' }, with_context = false) }}{% endblock %}{% endembed %}",
     ];
     $crawler = $this->renderComponentRenderArray($build);
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"] h2.component--my-card__header:contains("Card header")'));
@@ -350,6 +350,36 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $crawler->filter('#sdc-wrapper')->innerText(),
       'This is a test string.'
     );
+  }
+
+  /**
+   * Ensure that components variants render.
+   */
+  public function testVariants(): void {
+    $build = [
+      '#type' => 'component',
+      '#component' => 'sdc_test:my-cta',
+      '#variant' => 'primary',
+      '#props' => [
+        'text' => 'Test link',
+      ],
+    ];
+    $crawler = $this->renderComponentRenderArray($build);
+    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta"][data-component-variant="primary"][class*="my-cta-primary"]'));
+
+    // If there were an existing prop named variant, we don't override that for BC reasons.
+    $build = [
+      '#type' => 'component',
+      '#component' => 'sdc_test:my-cta-with-variant-prop',
+      '#variant' => 'tertiary',
+      '#props' => [
+        'text' => 'Test link',
+        'variant' => 'secondary',
+      ],
+    ];
+    $crawler = $this->renderComponentRenderArray($build);
+    $this->assertEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="tertiary"]'));
+    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="secondary"]'));
   }
 
   /**

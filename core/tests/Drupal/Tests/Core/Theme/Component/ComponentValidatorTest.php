@@ -123,6 +123,50 @@ class ComponentValidatorTest extends TestCase {
       ],
     ];
     yield 'invalid slot (type)' => [$cta_with_invalid_slot_type];
+
+    $cta_with_invalid_variant_title_type = $valid_cta;
+    $cta_with_invalid_variant_title_type['variants'] = [
+      'valid_variant' => [
+        'title' => 'Valid variant',
+        'description' => 'Valid variant description',
+      ],
+      'invalid_variant' => [
+        'title' => [
+          'hello' => 'Invalid variant',
+          'world' => 'Invalid variant',
+        ],
+        'description' => 'Title must be string',
+      ],
+    ];
+    yield 'invalid variant title (type)' => [$cta_with_invalid_variant_title_type];
+
+    $cta_with_missing_variant_title_type = $valid_cta;
+    $cta_with_missing_variant_title_type['variants'] = [
+      'valid_variant' => [
+        'title' => 'Valid variant',
+        'description' => 'Valid variant description',
+      ],
+      'invalid_variant' => [
+        'description' => 'Title is required',
+      ],
+    ];
+    yield 'invalid variant title (missing title)' => [$cta_with_missing_variant_title_type];
+
+    $cta_with_invalid_variant_description_type = $valid_cta;
+    $cta_with_invalid_variant_description_type['variants'] = [
+      'valid_variant' => [
+        'title' => 'Valid variant',
+        'description' => 'Valid variant description',
+      ],
+      'invalid_variant' => [
+        'title' => 'Invalid variant',
+        'description' => [
+          'this' => 'Description must be',
+          'that' => 'a string',
+        ],
+      ],
+    ];
+    yield 'invalid variant description (type)' => [$cta_with_invalid_variant_description_type];
   }
 
   /**

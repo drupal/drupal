@@ -1,6 +1,11 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
 name: Card
 status: experimental
+variants:
+  horizontal:
+    title: Horizontal
+  vertical:
+    title: Vertical
 props:
   type: object
   required:

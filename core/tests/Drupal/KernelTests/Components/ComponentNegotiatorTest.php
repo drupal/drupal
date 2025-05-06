@@ -72,6 +72,7 @@ class ComponentNegotiatorTest extends ComponentKernelTestBase {
       '#type' => 'inline_template',
       '#template' => "{{ include('sdc_theme_test:my-card') }}",
       '#context' => ['header' => 'Foo bar'],
+      '#variant' => 'horizontal',
     ];
     $crawler = $this->renderComponentRenderArray($build);
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper .component--my-card--replaced__body'));
