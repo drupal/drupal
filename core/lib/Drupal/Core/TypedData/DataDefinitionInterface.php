@@ -14,7 +14,7 @@ namespace Drupal\Core\TypedData;
  * properties can be retrieved from the definition.
  *
  * @see \Drupal\Core\TypedData\DataDefinition
- * @see \Drupal\Core\TypedData\ListDefinitionInterface
+ * @see \Drupal\Core\TypedData\ListDataDefinitionInterface
  * @see \Drupal\Core\TypedData\ComplexDataDefinitionInterface
  * @see \Drupal\Core\TypedData\DataReferenceDefinitionInterface
  * @see \Drupal\Core\TypedData\TypedDataInterface
@@ -81,7 +81,7 @@ interface DataDefinitionInterface {
    * Returns whether the data is multi-valued, i.e. a list of data items.
    *
    * This is equivalent to checking whether the data definition implements the
-   * \Drupal\Core\TypedData\ListDefinitionInterface interface.
+   * \Drupal\Core\TypedData\ListDataDefinitionInterface interface.
    *
    * @return bool
    *   Whether the data is multi-valued.
