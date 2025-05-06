@@ -62,8 +62,6 @@ final class ComposerPluginsValidator implements EventSubscriberInterface {
    *   for those plugins that this validator explicitly supports.
    */
   private const SUPPORTED_PLUGINS_THAT_DO_MODIFY = [
-    // @see \Drupal\package_manager\Validator\ComposerPatchesValidator
-    'cweagans/composer-patches' => '^1.7.3 || ^2',
     // @see \Drupal\package_manager\PathExcluder\VendorHardeningExcluder
     'drupal/core-vendor-hardening' => '*',
     'php-http/discovery' => '*',

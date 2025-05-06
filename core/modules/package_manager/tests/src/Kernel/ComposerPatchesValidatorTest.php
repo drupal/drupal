@@ -28,6 +28,20 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
   const REQUIRE_PACKAGE_INDIRECTLY = 8;
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // The composer-patches plugin is not allowed by default.
+    $this->config('package_manager.settings')
+      ->set('additional_trusted_composer_plugins', [
+        'cweagans/composer-patches',
+      ])
+      ->save();
+  }
+
+  /**
    * Data provider for testErrorDuringPreCreate().
    *
    * @return mixed[][]
