@@ -96,6 +96,7 @@ use Drupal\Core\Hook\Order\OrderInterface;
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class Hook implements HookAttributeInterface {
+
   /**
    * The hook prefix such as `form`.
    *
