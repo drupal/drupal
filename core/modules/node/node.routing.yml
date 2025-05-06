@@ -45,6 +45,7 @@ entity.node.preview:
   requirements:
     _node_preview_access: '{node_preview}'
   options:
+    no_cache: TRUE
     parameters:
       node_preview:
         type: 'node_preview'

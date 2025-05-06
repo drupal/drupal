@@ -53,6 +53,8 @@ image.style_private:
     required_derivative_scheme: 'private'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: TRUE
 
 image.effect_add_form:
   path: '/admin/config/media/image-styles/manage/{image_style}/add/{image_effect}'
