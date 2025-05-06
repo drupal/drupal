@@ -24,4 +24,14 @@ class WorkspacesTestHooks {
     }
   }
 
+  /**
+   * Implements hook_ENTITY_TYPE_translation_create() for 'entity_test_mulrevpub'.
+   */
+  #[Hook('entity_test_mulrevpub_translation_create')]
+  public function entityTranslationCreate(): void {
+    /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
+    $workspace_manager = \Drupal::service('workspaces.manager');
+    \Drupal::keyValue('ws_test')->set('workspace_was_active', $workspace_manager->hasActiveWorkspace());
+  }
+
 }

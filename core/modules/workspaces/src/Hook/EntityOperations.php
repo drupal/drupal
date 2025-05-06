@@ -209,18 +209,19 @@ class EntityOperations {
     // that translation to the default revision as well, otherwise the new
     // translation wouldn't show up in entity queries or views which use the
     // field data table as the base table.
-    $this->workspaceManager->executeOutsideWorkspace(function () use ($translation) {
-      $storage = $this->entityTypeManager->getStorage($translation->getEntityTypeId());
-      $default_revision = $storage->load($translation->id());
-
-      $langcode = $translation->language()->getId();
-      if (!$default_revision->hasTranslation($langcode)) {
-        $default_revision_translation = $default_revision->addTranslation($langcode, $translation->toArray());
-        $default_revision_translation->setUnpublished();
-        $default_revision_translation->setSyncing(TRUE);
-        $default_revision_translation->save();
-      }
+    $default_revision = $this->workspaceManager->executeOutsideWorkspace(function () use ($translation) {
+      return $this->entityTypeManager
+        ->getStorage($translation->getEntityTypeId())
+        ->load($translation->id());
     });
+    $langcode = $translation->language()->getId();
+    if (!$default_revision->hasTranslation($langcode)) {
+      $default_revision_translation = $default_revision->addTranslation($langcode, $translation->toArray());
+      assert($default_revision_translation instanceof EntityPublishedInterface);
+      $default_revision_translation->setUnpublished();
+      $default_revision_translation->setSyncing(TRUE);
+      $default_revision_translation->save();
+    }
   }
 
   /**

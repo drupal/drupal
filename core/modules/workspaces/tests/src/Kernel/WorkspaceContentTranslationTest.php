@@ -35,6 +35,7 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
     'language',
     'user',
     'workspaces',
+    'workspaces_test',
   ];
 
   /**
@@ -83,6 +84,9 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
     // Add a translation for each entity.
     $entity_published->addTranslation('ro', ['name' => 'live - 1 - published - RO']);
     $entity_published->save();
+
+    // Test that the default revision translation is created in a WS.
+    $this->assertTrue(\Drupal::keyValue('ws_test')->get('workspace_was_active'));
 
     $entity_unpublished->addTranslation('ro', ['name' => 'live - 2 - unpublished - RO']);
     $entity_unpublished->save();
