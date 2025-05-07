@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook\Attribute;
 
+use Drupal\Core\Hook\Order\OrderInterface;
+
 /**
  * Hook attribute for FormAlter.
  *
@@ -37,13 +39,16 @@ class FormAlter extends Hook {
    *   (optional) The module this implementation is for. This allows one module
    *   to implement a hook on behalf of another module. Defaults to the module
    *   the implementation is in.
+   * @param \Drupal\Core\Hook\Order\OrderInterface|null $order
+   *   (optional) Set the order of the implementation.
    */
   public function __construct(
     string $form_id = '',
     public string $method = '',
     public ?string $module = NULL,
+    public ?OrderInterface $order = NULL,
   ) {
-    parent::__construct($form_id, $method, $module);
+    parent::__construct($form_id, $method, $module, $order);
   }
 
 }
