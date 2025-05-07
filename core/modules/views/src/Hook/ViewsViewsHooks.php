@@ -183,32 +183,11 @@ class ViewsViewsHooks {
           if (is_array($result)) {
             $data = NestedArray::mergeDeep($result, $data);
           }
+          \Drupal::moduleHandler()->invoke($field_storage->getTypeProvider(), 'field_views_data_views_data_alter', [&$data, $field_storage]);
         }
       }
     }
     return $data;
-  }
-
-  /**
-   * Implements hook_views_data_alter().
-   *
-   * Field modules can implement hook_field_views_data_views_data_alter() to
-   * alter the views data on a per field basis. This is weirdly named so as not
-   * to conflict with the \Drupal::moduleHandler()->alter('field_views_data') in
-   * views_views_data().
-   */
-  #[Hook('views_data_alter')]
-  public function viewsDataAlter(&$data): void {
-    $entity_type_manager = \Drupal::entityTypeManager();
-    if (!$entity_type_manager->hasDefinition('field_storage_config')) {
-      return;
-    }
-    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
-      if (\Drupal::service('views.field_data_provider')->getSqlStorageForField($field_storage)) {
-        \Drupal::moduleHandler()->invoke($field_storage->getTypeProvider(), 'field_views_data_views_data_alter', [&$data, $field_storage]);
-      }
-    }
   }
 
   /**
