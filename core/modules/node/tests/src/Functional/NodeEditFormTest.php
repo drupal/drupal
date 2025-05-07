@@ -259,6 +259,16 @@ class NodeEditFormTest extends NodeTestBase {
   }
 
   /**
+   * Tests the node form when the author is NULL.
+   */
+  public function testNodeFormNullAuthor(): void {
+    \Drupal::service('module_installer')->install(['node_no_default_author']);
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->statusCodeEquals(200);
+  }
+
+  /**
    * Checks that the "authored by" works correctly with various values.
    *
    * @param \Drupal\node\NodeInterface $node
