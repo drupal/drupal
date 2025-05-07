@@ -65,6 +65,7 @@ class HtmlTest extends TestCase {
     $id1 = 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789';
     $id2 = '¡¢£¤¥';
     $id3 = 'css__identifier__with__double__underscores';
+    $id4 = "\x80\x81";
     return [
       // Verify that no valid ASCII characters are stripped from the identifier.
       [$id1, $id1, []],
@@ -73,6 +74,8 @@ class HtmlTest extends TestCase {
       [$id2, $id2, []],
       // Verify that double underscores are not stripped from the identifier.
       [$id3, $id3],
+      // Confirm that NULL identifier does not trigger PHP 8.1 deprecation message.
+      ['', $id4],
       // Verify that invalid characters (including non-breaking space) are
       // stripped from the identifier.
       ['invalid_identifier', 'invalid_ !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', []],
