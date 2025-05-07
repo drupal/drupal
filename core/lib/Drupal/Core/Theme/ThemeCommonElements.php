@@ -176,6 +176,7 @@ class ThemeCommonElements {
         ],
         'includes' => ['core/includes/theme.maintenance.inc'],
         'template' => 'authorize-report',
+        'deprecated' => 'The "authorize-report" template is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3522119',
       ],
       'pager' => [
         'render element' => 'pager',

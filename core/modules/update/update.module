@@ -276,8 +276,15 @@ function update_storage_clear(): void {
  *
  * @return string
  *   An eight character string uniquely identifying this Drupal installation.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3522119
  */
 function _update_manager_unique_identifier() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3522119', E_USER_DEPRECATED);
+
   static $id;
   if (!isset($id)) {
     $id = substr(hash('sha256', Settings::getHashSalt()), 0, 8);
@@ -295,8 +302,15 @@ function _update_manager_unique_identifier() {
  * @return string
  *   The full path to the temporary directory where update file archives should
  *   be extracted.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3522119
  */
 function _update_manager_extract_directory($create = TRUE) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3522119', E_USER_DEPRECATED);
+
   static $directory;
   if (!isset($directory)) {
     $directory = 'temporary://update-extraction-' . _update_manager_unique_identifier();
@@ -317,8 +331,15 @@ function _update_manager_extract_directory($create = TRUE) {
  * @return string
  *   The full path to the temporary directory where update file archives should
  *   be cached.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3522119
  */
 function _update_manager_cache_directory($create = TRUE) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3522119', E_USER_DEPRECATED);
+
   static $directory;
   if (!isset($directory)) {
     $directory = 'temporary://update-cache-' . _update_manager_unique_identifier();
@@ -331,8 +352,15 @@ function _update_manager_cache_directory($create = TRUE) {
 
 /**
  * Clears the temporary files and directories based on file age from disk.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3522119
  */
 function update_clear_update_disk_cache(): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3522119', E_USER_DEPRECATED);
+
   // List of update module cache directories. Do not create the directories if
   // they do not exist.
   $directories = [
@@ -368,8 +396,15 @@ function update_clear_update_disk_cache(): void {
  *
  * @return bool
  *   TRUE if the file is stale and deleted successfully, FALSE otherwise.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3522119
  */
 function update_delete_file_if_stale($path) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3522119', E_USER_DEPRECATED);
+
   if (file_exists($path)) {
     $filectime = filectime($path);
     $max_age = \Drupal::config('system.file')->get('temporary_maximum_age');

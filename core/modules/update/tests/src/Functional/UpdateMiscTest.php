@@ -41,23 +41,6 @@ class UpdateMiscTest extends UpdateTestBase {
   }
 
   /**
-   * Checks that clearing the disk cache works.
-   */
-  public function testClearDiskCache(): void {
-    $directories = [
-      _update_manager_cache_directory(FALSE),
-      _update_manager_extract_directory(FALSE),
-    ];
-    // Check that update directories does not exists.
-    foreach ($directories as $directory) {
-      $this->assertDirectoryDoesNotExist($directory);
-    }
-
-    // Method must not fail if update directories do not exists.
-    update_clear_update_disk_cache();
-  }
-
-  /**
    * Tests the Update Status module when the update server returns 503 errors.
    */
   public function testServiceUnavailable(): void {

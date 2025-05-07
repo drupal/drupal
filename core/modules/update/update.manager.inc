@@ -172,9 +172,11 @@ function update_manager_file_get($url) {
   }
 
   // Check the cache and download the file if needed.
+  // @phpstan-ignore function.deprecated
   $cache_directory = _update_manager_cache_directory();
   $local = $cache_directory . '/' . \Drupal::service('file_system')->basename($parsed_url['path']);
 
+  // @phpstan-ignore function.deprecated
   if (!file_exists($local) || update_delete_file_if_stale($local)) {
     try {
       $data = (string) \Drupal::httpClient()->get($url)->getBody();
@@ -229,6 +231,7 @@ function update_manager_batch_project_get($project, $url, &$context): void {
   }
 
   // Extract it.
+  // @phpstan-ignore function.deprecated
   $extract_directory = _update_manager_extract_directory();
   try {
     update_manager_archive_extract($local_cache, $extract_directory);

@@ -107,6 +107,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
     return;
   }
 
+  // @phpstan-ignore getDeprecatedService.deprecated
   $updater = new $updater_name($local_url, \Drupal::getContainer()->get('update.root'));
 
   try {

@@ -178,8 +178,6 @@ class UpdateHooks {
       \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.fetch');
       _update_cron_notify();
     }
-    // Clear garbage from disk.
-    update_clear_update_disk_cache();
   }
 
   /**
