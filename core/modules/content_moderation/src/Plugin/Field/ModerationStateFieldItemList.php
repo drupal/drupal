@@ -56,7 +56,7 @@ class ModerationStateFieldItemList extends FieldItemList {
 
     // It is possible that the bundle does not exist at this point. For example,
     // the node type form creates a fake Node entity to get default values.
-    // @see \Drupal\node\NodeTypeForm::form()
+    // @see \Drupal\node\Form\NodeTypeForm::form()
     $workflow = $moderation_info->getWorkFlowForEntity($entity);
     return $workflow ? $workflow->getTypePlugin()->getInitialState($entity)->id() : NULL;
   }

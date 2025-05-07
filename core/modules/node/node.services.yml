@@ -1,3 +1,16 @@
+parameters:
+  node.moved_classes:
+    'Drupal\node\NodeForm':
+      class: 'Drupal\node\Form\NodeForm'
+      deprecation_version: drupal:11.2.0
+      removed_version: drupal:12.0.0
+      change_record: https://www.drupal.org/node/3517871
+    'Drupal\node\NodeTypeForm':
+      class: 'Drupal\node\Form\NodeTypeForm'
+      deprecation_version: drupal:11.2.0
+      removed_version: drupal:12.0.0
+      change_record: https://www.drupal.org/node/3517871
+
 services:
   _defaults:
     autoconfigure: true

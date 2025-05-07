@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\Form\NodeTypeDeleteConfirm;
 use Drupal\node\NodeTypeAccessControlHandler;
-use Drupal\node\NodeTypeForm;
+use Drupal\node\Form\NodeTypeForm;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeTypeListBuilder;
 use Drupal\user\Entity\EntityPermissionsRouteProvider;

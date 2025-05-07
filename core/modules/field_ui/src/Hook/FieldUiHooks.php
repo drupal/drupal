@@ -249,7 +249,7 @@ class FieldUiHooks {
    *
    * Adds a button 'Save and manage fields' to forms.
    *
-   * @see \Drupal\node\NodeTypeForm
+   * @see \Drupal\node\Form\NodeTypeForm
    * @see \Drupal\comment\CommentTypeForm
    * @see \Drupal\media\MediaTypeForm
    * @see \Drupal\block_content\BlockContentTypeForm

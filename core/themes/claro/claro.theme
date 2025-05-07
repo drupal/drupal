@@ -665,7 +665,7 @@ function _claro_convert_link_to_action_link(array $link, $icon_name = NULL, $siz
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\Form\NodeForm.
  *
  * Changes vertical tabs to container.
  */

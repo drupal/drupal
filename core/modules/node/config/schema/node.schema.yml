@@ -24,7 +24,7 @@ node.type.*:
       label: 'Machine-readable name'
       constraints:
         # Node type machine names are specifically limited to 32 characters.
-        # @see \Drupal\node\NodeTypeForm::form()
+        # @see \Drupal\node\Form\NodeTypeForm::form()
         Length:
           max: 32
     description:
@@ -50,7 +50,7 @@ node.type.*:
       constraints:
         # These are the values of the DRUPAL_DISABLED, DRUPAL_OPTIONAL, and
         # DRUPAL_REQUIRED constants.
-        # @see \Drupal\node\NodeTypeForm::form()
+        # @see \Drupal\node\Form\NodeTypeForm::form()
         Choice: [0, 1, 2]
     display_submitted:
       type: boolean

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\node;
+namespace Drupal\node\Form;
 
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
