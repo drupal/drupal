@@ -81,11 +81,11 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     },
     {
       pack: 'htmx.org',
+      folder: 'htmx',
       library: 'htmx',
       files: [
         { from: 'dist/htmx.min.js', to: 'htmx.min.js' },
         { from: 'dist/htmx.js', to: 'htmx.js' },
-        { from: 'dist/ext/debug.js', to: 'debug.js' },
       ],
     },
     {

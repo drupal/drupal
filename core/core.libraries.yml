@@ -791,18 +791,6 @@ htmx:
   js:
     assets/vendor/htmx/htmx.min.js: { minified: true }
 
-htmx.debug:
-  remote: https://github.com/bigskysoftware/htmx-extensions
-  version: "2.0.1"
-  license:
-    name: Zero-Clause BSD
-    url: https://raw.githubusercontent.com/bigskysoftware/htmx-extensions/refs/heads/main/src/debug/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/htmx/debug.js: {}
-  dependencies:
-    - core/htmx
-
 internal.floating-ui:
   remote: https://github.com/floating-ui/floating-ui
   version: "1.6.12"
