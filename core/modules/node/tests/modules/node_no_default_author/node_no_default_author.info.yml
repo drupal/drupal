@@ -1,0 +1,5 @@
+name: 'Node no default author'
+type: module
+description: 'Disables the default value callback for the uid field on node.'
+package: Testing
+version: VERSION

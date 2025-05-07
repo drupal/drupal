@@ -163,7 +163,7 @@ class NodeForm extends ContentEntityForm {
     $form['meta']['author'] = [
       '#type' => 'item',
       '#title' => $this->t('Author'),
-      '#markup' => $node->getOwner()->getAccountName(),
+      '#markup' => $node->getOwner()?->getAccountName(),
       '#wrapper_attributes' => ['class' => ['entity-meta__author']],
     ];
 
