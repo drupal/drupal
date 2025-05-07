@@ -76,6 +76,11 @@ final class DeprecationHandler {
       $environmentVariable = "ignoreFile=$deprecationIgnoreFilename";
     }
     parse_str($environmentVariable, $configuration);
+
+    $environmentVariable = getenv('PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION');
+    $phpUnitDeprecationVariable = $environmentVariable !== FALSE ? $environmentVariable : TRUE;
+    $configuration['failOnPhpunitDeprecation'] = filter_var($phpUnitDeprecationVariable, \FILTER_VALIDATE_BOOLEAN);
+
     return $configuration;
   }
 

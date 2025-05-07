@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Test;
 
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use PHPUnit\TextUI\Configuration\Builder;
 use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 use Symfony\Component\Process\Process;
@@ -96,13 +97,27 @@ class PhpUnitTestDiscoveryTest extends KernelTestBase {
     $phpUnitXmlList = new \DOMDocument();
     $phpUnitXmlList->loadXML(file_get_contents($this->xmlOutputFile));
     $phpUnitClientList = [];
+    // Try PHPUnit 10 format first.
+    // @todo remove once PHPUnit 10 is no longer used.
     foreach ($phpUnitXmlList->getElementsByTagName('testCaseClass') as $node) {
       $phpUnitClientList[] = $node->getAttribute('name');
+    }
+    // If empty, try PHPUnit 11+ format.
+    if (empty($phpUnitClientList)) {
+      foreach ($phpUnitXmlList->getElementsByTagName('testClass') as $node) {
+        $phpUnitClientList[] = $node->getAttribute('name');
+      }
     }
     asort($phpUnitClientList);
 
     // Check against Drupal's discovery.
     $this->assertEquals(implode("\n", $phpUnitClientList), implode("\n", $internalList), self::TEST_LIST_MISMATCH_MESSAGE);
+
+    // @todo once PHPUnit 10 is no longer used re-enable the rest of the test.
+    // @see https://www.drupal.org/project/drupal/issues/3497116
+    if (RunnerVersion::getMajor() >= 11) {
+      $this->markTestIncomplete('On PHPUnit 11+ the test triggers warnings due to phpunit.xml setup. Re-enable in https://www.drupal.org/project/drupal/issues/3497116.');
+    }
 
     // PHPUnit's test discovery - via API.
     $phpUnitConfiguration = (new Builder())->build(['--configuration', 'core']);

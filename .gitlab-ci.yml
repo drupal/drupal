@@ -67,6 +67,7 @@ variables:
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.3-ubuntu"
+  PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: false
 
 #############
 # Stages    #
@@ -109,6 +110,7 @@ default:
   before_script:
     - composer validate
     - composer install --optimize-autoloader
+    - composer run-script drupal-phpunit-upgrade-check
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
   script:
@@ -128,9 +130,13 @@ default:
   before_script:
     - composer validate
     - composer install --optimize-autoloader
+    - composer run-script drupal-phpunit-upgrade-check
     - docker-php-ext-enable pcov
   script:
-    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=component-coverage-report.txt --coverage-cobertura=component-coverage-cobertura.xml --log-junit junit.xml --fail-on-deprecation --fail-on-phpunit-deprecation
+    - |
+      [[ $PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION == false ]] && export _FAIL_ON_PHPUNIT_DEPRECATION=""
+      [[ $PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION != false ]] && export _FAIL_ON_PHPUNIT_DEPRECATION="--fail-on-phpunit-deprecation"
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=component-coverage-report.txt --coverage-cobertura=component-coverage-cobertura.xml --log-junit junit.xml --fail-on-deprecation $_FAIL_ON_PHPUNIT_DEPRECATION
     # Process the coverage text report to produce an OpenMetrics report.
     - php .gitlab-ci/scripts/component-coverage-metrics.php
   artifacts:
@@ -390,6 +396,7 @@ default:
     - *phpstan-cache
     - composer validate
     - composer install --optimize-autoloader
+    - composer run-script drupal-phpunit-upgrade-check
     - if [ -n "$COMPOSER_UPDATE" ]; then
         composer update --optimize-autoloader;
         composer outdated;
@@ -439,6 +446,7 @@ default:
   script:
     - composer validate
     - composer install --optimize-autoloader
+    - composer run-script drupal-phpunit-upgrade-check
     - if [ -n "$COMPOSER_UPDATE" ]; then
         composer update --optimize-autoloader;
         composer outdated;

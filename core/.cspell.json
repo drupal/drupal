@@ -7,6 +7,7 @@
       "**/.*.json",
       ".*ignore",
       "composer.lock",
+      "composer/Metapackage/PinnedDevDependencies/composer.json",
       "assets/vendor/**",
       "misc/jquery.form.js",
       "lib/Drupal/Component/Diff/**",

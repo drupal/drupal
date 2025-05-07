@@ -206,11 +206,8 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   /**
    * @covers ::create
    * @covers ::doCreate
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The newly created entity instance with the specified ID and generated UUID.
    */
-  public function testCreate() {
+  public function testCreate(): void {
     $entity = $this->getMockEntity(EntityBaseTest::class, [], ['toArray']);
     $this->entityType->expects($this->once())
       ->method('getClass')
@@ -231,23 +228,17 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\Core\Entity\EntityInterface', $entity);
     $this->assertSame('foo', $entity->id());
     $this->assertSame('bar', $entity->uuid());
-    return $entity;
   }
 
   /**
    * @covers ::save
    * @covers ::doSave
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The saved entity instance after insertion.
-   *
-   * @depends testCreate
    */
-  public function testSaveInsert(EntityInterface $entity) {
+  public function testSaveInsert(): EntityInterface&MockObject {
     $this->setUpKeyValueEntityStorage();
+
+    $entity = $this->getMockEntity(EntityBaseTest::class, [['id' => 'foo']], ['toArray']);
+    $entity->enforceIsNew();
 
     $expected = ['id' => 'foo'];
     $this->keyValueStore->expects($this->exactly(2))
@@ -285,12 +276,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The updated entity instance after saving.
-   *
    * @depends testSaveInsert
    */
-  public function testSaveUpdate(EntityInterface $entity) {
+  public function testSaveUpdate(EntityInterface $entity): void {
     $this->entityType->expects($this->once())
       ->method('getClass')
       ->willReturn(get_class($entity));
@@ -320,7 +308,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->with('foo', $expected);
     $return = $this->entityStorage->save($entity);
     $this->assertSame(SAVED_UPDATED, $return);
-    return $entity;
   }
 
   /**

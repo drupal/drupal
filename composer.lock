@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7317ff2c0cfb5aed4d0df6e4b3e63c34",
+    "content-hash": "fbb4558bd4ae8ebb59dd3179e80083ac",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -496,7 +496,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "7e8f42a2a16fa8db35c42d6ba0c7bcc9b3508588"
+                "reference": "b929d8770bd808cc3d4796cb57c0e6d186b5a010"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -528,7 +528,7 @@
                 "php-tuf/composer-stager": "^2.0",
                 "psr/log": "^3.0",
                 "revolt/event-loop": "^1.0",
-                "sebastian/diff": "^4|^5",
+                "sebastian/diff": "^4 || ^5 || ^6 || ^7",
                 "symfony/console": "^7.2",
                 "symfony/dependency-injection": "^7.2",
                 "symfony/event-dispatcher": "^7.2",

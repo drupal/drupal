@@ -172,25 +172,17 @@ class ConfigEntityStorageTest extends UnitTestCase {
    */
   public function testCreateWithPredefinedUuid(): void {
     $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())->shouldNotBeCalled();
-
-    $entity = $this->getMockEntity();
-    $entity->set('id', 'foo');
-    $entity->set('langcode', 'hu');
-    $entity->set('uuid', 'baz');
-    $entity->setOriginalId('foo');
-    $entity->enforceIsNew();
-
-    $this->moduleHandler->invokeAll('test_entity_type_create', [$entity])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('entity_create', [$entity, 'test_entity_type'])
-      ->shouldBeCalled();
-
     $this->uuidService->generate()->shouldNotBeCalled();
 
     $entity = $this->entityStorage->create(['id' => 'foo', 'uuid' => 'baz']);
     $this->assertInstanceOf(EntityInterface::class, $entity);
     $this->assertSame('foo', $entity->id());
     $this->assertSame('baz', $entity->uuid());
+
+    $this->moduleHandler->invokeAll('test_entity_type_create', [$entity])
+      ->shouldBeCalled();
+    $this->moduleHandler->invokeAll('entity_create', [$entity, 'test_entity_type'])
+      ->shouldBeCalled();
   }
 
   /**
@@ -202,25 +194,18 @@ class ConfigEntityStorageTest extends UnitTestCase {
    */
   public function testCreate() {
     $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())->shouldNotBeCalled();
-
-    $entity = $this->getMockEntity();
-    $entity->set('id', 'foo');
-    $entity->set('langcode', 'hu');
-    $entity->set('uuid', 'bar');
-    $entity->setOriginalId('foo');
-    $entity->enforceIsNew();
-
-    $this->moduleHandler->invokeAll('test_entity_type_create', [$entity])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('entity_create', [$entity, 'test_entity_type'])
-      ->shouldBeCalled();
-
     $this->uuidService->generate()->willReturn('bar');
 
     $entity = $this->entityStorage->create(['id' => 'foo']);
     $this->assertInstanceOf(EntityInterface::class, $entity);
     $this->assertSame('foo', $entity->id());
     $this->assertSame('bar', $entity->uuid());
+
+    $this->moduleHandler->invokeAll('test_entity_type_create', [$entity])
+      ->shouldBeCalled();
+    $this->moduleHandler->invokeAll('entity_create', [$entity, 'test_entity_type'])
+      ->shouldBeCalled();
+
     return $entity;
   }
 

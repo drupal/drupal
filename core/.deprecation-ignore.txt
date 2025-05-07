@@ -29,6 +29,9 @@
 # PHPUnit 10.
 %The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.*You should not extend it from "Drupal\\[^"]+"%
 
+# PHPUnit 11.
+%The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered final\. It may change without further notice as of its next major version\. You should not extend it from "Drupal\\[^"]+"%
+
 # Symfony 7.2
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_length" option is deprecated and will be ignored in Symfony 8.0.%
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_bits_per_character" option is deprecated and will be ignored in Symfony 8.0.%
