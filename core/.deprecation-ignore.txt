@@ -44,3 +44,5 @@
 %The "Drupal\\Core\\Entity\\Query\\QueryBase::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 %The "Drupal\\Core\\Entity\\Query\\QueryBase::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 
+# Symfony 7.3
+%Since symfony/validator 7.3: Passing an array of options to configure the "[^"]+" constraint is deprecated, use named arguments instead.%
