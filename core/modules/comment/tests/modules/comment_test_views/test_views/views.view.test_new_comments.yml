@@ -38,6 +38,11 @@ display:
         type: full
       style:
         type: table
+        options:
+          grouping: {  }
+          class: ''
+          row_class: ''
+          default_row_class: true
       row:
         type: fields
       fields:

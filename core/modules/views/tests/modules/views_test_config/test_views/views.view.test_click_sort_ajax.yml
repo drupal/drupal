@@ -43,6 +43,15 @@ display:
       style:
         type: table
         options:
+          grouping: {  }
+          class: ''
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: true
+          caption: ''
+          summary: ''
+          description: ''
           info:
             id:
               sortable: true

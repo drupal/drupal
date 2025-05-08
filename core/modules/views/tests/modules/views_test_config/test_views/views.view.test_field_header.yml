@@ -20,6 +20,8 @@ display:
           element_label_type: h2
       style:
         type: table
+        options:
+          class: ''
       display_extenders: {  }
     display_plugin: default
     display_title: Default

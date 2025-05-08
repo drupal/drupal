@@ -71,7 +71,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     $options = parent::defineOptions();
 
     $options['columns'] = ['default' => []];
-    $options['class'] = ['default' => []];
+    $options['class'] = ['default' => ''];
     $options['default'] = ['default' => ''];
     $options['info'] = ['default' => []];
     $options['override'] = ['default' => TRUE];

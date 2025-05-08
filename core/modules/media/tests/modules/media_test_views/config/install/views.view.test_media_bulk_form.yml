@@ -138,6 +138,8 @@ display:
       arguments: {  }
       style:
         type: table
+        options:
+          class: ''
       row:
         type: fields
       relationships: {  }

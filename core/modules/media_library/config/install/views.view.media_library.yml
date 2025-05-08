@@ -1346,6 +1346,7 @@ display:
         options:
           row_class: 'media-library-item media-library-item--table js-media-library-item js-click-to-select'
           default_row_class: true
+          class: ''
       row:
         type: fields
       defaults:

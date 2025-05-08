@@ -286,6 +286,7 @@ display:
           override: true
           sticky: false
           grouping: {  }
+          class: ''
           row_class: ''
           default_row_class: true
           uses_fields: false

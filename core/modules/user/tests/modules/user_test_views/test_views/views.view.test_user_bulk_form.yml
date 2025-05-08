@@ -19,6 +19,8 @@ display:
     display_options:
       style:
         type: table
+        options:
+          class: ''
       row:
         type: fields
       fields:

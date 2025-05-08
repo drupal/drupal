@@ -48,6 +48,8 @@ display:
           plugin_id: standard
       style:
         type: table
+        options:
+          class: ''
     display_plugin: default
     display_title: Default
     id: default

@@ -42,6 +42,7 @@ display:
       style:
         type: table
         options:
+          class: ''
           info:
             id:
               sortable: true

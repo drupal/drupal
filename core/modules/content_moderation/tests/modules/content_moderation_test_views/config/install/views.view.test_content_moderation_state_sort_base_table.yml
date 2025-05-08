@@ -206,6 +206,7 @@ display:
         type: table
         options:
           grouping: {  }
+          class: ''
           row_class: ''
           default_row_class: true
           columns:

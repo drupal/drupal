@@ -854,6 +854,7 @@ display:
           sticky: false
           summary: ''
           empty_table: true
+          class: ''
       row:
         type: fields
       query:

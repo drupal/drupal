@@ -68,6 +68,16 @@ display:
           quantity: 9
       style:
         type: table
+        options:
+          grouping: {  }
+          class: ''
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
       row:
         type: fields
       fields:

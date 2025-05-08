@@ -37,6 +37,7 @@ display:
       style:
         type: table
         options:
+          class: ''
           columns:
             name: name
             translation_link: translation_link
