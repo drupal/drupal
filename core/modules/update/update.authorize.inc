@@ -100,6 +100,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
   // though the connection itself is now gone. So, although it's ugly, we have
   // to unset the connection variable at this point so that the FileTransfer
   // object will re-initiate the actual connection.
+  // @phpstan-ignore property.deprecatedClass
   unset($filetransfer->connection);
 
   if (!empty($context['results']['log'][$project]['#abort'])) {

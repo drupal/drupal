@@ -50,9 +50,11 @@ class TestFileTransfer extends FileTransfer {
    * Establishes a mock connection for file transfer.
    */
   public function connect() {
+    // @phpstan-ignore property.deprecatedClass
     $this->connection = new MockTestConnection();
     // Access the connection via the property. The property used to be set via a
     // magic method and this can cause problems if coded incorrectly.
+    // @phpstan-ignore property.deprecatedClass
     $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
   }
 
@@ -60,6 +62,7 @@ class TestFileTransfer extends FileTransfer {
    * Copies a file within the jailed environment.
    */
   public function copyFileJailed($source, $destination) {
+    // @phpstan-ignore property.deprecatedClass
     $this->connection->run("copyFile $source $destination");
   }
 
@@ -67,6 +70,7 @@ class TestFileTransfer extends FileTransfer {
    * Removes a directory within the jailed environment.
    */
   protected function removeDirectoryJailed($directory) {
+    // @phpstan-ignore property.deprecatedClass
     $this->connection->run("rmdir $directory");
   }
 
@@ -74,6 +78,7 @@ class TestFileTransfer extends FileTransfer {
    * Creates a directory within the jailed environment.
    */
   public function createDirectoryJailed($directory) {
+    // @phpstan-ignore property.deprecatedClass
     $this->connection->run("mkdir $directory");
   }
 
@@ -81,6 +86,7 @@ class TestFileTransfer extends FileTransfer {
    * Removes a file within the jailed environment.
    */
   public function removeFileJailed($destination) {
+    // @phpstan-ignore property.deprecatedClass
     $this->connection->run("rm $destination");
   }
 

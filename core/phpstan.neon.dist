@@ -2,7 +2,6 @@
 # The PHPStan check is executed as a job in the CI pipeline.
 includes:
   - .phpstan-baseline.php
-  - phar://phpstan.phar/conf/bleedingEdge.neon
 
 parameters:
 
