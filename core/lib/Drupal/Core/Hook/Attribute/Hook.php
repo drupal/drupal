@@ -135,7 +135,7 @@ class Hook implements HookAttributeInterface {
     public string $hook = '',
     public string $method = '',
     public ?string $module = NULL,
-    public OrderInterface|null $order = NULL,
+    public ?OrderInterface $order = NULL,
   ) {
     $this->hook = implode('_', array_filter([static::PREFIX, $hook, static::SUFFIX]));
     if ($this->hook === '') {
