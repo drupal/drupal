@@ -77,8 +77,15 @@ class UpdateHooks {
           $verbose = TRUE;
           break;
       }
+      // This loadInclude() is to ensure that the install API is available.
+      // Since we're loading an include of type 'install', this will also
+      // include core/includes/install.inc for us, which is where the
+      // REQUIREMENTS* constants are currently defined.
+      // @todo Remove this once those constants live in a better place.
+      // @see https://www.drupal.org/project/drupal/issues/2909480
+      // @see https://www.drupal.org/project/drupal/issues/3410938
       \Drupal::moduleHandler()->loadInclude('update', 'install');
-      $status = update_requirements('runtime');
+      $status = \Drupal::moduleHandler()->invoke('update', 'runtime_requirements');
       foreach (['core', 'contrib'] as $report_type) {
         $type = 'update_' . $report_type;
         // hook_requirements() supports render arrays therefore we need to

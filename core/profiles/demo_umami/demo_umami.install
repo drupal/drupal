@@ -8,24 +8,6 @@
 use Drupal\shortcut\Entity\Shortcut;
 
 /**
- * Implements hook_requirements().
- */
-function demo_umami_requirements($phase): array {
-  $requirements = [];
-  if ($phase == 'runtime') {
-    $profile = \Drupal::installProfile();
-    $info = \Drupal::service('extension.list.profile')->getExtensionInfo($profile);
-    $requirements['experimental_profile_used'] = [
-      'title' => t('Experimental installation profile used'),
-      'value' => $info['name'],
-      'description' => t('Experimental profiles are provided for testing purposes only. Use at your own risk. To start building a new site, reinstall Drupal and choose a non-experimental profile.'),
-      'severity' => REQUIREMENT_WARNING,
-    ];
-  }
-  return $requirements;
-}
-
-/**
  * Implements hook_install().
  *
  * Perform actions to set up the site for this profile.

@@ -197,8 +197,7 @@ class NodeRequirementsStatusFilterWarningTest extends KernelTestBase {
    *   The requirements raised by the Node module.
    */
   private function getRequirements(): array {
-    $this->container->get('module_handler')->loadInclude('node', 'install');
-    return node_requirements('runtime');
+    return $this->container->get('module_handler')->invoke('node', 'runtime_requirements');
   }
 
   /**
