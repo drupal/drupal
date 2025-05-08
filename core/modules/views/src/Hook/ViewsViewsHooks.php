@@ -143,8 +143,9 @@ class ViewsViewsHooks {
       }
     }
     // Registers an action bulk form per entity.
+    $all_actions = \Drupal::entityTypeManager()->getStorage('action')->loadMultiple();
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $entity_info) {
-      $actions = array_filter(\Drupal::entityTypeManager()->getStorage('action')->loadMultiple(), function (ActionConfigEntityInterface $action) use ($entity_type) {
+      $actions = array_filter($all_actions, function (ActionConfigEntityInterface $action) use ($entity_type) {
           return $action->getType() == $entity_type;
       });
       if (empty($actions)) {
