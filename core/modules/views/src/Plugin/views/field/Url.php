@@ -9,7 +9,7 @@ use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
- * Field handler to provide simple renderer that turns a URL into a clickable link.
+ * Field handler to provide a renderer that turns a URL into a clickable link.
  *
  * @ingroup views_field_handlers
  */

@@ -1102,7 +1102,7 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Extracts the subset of plain tags (attributes omitted) from allowed elements.
+   * Extracts plain tags (attributes omitted) from allowed elements.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    *   The extracted subset of the given set of HTML restrictions.

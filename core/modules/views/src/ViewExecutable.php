@@ -348,7 +348,7 @@ class ViewExecutable {
   public $footer;
 
   /**
-   * Stores the area handlers for the empty text which are initialized on this view.
+   * The area handlers for the empty text which are initialized on this view.
    *
    * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
    *

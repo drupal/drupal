@@ -67,7 +67,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Build a condition to match a table name against a standard information_schema.
+   * Builds a condition to match a table name with the information schema.
    *
    * MySQL uses databases like schemas rather than catalogs so when we build a
    * condition to query the information_schema.tables, we set the default
@@ -133,7 +133,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Create an SQL string for a field to be used in table creation or alteration.
+   * Creates an SQL string for a field used in table creation or alteration.
    *
    * @param string $name
    *   Name of the field.

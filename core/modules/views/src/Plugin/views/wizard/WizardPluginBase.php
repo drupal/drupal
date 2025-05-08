@@ -208,7 +208,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Gets the availableSorts property.
    *
    * @return array
-   *   An array of available sorts, keyed by sort ID, containing sort information.
+   *   An array whose keys are the available sort options and whose
+   *   corresponding values are human readable labels.
    */
   public function getAvailableSorts() {
     return $this->availableSorts;
@@ -483,7 +484,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * Gets the current value of a #select element, from within a form constructor function.
+   * Gets the current value of a #select element.
    *
    * This function is intended for use in highly dynamic forms (in particular
    * the add view wizard) which are rebuilt in different ways depending on which

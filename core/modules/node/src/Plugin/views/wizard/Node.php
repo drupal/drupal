@@ -89,11 +89,7 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::getAvailableSorts().
-   *
-   * @return array
-   *   An array whose keys are the available sort options and whose
-   *   corresponding values are human readable labels.
+   * {@inheritdoc}
    */
   public function getAvailableSorts() {
     // You can't execute functions in properties, so override the method
@@ -238,9 +234,7 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::buildFilters().
-   *
-   * Add some options for filter by taxonomy terms.
+   * {@inheritdoc}
    */
   protected function buildFilters(&$form, FormStateInterface $form_state) {
     parent::buildFilters($form, $form_state);

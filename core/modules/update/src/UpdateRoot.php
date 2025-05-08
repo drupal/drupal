@@ -6,7 +6,7 @@ use Drupal\Core\DrupalKernelInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Gets the root path used by the legacy Update Manager to install or update projects.
+ * Gets the root path used by the legacy Update Manager.
  *
  * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
  *   replacement. Use composer to manage the code for your site.

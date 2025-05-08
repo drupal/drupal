@@ -116,7 +116,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
 }
 
 /**
- * Processes a non-JavaScript fallback submit button to limit its validation errors.
+ * Limits validation errors for a non-JavaScript fallback submit button.
  */
 function views_ui_add_limited_validation($element, FormStateInterface $form_state) {
   // Retrieve the AJAX triggering element so we can determine its parents. (We
@@ -148,7 +148,7 @@ function views_ui_add_limited_validation($element, FormStateInterface $form_stat
 }
 
 /**
- * After-build function that adds a wrapper to a form region (for AJAX refreshes).
+ * Adds a wrapper to a form region (for AJAX refreshes) after the build.
  *
  * This function inserts a wrapper around the region of the form that needs to
  * be refreshed by AJAX, based on information stored in the corresponding

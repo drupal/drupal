@@ -321,7 +321,8 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
       if ($tries) {
         $id .= '_' . $tries;
 
-        // Ensure the suffixed field name does not exceed the maximum allowed length.
+        // Ensure the suffixed field name does not exceed the maximum allowed
+        // length.
         if (strlen($id) > EntityTypeInterface::ID_MAX_LENGTH) {
           $id = substr($base_id, 0, (EntityTypeInterface::ID_MAX_LENGTH - strlen('_' . $tries))) . '_' . $tries;
         }

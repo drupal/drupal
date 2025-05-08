@@ -70,7 +70,7 @@ trait FieldLayoutEntityDisplayTrait {
   }
 
   /**
-   * Implements \Drupal\field_layout\Display\EntityDisplayWithLayoutInterface::setLayout().
+   * {@inheritdoc}
    */
   public function setLayout(LayoutInterface $layout) {
     $this->setLayoutId($layout->getPluginId(), $layout->getConfiguration());
@@ -78,7 +78,7 @@ trait FieldLayoutEntityDisplayTrait {
   }
 
   /**
-   * Implements \Drupal\field_layout\Display\EntityDisplayWithLayoutInterface::getLayout().
+   * {@inheritdoc}
    */
   public function getLayout() {
     return $this->doGetLayout($this->getLayoutId(), $this->getLayoutSettings());

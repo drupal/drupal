@@ -115,7 +115,8 @@ class MenuUiHooks {
       return $entity->access('update', NULL, TRUE)->andIf($entity->access('delete', NULL, TRUE));
     }
     else {
-      // If the node has no corresponding menu link, users needs to permission to create one.
+      // If the node has no corresponding menu link, users needs to permission
+      // to create one.
       return $this->entityTypeManager->getAccessControlHandler('menu_link_content')->createAccess(NULL, NULL, [], TRUE);
     }
   }

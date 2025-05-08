@@ -108,7 +108,7 @@ function system_post_update_remove_path_key(): void {
 }
 
 /**
- * Updates all entity_form_mode configuration entities to set description from empty string to null.
+ * Updates entity_form_mode descriptions from empty string to null.
  */
 function system_post_update_convert_empty_description_entity_form_modes_to_null(array &$sandbox): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)

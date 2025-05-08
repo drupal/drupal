@@ -44,6 +44,7 @@ class TranslationsStream extends LocalStream {
   }
 
   /**
+   * phpcs:ignore Drupal.Files.LineLength
    * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getExternalUrl().
    *
    * @throws \LogicException

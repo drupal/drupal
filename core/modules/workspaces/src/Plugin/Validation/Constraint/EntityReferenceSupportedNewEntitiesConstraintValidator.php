@@ -36,9 +36,6 @@ class EntityReferenceSupportedNewEntitiesConstraintValidator extends ConstraintV
    */
   protected $workspaceInfo;
 
-  /**
-   * Creates a new EntityReferenceSupportedNewEntitiesConstraintValidator instance.
-   */
   public function __construct(WorkspaceManagerInterface $workspaceManager, EntityTypeManagerInterface $entityTypeManager, WorkspaceInformationInterface $workspace_information) {
     $this->workspaceManager = $workspaceManager;
     $this->entityTypeManager = $entityTypeManager;

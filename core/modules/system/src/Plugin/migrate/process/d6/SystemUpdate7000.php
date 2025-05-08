@@ -16,7 +16,7 @@ class SystemUpdate7000 extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    *
-   * Rename blog and forum permissions to be consistent with other content types.
+   * Makes blog and forum permissions to be consistent with other content types.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $value = preg_replace('/(?<=^|,\ )create\ blog\ entries(?=,|$)/', 'create blog content', $value);

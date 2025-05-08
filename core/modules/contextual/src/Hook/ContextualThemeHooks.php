@@ -38,14 +38,16 @@ class ContextualThemeHooks {
     if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
       $variables['#cache']['contexts'][] = 'user.permissions';
       if ($this->currentUser->hasPermission('access contextual links')) {
-        // Mark this element as potentially having contextual links attached to it.
+        // Mark this element as potentially having contextual links attached to
+        // it.
         $variables['attributes']['class'][] = 'contextual-region';
 
-        // Renders a contextual links placeholder unconditionally, thus not breaking
-        // the render cache. Although the empty placeholder is rendered for all
-        // users, contextual_page_attachments() only adds the asset library for
-        // users with the 'access contextual links' permission, thus preventing
-        // unnecessary HTTP requests for users without that permission.
+        // Renders a contextual links placeholder unconditionally, thus not
+        // breaking the render cache. Although the empty placeholder is rendered
+        // for all users, contextual_page_attachments() only adds the asset
+        // library for users with the 'access contextual links' permission, thus
+        // preventing unnecessary HTTP requests for users without that
+        // permission.
         $variables['title_suffix']['contextual_links'] = [
           '#type' => 'contextual_links_placeholder',
           '#id' => _contextual_links_to_id($element['#contextual_links']),

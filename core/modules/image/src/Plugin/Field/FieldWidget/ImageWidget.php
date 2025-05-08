@@ -108,9 +108,7 @@ class ImageWidget extends FileWidget {
   }
 
   /**
-   * Overrides \Drupal\file\Plugin\Field\FieldWidget\FileWidget::formMultipleElements().
-   *
-   * Special handling for draggable multiple widgets and 'add more' button.
+   * {@inheritdoc}
    */
   protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);

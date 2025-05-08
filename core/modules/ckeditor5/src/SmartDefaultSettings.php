@@ -76,7 +76,7 @@ final class SmartDefaultSettings {
   }
 
   /**
-   * Computes the closest possible equivalent settings for switching to CKEditor 5.
+   * Computes the closest equivalent settings for switching to CKEditor 5.
    *
    * @param \Drupal\editor\EditorInterface|null $text_editor
    *   The editor being reconfigured for CKEditor 5; infer the settings based on

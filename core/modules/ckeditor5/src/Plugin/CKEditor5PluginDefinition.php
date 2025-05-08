@@ -467,7 +467,8 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has an asset library to load on the admin UI.
    *
    * @return bool
-   *   TRUE if the plugin has an asset library to load on the admin UI, FALSE otherwise.
+   *   TRUE if the plugin has an asset library to load on the admin UI, FALSE
+   *   otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$admin_library
    */

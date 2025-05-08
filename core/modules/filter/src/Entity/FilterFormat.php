@@ -99,7 +99,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   protected $weight = 0;
 
   /**
-   * List of user role IDs to grant access to use this format on initial creation.
+   * List of role IDs to grant access to use this format on initial creation.
    *
    * This property is always empty and unused for existing text formats.
    *

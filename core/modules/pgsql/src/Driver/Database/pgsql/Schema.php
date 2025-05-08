@@ -1072,7 +1072,8 @@ EOD;
   /**
    * Calculates a base-64 encoded PostgreSQL-safe sha-256 hash.
    *
-   * The hash is modified to according to  @link https://www.postgresql.org/docs/current/sql-syntax-lexical.html PostgreSQL Lexical Structure@endlink.
+   * The hash is modified to according to PostgreSQL Lexical Structure. See
+   * https://www.postgresql.org/docs/current/sql-syntax-lexical.html.
    *
    * @param string $data
    *   String to be hashed.

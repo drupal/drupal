@@ -97,7 +97,7 @@ class TemporaryArrayObjectThrowingExceptions extends \ArrayObject {
   }
 
   /**
-   * Gets the class name of the array iterator that is used by \ArrayObject::getIterator().
+   * Gets the class name of the iterator used by \ArrayObject::getIterator().
    *
    * @throws \Exception
    *   This class does not support this action but it must implement it, because

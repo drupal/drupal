@@ -126,7 +126,7 @@ class Tables extends BaseTables {
   }
 
   /**
-   * Adds a new join to the 'workspace_association' table for an entity base table.
+   * Adds a join to the 'workspace_association' table for an entity base table.
    *
    * This method assumes that the active workspace has already been determined
    * to be a non-default workspace.

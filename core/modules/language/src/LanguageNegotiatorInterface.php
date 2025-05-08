@@ -165,7 +165,7 @@ interface LanguageNegotiatorInterface {
   public function getPrimaryNegotiationMethod($type);
 
   /**
-   * Checks whether a language negotiation method is enabled for a language type.
+   * Checks if a language negotiation method is enabled for a language type.
    *
    * @param string $method_id
    *   The language negotiation method ID.

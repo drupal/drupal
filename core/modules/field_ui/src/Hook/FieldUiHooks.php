@@ -238,8 +238,8 @@ class FieldUiHooks {
   #[Hook('form_field_ui_field_storage_add_form_alter')]
   public function formFieldUiFieldStorageAddFormAlter(array &$form) : void {
     $optgroup = (string) $this->t('Reference');
-    // Move the "Entity reference" option to the end of the list and rename it to
-    // "Other".
+    // Move the "Entity reference" option to the end of the list and rename it
+    // to "Other".
     unset($form['add']['new_storage_type']['#options'][$optgroup]['entity_reference']);
     $form['add']['new_storage_type']['#options'][$optgroup]['entity_reference'] = $this->t('Other…');
   }

@@ -54,7 +54,8 @@ class LayoutBuilderAccessCheck implements AccessInterface {
       $access = $access->andIf(AccessResult::allowedIfHasPermission($account, 'configure any layout'));
     }
 
-    // Disables access to inline blocks add_block routes if the section storage opts out.
+    // Disables access to inline blocks add_block routes if the section storage
+    // opts out.
     // Check if inline block access should be disabled.
     if ($operation === 'add_block' && !($section_storage->getPluginDefinition()->get('allow_inline_blocks') ?? TRUE)) {
       $route_name = $this->route_match->getRouteName();

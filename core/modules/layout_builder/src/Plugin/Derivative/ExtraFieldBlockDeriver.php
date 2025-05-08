@@ -146,7 +146,7 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
   }
 
   /**
-   * Gets a list of entity type and bundle tuples that have layout builder enabled.
+   * Gets the list of entity type and bundle tuples with layout builder enabled.
    *
    * @return array
    *   A structured array with entity type as first key, bundle as second.

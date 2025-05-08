@@ -9,7 +9,7 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
- * Field handler to display the timestamp of a comment with the count of comments.
+ * Displays the timestamp of a comment with the count of comments.
  *
  * @ingroup views_field_handlers
  */

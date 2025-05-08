@@ -218,7 +218,7 @@ class JsonapiHooks {
   public function jsonapiShortcutFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\shortcut\ShortcutAccessControlHandler::checkAccess()
     // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
-    // (shortcut_set = $shortcut_set_storage->getDisplayedToUser($current_user)),
+    // "shortcut_set = $shortcut_set_storage->getDisplayedToUser($current_user)"
     // so this does not have to.
     return [
       JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer shortcuts')->orIf(AccessResult::allowedIfHasPermissions($account, [

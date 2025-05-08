@@ -10,7 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface FilterFormatInterface extends ConfigEntityInterface {
 
   /**
-   * Returns the ordered collection of filter plugin instances or an individual plugin instance.
+   * Returns a sorted collection of filter plugins or an individual instance.
    *
    * @param string $instance_id
    *   (optional) The ID of a filter plugin instance to return.

@@ -149,7 +149,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Create an SQL string for a field to be used in table creation or alteration.
+   * Create an SQL string for a field to be used in table create or alter.
    *
    * Before passing a field out of a schema definition into this function it has
    * to be processed by self::processField().
@@ -647,7 +647,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Utility method: rename columns in an index definition according to a new mapping.
+   * Renames columns in an index definition according to a new mapping.
    *
    * @param array $key_definition
    *   The key definition.

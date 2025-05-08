@@ -313,8 +313,8 @@ class FieldHooks {
   /**
    * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
    *
-   * Reset the field handler settings, when the storage target_type is changed on
-   * an entity reference field.
+   * Reset the field handler settings, when the storage target_type is changed
+   * on an entity reference field.
    */
   #[Hook('field_storage_config_update')]
   public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage): void {
@@ -330,13 +330,14 @@ class FieldHooks {
     if ($class !== $item_class && !is_subclass_of($class, $item_class)) {
       return;
     }
-    // If target_type changed, reset the handler in the fields using that storage.
+    // If target_type changed, reset the handler in the fields using that
+    // storage.
     if ($field_storage->getSetting('target_type') !== $field_storage->getOriginal()->getSetting('target_type')) {
       foreach ($field_storage->getBundles() as $bundle) {
         $field = FieldConfig::loadByName($field_storage->getTargetEntityTypeId(), $bundle, $field_storage->getName());
-        // Reset the handler settings. This triggers field_field_config_presave(),
-        // which will take care of reassigning the handler to the correct
-        // derivative for the new target_type.
+        // Reset the handler settings. This triggers
+        // field_field_config_presave(), which will take care of reassigning the
+        // handler to the correct derivative for the new target_type.
         $field->setSetting('handler_settings', []);
         $field->save();
       }
@@ -394,9 +395,9 @@ class FieldHooks {
       return;
     }
     // In case we removed all the target bundles allowed by the field in
-    // EntityReferenceItem::onDependencyRemoval() or field_entity_bundle_delete()
-    // we have to log a critical message because the field will not function
-    // correctly anymore.
+    // EntityReferenceItem::onDependencyRemoval() or
+    // field_entity_bundle_delete() we have to log a critical message because
+    // the field will not function correctly anymore.
     $handler_settings = $field->getSetting('handler_settings');
     if (isset($handler_settings['target_bundles']) && $handler_settings['target_bundles'] === []) {
       \Drupal::logger('entity_reference')->critical('The %field_name entity reference field (entity_type: %entity_type, bundle: %bundle) no longer has any valid bundle it can reference. The field is not working correctly anymore and has to be adjusted.', [

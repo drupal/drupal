@@ -22,6 +22,7 @@ function big_pipe_theme_suggestions_big_pipe_interface_preview(array $variables)
 
     // Use simplified template suggestion, if any.
     // For example, this simplifies
+    // phpcs:ignore Drupal.Files.LineLength
     // big-pipe-interface-preview--Drupal-block-BlockViewBuilder--lazyBuilder--<BLOCK ID>.html.twig
     // to
     // big-pipe-interface-preview--block--<BLOCK ID>.html.twig
