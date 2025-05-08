@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 /**
  * Implements hook_requirements().
+ *
+ * This tests the procedural implementations for this hook.
  */
 function requirements1_test_requirements($phase): array {
   $requirements = [];

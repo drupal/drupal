@@ -23342,12 +23342,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/locale/tests/src/Unit/Menu/LocaleLocalTasksTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$error in empty\\(\\) always exists and is not falsy\\.$#',
-	'identifier' => 'empty.variable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/media.install',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\Controller\\\\MediaFilterController\\:\\:checkCsrf\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
