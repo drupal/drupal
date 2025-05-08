@@ -35,13 +35,21 @@ class StandardJavascriptTest extends WebDriverTestBase {
       ->setPublished();
     $node->save();
 
-    // Front page: Five placeholders.
+    // Front page: Four placeholders.
     $this->drupalGet('');
+    $this->assertBigPipePlaceholderReplacementCount(4);
+
+    // Front page with warm render caches: Zero placeholders.
+    $this->drupalGet('');
+    $this->assertBigPipePlaceholderReplacementCount(0);
+
+    // Node page: Five placeholders.
+    $this->drupalGet($node->toUrl());
     $this->assertBigPipePlaceholderReplacementCount(5);
 
-    // Node page: Six placeholders:
+    // Node page second request: One placeholder for the comment form.
     $this->drupalGet($node->toUrl());
-    $this->assertBigPipePlaceholderReplacementCount(6);
+    $this->assertBigPipePlaceholderReplacementCount(1);
   }
 
   /**
@@ -52,10 +60,17 @@ class StandardJavascriptTest extends WebDriverTestBase {
    */
   protected function assertBigPipePlaceholderReplacementCount($expected_count): void {
     $web_assert = $this->assertSession();
-    $web_assert->waitForElement('css', 'script[data-big-pipe-event="stop"]');
+    if ($expected_count > 0) {
+      $web_assert->waitForElement('css', 'script[data-big-pipe-event="stop"]');
+    }
     $page = $this->getSession()->getPage();
     // Settings are removed as soon as they are processed.
-    $this->assertCount(0, $this->getDrupalSettings()['bigPipePlaceholderIds']);
+    if ($expected_count === 0) {
+      $this->assertArrayNotHasKey('bigPipePlaceholderIds', $this->getDrupalSettings());
+    }
+    else {
+      $this->assertCount(0, $this->getDrupalSettings()['bigPipePlaceholderIds']);
+    }
     $this->assertCount($expected_count, $page->findAll('css', 'script[data-big-pipe-replacement-for-placeholder-with-id]'));
   }
 

@@ -112,7 +112,9 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
 
     $reordered = [];
     foreach ($placeholder_order as $placeholder) {
-      $reordered[$placeholder] = $build['#attached']['placeholders'][$placeholder];
+      if (isset($build['#attached']['placeholders'][$placeholder])) {
+        $reordered[$placeholder] = $build['#attached']['placeholders'][$placeholder];
+      }
     }
     $build['#attached']['placeholders'] = $reordered;
 

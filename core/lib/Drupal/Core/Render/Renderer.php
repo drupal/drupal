@@ -318,6 +318,7 @@ class Renderer implements RendererInterface {
       '#cache' => TRUE,
       '#lazy_builder' => TRUE,
       '#lazy_builder_preview' => TRUE,
+      '#placeholder_strategy_denylist' => TRUE,
       '#create_placeholder' => TRUE,
     ]);
 
@@ -338,6 +339,7 @@ class Renderer implements RendererInterface {
         '#cache',
         '#create_placeholder',
         '#lazy_builder_preview',
+        '#placeholder_strategy_denylist',
         '#preview',
         // The keys below are not actually supported, but these are added
         // automatically by the Renderer. Adding them as though they are

@@ -85,15 +85,18 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
    * {@inheritdoc}
    */
   public function createPlaceholder(array $element) {
-    $placeholder_render_array = array_intersect_key($element, [
+    $placeholder_render_array = array_intersect_key($element, \array_flip([
       // Placeholders are replaced with markup by executing the associated
       // #lazy_builder callback, which generates a render array, and which the
       // Renderer will render and replace the placeholder with.
-      '#lazy_builder' => TRUE,
+      '#lazy_builder',
       // The cacheability metadata for the placeholder. The rendered result of
       // the placeholder may itself be cached, if [#cache][keys] are specified.
-      '#cache' => TRUE,
-    ]);
+      '#cache',
+      // The placeholder strategy denylist for this placeholder which can be
+      // used to skip placeholder strategies for specific render arrays.
+      '#placeholder_strategy_denylist',
+    ]));
 
     if (isset($element['#lazy_builder_preview'])) {
       $placeholder_render_array['#preview'] = $element['#lazy_builder_preview'];

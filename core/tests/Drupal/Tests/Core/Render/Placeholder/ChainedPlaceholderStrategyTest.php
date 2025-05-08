@@ -40,20 +40,6 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
     $prophet = new Prophet();
     $data = [];
 
-    // Empty placeholders.
-    $data['empty placeholders'] = [[], [], []];
-
-    // Placeholder removing strategy.
-    $placeholders = [
-      'remove-me' => ['#markup' => 'I-am-a-llama-that-will-be-removed-sad-face.'],
-    ];
-
-    $prophecy = $prophet->prophesize('\Drupal\Core\Render\Placeholder\PlaceholderStrategyInterface');
-    $prophecy->processPlaceholders($placeholders)->willReturn([]);
-    $dev_null_strategy = $prophecy->reveal();
-
-    $data['placeholder removing strategy'] = [[$dev_null_strategy], $placeholders, []];
-
     // Fake Single Flush strategy.
     $placeholders = [
       '67890' => ['#markup' => 'special-placeholder'],

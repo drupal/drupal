@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
 
 /**
  * Provides a messages element.
@@ -52,6 +53,15 @@ class StatusMessages extends RenderElementBase {
     $build = [
       '#lazy_builder' => [static::class . '::renderMessages', [$element['#display']]],
       '#create_placeholder' => TRUE,
+      // Prevent this placeholder being handled by big pipe. Messages are
+      // very quick to render and this allows pages without other placeholders
+      // to avoid loading big pipe's JavaScript altogether. Note that while the
+      // big pipe namespaced is reference, PHP happily uses the '::class' magic
+      // property without needing to load the class, so this works when big_pipe
+      // module is not installed.
+      '#placeholder_strategy_denylist' => [
+        BigPipeStrategy::class => TRUE,
+      ],
     ];
 
     // Directly create a placeholder as we need this to be placeholdered

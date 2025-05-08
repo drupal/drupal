@@ -1,0 +1,5 @@
+name: 'BigPipe messages test'
+type: module
+description: 'Forces the messages placeholder to go via the big pipe strategy for testing purposes.'
+package: Testing
+version: VERSION

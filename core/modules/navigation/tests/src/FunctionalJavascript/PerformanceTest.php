@@ -91,7 +91,7 @@ class PerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 14,
       'ScriptCount' => 3,
-      'ScriptBytes' => 215500,
+      'ScriptBytes' => 213000,
       'StylesheetCount' => 2,
       'StylesheetBytes' => 46000,
     ];
