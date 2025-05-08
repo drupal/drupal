@@ -96,6 +96,9 @@ class Renderer implements RendererInterface {
    * {@inheritdoc}
    */
   public function renderRoot(&$elements) {
+    if (!$elements) {
+      return '';
+    }
     // Disallow calling ::renderRoot() from within another ::renderRoot() call.
     if ($this->isRenderingRoot) {
       $this->isRenderingRoot = FALSE;
@@ -104,21 +107,39 @@ class Renderer implements RendererInterface {
 
     // Render in its own render context.
     $this->isRenderingRoot = TRUE;
-    $output = $this->executeInRenderContext(new RenderContext(), function () use (&$elements) {
-      return $this->render($elements, TRUE);
-    });
-    $this->isRenderingRoot = FALSE;
+    try {
+      $output = $this->renderInIsolation($elements);
+    }
+    // Since #pre_render, #post_render, #lazy_builder callbacks and theme
+    // functions or templates may be used for generating a render array's
+    // content, and we might be rendering the main content for the page, it is
+    // possible that any of them throw an exception that will cause a different
+    // page to be rendered (e.g. throwing
+    // \Symfony\Component\HttpKernel\Exception\NotFoundHttpException will cause
+    // the 404 page to be rendered). That page might also use
+    // Renderer::renderRoot() but if exceptions aren't caught here, it will be
+    // impossible to call Renderer::renderRoot() again.
+    // Hence, catch all exceptions, reset the isRenderingRoot property and
+    // re-throw exceptions.
+    finally {
+      $this->isRenderingRoot = FALSE;
+    }
 
-    return $output;
+    if ((string) $output === '') {
+      return '';
+    }
+
+    return $elements['#markup'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function renderInIsolation(&$elements) {
-    return $this->executeInRenderContext(new RenderContext(), function () use (&$elements) {
-      return $this->render($elements, TRUE);
-    });
+    $context = new RenderContext();
+    return Markup::create($this->executeInRenderContext($context, function () use (&$elements, $context) {
+      return $this->doRenderRoot($elements, $context);
+    }));
   }
 
   /**
@@ -188,31 +209,59 @@ class Renderer implements RendererInterface {
    * {@inheritdoc}
    */
   public function render(&$elements, $is_root_call = FALSE) {
-    // Since #pre_render, #post_render, #lazy_builder callbacks and theme
-    // functions or templates may be used for generating a render array's
-    // content, and we might be rendering the main content for the page, it is
-    // possible that any of them throw an exception that will cause a different
-    // page to be rendered (e.g. throwing
-    // \Symfony\Component\HttpKernel\Exception\NotFoundHttpException will cause
-    // the 404 page to be rendered). That page might also use
-    // Renderer::renderRoot() but if exceptions aren't caught here, it will be
-    // impossible to call Renderer::renderRoot() again.
-    // Hence, catch all exceptions, reset the isRenderingRoot property and
-    // re-throw exceptions.
-    try {
-      return $this->doRender($elements, $is_root_call);
+    $context = $this->getCurrentRenderContext();
+    if (!isset($context)) {
+      throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
     }
-    catch (\Exception $e) {
-      // Mark the ::rootRender() call finished due to this exception & re-throw.
-      $this->isRenderingRoot = FALSE;
-      throw $e;
+
+    if ($is_root_call) {
+      trigger_error(__METHOD__ . ' with $is_root_call is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::renderRoot() instead.  See https://www.drupal.org/node/3497318.');
+      return $this->doRenderRoot($elements, $context);
     }
+
+    return $this->doRender($elements, $context);
   }
 
   /**
    * See the docs for ::render().
    */
-  protected function doRender(&$elements, $is_root_call = FALSE) {
+  protected function doRenderRoot(array &$elements, RenderContext $context): string|MarkupInterface {
+    if (!$elements) {
+      return '';
+    }
+    // Set the bubbleable rendering metadata that has configurable defaults
+    // to ensure that the final render array definitely has these configurable
+    // defaults, even when no subtree is render cached.
+    $required_cache_contexts = $this->rendererConfig['required_cache_contexts'];
+
+    if (isset($elements['#cache']['contexts'])) {
+      $elements['#cache']['contexts'] = Cache::mergeContexts($elements['#cache']['contexts'], $required_cache_contexts);
+    }
+    else {
+      $elements['#cache']['contexts'] = $required_cache_contexts;
+    }
+
+    // Render the elements normally.
+    $return = $this->doRender($elements, $context);
+
+    // If there is no output, return early as placeholders can't make a
+    // difference.
+    if ((string) $return === '') {
+      return $return;
+    }
+
+    // Only when we're in a root (non-recursive) Renderer::render() call,
+    // placeholders must be processed, to prevent breaking the render cache in
+    // case of nested elements with #cache set.
+    $this->replacePlaceholders($elements);
+
+    return $elements['#markup'];
+  }
+
+  /**
+   * See the docs for ::render().
+   */
+  protected function doRender(array &$elements, RenderContext $context): string|MarkupInterface {
     if (empty($elements)) {
       return '';
     }
@@ -233,10 +282,6 @@ class Renderer implements RendererInterface {
         $this->addCacheableDependency($elements, $elements['#access']);
         if (!$elements['#access']->isAllowed()) {
           // Abort, but bubble new cache metadata from the access result.
-          $context = $this->getCurrentRenderContext();
-          if (!isset($context)) {
-            throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderInIsolation() call. Use renderInIsolation()/renderRoot() or #lazy_builder/#pre_render instead.");
-          }
           $context->push(new BubbleableMetadata());
           $context->update($elements);
           $context->bubble();
@@ -264,7 +309,7 @@ class Renderer implements RendererInterface {
     //   has these configurable defaults, even when no subtree is render cached.
     // - this is a render cacheable subtree, to ensure that the cached data has
     //   the configurable defaults (which may affect the ID and invalidation).
-    if ($is_root_call || isset($elements['#cache']['keys'])) {
+    if (isset($elements['#cache']['keys'])) {
       $required_cache_contexts = $this->rendererConfig['required_cache_contexts'];
       if (isset($elements['#cache']['contexts'])) {
         $elements['#cache']['contexts'] = Cache::mergeContexts($elements['#cache']['contexts'], $required_cache_contexts);
@@ -287,12 +332,6 @@ class Renderer implements RendererInterface {
       $cached_element = $this->renderCache->get($elements);
       if ($cached_element !== FALSE) {
         $elements = $cached_element;
-        // Only when we're in a root (non-recursive) Renderer::render() call,
-        // placeholders must be processed, to prevent breaking the render cache
-        // in case of nested elements with #cache set.
-        if ($is_root_call) {
-          $this->replacePlaceholders($elements);
-        }
         // Mark the element markup as safe if is it a string.
         if (is_string($elements['#markup'])) {
           $elements['#markup'] = Markup::create($elements['#markup']);
@@ -464,7 +503,7 @@ class Renderer implements RendererInterface {
     // same process as Renderer::render() but is inlined for speed.
     if ((!$theme_is_implemented || isset($elements['#render_children'])) && empty($elements['#children'])) {
       foreach ($children as $key) {
-        $elements['#children'] .= $this->doRender($elements[$key]);
+        $elements['#children'] .= $this->doRender($elements[$key], $context);
       }
       $elements['#children'] = Markup::create($elements['#children']);
     }
@@ -556,23 +595,6 @@ class Renderer implements RendererInterface {
       $context->pop();
       $context->push(new BubbleableMetadata());
       $context->update($elements);
-    }
-
-    // Only when we're in a root (non-recursive) Renderer::render() call,
-    // placeholders must be processed, to prevent breaking the render cache in
-    // case of nested elements with #cache set.
-    //
-    // By running them here, we ensure that:
-    // - they run when #cache is disabled,
-    // - they run when #cache is enabled and there is a cache miss.
-    // Only the case of a cache hit when #cache is enabled, is not handled here,
-    // that is handled earlier in Renderer::render().
-    if ($is_root_call) {
-      $this->replacePlaceholders($elements);
-      // @todo remove as part of https://www.drupal.org/node/2511330.
-      if ($context->count() !== 1) {
-        throw new \LogicException('A stray RendererInterface::render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
-      }
     }
 
     // Rendering is finished, all necessary info collected!
