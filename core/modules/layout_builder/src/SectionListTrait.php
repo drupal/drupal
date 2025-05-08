@@ -57,7 +57,7 @@ trait SectionListTrait {
    *
    * @return $this
    */
-  protected function setSection($delta, Section $section) {
+  public function setSection($delta, Section $section) {
     $sections = $this->getSections();
     $sections[$delta] = $section;
     $this->setSections($sections);

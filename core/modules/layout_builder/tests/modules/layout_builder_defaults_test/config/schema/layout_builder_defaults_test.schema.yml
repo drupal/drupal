@@ -4,3 +4,11 @@ layout_builder.section.third_party.layout_builder_defaults_test:
     which_party:
       label: 'Which party?'
       type: string
+
+block.settings.my_plugin_id:
+  type: block_settings
+  label: 'My plugin ID for AddComponentTest'
+  mapping:
+    some_configuration:
+      type: string
+      label: 'Some configuration value'
