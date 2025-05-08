@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional\Wizard;
 
+use Drupal\views\Entity\View;
+
 /**
  * Tests that the views wizard can specify the number of items per page.
  *
@@ -19,6 +21,16 @@ class ItemsPerPageTest extends WizardTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $configSchemaCheckerExclusions = [
+    // To be able to test with the now invalid:
+    // - `items_per_page: 'none'`
+    // - `items_per_page: '5'`
+    'block.block.views_block_items_per_page_test_with_historical_override',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = []): void {
     parent::setUp($import_test_views, $modules);
 
@@ -27,6 +39,12 @@ class ItemsPerPageTest extends WizardTestBase {
 
   /**
    * Tests the number of items per page.
+   *
+   * This should be removed from the `legacy` group in
+   * https://drupal.org/i/3521221; see
+   * \Drupal\views\Hook\ViewsHooks::blockPresave().
+   *
+   * @group legacy
    */
   public function testItemsPerPage(): void {
     $this->drupalCreateContentType(['type' => 'article']);
@@ -83,7 +101,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
 
-    // Make sure the page display shows the nodes we expect, and that they
+    // Make sure the page display shows the 4 nodes we expect, and that they
     // appear in the expected order.
     $this->assertSession()->addressEquals($view['page[path]']);
     $this->assertSession()->pageTextContains($view['page[title]']);
@@ -109,21 +127,94 @@ class ItemsPerPageTest extends WizardTestBase {
 
     // Place the block, visit a page that displays the block, and check that the
     // nodes we expect appear in the correct order.
-    $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
+    $block = $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
 
+    // Asserts that the 3 newest articles are listed, which is the configuration
+    // for the `block` display in the view. In other words: the `items_per_page`
+    // setting in the `View` config entity is respected.
+    $assert_3_newest_nodes = function () use ($node5, $node4, $node3, $node2, $node1, $page_node) {
+      $this->drupalGet('user');
+      $content = $this->getSession()->getPage()->getContent();
+      $this->assertSession()->pageTextContains($node5->label());
+      $this->assertSession()->pageTextContains($node4->label());
+      $this->assertSession()->pageTextContains($node3->label());
+      $this->assertSession()->pageTextNotContains($node2->label());
+      $this->assertSession()->pageTextNotContains($node1->label());
+      $this->assertSession()->pageTextNotContains($page_node->label());
+      $pos5 = strpos($content, $node5->label());
+      $pos4 = strpos($content, $node4->label());
+      $pos3 = strpos($content, $node3->label());
+      $this->assertGreaterThan($pos5, $pos4);
+      $this->assertGreaterThan($pos4, $pos3);
+    };
+    self::assertSame(4, View::load($view['id'])->toArray()['display']['default']['display_options']['pager']['options']['items_per_page']);
+    self::assertSame(3, View::load($view['id'])->toArray()['display']['block_1']['display_options']['pager']['options']['items_per_page']);
+    self::assertArrayNotHasKey('items_per_page', $block->get('settings'));
+    $assert_3_newest_nodes();
+    $block->delete();
+
+    // Because the `allow[items_per_page]` checkbox is checked, it is allowed to
+    // override the `items_per_page` setting for the Views's `block` display,
+    // and is actually respected. Valid values are `null` ("do not override")
+    // and a positive integer.
+    $block = $this->drupalPlaceBlock("views_block:{$view['id']}-block_1", [
+      'items_per_page' => NULL,
+    ]);
+    self::assertSame(4, View::load($view['id'])->toArray()['display']['default']['display_options']['pager']['options']['items_per_page']);
+    self::assertSame(3, View::load($view['id'])->toArray()['display']['block_1']['display_options']['pager']['options']['items_per_page']);
+    self::assertNull($block->get('settings')['items_per_page']);
+    $assert_3_newest_nodes();
+    $block->delete();
+
+    $block = $this->drupalPlaceBlock("views_block:{$view['id']}-block_1", [
+      'items_per_page' => 5,
+    ]);
+    self::assertSame(4, View::load($view['id'])->toArray()['display']['default']['display_options']['pager']['options']['items_per_page']);
+    self::assertSame(3, View::load($view['id'])->toArray()['display']['block_1']['display_options']['pager']['options']['items_per_page']);
+    self::assertSame(5, $block->get('settings')['items_per_page']);
     $this->drupalGet('user');
-    $content = $this->getSession()->getPage()->getContent();
-    $this->assertSession()->pageTextContains($node5->label());
-    $this->assertSession()->pageTextContains($node4->label());
-    $this->assertSession()->pageTextContains($node3->label());
-    $this->assertSession()->pageTextNotContains($node2->label());
-    $this->assertSession()->pageTextNotContains($node1->label());
-    $this->assertSession()->pageTextNotContains($page_node->label());
-    $pos5 = strpos($content, $node5->label());
-    $pos4 = strpos($content, $node4->label());
-    $pos3 = strpos($content, $node3->label());
-    $this->assertGreaterThan($pos5, $pos4);
-    $this->assertGreaterThan($pos4, $pos3);
+    foreach ([$node5, $node4, $node3, $node2, $node1] as $node) {
+      $this->assertSession()->pageTextContains($node->label());
+    }
+    $block->delete();
+
+    // Finally: set `items_per_page: 'none'`, which is the predecessor of
+    // `items_per_page: null`. This must continue to work as before even if the
+    // configuration is no longer considered valid, because otherwise we risk
+    // breaking e.g. blocks placed using Layout Builder.
+    // @todo Delete in https://www.drupal.org/project/drupal/issues/3521221.
+    $block = $this->drupalPlaceBlock("views_block:{$view['id']}-block_1", [
+      'id' => 'views_block_items_per_page_test_with_historical_override',
+    ]);
+    // Explicitly set the `items_per_page` setting to a string without casting.
+    // It should be changed to NULL by the pre-save hook.
+    // @see \Drupal\views\Hook\ViewsHooks::blockPresave()
+    $block->set('settings', [
+      'items_per_page' => 'none',
+    ])->trustData()->save();
+    $this->expectDeprecation('Saving a views block with "none" items per page is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. To use the items per page defined by the view, use NULL. See https://www.drupal.org/node/3522240');
+    self::assertNull($block->get('settings')['items_per_page']);
+    self::assertSame(4, View::load($view['id'])->toArray()['display']['default']['display_options']['pager']['options']['items_per_page']);
+    self::assertSame(3, View::load($view['id'])->toArray()['display']['block_1']['display_options']['pager']['options']['items_per_page']);
+    $assert_3_newest_nodes();
+    $block->delete();
+
+    // Truly finally: set `items_per_page: '5'`, because for the same reason as
+    // above, blocks placed using Layout Builder may still have stale settings.
+    $block = $this->drupalPlaceBlock("views_block:{$view['id']}-block_1", [
+      'id' => 'views_block_items_per_page_test_with_historical_override',
+    ]);
+    // Explicitly set the `items_per_page` setting to a string without casting.
+    $block->set('settings', [
+      'items_per_page' => '5',
+    ])->trustData()->save();
+    self::assertSame('5', $block->get('settings')['items_per_page']);
+    self::assertSame(4, View::load($view['id'])->toArray()['display']['default']['display_options']['pager']['options']['items_per_page']);
+    self::assertSame(3, View::load($view['id'])->toArray()['display']['block_1']['display_options']['pager']['options']['items_per_page']);
+    $this->drupalGet('user');
+    foreach ([$node5, $node4, $node3, $node2, $node1] as $node) {
+      $this->assertSession()->pageTextContains($node->label());
+    }
   }
 
 }

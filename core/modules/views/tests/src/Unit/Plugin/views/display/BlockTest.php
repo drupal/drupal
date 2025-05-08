@@ -62,29 +62,37 @@ class BlockTest extends UnitTestCase {
 
   /**
    * Tests the build method with no overriding.
+   *
+   * @testWith [null]
+   *           ["none"]
+   *           [0]
+   * @todo Delete the last two cases in https://www.drupal.org/project/drupal/issues/3521221. The last one is `intval('none')`.
    */
-  public function testBuildNoOverride(): void {
+  public function testBuildNoOverride($items_per_page_setting): void {
     $this->executable->expects($this->never())
       ->method('setItemsPerPage');
 
     $this->blockPlugin->expects($this->once())
       ->method('getConfiguration')
-      ->willReturn(['items_per_page' => 'none']);
+      ->willReturn(['items_per_page' => $items_per_page_setting]);
 
     $this->blockDisplay->preBlockBuild($this->blockPlugin);
   }
 
   /**
    * Tests the build method with overriding items per page.
+   *
+   * @testWith [5, 5]
+   *           ["5", 5]
    */
-  public function testBuildOverride(): void {
+  public function testBuildOverride(mixed $input, int $expected): void {
     $this->executable->expects($this->once())
       ->method('setItemsPerPage')
-      ->with(5);
+      ->with($expected);
 
     $this->blockPlugin->expects($this->once())
       ->method('getConfiguration')
-      ->willReturn(['items_per_page' => 5]);
+      ->willReturn(['items_per_page' => $input]);
 
     $this->blockDisplay->preBlockBuild($this->blockPlugin);
   }

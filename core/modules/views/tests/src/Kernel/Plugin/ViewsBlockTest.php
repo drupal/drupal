@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
+use Drupal\Core\Extension\ThemeInstallerInterface;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -15,6 +17,8 @@ use Drupal\views\Views;
  * @group views
  */
 class ViewsBlockTest extends ViewsKernelTestBase {
+
+  use BlockCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -140,6 +144,24 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     $views_block = ViewsBlock::create($this->container, [], $plugin_id, $plugin_definition);
 
     $this->assertEquals('"test_view_block::block_1" views block', $views_block->getPreviewFallbackString());
+  }
+
+  /**
+   * Tests that saving a Views block with items_per_page = `none` is deprecated.
+   *
+   * @covers \Drupal\views\Hook\ViewsHooks::blockPresave
+   *
+   * @group legacy
+   */
+  public function testSaveBlockWithDeprecatedItemsPerPageSetting(): void {
+    $this->container->get(ThemeInstallerInterface::class)->install(['stark']);
+
+    $this->expectDeprecation('Saving a views block with "none" items per page is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. To use the items per page defined by the view, use NULL. See https://www.drupal.org/node/3522240');
+    $block = $this->placeBlock('views_block:test_view_block-block_1', [
+      'items_per_page' => 'none',
+    ]);
+    $settings = $block->get('settings');
+    $this->assertNull($settings['items_per_page']);
   }
 
 }

@@ -140,16 +140,29 @@ views.view.*:
 views_block:
   type: block_settings
   label: 'View block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     views_label:
       type: label
       label: 'Title'
+      requiredKey: false
     items_per_page:
-      type: string
+      type: integer
       label: 'Items per block'
+      constraints:
+        Range:
+          min: 1
+      # Will only be respected if the associated View is configured to allow this to be overridden.
+      # @see \Drupal\views\Plugin\views\display\Block::blockForm()
+      requiredKey: false
+      # NULL to use the default defined by the view.
+      nullable: true
 
 block.settings.views_block:*:
   type: views_block
+  constraints:
+    FullyValidatable: ~
 
 block.settings.views_exposed_filter_block:*:
   type: views_block
