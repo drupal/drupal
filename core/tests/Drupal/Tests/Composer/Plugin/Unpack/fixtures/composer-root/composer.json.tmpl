@@ -1,0 +1,97 @@
+{
+  "name": "fixtures/root",
+  "description": "Test recipe unpacking",
+  "type": "project",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": {
+    "packagist.org": false,
+    "core-recipe-unpack": {
+      "type": "path",
+      "url": "__PROJECT_ROOT__",
+      "options": {
+        "symlink": true
+      }
+    },
+    "composer/installers": {
+      "type": "path",
+      "url": "__COMPOSER_INSTALLERS__",
+      "options": {
+        "symlink": true
+      }
+    },
+    "recipes/recipe-a": {
+      "type": "path",
+      "url": "../recipes/composer-recipe-a",
+      "options": {
+        "symlink": true
+      }
+    },
+    "recipes/recipe-b": {
+      "type": "path",
+      "url": "../recipes/composer-recipe-b",
+      "options": {
+        "symlink": true
+      }
+    },
+    "recipes/recipe-c": {
+      "type": "path",
+      "url": "../recipes/composer-recipe-c",
+      "options": {
+        "symlink": true
+      }
+    },
+    "recipes/recipe-d": {
+      "type": "path",
+      "url": "../recipes/composer-recipe-d",
+      "options": {
+        "symlink": true
+      }
+    },
+    "modules/module-a": {
+      "type": "path",
+      "url": "../modules/composer-module-a",
+      "options": {
+        "symlink": true
+      }
+    },
+    "modules/module-b": {
+      "type": "path",
+      "url": "../modules/composer-module-b",
+      "options": {
+        "symlink": true
+      }
+    },
+    "themes/theme-a": {
+      "type": "path",
+      "url": "../themes/composer-theme-a",
+      "options": {
+        "symlink": true
+      }
+    }
+  },
+  "require": {
+    "composer/installers": "*",
+    "drupal/core-recipe-unpack": "*"
+  },
+  "extra": {
+    "installer-paths": {
+      "core": ["type:drupal-core"],
+      "modules/contrib/{$name}": ["type:drupal-module"],
+      "modules/custom/{$name}": ["type:drupal-custom-module"],
+      "themes/contrib/{$name}": ["type:drupal-theme"],
+      "themes/custom/{$name}": ["type:drupal-custom-theme"],
+      "recipes/{$name}": ["type:drupal-recipe"],
+      "profiles/contrib/{$name}": ["type:drupal-profile"],
+      "profiles/custom/{$name}": ["type:drupal-custom-profile"],
+      "libraries/{$name}": ["type:drupal-library"],
+      "drush/Commands/contrib/{$name}": ["type:drupal-drush"]
+    }
+  },
+  "config": {
+     "allow-plugins": {
+       "composer/installers": true,
+       "drupal/core-recipe-unpack": true
+     }
+  }
+}

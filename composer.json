@@ -12,6 +12,7 @@
         "composer/installers": "^2.3",
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
+        "drupal/core-recipe-unpack": "self.version",
         "drupal/core-vendor-hardening": "self.version"
     },
     "require-dev": {
@@ -62,6 +63,7 @@
             "composer/installers": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "drupal/core-project-message": true,
+            "drupal/core-recipe-unpack": true,
             "drupal/core-vendor-hardening": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true,
@@ -85,6 +87,9 @@
             "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
             "modules/custom/{$name}": ["type:drupal-custom-module"],
             "themes/custom/{$name}": ["type:drupal-custom-theme"]
+        },
+        "drupal-recipe-unpack": {
+            "on-require": false
         },
         "drupal-core-project-message": {
             "post-install-cmd-message": [
@@ -130,6 +135,11 @@
             "type": "path",
             "canonical": false,
             "url": "core"
+        },
+        {
+            "type": "path",
+            "canonical": false,
+            "url": "composer/Plugin/RecipeUnpack"
         },
         {
             "type": "path",

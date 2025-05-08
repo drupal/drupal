@@ -7,7 +7,7 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold\Functional;
 use Composer\Util\Filesystem;
 use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
-use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
+use Drupal\Tests\Composer\Plugin\ExecTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
 
 /**

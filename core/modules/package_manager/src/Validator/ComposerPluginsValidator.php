@@ -78,6 +78,7 @@ final class ComposerPluginsValidator implements EventSubscriberInterface {
     'composer/installers' => '^2.0',
     'dealerdirect/phpcodesniffer-composer-installer' => '^0.7.1 || ^1.0.0',
     'drupal/core-composer-scaffold' => '*',
+    'drupal/core-recipe-unpack' => '*',
     'drupal/core-project-message' => '*',
     'phpstan/extension-installer' => '^1.1',
     PhpTufValidator::PLUGIN_NAME => '^1',

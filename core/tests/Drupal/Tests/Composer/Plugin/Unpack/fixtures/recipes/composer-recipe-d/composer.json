@@ -1,0 +1,5 @@
+{
+  "name": "fixtures/recipe-d",
+  "type": "drupal-recipe",
+  "description": "A Drupal recipe's composer for testing."
+}

@@ -1,0 +1,9 @@
+{
+  "name": "fixtures/recipe-b",
+  "type": "drupal-recipe",
+  "description": "A Drupal recipe's composer for testing.",
+  "require": {
+    "fixtures/module-a": "*",
+    "fixtures/theme-a": "*"
+  }
+}

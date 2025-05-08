@@ -1,0 +1,5 @@
+{
+  "name": "fixtures/theme-a",
+  "type": "drupal-theme",
+  "description": "A Drupal theme's composer for testing."
+}

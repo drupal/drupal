@@ -1,0 +1,6 @@
+{
+  "name": "fixtures/module-a",
+  "version": "1.0.4",
+  "type": "drupal-module",
+  "description": "A Drupal module's composer for testing."
+}
