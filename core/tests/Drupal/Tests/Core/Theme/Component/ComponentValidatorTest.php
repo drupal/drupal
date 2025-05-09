@@ -124,6 +124,19 @@ class ComponentValidatorTest extends TestCase {
     ];
     yield 'invalid slot (type)' => [$cta_with_invalid_slot_type];
 
+    $cta_with_invalid_slot_name = $valid_cta;
+    $cta_with_invalid_slot_name['slots'] = [
+      'valid_slot' => [
+        'title' => 'Valid slot',
+        'description' => 'Valid slot description',
+      ],
+      'invalid slot' => [
+        'title' => 'Invalid slot',
+        'description' => 'Slot name cannot have spaces',
+      ],
+    ];
+    yield 'invalid slot (name with spaces)' => [$cta_with_invalid_slot_name];
+
     $cta_with_invalid_variant_title_type = $valid_cta;
     $cta_with_invalid_variant_title_type['variants'] = [
       'valid_variant' => [
