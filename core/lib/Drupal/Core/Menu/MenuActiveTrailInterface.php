@@ -23,16 +23,16 @@ interface MenuActiveTrailInterface {
   public function getActiveTrailIds($menu_name);
 
   /**
-   * Fetches a menu link which matches the route name, parameters and menu name.
+   * Fetches a menu link that matches the currently active route.
    *
    * @param string|null $menu_name
    *   (optional) The menu within which to find the active link. If omitted, all
    *   menus will be searched.
    *
    * @return \Drupal\Core\Menu\MenuLinkInterface|null
-   *   The menu link for the given route name, parameters and menu, or NULL if
-   *   there is no matching menu link or the current user cannot access the
-   *   current page (i.e. we have a 403 response).
+   *   The menu link for the currently active route, or NULL if there is no
+   *   matching menu link or the current user cannot access the current page
+   *   (i.e. we have a 403 response).
    */
   public function getActiveLink($menu_name = NULL);
 

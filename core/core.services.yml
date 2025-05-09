@@ -831,7 +831,7 @@ services:
   Drupal\Core\Menu\DefaultMenuLinkTreeManipulators: '@menu.default_tree_manipulators'
   menu.active_trail:
     class: Drupal\Core\Menu\MenuActiveTrail
-    arguments: ['@plugin.manager.menu.link', '@current_route_match', '@cache.menu', '@lock']
+    arguments: ['@plugin.manager.menu.link', '@current_route_match', '@cache.menu', '@lock', '@path.matcher']
     tags:
       - { name: needs_destruction }
     lazy: true

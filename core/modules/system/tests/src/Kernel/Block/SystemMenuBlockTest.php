@@ -341,6 +341,13 @@ class SystemMenuBlockTest extends KernelTestBase {
    * @dataProvider configExpandedTestCases
    */
   public function testConfigExpanded($active_route, $menu_block_level, $expected_items): void {
+    // Replace the path.matcher service so it always returns FALSE when
+    // checking whether a route is the front page. Otherwise, the default
+    // service throws an exception when checking routes because all of these
+    // are mocked.
+    $service_definition = $this->container->getDefinition('path.matcher');
+    $service_definition->setClass(StubPathMatcher::class);
+
     $block = $this->blockManager->createInstance('system_menu_block:' . $this->menu->id(), [
       'region' => 'footer',
       'id' => 'machine_name',

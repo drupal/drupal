@@ -10,6 +10,8 @@ use Drupal\Tests\PerformanceData;
 use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 
+// cSpell:ignore mlid
+
 /**
  * Tests the performance of basic functionality in the standard profile.
  *
@@ -113,7 +115,12 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "user.role.authenticated" )',
       'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
       'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "view.frontpage.page_1") AND ("route_param_key" = "view_id=frontpage&display_id=page_1") AND ("menu_name" = "main") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
+      'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "<front>") AND ("route_param_key" = "") AND ("menu_name" = "main") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
+      'SELECT "menu_tree"."p1" AS "p1", "menu_tree"."p2" AS "p2", "menu_tree"."p3" AS "p3", "menu_tree"."p4" AS "p4", "menu_tree"."p5" AS "p5", "menu_tree"."p6" AS "p6", "menu_tree"."p7" AS "p7", "menu_tree"."p8" AS "p8", "menu_tree"."p9" AS "p9" FROM "menu_tree" "menu_tree" WHERE "id" = "standard.front_page"',
+      'SELECT "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE "mlid" IN ("5") ORDER BY "depth" DESC',
       'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "view.frontpage.page_1") AND ("route_param_key" = "view_id=frontpage&display_id=page_1") AND ("menu_name" = "account") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
+      'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "<front>") AND ("route_param_key" = "") AND ("menu_name" = "account") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
+      'SELECT "menu_tree".* FROM "menu_tree" "menu_tree" WHERE ("menu_name" = "main") AND ("depth" <= 2) ORDER BY "p1" ASC, "p2" ASC, "p3" ASC, "p4" ASC, "p5" ASC, "p6" ASC, "p7" ASC, "p8" ASC, "p9" ASC',
       'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("theme_registry:runtime:stark:Drupal\Core\Utility\ThemeRegistry", "LOCK_ID", "EXPIRE")',
       'DELETE FROM "semaphore"  WHERE ("name" = "theme_registry:runtime:stark:Drupal\Core\Utility\ThemeRegistry") AND ("value" = "LOCK_ID")',
       'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("library_info:stark:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
@@ -126,8 +133,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
-      'QueryCount' => 36,
-      'CacheGetCount' => 100,
+      'QueryCount' => 41,
+      'CacheGetCount' => 101,
       'CacheGetCountByBin' => [
         'page' => 1,
         'config' => 21,
@@ -138,9 +145,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
         'render' => 14,
         'default' => 5,
         'entity' => 2,
-        'menu' => 2,
+        'menu' => 3,
       ],
-      'CacheSetCount' => 45,
+      'CacheSetCount' => 47,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 17,
@@ -188,8 +195,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
           'config:block_list',
           'http_response',
         ],
-        ['config:system.menu.main'],
         ['config:system.menu.account'],
+        ['config:system.menu.main'],
         ['config:user.role.anonymous'],
       ],
       'StylesheetCount' => 1,
