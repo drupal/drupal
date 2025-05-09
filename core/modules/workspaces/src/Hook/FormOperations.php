@@ -29,20 +29,24 @@ class FormOperations {
       return;
     }
 
-    // Add a validation step for every form if we are in a workspace.
-    $this->addWorkspaceValidation($form);
+    // If a form hasn't already been marked as safe or not to submit in a
+    // workspace, check the generic interfaces.
+    if (!$form_state->has('workspace_safe')) {
+      $form_object = $form_state->getFormObject();
+      $workspace_safe = $form_object instanceof WorkspaceSafeFormInterface
+        || ($form_object instanceof WorkspaceDynamicSafeFormInterface && $form_object->isWorkspaceSafeForm($form, $form_state));
 
-    // If a form has already been marked as safe or not to submit in a
-    // workspace, we don't have anything else to do.
-    if ($form_state->has('workspace_safe')) {
-      return;
+      $form_state->set('workspace_safe', $workspace_safe);
     }
 
-    $form_object = $form_state->getFormObject();
-    $workspace_safe = $form_object instanceof WorkspaceSafeFormInterface
-      || ($form_object instanceof WorkspaceDynamicSafeFormInterface && $form_object->isWorkspaceSafeForm($form, $form_state));
-
-    $form_state->set('workspace_safe', $workspace_safe);
+    // Add a validation step for every other form.
+    if ($form_state->get('workspace_safe') !== TRUE) {
+      $form['workspace_safe'] = [
+        '#type' => 'value',
+        '#value' => FALSE,
+      ];
+      $this->addWorkspaceValidation($form);
+    }
   }
 
   /**
@@ -59,8 +63,14 @@ class FormOperations {
       }
     }
 
-    if (isset($element['#validate'])) {
+    if (isset($element['#submit'])) {
       $element['#validate'][] = [static::class, 'validateDefaultWorkspace'];
+
+      // Ensure that the workspace validation is always shown, even when the
+      // form element is limiting validation errors.
+      if (isset($element['#limit_validation_errors']) && $element['#limit_validation_errors'] !== FALSE) {
+        $element['#limit_validation_errors'][] = ['workspace_safe'];
+      }
     }
   }
 
@@ -68,8 +78,8 @@ class FormOperations {
    * Validation handler which sets a validation error for all unsupported forms.
    */
   public static function validateDefaultWorkspace(array &$form, FormStateInterface $form_state): void {
-    if ($form_state->get('workspace_safe') !== TRUE) {
-      $form_state->setError($form, new TranslatableMarkup('This form can only be submitted in the default workspace.'));
+    if ($form_state->get('workspace_safe') !== TRUE && isset($form_state->getCompleteForm()['workspace_safe'])) {
+      $form_state->setErrorByName('workspace_safe', new TranslatableMarkup('This form can only be submitted in the default workspace.'));
     }
   }
 

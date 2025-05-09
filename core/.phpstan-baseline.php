@@ -48524,6 +48524,30 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceEntityDeleteTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',
+  'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:setupWorkspaceSwitcherBlock\\(\\) has no return type specified\\.$#',
+  'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:switchToLive\\(\\) has no return type specified\\.$#',
+  'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
+  'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceMenuLinkContentIntegrationTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
