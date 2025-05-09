@@ -67,6 +67,14 @@ class ComponentElement extends RenderElementBase {
       ),
       $props
     );
+
+    // Handle children as slots.
+    $children = Element::children($element, TRUE);
+    foreach ($children as $key) {
+      $element['#slots'][$key] = $element[$key];
+      unset($element[$key]);
+    }
+
     $inline_template = $this->generateComponentTemplate(
       $element['#component'],
       $element['#slots'],
