@@ -5,6 +5,7 @@ namespace Drupal\Core\FileTransfer;
 /**
  * Defines the base class for FTP implementations.
  */
+// phpcs:ignore Drupal.NamingConventions.ValidClassName.NoUpperAcronyms
 abstract class FTP extends FileTransfer {
 
   /**

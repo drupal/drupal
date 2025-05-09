@@ -5,6 +5,7 @@ namespace Drupal\Core\FileTransfer;
 /**
  * The SSH connection class for the update module.
  */
+// phpcs:ignore Drupal.NamingConventions.ValidClassName.NoUpperAcronyms
 class SSH extends FileTransfer implements ChmodInterface {
 
   /**

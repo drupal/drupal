@@ -73,6 +73,7 @@ trait CacheTagsChecksumTrait {
           $this->getDatabaseConnection()->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionEndCallback']);
         }
         else {
+          // @phpstan-ignore method.deprecated
           $this->getDatabaseConnection()->addRootTransactionEndCallback([$this, 'rootTransactionEndCallback']);
         }
       }
