@@ -441,6 +441,8 @@ END;
         $requirements['symfony/polyfill-php81'],
         $requirements['symfony/polyfill-php82'],
         $requirements['symfony/polyfill-php83'],
+        // Needed for PHP 8.4 features while PHP 8.3 is the minimum.
+        $requirements['symfony/polyfill-php84'],
       );
       // If this package requires any Drupal core packages, ensure it allows
       // any version.
