@@ -15836,12 +15836,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/ContextualLinksTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$unrestricted_tab_count might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\datetime\\\\DateTimeComputed\\:\\:setValue\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

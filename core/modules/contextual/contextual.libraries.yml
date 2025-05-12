@@ -1,16 +1,9 @@
 drupal.contextual-links:
   version: VERSION
   js:
+    js/contextualModelView.js: {}
     # Ensure to run before contextual/drupal.context-toolbar.
-    # Core.
     js/contextual.js: { weight: -2 }
-    # Models.
-    js/models/StateModel.js: { weight: -2 }
-    # Views.
-    js/views/AuralView.js: { weight: -2 }
-    js/views/KeyboardView.js: { weight: -2 }
-    js/views/RegionView.js: { weight: -2 }
-    js/views/VisualView.js: { weight: -2 }
   css:
     component:
       css/contextual.module.css: {}
@@ -22,28 +15,21 @@ drupal.contextual-links:
     - core/drupal
     - core/drupal.ajax
     - core/drupalSettings
-    # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
-    - core/internal.backbone
     - core/once
     - core/drupal.touchevents-test
 
 drupal.contextual-toolbar:
   version: VERSION
   js:
+    js/toolbar/contextualToolbarModelView.js: {}
     js/contextual.toolbar.js: {}
-    # Models.
-    js/toolbar/models/StateModel.js: {}
-    # Views.
-    js/toolbar/views/AuralView.js: {}
-    js/toolbar/views/VisualView.js: {}
   css:
     component:
       css/contextual.toolbar.css: {}
   dependencies:
     - core/jquery
+    - contextual/drupal.contextual-links
     - core/drupal
-    # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
-    - core/internal.backbone
     - core/once
     - core/drupal.tabbingmanager
     - core/drupal.announce

@@ -3,7 +3,7 @@
  * Attaches behaviors for the Contextual module.
  */
 
-(function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
+(function ($, Drupal, drupalSettings, JSON, storage) {
   const options = $.extend(
     drupalSettings.contextual,
     // Merge strings on top of drupalSettings so that they are not mutable.
@@ -14,22 +14,19 @@
       },
     },
   );
-
   // Clear the cached contextual links whenever the current user's set of
   // permissions changes.
   const cachedPermissionsHash = storage.getItem(
     'Drupal.contextual.permissionsHash',
   );
-  const permissionsHash = drupalSettings.user.permissionsHash;
+  const { permissionsHash } = drupalSettings.user;
   if (cachedPermissionsHash !== permissionsHash) {
     if (typeof permissionsHash === 'string') {
-      _.chain(storage)
-        .keys()
-        .each((key) => {
-          if (key.startsWith('Drupal.contextual.')) {
-            storage.removeItem(key);
-          }
-        });
+      Object.keys(storage).forEach((key) => {
+        if (key.startsWith('Drupal.contextual.')) {
+          storage.removeItem(key);
+        }
+      });
     }
     storage.setItem('Drupal.contextual.permissionsHash', permissionsHash);
   }
@@ -87,7 +84,7 @@
    */
   function initContextual($contextual, html) {
     const $region = $contextual.closest('.contextual-region');
-    const contextual = Drupal.contextual;
+    const { contextual } = Drupal;
 
     $contextual
       // Update the placeholder to contain its rendered contextual links.
@@ -107,46 +104,18 @@
       const glue = url.includes('?') ? '&' : '?';
       this.setAttribute('href', url + glue + destination);
     });
-
     let title = '';
     const $regionHeading = $region.find('h2');
     if ($regionHeading.length) {
       title = $regionHeading[0].textContent.trim();
     }
-    // Create a model and the appropriate views.
-    const model = new contextual.StateModel({
-      title,
-    });
-    const viewOptions = $.extend({ el: $contextual, model }, options);
-    contextual.views.push({
-      visual: new contextual.VisualView(viewOptions),
-      aural: new contextual.AuralView(viewOptions),
-      keyboard: new contextual.KeyboardView(viewOptions),
-    });
-    contextual.regionViews.push(
-      new contextual.RegionView($.extend({ el: $region, model }, options)),
+    options.title = title;
+    const contextualModelView = new Drupal.contextual.ContextualModelView(
+      $contextual,
+      $region,
+      options,
     );
-
-    // Add the model to the collection. This must happen after the views have
-    // been associated with it, otherwise collection change event handlers can't
-    // trigger the model change event handler in its views.
-    contextual.collection.add(model);
-
-    // Let other JavaScript react to the adding of a new contextual link.
-    $(document).trigger(
-      'drupalContextualLinkAdded',
-      Drupal.deprecatedProperty({
-        target: {
-          $el: $contextual,
-          $region,
-          model,
-        },
-        deprecatedProperty: 'model',
-        message:
-          'The model property is deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is no replacement.',
-      }),
-    );
-
+    contextual.instances.push(contextualModelView);
     // Fix visual collisions between contextual link triggers.
     adjustIfNestedAndOverlapping($contextual);
   }
@@ -192,7 +161,7 @@
           // Initialize after the current execution cycle, to make the AJAX
           // request for retrieving the uncached contextual links as soon as
           // possible, but also to ensure that other Drupal behaviors have had
-          // the chance to set up an event listener on the Backbone collection
+          // the chance to set up an event listener on the collection
           // Drupal.contextual.collection.
           window.setTimeout(() => {
             initContextual(
@@ -217,7 +186,7 @@
           data: { 'ids[]': uncachedIDs, 'tokens[]': uncachedTokens },
           dataType: 'json',
           success(results) {
-            _.each(results, (html, contextualID) => {
+            Object.entries(results).forEach(([contextualID, html]) => {
               // Store the metadata.
               storage.setItem(`Drupal.contextual.${contextualID}`, html);
               // If the rendered contextual links are empty, then the current
@@ -274,19 +243,21 @@
      *  replacement.
      */
     regionViews: [],
+    instances: new Proxy([], {
+      set: function set(obj, prop, value) {
+        obj[prop] = value;
+        window.dispatchEvent(new Event('contextual-instances-added'));
+        return true;
+      },
+      deleteProperty(target, prop) {
+        if (prop in target) {
+          delete target[prop];
+          window.dispatchEvent(new Event('contextual-instances-removed'));
+        }
+      },
+    }),
+    ContextualModelView: {},
   };
-
-  /**
-   * A Backbone.Collection of {@link Drupal.contextual.StateModel} instances.
-   *
-   * @type {Backbone.Collection}
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is no
-   *  replacement.
-   */
-  Drupal.contextual.collection = new Backbone.Collection([], {
-    model: Drupal.contextual.StateModel,
-  });
 
   /**
    * A trigger is an interactive element often bound to a click handler.
@@ -311,12 +282,4 @@
   $(document).on('drupalContextualLinkAdded', (event, data) => {
     Drupal.ajax.bindAjaxLinks(data.$el[0]);
   });
-})(
-  jQuery,
-  Drupal,
-  drupalSettings,
-  _,
-  Backbone,
-  window.JSON,
-  window.sessionStorage,
-);
+})(jQuery, Drupal, drupalSettings, window.JSON, window.sessionStorage);

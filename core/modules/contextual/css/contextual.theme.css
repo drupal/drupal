@@ -17,6 +17,10 @@
   left: 0;
 }
 
+.contextual.open {
+  z-index: 501;
+}
+
 /**
  * Contextual region.
  */
