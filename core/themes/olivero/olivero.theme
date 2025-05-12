@@ -617,15 +617,6 @@ function olivero_preprocess_table(&$variables): void {
       }
     }
   }
-
-  $variables['#attached']['library'][] = 'olivero/olivero.table';
-}
-
-/**
- * Implements hook_preprocess_HOOK() for views-view-table templates.
- */
-function olivero_preprocess_views_view_table(&$variables): void {
-  $variables['#attached']['library'][] = 'olivero/olivero.table';
 }
 
 /**
