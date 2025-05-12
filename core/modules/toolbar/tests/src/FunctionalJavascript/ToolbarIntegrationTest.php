@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\toolbar\FunctionalJavascript;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -43,12 +44,22 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     // Test that it is possible to toggle the toolbar tray.
-    $content = $page->findLink('Content');
-    $this->assertTrue($content->isVisible(), 'Toolbar tray is open by default.');
-    $page->clickLink('Manage');
-    $this->assertFalse($content->isVisible(), 'Toolbar tray is closed after clicking the "Manage" link.');
-    $page->clickLink('Manage');
-    $this->assertTrue($content->isVisible(), 'Toolbar tray is visible again after clicking the "Manage" button a second time.');
+    $content_link = $page->findLink('Content');
+    $manage_link = $page->find('css', '#toolbar-item-administration');
+
+    // Start with open tray.
+    $this->waitAndAssertAriaPressedState($manage_link, TRUE);
+    $this->assertTrue($content_link->isVisible(), 'Toolbar tray is open by default.');
+
+    // Click to close.
+    $manage_link->click();
+    $this->waitAndAssertAriaPressedState($manage_link, FALSE);
+    $this->assertFalse($content_link->isVisible(), 'Toolbar tray is closed after clicking the "Manage" link.');
+
+    // Click to open.
+    $manage_link->click();
+    $this->waitAndAssertAriaPressedState($manage_link, TRUE);
+    $this->assertTrue($content_link->isVisible(), 'Toolbar tray is visible again after clicking the "Manage" button a second time.');
 
     // Test toggling the toolbar tray between horizontal and vertical.
     $tray = $page->findById('toolbar-item-administration-tray');
@@ -85,6 +96,35 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
     $this->assertSession()->elementNotExists('css', '#toolbar-item-administration-tray .toolbar-toggle-orientation');
     $button = $page->findButton('Vertical orientation');
     $this->assertFalse($button->isVisible(), 'Orientation toggle from other tray is not visible');
+  }
+
+  /**
+   * Asserts that an element's `aria-pressed` attribute matches expected state.
+   *
+   * Uses `waitFor()` to pause until either the condition is met or the timeout
+   * of `1` second has passed.
+   *
+   * @param \Behat\Mink\Element\NodeElement $element
+   *   The element to be tested.
+   * @param bool $expected
+   *   The expected value of `aria-pressed`, as a boolean.
+   *
+   * @throws ExpectationFailedException
+   */
+  private function waitAndAssertAriaPressedState(NodeElement $element, bool $expected): void {
+    $this->assertTrue(
+      $this
+        ->getSession()
+        ->getPage()
+        ->waitFor(1, function () use ($element, $expected): bool {
+          // Get boolean representation of `aria-pressed`.
+          // TRUE if `aria-pressed="true"`, FALSE otherwise.
+          $actual = $element->getAttribute('aria-pressed') == 'true';
+
+          // Exit `waitFor()` when $actual == $expected.
+          return $actual == $expected;
+        })
+    );
   }
 
 }

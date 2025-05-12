@@ -210,7 +210,7 @@
         // Deactivate the previous tab.
         $(this.model.previous('activeTab'))
           .removeClass('is-active')
-          .prop('aria-pressed', false);
+          .attr('aria-pressed', false);
         // Deactivate the previous tray.
         $(this.model.previous('activeTray')).removeClass('is-active');
 
@@ -222,7 +222,7 @@
           $tab
             .addClass('is-active')
             // Mark the tab as pressed.
-            .prop('aria-pressed', true);
+            .attr('aria-pressed', true);
           const name = $tab.attr('data-toolbar-tray');
           // Store the active tab name or remove the setting.
           const id = $tab.get(0).id;
