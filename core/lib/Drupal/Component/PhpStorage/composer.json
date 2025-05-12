@@ -8,7 +8,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.3.0",
-        "drupal/core-file-security": "11.2.x-dev"
+        "drupal/core-file-security": "11.2.0-alpha1"
     },
     "autoload": {
         "psr-4": {
@@ -20,5 +20,5 @@
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "alpha"
 }
