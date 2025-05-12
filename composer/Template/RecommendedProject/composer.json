@@ -16,13 +16,13 @@
     ],
     "require": {
         "composer/installers": "^2.3",
-        "drupal/core-composer-scaffold": "^11",
-        "drupal/core-recipe-unpack": "^11",
-        "drupal/core-project-message": "^11",
-        "drupal/core-recommended": "^11"
+        "drupal/core-composer-scaffold": "^11.2",
+        "drupal/core-recipe-unpack": "^11.2",
+        "drupal/core-project-message": "^11.2",
+        "drupal/core-recommended": "^11.2"
     },
     "require-dev": {
-        "drupal/core-dev": "^11"
+        "drupal/core-dev": "^11.2"
     },
     "conflict": {
         "drupal/drupal": "*"

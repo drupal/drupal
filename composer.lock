@@ -493,7 +493,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "11.x-dev",
+            "version": "11.2.x-dev",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -659,7 +659,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "11.x-dev",
+            "version": "11.2.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -691,8 +691,44 @@
             }
         },
         {
+            "name": "drupal/core-recipe-unpack",
+            "version": "11.2.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "composer/Plugin/RecipeUnpack",
+                "reference": "42e58be1818866167bc27d4fce206dc1d7a40d4c"
+            },
+            "require": {
+                "composer-plugin-api": "^2",
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "composer/composer": "^2.7"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Drupal\\Composer\\Plugin\\RecipeUnpack\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\Composer\\Plugin\\RecipeUnpack\\": ""
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "A Composer project unpacker for Drupal recipes.",
+            "homepage": "https://www.drupal.org/project/drupal",
+            "keywords": [
+                "drupal"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "drupal/core-vendor-hardening",
-            "version": "11.x-dev",
+            "version": "11.2.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
