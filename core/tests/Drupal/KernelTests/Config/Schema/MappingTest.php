@@ -371,6 +371,7 @@ class MappingTest extends KernelTestBase {
         'field.value.decimal' => ['value'],
         'field.value.float' => ['value'],
         'field.value.timestamp' => ['value'],
+        'field.value.language' => ['value'],
         'field.value.comment' => [
           'status',
           'cid',
