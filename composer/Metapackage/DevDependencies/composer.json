@@ -12,7 +12,7 @@
         "colinodell/psr-testlogger": "^1.2",
         "composer/composer": "^2.8.1",
         "drupal/coder": "^8.3.10",
-        "justinrainbow/json-schema": "^5.2",
+        "justinrainbow/json-schema": "^5.2 || ^6.3",
         "lullabot/mink-selenium2-driver": "^1.7.3",
         "lullabot/php-webdriver": "^2.0.5",
         "mglaman/phpstan-drupal": "^1.2.11 || ^2.0.4",
