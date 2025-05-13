@@ -8,7 +8,7 @@ use Drupal\Core\Database\DatabaseException;
 /**
  * Cache tags invalidations checksum implementation that uses the database.
  */
-class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTagsInvalidatorInterface, CacheTagsChecksumPreloadInterface {
+class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTagsInvalidatorInterface, CacheTagsChecksumPreloadInterface, CacheTagsPurgeInterface {
 
   use CacheTagsChecksumTrait;
 
@@ -67,6 +67,22 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
       }
     }
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function purge(): void {
+    try {
+      $this->connection->truncate('cachetags')->execute();
+    }
+    catch (\Throwable $e) {
+      // If the table does not exist yet, there is nothing to purge.
+      if (!$this->ensureTableExists()) {
+        throw $e;
+      }
+    }
+    $this->reset();
   }
 
   /**
