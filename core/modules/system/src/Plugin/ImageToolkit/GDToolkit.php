@@ -439,9 +439,6 @@ class GDToolkit extends ImageToolkitBase {
       IMG_AVIF => 'AVIF',
     ];
     $supported_formats = array_filter($check_formats, fn($type) => imagetypes() & $type, ARRAY_FILTER_USE_KEY);
-    if (isset($supported_formats[IMG_AVIF]) && !$this->checkAvifSupport()) {
-      unset($supported_formats[IMG_AVIF]);
-    }
     $unsupported_formats = array_diff_key($check_formats, $supported_formats);
 
     $descriptions = [];
@@ -556,7 +553,7 @@ class GDToolkit extends ImageToolkitBase {
    * @return bool
    *   TRUE if AVIF is fully supported, FALSE otherwise.
    */
-  protected function checkAvifSupport(): bool {
+  protected static function checkAvifSupport(): bool {
     static $supported = NULL;
 
     if ($supported !== NULL) {
@@ -578,13 +575,16 @@ class GDToolkit extends ImageToolkitBase {
    *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
    */
   protected static function supportedTypes() {
-    return [
+    $types = [
       IMAGETYPE_PNG,
       IMAGETYPE_JPEG,
       IMAGETYPE_GIF,
       IMAGETYPE_WEBP,
-      IMAGETYPE_AVIF,
     ];
+    if (static::checkAvifSupport()) {
+      $types[] = IMAGETYPE_AVIF;
+    }
+    return $types;
   }
 
 }

@@ -253,7 +253,11 @@ class TestToolkit extends ImageToolkitBase {
    *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
    */
   protected static function supportedTypes() {
-    return [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
+    $types = [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
+    if (\Drupal::keyValue('image_test')->get('avif_enabled', FALSE)) {
+      $types[] = IMAGETYPE_AVIF;
+    }
+    return $types;
   }
 
   /**
