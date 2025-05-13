@@ -172,6 +172,10 @@
   box-shadow: none;
 }
 
+.position-container {
+  position: relative;
+}
+
 @media screen and (min-width: 48em) {
   .tabs-wrapper {
     display: flex;
