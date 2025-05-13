@@ -120,6 +120,31 @@ class ImageEffectsTest extends KernelTestBase {
   }
 
   /**
+   * Tests the 'image_convert_avif' effect when avif is supported.
+   */
+  public function testConvertAvifEffect(): void {
+    $this->container->get('keyvalue')->get('image_test')->set('avif_enabled', TRUE);
+    $this->assertImageEffect(['convert'], 'image_convert_avif', [
+      'extension' => 'webp',
+    ]);
+
+    $calls = $this->imageTestGetAllCalls();
+    $this->assertEquals('avif', $calls['convert'][0][0]);
+  }
+
+  /**
+   * Tests the 'image_convert_avif' effect with webp fallback.
+   */
+  public function testConvertAvifEffectFallback(): void {
+    $this->assertImageEffect(['convert'], 'image_convert_avif', [
+      'extension' => 'webp',
+    ]);
+
+    $calls = $this->imageTestGetAllCalls();
+    $this->assertEquals('webp', $calls['convert'][0][0]);
+  }
+
+  /**
    * Tests the 'image_scale_and_crop' effect.
    */
   public function testScaleAndCropEffect(): void {
