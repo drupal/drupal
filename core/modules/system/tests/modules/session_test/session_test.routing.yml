@@ -179,3 +179,25 @@ session_test.trigger_write_exception:
     no_cache: TRUE
   requirements:
     _access: 'TRUE'
+
+session_test.legacy_get:
+  path: '/session-test/legacy-get'
+  defaults:
+    _title: 'Legacy session value'
+    _controller: '\Drupal\session_test\Controller\LegacySessionTestController::get'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+session_test.legacy_set:
+  path: '/session-test/legacy-set/{test_value}'
+  defaults:
+    _title: 'Set legacy session value'
+    _controller: '\Drupal\session_test\Controller\LegacySessionTestController::set'
+  options:
+    no_cache: TRUE
+    converters:
+      test_value: '\s+'
+  requirements:
+    _access: 'TRUE'
