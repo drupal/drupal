@@ -321,13 +321,7 @@ JS;
       ],
       'List string' => [
         'list_string',
-        ['first' => 'First', 'second' => 'Second', 'third' => 'Third'],
-        TRUE,
-      ],
-      // Example with empty key and label values like string '0'.
-      'List string with 0 value' => [
-        'list_string',
-        ['0' => '0', '1' => '1', '2' => '2'],
+        ['0' => '0', '1' => '1', 'two' => 'two'],
         TRUE,
       ],
     ];
