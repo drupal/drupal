@@ -18,6 +18,7 @@ use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
  * Test class for a complete node migration for Drupal 7.
  *
  * @group migrate_drupal_7
+ * @group #slow
  */
 class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
 
