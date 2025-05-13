@@ -940,6 +940,18 @@ field.value.timestamp:
       type: timestamp
       label: 'Value'
 
+field.value.language:
+  type: mapping
+  label: 'Language value'
+  mapping:
+    value:
+      # Not this doesn't make use of type: langcode because that doesn't allow null values.
+      type: string
+      label: 'Language value'
+      constraints:
+        Choice:
+          callback: 'Drupal\Core\TypedData\Plugin\DataType\LanguageReference::getAllValidLangcodes'
+
 # Text with a text format.
 text_format:
   type: mapping
