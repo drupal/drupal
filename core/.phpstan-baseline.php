@@ -34378,12 +34378,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/services_defaults_test/src/TestService.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\session_test\\\\Controller\\\\SessionTestController\\:\\:triggerWriteException\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/session_test/src/Controller/SessionTestController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\session_test\\\\EventSubscriber\\\\SessionTestSubscriber\\:\\:onKernelRequestSessionTest\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
