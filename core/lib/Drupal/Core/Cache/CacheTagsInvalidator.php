@@ -7,7 +7,7 @@ use Drupal\Component\Assertion\Inspector;
 /**
  * Passes cache tag events to classes that wish to respond to them.
  */
-class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
+class CacheTagsInvalidator implements CacheTagsInvalidatorInterface, CacheTagsPurgeInterface {
 
   /**
    * Holds an array of cache tags invalidators.
@@ -49,6 +49,17 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
     foreach ($this->invalidators as $invalidator) {
       if ($invalidator instanceof CacheTagsChecksumInterface) {
         $invalidator->reset();
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function purge(): void {
+    foreach ($this->invalidators as $invalidator) {
+      if ($invalidator instanceof CacheTagsPurgeInterface) {
+        $invalidator->purge();
       }
     }
   }

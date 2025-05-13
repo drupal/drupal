@@ -10,6 +10,7 @@
 
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheTagsPurgeInterface;
 use Drupal\Core\DrupalKernel;
 
 /**
@@ -418,6 +419,13 @@ function drupal_flush_all_caches($kernel = NULL): void {
   $module_handler = \Drupal::moduleHandler();
   // Flush all persistent caches.
   $module_handler->invokeAll('cache_flush');
+  // Purge cache tags immediately before flushing cache bins. If a cache tag is
+  // invalidated between the tags being purged and cache bins are flushed, then
+  // it will be included in the checksum of any new cache items, but still valid
+  // because the tag was written before the creation of cache item.
+  if (($invalidator = \Drupal::service('cache_tags.invalidator')) && ($invalidator instanceof CacheTagsPurgeInterface)) {
+    $invalidator->purge();
+  }
   foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->deleteAll();
   }
