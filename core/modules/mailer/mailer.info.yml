@@ -1,0 +1,6 @@
+name: Mailer
+type: module
+description: 'Provides an experimental API to build and deliver email messages.'
+package: Core (Experimental)
+lifecycle: experimental
+version: VERSION

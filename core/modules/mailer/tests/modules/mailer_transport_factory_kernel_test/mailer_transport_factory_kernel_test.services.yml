@@ -1,0 +1,7 @@
+services:
+  _defaults:
+    autoconfigure: true
+  Drupal\mailer_transport_factory_kernel_test\Transport\CanaryTransportFactory:
+    parent: Symfony\Component\Mailer\Transport\AbstractTransportFactory
+    tags:
+      - { name: mailer.transport_factory }

@@ -1,0 +1,5 @@
+name: 'Mailer transport factory functional test'
+type: module
+description: 'Support module for mailer transport factory functional testing.'
+package: Testing
+version: VERSION
