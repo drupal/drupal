@@ -100,7 +100,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    */
   public function testBlockMigration(): void {
     $blocks = Block::loadMultiple();
-    $this->assertCount(25, $blocks);
+    $this->assertCount(24, $blocks);
 
     // Check user blocks.
     $visibility = [
