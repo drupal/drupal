@@ -51,8 +51,8 @@ class UserTokenReplaceTest extends BrowserTestBase {
       'language' => $language_interface,
     ];
 
-    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
-    \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
+    \Drupal::keyValue('user_hooks_test')->set('user_format_name_alter', TRUE);
+    \Drupal::keyValue('user_hooks_test')->set('user_format_name_alter_safe', TRUE);
 
     // Create two users and log them in one after another.
     $user1 = $this->drupalCreateUser([]);
@@ -170,7 +170,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
 
     // Generate user display name tokens when safe markup is returned.
     // @see user_hooks_test_user_format_name_alter()
-    \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
+    \Drupal::keyValue('user_hooks_test')->set('user_format_name_alter_safe', TRUE);
     $input = '[user:display-name] [current-user:display-name]';
     $expected = "<em>{$user1->id()}</em> <em>{$user2->id()}</em>";
     $output = $token_service->replace($input, ['user' => $user1]);

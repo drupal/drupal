@@ -12,8 +12,8 @@ use Drupal\Core\Session\AccountInterface;
  * Implements hook_user_format_name_alter().
  */
 function user_hooks_test_user_format_name_alter(&$name, AccountInterface $account) {
-  if (\Drupal::state()->get('user_hooks_test_user_format_name_alter', FALSE)) {
-    if (\Drupal::state()->get('user_hooks_test_user_format_name_alter_safe', FALSE)) {
+  if (\Drupal::keyValue('user_hooks_test')->get('user_format_name_alter', FALSE)) {
+    if (\Drupal::keyValue('user_hooks_test')->get('user_format_name_alter_safe', FALSE)) {
       $name = new FormattableMarkup('<em>@uid</em>', ['@uid' => $account->id()]);
     }
     else {
