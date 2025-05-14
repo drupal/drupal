@@ -59,7 +59,6 @@ config:
       - block.block.olivero_help
       - block.block.olivero_search_form_narrow
       - block.block.olivero_search_form_wide
-      - block.block.olivero_syndicate
     user:
       - core.entity_view_mode.user.compact
       - search.page.user_search

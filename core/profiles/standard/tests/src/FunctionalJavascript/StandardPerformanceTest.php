@@ -90,6 +90,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
       'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/node" ) AND "number_parts" >= 1',
+      'SELECT 1 AS "expression" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/rss.xml%" ESCAPE ' . "'\\\\'" . ') LIMIT 1 OFFSET 0',
       'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "node_field_data" "node_field_data" WHERE ("node_field_data"."promote" = 1) AND ("node_field_data"."status" = 1)) "subquery"',
       'SELECT "node_field_data"."sticky" AS "node_field_data_sticky", "node_field_data"."created" AS "node_field_data_created", "node_field_data"."nid" AS "nid" FROM "node_field_data" "node_field_data" WHERE ("node_field_data"."promote" = 1) AND ("node_field_data"."status" = 1) ORDER BY "node_field_data_sticky" DESC, "node_field_data_created" DESC LIMIT 10 OFFSET 0',
       'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_uid" AS "revision_uid", "revision"."revision_timestamp" AS "revision_timestamp", "revision"."revision_log" AS "revision_log", "revision"."revision_default" AS "revision_default", "base"."nid" AS "nid", "base"."type" AS "type", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "node" "base" INNER JOIN "node_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."nid" IN (1)',
@@ -133,8 +134,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
-      'QueryCount' => 41,
-      'CacheGetCount' => 101,
+      'QueryCount' => 42,
+      'CacheGetCount' => 100,
       'CacheGetCountByBin' => [
         'page' => 1,
         'config' => 21,
@@ -142,7 +143,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         'discovery' => 38,
         'bootstrap' => 8,
         'dynamic_page_cache' => 1,
-        'render' => 14,
+        'render' => 13,
         'default' => 5,
         'entity' => 2,
         'menu' => 3,
@@ -150,7 +151,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 47,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 17,
+      'CacheTagLookupQueryCount' => 16,
       'CacheTagGroupedLookups' => [
         [
           'route_match',
@@ -182,7 +183,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:block.block.stark_messages'],
         ['config:block.block.stark_help'],
         ['config:block.block.stark_powered'],
-        ['config:block.block.stark_syndicate'],
         [
           'config:block.block.stark_account_menu',
           'config:block.block.stark_breadcrumbs',
@@ -234,11 +234,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 10,
-      'CacheGetCount' => 72,
+      'CacheGetCount' => 71,
       'CacheSetCount' => 16,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 14,
+      'CacheTagLookupQueryCount' => 13,
       'CacheTagGroupedLookups' => [
         [
           'route_match',
@@ -267,7 +267,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:block.block.stark_messages'],
         ['config:block.block.stark_help'],
         ['config:block.block.stark_powered'],
-        ['config:block.block.stark_syndicate'],
         [
           'config:block.block.stark_account_menu',
           'config:block.block.stark_breadcrumbs',
@@ -316,11 +315,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 14,
-      'CacheGetCount' => 57,
+      'CacheGetCount' => 56,
       'CacheSetCount' => 17,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 13,
+      'CacheTagLookupQueryCount' => 12,
       'StylesheetCount' => 1,
       'StylesheetBytes' => 1800,
     ];
@@ -375,11 +374,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'StylesheetBytes' => 1429,
       'StylesheetCount' => 1,
       'QueryCount' => 17,
-      'CacheGetCount' => 69,
+      'CacheGetCount' => 68,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 14,
+      'CacheTagLookupQueryCount' => 13,
       'CacheTagGroupedLookups' => [
         // Form submission and login.
         [
@@ -421,7 +420,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:block.block.stark_messages'],
         ['config:block.block.stark_help'],
         ['config:block.block.stark_powered'],
-        ['config:block.block.stark_syndicate'],
         ['config:block.block.stark_main_menu'],
         [
           'config:block.block.stark_account_menu',

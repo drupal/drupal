@@ -65,6 +65,10 @@ class BlockConfigSchemaTest extends KernelTestBase {
    */
   public function testBlockConfigSchema(): void {
     foreach ($this->blockManager->getDefinitions() as $block_id => $definition) {
+      // Skip the syndicate block as it is deprecated.
+      if ($block_id === 'node_syndicate_block') {
+        continue;
+      }
       $id = $this->randomMachineName();
       $block = Block::create([
         'id' => $id,
