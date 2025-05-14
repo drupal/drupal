@@ -63,25 +63,20 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
     // Assert that in the settings.php the database connection array has the
     // correct values set.
-    $contents = file_get_contents($this->container->getParameter('app.root') . '/' . $this->siteDirectory . '/settings.php');
-    $this->assertStringContainsString("'namespace' => 'Drupal\\\\driver_test\\\\Driver\\\\Database\\\\{$this->testDriverName}',", $contents);
-    $this->assertStringContainsString("'driver' => '{$this->testDriverName}',", $contents);
-    $this->assertStringContainsString("'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/',", $contents);
-
-    $dependencies = "'dependencies' => " . PHP_EOL .
-      "  array (" . PHP_EOL .
-      "    'mysql' => " . PHP_EOL .
-      "    array (" . PHP_EOL .
-      "      'namespace' => 'Drupal\\\\mysql'," . PHP_EOL .
-      "      'autoload' => 'core/modules/mysql/src/'," . PHP_EOL .
-      "    )," . PHP_EOL .
-      "    'pgsql' => " . PHP_EOL .
-      "    array (" . PHP_EOL .
-      "      'namespace' => 'Drupal\\\\pgsql'," . PHP_EOL .
-      "      'autoload' => 'core/modules/pgsql/src/'," . PHP_EOL .
-      "    )," . PHP_EOL .
-      "  )," . PHP_EOL;
-    $this->assertStringContainsString($dependencies, $contents);
+    $installedDatabaseSettings = $this->getInstalledDatabaseSettings();
+    $this->assertSame("Drupal\\driver_test\\Driver\\Database\\{$this->testDriverName}", $installedDatabaseSettings['default']['default']['namespace']);
+    $this->assertSame($this->testDriverName, $installedDatabaseSettings['default']['default']['driver']);
+    $this->assertSame("core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/", $installedDatabaseSettings['default']['default']['autoload']);
+    $this->assertEquals([
+      'mysql' => [
+        'namespace' => 'Drupal\\mysql',
+        'autoload' => 'core/modules/mysql/src/',
+      ],
+      'pgsql' => [
+        'namespace' => 'Drupal\\pgsql',
+        'autoload' => 'core/modules/pgsql/src/',
+      ],
+    ], $installedDatabaseSettings['default']['default']['dependencies']);
 
     // Assert that the module "driver_test" has been installed.
     $this->assertEquals(\Drupal::service('module_handler')->getModule('driver_test'), new Extension($this->root, 'module', 'core/modules/system/tests/modules/driver_test/driver_test.info.yml'));
@@ -108,6 +103,24 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
     // Restore the old database connection.
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
+  }
+
+  /**
+   * Returns the databases setup from the SUT's settings.php.
+   *
+   * @return array<string,mixed>
+   *   The value of the $databases variable.
+   */
+  protected function getInstalledDatabaseSettings(): array {
+    // The $app_root and $site_path variables are required by the settings.php
+    // file to be parsed correctly. The $databases variable is set in the
+    // included file, we need to inform PHPStan about that since PHPStan itself
+    // is unable to determine it.
+    $app_root = $this->container->getParameter('app.root');
+    $site_path = $this->siteDirectory;
+    include $app_root . '/' . $site_path . '/settings.php';
+    assert(isset($databases));
+    return $databases;
   }
 
 }
