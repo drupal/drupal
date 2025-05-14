@@ -608,15 +608,15 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * {@inheritdoc}
    */
   public function preRollback(MigrateRollbackEvent $event) {
-    // Nothing to do in this implementation.
+    // Reset the high-water mark.
+    $this->saveHighWater(NULL);
   }
 
   /**
    * {@inheritdoc}
    */
   public function postRollback(MigrateRollbackEvent $event) {
-    // Reset the high-water mark.
-    $this->saveHighWater(NULL);
+    // Nothing to do in this implementation.
   }
 
   /**
