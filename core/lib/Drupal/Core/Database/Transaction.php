@@ -30,12 +30,12 @@ class Transaction {
   /**
    * Destructs the object.
    *
-   * Depending on the nesting level of the object, this leads to a COMMIT (for
-   * a root item) or to a RELEASE SAVEPOINT (for a savepoint item) executed on
-   * the database.
+   * If the transaction is still active at this stage, and depending on the
+   * state of the transaction stack, this leads to a COMMIT (for a root item)
+   * or to a RELEASE SAVEPOINT (for a savepoint item) executed on the database.
    */
   public function __destruct() {
-    $this->connection->transactionManager()->unpile($this->name, $this->id);
+    $this->connection->transactionManager()->purge($this->name, $this->id);
   }
 
   /**
@@ -46,16 +46,22 @@ class Transaction {
   }
 
   /**
-   * Rolls back the current transaction.
+   * Returns the transaction to the parent nesting level.
    *
-   * This is just a wrapper method to rollback whatever transaction stack we are
-   * currently in, which is managed by the TransactionManager. Note that logging
-   * needs to happen after a transaction has been rolled back or the log
-   * messages will be rolled back too.
+   * Depending on the state of the transaction stack, this leads to a COMMIT
+   * operation (for a root item), or to a RELEASE SAVEPOINT operation (for a
+   * savepoint item) executed on the database.
+   */
+  public function commitOrRelease(): void {
+    $this->connection->transactionManager()->unpile($this->name, $this->id);
+  }
+
+  /**
+   * Rolls back the transaction.
    *
-   * Depending on the nesting level of the object, this leads to a ROLLBACK (for
-   * a root item) or to a ROLLBACK TO SAVEPOINT (for a savepoint item) executed
-   * on the database.
+   * Depending on the state of the transaction stack, this leads to a ROLLBACK
+   * operation (for a root item), or to a ROLLBACK TO SAVEPOINT + a RELEASE
+   * SAVEPOINT operations (for a savepoint item) executed on the database.
    */
   public function rollBack() {
     $this->connection->transactionManager()->rollback($this->name, $this->id);

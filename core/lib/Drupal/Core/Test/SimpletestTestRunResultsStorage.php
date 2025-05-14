@@ -95,13 +95,14 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
    * {@inheritdoc}
    */
   public function removeResults(TestRun $test_run): int {
-    $this->connection->startTransaction('delete_test_run');
+    $transaction = $this->connection->startTransaction('delete_test_run');
     $this->connection->delete('simpletest')
       ->condition('test_id', $test_run->id())
       ->execute();
     $count = $this->connection->delete('simpletest_test_id')
       ->condition('test_id', $test_run->id())
       ->execute();
+    $transaction->commitOrRelease();
     return $count;
   }
 
@@ -169,9 +170,10 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
    */
   public function cleanUp(): int {
     // Clear test results.
-    $this->connection->startTransaction('delete_simpletest');
+    $transaction = $this->connection->startTransaction('delete_simpletest');
     $this->connection->delete('simpletest')->execute();
     $count = $this->connection->delete('simpletest_test_id')->execute();
+    $transaction->commitOrRelease();
     return $count;
   }
 
