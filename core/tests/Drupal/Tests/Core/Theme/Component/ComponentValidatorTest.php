@@ -9,6 +9,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Component\ComponentValidator;
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\Plugin\Component;
+use JsonSchema\ConstraintError;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\Constraints\FormatConstraint;
 use JsonSchema\Entity\JsonPointer;
@@ -279,7 +280,13 @@ class UrlHelperFormatConstraint extends FormatConstraint {
     }
     if ($schema->format === 'uri') {
       if (\is_string($element) && !UrlHelper::isValid($element)) {
-        $this->addError($path, 'Invalid URL format', 'format', ['format' => $schema->format]);
+        if (class_exists(ConstraintError::class)) {
+          $this->addError(ConstraintError::FORMAT_URL(), $path, ['format' => $schema->format]);
+        }
+        else {
+          // @todo Remove when we no longer support justinrainbow/json-schema v5.
+          $this->addError($path, 'Invalid URL format', 'format', ['format' => $schema->format]);
+        }
       }
       return;
     }

@@ -177,7 +177,9 @@ class ComponentValidator {
     $errors = array_filter(
       $this->validator->getErrors(),
       function (array $error) use ($context): bool {
-        if (($error['constraint'] ?? '') !== 'type') {
+        // Support 5.0 ($error['constraint']) and 6.0
+        // ($error['constraint']['name']) at the same time.
+        if (($error['constraint']['name'] ?? $error['constraint'] ?? '') !== 'type') {
           return TRUE;
         }
         return !Element::isRenderArray($context[$error['property']] ?? NULL);
