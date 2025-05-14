@@ -5,7 +5,6 @@ namespace Drupal\block_content\Plugin\Menu\LocalAction;
 use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -53,11 +52,6 @@ class BlockContentAddLocalAction extends LocalActionDefault {
     // If the current request has a region, append it to the query string.
     if ($region = $this->requestStack->getCurrentRequest()->query->getString('region')) {
       $options['query']['region'] = $region;
-    }
-
-    // Adds a destination on content block listing.
-    if ($route_match->getRouteName() == 'entity.block_content.collection') {
-      $options['query']['destination'] = Url::fromRoute('<current>')->toString();
     }
     return $options;
   }
