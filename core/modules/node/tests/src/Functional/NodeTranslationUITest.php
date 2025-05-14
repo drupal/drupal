@@ -242,21 +242,19 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
 
     // Set up the default admin theme and use it for node editing.
     $this->container->get('theme_installer')->install(['claro']);
-    $edit = [];
-    $edit['admin_theme'] = 'claro';
-    $edit['use_admin_theme'] = TRUE;
-    $this->drupalGet('admin/appearance');
-    $this->submitForm($edit, 'Save configuration');
-    $this->drupalGet('node/' . $article->id() . '/translations');
+    $this->config('system.theme')->set('admin', 'claro')->save();
+
     // Verify that translation uses the admin theme if edit is admin.
+    $this->drupalGet('node/' . $article->id() . '/translations');
     $this->assertSession()->responseContains('core/themes/claro/css/base/elements.css');
 
     // Turn off admin theme for editing, assert inheritance to translations.
-    $edit['use_admin_theme'] = FALSE;
-    $this->drupalGet('admin/appearance');
-    $this->submitForm($edit, 'Save configuration');
-    $this->drupalGet('node/' . $article->id() . '/translations');
+    $this->config('node.settings')->set('use_admin_theme', FALSE)->save();
+    // Changing node.settings:use_admin_theme requires a route rebuild.
+    $this->container->get('router.builder')->rebuild();
+
     // Verify that translation uses the frontend theme if edit is frontend.
+    $this->drupalGet('node/' . $article->id() . '/translations');
     $this->assertSession()->responseNotContains('core/themes/claro/css/base/elements.css');
 
     // Assert presence of translation page itself (vs. DisabledBundle below).
@@ -561,12 +559,10 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       'translatable' => TRUE,
     ])->save();
 
-    $this->drupalLogin($this->administrator);
     // Make the image field a multi-value field in order to display a
     // details form element.
-    $edit = ['field_storage[subform][cardinality_number]' => 2];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image');
-    $this->submitForm($edit, 'Save');
+    $fieldStorage = FieldStorageConfig::loadByName('node', 'field_image');
+    $fieldStorage->setCardinality(2)->save();
 
     // Enable the display of the image field.
     EntityFormDisplay::load('node.article.default')
