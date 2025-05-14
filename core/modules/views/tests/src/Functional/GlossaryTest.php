@@ -83,7 +83,6 @@ class GlossaryTest extends ViewTestBase {
         'url',
         'user.node_grants:view',
         'user.permissions',
-        'route',
       ],
       [
         'config:views.view.glossary',
