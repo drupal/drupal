@@ -149,4 +149,38 @@ class ArgumentSummaryTest extends ViewsKernelTestBase {
     $this->assertStringContainsString($tags[1]->label() . ' (2)', $output);
   }
 
+  /**
+   * Tests that the active link is set correctly.
+   */
+  public function testActiveLink(): void {
+    require_once $this->root . '/core/modules/views/views.theme.inc';
+
+    // We need at least one node.
+    Node::create([
+      'type' => $this->nodeType->id(),
+      'title' => $this->randomMachineName(),
+    ])->save();
+
+    $view = Views::getView('test_argument_summary');
+    $view->execute();
+    $view->build();
+    $variables = [
+      'view' => $view,
+      'rows' => $view->result,
+    ];
+
+    template_preprocess_views_view_summary_unformatted($variables);
+    $this->assertFalse($variables['rows'][0]->active);
+
+    template_preprocess_views_view_summary($variables);
+    $this->assertFalse($variables['rows'][0]->active);
+
+    // Checks that the row with the current path is active.
+    \Drupal::service('path.current')->setPath('/test-argument-summary');
+    template_preprocess_views_view_summary_unformatted($variables);
+    $this->assertTrue($variables['rows'][0]->active);
+    template_preprocess_views_view_summary($variables);
+    $this->assertTrue($variables['rows'][0]->active);
+  }
+
 }
