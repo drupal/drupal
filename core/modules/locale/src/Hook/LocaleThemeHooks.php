@@ -2,7 +2,7 @@
 
 namespace Drupal\locale\Hook;
 
-use Drupal\Core\Hook\Attribute\Preprocess;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
@@ -18,7 +18,7 @@ class LocaleThemeHooks {
   /**
    * Implements hook_preprocess_HOOK() for node templates.
    */
-  #[Preprocess('node')]
+  #[Hook('preprocess_node')]
   public function preprocessNode(&$variables): void {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $variables['node'];
