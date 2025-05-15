@@ -4,7 +4,7 @@ namespace Drupal\contact\Hook;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Hook\Attribute\FormAlter;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\UserDataInterface;
@@ -29,7 +29,7 @@ class ContactFormHooks {
    *
    * @see \Drupal\user\ProfileForm::form()
    */
-  #[FormAlter('user_form')]
+  #[Hook('form_user_form_alter')]
   public function formUserFormAlter(&$form, FormStateInterface $form_state) : void {
     $form['contact'] = [
       '#type' => 'details',
@@ -55,7 +55,7 @@ class ContactFormHooks {
    *
    * Adds the default personal contact setting on the user settings page.
    */
-  #[FormAlter('user_admin_settings')]
+  #[Hook('form_user_admin_settings_alter')]
   public function formUserAdminSettingsAlter(&$form, FormStateInterface $form_state) : void {
     $form['contact'] = [
       '#type' => 'details',

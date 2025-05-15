@@ -2,7 +2,7 @@
 
 namespace Drupal\contextual\Hook;
 
-use Drupal\Core\Hook\Attribute\Preprocess;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -21,7 +21,7 @@ class ContextualThemeHooks {
    * @see contextual_page_attachments()
    * @see \Drupal\contextual\ContextualController::render()
    */
-  #[Preprocess]
+  #[Hook('preprocess')]
   public function preprocess(&$variables, $hook, $info): void {
     // Determine the primary theme function argument.
     if (!empty($info['variables'])) {

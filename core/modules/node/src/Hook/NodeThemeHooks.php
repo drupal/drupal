@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\node\Hook;
 
-use Drupal\Core\Hook\Attribute\Preprocess;
+use Drupal\Core\Hook\Attribute\Hook;
 
 /**
  * Hook implementations for the node module.
@@ -14,7 +14,7 @@ class NodeThemeHooks {
   /**
    * Implements hook_preprocess_HOOK() for node field templates.
    */
-  #[Preprocess('field__node')]
+  #[Hook('preprocess_field__node')]
   public function preprocessFieldNode(&$variables): void {
     // Set a variable 'is_inline' in cases where inline markup is required,
     // without any block elements such as <div>.
