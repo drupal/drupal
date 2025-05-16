@@ -27,7 +27,7 @@
   list-style: none;
   color: var(--color-text);
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     float: right;
   }
 }
@@ -224,7 +224,7 @@
   margin-inline-start: var(--vertical-tabs-menu-width);
   border-top-left-radius: 0;
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     border-top-left-radius: var(--vertical-tabs-border-radius);
   }
 }

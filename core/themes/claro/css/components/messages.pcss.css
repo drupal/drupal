@@ -56,7 +56,7 @@
     margin: 0;
   }
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     border-right-width: var(--messages-border-width);
     border-left-width: 0;
   }
@@ -97,7 +97,7 @@
   align-items: center;
   margin-block-end: var(--space-m);
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     background-position: center right;
   }
 }

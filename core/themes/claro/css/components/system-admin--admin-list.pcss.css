@@ -51,7 +51,7 @@
   background: transparent no-repeat 50% 50%;
   background-image: url(../../images/icons/003ecc/arrow-right.svg);
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     transform: scaleX(-1);
   }
 

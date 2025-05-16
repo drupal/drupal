@@ -79,7 +79,7 @@
     }
   }
 
-  @nest .draggable .form-managed-file.has-value & {
+  .draggable .form-managed-file.has-value & {
     /**
      * In tables, this should be inline-flex. This is needed to make this element be
      * pushed to a new line, to the bottom of the drag handle.
@@ -98,7 +98,7 @@
   max-width: 100%;
   margin-block-end: var(--space-m);
 
-  @nest .form-managed-file.has-meta & {
+  .form-managed-file.has-meta & {
     /* Add some 'end' margin if there are other meta inputs. */
     margin-inline-end: var(--space-m);
   }
@@ -107,7 +107,7 @@
    * If this is rendered inside a file multiple table and there are no alt or
    * title, we have to reduce the amount of the bottom margin.
    */
-  @nest td .form-managed-file.no-meta & {
+  td .form-managed-file.no-meta & {
     margin-block-end: var(--space-xs);
   }
 }
@@ -164,11 +164,11 @@
   }
 
   /* Add some bottom margin for single widgets if no meta is present. */
-  @nest .form-managed-file.is-single.has-value &:last-child {
+  .form-managed-file.is-single.has-value &:last-child {
     margin-block-end: var(--space-m);
   }
 
-  @nest .draggable .form-managed-file.has-value & {
+  .draggable .form-managed-file.has-value & {
     /**
      * Inside (draggable) tables, this should be flex-displayed. This keeps even
      * long file names in the same visual line where the drag handle is.
