@@ -1,0 +1,8 @@
+name: 'Third Party Settings Test'
+type: module
+description: 'A dummy module that third party settings tests can depend on'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:views
