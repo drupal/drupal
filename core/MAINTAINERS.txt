@@ -228,6 +228,7 @@ Filter
 Form API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
+- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
 History
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
@@ -354,6 +355,7 @@ Recipes
 Render API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
+- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
 Request Processing
 - ?
