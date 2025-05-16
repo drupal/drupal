@@ -1,0 +1,7 @@
+views.view.*.third_party.views_third_party_settings_test:
+  type: config_entity
+  label: "Example settings"
+  mapping:
+    example_setting:
+      type: boolean
+      label: "Example setting"
