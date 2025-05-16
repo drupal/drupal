@@ -481,7 +481,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function onDependencyRemoval(array $dependencies) {
-    $changed = FALSE;
+    $changed = parent::onDependencyRemoval($dependencies);
 
     // Don't intervene if the views module is removed.
     if (isset($dependencies['module']) && in_array('views', $dependencies['module'])) {
