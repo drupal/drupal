@@ -34,13 +34,13 @@
           const $previewDialog = $(
             `<div>${Drupal.theme('nodePreviewModal')}</div>`,
           ).appendTo('body');
-          Drupal.dialog($previewDialog, {
+          const confirmationDialog = Drupal.dialog($previewDialog, {
             title: Drupal.t('Leave preview?'),
             buttons: [
               {
                 text: Drupal.t('Cancel'),
                 click() {
-                  $(this).dialog('close');
+                  confirmationDialog.close();
                 },
               },
               {
@@ -50,7 +50,8 @@
                 },
               },
             ],
-          }).showModal();
+          });
+          confirmationDialog.showModal();
         }
       }
 
