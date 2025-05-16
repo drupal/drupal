@@ -196,7 +196,6 @@ class ViewsExposedForm extends FormBase implements WorkspaceSafeFormInterface {
     $view->exposed_data = $values;
     $view->exposed_raw_input = [];
 
-    $exclude = ['submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset'];
     /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase $exposed_form_plugin */
     $exposed_form_plugin = $view->display_handler->getPlugin('exposed_form');
     $exposed_form_plugin->exposedFormSubmit($form, $form_state, $exclude);
