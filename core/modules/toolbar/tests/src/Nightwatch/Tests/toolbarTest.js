@@ -13,27 +13,10 @@ const userOrientationBtn = `${itemUserTray} .toolbar-toggle-orientation button`;
 module.exports = {
   '@tags': ['core'],
   before(browser) {
-    browser
-      .drupalInstall()
-      .drupalInstallModule('toolbar', true)
-      .drupalCreateUser({
-        name: 'user',
-        password: '123',
-        permissions: [
-          'access site reports',
-          'access toolbar',
-          'access administration pages',
-          'administer menu',
-          'administer modules',
-          'administer site configuration',
-          'administer account settings',
-          'administer software updates',
-          'access content',
-          'administer permissions',
-          'administer users',
-        ],
-      })
-      .drupalLogin({ name: 'user', password: '123' });
+    browser.drupalInstall({
+      setupFile:
+        'core/modules/toolbar/tests/src/Nightwatch/ToolbarTestSetup.php',
+    });
   },
   beforeEach(browser) {
     // Set the resolution to the default desktop resolution. Ensure the default
@@ -189,7 +172,7 @@ module.exports = {
     browser.drupalRelativeURL('/admin');
     // Don't check the visibility as stark doesn't add the .path-admin class
     // to the <body> required to display the button.
-    browser.assert.attributeContains(escapeSelector, 'href', '/user/2');
+    browser.assert.attributeContains(escapeSelector, 'href', '/user/login');
   },
   'Aural view test: tray orientation': (browser) => {
     browser.waitForElementPresent(
