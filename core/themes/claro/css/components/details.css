@@ -176,6 +176,7 @@ td .claro-details {
     border-inline-end: 0.125rem solid;
     background: none;
   }
+
   [dir="rtl"] .claro-details__summary::before {
     transform: rotate(-225deg);
   }

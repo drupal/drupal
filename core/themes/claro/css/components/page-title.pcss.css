@@ -17,7 +17,7 @@
   font-size: var(--font-size-h1);
   -webkit-font-smoothing: antialiased;
 
-  @nest .region-header > & {
+  .region-header > & {
     /**
      * In this case page title is not rendered as a block ¯\_(ツ)_/¯.
      *

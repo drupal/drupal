@@ -21,7 +21,7 @@
   margin-inline-start: calc(var(--input--label-spacing) * -1);
   transform: translateY(-50%);
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     float: right;
   }
 }

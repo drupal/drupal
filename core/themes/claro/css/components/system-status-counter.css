@@ -35,6 +35,10 @@
   background-position: right center;
   background-size: 2.5rem;
 }
+[dir="rtl"] .system-status-counter__status-icon::before {
+  border-inline-end: 1px solid #e6e4df;
+  border-inline-start: 0;
+}
 @media (forced-colors: active) {
   .system-status-counter__status-icon::before {
     background-color: canvastext;
@@ -43,9 +47,6 @@
     mask-position: right center;
     mask-size: 2.5rem;
   }
-}
-[dir="rtl"] .system-status-counter__status-icon::before {
-  background-position: left center;
 }
 .system-status-counter__status-icon--error::before {
   background-image: var(--system-status-counter-status-icon-error);

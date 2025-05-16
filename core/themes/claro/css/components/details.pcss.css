@@ -49,7 +49,7 @@
    * element constrains the width. This can happen when toggling the
    * "lazy-load" option within an image field.
    */
-  @nest td & {
+  td & {
     width: min-content;
     min-width: 100%;
   }
@@ -142,7 +142,7 @@
   background-image: url(../../images/icons/545560/chevron-right.svg);
   background-size: contain;
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     transform: rotate(-270deg);
   }
 }
@@ -165,7 +165,7 @@
     border-inline-end: 0.125rem solid;
     background: none;
 
-    @nest [dir="rtl"] & {
+    [dir="rtl"] & {
       transform: rotate(-225deg);
     }
   }
@@ -310,7 +310,7 @@
   border-width: 0 0 0 var(--details-summary-focus-border-size); /* LTR */
   box-shadow: none;
 
-  @nest [dir="rtl"] & {
+  [dir="rtl"] & {
     border-width: 0 var(--details-summary-focus-border-size) 0 0;
   }
 }
