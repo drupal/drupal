@@ -83,7 +83,7 @@
       if (queryString !== '') {
         // If there is a '?' in ajaxPath, clean URL are on and & should be
         // used to add parameters.
-        queryString = (/\?/.test(ajaxPath) ? '&' : '?') + queryString;
+        queryString = (ajaxPath.includes('?') ? '&' : '?') + queryString;
       }
     }
 

@@ -14,7 +14,7 @@
   // loaded within an existing "workflow".
   if (
     !pathInfo.currentPathIsAdmin &&
-    !/destination=/.test(windowLocation.search)
+    !windowLocation.search.includes('destination=')
   ) {
     sessionStorage.setItem('escapeAdminPath', windowLocation);
   }
