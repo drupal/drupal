@@ -155,6 +155,8 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     }
     sort($this->allModules);
     $this->container->get('module_installer')->install($this->allModules);
+    // Get a library discovery from the new container.
+    $this->libraryDiscovery = $this->container->get('library.discovery');
 
     $this->assertLibraries();
   }
@@ -174,6 +176,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
       }
     });
     $this->container->get('module_installer')->install(array_keys($deprecated_modules_to_test));
+    $this->libraryDiscovery = $this->container->get('library.discovery');
     $this->allModules = array_keys(\Drupal::moduleHandler()->getModuleList());
 
     $this->assertLibraries();
