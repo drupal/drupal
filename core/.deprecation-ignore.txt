@@ -2,37 +2,33 @@
 # deprecated code.
 # See https://www.drupal.org/node/3285162 for more details.
 
-%The "Symfony\\Component\\Validator\\Context\\ExecutionContextInterface::.*\(\)" method is considered internal Used by the validator engine\. (Should not be called by user\W+code\. )?It may change without further notice\. You should not extend it from "[^"]+"\.%
+# @todo Remove when we no longer support PHPUnit 10.
+%The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.* You should not extend it from "Drupal\\[^"]+"%
 
-# Skip some dependencies' DebugClassLoader forward compatibility warnings.
-%Method "Behat\\[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Doctrine\\Common\\Annotations\\Reader::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Twig\\Extension\\ExtensionInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Twig\\Loader\\FilesystemLoader::findTemplate\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Twig\\Loader\\LoaderInterface::exists\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Twig\\Node\\Node::compile\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Twig\\NodeVisitor\\AbstractNodeVisitor::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Twig\\NodeVisitor\\NodeVisitorInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Twig\\TokenParser\\TokenParserInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "WebDriver\\Service\\CurlServiceInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+# Internal code that we cannot avoid extending.
+%The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered final.* You should not extend it from "Drupal\\[^"]+"%
+%The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
+
+# Skip some dependencies' DebugClassLoader forward compatibility warnings, in
+# order to let contrib modules make their necessary fixes first.
+%Method "Behat\\Mink\\Driver\\CoreDriver::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\FunctionalJavascriptTests\\DrupalSelenium2Driver" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Behat\\Mink\\WebAssert::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\FunctionalJavascriptTests\\WebDriverWebAssert" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Behat\\Mink\\WebAssert::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\Tests\\WebAssert" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Doctrine\\Common\\Annotations\\Reader::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "Drupal\\Component\\Annotation\\Doctrine\\SimpleAnnotationReader" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Extension\\ExtensionInterface::[^"]+" might add "array" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\TwigExtension" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Loader\\FilesystemLoader::findTemplate\(\)" might add "\?string" as a native return type declaration in the future. Do the same in child class "Drupal\\Core\\Template\\Loader\\FilesystemLoader" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Loader\\LoaderInterface::exists\(\)" might add "bool" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\Loader\\StringLoader" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Node\\Node::compile\(\)" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\Core\\Template\\TwigNodeCheckDeprecations" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Node\\Node::compile\(\)" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\Core\\Template\\TwigNodeTrans" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\NodeVisitor\\NodeVisitorInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\RemoveCheckToStringNodeVisitor" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\NodeVisitor\\NodeVisitorInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\TwigNodeVisitor" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\TokenParser\\TokenParserInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\TwigTransTokenParser" now to avoid errors or add an explicit @return annotation to suppress this message%
 
 # Indirect deprecations. These are not in Drupal's remit to fix, but it is
 # worth keeping track of dependencies' issues.
-%Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "org\\bovigo\\vfs\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "OpenTelemetry\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Iterator::[^"]+" might add "void" as a native return type declaration in the future. Do the same in implementation "org\\bovigo\\vfs\\vfsStreamContainerIterator" now to avoid errors or add an explicit @return annotation to suppress this message%
 
-# The following deprecation is listed for Twig 2 compatibility when unit
-# testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
-%The "Twig\\Template" class is considered internal\. It may change without further notice\. You should not use it from "Drupal\\Tests\\Core\\Template\\StubTwigTemplate"\.%
-%The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
-
-# PHPUnit 10.
-%The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.*You should not extend it from "Drupal\\[^"]+"%
-
-# PHPUnit 11.
-%The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered final\. It may change without further notice as of its next major version\. You should not extend it from "Drupal\\[^"]+"%
-
-# Symfony 7.2
+# Symfony 7.2.
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_length" option is deprecated and will be ignored in Symfony 8.0.%
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_bits_per_character" option is deprecated and will be ignored in Symfony 8.0.%
 
@@ -44,5 +40,5 @@
 %The "Drupal\\Core\\Entity\\Query\\QueryBase::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 %The "Drupal\\Core\\Entity\\Query\\QueryBase::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 
-# Symfony 7.3
+# Symfony 7.3.
 %Since symfony/validator 7.3: Passing an array of options to configure the "[^"]+" constraint is deprecated, use named arguments instead.%
