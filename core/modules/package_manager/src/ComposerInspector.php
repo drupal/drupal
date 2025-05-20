@@ -54,7 +54,7 @@ class ComposerInspector implements LoggerAwareInterface {
    *
    * @var string
    */
-  final public const SUPPORTED_VERSION = '^2.6';
+  final public const SUPPORTED_VERSION = '^2.7';
 
   public function __construct(
     private readonly ComposerProcessRunnerInterface $runner,

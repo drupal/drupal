@@ -47,6 +47,7 @@ services:
   Drupal\package_manager\EventSubscriber\ChangeLogger:
     calls:
       - [setLogger, ['@logger.channel.package_manager_change_log']]
+  Drupal\package_manager\EventSubscriber\DirectWriteSubscriber: {}
   Drupal\package_manager\ComposerInspector: {}
 
   # Validators.
@@ -200,4 +201,10 @@ services:
     public: false
   PhpTuf\ComposerStager\Internal\Translation\Service\SymfonyTranslatorProxyInterface:
     class: PhpTuf\ComposerStager\Internal\Translation\Service\SymfonyTranslatorProxy
+    public: false
+
+  Drupal\package_manager\DirectWritePreconditionBypass:
+    decorates: 'PhpTuf\ComposerStager\API\Precondition\Service\ActiveAndStagingDirsAreDifferentInterface'
+    arguments:
+      - '@.inner'
     public: false

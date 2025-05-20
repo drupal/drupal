@@ -230,7 +230,7 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
    *   ["2.5.0", "<default>"]
    *   ["2.5.5", "<default>"]
    *   ["2.5.11", "<default>"]
-   *   ["2.6.0", null]
+   *   ["2.7.0", null]
    *   ["2.2.11", "<default>"]
    *   ["2.2.0-dev", "<default>"]
    *   ["2.3.6", "<default>"]

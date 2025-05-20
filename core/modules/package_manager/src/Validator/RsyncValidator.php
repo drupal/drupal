@@ -38,6 +38,12 @@ final class RsyncValidator implements EventSubscriberInterface {
    *   The event being handled.
    */
   public function validate(SandboxValidationEvent $event): void {
+    // If the we are going to change the active directory directly, we don't
+    // need rsync.
+    if ($event->sandboxManager->isDirectWrite()) {
+      return;
+    }
+
     try {
       $this->executableFinder->find('rsync');
       $rsync_found = TRUE;

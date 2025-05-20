@@ -8,11 +8,13 @@ use Composer\Semver\VersionParser;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TempStore\SharedTempStore;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Core\Utility\Error;
+use Drupal\package_manager\Attribute\AllowDirectWrite;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PostCreateEvent;
@@ -147,9 +149,9 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
    *
    * Consists of a unique random string and the current class name.
    *
-   * @var string[]
+   * @var string[]|null
    */
-  private $lock;
+  private ?array $lock = NULL;
 
   /**
    * The shared temp store.
@@ -338,6 +340,7 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
       $id,
       static::class,
       $this->getType(),
+      $this->isDirectWrite(),
     ]);
     $this->claim($id);
 
@@ -351,7 +354,12 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
     $this->dispatch($event, [$this, 'markAsAvailable']);
 
     try {
-      $this->beginner->begin($active_dir, $stage_dir, $excluded_paths, NULL, $timeout);
+      if ($this->isDirectWrite()) {
+        $this->logger?->info($this->t('Direct-write is enabled. Skipping sandboxing.'));
+      }
+      else {
+        $this->beginner->begin($active_dir, $stage_dir, $excluded_paths, NULL, $timeout);
+      }
     }
     catch (\Throwable $error) {
       $this->destroy();
@@ -372,7 +380,10 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
   }
 
   /**
-   * Adds or updates packages in the stage directory.
+   * Adds or updates packages in the sandbox directory.
+   *
+   * If this sandbox manager is running in direct-write mode, the changes will
+   * be made in the active directory.
    *
    * @param string[] $runtime
    *   The packages to add as regular top-level dependencies, in the form
@@ -430,8 +441,18 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
 
     // If constraints were changed, update those packages.
     if ($runtime || $dev) {
-      $command = array_merge(['update', '--with-all-dependencies', '--optimize-autoloader'], $runtime, $dev);
-      $do_stage($command);
+      $do_stage([
+        'update',
+        // Allow updating top-level dependencies.
+        '--with-all-dependencies',
+        // Always optimize the autoloader for better site performance.
+        '--optimize-autoloader',
+        // For extra safety and speed, make Composer do only the necessary
+        // changes to transitive (indirect) dependencies.
+        '--minimal-changes',
+        ...$runtime,
+        ...$dev,
+      ]);
     }
     $this->dispatch(new PostRequireEvent($this, $runtime, $dev));
   }
@@ -458,6 +479,13 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
    *   a failed commit operation.
    */
   public function apply(?int $timeout = 600): void {
+    // In direct-write mode, changes are made directly to the running code base,
+    // so there is nothing to do.
+    if ($this->isDirectWrite()) {
+      $this->logger?->info($this->t('Direct-write is enabled. Changes have been made to the running code base.'));
+      return;
+    }
+
     $this->checkOwnership();
 
     $active_dir = $this->pathFactory->create($this->pathLocator->getProjectRoot());
@@ -556,7 +584,7 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
     // If the stage directory exists, queue it to be automatically cleaned up
     // later by a queue (which may or may not happen during cron).
     // @see \Drupal\package_manager\Plugin\QueueWorker\Cleaner
-    if ($this->sandboxDirectoryExists()) {
+    if ($this->sandboxDirectoryExists() && !$this->isDirectWrite()) {
       $this->queueFactory->get('package_manager_cleanup')
         ->createItem($this->getSandboxDirectory());
     }
@@ -659,8 +687,14 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
       )->render());
     }
 
-    if ($stored_lock === [$unique_id, static::class, $this->getType()]) {
+    if (array_slice($stored_lock, 0, 3) === [$unique_id, static::class, $this->getType()]) {
       $this->lock = $stored_lock;
+
+      if ($this->isDirectWrite()) {
+        // Bypass a hard-coded set of Composer Stager preconditions that prevent
+        // the active directory from being modified directly.
+        DirectWritePreconditionBypass::activate();
+      }
       return $this;
     }
 
@@ -717,7 +751,9 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
    * Returns the path of the directory where changes should be staged.
    *
    * @return string
-   *   The absolute path of the directory where changes should be staged.
+   *   The absolute path of the directory where changes should be staged. If
+   *   this sandbox manager is operating in direct-write mode, this will be
+   *   path of the active directory.
    *
    * @throws \LogicException
    *   If this method is called before the stage has been created or claimed.
@@ -725,6 +761,10 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
   public function getSandboxDirectory(): string {
     if (!$this->lock) {
       throw new \LogicException(__METHOD__ . '() cannot be called because the stage has not been created or claimed.');
+    }
+
+    if ($this->isDirectWrite()) {
+      return $this->pathLocator->getProjectRoot();
     }
     return $this->getStagingRoot() . DIRECTORY_SEPARATOR . $this->lock[0];
   }
@@ -846,6 +886,28 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
     }
     [$id] = $this->tempStore->get(static::TEMPSTORE_LOCK_KEY);
     $this->tempStore->set(self::TEMPSTORE_DESTROYED_STAGES_INFO_PREFIX . $id, $message);
+  }
+
+  /**
+   * Indicates whether the active directory will be changed directly.
+   *
+   * This can only happen if direct-write is globally enabled by the
+   * `package_manager_allow_direct_write` setting, AND this class explicitly
+   * allows it (by adding the AllowDirectWrite attribute).
+   *
+   * @return bool
+   *   TRUE if the sandbox manager is operating in direct-write mode, otherwise
+   *   FALSE.
+   */
+  final public function isDirectWrite(): bool {
+    // The use of direct-write is stored as part of the lock so that it will
+    // remain consistent during the sandbox's entire life cycle, even if the
+    // underlying global settings are changed.
+    if ($this->lock) {
+      return $this->lock[3];
+    }
+    $reflector = new \ReflectionClass($this);
+    return Settings::get('package_manager_allow_direct_write', FALSE) && $reflector->getAttributes(AllowDirectWrite::class);
   }
 
 }

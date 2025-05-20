@@ -7,6 +7,7 @@ namespace Drupal\package_manager_test_api;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Url;
+use Drupal\package_manager\Attribute\AllowDirectWrite;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\SandboxManagerBase;
@@ -142,6 +143,7 @@ class ApiController extends ControllerBase {
  *
  * @see \Drupal\package_manager\SandboxManagerBase::claim()
  */
+#[AllowDirectWrite]
 final class ControllerSandboxManager extends SandboxManagerBase {
 
   /**

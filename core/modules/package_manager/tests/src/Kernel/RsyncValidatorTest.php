@@ -76,4 +76,13 @@ class RsyncValidatorTest extends PackageManagerKernelTestBase {
     $this->assertResults([$result], PreCreateEvent::class);
   }
 
+  /**
+   * Tests that the presence of rsync is not checked in direct-write mode.
+   */
+  public function testRsyncNotNeededForDirectWrite(): void {
+    $this->executableFinder->find('rsync')->shouldNotBeCalled();
+    $this->setSetting('package_manager_allow_direct_write', TRUE);
+    $this->createStage(TestDirectWriteSandboxManager::class)->create();
+  }
+
 }
