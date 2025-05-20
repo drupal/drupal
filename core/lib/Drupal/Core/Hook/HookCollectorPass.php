@@ -95,6 +95,10 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       $priority = 0;
       foreach ($moduleImplements as $module => $v) {
+        if (str_starts_with((string) $hook, 'preprocess') && !function_exists($module . '_' . $hook)) {
+          $missingProcedural = $module . '_' . $hook;
+          @trigger_error("To support Drupal 11.1 the hook $missingProcedural requires the procedural LegacyHook implementation.", E_USER_WARNING);
+        }
         foreach ($collector->implementations[$hook][$module] as $class => $method_hooks) {
           if ($container->has($class)) {
             $definition = $container->findDefinition($class);
@@ -382,7 +386,7 @@ class HookCollectorPass implements CompilerPassInterface {
       'hook_install_tasks_alter',
     ];
 
-    if (in_array($hook->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|update_\d+$)/', $hook->hook)) {
+    if (in_array($hook->hook, $staticDenyHooks) || preg_match('/^(post_update_|update_\d+$)/', $hook->hook)) {
       throw new \LogicException("The hook $hook->hook on class $class does not support attributes and must remain procedural.");
     }
   }

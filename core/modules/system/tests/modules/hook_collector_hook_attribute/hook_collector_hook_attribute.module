@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Test preprocess with function does not throw exception.
+ */
+
+declare(strict_types=1);
+
+/**
+ * @file
+ */
+
+function hook_collector_hook_attribute_preprocess_test(): void {}

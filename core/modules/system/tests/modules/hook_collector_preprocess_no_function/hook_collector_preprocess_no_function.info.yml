@@ -1,0 +1,5 @@
+name: 'Test Hook preprocess no function in 11.1'
+type: module
+description: 'Test exception'
+package: Testing
+version: VERSION
