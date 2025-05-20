@@ -223,11 +223,11 @@ class TrackerTest extends BrowserTestBase {
     // Test escaping of title on user's tracker tab.
     \Drupal::service('module_installer')->install(['user_hooks_test']);
     Cache::invalidateTags(['rendered']);
-    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
+    \Drupal::keyvalue('user_hooks_test')->set('user_format_name_alter', TRUE);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertSession()->assertEscaped('<em>' . $this->user->id() . '</em>');
 
-    \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
+    \Drupal::keyvalue('user_hooks_test')->set('user_format_name_alter_safe', TRUE);
     Cache::invalidateTags(['rendered']);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertSession()->assertNoEscaped('<em>' . $this->user->id() . '</em>');
