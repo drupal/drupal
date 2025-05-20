@@ -41,7 +41,7 @@ class HelpTwigExtension extends AbstractExtension {
   /**
    * {@inheritdoc}
    */
-  public function getFunctions() {
+  public function getFunctions(): array {
     return [
       new TwigFunction('help_route_link', [$this, 'getRouteLink']),
       new TwigFunction('help_topic_link', [$this, 'getTopicLink']),
