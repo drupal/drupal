@@ -427,6 +427,8 @@ rowspans
 rtsp
 ruleset
 sameorigin
+sandboxed
+sandboxing
 savepoints
 sayre
 schemaapi

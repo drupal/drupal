@@ -85,15 +85,21 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
       $event->getDevPackages(),
     );
     $event->sandboxManager->setMetadata(static::REQUESTED_PACKAGES_KEY, $requested_packages);
+
+    // If we're in direct-write mode, the changes have already been made, so
+    // we should log them right away.
+    if ($event->sandboxManager->isDirectWrite()) {
+      $this->logChanges($event);
+    }
   }
 
   /**
    * Logs changes made by Package Manager.
    *
-   * @param \Drupal\package_manager\Event\PostApplyEvent $event
+   * @param \Drupal\package_manager\Event\PostApplyEvent|\Drupal\package_manager\Event\PostRequireEvent $event
    *   The event being handled.
    */
-  public function logChanges(PostApplyEvent $event): void {
+  public function logChanges(PostApplyEvent|PostRequireEvent $event): void {
     $installed_at_start = $event->sandboxManager->getMetadata(static::INSTALLED_PACKAGES_KEY);
     $installed_post_apply = $this->composerInspector->getInstalledPackagesList($this->pathLocator->getProjectRoot());
 

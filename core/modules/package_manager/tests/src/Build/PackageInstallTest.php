@@ -15,9 +15,14 @@ class PackageInstallTest extends TemplateProjectTestBase {
 
   /**
    * Tests installing packages in a stage directory.
+   *
+   * @testWith [true]
+   *   [false]
    */
-  public function testPackageInstall(): void {
+  public function testPackageInstall(bool $allow_direct_write): void {
     $this->createTestProject('RecommendedProject');
+    $allow_direct_write = var_export($allow_direct_write, TRUE);
+    $this->writeSettings("\n\$settings['package_manager_allow_direct_write'] = $allow_direct_write;");
 
     $this->setReleaseMetadata([
       'alpha' => __DIR__ . '/../../fixtures/release-history/alpha.1.1.0.xml',

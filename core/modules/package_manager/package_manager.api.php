@@ -95,6 +95,8 @@
  *   for event subscribers to flag errors before the active directory is
  *   modified, because once that has happened, the changes cannot be undone.
  *   This event may be dispatched multiple times during the stage life cycle.
+ *   Note that this event is NOT dispatched when the sandbox manager is
+ *   operating in direct-write mode.
  *
  * - \Drupal\package_manager\Event\PostApplyEvent
  *   Dispatched after changes in the stage directory have been copied to the
@@ -108,6 +110,11 @@
  *   container. This event may be dispatched multiple times during the stage
  *   life cycle, and should *never* be used for schema changes (i.e., operations
  *   that should happen in `hook_update_N()` or a post-update function).
+ *
+ * Since the apply events are not dispatched in direct-write mode, event
+ * subscribers that want to prevent a sandbox from moving through its life cycle
+ * in direct-write mode should do it by subscribing to PreCreateEvent or
+ * StatusCheckEvent.
  *
  * @section sec_stage_api Stage API: Public methods
  * The public API of any stage consists of the following methods:

@@ -347,7 +347,7 @@ END;
     $this->assertDirectoryIsWritable($log);
     $log .= '/' . str_replace('\\', '_', static::class) . '-' . $this->name();
     if ($this->usesDataProvider()) {
-      $log .= '-' . preg_replace('/[^a-z0-9]+/i', '_', $this->dataName());
+      $log .= '-' . preg_replace('/[^a-z0-9]+/i', '_', (string) $this->dataName());
     }
     $code .= <<<END
 \$config['package_manager.settings']['log'] = '$log-package_manager.log';
