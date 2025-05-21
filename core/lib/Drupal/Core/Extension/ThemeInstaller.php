@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Extension;
 
+use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -22,100 +23,25 @@ class ThemeInstaller implements ThemeInstallerInterface {
   use ModuleDependencyMessageTrait;
   use StringTranslationTrait;
 
-  /**
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * @var \Drupal\Core\Config\ConfigInstallerInterface
-   */
-  protected $configInstaller;
-
-  /**
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * @var \Drupal\Core\Asset\AssetCollectionOptimizerInterface
-   */
-  protected $cssCollectionOptimizer;
-
-  /**
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
-   * Constructs a new ThemeInstaller.
-   *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory to get the installed themes.
-   * @param \Drupal\Core\Config\ConfigInstallerInterface $config_installer
-   *   (optional) The config installer to install configuration. This optional
-   *   to allow the theme handler to work before Drupal is installed and has a
-   *   database.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to fire themes_installed/themes_uninstalled hooks.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
-   *   The config manager used to uninstall a theme.
-   * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
-   *   The CSS asset collection optimizer service.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
-   *   (optional) The route builder service to rebuild the routes if a theme is
-   *   installed.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state store.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
-   *   The module extension list.
-   * @param \Drupal\Core\Theme\Registry|null $themeRegistry
-   *   The theme registry.
-   * @param \Drupal\Core\Extension\ThemeExtensionList|null $themeExtensionList
-   *   The theme extension list.
-   */
-  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list, protected Registry $themeRegistry, protected ThemeExtensionList $themeExtensionList) {
-    $this->themeHandler = $theme_handler;
-    $this->configFactory = $config_factory;
-    $this->configInstaller = $config_installer;
-    $this->moduleHandler = $module_handler;
-    $this->configManager = $config_manager;
-    $this->cssCollectionOptimizer = $css_collection_optimizer;
-    $this->routeBuilder = $route_builder;
-    $this->logger = $logger;
-    $this->state = $state;
-    $this->moduleExtensionList = $module_extension_list;
+  public function __construct(
+    protected readonly ThemeHandlerInterface $themeHandler,
+    protected readonly ConfigFactoryInterface $configFactory,
+    protected readonly ConfigInstallerInterface $configInstaller,
+    protected readonly ModuleHandlerInterface $moduleHandler,
+    protected readonly ConfigManagerInterface $configManager,
+    protected readonly AssetCollectionOptimizerInterface $cssCollectionOptimizer,
+    protected readonly RouteBuilderInterface $routeBuilder,
+    protected readonly LoggerInterface $logger,
+    protected readonly StateInterface $state,
+    protected readonly ModuleExtensionList $moduleExtensionList,
+    protected readonly Registry $themeRegistry,
+    protected readonly ThemeExtensionList $themeExtensionList,
+    protected ?CachedDiscoveryInterface $componentPluginManager = NULL,
+  ) {
+    if ($this->componentPluginManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $componentPluginManager argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3525649', E_USER_DEPRECATED);
+      $this->componentPluginManager = \Drupal::service('plugin.manager.sdc');
+    }
   }
 
   /**
@@ -311,11 +237,9 @@ class ThemeInstaller implements ThemeInstallerInterface {
    * Resets some other systems like rebuilding the route information or caches.
    */
   protected function resetSystem() {
-    if ($this->routeBuilder) {
-      $this->routeBuilder->setRebuildNeeded();
-    }
-
+    $this->routeBuilder->setRebuildNeeded();
     $this->themeRegistry->reset();
+    $this->componentPluginManager->clearCachedDefinitions();
   }
 
 }
