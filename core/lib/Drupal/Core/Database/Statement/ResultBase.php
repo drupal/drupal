@@ -42,7 +42,7 @@ abstract class ResultBase {
   /**
    * Sets the default fetch mode for this result set.
    *
-   * @param \Drupal\Core\Database\FetchAs $mode
+   * @param \Drupal\Core\Database\Statement\FetchAs $mode
    *   One of the cases of the FetchAs enum.
    * @param array{class: class-string, constructor_args: list<mixed>, column: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
    *   An array of fetch options.
@@ -55,7 +55,7 @@ abstract class ResultBase {
   /**
    * Fetches the next row.
    *
-   * @param \Drupal\Core\Database\FetchAs $mode
+   * @param \Drupal\Core\Database\Statement\FetchAs $mode
    *   One of the cases of the FetchAs enum.
    * @param array{class?: class-string, constructor_args?: list<mixed>, column?: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
    *   An array of fetch options.
@@ -68,7 +68,7 @@ abstract class ResultBase {
   /**
    * Returns an array containing all of the result set rows.
    *
-   * @param \Drupal\Core\Database\FetchAs $mode
+   * @param \Drupal\Core\Database\Statement\FetchAs $mode
    *   One of the cases of the FetchAs enum.
    * @param array{class?: class-string, constructor_args?: list<mixed>, column?: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
    *   An array of fetch options.
@@ -120,7 +120,7 @@ abstract class ResultBase {
    *
    * @param string $column
    *   The name of the field on which to index the array.
-   * @param \Drupal\Core\Database\FetchAs $mode
+   * @param \Drupal\Core\Database\Statement\FetchAs $mode
    *   One of the cases of the FetchAs enum. If set to FetchAs::Associative
    *   or FetchAs::List the returned value with be an array of arrays. For any
    *   other value it will be an array of objects. If not specified, defaults to
