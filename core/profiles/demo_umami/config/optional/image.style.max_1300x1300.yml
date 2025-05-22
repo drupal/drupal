@@ -17,7 +17,7 @@ effects:
       upscale: false
   45c1e8e2-700e-4300-b0b8-c219e91d256b:
     uuid: 45c1e8e2-700e-4300-b0b8-c219e91d256b
-    id: image_convert
+    id: image_convert_avif
     weight: 2
     data:
       extension: webp

@@ -18,7 +18,7 @@ effects:
       upscale: false
   f2b6c795-26ae-4130-aa18-aa120ea3ba98:
     uuid: f2b6c795-26ae-4130-aa18-aa120ea3ba98
-    id: image_convert
+    id: image_convert_avif
     weight: 2
     data:
       extension: webp
