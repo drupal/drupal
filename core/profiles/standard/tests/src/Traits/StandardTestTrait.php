@@ -192,7 +192,7 @@ trait StandardTestTrait {
     foreach (ImageStyle::loadMultiple() as $style) {
       $effects = $style->getEffects()->getInstanceIds();
       $last = $style->getEffects()->get(end($effects));
-      $this->assertSame('image_convert', $last->getConfiguration()['id']);
+      $this->assertSame('image_convert_avif', $last->getConfiguration()['id']);
       $this->assertSame('webp', $last->getConfiguration()['data']['extension']);
     }
 

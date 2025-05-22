@@ -17,7 +17,7 @@ effects:
       upscale: false
   1021da71-fc2a-43d0-be5d-efaf1c79e2ea:
     uuid: 1021da71-fc2a-43d0-be5d-efaf1c79e2ea
-    id: image_convert
+    id: image_convert_avif
     weight: 2
     data:
       extension: webp

@@ -52,6 +52,10 @@ image.effect.image_convert:
         Choice:
           callback: 'Drupal\Core\ImageToolkit\ImageToolkitManager::getAllValidExtensions'
 
+image.effect.image_convert_avif:
+  type: image.effect.image_convert
+  label: 'Convert to AVIF'
+
 image.effect.image_resize:
   type: image_size
   label: 'Image resize'

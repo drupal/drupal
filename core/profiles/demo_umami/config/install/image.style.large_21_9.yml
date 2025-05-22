@@ -14,7 +14,7 @@ effects:
       anchor: center-center
   622f10ec-5f36-427e-a54a-4c0b8a45d6ab:
     uuid: 622f10ec-5f36-427e-a54a-4c0b8a45d6ab
-    id: image_convert
+    id: image_convert_avif
     weight: 2
     data:
       extension: webp
