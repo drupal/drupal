@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contact\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Test\AssertMailTrait;
@@ -106,12 +105,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     // Verify that the correct watchdog message has been logged.
     $this->drupalGet('/admin/reports/dblog');
-    $placeholders = [
-      '@sender_name' => $this->webUser->getAccountName(),
-      '@sender_email' => $this->webUser->getEmail(),
-      '@recipient_name' => $this->contactUser->getAccountName(),
-    ];
-    $this->assertSession()->responseContains(new FormattableMarkup('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
+    $this->assertSession()->responseContains($this->webUser->getAccountName() . " (" . HTML::escape($this->webUser->getEmail()) . ") sent " . $this->contactUser->getAccountName() . " an email.");
     // Ensure an unescaped version of the email does not exist anywhere.
     $this->assertSession()->responseNotContains($this->webUser->getEmail());
 

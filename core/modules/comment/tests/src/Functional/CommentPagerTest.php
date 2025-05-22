@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentManagerInterface;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\node\Entity\Node;
 
 /**
@@ -446,7 +445,7 @@ class CommentPagerTest extends CommentTestBase {
       $url_target = $this->getAbsoluteUrl($urls[$index]->getAttribute('href'));
       return $this->drupalGet($url_target);
     }
-    $this->fail(new FormattableMarkup('Link %label does not exist on @url_before', ['%label' => $xpath, '@url_before' => $url_before]));
+    $this->fail("Link $xpath does not exist on $url_before");
     return FALSE;
   }
 

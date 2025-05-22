@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
@@ -172,10 +171,9 @@ class ConfigEntityTest extends BrowserTestBase {
     ]);
     try {
       $status = $id_length_config_test->save();
-      $this->fail(new FormattableMarkup("config_test entity with ID length @length exceeding the maximum allowed length of @max saved successfully", [
-        '@length' => strlen($id_length_config_test->id()),
-        '@max' => static::MAX_ID_LENGTH,
-      ]));
+      $length = strlen($id_length_config_test->id());
+      $max = static::MAX_ID_LENGTH;
+      $this->fail("config_test entity with ID length $length exceeding the maximum allowed length of $max saved successfully");
     }
     catch (ConfigEntityIdLengthException) {
       // Expected exception; just continue testing.

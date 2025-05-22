@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -101,9 +101,10 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $link->click();
 
     // Confirm deletion.
-    $this->assertSession()->responseContains(new FormattableMarkup('Are you sure you want to delete the vocabulary %name?', ['%name' => $edit['name']]));
+    $name = Html::escape($edit['name']);
+    $this->assertSession()->responseContains("Are you sure you want to delete the vocabulary <em class=\"placeholder\">$name</em>?");
     $this->submitForm([], 'Delete');
-    $this->assertSession()->responseContains(new FormattableMarkup('Deleted vocabulary %name.', ['%name' => $edit['name']]));
+    $this->assertSession()->responseContains("Deleted vocabulary <em class=\"placeholder\">$name</em>.");
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($edit['vid']), 'Vocabulary not found.');
   }

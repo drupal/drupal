@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -738,8 +738,8 @@ class SaveUploadTest extends FileManagedTestBase {
 
     $content = (string) $response->getBody();
     $this->htmlOutput($content);
-    $error_text = new FormattableMarkup('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $filename]);
-    $this->assertStringContainsString((string) $error_text, $content);
+    $error_text = 'The file <em class="placeholder">' . Html::escape($filename) . '</em> could not be uploaded because the name is invalid.';
+    $this->assertStringContainsString($error_text, $content);
     $this->assertStringContainsString('Epic upload FAIL!', $content);
     $this->assertFileDoesNotExist('temporary://' . $filename);
   }
