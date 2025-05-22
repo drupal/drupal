@@ -316,6 +316,14 @@ class DisplayTest extends ViewTestBase {
     $output = $view->preview();
     $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?date=22&amp;foo=bar#22', $output, 'The read more link with href "/node?date=22&foo=bar#22" was found.');
+
+    // Test more link isn't rendered if user doesn't have permission to the
+    // more link URL.
+    $view->display_handler->setOption('link_url', 'admin/content');
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = (string) $renderer->renderRoot($output);
+    $this->assertStringNotContainsString('/admin/content', $output, 'The read more link with href "/admin/content" was not found.');
   }
 
   /**
