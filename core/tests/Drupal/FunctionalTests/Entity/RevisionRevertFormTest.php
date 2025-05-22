@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Entity;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test\Entity\EntityTestRevPub;
@@ -192,7 +191,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
    * @covers ::submitForm
    * @dataProvider providerSubmitForm
    */
-  public function testSubmitForm(array $permissions, string $entityTypeId, string $entityLabel, string $expectedLog, string $expectedMessage, string $expectedDestination): void {
+  public function testSubmitForm(array $permissions, string $entityTypeId, string $entityLabel, array $expectedLog, string $expectedMessage, string $expectedDestination): void {
     if (count($permissions) > 0) {
       $this->drupalLogin($this->createUser($permissions));
     }
@@ -231,7 +230,10 @@ class RevisionRevertFormTest extends BrowserTestBase {
 
     // Logger log.
     $logs = $this->getLogs($entity->getEntityType()->getProvider());
-    $this->assertEquals([0 => $expectedLog], $logs);
+    $this->assertCount(1, $logs);
+    $this->assertEquals('@type: reverted %title revision %revision.', $logs[0]->message);
+    $this->assertEquals($expectedLog, unserialize($logs[0]->variables));
+
     // Messenger message.
     $this->assertSession()->pageTextContains($expectedMessage);
   }
@@ -246,7 +248,11 @@ class RevisionRevertFormTest extends BrowserTestBase {
       ['view test entity'],
       'entity_test_rev',
       'view, revert',
-      'entity_test_rev: reverted <em class="placeholder">view, revert</em> revision <em class="placeholder">1</em>.',
+      [
+        '@type' => 'entity_test_rev',
+        '%title' => 'view, revert',
+        '%revision' => '1',
+      ],
       'Entity Test Bundle view, revert has been reverted.',
       '/entity_test_rev/manage/1',
     ];
@@ -255,7 +261,11 @@ class RevisionRevertFormTest extends BrowserTestBase {
       ['view test entity'],
       'entity_test_rev',
       'view, view all revisions, revert',
-      'entity_test_rev: reverted <em class="placeholder">view, view all revisions, revert</em> revision <em class="placeholder">1</em>.',
+      [
+        '@type' => 'entity_test_rev',
+        '%title' => 'view, view all revisions, revert',
+        '%revision' => '1',
+      ],
       'Entity Test Bundle view, view all revisions, revert has been reverted.',
       '/entity_test_rev/1/revisions',
     ];
@@ -264,7 +274,11 @@ class RevisionRevertFormTest extends BrowserTestBase {
       [],
       'entity_test_revlog',
       'view, revert',
-      'entity_test_revlog: reverted <em class="placeholder">view, revert</em> revision <em class="placeholder">1</em>.',
+      [
+        '@type' => 'entity_test_revlog',
+        '%title' => 'view, revert',
+        '%revision' => '1',
+      ],
       'Test entity - revisions log view, revert has been reverted to the revision from Sun, 11 Jan 2009 - 16:00.',
       '/entity_test_revlog/manage/1',
     ];
@@ -273,7 +287,11 @@ class RevisionRevertFormTest extends BrowserTestBase {
       [],
       'entity_test_revlog',
       'view, view all revisions, revert',
-      'entity_test_revlog: reverted <em class="placeholder">view, view all revisions, revert</em> revision <em class="placeholder">1</em>.',
+      [
+        '@type' => 'entity_test_revlog',
+        '%title' => 'view, view all revisions, revert',
+        '%revision' => '1',
+      ],
       'Test entity - revisions log view, view all revisions, revert has been reverted to the revision from Sun, 11 Jan 2009 - 16:00.',
       '/entity_test_revlog/1/revisions',
     ];
@@ -347,14 +365,11 @@ class RevisionRevertFormTest extends BrowserTestBase {
    *   Watchdog entries.
    */
   protected function getLogs(string $channel): array {
-    $logs = \Drupal::database()->select('watchdog')
+    return \Drupal::database()->select('watchdog')
       ->fields('watchdog')
       ->condition('type', $channel)
       ->execute()
       ->fetchAll();
-    return array_map(function (object $log) {
-      return (string) new FormattableMarkup($log->message, unserialize($log->variables));
-    }, $logs);
   }
 
   /**

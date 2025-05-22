@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\field\FunctionalJavascript\EntityReference;
 
 use Behat\Mink\Element\NodeElement;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
@@ -317,10 +316,9 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Try to select the views handler.
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $page->findField('settings[handler]')->setValue('views');
-    $views_text = (string) new FormattableMarkup('No eligible views were found. <a href=":create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href=":existing">existing view</a>.', [
-      ':create' => Url::fromRoute('views_ui.add')->toString(),
-      ':existing' => Url::fromRoute('entity.view.collection')->toString(),
-    ]);
+    $create = Url::fromRoute('views_ui.add')->toString();
+    $existing = Url::fromRoute('entity.view.collection')->toString();
+    $views_text = 'No eligible views were found. <a href="' . $create . '">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="' . $existing . '">existing view</a>.';
     $assert_session->waitForElement('xpath', '//a[contains(text(), "Create a view")]');
     $assert_session->responseContains($views_text);
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Entity;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test\Entity\EntityTestRevPub;
@@ -247,7 +246,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
    *
    * @covers ::submitForm
    */
-  protected function doTestSubmitForm(array $permissions, string $entityTypeId, string $entityLabel, int $totalRevisions, string $expectedLog, string $expectedMessage, $expectedDestination): void {
+  protected function doTestSubmitForm(array $permissions, string $entityTypeId, string $entityLabel, int $totalRevisions, array $expectedLog, string $expectedMessage, $expectedDestination): void {
     if (count($permissions) > 0) {
       $this->drupalLogin($this->createUser($permissions));
     }
@@ -297,7 +296,9 @@ class RevisionDeleteFormTest extends BrowserTestBase {
 
     // Logger log.
     $logs = $this->getLogs($entity->getEntityType()->getProvider());
-    $this->assertEquals([0 => $expectedLog], $logs);
+    $this->assertCount(1, $logs);
+    $this->assertEquals("@type: deleted %title revision %revision.", $logs[0]->message);
+    $this->assertEquals($expectedLog, unserialize($logs[0]->variables));
     // Messenger message.
     $this->assertSession()->pageTextContains($expectedMessage);
     \Drupal::database()->delete('watchdog')->execute();
@@ -314,7 +315,11 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       'entity_test_rev',
       'view all revisions, delete revision',
       2,
-      'entity_test_rev: deleted <em class="placeholder">view all revisions, delete revision</em> revision <em class="placeholder">1</em>.',
+      [
+        '@type' => 'entity_test_rev',
+        '%title' => 'view all revisions, delete revision',
+        '%revision' => '1',
+      ],
       'Revision of Entity Test Bundle view all revisions, delete revision has been deleted.',
       '/entity_test_rev/1/revisions',
     ];
@@ -324,7 +329,11 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       'entity_test_rev',
       'view, view all revisions, delete revision',
       2,
-      'entity_test_rev: deleted <em class="placeholder">view, view all revisions, delete revision</em> revision <em class="placeholder">3</em>.',
+      [
+        '@type' => 'entity_test_rev',
+        '%title' => 'view, view all revisions, delete revision',
+        '%revision' => '3',
+      ],
       'Revision of Entity Test Bundle view, view all revisions, delete revision has been deleted.',
       '/entity_test_rev/2/revisions',
     ];
@@ -334,7 +343,11 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       'entity_test_revlog',
       'view all revisions, delete revision',
       2,
-      'entity_test_revlog: deleted <em class="placeholder">view all revisions, delete revision</em> revision <em class="placeholder">1</em>.',
+      [
+        '@type' => 'entity_test_revlog',
+        '%title' => 'view all revisions, delete revision',
+        '%revision' => '1',
+      ],
       'Revision from Sun, 11 Jan 2009 - 16:00 of Test entity - revisions log view all revisions, delete revision has been deleted.',
       '/entity_test_revlog/1/revisions',
     ];
@@ -344,7 +357,11 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       'entity_test_revlog',
       'view, view all revisions, delete revision',
       2,
-      'entity_test_revlog: deleted <em class="placeholder">view, view all revisions, delete revision</em> revision <em class="placeholder">3</em>.',
+      [
+        '@type' => 'entity_test_revlog',
+        '%title' => 'view, view all revisions, delete revision',
+        '%revision' => '3',
+      ],
       'Revision from Sun, 11 Jan 2009 - 16:00 of Test entity - revisions log view, view all revisions, delete revision has been deleted.',
       '/entity_test_revlog/2/revisions',
     ];
@@ -362,14 +379,11 @@ class RevisionDeleteFormTest extends BrowserTestBase {
    *   Watchdog entries.
    */
   protected function getLogs(string $channel): array {
-    $logs = \Drupal::database()->select('watchdog')
+    return \Drupal::database()->select('watchdog')
       ->fields('watchdog')
       ->condition('type', $channel)
       ->execute()
       ->fetchAll();
-    return array_map(function (object $log) {
-      return (string) new FormattableMarkup($log->message, unserialize($log->variables));
-    }, $logs);
   }
 
 }
