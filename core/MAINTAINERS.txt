@@ -210,7 +210,7 @@ Entity API
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
 
 Extension API
-- ?
+- Nic Laflin 'nicxvan' https://www.drupal.org/u/nicxvan
 
 Field API
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
