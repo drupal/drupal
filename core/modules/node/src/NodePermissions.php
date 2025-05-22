@@ -2,6 +2,9 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\DependencyInjection\AutowireTrait;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\BundlePermissionHandlerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\NodeType;
@@ -9,19 +12,34 @@ use Drupal\node\Entity\NodeType;
 /**
  * Provides dynamic permissions for nodes of different types.
  */
-class NodePermissions {
+class NodePermissions implements ContainerInjectionInterface {
+
+  use AutowireTrait;
   use BundlePermissionHandlerTrait;
   use StringTranslationTrait;
+
+  public function __construct(
+    protected ?EntityTypeManagerInterface $entityTypeManager = NULL,
+  ) {
+    if ($entityTypeManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $entityTypeManager argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3515921', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+  }
 
   /**
    * Returns an array of node type permissions.
    *
    * @return array
    *   The node type permissions.
-   *   @see \Drupal\user\PermissionHandlerInterface::getPermissions()
+   *
+   * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   public function nodeTypePermissions() {
-    return $this->generatePermissions(NodeType::loadMultiple(), [$this, 'buildPermissions']);
+    return $this->generatePermissions(
+      $this->entityTypeManager->getStorage('node_type')->loadMultiple(),
+      [$this, 'buildPermissions']
+    );
   }
 
   /**
