@@ -2117,13 +2117,18 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $hasMoreRecords = !empty($this->view->pager) && $this->view->pager->hasMoreRecords();
     if ($this->isMoreEnabled() && ($this->useMoreAlways() || $hasMoreRecords)) {
       $url = $this->getMoreUrl();
+      $access = $url->access(return_as_object: TRUE);
 
-      return [
+      $more_link = [
         '#type' => 'more_link',
         '#url' => $url,
         '#title' => $this->useMoreText(),
         '#view' => $this->view,
+        '#access' => $access->isAllowed(),
       ];
+      $accessCacheability = CacheableMetadata::createFromObject($access);
+      $accessCacheability->applyTo($more_link);
+      return $more_link;
     }
   }
 
