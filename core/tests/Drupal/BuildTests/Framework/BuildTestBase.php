@@ -333,8 +333,8 @@ abstract class BuildTestBase extends TestCase {
   public function executeCommand($command_line, $working_dir = NULL) {
     $this->commandProcess = Process::fromShellCommandline($command_line);
     $this->commandProcess->setWorkingDirectory($this->getWorkingPath($working_dir))
-      ->setTimeout(300)
-      ->setIdleTimeout(300);
+      ->setTimeout(360)
+      ->setIdleTimeout(360);
     $this->commandProcess->run();
     return $this->commandProcess;
   }

@@ -92,7 +92,7 @@ class ApiController extends ControllerBase {
   public function finish(string $id): Response {
     $this->stage->claim($id)->postApply();
     $this->stage->destroy();
-    return new Response();
+    return new Response('Finished');
   }
 
   /**
