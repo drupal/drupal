@@ -12,26 +12,47 @@ use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InstallRequirementsInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Requirement severity -- Informational message only.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\Core\Extension\Requirement\RequirementSeverity::Info instead.
+ *
+ * @see https://www.drupal.org/node/3410939
  */
 const REQUIREMENT_INFO = -1;
 
 /**
  * Requirement severity -- Requirement successfully met.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\Core\Extension\Requirement\RequirementSeverity::OK instead.
+ *
+ * @see https://www.drupal.org/node/3410939
  */
 const REQUIREMENT_OK = 0;
 
 /**
  * Requirement severity -- Warning condition; proceed but flag warning.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\Core\Extension\Requirement\RequirementSeverity::Warning instead.
+ *
+ * @see https://www.drupal.org/node/3410939
  */
 const REQUIREMENT_WARNING = 1;
 
 /**
  * Requirement severity -- Error condition; abort installation.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\Core\Extension\Requirement\RequirementSeverity::Error instead.
+ *
+ * @see https://www.drupal.org/node/3410939
  */
 const REQUIREMENT_ERROR = 2;
 
@@ -190,7 +211,7 @@ function drupal_verify_profile($install_state): array {
     $requirements['required_modules'] = [
       'title' => t('Required modules'),
       'value' => t('Required modules not found.'),
-      'severity' => REQUIREMENT_ERROR,
+      'severity' => RequirementSeverity::Error,
       'description' => t('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>/modules</em>. Missing modules: @modules', ['@modules' => $modules_list]),
     ];
   }
@@ -560,7 +581,7 @@ function drupal_current_script_url($query = []) {
  * update.php) and returns a URL that can be used to attempt to proceed to the
  * next step of the script.
  *
- * @param int $severity
+ * @param int|\Drupal\Core\Extension\Requirement\RequirementSeverity $severity
  *   The severity of the requirements problem, as returned by
  *   drupal_requirements_severity().
  *
@@ -573,11 +594,18 @@ function drupal_current_script_url($query = []) {
  * @see drupal_current_script_url()
  * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
  */
-function drupal_requirements_url($severity) {
+function drupal_requirements_url(/* int|RequirementSeverity */ $severity): string {
+  if (!$severity instanceof RequirementSeverity) {
+    @trigger_error('Passing a type other than ' . RequirementSeverity::class . ' to ' . __FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a ' . RequirementSeverity::class . ' enum instead. See https://www.drupal.org/node/3410939', E_USER_DEPRECATED);
+    $severity = RequirementSeverity::from($severity);
+  }
+  if (is_null($severity)) {
+    $severity = RequirementSeverity::Info;
+  }
   $query = [];
   // If there are no errors, only warnings, append 'continue=1' to the URL so
   // the user can bypass this screen on the next page load.
-  if ($severity == REQUIREMENT_WARNING) {
+  if ($severity === RequirementSeverity::Warning) {
     $query['continue'] = 1;
   }
   return drupal_current_script_url($query);
@@ -644,15 +672,16 @@ function drupal_check_profile($profile): array {
  *
  * @return int
  *   The highest severity in the array.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3410939
  */
 function drupal_requirements_severity(&$requirements) {
-  $severity = REQUIREMENT_OK;
-  foreach ($requirements as $requirement) {
-    if (isset($requirement['severity'])) {
-      $severity = max($severity, $requirement['severity']);
-    }
-  }
-  return $severity;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . RequirementSeverity::class . '::maxSeverityFromRequirements() instead. See https://www.drupal.org/node/3410939', E_USER_DEPRECATED);
+  return RequirementSeverity::maxSeverityFromRequirements($requirements)->value;
 }
 
 /**
@@ -676,10 +705,10 @@ function drupal_check_module($module) {
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']) ?? [];
   $requirements = array_merge($requirements, install_check_class_requirements($extension));
 
-  if (!empty($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
+  if (!empty($requirements) && RequirementSeverity::maxSeverityFromRequirements($requirements) === RequirementSeverity::Error) {
     // Print any error messages
     foreach ($requirements as $requirement) {
-      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
+      if (isset($requirement['severity']) && $requirement['severity'] === RequirementSeverity::Error) {
         $message = $requirement['description'];
         if (isset($requirement['value']) && $requirement['value']) {
           $message = t('@requirements_message (Currently using @item version @version)', ['@requirements_message' => $requirement['description'], '@item' => $requirement['title'], '@version' => $requirement['value']]);

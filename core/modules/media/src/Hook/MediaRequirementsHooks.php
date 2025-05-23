@@ -4,6 +4,7 @@ namespace Drupal\media\Hook;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -45,7 +46,7 @@ class MediaRequirementsHooks {
               '%type' => $type->label(),
             ]
           ),
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => RequirementSeverity::Error,
         ];
         continue;
       }
@@ -88,7 +89,7 @@ class MediaRequirementsHooks {
             '%type' => $type->label(),
           ]
         ),
-        'severity' => REQUIREMENT_WARNING,
+        'severity' => RequirementSeverity::Warning,
       ];
     }
 

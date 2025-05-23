@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\package_manager\EventSubscriber;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PostRequireEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
-use Drupal\system\SystemManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -68,7 +68,7 @@ final class DirectWriteSubscriber implements EventSubscriberInterface {
    *   The event being handled.
    */
   public function enterMaintenanceMode(PreRequireEvent $event): void {
-    $errors = $event->getResults(SystemManager::REQUIREMENT_ERROR);
+    $errors = $event->getResults(RequirementSeverity::Error->value);
 
     if (empty($errors) && $event->sandboxManager->isDirectWrite()) {
       $this->state->set(static::STATE_KEY, (bool) $this->state->get('system.maintenance_mode'));

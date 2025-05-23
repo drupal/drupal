@@ -6,6 +6,7 @@ namespace Drupal\user\Hook;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -40,7 +41,7 @@ class UserRequirements {
         'description' => $this->t('The anonymous user does not exist. See the <a href=":url">restore the anonymous (user ID 0) user record</a> for more information', [
           ':url' => 'https://www.drupal.org/node/1029506',
         ]),
-        'severity' => REQUIREMENT_WARNING,
+        'severity' => RequirementSeverity::Warning,
       ];
     }
 
@@ -57,7 +58,7 @@ class UserRequirements {
         'description' => $this->t('Some user accounts have email addresses that differ only by case. For example, one account might have alice@example.com and another might have Alice@Example.com. See <a href=":url">Conflicting User Emails</a> for more information.', [
           ':url' => 'https://www.drupal.org/node/3486109',
         ]),
-        'severity' => REQUIREMENT_WARNING,
+        'severity' => RequirementSeverity::Warning,
       ];
     }
 

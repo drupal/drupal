@@ -20,8 +20,8 @@ interface InstallRequirementsInterface {
    * hand. As a consequence, install-time requirements must be checked without
    * access to the full Drupal API, because it is not available during
    * install.php.
-   * If a requirement has a severity of REQUIREMENT_ERROR, install.php will
-   * abort or at least the module will not install.
+   * If a requirement has a severity of RequirementSeverity::Error, install.php
+   * will abort or at least the module will not install.
    * Other severity levels have no effect on the installation.
    * Module dependencies do not belong to these installation requirements,
    * but should be defined in the module's .info.yml file.
@@ -37,12 +37,9 @@ interface InstallRequirementsInterface {
    *   - value: This should only be used for version numbers, do not set it if
    *     not applicable.
    *   - description: The description of the requirement/status.
-   *   - severity: (optional) The requirement's result/severity level, one of:
-   *     - REQUIREMENT_INFO: For info only.
-   *     - REQUIREMENT_OK: The requirement is satisfied.
-   *     - REQUIREMENT_WARNING: The requirement failed with a warning.
-   *     - REQUIREMENT_ERROR: The requirement failed with an error.
-   *     Defaults to REQUIREMENT_OK when installing.
+   *   - severity: (optional) An instance of
+   *     \Drupal\Core\Extension\Requirement\RequirementSeverity enum. Defaults
+   *     to RequirementSeverity::OK when installing.
    */
   public static function getRequirements(): array;
 

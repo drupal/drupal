@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\image\Hook;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\ImageToolkit\ImageToolkitManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -46,7 +47,7 @@ class ImageRequirements {
           'title' => $this->t('Image toolkit'),
           'value' => $this->t('None'),
           'description' => $this->t("No image toolkit is configured on the site. Check PHP installed extensions or add a contributed toolkit that doesn't require a PHP extension. Make sure that at least one valid image toolkit is installed."),
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => RequirementSeverity::Error,
         ],
       ];
     }

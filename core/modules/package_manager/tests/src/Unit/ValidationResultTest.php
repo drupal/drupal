@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Unit;
 
-use Drupal\package_manager\ValidationResult;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\system\SystemManager;
+use Drupal\package_manager\ValidationResult;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -25,7 +25,7 @@ class ValidationResultTest extends UnitTestCase {
     // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString, DrupalPractice.Objects.GlobalFunction
     $summary = $summary ? t($summary) : NULL;
     $result = ValidationResult::createWarning($messages, $summary);
-    $this->assertResultValid($result, $messages, $summary, SystemManager::REQUIREMENT_WARNING);
+    $this->assertResultValid($result, $messages, $summary, RequirementSeverity::Warning->value);
   }
 
   /**
@@ -39,16 +39,17 @@ class ValidationResultTest extends UnitTestCase {
       ValidationResult::createWarning([t('Moo!')]),
       // phpcs:enable DrupalPractice.Objects.GlobalFunction
     ];
-    $this->assertSame(SystemManager::REQUIREMENT_ERROR, ValidationResult::getOverallSeverity($results));
+    $this->assertSame(RequirementSeverity::Error->value, ValidationResult::getOverallSeverity($results));
 
     // If there are no results, but no errors, the results should be counted as
     // a warning.
     array_shift($results);
-    $this->assertSame(SystemManager::REQUIREMENT_WARNING, ValidationResult::getOverallSeverity($results));
+    $this->assertSame(RequirementSeverity::Warning->value, ValidationResult::getOverallSeverity($results));
 
-    // If there are just plain no results, we should get REQUIREMENT_OK.
+    // If there are just plain no results, we should get
+    // RequirementSeverity::OK.
     array_shift($results);
-    $this->assertSame(SystemManager::REQUIREMENT_OK, ValidationResult::getOverallSeverity($results));
+    $this->assertSame(RequirementSeverity::OK->value, ValidationResult::getOverallSeverity($results));
   }
 
   /**
@@ -60,7 +61,7 @@ class ValidationResultTest extends UnitTestCase {
     // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString, DrupalPractice.Objects.GlobalFunction
     $summary = $summary ? t($summary) : NULL;
     $result = ValidationResult::createError($messages, $summary);
-    $this->assertResultValid($result, $messages, $summary, SystemManager::REQUIREMENT_ERROR);
+    $this->assertResultValid($result, $messages, $summary, RequirementSeverity::Error->value);
   }
 
   /**

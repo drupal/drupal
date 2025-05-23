@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\media\Install\Requirements;
 
 use Drupal\Core\Extension\InstallRequirementsInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\File\FileSystemInterface;
 
 /**
@@ -31,7 +32,7 @@ class MediaRequirements implements InstallRequirementsInterface {
       $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', [':handbook_url' => 'https://www.drupal.org/server-permissions']);
       $description = $error . ' ' . $description;
       $requirements['media']['description'] = $description;
-      $requirements['media']['severity'] = REQUIREMENT_ERROR;
+      $requirements['media']['severity'] = RequirementSeverity::Error;
     }
     return $requirements;
   }

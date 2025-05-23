@@ -6,6 +6,7 @@ namespace Drupal\jsonapi\Hook;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -40,7 +41,7 @@ class JsonapiRequirements {
       $requirements['jsonapi_multilingual_support'] = [
         'title' => $this->t('JSON:API multilingual support'),
         'value' => $this->t('Limited'),
-        'severity' => REQUIREMENT_INFO,
+        'severity' => RequirementSeverity::Info,
         'description' => $this->t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [
           ':jsonapi-docs' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/jsonapi-module/translations',
         ]),
@@ -49,7 +50,7 @@ class JsonapiRequirements {
     $requirements['jsonapi_revision_support'] = [
       'title' => $this->t('JSON:API revision support'),
       'value' => $this->t('Limited'),
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::Info,
       'description' => $this->t('Revision support is currently read-only and only for the "Content" and "Media" entity types in JSON:API. See the <a href=":jsonapi-docs">JSON:API revision support documentation</a> for more information on the current status of revision support.', [
         ':jsonapi-docs' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/jsonapi-module/revisions',
       ]),
@@ -57,7 +58,7 @@ class JsonapiRequirements {
     $requirements['jsonapi_read_only_mode'] = [
       'title' => $this->t('JSON:API allowed operations'),
       'value' => $this->t('Read-only'),
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::Info,
     ];
     if (!$this->configFactory->get('jsonapi.settings')->get('read_only')) {
       $requirements['jsonapi_read_only_mode']['value'] = $this->t('All (create, read, update, delete)');

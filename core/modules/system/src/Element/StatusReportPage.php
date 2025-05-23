@@ -2,9 +2,9 @@
 
 namespace Drupal\system\Element;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
-use Drupal\Core\Render\Element\StatusReport;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
@@ -37,6 +37,7 @@ class StatusReportPage extends RenderElementBase {
       '#theme' => 'status_report_general_info',
     ];
     // Loop through requirements and pull out items.
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     foreach ($element['#requirements'] as $key => $requirement) {
       switch ($key) {
         case 'cron':
@@ -59,10 +60,10 @@ class StatusReportPage extends RenderElementBase {
         case 'php':
         case 'php_memory_limit':
           $element['#general_info']['#' . $key] = $requirement;
-          if (isset($requirement['severity']) && $requirement['severity'] < REQUIREMENT_WARNING) {
-            if (empty($requirement['severity']) || $requirement['severity'] == REQUIREMENT_OK) {
-              unset($element['#requirements'][$key]);
-            }
+          if (isset($requirement['severity']) &&
+            in_array($requirement['severity'], [RequirementSeverity::Info, RequirementSeverity::OK], TRUE)
+          ) {
+            unset($element['#requirements'][$key]);
           }
           break;
       }
@@ -94,18 +95,18 @@ class StatusReportPage extends RenderElementBase {
       ],
     ];
 
-    $severities = StatusReport::getSeverities();
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     foreach ($element['#requirements'] as $key => &$requirement) {
-      $severity = $severities[REQUIREMENT_INFO];
+      $severity = RequirementSeverity::Info;
       if (isset($requirement['severity'])) {
-        $severity = $severities[(int) $requirement['severity']];
+        $severity = $requirement['severity'];
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
-        $severity = $severities[REQUIREMENT_OK];
+        $severity = RequirementSeverity::OK;
       }
 
-      if (isset($counters[$severity['status']])) {
-        $counters[$severity['status']]['amount']++;
+      if (isset($counters[$severity->status()])) {
+        $counters[$severity->status()]['amount']++;
       }
     }
 
