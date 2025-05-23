@@ -10,6 +10,7 @@ use Drupal\node\Entity\Node;
 /**
  * Upgrade taxonomy term node associations.
  *
+ * @group #slow
  * @group migrate_drupal_6
  */
 class MigrateTermNodeTest extends MigrateDrupal6TestBase {
