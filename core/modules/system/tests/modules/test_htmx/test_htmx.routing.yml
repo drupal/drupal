@@ -1,0 +1,23 @@
+test_htmx.attachments.page:
+  path: '/htmx-test-attachments/page'
+  defaults:
+    _title: 'Page'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::page'
+  requirements:
+    _permission: 'access content'
+
+test_htmx.attachments.replace:
+  path: '/htmx-test-attachments/replace'
+  defaults:
+    _title: 'Ajax Content'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::replace'
+  requirements:
+    _permission: 'access content'
+
+test_htmx.attachments.ajax:
+  path: '/htmx-test-attachments/ajax'
+  defaults:
+    _title: 'Ajax'
+    _form: '\Drupal\test_htmx\Form\HtmxTestAjaxForm'
+  requirements:
+    _permission: 'access content'

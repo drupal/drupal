@@ -1,0 +1,10 @@
+assets:
+  version: VERSION
+  js:
+    js/behavior.js: {}
+  css:
+    theme:
+      css/style.css: {}
+  dependencies:
+    - core/drupal
+    - core/once

@@ -21,6 +21,7 @@
     "_": true,
     "Cookies": true,
     "Backbone": true,
+    "htmx": true,
     "loadjs": true,
     "Shepherd": true,
     "Sortable": true,
