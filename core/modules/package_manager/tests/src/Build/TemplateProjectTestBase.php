@@ -721,6 +721,9 @@ END;
       $this->serverErrorLog,
     );
     $this->assertSame(200, $session->getStatusCode(), $message);
+    // Sometimes we get a 200 response after a PHP timeout or OOM error, so we
+    // also check the page content to ensure it's what we expect.
+    $this->assertSame('Finished', $session->getPage()->getText());
   }
 
   /**
