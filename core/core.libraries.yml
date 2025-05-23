@@ -614,6 +614,24 @@ drupal.form:
     - core/drupal.debounce
     - core/once
 
+drupal.htmx:
+  version: VERSION
+  js:
+    misc/htmx/htmx-assets.js: {}
+    misc/htmx/htmx-behaviors.js: {}
+  dependencies:
+    - core/htmx
+    - core/drupal
+    - core/drupalSettings
+    - core/loadjs
+  drupalSettings:
+    # These placeholder values will be set by system_js_settings_alter().
+    ajaxPageState:
+      libraries: null
+      theme: null
+      theme_token: null
+    ajaxTrustedUrl: {}
+
 drupal.machine-name:
   version: VERSION
   js:
