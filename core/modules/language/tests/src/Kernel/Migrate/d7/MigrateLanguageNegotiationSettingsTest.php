@@ -10,7 +10,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 /**
  * Tests the migration of language negotiation.
  *
- * @group #slow
  * @group migrate_drupal_7
  */
 class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal7TestBase {

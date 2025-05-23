@@ -13,6 +13,7 @@ use Drupal\Tests\package_manager\Traits\FixtureUtilityTrait;
  * @coversDefaultClass \Drupal\package_manager\Validator\SupportedReleaseValidator
  * @group #slow
  * @group package_manager
+ * @group #slow
  * @internal
  */
 class SupportedReleaseValidatorTest extends PackageManagerKernelTestBase {
