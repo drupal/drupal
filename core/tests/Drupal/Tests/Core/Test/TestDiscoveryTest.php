@@ -13,23 +13,17 @@ use Drupal\Core\Test\Exception\MissingGroupException;
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * Unit tests for TestDiscovery.
+ * @coversDefaultClass \Drupal\Core\Test\TestDiscovery
+ * @group Test
  */
-#[CoversClass(TestDiscovery::class)]
-#[Group('Test')]
-#[IgnoreDeprecations]
 class TestDiscoveryTest extends UnitTestCase {
 
   /**
-   * @legacy-covers ::getTestInfo
+   * @covers ::getTestInfo
+   * @dataProvider infoParserProvider
    */
-  #[DataProvider('infoParserProvider')]
   public function testTestInfoParser($expected, $classname, $doc_comment = NULL): void {
     $info = TestDiscovery::getTestInfo($classname, $doc_comment);
     $this->assertEquals($expected, $info);
@@ -40,14 +34,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => TestDatabaseTest::class,
+        'name' => static::class,
         'group' => 'Test',
-        'groups' => ['Test', 'simpletest', 'Template'],
-        'description' => 'Tests \Drupal\Core\Test\TestDatabase.',
+        'groups' => ['Test'],
+        'description' => 'Tests \Drupal\Core\Test\TestDiscovery.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      TestDatabaseTest::class,
+      static::class,
     ];
 
     // A core unit test.
@@ -223,7 +217,7 @@ class TestDiscoveryTest extends UnitTestCase {
   }
 
   /**
-   * @legacy-covers ::getTestInfo
+   * @covers ::getTestInfo
    */
   public function testTestInfoParserMissingGroup(): void {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
@@ -238,7 +232,7 @@ EOT;
   }
 
   /**
-   * @legacy-covers ::getTestInfo
+   * @covers ::getTestInfo
    */
   public function testTestInfoParserMissingSummary(): void {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
@@ -317,7 +311,7 @@ EOF;
   }
 
   /**
-   * @legacy-covers ::getTestClasses
+   * @covers ::getTestClasses
    */
   public function testGetTestClasses(): void {
     $this->setupVfsWithTestClasses();
@@ -386,7 +380,7 @@ EOF;
   }
 
   /**
-   * @legacy-covers ::getTestClasses
+   * @covers ::getTestClasses
    */
   public function testGetTestClassesWithSelectedTypes(): void {
     $this->setupVfsWithTestClasses();
@@ -431,7 +425,7 @@ EOF;
   }
 
   /**
-   * @legacy-covers ::getTestClasses
+   * @covers ::getTestClasses
    */
   public function testGetTestsInProfiles(): void {
     $this->setupVfsWithTestClasses();
@@ -460,9 +454,9 @@ EOF;
   }
 
   /**
-   * @legacy-covers ::getPhpunitTestSuite
+   * @covers ::getPhpunitTestSuite
+   * @dataProvider providerTestGetPhpunitTestSuite
    */
-  #[DataProvider('providerTestGetPhpunitTestSuite')]
   public function testGetPhpunitTestSuite($classname, $expected): void {
     $this->assertEquals($expected, TestDiscovery::getPhpunitTestSuite($classname));
   }
@@ -488,7 +482,7 @@ EOF;
   /**
    * Ensure that classes are not reflected when the docblock is empty.
    *
-   * @legacy-covers ::getTestInfo
+   * @covers ::getTestInfo
    */
   public function testGetTestInfoEmptyDocblock(): void {
     // If getTestInfo() performed reflection, it won't be able to find the
@@ -503,7 +497,7 @@ EOF;
   /**
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
    *
-   * @legacy-covers ::scanDirectory
+   * @covers ::scanDirectory
    */
   public function testScanDirectoryNoAbstract(): void {
     $this->setupVfsWithTestClasses();
