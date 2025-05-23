@@ -149,7 +149,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
         // If this direct child belongs to a group populate the grouping element
         // with the children errors.
         if (!empty($child['#group'])) {
-          $parents = explode('][', $child['#group']);
+          $parents = is_array($child['#group']) ? $child['#group'] : explode('][', $child['#group']);
           $group_element = NestedArray::getValue($form, $parents);
           if (isset($group_element['#children_errors'])) {
             $group_element['#children_errors'] = $group_element['#children_errors'] + $children_errors;
