@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- This is a near-copy of phpunit.xml.dist, used to test with upcoming
+     PHPUnit versions.
+
+     Current differences:
+     * for PHPUnit 11: removed duplicate directories from <testsuites>,
+       required in PHPUnit 10, but that cause duplication warnings in
+       PHPUnit 11.
+-->
+
+
+<!-- For how to customize PHPUnit configuration, see core/tests/README.md. -->
+<!-- TODO set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
+<!-- PHPUnit expects functional tests to be run with either a privileged user
+ or your current system user. See core/tests/README.md and
+ https://www.drupal.org/node/2116263 for details.
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         cacheResult="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         cacheDirectory=".phpunit.cache">
+  <php>
+    <!-- Set error reporting to E_ALL. -->
+    <ini name="error_reporting" value="32767"/>
+    <!-- Do not limit the amount of memory tests take to run. -->
+    <ini name="memory_limit" value="-1"/>
+    <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
+    <env name="SIMPLETEST_BASE_URL" value=""/>
+    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/database_name#table_prefix -->
+    <env name="SIMPLETEST_DB" value=""/>
+    <!-- By default, browser tests will output links that use the base URL set
+     in SIMPLETEST_BASE_URL. However, if your SIMPLETEST_BASE_URL is an internal
+     path (such as may be the case in a virtual or Docker-based environment),
+     you can set the base URL used in the browser test output links to something
+     reachable from your host machine here. This will allow you to follow them
+     directly and view the output. -->
+    <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
+    <!-- The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
+      the behavior of the deprecation tests.
+      Drupal core's testing framework is setting this variable to its defaults.
+      Projects with their own requirements need to manage this variable
+      explicitly.
+    -->
+    <!-- To disable deprecation testing completely uncomment the next line. -->
+    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
+    <!-- Deprecation errors can be selectively ignored by specifying a file of
+      regular expression patterns for exclusion.
+      Uncomment the line below to specify a custom deprecations ignore file.
+      NOTE: it may be required to specify the full path to the file to run tests
+      correctly.
+    -->
+    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="ignoreFile=.deprecation-ignore.txt"/> -->
+    <!-- Example for changing the driver class for mink tests MINK_DRIVER_CLASS value: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver' -->
+    <env name="MINK_DRIVER_CLASS" value=""/>
+    <!-- Example for changing the driver args to mink tests MINK_DRIVER_ARGS value: '["http://127.0.0.1:8510"]' -->
+    <env name="MINK_DRIVER_ARGS" value=""/>
+    <!-- Example for changing the driver args to webdriver tests MINK_DRIVER_ARGS_WEBDRIVER value: '["chrome", { "goog:chromeOptions": { "w3c": false } }, "http://localhost:4444/wd/hub"]' For using the Firefox browser, replace "chrome" with "firefox" -->
+    <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=""/>
+  </php>
+  <extensions>
+    <!-- Functional tests HTML output logging. -->
+    <bootstrap class="Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger">
+      <!-- The directory where the browser output will be stored. If a relative
+        path is specified, it will be relative to the current working directory
+        of the process running the PHPUnit CLI. In CI environments, this can be
+        overridden by the value set for the "BROWSERTEST_OUTPUT_DIRECTORY"
+        environment variable.
+      -->
+      <parameter name="outputDirectory" value="sites/simpletest/browser_output"/>
+      <!-- By default browser tests print the individual links in the test run
+        report. To avoid overcrowding the output in CI environments, you can
+        set the "verbose" parameter or the "BROWSERTEST_OUTPUT_VERBOSE"
+        environment variable to "false". In GitLabCI, the output is saved
+        anyway as an artifact that can be browsed or downloaded from Gitlab.
+      -->
+      <parameter name="verbose" value="true"/>
+    </bootstrap>
+    <!-- Debug dump() printer. -->
+    <bootstrap class="Drupal\TestTools\Extension\Dump\DebugDump">
+      <parameter name="colors" value="true"/>
+      <parameter name="printCaller" value="true"/>
+    </bootstrap>
+  </extensions>
+  <testsuites>
+    <testsuite name="unit-component">
+      <directory>tests/Drupal/Tests/Component</directory>
+    </testsuite>
+    <testsuite name="unit">
+      <directory>tests/Drupal/Tests</directory>
+      <exclude>tests/Drupal/Tests/Component</exclude>
+      <directory>modules/**/tests/src/Unit</directory>
+      <directory>profiles/**/tests/src/Unit</directory>
+      <directory>themes/**/tests/src/Unit</directory>
+      <directory>../modules/**/tests/src/Unit</directory>
+      <directory>../profiles/**/tests/src/Unit</directory>
+      <directory>../themes/**/tests/src/Unit</directory>
+    </testsuite>
+    <testsuite name="kernel">
+      <directory>tests/Drupal/KernelTests</directory>
+      <directory>modules/**/tests/src/Kernel</directory>
+      <directory>recipes/*/tests/src/Kernel</directory>
+      <directory>profiles/**/tests/src/Kernel</directory>
+      <directory>themes/**/tests/src/Kernel</directory>
+      <directory>../modules/**/tests/src/Kernel</directory>
+      <directory>../profiles/**/tests/src/Kernel</directory>
+      <directory>../themes/**/tests/src/Kernel</directory>
+    </testsuite>
+    <testsuite name="functional">
+      <directory>tests/Drupal/FunctionalTests</directory>
+      <directory>modules/**/tests/src/Functional</directory>
+      <directory>profiles/**/tests/src/Functional</directory>
+      <directory>recipes/*/tests/src/Functional</directory>
+      <directory>themes/**/tests/src/Functional</directory>
+      <directory>../modules/**/tests/src/Functional</directory>
+      <directory>../profiles/**/tests/src/Functional</directory>
+      <directory>../themes/**/tests/src/Functional</directory>
+    </testsuite>
+    <testsuite name="functional-javascript">
+      <directory>tests/Drupal/FunctionalJavascriptTests</directory>
+      <directory>modules/**/tests/src/FunctionalJavascript</directory>
+      <directory>recipes/*/tests/src/FunctionalJavascript</directory>
+      <directory>profiles/**/tests/src/FunctionalJavascript</directory>
+      <directory>themes/**/tests/src/FunctionalJavascript</directory>
+      <directory>../modules/**/tests/src/FunctionalJavascript</directory>
+      <directory>../profiles/**/tests/src/FunctionalJavascript</directory>
+      <directory>../themes/**/tests/src/FunctionalJavascript</directory>
+    </testsuite>
+    <testsuite name="build">
+      <directory>tests/Drupal/BuildTests</directory>
+      <directory>modules/**/tests/src/Build</directory>
+    </testsuite>
+  </testsuites>
+  <!-- Settings for coverage reports. -->
+  <source ignoreSuppressionOfDeprecations="true">
+    <include>
+      <directory>./includes</directory>
+      <directory>./lib</directory>
+      <directory>./modules</directory>
+      <directory>../modules</directory>
+      <directory>../sites</directory>
+    </include>
+    <exclude>
+      <directory>./lib/Drupal/Component</directory>
+      <directory>./modules/*/src/Tests</directory>
+      <directory>./modules/*/tests</directory>
+      <directory>../modules/*/src/Tests</directory>
+      <directory>../modules/*/tests</directory>
+      <directory>../modules/*/*/src/Tests</directory>
+      <directory>../modules/*/*/tests</directory>
+    </exclude>
+  </source>
+</phpunit>

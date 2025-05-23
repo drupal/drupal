@@ -7,6 +7,7 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Discovers available tests.
@@ -26,6 +27,11 @@ class TestDiscovery {
    * Statically cached list of test classes.
    *
    * @var array
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3447698
    */
   protected $testClasses;
 
@@ -149,8 +155,14 @@ class TestDiscovery {
    *
    * @todo Remove singular grouping; retain list of groups in 'group' key.
    * @see https://www.drupal.org/node/2296615
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   *   PhpUnitTestDiscovery::getTestClasses() instead.
+   *
+   * @see https://www.drupal.org/node/3447698
    */
   public function getTestClasses($extension = NULL, array $types = [], ?string $directory = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use PhpUnitTestDiscovery::getTestClasses() instead. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
     if (!isset($extension) && empty($types)) {
       if (!empty($this->testClasses)) {
         return $this->testClasses;
@@ -175,6 +187,15 @@ class TestDiscovery {
       catch (MissingGroupException $e) {
         // If the class name ends in Test and is not a migrate table dump.
         if (str_ends_with($classname, 'Test') && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
+          $reflection = new \ReflectionClass($classname);
+          $groupAttributes = $reflection->getAttributes(Group::class, \ReflectionAttribute::IS_INSTANCEOF);
+          if (!empty($groupAttributes)) {
+            $group = '##no-group-annotations';
+            $info['group'] = $group;
+            $info['groups'] = [$group];
+            $list[$group][$classname] = $info;
+            continue;
+          }
           throw $e;
         }
         // If the class is @group annotation just skip it. Most likely it is an
@@ -216,8 +237,14 @@ class TestDiscovery {
    * @return array
    *   A classmap containing all discovered class files; i.e., a map of
    *   fully-qualified classnames to path names.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   *   PhpUnitTestDiscovery::findAllClassFiles() instead.
+   *
+   * @see https://www.drupal.org/node/3447698
    */
   public function findAllClassFiles($extension = NULL, ?string $directory = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use PhpUnitTestDiscovery::findAllClassFiles() instead. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
     $classmap = [];
     $namespaces = $this->registerTestNamespaces();
     if (isset($extension)) {
@@ -256,8 +283,14 @@ class TestDiscovery {
    *
    * @todo Limit to '*Test.php' files (~10% less files to reflect/introspect).
    * @see https://www.drupal.org/node/2296635
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3447698
    */
   public static function scanDirectory($namespace_prefix, $path) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
     if (!str_ends_with($namespace_prefix, '\\')) {
       throw new \InvalidArgumentException("Namespace prefix for $path must contain a trailing namespace separator.");
     }
@@ -312,8 +345,14 @@ class TestDiscovery {
    *
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3447698
    */
   public static function getTestInfo($classname, $doc_comment = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
     if ($doc_comment === NULL) {
       $reflection = new \ReflectionClass($classname);
       $doc_comment = $reflection->getDocComment();
@@ -350,7 +389,7 @@ class TestDiscovery {
     $info['type'] = 'PHPUnit-' . static::getPhpunitTestSuite($classname);
 
     if (!empty($annotations['coversDefaultClass'])) {
-      $info['description'] = 'Tests ' . $annotations['coversDefaultClass'] . '.';
+      $info['description'] = 'Tests ' . ltrim($annotations['coversDefaultClass']) . '.';
     }
     else {
       $info['description'] = static::parseTestClassSummary($doc_comment);
