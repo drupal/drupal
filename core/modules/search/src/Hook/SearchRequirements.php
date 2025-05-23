@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\search\Hook;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\search\SearchPageRepositoryInterface;
@@ -42,7 +43,7 @@ class SearchRequirements {
     $requirements['search_status'] = [
       'title' => $this->t('Search index progress'),
       'value' => $this->t('@percent% (@remaining remaining)', ['@percent' => $percent, '@remaining' => $remaining]),
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::Info,
     ];
     return $requirements;
   }

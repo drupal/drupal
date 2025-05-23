@@ -7,6 +7,7 @@ use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -166,8 +167,8 @@ class DbUpdateController extends ControllerBase {
 
     $regions = [];
     $requirements = update_check_requirements();
-    $severity = drupal_requirements_severity($requirements);
-    if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$request->getSession()->has('update_ignore_warnings'))) {
+    $severity = RequirementSeverity::maxSeverityFromRequirements($requirements);
+    if ($severity === RequirementSeverity::Error || ($severity === RequirementSeverity::Warning && !$request->getSession()->has('update_ignore_warnings'))) {
       $regions['sidebar_first'] = $this->updateTasksList('requirements');
       $output = $this->requirements($severity, $requirements, $request);
     }
@@ -543,7 +544,7 @@ class DbUpdateController extends ControllerBase {
    *   A render array.
    */
   public function requirements($severity, array $requirements, Request $request) {
-    $options = $severity == REQUIREMENT_WARNING ? ['continue' => 1] : [];
+    $options = $severity === RequirementSeverity::Warning ? ['continue' => 1] : [];
     // @todo Revisit once https://www.drupal.org/node/2548095 is in. Something
     // like Url::fromRoute('system.db_update')->setOptions() should then be
     // possible.

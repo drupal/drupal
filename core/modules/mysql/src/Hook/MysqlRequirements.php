@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\mysql\Hook;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -46,18 +47,18 @@ class MysqlRequirements {
       $description = [];
       if ($isolation_level == 'READ-COMMITTED') {
         if (empty($tables_missing_primary_key)) {
-          $severity_level = REQUIREMENT_OK;
+          $severity_level = RequirementSeverity::OK;
         }
         else {
-          $severity_level = REQUIREMENT_ERROR;
+          $severity_level = RequirementSeverity::Error;
         }
       }
       else {
         if ($isolation_level == 'REPEATABLE-READ') {
-          $severity_level = REQUIREMENT_WARNING;
+          $severity_level = RequirementSeverity::Warning;
         }
         else {
-          $severity_level = REQUIREMENT_ERROR;
+          $severity_level = RequirementSeverity::Error;
           $description[] = $this->t('This is not supported by Drupal.');
         }
         $description[] = $this->t('The recommended level for Drupal is "READ COMMITTED".');

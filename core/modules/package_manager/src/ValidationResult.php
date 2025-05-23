@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\package_manager;
 
 use Drupal\Component\Assertion\Inspector;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\system\SystemManager;
 use PhpTuf\ComposerStager\API\Exception\ExceptionInterface;
 
 /**
@@ -22,6 +22,7 @@ final class ValidationResult {
    * @param int $severity
    *   The severity of the result. Should be one of the
    *   SystemManager::REQUIREMENT_* constants.
+   *   @todo Refactor this to use RequirementSeverity in https://www.drupal.org/i/3525121.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup[]|string[] $messages
    *   The result messages.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $summary
@@ -76,7 +77,7 @@ final class ValidationResult {
     // All Composer Stager exceptions are translatable.
     $is_translatable = $throwable instanceof ExceptionInterface;
     $message = $is_translatable ? $throwable->getTranslatableMessage() : $throwable->getMessage();
-    return new static(SystemManager::REQUIREMENT_ERROR, [$message], $summary, $is_translatable);
+    return new static(RequirementSeverity::Error->value, [$message], $summary, $is_translatable);
   }
 
   /**
@@ -90,7 +91,7 @@ final class ValidationResult {
    * @return static
    */
   public static function createError(array $messages, ?TranslatableMarkup $summary = NULL): static {
-    return new static(SystemManager::REQUIREMENT_ERROR, $messages, $summary, TRUE);
+    return new static(RequirementSeverity::Error->value, $messages, $summary, TRUE);
   }
 
   /**
@@ -104,7 +105,7 @@ final class ValidationResult {
    * @return static
    */
   public static function createWarning(array $messages, ?TranslatableMarkup $summary = NULL): static {
-    return new static(SystemManager::REQUIREMENT_WARNING, $messages, $summary, TRUE);
+    return new static(RequirementSeverity::Warning->value, $messages, $summary, TRUE);
   }
 
   /**
@@ -119,12 +120,12 @@ final class ValidationResult {
    */
   public static function getOverallSeverity(array $results): int {
     foreach ($results as $result) {
-      if ($result->severity === SystemManager::REQUIREMENT_ERROR) {
-        return SystemManager::REQUIREMENT_ERROR;
+      if ($result->severity === RequirementSeverity::Error->value) {
+        return RequirementSeverity::Error->value;
       }
     }
     // If there were no errors, then any remaining results must be warnings.
-    return $results ? SystemManager::REQUIREMENT_WARNING : SystemManager::REQUIREMENT_OK;
+    return $results ? RequirementSeverity::Warning->value : RequirementSeverity::OK->value;
   }
 
   /**

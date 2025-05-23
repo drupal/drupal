@@ -10,6 +10,7 @@
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\Update\EquivalentUpdate;
 
@@ -34,7 +35,7 @@ function update_system_schema_requirements(): array {
   else {
     $requirements['minimum schema'] += [
       'value' => 'The installed schema version does not meet the minimum.',
-      'severity' => REQUIREMENT_ERROR,
+      'severity' => RequirementSeverity::Error,
       'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must upgrade your site to Drupal 8 first, see https://www.drupal.org/docs/8/upgrade.',
     ];
   }

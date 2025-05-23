@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\update\Hook;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -76,7 +77,7 @@ class UpdateRequirements {
     else {
       $requirements['update_core']['title'] = $this->t('Drupal core update status');
       $requirements['update_core']['value'] = $this->t('No update data available');
-      $requirements['update_core']['severity'] = REQUIREMENT_WARNING;
+      $requirements['update_core']['severity'] = RequirementSeverity::Warning;
       $requirements['update_core']['reason'] = UpdateFetcherInterface::UNKNOWN;
       $requirements['update_core']['description'] = _update_no_data();
     }
@@ -113,7 +114,7 @@ class UpdateRequirements {
     $status = $project['status'];
     if ($status != UpdateManagerInterface::CURRENT) {
       $requirement['reason'] = $status;
-      $requirement['severity'] = REQUIREMENT_ERROR;
+      $requirement['severity'] = RequirementSeverity::Error;
       // When updates are available, append the available updates link to the
       // message from _update_message_text(), and format the two translated
       // strings together in a single paragraph.
@@ -137,7 +138,7 @@ class UpdateRequirements {
 
       case UpdateManagerInterface::NOT_CURRENT:
         $requirement_label = $this->t('Out of date');
-        $requirement['severity'] = REQUIREMENT_WARNING;
+        $requirement['severity'] = RequirementSeverity::Warning;
         break;
 
       case UpdateFetcherInterface::UNKNOWN:
@@ -145,7 +146,7 @@ class UpdateRequirements {
       case UpdateFetcherInterface::NOT_FETCHED:
       case UpdateFetcherInterface::FETCH_PENDING:
         $requirement_label = $project['reason'] ?? $this->t('Can not determine status');
-        $requirement['severity'] = REQUIREMENT_WARNING;
+        $requirement['severity'] = RequirementSeverity::Warning;
         break;
 
       default:

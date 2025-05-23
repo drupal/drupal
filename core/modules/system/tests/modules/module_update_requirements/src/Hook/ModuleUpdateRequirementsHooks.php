@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\module_update_requirements\Hook;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -24,13 +25,13 @@ class ModuleUpdateRequirementsHooks {
         'title' => $this->t('UpdateError'),
         'value' => $this->t('None'),
         'description' => $this->t('Update Error.'),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => RequirementSeverity::Error,
       ],
       'test.update.error.alter' => [
         'title' => $this->t('UpdateError'),
         'value' => $this->t('None'),
         'description' => $this->t('Update Error.'),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => RequirementSeverity::Error,
       ],
     ];
   }
@@ -44,7 +45,7 @@ class ModuleUpdateRequirementsHooks {
       'title' => $this->t('UpdateWarning'),
       'value' => $this->t('None'),
       'description' => $this->t('Update Warning.'),
-      'severity' => REQUIREMENT_WARNING,
+      'severity' => RequirementSeverity::Warning,
     ];
   }
 

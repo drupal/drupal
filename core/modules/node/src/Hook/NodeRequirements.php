@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\node\Hook;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -144,7 +145,7 @@ class NodeRequirements {
           'title' => $this->t('Content status filter'),
           'value' => $this->t('Redundant filters detected'),
           'description' => $node_status_filter_description,
-          'severity' => REQUIREMENT_WARNING,
+          'severity' => RequirementSeverity::Warning,
         ];
       }
     }

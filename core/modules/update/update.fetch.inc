@@ -5,6 +5,7 @@
  */
 
 use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\update\UpdateManagerInterface;
 
 /**
@@ -33,7 +34,7 @@ function _update_cron_notify(): void {
   foreach (['core', 'contrib'] as $report_type) {
     $type = 'update_' . $report_type;
     if (isset($status[$type]['severity'])
-        && ($status[$type]['severity'] == REQUIREMENT_ERROR || ($notify_all && $status[$type]['reason'] == UpdateManagerInterface::NOT_CURRENT))) {
+        && ($status[$type]['severity'] == RequirementSeverity::Error || ($notify_all && $status[$type]['reason'] == UpdateManagerInterface::NOT_CURRENT))) {
       $params[$report_type] = $status[$type]['reason'];
     }
   }

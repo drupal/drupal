@@ -2,6 +2,7 @@
 
 namespace Drupal\update\Hook;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\update\UpdateManagerInterface;
 use Drupal\Core\Url;
@@ -96,10 +97,10 @@ class UpdateHooks {
         }
         if (!empty($verbose)) {
           if (isset($status[$type]['severity'])) {
-            if ($status[$type]['severity'] == REQUIREMENT_ERROR) {
+            if ($status[$type]['severity'] === RequirementSeverity::Error) {
               \Drupal::messenger()->addError($status[$type]['description']);
             }
-            elseif ($status[$type]['severity'] == REQUIREMENT_WARNING) {
+            elseif ($status[$type]['severity'] === RequirementSeverity::Warning) {
               \Drupal::messenger()->addWarning($status[$type]['description']);
             }
           }

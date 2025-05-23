@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\requirements1_test\Hook;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -22,7 +23,7 @@ class Requirements1TestHooks {
     // Change the title.
     $requirements['requirements1_test_alterable']['title'] = $this->t('Requirements 1 Test - Changed');
     // Decrease the severity.
-    $requirements['requirements1_test_alterable']['severity'] = REQUIREMENT_WARNING;
+    $requirements['requirements1_test_alterable']['severity'] = RequirementSeverity::Warning;
     // Delete 'requirements1_test_deletable',
     unset($requirements['requirements1_test_deletable']);
   }

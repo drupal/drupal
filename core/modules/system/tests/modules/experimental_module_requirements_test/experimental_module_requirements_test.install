@@ -7,6 +7,8 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
+
 /**
  * Implements hook_requirements().
  */
@@ -14,7 +16,7 @@ function experimental_module_requirements_test_requirements(): array {
   $requirements = [];
   if (\Drupal::state()->get('experimental_module_requirements_test_requirements', FALSE)) {
     $requirements['experimental_module_requirements_test_requirements'] = [
-      'severity' => REQUIREMENT_ERROR,
+      'severity' => RequirementSeverity::Error,
       'description' => t('The Experimental Test Requirements module can not be installed.'),
     ];
   }

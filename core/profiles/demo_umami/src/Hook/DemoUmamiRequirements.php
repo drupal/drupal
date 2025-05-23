@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\demo_umami\Hook;
 
 use Drupal\Core\Extension\ProfileExtensionList;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -31,7 +32,7 @@ class DemoUmamiRequirements {
       'title' => $this->t('Experimental installation profile used'),
       'value' => $info['name'],
       'description' => $this->t('Experimental profiles are provided for testing purposes only. Use at your own risk. To start building a new site, reinstall Drupal and choose a non-experimental profile.'),
-      'severity' => REQUIREMENT_WARNING,
+      'severity' => RequirementSeverity::Warning,
     ];
     return $requirements;
   }

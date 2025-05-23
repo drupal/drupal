@@ -17,6 +17,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Installer\Exception\AlreadyInstalledException;
@@ -2018,7 +2019,7 @@ function install_check_translations($langcode, $server_pattern): array {
     $requirements['translations directory exists'] = [
       'title'       => t('Translations directory'),
       'value'       => t('The translations directory does not exist.'),
-      'severity'    => REQUIREMENT_ERROR,
+      'severity'    => RequirementSeverity::Error,
       'description' => t('The installer requires that you create a translations directory as part of the installation process. Create the directory %translations_directory . More details about installing Drupal are available in <a href=":install_txt">INSTALL.txt</a>.', ['%translations_directory' => $translations_directory, ':install_txt' => base_path() . 'core/INSTALL.txt']),
     ];
   }
@@ -2032,7 +2033,7 @@ function install_check_translations($langcode, $server_pattern): array {
       $requirements['translations directory readable'] = [
         'title'       => t('Translations directory'),
         'value'       => t('The translations directory is not readable.'),
-        'severity'    => REQUIREMENT_ERROR,
+        'severity'    => RequirementSeverity::Error,
         'description' => t('The installer requires read permissions to %translations_directory at all times. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', ['%translations_directory' => $translations_directory, ':handbook_url' => 'https://www.drupal.org/server-permissions']),
       ];
     }
@@ -2041,7 +2042,7 @@ function install_check_translations($langcode, $server_pattern): array {
       $requirements['translations directory writable'] = [
         'title'       => t('Translations directory'),
         'value'       => t('The translations directory is not writable.'),
-        'severity'    => REQUIREMENT_ERROR,
+        'severity'    => RequirementSeverity::Error,
         'description' => t('The installer requires write permissions to %translations_directory during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', ['%translations_directory' => $translations_directory, ':handbook_url' => 'https://www.drupal.org/server-permissions']),
       ];
     }
@@ -2058,7 +2059,7 @@ function install_check_translations($langcode, $server_pattern): array {
     $requirements['online'] = [
       'title'       => t('Internet'),
       'value'       => t('The translation server is offline.'),
-      'severity'    => REQUIREMENT_ERROR,
+      'severity'    => RequirementSeverity::Error,
       'description' => t('The installer requires to contact the translation server to download a translation file. Check your internet connection and verify that your website can reach the translation server at <a href=":server_url">@server_url</a>.', [':server_url' => $server_url, '@server_url' => $server_url]),
     ];
   }
@@ -2073,7 +2074,7 @@ function install_check_translations($langcode, $server_pattern): array {
       $requirements['translation available'] = [
         'title'       => t('Translation'),
         'value'       => t('The %language translation is not available.', ['%language' => $language]),
-        'severity'    => REQUIREMENT_ERROR,
+        'severity'    => RequirementSeverity::Error,
         'description' => t('The %language translation file is not available at the translation server. <a href=":url">Choose a different language</a> or select English and translate your website later.', ['%language' => $language, ':url' => $_SERVER['SCRIPT_NAME']]),
       ];
     }
@@ -2092,7 +2093,7 @@ function install_check_translations($langcode, $server_pattern): array {
       $requirements['translation downloaded'] = [
         'title'       => t('Translation'),
         'value'       => t('The %language translation could not be downloaded.', ['%language' => $language]),
-        'severity'    => REQUIREMENT_ERROR,
+        'severity'    => RequirementSeverity::Error,
         'description' => t('The %language translation file could not be downloaded. <a href=":url">Choose a different language</a> or select English and translate your website later.', ['%language' => $language, ':url' => $_SERVER['SCRIPT_NAME']]),
       ];
     }
@@ -2152,7 +2153,7 @@ function install_check_requirements($install_state) {
       $requirements["default $file file exists"] = [
         'title' => $default_file_info['title_default'],
         'value' => $default_file_info['description_default'],
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => RequirementSeverity::Error,
         'description' => t('The @drupal installer requires that the %default-file file must not be deleted or modified from the original download.', [
           '@drupal' => drupal_install_profile_distribution_name(),
           '%default-file' => $default_file,
@@ -2211,7 +2212,7 @@ function install_check_requirements($install_state) {
       $requirements["$file file exists"] = [
         'title' => $default_file_info['title'],
         'value' => t('The %file does not exist.', ['%file' => $default_file_info['title']]),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => RequirementSeverity::Error,
         'description' => t('The @drupal installer requires that you create a %file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href=":install_txt">INSTALL.txt</a>.', [
           '@drupal' => drupal_install_profile_distribution_name(),
           '%file' => $file,
@@ -2230,7 +2231,7 @@ function install_check_requirements($install_state) {
         $requirements["$file file readable"] = [
           'title' => $default_file_info['title'],
           'value' => t('The %file is not readable.', ['%file' => $default_file_info['title']]),
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => RequirementSeverity::Error,
           'description' => t('@drupal requires read permissions to %file at all times. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
             '@drupal' => drupal_install_profile_distribution_name(),
             '%file' => $file,
@@ -2243,7 +2244,7 @@ function install_check_requirements($install_state) {
         $requirements["$file file writable"] = [
           'title' => $default_file_info['title'],
           'value' => t('The %file is not writable.', ['%file' => $default_file_info['title']]),
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => RequirementSeverity::Error,
           'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
             '@drupal' => drupal_install_profile_distribution_name(),
             '%file' => $file,
@@ -2261,7 +2262,7 @@ function install_check_requirements($install_state) {
         $requirements["$file file ownership"] = [
           'title' => $default_file_info['title'],
           'value' => t('The @file is owned by the web server.', ['@file' => $default_file_info['title']]),
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => RequirementSeverity::Error,
           'description' => t('The @drupal installer failed to create a %file file with proper file ownership. Log on to your web server, remove the existing %file file, and create a new one by copying the %default_file file to %file. More details about installing Drupal are available in <a href=":install_txt">INSTALL.txt</a>. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
             '@drupal' => drupal_install_profile_distribution_name(),
             '%file' => $file,
@@ -2287,7 +2288,7 @@ function install_check_requirements($install_state) {
         $requirements['database_install_errors'] = [
           'title' => t('Database settings'),
           'description' => $error_message,
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => RequirementSeverity::Error,
         ];
       }
     }
@@ -2315,18 +2316,18 @@ function install_check_requirements($install_state) {
  */
 function install_display_requirements($install_state, $requirements) {
   // Check the severity of the requirements reported.
-  $severity = drupal_requirements_severity($requirements);
+  $severity = RequirementSeverity::maxSeverityFromRequirements($requirements);
 
   // If there are errors, always display them. If there are only warnings, skip
   // them if the user has provided a URL parameter acknowledging the warnings
   // and indicating a desire to continue anyway. See drupal_requirements_url().
-  if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($install_state['parameters']['continue']))) {
+  if ($severity === RequirementSeverity::Error || ($severity === RequirementSeverity::Warning && empty($install_state['parameters']['continue']))) {
     if ($install_state['interactive']) {
       $build['report']['#type'] = 'status_report';
       $build['report']['#requirements'] = $requirements;
-      if ($severity == REQUIREMENT_WARNING) {
+      if ($severity == RequirementSeverity::Warning) {
         $build['#title'] = t('Requirements review');
-        $build['#suffix'] = t('Check the messages and <a href=":retry">retry</a>, or you may choose to <a href=":cont">continue anyway</a>.', [':retry' => drupal_requirements_url(REQUIREMENT_ERROR), ':cont' => drupal_requirements_url($severity)]);
+        $build['#suffix'] = t('Check the messages and <a href=":retry">retry</a>, or you may choose to <a href=":cont">continue anyway</a>.', [':retry' => drupal_requirements_url(RequirementSeverity::Error), ':cont' => drupal_requirements_url($severity)]);
       }
       else {
         $build['#title'] = t('Requirements problem');
@@ -2341,7 +2342,7 @@ function install_display_requirements($install_state, $requirements) {
         // Skip warnings altogether for non-interactive installations; these
         // proceed in a single request so there is no good opportunity (and no
         // good method) to warn the user anyway.
-        if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
+        if (isset($requirement['severity']) && $requirement['severity'] === RequirementSeverity::Error) {
           $render_array = [
             '#type' => 'inline_template',
             '#template' => '{{ title }}:{{ value }}<br /><br />{{ description }}',

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\package_manager\Install\Requirements;
 
 use Drupal\Core\Extension\InstallRequirementsInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Site\Settings;
 use Drupal\package_manager\Exception\FailureMarkerExistsException;
 use Drupal\package_manager\FailureMarker;
@@ -24,7 +25,7 @@ class PackageManagerRequirements implements InstallRequirementsInterface {
       $requirements['testing_package_manager'] = [
         'title' => 'Package Manager',
         'description' => t("Package Manager is available for early testing. To install the module set the value of 'testing_package_manager' to TRUE in your settings.php file."),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => RequirementSeverity::Error,
       ];
     }
 
@@ -41,7 +42,7 @@ class PackageManagerRequirements implements InstallRequirementsInterface {
         $requirements['package_manager_failure_marker'] = [
           'title' => t('Failed Package Manager update detected'),
           'description' => $exception->getMessage(),
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => RequirementSeverity::Error,
         ];
       }
     }

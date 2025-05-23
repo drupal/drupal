@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\module_runtime_requirements\Hook;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -24,13 +25,13 @@ class ModuleRuntimeRequirementsHooks {
         'title' => $this->t('RuntimeError'),
         'value' => $this->t('None'),
         'description' => $this->t('Runtime Error.'),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => RequirementSeverity::Error,
       ],
       'test.runtime.error.alter' => [
         'title' => $this->t('RuntimeError'),
         'value' => $this->t('None'),
         'description' => $this->t('Runtime Error.'),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => RequirementSeverity::Error,
       ],
     ];
   }
@@ -44,7 +45,7 @@ class ModuleRuntimeRequirementsHooks {
       'title' => $this->t('RuntimeWarning'),
       'value' => $this->t('None'),
       'description' => $this->t('Runtime Warning.'),
-      'severity' => REQUIREMENT_WARNING,
+      'severity' => RequirementSeverity::Warning,
     ];
   }
 
