@@ -1097,7 +1097,7 @@ class RendererTest extends RendererTestBase {
             'max-age' => 600,
           ],
         ],
-        new \stdClass(),
+        (new CacheableMetadata())->setCacheMaxAge(0),
         [
           '#cache' => [
             'contexts' => ['theme'],

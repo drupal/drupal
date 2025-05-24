@@ -196,10 +196,12 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
               'username' => $this->renderer->renderInIsolation($username),
               'message' => ['#markup' => $revision->revision_log->value, '#allowed_tags' => Xss::getHtmlTagList()],
             ],
+            // @todo Fix this properly in https://www.drupal.org/project/drupal/issues/3227637.
+            '#cache' => [
+              'max-age' => 0,
+            ],
           ],
         ];
-        // @todo Simplify once https://www.drupal.org/node/2334319 lands.
-        $this->renderer->addCacheableDependency($column['data'], $username);
         $row[] = $column;
 
         if ($is_current_revision) {
