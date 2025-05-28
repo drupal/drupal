@@ -198,10 +198,15 @@ class PoDatabaseWriter implements PoWriterInterface {
    * {@inheritdoc}
    */
   public function writeItems(PoReaderInterface $reader, $count = -1) {
+    // Processing multiple writes in a transaction is quicker than committing
+    // each individual write.
+    $transaction = \Drupal::database()->startTransaction();
     $forever = $count == -1;
     while (($count-- > 0 || $forever) && ($item = $reader->readItem())) {
       $this->writeItem($item);
     }
+    // Commit the transaction.
+    unset($transaction);
   }
 
   /**
