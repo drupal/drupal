@@ -562,7 +562,7 @@ class GDToolkit extends ImageToolkitBase {
     }
 
     $tempFile = fopen('php://memory', 'r+');
-    $supported = imageavif(imagecreatetruecolor(1, 1), $tempFile, 0, 10) && fstat($tempFile)['size'] > 0;
+    $supported = function_exists('imageavif') && imageavif(imagecreatetruecolor(1, 1), $tempFile, 0, 10) && fstat($tempFile)['size'] > 0;
     fclose($tempFile);
 
     return $supported;
