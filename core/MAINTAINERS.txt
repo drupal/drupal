@@ -22,6 +22,10 @@ Product managers
 - Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 
+User Experience (UX) managers
+- Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
+- (provisional) Emma Horrell 'emma-horrell' https://www.drupal.org/u/emma-horrell
+
 Framework managers
 
   Backend
