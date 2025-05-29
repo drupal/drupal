@@ -173,16 +173,6 @@ abstract class BrowserTestBase extends TestCase {
   protected $originalShutdownCallbacks = [];
 
   /**
-   * The original container.
-   *
-   * Move this to \Drupal\Core\Test\FunctionalTestSetupTrait once TestBase no
-   * longer provides the same value.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $originalContainer;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(string $name) {
