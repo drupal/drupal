@@ -124,10 +124,10 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * Insecure examples.
    * @code
    * // The following are using the @ placeholder inside an HTML tag.
-   * $this->placeholderFormat('<@foo>text</@foo>, ['@foo' => $some_variable]);
-   * $this->placeholderFormat('<a @foo>link text</a>, ['@foo' => $some_variable]);
-   * $this->placeholderFormat('<a href="@foo">link text</a>, ['@foo' => $some_variable]);
-   * $this->placeholderFormat('<a title="@foo">link text</a>, ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<@foo>text</@foo>', ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<a @foo>link text</a>', ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<a href="@foo">link text</a>', ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<a title="@foo">link text</a>', ['@foo' => $some_variable]);
    * // Implicitly convert an object to a string, which is not sanitized.
    * $this->placeholderFormat('Non-sanitized replacement value: @foo', ['@foo' => $safe_string_interface_object]);
    * @endcode
