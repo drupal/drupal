@@ -1109,10 +1109,25 @@ mailer_dsn.options.smtp:
   type: mapping
   label: 'SMTP options'
   mapping:
+    auto_tls:
+      type: boolean
+      nullable: true
+      label: 'Whether or not to enable TLS opportunistically (defaults to true).'
+    require_tls:
+      type: boolean
+      nullable: true
+      label: 'Whether or not to enforce TLS (defaults to false).'
     verify_peer:
       type: boolean
       nullable: true
       label: 'TLS Peer Verification (defaults to true)'
+    source_ip:
+      type: string
+      nullable: true
+      label: 'Bind to a specific IPv4 or IPv6 address (no default).'
+      constraints:
+        UriHost:
+          message: 'The source IP should conform to RFC 3986 URI host component.'
     peer_fingerprint:
       type: string
       nullable: true
