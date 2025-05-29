@@ -15,7 +15,6 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  * Tests link field UI functionality.
  *
  * @group link
- * @group #slow
  */
 class LinkFieldUITest extends BrowserTestBase {
 
