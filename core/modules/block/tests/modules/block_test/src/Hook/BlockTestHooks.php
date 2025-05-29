@@ -37,6 +37,16 @@ class BlockTestHooks {
   }
 
   /**
+   * Implements hook_block_view_BASE_BLOCK_ID_alter().
+   *
+   * @see \Drupal\Tests\block\Kernel\BlockViewBuilderTest::testBlockViewBuilderCacheTitleBlock()
+   */
+  #[Hook('block_view_page_title_block_alter')]
+  public function blockViewPageTitleBlockAlter(array &$build, BlockPluginInterface $block): void {
+    $build['#cache']['tags'][] = 'custom_cache_tag';
+  }
+
+  /**
    * Implements hook_block_build_BASE_BLOCK_ID_alter().
    */
   #[Hook('block_build_test_cache_alter')]

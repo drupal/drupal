@@ -164,6 +164,30 @@ class BlockViewBuilderTest extends KernelTestBase {
   }
 
   /**
+   * Tests title block render cache handling.
+   *
+   * @see \Drupal\block_test\Hook\BlockTestHooks::blockViewPageTitleBlockAlter()
+   */
+  public function testBlockViewBuilderCacheTitleBlock(): void {
+    // Create title block.
+    $this->block = $this->controller->create([
+      'id' => 'test_block_title',
+      'theme' => 'stark',
+      'plugin' => 'page_title_block',
+    ]);
+    $this->block->save();
+
+    $entity = Block::load('test_block_title');
+    $builder = \Drupal::entityTypeManager()->getViewBuilder('block');
+    $output = $builder->view($entity, 'block');
+
+    $this->assertSame(
+      ['block_view', 'config:block.block.test_block_title', 'custom_cache_tag'],
+      $output['#cache']['tags']
+    );
+  }
+
+  /**
    * Verifies render cache handling of the block being tested.
    *
    * @see ::testBlockViewBuilderCache()
