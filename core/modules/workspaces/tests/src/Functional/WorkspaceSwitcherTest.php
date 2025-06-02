@@ -7,6 +7,7 @@ namespace Drupal\Tests\workspaces\Functional;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\workspaces\Entity\Workspace;
 
 /**
  * Tests workspace switching functionality.
@@ -52,14 +53,18 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
 
     $mayer = $this->drupalCreateUser($permissions);
     $this->drupalLogin($mayer);
+
+    $this->createWorkspaceThroughUi('Vultures', 'vultures');
+    $this->createWorkspaceThroughUi('Gravity', 'gravity');
   }
 
   /**
    * Tests switching workspace via the switcher block and admin page.
    */
   public function testSwitchingWorkspaces(): void {
-    $this->createAndActivateWorkspaceThroughUi('Vultures', 'vultures');
-    $gravity = $this->createWorkspaceThroughUi('Gravity', 'gravity');
+    $vultures = Workspace::load('vultures');
+    $gravity = Workspace::load('gravity');
+    $this->switchToWorkspace($vultures);
 
     // Confirm the block shows on the front page.
     $this->drupalGet('<front>');
@@ -89,12 +94,12 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
 
     // When adding a query parameter the workspace will be switched.
     $current_user_url = \Drupal::currentUser()->getAccount()->toUrl();
-    $this->drupalGet($current_user_url, ['query' => ['workspace' => 'stage']]);
-    $web_assert->elementContains('css', '#block-workspace-switcher', 'Stage');
+    $this->drupalGet($current_user_url, ['query' => ['workspace' => 'vultures']]);
+    $web_assert->elementContains('css', '#block-workspace-switcher', 'Vultures');
 
     // The workspace switching via query parameter should persist.
     $this->drupalGet($current_user_url);
-    $web_assert->elementContains('css', '#block-workspace-switcher', 'Stage');
+    $web_assert->elementContains('css', '#block-workspace-switcher', 'Vultures');
 
     // Check that WorkspaceCacheContext provides the cache context used to
     // support its functionality.

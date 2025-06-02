@@ -47,8 +47,9 @@ class WorkspacesMediaLibraryIntegrationTest extends EntityReferenceWidgetTest {
 
     // Ensure that all the test methods are executed in the context of a
     // workspace.
-    $stage = Workspace::load('stage');
-    \Drupal::service('workspaces.manager')->setActiveWorkspace($stage);
+    $workspace = Workspace::create(['id' => 'test', 'label' => 'Test']);
+    $workspace->save();
+    \Drupal::service('workspaces.manager')->setActiveWorkspace($workspace);
   }
 
   /**

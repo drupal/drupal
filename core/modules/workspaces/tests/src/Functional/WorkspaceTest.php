@@ -158,6 +158,7 @@ class WorkspaceTest extends BrowserTestBase {
   public function testWorkspaceFormRevisions(): void {
     $this->drupalLogin($this->editor1);
     $storage = \Drupal::entityTypeManager()->getStorage('workspace');
+    $this->createWorkspaceThroughUi('Stage', 'stage');
 
     // The current 'stage' workspace entity should be revision 1.
     $stage_workspace = $storage->load('stage');
@@ -335,7 +336,7 @@ class WorkspaceTest extends BrowserTestBase {
     $user->delete();
     $this->drupalGet('/admin/config/workflow/workspaces');
     $this->assertSession()->pageTextContains('Summer event');
-    $summer_event_workspace_row = $page->find('css', 'table tbody tr:nth-of-type(3)');
+    $summer_event_workspace_row = $page->find('css', 'table tbody tr:nth-of-type(2)');
     $this->assertEquals('N/A', $summer_event_workspace_row->find('css', 'td:nth-of-type(2)')->getText());
   }
 

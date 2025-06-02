@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\views\Functional\BulkFormTest;
-use Drupal\workspaces\Entity\Workspace;
 
 /**
  * Tests the views bulk form in a workspace.
@@ -40,8 +39,7 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest {
     // Ensure that all the test methods are executed in the context of a
     // workspace.
     $this->setupWorkspaceSwitcherBlock();
-    $stage = Workspace::load('stage');
-    $this->switchToWorkspace($stage);
+    $this->createAndActivateWorkspaceThroughUi('Test workspace', 'test');
   }
 
   /**

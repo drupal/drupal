@@ -62,6 +62,7 @@ class WorkspacesLayoutBuilderIntegrationTest extends InlineBlockTestBase {
     ]);
     $this->drupalLogin($this->defaultUser);
     $this->setupWorkspaceSwitcherBlock();
+    Workspace::create(['id' => 'stage', 'label' => 'Stage'])->save();
 
     // Enable layout builder.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');

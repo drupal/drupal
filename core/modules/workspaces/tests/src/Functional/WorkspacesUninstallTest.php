@@ -43,18 +43,12 @@ class WorkspacesUninstallTest extends BrowserTestBase {
    */
   public function testUninstallingWorkspace(): void {
     $this->createContentType(['type' => 'article']);
-    $this->drupalGet('/admin/modules/uninstall');
-    $session = $this->assertSession();
-    $session->linkExists('Remove workspaces');
-    $this->clickLink('Remove workspaces');
-    $session->pageTextContains('Are you sure you want to delete all workspaces?');
-    $this->drupalGet('/admin/modules/uninstall/entity/workspace');
-    $this->submitForm([], 'Delete all workspaces');
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm(['uninstall[workspaces_ui]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->submitForm(['uninstall[workspaces]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
+    $session = $this->assertSession();
     $session->pageTextContains('The selected modules have been uninstalled.');
     $session->pageTextNotContains('Workspaces');
 

@@ -123,7 +123,7 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
       ],
       'revision_id' => [
         [
-          'value' => 2,
+          'value' => 1,
         ],
       ],
       'parent' => [],
