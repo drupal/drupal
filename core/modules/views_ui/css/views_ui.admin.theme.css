@@ -39,11 +39,11 @@
   background:
     linear-gradient(-90deg, #fff 0, #e8e8e8 100%) no-repeat,
     repeat-y;
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.3333) inset;
+  box-shadow: 0 0 0 rgb(0, 0, 0, 0.3333) inset;
 }
 .views-admin a.icon:hover {
   border-color: #d0d0d0;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3333) inset;
+  box-shadow: 0 0 1px rgb(0, 0, 0, 0.3333) inset;
 }
 .views-admin a.icon:active {
   border-color: #c0c0c0;

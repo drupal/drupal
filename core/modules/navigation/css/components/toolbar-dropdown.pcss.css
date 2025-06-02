@@ -49,7 +49,7 @@
   padding: var(--admin-toolbar-space-8) var(--admin-toolbar-space-16);
   border-radius: var(--admin-toolbar-space-12);
   background: white;
-  box-shadow: 0 14px 30px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 14px 30px 0 rgb(0, 0, 0, 0.1);
 }
 
 [data-drupal-dropdown][aria-expanded="true"] + .toolbar-dropdown__menu {

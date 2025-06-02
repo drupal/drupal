@@ -54,7 +54,7 @@
   border: 1px solid var(--color--gray-70);
   border-radius: 3.5rem;
   background-color: var(--color--white);
-  box-shadow: 0 0.25rem 0.625rem rgba(34, 35, 48, 0.1); /* LTR */
+  box-shadow: 0 0.25rem 0.625rem rgb(34, 35, 48, 0.1); /* LTR */
 
   &::before {
     position: absolute;
@@ -69,7 +69,7 @@
 }
 
 [dir="rtl"] .ajax-progress-fullscreen {
-  box-shadow: 0 -0.25rem 0.625rem rgba(34, 35, 48, 0.1);
+  box-shadow: 0 -0.25rem 0.625rem rgb(34, 35, 48, 0.1);
 }
 
 /**

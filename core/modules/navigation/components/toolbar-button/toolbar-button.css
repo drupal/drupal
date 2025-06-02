@@ -36,7 +36,7 @@
   text-align: start;
   -webkit-text-decoration: none;
   text-decoration: none;
-  word-break: break-word;
+  overflow-wrap: break-word;
   color: var(--toolbar-button-color);
   border: 0;
   border-radius: var(--admin-toolbar-space-8);

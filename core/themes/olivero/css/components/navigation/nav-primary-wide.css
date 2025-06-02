@@ -137,7 +137,7 @@
     border-left: solid 1px transparent;
     border-radius: 0 0 2px 2px;
     background: var(--color--white);
-    box-shadow: 0 1px 36px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 36px rgb(0, 0, 0, 0.08);
   }
 
   body:not(.is-always-mobile-nav) .primary-nav__menu--level-2.is-active-menu-parent {

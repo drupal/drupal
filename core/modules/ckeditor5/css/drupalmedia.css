@@ -28,7 +28,7 @@
   display: table-caption;
   padding: 0.6em;
   caption-side: bottom;
-  word-break: break-word;
+  overflow-wrap: break-word;
   color: hsl(0, 0%, 20%);
   outline-offset: -1px;
   background-color: hsl(0, 0%, 97%);

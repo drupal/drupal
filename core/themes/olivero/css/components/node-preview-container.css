@@ -15,13 +15,13 @@
   padding-inline-start: calc(var(--sp0-5) + var(--drupal-displace-offset-left, 0rem));
   padding-inline-end: calc(var(--sp0-5) + var(--drupal-displace-offset-right, 0rem));
   background: var(--color--white);
-  box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08); /* LTR */
+  box-shadow: -36px 1px 36px rgb(0, 0, 0, 0.08); /* LTR */
 }
 
 [dir="rtl"] .node-preview-container {
   padding-inline-start: calc(var(--sp0-5) + var(--drupal-displace-offset-right, 0rem));
   padding-inline-end: calc(var(--sp0-5) + var(--drupal-displace-offset-left, 0rem));
-  box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08);
+  box-shadow: 36px 1px 36px rgb(0, 0, 0, 0.08);
 }
 
 .toolbar-vertical.toolbar-tray-open .node-preview-container {

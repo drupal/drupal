@@ -80,7 +80,7 @@ select.form-element--small {
   select {
     padding-inline-end: var(--sp);
     background-image: none;
-    appearance: listbox; /* Default <select> appearance value for modern browsers. */
+    appearance: auto; /* Default <select> appearance value for modern browsers. */
 
     /* Lets browser set <select> appearance to whatever the browser's default is. */
   }

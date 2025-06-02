@@ -95,7 +95,7 @@
 
 #drupal-off-canvas-wrapper .inline-block-create-button:hover,
 #drupal-off-canvas-wrapper .inline-block-list__item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgb(255, 255, 255, 0.05);
 }
 
 #drupal-off-canvas-wrapper .inline-block-create-button:focus,

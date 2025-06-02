@@ -19,7 +19,7 @@
     width: var(--sp3);
     height: var(--sp2);
     content: "";
-    background: linear-gradient(to left, var(--color--white) 0%, rgba(255, 255, 255, 0) 100%); /* LTR */
+    background: linear-gradient(to left, var(--color--white) 0%, rgb(255, 255, 255, 0) 100%); /* LTR */
 
     @media (--lg) {
       content: none;
@@ -32,7 +32,7 @@
 }
 
 [dir="rtl"] .breadcrumb::after {
-  background: linear-gradient(to right, var(--color--white) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(to right, var(--color--white) 0%, rgb(255, 255, 255, 0) 100%);
 }
 
 .breadcrumb__content {

@@ -61,10 +61,10 @@
 
 /* Style the editables while in edit mode. */
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode .settings-tray-editable {
-  outline: 1px dashed rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
+  outline: 1px dashed rgb(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 1px rgb(255, 255, 255, 0.7);
 }
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode .settings-tray-editable:hover,
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode .settings-tray-editable.settings-tray-active-editable {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgb(0, 0, 0, 0.2);
 }

@@ -104,7 +104,7 @@
     }
   }
 
-  @nest .no-touchevents & .button--small {
+  .no-touchevents & .button--small {
     padding: 2px 1em;
     font-size: 13px;
   }

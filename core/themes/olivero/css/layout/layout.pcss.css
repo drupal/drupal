@@ -13,7 +13,7 @@
   /* This fixes an issue where if the toolbar is open in vertical mode, and
    * the mobile navigation is open, the "close" button gets pushed outside of
    * the viewport. */
-  @nest body.is-fixed & {
+  body.is-fixed & {
     width: calc(100% - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
   }
 }

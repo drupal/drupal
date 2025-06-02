@@ -86,16 +86,16 @@
     width: 5px;
   }
 
-  @nest .touchevents & .draggable td {
+  .touchevents & .draggable td {
     padding: 0 10px;
   }
 
-  @nest .touchevents & .draggable .menu-item__link {
+  .touchevents & .draggable .menu-item__link {
     display: inline-block;
     padding: 10px 0;
   }
 
-  @nest .touchevents & a.tabledrag-handle {
+  .touchevents & a.tabledrag-handle {
     width: 40px;
     height: 44px;
   }

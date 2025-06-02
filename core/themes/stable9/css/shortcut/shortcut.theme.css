@@ -43,7 +43,7 @@
   color: #fff;
   border-radius: 5px;
   background: #000;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0, 0, 0, 0.5);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }

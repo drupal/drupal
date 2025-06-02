@@ -16,7 +16,7 @@
   --card-border-color: var(--color-gray-200-o-80);
   --card-border-radius-size: var(--base-border-radius);
   --card-image-border-radius-size: calc(var(--card-border-radius-size) - var(--card-border-size));
-  --card-box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+  --card-box-shadow: 0 0.25rem 0.625rem rgb(0, 0, 0, 0.1);
 }
 
 .card {

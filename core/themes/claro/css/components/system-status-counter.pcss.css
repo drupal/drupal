@@ -31,8 +31,7 @@
     background-size: 40px;
 
     [dir="rtl"] & {
-      border-inline-end: 1px solid #e6e4df;
-      border-inline-start: 0;
+      background-position: left center;
     }
 
     @media (forced-colors: active) {

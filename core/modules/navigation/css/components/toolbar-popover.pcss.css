@@ -47,9 +47,9 @@
     padding-block-start: var(--admin-toolbar-space-16);
     transform: translateX(0);
     box-shadow:
-      0 0 72px rgba(0, 0, 0, 0.2),
-      0 0 8px rgba(0, 0, 0, 0.04),
-      0 0 40px rgba(0, 0, 0, 0.06);
+      0 0 72px rgb(0, 0, 0, 0.2),
+      0 0 8px rgb(0, 0, 0, 0.04),
+      0 0 40px rgb(0, 0, 0, 0.06);
     inline-size: var(--admin-toolbar-popover-width);
     inset-block-start: var(--drupal-displace-offset-top, 0);
     inset-inline-start: 1px;

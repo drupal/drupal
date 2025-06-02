@@ -12,9 +12,9 @@
   --color-white: #fff;
   --color-text: var(--color-gray);
   --color-text-light: var(--color-gray-500);
-  --color-gray-050-o-40: rgba(243, 244, 249, 0.4);
+  --color-gray-050-o-40: rgb(243, 244, 249, 0.4);
   /* Secondary. */
-  --color-gray-200-o-80: rgba(212, 212, 218, 0.8);
+  --color-gray-200-o-80: rgb(212, 212, 218, 0.8);
   --color-maximumred: var(--color-red-500);
   --color-sunglow: #ffd23f;
   --color-sunglow-shaded: #977405;
@@ -80,7 +80,7 @@
   --color-link: var(--color-absolutezero);
   --color-link-hover: var(--color-absolutezero-hover);
   --color-link-active: var(--color-absolutezero-active);
-  --color-divider: rgba(142, 146, 156, 0.5);
+  --color-divider: rgb(142, 146, 156, 0.5);
   /*
    * Typography.
    */
@@ -124,7 +124,7 @@
   /**
    * Shadows.
    */
-  --shadow-z3: 0 0.875rem 1.875rem rgba(0, 0, 0, 0.1);
+  --shadow-z3: 0 0.875rem 1.875rem rgb(0, 0, 0, 0.1);
   /*
    * Inputs.
    */
@@ -137,7 +137,7 @@
   --input--focus-border-color: var(--color-absolutezero);
   --input--error-color: var(--color-maximumred);
   --input--error-border-color: var(--color-maximumred);
-  --input--disabled-color: rgba(84, 85, 96, 0.6); /* Davy's gray with 0.6 opacity. */
+  --input--disabled-color: rgb(84, 85, 96, 0.6); /* Davy's gray with 0.6 opacity. */
   --input--disabled-fg-color: var(--color-gray-800);
   --input--disabled-bg-color: #f2f2f3; /* Light gray with 0.3 opacity on white bg. */
   --input--disabled-border-color: #bababf; /* Old silver with 0.5 opacity on white bg. */
@@ -166,7 +166,7 @@
   --details-summary-shadow-color: var(--color-focus);
   --details-summary-focus-border-size: var(--focus-border-size);
   --details-desktop-wrapper-padding-start: calc(var(--space-m) + var(--space-s) + var(--space-xs));
-  --details-box-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.1);
+  --details-box-shadow: 0 2px 0.25rem rgb(0, 0, 0, 0.1);
   --details-border-size: 1px;
   --details-border-size-radius: 2px;
   --details-accordion-border-size-radius: var(--base-border-radius);
@@ -205,8 +205,8 @@
   --jui-dropdown-bg-color: var(--color-white);
   --jui-dropdown--active-fg-color: var(--color-white);
   --jui-dropdown--active-bg-color: var(--color-absolutezero);
-  --jui-dropdown-border-color: rgba(216, 217, 224, 0.8); /* Light gray with 0.8 opacity. */
-  --jui-dropdown-shadow-color: rgba(34, 35, 48, 0.1); /* Text color with 0.1 opacity. */
+  --jui-dropdown-border-color: rgb(216, 217, 224, 0.8); /* Light gray with 0.8 opacity. */
+  --jui-dropdown-shadow-color: rgb(34, 35, 48, 0.1); /* Text color with 0.1 opacity. */
   /**
    * jQuery.UI dialog.
    */
