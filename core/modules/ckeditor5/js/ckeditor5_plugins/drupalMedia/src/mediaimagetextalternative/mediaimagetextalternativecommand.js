@@ -22,8 +22,7 @@ export default class MediaImageTextAlternativeCommand extends Command {
       this.editor.model.document.selection,
     );
     this.isEnabled =
-      !!drupalMediaElement &&
-      drupalMediaElement.getAttribute('drupalMediaIsImage') &&
+      drupalMediaElement?.getAttribute('drupalMediaIsImage') &&
       drupalMediaElement.getAttribute('drupalMediaIsImage') !== METADATA_ERROR;
 
     if (this.isEnabled) {
