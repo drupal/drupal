@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\automated_cron\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\CronInterface;
 use Drupal\Core\State\StateInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -14,42 +16,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class AutomatedCron implements EventSubscriberInterface {
 
-  /**
-   * The cron service.
-   *
-   * @var \Drupal\Core\CronInterface
-   */
-  protected $cron;
-
-  /**
-   * The cron configuration.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
-
-  /**
-   * The state key value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * Constructs a new automated cron runner.
-   *
-   * @param \Drupal\Core\CronInterface $cron
-   *   The cron service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state key-value store service.
-   */
-  public function __construct(CronInterface $cron, ConfigFactoryInterface $config_factory, StateInterface $state) {
-    $this->cron = $cron;
-    $this->config = $config_factory->get('automated_cron.settings');
-    $this->state = $state;
-  }
+  public function __construct(
+    #[AutowireServiceClosure('cron')]
+    protected readonly \Closure $cron,
+    protected readonly ConfigFactoryInterface $configFactory,
+    protected StateInterface $state,
+  ) {}
 
   /**
    * Run the automated cron if enabled.
@@ -57,12 +29,12 @@ class AutomatedCron implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
    *   The Event to process.
    */
-  public function onTerminate(TerminateEvent $event) {
-    $interval = $this->config->get('interval');
+  public function onTerminate(TerminateEvent $event): void {
+    $interval = $this->configFactory->get('automated_cron.settings')->get('interval');
     if ($interval > 0) {
       $cron_next = $this->state->get('system.cron_last', 0) + $interval;
       if ((int) $event->getRequest()->server->get('REQUEST_TIME') > $cron_next) {
-        $this->cron->run();
+        ($this->cron)()->run();
       }
     }
   }
