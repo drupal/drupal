@@ -33,6 +33,7 @@ class WorkspaceTest extends BrowserTestBase {
     'user',
     'workspaces',
     'workspaces_ui',
+    'workspaces_test',
   ];
 
   /**
@@ -364,7 +365,9 @@ class WorkspaceTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('There are no changes that can be published from Test workspace to Live.');
 
     // Create a node in the workspace.
-    $this->createNodeThroughUi('Test node', 'test');
+    $this->drupalGet('/node/add/test');
+    $this->assertEquals(1, \Drupal::keyValue('ws_test')->get('node.hook_entity_create.count'));
+    $this->submitForm(['title[0][value]' => 'Test node'], 'Save');
 
     $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/publish');
     $this->assertSession()->statusCodeEquals(200);
