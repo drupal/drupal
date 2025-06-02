@@ -9,7 +9,7 @@
     "require": {
         "php": ">=8.3.0",
         "doctrine/annotations": "^2.0",
-        "doctrine/lexer": "^2.0",
+        "doctrine/lexer": "^2 || ^3",
         "drupal/core-class-finder": "11.x-dev",
         "drupal/core-file-cache": "11.x-dev",
         "drupal/core-plugin": "11.x-dev",
