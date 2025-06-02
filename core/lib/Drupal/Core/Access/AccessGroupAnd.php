@@ -1,9 +1,7 @@
 <?php
 
-namespace Drupal\block_content\Access;
+namespace Drupal\Core\Access;
 
-use Drupal\Core\Access\AccessibleInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -21,7 +19,12 @@ class AccessGroupAnd implements AccessibleInterface {
   protected $dependencies = [];
 
   /**
-   * {@inheritdoc}
+   * Adds an access dependency.
+   *
+   * @param \Drupal\Core\Access\AccessibleInterface $dependency
+   *   The access dependency to be added.
+   *
+   * @return $this
    */
   public function addDependency(AccessibleInterface $dependency) {
     $this->dependencies[] = $dependency;
@@ -40,7 +43,10 @@ class AccessGroupAnd implements AccessibleInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets all the access dependencies.
+   *
+   * @return list<\Drupal\Core\Access\AccessibleInterface>
+   *   The list of access dependencies.
    */
   public function getDependencies() {
     return $this->dependencies;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\block_content\Unit\Access;
+namespace Drupal\Tests\Core\Access;
 
-use Drupal\block_content\Access\AccessGroupAnd;
+use Drupal\Core\Access\AccessGroupAnd;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests accessible groups.
  *
- * @group block_content
+ * @group Access
  */
 class AccessGroupAndTest extends UnitTestCase {
 
@@ -27,7 +27,7 @@ class AccessGroupAndTest extends UnitTestCase {
   }
 
   /**
-   * @covers \Drupal\block_content\Access\AccessGroupAnd
+   * @covers \Drupal\Core\Access\AccessGroupAnd
    */
   public function testGroups(): void {
     $allowedAccessible = $this->createAccessibleDouble(AccessResult::allowed());

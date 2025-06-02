@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Access;
+namespace Drupal\Core\Access;
 
 /**
  * Interface for AccessibleInterface objects that have an access dependency.

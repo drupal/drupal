@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Access;
-
-use Drupal\Core\Access\AccessibleInterface;
+namespace Drupal\Core\Access;
 
 /**
  * An interface to allow adding an access dependency.

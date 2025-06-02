@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\block_content\Unit\Access;
+namespace Drupal\Tests\Core\Access;
 
-use Drupal\block_content\Access\AccessGroupAnd;
+use Drupal\Core\Access\AccessGroupAnd;
 use Drupal\Core\Access\AccessResult;
-use Drupal\block_content\Access\RefinableDependentAccessInterface;
-use Drupal\block_content\Access\RefinableDependentAccessTrait;
+use Drupal\Core\Access\RefinableDependentAccessInterface;
+use Drupal\Core\Access\RefinableDependentAccessTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass  \Drupal\block_content\Access\RefinableDependentAccessTrait
+ * @coversDefaultClass  \Drupal\Core\Access\RefinableDependentAccessTrait
  *
- * @group block_content
+ * @group Access
  */
 class DependentAccessTest extends UnitTestCase {
   use AccessibleTestingTrait;
@@ -91,7 +91,7 @@ class DependentAccessTest extends UnitTestCase {
     $this->assertEquals('Because I said so', $accessResult->getReason());
 
     $testRefinable->addAccessDependency($this->neutral);
-    /** @var \Drupal\block_content\Access\AccessGroupAnd $dependency */
+    /** @var \Drupal\Core\Access\AccessGroupAnd $dependency */
     $dependency = $testRefinable->getAccessDependency();
     // Ensure the new dependency create a new AND group when merged.
     $this->assertInstanceOf(AccessGroupAnd::class, $dependency);
@@ -121,7 +121,7 @@ class DependentAccessTest extends UnitTestCase {
     }
 
     $testRefinable->addAccessDependency($this->neutral);
-    /** @var \Drupal\block_content\Access\AccessGroupAnd $dependency */
+    /** @var \Drupal\Core\Access\AccessGroupAnd $dependency */
     $dependency = $testRefinable->getAccessDependency();
 
     // Ensure the new dependency is merged with the existing group.
@@ -142,7 +142,7 @@ class DependentAccessTest extends UnitTestCase {
    * mergeAccessDependency() first. A call to either should behave the same on a
    * new RefinableDependentAccessInterface object.
    */
-  public static function providerTestSetFirst() {
+  public static function providerTestSetFirst(): array {
     return [
       [TRUE],
       [FALSE],

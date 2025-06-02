@@ -1,6 +1,28 @@
 parameters:
   block_content.skip_procedural_hook_scan: false
 
+  block_content.moved_classes:
+    Drupal\block_content\Access\AccessGroupAnd:
+      class: Drupal\Core\Access\AccessGroupAnd
+      deprecation_version: drupal:11.3.0
+      removed_version: drupal:12.0.0
+      change_record: https://www.drupal.org/node/3527501
+    Drupal\block_content\Access\DependentAccessInterface:
+      class: Drupal\Core\Access\DependentAccessInterface
+      deprecation_version: drupal:11.3.0
+      removed_version: drupal:12.0.0
+      change_record: https://www.drupal.org/node/3527501
+    Drupal\block_content\Access\RefinableDependentAccessInterface:
+      class: Drupal\Core\Access\RefinableDependentAccessInterface
+      deprecation_version: drupal:11.3.0
+      removed_version: drupal:12.0.0
+      change_record: https://www.drupal.org/node/3527501
+    Drupal\block_content\Access\RefinableDependentAccessTrait:
+      class: Drupal\Core\Access\RefinableDependentAccessTrait
+      deprecation_version: drupal:11.3.0
+      removed_version: drupal:12.0.0
+      change_record: https://www.drupal.org/node/3527501
+
 services:
   _defaults:
     autoconfigure: true
