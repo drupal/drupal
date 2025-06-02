@@ -62,7 +62,7 @@ class NavigationHooks {
         $output = '';
         $output .= '<h3>' . $this->t('About') . '</h3>';
         $output .= '<p>' . $this->t('The Navigation module provides a left-aligned, collapsible, vertical sidebar navigation.') . '</p>';
-        $output .= '<p>' . $this->t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [':docs' => 'https://www.drupal.org/project/navigation']) . '</p>';
+        $output .= '<p>' . $this->t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [':docs' => 'https://www.drupal.org/docs/develop/core-modules-and-themes/core-modules/navigation-module']) . '</p>';
         return $output;
     }
     $configuration_route = 'layout_builder.navigation.';
