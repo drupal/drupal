@@ -1064,8 +1064,7 @@
       const nextRow = $nextRow.get(0);
       sourceRow = changedRow;
       if (
-        previousRow &&
-        previousRow.matches('.draggable') &&
+        previousRow?.matches('.draggable') &&
         $previousRow.find(`.${group}`).length
       ) {
         if (this.indentEnabled) {
@@ -1079,8 +1078,7 @@
           sourceRow = previousRow;
         }
       } else if (
-        nextRow &&
-        nextRow.matches('.draggable') &&
+        nextRow?.matches('.draggable') &&
         $nextRow.find(`.${group}`).length
       ) {
         if (this.indentEnabled) {

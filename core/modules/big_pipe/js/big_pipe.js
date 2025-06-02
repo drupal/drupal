@@ -91,8 +91,7 @@
     return Boolean(
       node.nodeType === Node.ELEMENT_NODE &&
         node.nodeName === 'SCRIPT' &&
-        node.dataset &&
-        node.dataset.bigPipeReplacementForPlaceholderWithId &&
+        node.dataset?.bigPipeReplacementForPlaceholderWithId &&
         typeof drupalSettings.bigPipePlaceholderIds[
           node.dataset.bigPipeReplacementForPlaceholderWithId
         ] !== 'undefined',

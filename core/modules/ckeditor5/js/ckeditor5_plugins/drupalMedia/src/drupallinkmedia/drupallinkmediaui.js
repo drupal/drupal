@@ -103,8 +103,7 @@ export default class DrupalLinkMediaUI extends Plugin {
   _isSelectedLinkedMedia(selection) {
     const selectedModelElement = selection.getSelectedElement();
     return (
-      !!selectedModelElement &&
-      selectedModelElement.is('element', 'drupalMedia') &&
+      selectedModelElement?.is('element', 'drupalMedia') &&
       selectedModelElement.hasAttribute('linkHref')
     );
   }
