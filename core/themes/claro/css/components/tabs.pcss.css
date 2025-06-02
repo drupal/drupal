@@ -13,8 +13,8 @@
   --tabs-link-height: 3rem; /* 48px */
   --tabs-secondary-link-height: 2.5rem; /* 40px */
   --tabs-base-border: 1px solid var(--color-gray-200);
-  --tabs-base-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --tabs-trigger-border: 1px solid rgba(216, 217, 224, 0.8);
+  --tabs-base-shadow: 0 2px 4px rgb(0, 0, 0, 0.1);
+  --tabs-trigger-border: 1px solid rgb(216, 217, 224, 0.8);
   --tabs--hover-bg-color: var(--color-bgblue-active);
 }
 

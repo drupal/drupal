@@ -42,13 +42,6 @@
 .tabs__tab.is-active {
   display: flex;
 }
-@media (min-width: 43.75rem) {
-  .tabs__tab {
-    display: flex;
-    margin-block-end: 0;
-    margin-inline-start: calc(-1 * var(--tabs-border-width));
-  }
-}
 /* Show tabs when JavaScript disabled. */
 html:not(.js) .tabs__tab {
   display: flex;
@@ -64,6 +57,13 @@ html:not(.js) .tabs__tab {
 @media (min-width: 43.75rem) {
   .tabs--secondary .tabs__tab {
     display: flex;
+  }
+}
+@media (min-width: 43.75rem) {
+  .tabs__tab {
+    display: flex;
+    margin-block-end: 0;
+    margin-inline-start: calc(-1 * var(--tabs-border-width));
   }
 }
 .tabs__link {

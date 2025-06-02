@@ -16,7 +16,7 @@
   --input-fg-color: var(--color-gray);
   --color-blue: #003ecc;
   --color-red: #dc2323;
-  --details-box-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.1);
+  --details-box-shadow: 0 2px 0.25rem rgb(0, 0, 0, 0.1);
 }
 
 .field-ui-new-storage-wrapper {

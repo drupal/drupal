@@ -12,7 +12,7 @@
   border-radius: 0 0 10px 10px;
   outline: 0;
   background: #444;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgb(0, 0, 0, 0.6);
 }
 .skip-link.visually-hidden.focusable:focus {
   position: absolute !important;

@@ -46,12 +46,12 @@
   background:
     linear-gradient(-90deg, #fff 0, #e8e8e8 100%) no-repeat,
     repeat-y;
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.3333) inset;
+  box-shadow: 0 0 0 rgb(0, 0, 0, 0.3333) inset;
 }
 
 .views-admin a.icon:hover {
   border-color: #d0d0d0;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3333) inset;
+  box-shadow: 0 0 1px rgb(0, 0, 0, 0.3333) inset;
 }
 
 .views-admin a.icon:active {
@@ -582,7 +582,7 @@ td.group-title {
   padding: 0.3rem 0.8rem;
   border: 1px solid #dedfe4;
   border-radius: 2px 2px 0 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgb(0, 0, 0, 0.1);
 }
 
 .views-ui-dialog .form-item-selected {
@@ -611,7 +611,7 @@ td.group-title {
   width: 100%;
   height: 0.1875rem;
   content: "";
-  background: linear-gradient(to bottom, rgba(80, 81, 86, 0.11) 0%, rgba(18, 19, 20, 0.02) 49%, rgba(18, 19, 20, 0) 100%);
+  background: linear-gradient(to bottom, rgb(80, 81, 86, 0.11) 0%, rgb(18, 19, 20, 0.02) 49%, rgb(18, 19, 20, 0) 100%);
 }
 
 .views-ui-dialog .views-offset-top > * {

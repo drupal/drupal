@@ -9,7 +9,7 @@
   padding: 0.5em 0;
   text-align: center;
   white-space: nowrap;
-  background-color: rgba(0, 0, 0, 0.063);
+  background-color: rgb(0, 0, 0, 0.063);
 }
 
 @media screen and (min-width: 60em) {

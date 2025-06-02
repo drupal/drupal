@@ -33,7 +33,7 @@
   cursor: pointer;
   text-align: start;
   text-decoration: none;
-  word-break: break-word;
+  overflow-wrap: break-word;
   color: var(--toolbar-button-color);
   border: 0;
   border-radius: var(--admin-toolbar-space-8);

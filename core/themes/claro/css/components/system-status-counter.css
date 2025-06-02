@@ -36,8 +36,7 @@
   background-size: 2.5rem;
 }
 [dir="rtl"] .system-status-counter__status-icon::before {
-  border-inline-end: 1px solid #e6e4df;
-  border-inline-start: 0;
+  background-position: left center;
 }
 @media (forced-colors: active) {
   .system-status-counter__status-icon::before {

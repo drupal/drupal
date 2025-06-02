@@ -11,7 +11,7 @@
  * @internal
  */
 #drupal-off-canvas-wrapper {
-  --off-canvas-wrapper-box-shadow: 0 0 0.25rem 2px rgba(0, 0, 0, 0.3);
+  --off-canvas-wrapper-box-shadow: 0 0 0.25rem 2px rgb(0, 0, 0, 0.3);
   --off-canvas-wrapper-border-color: #2d2d2d;
   --off-canvas-wrapper-border-width: 1px;
 

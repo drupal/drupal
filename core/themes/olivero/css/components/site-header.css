@@ -81,13 +81,13 @@
 
 @media (min-width: 75rem) {
   .site-header__fixable.is-expanded .site-header__inner {
-    box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08); /* LTR */
+    box-shadow: -36px 1px 36px rgb(0, 0, 0, 0.08); /* LTR */
   }
 }
 
 @media (min-width: 75rem) {
   [dir="rtl"] .site-header__fixable.is-expanded .site-header__inner {
-    box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08);
+    box-shadow: 36px 1px 36px rgb(0, 0, 0, 0.08);
   }
 }
 

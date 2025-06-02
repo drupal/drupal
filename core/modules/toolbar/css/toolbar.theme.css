@@ -5,10 +5,10 @@
   font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
   /* Set base font size to 13px based on root ems. */
   font-size: 0.8125rem;
-  -moz-tap-highlight-color: rgba(0, 0, 0, 0);
-  -o-tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  tap-highlight-color: rgba(0, 0, 0, 0);
+  -moz-tap-highlight-color: rgb(0, 0, 0, 0);
+  -o-tap-highlight-color: rgb(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgb(0, 0, 0, 0);
+  tap-highlight-color: rgb(0, 0, 0, 0);
   -moz-touch-callout: none;
   -o-touch-callout: none;
   -webkit-touch-callout: none;
@@ -31,10 +31,10 @@
 .toolbar .toolbar-bar {
   color: #ddd;
   background-color: #0f0f0f;
-  box-shadow: -1px 0 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
+  box-shadow: -1px 0 3px 1px rgb(0, 0, 0, 0.3333); /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-bar {
-  box-shadow: 1px 0 3px 1px rgba(0, 0, 0, 0.3333);
+  box-shadow: 1px 0 3px 1px rgb(0, 0, 0, 0.3333);
 }
 .toolbar .toolbar-bar .toolbar-item {
   color: #fff;
@@ -44,7 +44,7 @@
 }
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover,
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
+  background-image: linear-gradient(rgb(255, 255, 255, 0.125) 20%, transparent 200%);
 }
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
   color: #000;
@@ -68,19 +68,19 @@
 .toolbar .toolbar-tray-vertical {
   border-right: 1px solid #aaa; /* LTR */
   background-color: #f5f5f5;
-  box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
+  box-shadow: -1px 0 5px 2px rgb(0, 0, 0, 0.3333); /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical {
   border-right: 0 none;
   border-left: 1px solid #aaa;
-  box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
+  box-shadow: 1px 0 5px 2px rgb(0, 0, 0, 0.3333);
 }
 .toolbar-horizontal .toolbar-tray {
   border-bottom: 1px solid #aaa;
-  box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
+  box-shadow: -2px 1px 3px 1px rgb(0, 0, 0, 0.3333); /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray {
-  box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.3333);
+  box-shadow: 2px 1px 3px 1px rgb(0, 0, 0, 0.3333);
 }
 .toolbar .toolbar-tray-horizontal .toolbar-tray {
   background-color: #f5f5f5;

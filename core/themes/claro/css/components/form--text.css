@@ -47,6 +47,7 @@
 
 .form-element--type-date,
 .form-element--type-time {
+  /* stylelint-disable-next-line declaration-property-value-no-unknown */
   vertical-align: -webkit-baseline-middle; /* Prevent iOS input jump while filling. */
 }
 

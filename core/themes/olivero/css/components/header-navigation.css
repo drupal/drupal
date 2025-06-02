@@ -32,7 +32,7 @@
    * viewport on short screens. */
   border-block-start: solid var(--color--white) calc(var(--sp3) + var(--drupal-displace-offset-top, 0px));
   background-color: var(--color--white);
-  box-shadow: 0 0 72px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 72px rgb(0, 0, 0, 0.1);
 }
 
 .header-nav.is-active {
@@ -138,12 +138,12 @@ html.js .header-nav {
   background: var(--color--gray-5);
 }
 
+.is-overlay-active .header-nav-overlay {
+  display: block;
+}
+
 @media (forced-colors: active) {
   .header-nav-overlay {
     background: canvastext;
   }
-}
-
-.is-overlay-active .header-nav-overlay {
-  display: block;
 }

@@ -23,7 +23,7 @@
   color: #eee;
   background-color: #0066a1;
   background-image: linear-gradient(to bottom, #0066a1, #005b98);
-  text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
+  text-shadow: 0 1px hsl(0, 0%, 0%, 0.5);
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
 }
@@ -31,7 +31,7 @@
   color: #fff;
   background-color: #0a7bc1;
   background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
-  text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
+  text-shadow: 0 1px hsl(0, 0%, 0%, 0.5);
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
 }

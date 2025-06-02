@@ -55,7 +55,7 @@
   text-align: start;
   text-decoration: none;
   letter-spacing: var(--admin-toolbar-letter-spacing-0-06);
-  word-break: break-word;
+  overflow-wrap: break-word;
   color: var(--admin-toolbar-color-gray-800);
   border: none;
   background-color: transparent;
@@ -150,7 +150,7 @@
     rotate: -90deg;
 
     [dir="rtl"] & {
-      rotate: 0;
+      rotate: none;
     }
   }
 }

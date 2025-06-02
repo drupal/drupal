@@ -34,6 +34,7 @@ module.exports = (filePath, callback) => {
           'image-set-function': false,
           'prefers-color-scheme-query': false,
           'content-alt-text': false,
+          'nesting-rules': { edition: '2021' },
         }
       }),
       postcssPixelsToRem({

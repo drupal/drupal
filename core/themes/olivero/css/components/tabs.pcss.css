@@ -41,29 +41,29 @@
     display: flex;
   }
 
-  @media (--tabs-layout-switch) {
-    display: flex;
-    margin-block-end: 0;
-    margin-inline-start: calc(-1 * var(--tabs-border-width));
-  }
-
   /* Show tabs when JavaScript disabled. */
-  @nest html:not(.js) & {
+  html:not(.js) & {
     display: flex;
   }
 
   /* Show tabs when tabs-expanded class is present. */
-  @nest .tabs.is-expanded & {
+  .tabs.is-expanded & {
     display: flex;
   }
 
   /* Secondary tabs will always be expanded. */
-  @nest .tabs--secondary & {
+  .tabs--secondary & {
     display: block;
 
     @media (--tabs-layout-switch) {
       display: flex;
     }
+  }
+
+  @media (--tabs-layout-switch) {
+    display: flex;
+    margin-block-end: 0;
+    margin-inline-start: calc(-1 * var(--tabs-border-width));
   }
 }
 
@@ -121,7 +121,7 @@
   }
 
   /* No regular borders or background color for secondary tab links. */
-  @nest .tabs--secondary & {
+  .tabs--secondary & {
     @media (--tabs-layout-switch) {
       border-color: transparent;
       background-color: transparent;
@@ -152,7 +152,7 @@
   }
 
   /* Button will not work when JavaScript is disabled, so we hide it. */
-  @nest html:not(.js) & {
+  html:not(.js) & {
     display: none;
   }
 
@@ -182,7 +182,7 @@
     &:nth-child(1) {
       inset-block-start: 0;
 
-      @nest .tabs__trigger[aria-expanded="true"] & {
+      .tabs__trigger[aria-expanded="true"] & {
         inset-block-start: calc(50% + 1px);
         transform: rotate(45deg);
       }
@@ -191,7 +191,7 @@
     &:nth-child(2) {
       inset-block-start: calc(50% + 1px);
 
-      @nest .tabs__trigger[aria-expanded="true"] & {
+      .tabs__trigger[aria-expanded="true"] & {
         opacity: 0;
       }
     }
@@ -199,7 +199,7 @@
     &:nth-child(3) {
       inset-block-start: calc(100% + 2px);
 
-      @nest .tabs__trigger[aria-expanded="true"] & {
+      .tabs__trigger[aria-expanded="true"] & {
         inset-block-start: calc(50% + 1px);
         transform: rotate(-45deg);
       }

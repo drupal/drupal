@@ -27,7 +27,7 @@
    * viewport on short screens. */
   border-block-start: solid var(--color--white) calc(var(--sp3) + var(--drupal-displace-offset-top, 0px));
   background-color: var(--color--white);
-  box-shadow: 0 0 72px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 72px rgb(0, 0, 0, 0.1);
 
   &.is-active {
     visibility: visible;
@@ -122,11 +122,11 @@ body.is-always-mobile-nav {
   opacity: 0.2;
   background: var(--color--gray-5);
 
-  @media (forced-colors: active) {
-    background: canvastext;
+  .is-overlay-active & {
+    display: block;
   }
 
-  @nest .is-overlay-active & {
-    display: block;
+  @media (forced-colors: active) {
+    background: canvastext;
   }
 }

@@ -52,7 +52,7 @@
   text-align: start;
   color: inherit;
 
-  @nest .toolbar-oriented & {
+  .toolbar-oriented & {
     width: auto;
     text-align: initial;
   }
