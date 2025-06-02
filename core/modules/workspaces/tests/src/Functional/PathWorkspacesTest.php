@@ -7,7 +7,6 @@ namespace Drupal\Tests\workspaces\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\WaitTerminateTestTrait;
-use Drupal\workspaces\Entity\Workspace;
 
 /**
  * Tests path aliases with workspaces.
@@ -91,9 +90,8 @@ class PathWorkspacesTest extends BrowserTestBase {
       'status' => TRUE,
     ]);
 
-    // Switch to Stage and create an alias for the node.
-    $stage = Workspace::load('stage');
-    $this->switchToWorkspace($stage);
+    // Activate a workspace and create an alias for the node.
+    $stage = $this->createAndActivateWorkspaceThroughUi('Stage', 'stage');
 
     $edit = [
       'path[0][alias]' => '/' . $this->randomMachineName(),
@@ -131,9 +129,8 @@ class PathWorkspacesTest extends BrowserTestBase {
       'status' => TRUE,
     ]);
 
-    // Switch to Stage and create an alias for the node.
-    $stage = Workspace::load('stage');
-    $this->switchToWorkspace($stage);
+    // Activate a workspace and create an alias for the node.
+    $stage = $this->createAndActivateWorkspaceThroughUi('Stage', 'stage');
 
     $edit = [
       'path[0][alias]' => '/' . $this->randomMachineName(),
@@ -169,7 +166,7 @@ class PathWorkspacesTest extends BrowserTestBase {
    * Tests path aliases with workspaces for translatable nodes.
    */
   public function testPathAliasesWithTranslation(): void {
-    $stage = Workspace::load('stage');
+    $stage = $this->createWorkspaceThroughUi('Stage', 'stage');
 
     // Create one node with a random alias.
     $default_node = $this->drupalCreateNode([
