@@ -1,7 +1,6 @@
 drupal.contextual-links:
   version: VERSION
   js:
-    js/contextualModelView.js: {}
     # Ensure to run before contextual/drupal.context-toolbar.
     js/contextual.js: { weight: -2 }
   css:
