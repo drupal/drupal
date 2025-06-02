@@ -81,31 +81,35 @@
 
         Drupal.displace(true);
       });
-
-      /**
-       * Initialize Drupal.displace()
-       *
-       * We add the displace attribute to a separate full width element because we
-       * don't want this element to have transitions. Note that this element and the
-       * navbar share the same exact width.
-       */
-      const initDisplace = () => {
-        const displaceElement = doc
-          .querySelector('.admin-toolbar')
-          ?.querySelector('.admin-toolbar__displace-placeholder');
-        const edge = document.documentElement.dir === 'rtl' ? 'right' : 'left';
-        displaceElement?.setAttribute(`data-offset-${edge}`, '');
-        Drupal.displace(true);
-      };
-
-      initDisplace();
     }
+
+    /**
+     * Initialize Drupal.displace()
+     *
+     * We add the displace attribute to a separate full width element because we
+     * don't want this element to have transitions. Note that this element and the
+     * navbar share the same exact width.
+     *
+     * @param {HTMLElement} el - The admin toolbar wrapper.
+     */
+    const initDisplace = (el) => {
+      const displaceElement = el.querySelector(
+        '.admin-toolbar__displace-placeholder',
+      );
+      const edge = document.documentElement.dir === 'rtl' ? 'right' : 'left';
+      displaceElement?.setAttribute(`data-offset-${edge}`, '');
+      Drupal.displace(true);
+    };
 
     // Any triggers on page. Inside or outside sidebar.
     // For now button in sidebar + mobile header and background.
 
     Drupal.behaviors.navigationProcessToolbarTriggers = {
       attach: (context) => {
+        once('navigation-displace', '.admin-toolbar', context).forEach(
+          initDisplace,
+        );
+
         const triggers = once(
           'admin-toolbar-trigger',
           '[aria-controls="admin-toolbar"]',
