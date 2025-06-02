@@ -11114,12 +11114,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Validation/Plugin/Validation/Constraint/UniqueFieldValueValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\automated_cron\\\\EventSubscriber\\\\AutomatedCron\\:\\:onTerminate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/automated_cron/src/EventSubscriber/AutomatedCron.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ban\\\\BanIpManager\\:\\:banIp\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

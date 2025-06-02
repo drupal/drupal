@@ -461,7 +461,6 @@ services:
   cron:
     class: Drupal\Core\Cron
     arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@datetime.time', '%queue.config%']
-    lazy: true
   Drupal\Core\CronInterface: '@cron'
   diff.formatter:
     class: Drupal\Core\Diff\DiffFormatter
