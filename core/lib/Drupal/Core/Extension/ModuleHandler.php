@@ -333,6 +333,9 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function resetImplementations() {
     $this->alterEventListeners = [];
+    $this->invokeMap = [];
+    $this->listenersByHook = [];
+    $this->modulesByHook = [];
   }
 
   /**
@@ -730,6 +733,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   protected function getFlatHookListeners(string $hook): array {
     if (!isset($this->listenersByHook[$hook])) {
+      $this->listenersByHook[$hook] = [];
       foreach ($this->eventDispatcher->getListeners("drupal_hook.$hook") as $listener) {
         if (is_array($listener) && is_object($listener[0])) {
           $module = $this->hookImplementationsMap[$hook][get_class($listener[0])][$listener[1]];
@@ -755,7 +759,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       }
     }
 
-    return $this->listenersByHook[$hook] ?? [];
+    return $this->listenersByHook[$hook];
   }
 
 }

@@ -16,3 +16,17 @@ declare(strict_types=1);
 function module_test_test_hook(): array {
   return ['module_test' => 'success!'];
 }
+
+/**
+ * Implements hook_test_reset_implementations_hook().
+ */
+function module_test_test_reset_implementations_hook(): string {
+  return __FUNCTION__;
+}
+
+/**
+ * Implements hook_test_reset_implementations_alter().
+ */
+function module_test_test_reset_implementations_alter(array &$data): void {
+  $data[] = __FUNCTION__;
+}
