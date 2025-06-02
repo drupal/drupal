@@ -1,11 +1,9 @@
 <?php
 
-namespace Drupal\block_content\Access;
-
-use Drupal\Core\Access\AccessibleInterface;
+namespace Drupal\Core\Access;
 
 /**
- * Trait for \Drupal\block_content\Access\RefinableDependentAccessInterface.
+ * Trait for \Drupal\Core\Access\RefinableDependentAccessInterface.
  *
  * @internal
  */

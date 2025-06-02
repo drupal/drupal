@@ -1,0 +1,5 @@
+name: 'Layout Builder BLock Content dependency test'
+type: module
+description: 'Support module for testing Layout Builder''s implicit dependencies on Block Content'
+package: Testing
+version: VERSION

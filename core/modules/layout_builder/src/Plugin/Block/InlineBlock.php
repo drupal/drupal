@@ -2,10 +2,10 @@
 
 namespace Drupal\layout_builder\Plugin\Block;
 
-use Drupal\block_content\Access\RefinableDependentAccessInterface;
-use Drupal\block_content\Access\RefinableDependentAccessTrait;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\RefinableDependentAccessInterface;
+use Drupal\Core\Access\RefinableDependentAccessTrait;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

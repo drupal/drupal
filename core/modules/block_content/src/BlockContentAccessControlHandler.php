@@ -2,10 +2,10 @@
 
 namespace Drupal\block_content;
 
-use Drupal\block_content\Access\DependentAccessInterface;
 use Drupal\block_content\Event\BlockContentGetDependencyEvent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Access\DependentAccessInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;

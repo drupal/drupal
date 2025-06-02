@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\block_content\Unit\Access;
+namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResultInterface;

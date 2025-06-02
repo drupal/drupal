@@ -11726,18 +11726,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/tests/src/Unit/Plugin/migrate/process/BlockSettingsTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_content\\\\Access\\\\AccessGroupAnd\\:\\:addDependency\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/src/Access/AccessGroupAnd.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_content\\\\Access\\\\AccessGroupAnd\\:\\:getDependencies\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/src/Access/AccessGroupAnd.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$dependency in empty\\(\\) always exists and is not falsy\\.$#',
 	'identifier' => 'empty.variable',
 	'count' => 1,
@@ -12084,12 +12072,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/Migrate/MigrateBlockContentStubTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Unit\\\\Access\\\\DependentAccessTest\\:\\:providerTestSetFirst\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Unit/Access/DependentAccessTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Unit\\\\Menu\\\\BlockContentLocalTasksTest\\:\\:getBlockContentListingRoutes\\(\\) has no return type specified\\.$#',
@@ -27008,6 +26990,30 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Form/NodeDeleteForm.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:create\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:form\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:preview\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
+	'identifier' => 'return.missing',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodePreviewForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -27050,6 +27056,30 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Form/NodeRevisionRevertTranslationForm.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:create\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:form\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
+	'identifier' => 'return.missing',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Form\\\\RebuildPermissionsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -27078,30 +27108,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeAccessControlHandlerInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:form\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:preview\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'identifier' => 'return.missing',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\NodeGrantDatabaseStorage\\:\\:alterQuery\\(\\) should return int but return statement is missing\\.$#',
@@ -27186,30 +27192,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeTranslationHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:form\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'identifier' => 'return.missing',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\NodeTypeInterface\\:\\:setDisplaySubmitted\\(\\) has no return type specified\\.$#',
@@ -48501,25 +48483,25 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',
-  'identifier' => 'missingType.return',
+	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:setupWorkspaceSwitcherBlock\\(\\) has no return type specified\\.$#',
-  'identifier' => 'missingType.return',
+	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:switchToLive\\(\\) has no return type specified\\.$#',
-  'identifier' => 'missingType.return',
+	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
-  'identifier' => 'missingType.return',
+	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
 ];
