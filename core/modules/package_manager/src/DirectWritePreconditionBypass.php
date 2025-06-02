@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use PhpTuf\ComposerStager\API\Path\Value\PathInterface;
 use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
 use PhpTuf\ComposerStager\API\Precondition\Service\ActiveAndStagingDirsAreDifferentInterface;
+use PhpTuf\ComposerStager\API\Precondition\Service\RsyncIsAvailableInterface;
 use PhpTuf\ComposerStager\API\Process\Service\ProcessInterface;
 use PhpTuf\ComposerStager\API\Translation\Value\TranslatableInterface;
 
@@ -22,7 +23,7 @@ use PhpTuf\ComposerStager\API\Translation\Value\TranslatableInterface;
  *    at any time without warning. External code should not interact with this
  *    class.
  */
-final class DirectWritePreconditionBypass implements ActiveAndStagingDirsAreDifferentInterface {
+final class DirectWritePreconditionBypass implements ActiveAndStagingDirsAreDifferentInterface, RsyncIsAvailableInterface {
 
   use StringTranslationTrait;
 
@@ -34,7 +35,7 @@ final class DirectWritePreconditionBypass implements ActiveAndStagingDirsAreDiff
   private static bool $isBypassed = FALSE;
 
   public function __construct(
-    private readonly ActiveAndStagingDirsAreDifferentInterface $decorated,
+    private readonly ActiveAndStagingDirsAreDifferentInterface|RsyncIsAvailableInterface $decorated,
   ) {}
 
   /**

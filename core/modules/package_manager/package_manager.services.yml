@@ -203,8 +203,15 @@ services:
     class: PhpTuf\ComposerStager\Internal\Translation\Service\SymfonyTranslatorProxy
     public: false
 
-  Drupal\package_manager\DirectWritePreconditionBypass:
+  package_manager.direct_write_precondition.directories:
+    class: Drupal\package_manager\DirectWritePreconditionBypass
     decorates: 'PhpTuf\ComposerStager\API\Precondition\Service\ActiveAndStagingDirsAreDifferentInterface'
+    arguments:
+      - '@.inner'
+    public: false
+  package_manager.direct_write_precondition.rsync:
+    class: Drupal\package_manager\DirectWritePreconditionBypass
+    decorates: 'PhpTuf\ComposerStager\API\Precondition\Service\RsyncIsAvailableInterface'
     arguments:
       - '@.inner'
     public: false
