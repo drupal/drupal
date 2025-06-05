@@ -59,6 +59,9 @@ final class WorkspacesLazyBuilder {
           'title' => $active_workspace ? $active_workspace->label() : $this->t('Live'),
           'url' => $url,
           'class' => 'workspaces',
+          'icon' => [
+            'icon_id' => 'workspaces',
+          ],
         ],
       ],
       '#attached' => [
