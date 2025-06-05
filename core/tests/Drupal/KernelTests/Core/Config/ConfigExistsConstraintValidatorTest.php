@@ -28,6 +28,7 @@ class ConfigExistsConstraintValidatorTest extends KernelTestBase {
    *
    * @testWith [{}, "system.site", "system.site"]
    *           [{"prefix": "system."}, "site", "system.site"]
+   *           [{"prefix": "system.[%parent.reference]."}, "admin", "system.menu.admin"]
    */
   public function testValidation(array $constraint_options, string $value, string $expected_config_name): void {
     // Create a data definition that specifies the value must be a string with
@@ -37,7 +38,11 @@ class ConfigExistsConstraintValidatorTest extends KernelTestBase {
 
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
     $typed_data = $this->container->get('typed_data_manager');
-    $data = $typed_data->create($definition, $value);
+
+    // Create a data definition for the parent data.
+    $parent_data_definition = $typed_data->createDataDefinition('map');
+    $parent_data = $typed_data->create($parent_data_definition, ['reference' => 'menu']);
+    $data = $typed_data->create($definition, $value, 'data_name', $parent_data);
 
     $violations = $data->validate();
     $this->assertCount(1, $violations);
