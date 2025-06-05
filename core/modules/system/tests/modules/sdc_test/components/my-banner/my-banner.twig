@@ -7,6 +7,7 @@
 <div {{ attributes }}>
   <div class="component--my-banner--header">
     <h3>{{ heading }}</h3>
+    <p>CTA target selected value: {{ componentMetadata.meta.properties.ctaTarget[ctaTarget] }}</p>
     {% include 'sdc_test:my-cta' with { text: ctaText, href: ctaHref, target: ctaTarget } only %}
   </div>
   <div class="component--my-banner--body">

@@ -37,6 +37,17 @@ props:
           - primary
           - small-offset
           - weight--400
+        meta:enum:
+          collapsible: Collapsible
+          dark: Dark
+          expand--down: Expands down
+          expand--side: Expands to the side
+          large: Large
+          non-interactive: Non-Interactive
+          primary: Primary
+          small-offset: Small offset
+          weight--400: Weight 400
+        x-translation-context:  Toolbar button modifiers
     extra_classes:
       type: array
       title: Extra classes.
@@ -53,6 +64,11 @@ props:
         - a
         - button
         - span
+      meta:enum:
+        a: Link
+        button: Button
+        span: Inline
+      x-translation-context: HTML tag
       # Provide a default value
       default: button
     icon:

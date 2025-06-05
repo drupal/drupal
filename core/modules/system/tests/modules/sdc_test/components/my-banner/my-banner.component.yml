@@ -29,6 +29,10 @@ props:
       enum:
         - ''
         - _blank
+      meta:enum:
+        '': 'Open in same window'
+        _blank: 'Open in a new window'
+      x-translation-context: Banner link target
     image:
       title: Media Image
       description: Background image for the banner.

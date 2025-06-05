@@ -17,12 +17,23 @@ props:
       type: string
       title: URL
       format: uri
+      examples:
+        - https://drupal.org
     target:
       type: string
       title: Target
+      description: The target for opening the link.
       enum:
         - ''
-        - _blank
+        - '_blank'
+      meta:enum:
+        '': 'Open in same window'
+        _blank: 'Open in a new window'
+      x-translation-context: CTA link target
+      default: ''
+      examples:
+        - ''
+        - '_blank'
     attributes:
       type: Drupal\Core\Template\Attribute
       name: Attributes

@@ -24,3 +24,7 @@ props:
         - power
         - like
         - external
+      meta:enum:
+        power: 'Power'
+        like: 'Like'
+        external: 'External'

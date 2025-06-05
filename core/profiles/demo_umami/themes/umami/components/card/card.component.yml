@@ -24,6 +24,10 @@ props:
       enum:
         - article
         - div
+      meta:enum:
+        article: Article
+        div: Container
+      x-translation-context: HTML tag
       # Provide a default value
       default: article
 
