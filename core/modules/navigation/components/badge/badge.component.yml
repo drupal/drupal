@@ -21,6 +21,9 @@ props:
       enum:
         - info
         - success
+      meta:enum:
+        info: Information
+        success: Success
 slots:
   label:
     type: string

@@ -2,6 +2,24 @@
   "$id": "https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata-full.schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$defs": {
+    "propDefinition": {
+      "$ref": "http://json-schema.org/draft-04/schema#",
+      "meta:enum": {
+        "type": "object",
+        "minItems": 1,
+        "uniqueItems": true,
+        "patternProperties": {
+          "additionalProperties": false,
+          "^[a-zA-Z0-9_-]*$": {
+            "type": "string"
+          }
+        }
+      },
+      "x-translation-context": {
+        "type": "string",
+        "title": "Translation Context"
+      }
+    },
     "slotDefinition": {
       "type": "object",
       "additionalProperties": false,
@@ -160,7 +178,7 @@
       ]
     },
     "props": {
-      "$ref": "http://json-schema.org/draft-04/schema#"
+      "$ref": "#/$defs/propDefinition"
     },
     "slots": {
       "$ref": "metadata.schema.json#/$defs/slotDefinition"

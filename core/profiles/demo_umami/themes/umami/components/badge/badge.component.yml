@@ -27,6 +27,12 @@ props:
         - timer
         - serves
         - difficulty
+      meta:enum:
+        knife: Knife
+        timer: Timer
+        serves: Serves
+        difficulty: Difficulty
+      x-translation-context: Umami recipes icon names
 slots:
   label:
     type: string

@@ -14,6 +14,11 @@ class ComponentMetadata {
   use StringTranslationTrait;
 
   /**
+   * The ID of the component, in the form of provider:machine_name.
+   */
+  public readonly string $id;
+
+  /**
    * The absolute path to the component directory.
    *
    * @var string
@@ -115,6 +120,7 @@ class ComponentMetadata {
     if (str_starts_with($path, $app_root)) {
       $path = substr($path, strlen($app_root));
     }
+    $this->id = $metadata_info['id'];
     $this->mandatorySchemas = $enforce_schemas;
     $this->path = $path;
 
@@ -149,7 +155,7 @@ class ComponentMetadata {
   private function parseSchemaInfo(array $metadata_info): ?array {
     if (empty($metadata_info['props'])) {
       if ($this->mandatorySchemas) {
-        throw new InvalidComponentException(sprintf('The component "%s" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.', $metadata_info['id']));
+        throw new InvalidComponentException(sprintf('The component "%s" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.', $this->id));
       }
       $schema = NULL;
     }
@@ -167,6 +173,12 @@ class ComponentMetadata {
       $schema_props = $metadata_info['props'];
       foreach ($schema_props['properties'] ?? [] as $name => $prop_schema) {
         $type = $prop_schema['type'] ?? '';
+        if (isset($prop_schema['enum'], $prop_schema['meta:enum'])) {
+          $enum_keys_diff = array_diff($prop_schema['enum'], array_keys($prop_schema['meta:enum']));
+          if (!empty($enum_keys_diff)) {
+            throw new InvalidComponentException(sprintf('The values for the %s prop enum in component %s must be defined in meta:enum.', $name, $this->id));
+          }
+        }
         $schema['properties'][$name]['type'] = array_unique([
           ...(array) $type,
           'object',
@@ -197,6 +209,14 @@ class ComponentMetadata {
    *   The normalized value object.
    */
   public function normalize(): array {
+    $meta = [];
+    if (!empty($this->schema['properties'])) {
+      foreach ($this->schema['properties'] as $prop_name => $prop_definition) {
+        if (!empty($prop_definition['meta:enum'])) {
+          $meta['properties'][$prop_name] = $this->getEnumOptions($prop_name);
+        }
+      }
+    }
     return [
       'path' => $this->path,
       'machineName' => $this->machineName,
@@ -204,7 +224,42 @@ class ComponentMetadata {
       'name' => $this->name,
       'group' => $this->group,
       'variants' => $this->variants,
+      'meta' => $meta,
     ];
+  }
+
+  /**
+   * Get translated options labels from enumeration.
+   *
+   * @param string $propertyName
+   *   The enum property name.
+   *
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   *   An array with enum options as keys and the (non-rendered)
+   *   translated labels as values.
+   */
+  public function getEnumOptions(string $propertyName): array {
+    $options = [];
+    if (isset($this->schema['properties'][$propertyName])) {
+      $prop_definition = $this->schema['properties'][$propertyName];
+      if (!empty($prop_definition['enum'])) {
+        $translation_context = $prop_definition['x-translation-context'] ?? '';
+        // We convert ['a', 'b'], into ['a' => t('a'), 'b' => t('b')].
+        $options = array_combine(
+          $prop_definition['enum'],
+          // @phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
+          array_map(fn($value) => $this->t($value, [], ['context' => $translation_context]), $prop_definition['enum']),
+        );
+        if (!empty($prop_definition['meta:enum'])) {
+          foreach ($prop_definition['meta:enum'] as $enum_value => $enum_label) {
+            $options[$enum_value] =
+              // @phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
+              $this->t($enum_label, [], ['context' => $translation_context]);
+          }
+        }
+      }
+    }
+    return $options;
   }
 
 }
