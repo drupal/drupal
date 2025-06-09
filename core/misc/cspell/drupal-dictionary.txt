@@ -1,6 +1,4 @@
 bartik
-corepack
-dblog
 dependee
 dependee's
 dependees
