@@ -18,6 +18,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\TestTools\Random;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 use Symfony\Component\Yaml\Yaml;
@@ -2051,6 +2052,28 @@ PHP,
         ]),
       ],
     ];
+  }
+
+  /**
+   * Tests deprecation and backwards compatibility of icon names.
+   */
+  #[IgnoreDeprecations]
+  public function testDeprecatedIcons(): void {
+    $this->expectDeprecation('The icon configuration value "objectBlockLeft" in drupalElementStyles group align for CKEditor5 plugin ckeditor5_icon_deprecation_test_plugin is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Try using "IconObjectLeft" instead. See https://www.drupal.org/node/3528806');
+    $this->expectDeprecation('The icon configuration value "objectBlockRight" in drupalElementStyles group align for CKEditor5 plugin ckeditor5_icon_deprecation_test_plugin is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Try using "IconObjectRight" instead. See https://www.drupal.org/node/3528806');
+    $this->expectDeprecation('The icon configuration value "objectLeft" in drupalElementStyles group align for CKEditor5 plugin ckeditor5_icon_deprecation_test_plugin is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Try using "IconObjectInlineLeft" instead. See https://www.drupal.org/node/3528806');
+    $this->expectDeprecation('The icon configuration value "objectRight" in drupalElementStyles group align for CKEditor5 plugin ckeditor5_icon_deprecation_test_plugin is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Try using "IconObjectInlineRight" instead. See https://www.drupal.org/node/3528806');
+    $this->expectDeprecation('The icon configuration value "threeVerticalDots" in drupalElementStyles group threeVerticalDots for CKEditor5 plugin ckeditor5_icon_deprecation_test_plugin is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Try using "IconThreeVerticalDots" instead. See https://www.drupal.org/node/3528806');
+    \Drupal::service('module_installer')->install(['ckeditor5_icon_deprecation_test']);
+    $definitions = \Drupal::service('plugin.manager.ckeditor5.plugin')->getDefinitions();
+    $config = $definitions['ckeditor5_icon_deprecation_test_plugin']->toArray()['ckeditor5']['config']['drupalElementStyles'];
+    $this->assertSame('IconObjectCenter', $config['align'][0]['icon']);
+    $this->assertSame('IconObjectLeft', $config['align'][1]['icon']);
+    $this->assertSame('IconObjectRight', $config['align'][2]['icon']);
+    $this->assertSame('IconObjectInlineLeft', $config['align'][3]['icon']);
+    $this->assertSame('IconObjectInlineRight', $config['align'][4]['icon']);
+    $this->assertStringContainsString('<svg viewBox="0 0 20 20"', $config['svg'][0]['icon']);
+    $this->assertSame('IconThreeVerticalDots', $config['threeVerticalDots'][0]['icon']);
   }
 
 }

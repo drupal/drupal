@@ -1,1 +1,1 @@
-!function(i){const n=i.lt=i.lt||{};n.dictionary=Object.assign(n.dictionary||{},{"Show source":"Rodyti šaltinį",Source:"Šaltinis"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(i){const n=i.lt=i.lt||{};n.dictionary=Object.assign(n.dictionary||{},{"Show source":"Rodyti šaltinį"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

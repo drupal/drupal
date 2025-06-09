@@ -1,0 +1,1 @@
+!function(e){const n=e["zh-cn"]=e["zh-cn"]||{};n.dictionary=Object.assign(n.dictionary||{},{"Connected users":"已连接用户","Document outline":"文档大纲","Enter fullscreen mode":"进入全屏模式","Fullscreen mode":"全屏模式","Leave fullscreen mode":"退出全屏模式","Toggle fullscreen mode":"切换全屏模式"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
