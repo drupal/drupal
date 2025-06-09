@@ -107,7 +107,6 @@ classmap
 classmaps
 classtype
 cldr
-clearfix
 closethick
 codesniffer
 colgroups
@@ -125,7 +124,6 @@ controlgroup
 conv
 createrole
 createuser
-crema
 crossout
 crème
 csrftoken
@@ -234,7 +232,6 @@ fieldlayout
 fieldnames
 fieldsets
 filemime
-filetransfer
 findwith
 flickr
 flipfit
@@ -282,7 +279,6 @@ idekey
 iframeupload
 imagecache
 imagetextalternative
-indexname
 inglés
 inited
 inno
@@ -333,7 +329,6 @@ longerthan
 longtext
 loquesea
 lrdd
-lspeak
 lstitle
 ltitle
 lzma
@@ -432,11 +427,9 @@ optin
 orgchart
 ossp
 outdent
-outro
 overrider
 overrider's
 overriders
-pagecache
 pagetop
 paramconverter
 parseable
@@ -465,7 +458,6 @@ postcondition
 postfields
 postorder
 postupdate
-precache
 preconfigured
 predelete
 prefixsqlite
@@ -477,7 +469,6 @@ prepopulating
 prepopulation
 prerender
 prerendered
-presave
 pretransaction
 preuninstall
 processlist
@@ -516,7 +507,6 @@ renderables
 renderered
 reparenting
 replyto
-resave
 resaved
 resaving
 restrictor
@@ -533,7 +523,6 @@ revpub
 ribisi
 rowspans
 rtsp
-ruleset
 sameline
 samename
 sameorigin
@@ -564,8 +553,6 @@ smalldatetime
 somecompany
 specialchars
 spiffiness
-splitbutton
-splitbuttons
 squaresmall
 squiz
 squizlabs
@@ -701,7 +688,6 @@ upcasting
 updateprogress
 uploaders
 uploadprogress
-upscaling
 urandom
 userinfo
 userref
