@@ -1,0 +1,1 @@
+!function(i){const n=i.be=i.be||{};n.dictionary=Object.assign(n.dictionary||{},{"Characters: %0":"Сімвалаў: %0","Words: %0":"Словаў: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

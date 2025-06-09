@@ -1,1 +1,1 @@
-!function(i){const o=i.si=i.si||{};o.dictionary=Object.assign(o.dictionary||{},{"Show source":"",Source:""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(i){const n=i.si=i.si||{};n.dictionary=Object.assign(n.dictionary||{},{"Show source":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

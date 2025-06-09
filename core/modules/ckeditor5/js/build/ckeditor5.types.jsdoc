@@ -209,18 +209,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-bookmark/src/bookmarkui.js
- *
- * @typedef {module:bookmark/bookmarkui} module:bookmark/bookmarkui~BookmarkUI
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-bookmark/src/ui/bookmarkactionsview.js
- *
- * @typedef {module:bookmark/ui/bookmarkactionsview} module:bookmark/ui/bookmarkactionsview~BookmarkActionsView
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-bookmark/src/ui/bookmarkformview.js
  *
  * @typedef {module:bookmark/ui/bookmarkformview} module:bookmark/ui/bookmarkformview~BookmarkFormView
@@ -575,6 +563,84 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/emoji.js
+ *
+ * @typedef {module:emoji/emoji} module:emoji/emoji~Emoji
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/emojicommand.js
+ *
+ * @typedef {module:emoji/emojicommand} module:emoji/emojicommand~EmojiCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/emojimention.js
+ *
+ * @typedef {module:emoji/emojimention} module:emoji/emojimention~EmojiMention
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/emojipicker.js
+ *
+ * @typedef {module:emoji/emojipicker} module:emoji/emojipicker~EmojiPicker
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/emojirepository.js
+ *
+ * @typedef {module:emoji/emojirepository} module:emoji/emojirepository~EmojiRepository
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/emojiutils.js
+ *
+ * @typedef {module:emoji/emojiutils} module:emoji/emojiutils~EmojiUtils
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/ui/emojicategoriesview.js
+ *
+ * @typedef {module:emoji/ui/emojicategoriesview} module:emoji/ui/emojicategoriesview~EmojiCategoriesView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/ui/emojigridview.js
+ *
+ * @typedef {module:emoji/ui/emojigridview} module:emoji/ui/emojigridview~EmojiGridView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/ui/emojipickerformview.js
+ *
+ * @typedef {module:emoji/ui/emojipickerformview} module:emoji/ui/emojipickerformview~EmojiPickerFormView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/ui/emojipickerview.js
+ *
+ * @typedef {module:emoji/ui/emojipickerview} module:emoji/ui/emojipickerview~EmojiPickerView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/ui/emojisearchview.js
+ *
+ * @typedef {module:emoji/ui/emojisearchview} module:emoji/ui/emojisearchview~EmojiSearchView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/ui/emojitoneview.js
+ *
+ * @typedef {module:emoji/ui/emojitoneview} module:emoji/ui/emojitoneview~EmojiToneView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-emoji/src/utils/isemojisupported.js
+ *
+ * @typedef {module:emoji/utils/isemojisupported} module:emoji/utils/isemojisupported~isEmojiSupported
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-engine/src/controller/datacontroller.js
  *
  * @typedef {module:engine/controller/datacontroller} module:engine/controller/datacontroller~DataController
@@ -851,12 +917,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-engine/src/model/treewalker.js
- *
- * @typedef {module:engine/model/treewalker} module:engine/model/treewalker~TreeWalker
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/utils/deletecontent.js
  *
  * @typedef {module:engine/model/utils/deletecontent} module:engine/model/utils/deletecontent~deleteContent
@@ -1043,6 +1103,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-engine/src/view/observer/touchobserver.js
+ *
+ * @typedef {module:engine/view/observer/touchobserver} module:engine/view/observer/touchobserver~TouchObserver
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-engine/src/view/position.js
  *
  * @typedef {module:engine/view/position} module:engine/view/position~Position
@@ -1097,9 +1163,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-engine/src/view/treewalker.js
+ * Declared in file @ckeditor/ckeditor5-engine/src/view/tokenlist.js
  *
- * @typedef {module:engine/view/treewalker} module:engine/view/treewalker~TreeWalker
+ * @typedef {module:engine/view/tokenlist} module:engine/view/tokenlist~TokenList
  */
 
 /**
@@ -1301,6 +1367,42 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-fullscreen/src/fullscreen.js
+ *
+ * @typedef {module:fullscreen/fullscreen} module:fullscreen/fullscreen~Fullscreen
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-fullscreen/src/fullscreencommand.js
+ *
+ * @typedef {module:fullscreen/fullscreencommand} module:fullscreen/fullscreencommand~FullscreenCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-fullscreen/src/fullscreenediting.js
+ *
+ * @typedef {module:fullscreen/fullscreenediting} module:fullscreen/fullscreenediting~FullscreenEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-fullscreen/src/fullscreenui.js
+ *
+ * @typedef {module:fullscreen/fullscreenui} module:fullscreen/fullscreenui~FullscreenUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-fullscreen/src/handlers/abstracteditorhandler.js
+ *
+ * @typedef {module:fullscreen/handlers/abstracteditorhandler} module:fullscreen/handlers/abstracteditorhandler~AbstractEditorHandler
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-fullscreen/src/handlers/classiceditorhandler.js
+ *
+ * @typedef {module:fullscreen/handlers/classiceditorhandler} module:fullscreen/handlers/classiceditorhandler~ClassicEditorHandler
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-heading/src/heading.js
  *
  * @typedef {module:heading/heading} module:heading/heading~Heading
@@ -1436,6 +1538,12 @@
  * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/heading.js
  *
  * @typedef {module:html-support/integrations/heading} module:html-support/integrations/heading~HeadingElementSupport
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/horizontalline.js
+ *
+ * @typedef {module:html-support/integrations/horizontalline} module:html-support/integrations/horizontalline~HorizontalLineElementSupport
  */
 
 /**
@@ -1805,15 +1913,33 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-link/src/ui/linkactionsview.js
+ * Declared in file @ckeditor/ckeditor5-link/src/ui/linkbuttonview.js
  *
- * @typedef {module:link/ui/linkactionsview} module:link/ui/linkactionsview~LinkActionsView
+ * @typedef {module:link/ui/linkbuttonview} module:link/ui/linkbuttonview~LinkButtonView
  */
 
 /**
  * Declared in file @ckeditor/ckeditor5-link/src/ui/linkformview.js
  *
  * @typedef {module:link/ui/linkformview} module:link/ui/linkformview~LinkFormView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-link/src/ui/linkpreviewbuttonview.js
+ *
+ * @typedef {module:link/ui/linkpreviewbuttonview} module:link/ui/linkpreviewbuttonview~LinkPreviewButtonView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-link/src/ui/linkpropertiesview.js
+ *
+ * @typedef {module:link/ui/linkpropertiesview} module:link/ui/linkpropertiesview~LinkPropertiesView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-link/src/ui/linkprovideritemsview.js
+ *
+ * @typedef {module:link/ui/linkprovideritemsview} module:link/ui/linkprovideritemsview~LinkProviderItemsView
  */
 
 /**
@@ -2066,6 +2192,12 @@
  * Declared in file @ckeditor/ckeditor5-media-embed/src/mediaembedui.js
  *
  * @typedef {module:media-embed/mediaembedui} module:media-embed/mediaembedui~MediaEmbedUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/src/mediaregistry.js
+ *
+ * @typedef {module:media-embed/mediaregistry} module:media-embed/mediaregistry~MediaRegistry
  */
 
 /**
@@ -2477,6 +2609,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-table/src/commands/inserttablelayoutcommand.js
+ *
+ * @typedef {module:table/commands/inserttablelayoutcommand} module:table/commands/inserttablelayoutcommand~InsertTableLayoutCommand
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/src/commands/removecolumncommand.js
  *
  * @typedef {module:table/commands/removecolumncommand} module:table/commands/removecolumncommand~RemoveColumnCommand
@@ -2615,6 +2753,30 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablelayout.js
+ *
+ * @typedef {module:table/tablelayout} module:table/tablelayout~TableLayout
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablelayout/commands/tabletypecommand.js
+ *
+ * @typedef {module:table/tablelayout/commands/tabletypecommand} module:table/tablelayout/commands/tabletypecommand~TableTypeCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablelayout/tablelayoutediting.js
+ *
+ * @typedef {module:table/tablelayout/tablelayoutediting} module:table/tablelayout/tablelayoutediting~TableLayoutEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablelayout/tablelayoutui.js
+ *
+ * @typedef {module:table/tablelayout/tablelayoutui} module:table/tablelayout/tablelayoutui~TableLayoutUI
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/src/tablemouse.js
  *
  * @typedef {module:table/tablemouse} module:table/tablemouse~TableMouse
@@ -2690,12 +2852,6 @@
  * Declared in file @ckeditor/ckeditor5-table/src/ui/colorinputview.js
  *
  * @typedef {module:table/ui/colorinputview} module:table/ui/colorinputview~ColorInputView
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-table/src/ui/formrowview.js
- *
- * @typedef {module:table/ui/formrowview} module:table/ui/formrowview~FormRowView
  */
 
 /**
@@ -2798,6 +2954,12 @@
  * Declared in file @ckeditor/ckeditor5-ui/src/button/switchbuttonview.js
  *
  * @typedef {module:ui/button/switchbuttonview} module:ui/button/switchbuttonview~SwitchButtonView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/collapsible/collapsibleview.js
+ *
+ * @typedef {module:ui/collapsible/collapsibleview} module:ui/collapsible/collapsibleview~CollapsibleView
  */
 
 /**
@@ -2951,6 +3113,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/editorui/poweredby.js
+ *
+ * @typedef {module:ui/editorui/poweredby} module:ui/editorui/poweredby~PoweredBy
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/focuscycler.js
  *
  * @typedef {module:ui/focuscycler} module:ui/focuscycler~FocusCycler
@@ -2960,6 +3128,12 @@
  * Declared in file @ckeditor/ckeditor5-ui/src/formheader/formheaderview.js
  *
  * @typedef {module:ui/formheader/formheaderview} module:ui/formheader/formheaderview~FormHeaderView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/formrow/formrowview.js
+ *
+ * @typedef {module:ui/formrow/formrowview} module:ui/formrow/formrowview~FormRowView
  */
 
 /**
@@ -3275,6 +3449,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/collectstylesheets.js
+ *
+ * @typedef {module:utils/collectstylesheets} module:utils/collectstylesheets~async
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/comparearrays.js
  *
  * @typedef {module:utils/comparearrays} module:utils/comparearrays~compareArrays
@@ -3368,6 +3548,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/getrangefrommouseevent.js
  *
  * @typedef {module:utils/dom/getrangefrommouseevent} module:utils/dom/getrangefrommouseevent~getRangeFromMouseEvent
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/getvisualviewportoffset.js
+ *
+ * @typedef {module:utils/dom/getvisualviewportoffset} module:utils/dom/getvisualviewportoffset~getVisualViewportOffset
  */
 
 /**
@@ -3497,6 +3683,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/formathtml.js
+ *
+ * @typedef {module:utils/formathtml} module:utils/formathtml~formatHtml
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/isiterable.js
  *
  * @typedef {module:utils/isiterable} module:utils/isiterable~isIterable
@@ -3590,6 +3782,18 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/wait.js
  *
  * @typedef {module:utils/wait} module:utils/wait~wait
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-watchdog/src/contextwatchdog.js
+ *
+ * @typedef {module:watchdog/contextwatchdog} module:watchdog/contextwatchdog~ContextWatchdog
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-watchdog/src/editorwatchdog.js
+ *
+ * @typedef {module:watchdog/editorwatchdog} module:watchdog/editorwatchdog~EditorWatchdog
  */
 
 /**

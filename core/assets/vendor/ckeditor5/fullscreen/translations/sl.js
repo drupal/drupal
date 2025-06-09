@@ -1,0 +1,1 @@
+!function(e){const n=e.sl=e.sl||{};n.dictionary=Object.assign(n.dictionary||{},{"Connected users":"","Document outline":"","Enter fullscreen mode":"","Fullscreen mode":"","Leave fullscreen mode":"","Toggle fullscreen mode":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

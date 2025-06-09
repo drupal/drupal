@@ -1,1 +1,1 @@
-!function(n){const c=n["zh-cn"]=n["zh-cn"]||{};c.dictionary=Object.assign(c.dictionary||{},{"Show source":"显示源代码",Source:"源代码"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const c=n["zh-cn"]=n["zh-cn"]||{};c.dictionary=Object.assign(c.dictionary||{},{"Show source":"显示源代码"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

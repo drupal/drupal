@@ -1,0 +1,1 @@
+!function(t){const s=t.be=t.be||{};s.dictionary=Object.assign(s.dictionary||{},{"Block styles":"Стылі для блокаў","Multiple styles":"Некалькі стыляў",Styles:"Стылі","Text styles":"Стылі для тэксту"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

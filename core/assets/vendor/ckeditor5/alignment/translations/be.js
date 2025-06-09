@@ -1,0 +1,1 @@
+!function(n){const i=n.be=n.be||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"Выраўнаваць па цэнтры","Align left":"Выраўнаваць па левым краі","Align right":"Выраўнаваць па правым краі",Justify:"Выраўнаваць па шырыні","Text alignment":"Выраўнаваць тэкст","Text alignment toolbar":"Выраўноўванне"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
