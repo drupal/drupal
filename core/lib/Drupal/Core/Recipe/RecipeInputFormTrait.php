@@ -61,10 +61,7 @@ trait RecipeInputFormTrait {
        * @endcode
        *
        * The `#tree` property will always be set to TRUE.
-       *
-       * @var array
        */
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable, Drupal.Commenting.VariableComment.Missing
       public array $form = [];
 
       /**

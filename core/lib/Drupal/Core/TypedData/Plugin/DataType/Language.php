@@ -36,8 +36,8 @@ class Language extends TypedData {
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Language\LanguageInterface|null
+   *   The language object, or NULL if the language is not set.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getValue() {
     if (!isset($this->language) && $this->id) {
       $this->language = \Drupal::languageManager()->getLanguage($this->id);

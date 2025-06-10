@@ -151,7 +151,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
     ]);
     foreach (['aa', 'bb', 'cc'] as $language_code) {
       $multi_lingual_menu_item->addTranslation($language_code, [
-        'title' => $language_code . '|' . 'A multi-lingual-node',
+        'title' => $language_code . '|A multi-lingual-node',
       ]);
       $multi_lingual_menu_item->save();
     }
@@ -170,7 +170,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
     ]);
     foreach (['aa', 'bb'] as $language_code) {
       $multi_lingual_menu_item->addTranslation($language_code, [
-        'title' => $language_code . '|' . 'Second multi-lingual-node',
+        'title' => $language_code . '|Second multi-lingual-node',
       ]);
       $multi_lingual_menu_item->save();
     }
@@ -189,7 +189,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
     ]);
     foreach (['aa', 'bb'] as $language_code) {
       $multi_lingual_menu_item->addTranslation($language_code, [
-        'title' => $language_code . '|' . 'Third multi-lingual-node',
+        'title' => $language_code . '|Third multi-lingual-node',
       ]);
       $multi_lingual_menu_item->save();
     }

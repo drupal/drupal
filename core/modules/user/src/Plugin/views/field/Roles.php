@@ -108,8 +108,8 @@ class Roles extends PrerenderList {
    * {@inheritdoc}
    */
   protected function documentSelfTokens(&$tokens) {
-    $tokens['{{ ' . $this->options['id'] . '__role' . ' }}'] = $this->t('The name of the role.');
-    $tokens['{{ ' . $this->options['id'] . '__rid' . ' }}'] = $this->t('The role machine-name of the role.');
+    $tokens['{{ ' . $this->options['id'] . '__role }}'] = $this->t('The name of the role.');
+    $tokens['{{ ' . $this->options['id'] . '__rid }}'] = $this->t('The role machine-name of the role.');
   }
 
   /**

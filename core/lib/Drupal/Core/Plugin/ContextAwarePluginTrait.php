@@ -122,8 +122,8 @@ trait ContextAwarePluginTrait {
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface[]
+   *   The array of context definitions, keyed by context name.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getContextDefinitions() {
     $definition = $this->getPluginDefinition();
     if ($definition instanceof ContextAwarePluginDefinitionInterface) {
@@ -137,8 +137,8 @@ trait ContextAwarePluginTrait {
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
+   *   The definition against which the context value must validate.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getContextDefinition($name) {
     $definition = $this->getPluginDefinition();
     if ($definition instanceof ContextAwarePluginDefinitionInterface) {

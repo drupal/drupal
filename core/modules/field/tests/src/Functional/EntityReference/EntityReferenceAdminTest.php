@@ -192,7 +192,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Multiple content items match this reference;');
     $this->assertSession()->pageTextContains($node1->getTitle() . ' (' . $node1->id() . ')');
     $this->assertSession()->pageTextContains($node2->getTitle() . ' (' . $node2->id() . ')');
-    $this->assertSession()->pageTextContains('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
+    $this->assertSession()->pageTextContains('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')".');
 
     $edit = [
       'title[0][value]' => 'Test',

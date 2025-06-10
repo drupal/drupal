@@ -196,7 +196,7 @@ class MachineNameTest extends WebDriverTestBase {
     $assert->fieldExists('Name')->setValue('test 1');
     $machine_name_value = $page->find('css', '#edit-name-machine-name-suffix .machine-name-value');
     $this->assertNotEmpty($machine_name_value, 'Machine name field must be initialized');
-    $this->assertJsCondition('jQuery("#edit-name-machine-name-suffix .machine-name-value").html() == "' . 'test_1' . '"');
+    $this->assertJsCondition('jQuery("#edit-name-machine-name-suffix .machine-name-value").html() == "test_1"');
 
     // Ensure that machine name generation still occurs after a non-HTML 5
     // validation failure.

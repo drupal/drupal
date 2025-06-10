@@ -188,7 +188,6 @@ trait PdoTrait {
    * @return array<array<scalar|null>|object|scalar|null>
    *   An array of results.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidReturn, Drupal.Commenting.FunctionComment.Missing
   protected function clientFetchAll(?FetchAs $mode = NULL, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): array {
     return match ($mode) {
       FetchAs::Column => $this->getClientStatement()->fetchAll(

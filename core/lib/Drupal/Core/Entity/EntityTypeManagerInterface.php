@@ -139,16 +139,18 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface|null
+   *   A plugin definition, or NULL if the plugin ID is invalid and
+   *   $exception_on_invalid is FALSE.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getDefinition($entity_type_id, $exception_on_invalid = TRUE);
 
   /**
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface[]
+   *   An array of plugin definitions (empty array if no definitions were
+   *   found). Keys are plugin IDs.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getDefinitions();
 
 }

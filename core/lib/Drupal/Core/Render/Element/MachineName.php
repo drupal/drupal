@@ -296,7 +296,7 @@ class MachineName extends Textfield {
       return $overrides[$langcode];
     }
 
-    $file = dirname(__DIR__, 3) . '/Component/Transliteration/data' . '/' . preg_replace('/[^a-zA-Z\-]/', '', $langcode) . '.php';
+    $file = dirname(__DIR__, 3) . '/Component/Transliteration/data/' . preg_replace('/[^a-zA-Z\-]/', '', $langcode) . '.php';
 
     $overrides[$langcode] = [];
     if (is_file($file)) {

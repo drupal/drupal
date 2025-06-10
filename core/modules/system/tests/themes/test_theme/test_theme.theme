@@ -54,7 +54,7 @@ function test_theme_theme_suggestions_alter(array &$suggestions, array &$variabl
   // the theme_suggestions_test module can be picked up when that module is
   // enabled.
   if ($hook == 'theme_test_general_suggestions') {
-    array_unshift($suggestions, 'theme_test_general_suggestions__' . 'theme_override');
+    array_unshift($suggestions, 'theme_test_general_suggestions__theme_override');
     $variables['theme_hook'] = 'test_theme_theme_suggestions_alter';
   }
 }
@@ -68,7 +68,7 @@ function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$sugge
   // suggestion to the beginning of the array so that the suggestion added by
   // the theme_suggestions_test module can be picked up when that module is
   // enabled.
-  array_unshift($suggestions, 'theme_test_suggestions__' . 'theme_override');
+  array_unshift($suggestions, 'theme_test_suggestions__theme_override');
 }
 
 /**

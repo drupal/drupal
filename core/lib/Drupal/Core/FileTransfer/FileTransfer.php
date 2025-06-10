@@ -94,12 +94,12 @@ abstract class FileTransfer {
    *   getSettingsForm() method uses any nested settings, the same structure
    *   will be assumed here.
    *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
    * @return object
    *   New instance of the appropriate FileTransfer subclass.
    *
    * @throws \Drupal\Core\FileTransfer\FileTransferException
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
   public static function factory($jail, $settings) {
     throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');
   }

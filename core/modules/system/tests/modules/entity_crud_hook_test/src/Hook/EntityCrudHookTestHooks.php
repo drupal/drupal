@@ -17,7 +17,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('entity_create')]
   public function entityCreate(EntityInterface $entity): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_create' . ' called for type ' . $entity->getEntityTypeId();
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_create called for type ' . $entity->getEntityTypeId();
   }
 
   /**
@@ -25,7 +25,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('block_create')]
   public function blockCreate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_create' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_create called';
   }
 
   /**
@@ -33,7 +33,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('comment_create')]
   public function commentCreate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_create' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_create called';
   }
 
   /**
@@ -41,7 +41,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('file_create')]
   public function fileCreate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_create' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_create called';
   }
 
   /**
@@ -49,7 +49,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('node_create')]
   public function nodeCreate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_create' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_create called';
   }
 
   /**
@@ -57,7 +57,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_term_create')]
   public function taxonomyTermCreate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_create' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_create called';
   }
 
   /**
@@ -65,7 +65,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_vocabulary_create')]
   public function taxonomyVocabularyCreate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_create' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_create called';
   }
 
   /**
@@ -73,7 +73,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('user_create')]
   public function userCreate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_create' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_create called';
   }
 
   /**
@@ -81,7 +81,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_presave' . ' called for type ' . $entity->getEntityTypeId();
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_presave called for type ' . $entity->getEntityTypeId();
   }
 
   /**
@@ -89,7 +89,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('block_presave')]
   public function blockPresave(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_presave' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_presave called';
   }
 
   /**
@@ -97,7 +97,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('comment_presave')]
   public function commentPresave(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_presave' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_presave called';
   }
 
   /**
@@ -105,7 +105,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('file_presave')]
   public function filePresave(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_presave' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_presave called';
   }
 
   /**
@@ -113,7 +113,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('node_presave')]
   public function nodePresave(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_presave' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_presave called';
   }
 
   /**
@@ -121,7 +121,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_term_presave')]
   public function taxonomyTermPresave(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_presave' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_presave called';
   }
 
   /**
@@ -129,7 +129,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_vocabulary_presave')]
   public function taxonomyVocabularyPresave(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_presave' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_presave called';
   }
 
   /**
@@ -137,7 +137,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('user_presave')]
   public function userPresave(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_presave' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_presave called';
   }
 
   /**
@@ -145,7 +145,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('entity_insert')]
   public function entityInsert(EntityInterface $entity): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_insert' . ' called for type ' . $entity->getEntityTypeId();
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_insert called for type ' . $entity->getEntityTypeId();
   }
 
   /**
@@ -153,7 +153,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('block_insert')]
   public function blockInsert(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_insert' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_insert called';
   }
 
   /**
@@ -161,7 +161,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('comment_insert')]
   public function commentInsert(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_insert' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_insert called';
   }
 
   /**
@@ -169,7 +169,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('file_insert')]
   public function fileInsert(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_insert' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_insert called';
   }
 
   /**
@@ -177,7 +177,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('node_insert')]
   public function nodeInsert(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_insert' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_insert called';
   }
 
   /**
@@ -185,7 +185,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_term_insert')]
   public function taxonomyTermInsert(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_insert' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_insert called';
   }
 
   /**
@@ -193,7 +193,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_vocabulary_insert')]
   public function taxonomyVocabularyInsert(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_insert' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_insert called';
   }
 
   /**
@@ -201,7 +201,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('user_insert')]
   public function userInsert(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_insert' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_insert called';
   }
 
   /**
@@ -209,7 +209,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('entity_preload')]
   public function entityPreload(array $entities, $type): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_preload' . ' called for type ' . $type;
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_preload called for type ' . $type;
   }
 
   /**
@@ -217,7 +217,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('entity_load')]
   public function entityLoad(array $entities, $type): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_load' . ' called for type ' . $type;
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_load called for type ' . $type;
   }
 
   /**
@@ -225,7 +225,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('block_load')]
   public function blockLoad(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_load' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_load called';
   }
 
   /**
@@ -233,7 +233,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('comment_load')]
   public function commentLoad(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_load' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_load called';
   }
 
   /**
@@ -241,7 +241,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('file_load')]
   public function fileLoad(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_load' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_load called';
   }
 
   /**
@@ -249,7 +249,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('node_load')]
   public function nodeLoad(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_load' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_load called';
   }
 
   /**
@@ -257,7 +257,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_term_load')]
   public function taxonomyTermLoad(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_load' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_load called';
   }
 
   /**
@@ -265,7 +265,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_vocabulary_load')]
   public function taxonomyVocabularyLoad(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_load' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_load called';
   }
 
   /**
@@ -273,7 +273,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('user_load')]
   public function userLoad(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_load' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_load called';
   }
 
   /**
@@ -281,7 +281,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('entity_update')]
   public function entityUpdate(EntityInterface $entity): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_update' . ' called for type ' . $entity->getEntityTypeId();
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_update called for type ' . $entity->getEntityTypeId();
   }
 
   /**
@@ -289,7 +289,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('block_update')]
   public function blockUpdate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_update' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_update called';
   }
 
   /**
@@ -297,7 +297,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('comment_update')]
   public function commentUpdate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_update' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_update called';
   }
 
   /**
@@ -305,7 +305,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('file_update')]
   public function fileUpdate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_update' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_update called';
   }
 
   /**
@@ -313,7 +313,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('node_update')]
   public function nodeUpdate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_update' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_update called';
   }
 
   /**
@@ -321,7 +321,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_term_update')]
   public function taxonomyTermUpdate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_update' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_update called';
   }
 
   /**
@@ -329,7 +329,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_vocabulary_update')]
   public function taxonomyVocabularyUpdate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_update' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_update called';
   }
 
   /**
@@ -337,7 +337,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('user_update')]
   public function userUpdate(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_update' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_update called';
   }
 
   /**
@@ -345,7 +345,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('entity_predelete')]
   public function entityPredelete(EntityInterface $entity): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_predelete' . ' called for type ' . $entity->getEntityTypeId();
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_predelete called for type ' . $entity->getEntityTypeId();
   }
 
   /**
@@ -353,7 +353,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('block_predelete')]
   public function blockPredelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_predelete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_predelete called';
   }
 
   /**
@@ -361,7 +361,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('comment_predelete')]
   public function commentPredelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_predelete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_predelete called';
   }
 
   /**
@@ -369,7 +369,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('file_predelete')]
   public function filePredelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_predelete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_predelete called';
   }
 
   /**
@@ -377,7 +377,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('node_predelete')]
   public function nodePredelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_predelete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_predelete called';
   }
 
   /**
@@ -385,7 +385,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_term_predelete')]
   public function taxonomyTermPredelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_predelete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_predelete called';
   }
 
   /**
@@ -393,7 +393,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_vocabulary_predelete')]
   public function taxonomyVocabularyPredelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_predelete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_predelete called';
   }
 
   /**
@@ -401,7 +401,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('user_predelete')]
   public function userPredelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_predelete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_predelete called';
   }
 
   /**
@@ -409,7 +409,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('entity_delete')]
   public function entityDelete(EntityInterface $entity): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_delete' . ' called for type ' . $entity->getEntityTypeId();
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_delete called for type ' . $entity->getEntityTypeId();
   }
 
   /**
@@ -417,7 +417,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('block_delete')]
   public function blockDelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_delete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_block_delete called';
   }
 
   /**
@@ -425,7 +425,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('comment_delete')]
   public function commentDelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_delete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_comment_delete called';
   }
 
   /**
@@ -433,7 +433,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('file_delete')]
   public function fileDelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_delete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_file_delete called';
   }
 
   /**
@@ -441,7 +441,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('node_delete')]
   public function nodeDelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_delete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_node_delete called';
   }
 
   /**
@@ -449,7 +449,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_term_delete')]
   public function taxonomyTermDelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_delete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_term_delete called';
   }
 
   /**
@@ -457,7 +457,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('taxonomy_vocabulary_delete')]
   public function taxonomyVocabularyDelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_delete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_taxonomy_vocabulary_delete called';
   }
 
   /**
@@ -465,7 +465,7 @@ class EntityCrudHookTestHooks {
    */
   #[Hook('user_delete')]
   public function userDelete(): void {
-    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_delete' . ' called';
+    $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_user_delete called';
   }
 
 }

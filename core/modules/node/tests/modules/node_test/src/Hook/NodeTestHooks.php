@@ -32,14 +32,14 @@ class NodeTestHooks {
       ];
       // Add content that should be displayed only in the RSS feed.
       $build['extra_feed_content'] = [
-        '#markup' => '<p>' . 'Extra data that should appear only in the RSS feed for node ' . $node->id() . '.</p>',
+        '#markup' => '<p>Extra data that should appear only in the RSS feed for node ' . $node->id() . '.</p>',
         '#weight' => 10,
       ];
     }
     if ($view_mode != 'rss') {
       // Add content that should NOT be displayed in the RSS feed.
       $build['extra_non_feed_content'] = [
-        '#markup' => '<p>' . 'Extra data that should appear everywhere except the RSS feed for node ' . $node->id() . '.</p>',
+        '#markup' => '<p>Extra data that should appear everywhere except the RSS feed for node ' . $node->id() . '.</p>',
       ];
     }
   }

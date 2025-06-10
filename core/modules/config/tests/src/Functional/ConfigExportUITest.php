@@ -84,7 +84,7 @@ class ConfigExportUITest extends BrowserTestBase {
     // Ensure the test configuration override is in effect but was not exported.
     $this->assertSame('Foo', \Drupal::config('system.maintenance')->get('message'));
     $archiver->extract($temp_directory, ['system.maintenance.yml']);
-    $file_contents = file_get_contents($temp_directory . '/' . 'system.maintenance.yml');
+    $file_contents = file_get_contents($temp_directory . '/system.maintenance.yml');
     $exported = Yaml::decode($file_contents);
     $this->assertNotSame('Foo', $exported['message']);
 

@@ -965,7 +965,7 @@ class ValidatorsTest extends KernelTestBase {
           'status' => TRUE,
           'weight' => 0,
           'settings' => [
-            'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id>" . "<p> <br>",
+            'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <p> <br>",
             'filter_html_help' => TRUE,
             'filter_html_nofollow' => TRUE,
           ],

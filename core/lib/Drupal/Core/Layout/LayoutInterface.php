@@ -29,8 +29,8 @@ interface LayoutInterface extends PluginInspectionInterface, DerivativeInspectio
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Layout\LayoutDefinition
+   *   The layout plugin definition for this plugin.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getPluginDefinition();
 
 }

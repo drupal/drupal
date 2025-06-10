@@ -27,13 +27,13 @@ class FormState implements FormStateInterface {
    * on a form element may use this reference to access other information in the
    * form the element is contained in.
    *
+   * @var array
+   *
    * @see self::getCompleteForm()
    *
    * This property is uncacheable.
-   *
-   * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $complete_form;
 
   /**

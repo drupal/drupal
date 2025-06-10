@@ -16,7 +16,7 @@ class ThemeSuggestionsTestHooks {
    */
   #[Hook('theme_suggestions_alter')]
   public function themeSuggestionsAlter(array &$suggestions, array &$variables, $hook): void {
-    \Drupal::messenger()->addStatus('theme_suggestions_test_theme_suggestions_alter' . '() executed.');
+    \Drupal::messenger()->addStatus('theme_suggestions_test_theme_suggestions_alter() executed.');
     if ($hook == 'theme_test_general_suggestions') {
       $suggestions[] = $hook . '__module_override';
       $variables['module_hook'] = 'theme_suggestions_test_theme_suggestions_alter';
@@ -28,7 +28,7 @@ class ThemeSuggestionsTestHooks {
    */
   #[Hook('theme_suggestions_theme_test_suggestions_alter')]
   public function themeSuggestionsThemeTestSuggestionsAlter(array &$suggestions, array $variables): void {
-    \Drupal::messenger()->addStatus('theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter' . '() executed.');
+    \Drupal::messenger()->addStatus('theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter() executed.');
     $suggestions[] = 'theme_test_suggestions__module_override';
   }
 

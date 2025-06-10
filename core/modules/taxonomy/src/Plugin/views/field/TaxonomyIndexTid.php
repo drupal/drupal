@@ -174,10 +174,10 @@ class TaxonomyIndexTid extends PrerenderList {
    * {@inheritdoc}
    */
   protected function documentSelfTokens(&$tokens) {
-    $tokens['{{ ' . $this->options['id'] . '__tid' . ' }}'] = $this->t('The taxonomy term ID for the term.');
-    $tokens['{{ ' . $this->options['id'] . '__name' . ' }}'] = $this->t('The taxonomy term name for the term.');
-    $tokens['{{ ' . $this->options['id'] . '__vocabulary_vid' . ' }}'] = $this->t('The machine name for the vocabulary the term belongs to.');
-    $tokens['{{ ' . $this->options['id'] . '__vocabulary' . ' }}'] = $this->t('The name for the vocabulary the term belongs to.');
+    $tokens['{{ ' . $this->options['id'] . '__tid }}'] = $this->t('The taxonomy term ID for the term.');
+    $tokens['{{ ' . $this->options['id'] . '__name }}'] = $this->t('The taxonomy term name for the term.');
+    $tokens['{{ ' . $this->options['id'] . '__vocabulary_vid }}'] = $this->t('The machine name for the vocabulary the term belongs to.');
+    $tokens['{{ ' . $this->options['id'] . '__vocabulary }}'] = $this->t('The name for the vocabulary the term belongs to.');
   }
 
   /**

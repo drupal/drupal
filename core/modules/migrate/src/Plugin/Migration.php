@@ -226,6 +226,8 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * These are different from the configuration dependencies. Migration
    * dependencies are only used to store relationships between migrations.
    *
+   * @var array
+   *
    * The migration_dependencies value is structured like this:
    * @code
    * [
@@ -238,10 +240,8 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    *   ],
    * ];
    * @endcode
-   *
-   * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $migration_dependencies = [];
 
   /**
