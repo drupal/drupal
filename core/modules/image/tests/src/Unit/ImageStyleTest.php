@@ -174,8 +174,8 @@ class ImageStyleTest extends UnitTestCase {
 
     // Assert the extension has been added to the URI before creating the token.
     $this->assertEquals($image_style->getPathToken('public://test.jpeg.png'), $image_style->getPathToken('public://test.jpeg'));
-    $this->assertEquals(substr(Crypt::hmacBase64($image_style->id() . ':' . 'public://test.jpeg.png', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
-    $this->assertNotEquals(substr(Crypt::hmacBase64($image_style->id() . ':' . 'public://test.jpeg', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
+    $this->assertEquals(substr(Crypt::hmacBase64($image_style->id() . ':public://test.jpeg.png', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
+    $this->assertNotEquals(substr(Crypt::hmacBase64($image_style->id() . ':public://test.jpeg', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
 
     // Image style that doesn't change the extension.
     $image_effect_id = $this->randomMachineName();
@@ -195,8 +195,8 @@ class ImageStyleTest extends UnitTestCase {
       ->willReturn($hash_salt);
     // Assert no extension has been added to the uri before creating the token.
     $this->assertNotEquals($image_style->getPathToken('public://test.jpeg.png'), $image_style->getPathToken('public://test.jpeg'));
-    $this->assertNotEquals(substr(Crypt::hmacBase64($image_style->id() . ':' . 'public://test.jpeg.png', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
-    $this->assertEquals(substr(Crypt::hmacBase64($image_style->id() . ':' . 'public://test.jpeg', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
+    $this->assertNotEquals(substr(Crypt::hmacBase64($image_style->id() . ':public://test.jpeg.png', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
+    $this->assertEquals(substr(Crypt::hmacBase64($image_style->id() . ':public://test.jpeg', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
   }
 
   /**

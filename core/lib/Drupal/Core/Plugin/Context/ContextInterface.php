@@ -17,8 +17,8 @@ interface ContextInterface extends ComponentContextInterface, CacheableDependenc
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
+   *   The defining characteristic representation of the context.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getContextDefinition();
 
   /**

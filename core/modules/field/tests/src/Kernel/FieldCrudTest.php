@@ -313,7 +313,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertCount(0, $fields, 'A deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
-    $field = FieldConfig::load('entity_test.' . '.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
+    $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
     $this->assertTrue(empty($field), 'Field was deleted');
 
     // Make sure the other field is not deleted.

@@ -67,7 +67,7 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
     // profile. This distribution language should still be used.
     // The unrouted URL assembler does not exist at this point, so we build the
     // URL ourselves.
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php' . '?langcode=fr');
+    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?langcode=fr');
   }
 
   /**

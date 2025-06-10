@@ -232,8 +232,8 @@ function olivero_theme_suggestions_block_alter(&$suggestions, array $variables):
         ->getRegion();
 
       $suggestions[] = 'block__' . $region;
-      $suggestions[] = 'block__' . $region . '__' . 'plugin_id' . '__' . $variables['elements']['#plugin_id'];
-      $suggestions[] = 'block__' . $region . '__' . 'id' . '__' . $variables['elements']['#id'];
+      $suggestions[] = 'block__' . $region . '__plugin_id__' . $variables['elements']['#plugin_id'];
+      $suggestions[] = 'block__' . $region . '__id__' . $variables['elements']['#id'];
     }
   }
 }

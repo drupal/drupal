@@ -85,12 +85,12 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Stores the rendered field values, keyed by the row index and field name.
    *
+   * @var array|null
+   *
    * @see \Drupal\views\Plugin\views\style\StylePluginBase::renderFields()
    * @see \Drupal\views\Plugin\views\style\StylePluginBase::getField()
-   *
-   * @var array|null
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $rendered_fields;
 
   /**

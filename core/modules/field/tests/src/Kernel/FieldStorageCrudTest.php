@@ -357,7 +357,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $this->assertEmpty($field_storage, 'Field storage was deleted');
 
     // Try to load the field normally and make sure it does not show up.
-    $field = FieldConfig::load('entity_test.' . '.' . $field_definition['bundle'] . '.' . $field_definition['field_name']);
+    $field = FieldConfig::load('entity_test.' . $field_definition['bundle'] . '.' . $field_definition['field_name']);
     $this->assertEmpty($field, 'Field was deleted');
 
     // Make sure the other field and its storage are not deleted.

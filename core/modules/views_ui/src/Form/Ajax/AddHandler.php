@@ -169,7 +169,7 @@ class AddHandler extends ViewsFormBase {
     // Add a div to show the selected items
     $form['selected'] = [
       '#type' => 'item',
-      '#markup' => '<span class="views-ui-view-title">' . $this->t('Selected:') . '</span> ' . '<div class="views-selected-options"></div>',
+      '#markup' => '<span class="views-ui-view-title">' . $this->t('Selected:') . '</span><div class="views-selected-options"></div>',
       '#theme_wrappers' => ['form_element', 'views_ui_container'],
       '#attributes' => [
         'class' => ['container-inline', 'views-add-form-selected', 'views-offset-bottom'],

@@ -35,7 +35,7 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
 
     // The unrouted URL assembler does not exist at this point, so we build the
     // URL ourselves.
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php' . '?langcode=' . $this->langcode);
+    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?langcode=' . $this->langcode);
 
     // The language should have been automatically detected, all following
     // screens should be translated already.

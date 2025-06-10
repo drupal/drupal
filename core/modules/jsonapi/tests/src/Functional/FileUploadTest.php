@@ -265,7 +265,7 @@ class FileUploadTest extends ResourceTestBase {
       ->set('field_rest_file_test', ['target_id' => $existing_file->id()])
       ->save();
 
-    $uri = Url::fromUri('base:' . '/jsonapi/entity_test/entity_test/' . $this->entity->uuid() . '/field_rest_file_test');
+    $uri = Url::fromUri('base:/jsonapi/entity_test/entity_test/' . $this->entity->uuid() . '/field_rest_file_test');
 
     // DX: 405 when read-only mode is enabled.
     $response = $this->fileRequest($uri, $this->testFileData);

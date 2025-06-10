@@ -92,7 +92,7 @@ class NodeHooks1 {
       case 'entity.entity_view_display.node.default':
       case 'entity.entity_view_display.node.view_mode':
         $type = $route_match->getParameter('node_type');
-        return '<p>' . $this->t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' . '<p>' . $this->t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', ['%type' => $type->label()]) . '</p>';
+        return '<p>' . $this->t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p><p>' . $this->t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', ['%type' => $type->label()]) . '</p>';
 
       case 'entity.node.version_history':
         return '<p>' . $this->t('Revisions allow you to track differences between multiple versions of your content, and revert to older versions.') . '</p>';
