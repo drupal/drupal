@@ -360,13 +360,7 @@ class UrlHelperFormatConstraint extends FormatConstraint {
     }
     if ($schema->format === 'uri') {
       if (\is_string($element) && !UrlHelper::isValid($element)) {
-        if (class_exists(ConstraintError::class)) {
-          $this->addError(ConstraintError::FORMAT_URL(), $path, ['format' => $schema->format]);
-        }
-        else {
-          // @todo Remove when we no longer support justinrainbow/json-schema v5.
-          $this->addError($path, 'Invalid URL format', 'format', ['format' => $schema->format]);
-        }
+        $this->addError(ConstraintError::FORMAT_URL, $path, ['format' => $schema->format]);
       }
       return;
     }
