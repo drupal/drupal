@@ -5,6 +5,7 @@ namespace Drupal\Core\Theme\Component;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Component metadata.
@@ -168,17 +169,29 @@ class ComponentMetadata {
         throw new InvalidComponentException('The schema for the %s in the component metadata is invalid. Arbitrary additional properties are not allowed.');
       }
       $schema['additionalProperties'] = FALSE;
-      // All props should also support "object" this allows deferring rendering
-      // in Twig to the render pipeline.
-      $schema_props = $metadata_info['props'];
-      foreach ($schema_props['properties'] ?? [] as $name => $prop_schema) {
-        $type = $prop_schema['type'] ?? '';
-        if (isset($prop_schema['enum'], $prop_schema['meta:enum'])) {
-          $enum_keys_diff = array_diff($prop_schema['enum'], array_keys($prop_schema['meta:enum']));
-          if (!empty($enum_keys_diff)) {
-            throw new InvalidComponentException(sprintf('The values for the %s prop enum in component %s must be defined in meta:enum.', $name, $this->id));
-          }
+      foreach ($schema['properties'] ?? [] as $name => $prop_schema) {
+        if (isset($prop_schema['enum'])) {
+          // Ensure all enum values are also in meta:enum.
+          $enum = array_combine($prop_schema['enum'], $prop_schema['enum']);
+          $prop_schema['meta:enum'] = array_replace($enum, $prop_schema['meta:enum'] ?? []);
+
+          // Remove meta:enum values which are not in enum.
+          $prop_schema['meta:enum'] = array_intersect_key($prop_schema['meta:enum'], $enum);
+
+          // Make meta:enum label translatable.
+          $translation_context = $prop_schema['x-translation-context'] ?? '';
+          $prop_schema['meta:enum'] = array_map(
+            // @phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
+            fn($label) => new TranslatableMarkup((string) $label, [], ['context' => $translation_context]),
+            $prop_schema['meta:enum']
+          );
+
+          $schema['properties'][$name] = $prop_schema;
         }
+
+        // All props should also support "object" this allows deferring
+        // rendering in Twig to the render pipeline.
+        $type = $prop_schema['type'] ?? '';
         $schema['properties'][$name]['type'] = array_unique([
           ...(array) $type,
           'object',
@@ -209,14 +222,6 @@ class ComponentMetadata {
    *   The normalized value object.
    */
   public function normalize(): array {
-    $meta = [];
-    if (!empty($this->schema['properties'])) {
-      foreach ($this->schema['properties'] as $prop_name => $prop_definition) {
-        if (!empty($prop_definition['meta:enum'])) {
-          $meta['properties'][$prop_name] = $this->getEnumOptions($prop_name);
-        }
-      }
-    }
     return [
       'path' => $this->path,
       'machineName' => $this->machineName,
@@ -224,42 +229,7 @@ class ComponentMetadata {
       'name' => $this->name,
       'group' => $this->group,
       'variants' => $this->variants,
-      'meta' => $meta,
     ];
-  }
-
-  /**
-   * Get translated options labels from enumeration.
-   *
-   * @param string $propertyName
-   *   The enum property name.
-   *
-   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
-   *   An array with enum options as keys and the (non-rendered)
-   *   translated labels as values.
-   */
-  public function getEnumOptions(string $propertyName): array {
-    $options = [];
-    if (isset($this->schema['properties'][$propertyName])) {
-      $prop_definition = $this->schema['properties'][$propertyName];
-      if (!empty($prop_definition['enum'])) {
-        $translation_context = $prop_definition['x-translation-context'] ?? '';
-        // We convert ['a', 'b'], into ['a' => t('a'), 'b' => t('b')].
-        $options = array_combine(
-          $prop_definition['enum'],
-          // @phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-          array_map(fn($value) => $this->t($value, [], ['context' => $translation_context]), $prop_definition['enum']),
-        );
-        if (!empty($prop_definition['meta:enum'])) {
-          foreach ($prop_definition['meta:enum'] as $enum_value => $enum_label) {
-            $options[$enum_value] =
-              // @phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-              $this->t($enum_label, [], ['context' => $translation_context]);
-          }
-        }
-      }
-    }
-    return $options;
   }
 
 }

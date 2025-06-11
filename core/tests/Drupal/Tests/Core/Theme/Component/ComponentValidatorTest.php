@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Theme\Component;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Component\ComponentValidator;
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\Plugin\Component;
+use Drupal\Tests\UnitTestCaseTest;
 use JsonSchema\ConstraintError;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\Constraints\FormatConstraint;
 use JsonSchema\Entity\JsonPointer;
 use JsonSchema\Validator;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -23,7 +24,7 @@ use Symfony\Component\Yaml\Yaml;
  * @coversDefaultClass \Drupal\Core\Theme\Component\ComponentValidator
  * @group sdc
  */
-class ComponentValidatorTest extends TestCase {
+class ComponentValidatorTest extends UnitTestCaseTest {
 
   /**
    * Tests that valid component definitions don't cause errors.
@@ -191,6 +192,11 @@ class ComponentValidatorTest extends TestCase {
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentException
    */
   public function testValidatePropsValid(array $context, string $component_id, array $definition): void {
+    $translation = $this->getStringTranslationStub();
+    $container = new ContainerBuilder();
+    $container->set('string_translation', $translation);
+    \Drupal::setContainer($container);
+
     $component = new Component(
       ['app_root' => '/fake/path/root'],
       'sdc_test:' . $component_id,
@@ -235,6 +241,11 @@ class ComponentValidatorTest extends TestCase {
    * Tests we can use a custom validator to validate props.
    */
   public function testCustomValidator(): void {
+    $translation = $this->getStringTranslationStub();
+    $container = new ContainerBuilder();
+    $container->set('string_translation', $translation);
+    \Drupal::setContainer($container);
+
     $component = new Component(
       ['app_root' => '/fake/path/root'],
       'sdc_test:my-cta',
@@ -266,6 +277,11 @@ class ComponentValidatorTest extends TestCase {
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentException
    */
   public function testValidatePropsInvalid(array $context, string $component_id, array $definition, string $expected_exception_message): void {
+    $translation = $this->getStringTranslationStub();
+    $container = new ContainerBuilder();
+    $container->set('string_translation', $translation);
+    \Drupal::setContainer($container);
+
     $component = new Component(
       ['app_root' => '/fake/path/root'],
       'sdc_test:' . $component_id,
