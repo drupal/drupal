@@ -2035,4 +2035,20 @@ PHP,
     ];
   }
 
+  /**
+   * Tests backwards compatibility of icon names.
+   */
+  public function testIconsBackwardsCompatibility(): void {
+    \Drupal::service('module_installer')->install(['ckeditor5_icon_deprecation_test']);
+    $definitions = \Drupal::service('plugin.manager.ckeditor5.plugin')->getDefinitions();
+    $config = $definitions['ckeditor5_icon_deprecation_test_plugin']->toArray()['ckeditor5']['config']['drupalElementStyles'];
+    $this->assertSame('IconObjectCenter', $config['align'][0]['icon']);
+    $this->assertSame('IconObjectLeft', $config['align'][1]['icon']);
+    $this->assertSame('IconObjectRight', $config['align'][2]['icon']);
+    $this->assertSame('IconObjectInlineLeft', $config['align'][3]['icon']);
+    $this->assertSame('IconObjectInlineRight', $config['align'][4]['icon']);
+    $this->assertStringContainsString('<svg viewBox="0 0 20 20"', $config['svg'][0]['icon']);
+    $this->assertSame('IconThreeVerticalDots', $config['threeVerticalDots'][0]['icon']);
+  }
+
 }

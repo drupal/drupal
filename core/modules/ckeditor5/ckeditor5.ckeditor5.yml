@@ -771,25 +771,25 @@ media_mediaAlign:
         align:
           - name: 'right'
             title: 'Align right and wrap text'
-            icon: 'objectRight'
+            icon: 'IconObjectInlineRight'
             attributeName: 'data-align'
             attributeValue: 'right'
             modelElements: [ 'drupalMedia' ]
           - name: 'left'
             title: 'Align left and wrap text'
-            icon: 'objectLeft'
+            icon: 'IconObjectInlineLeft'
             attributeName: 'data-align'
             attributeValue: 'left'
             modelElements: [ 'drupalMedia' ]
           - name: 'center'
             title: 'Align center and break text'
-            icon: 'objectCenter'
+            icon: 'IconObjectCenter'
             attributeName: 'data-align'
             attributeValue: 'center'
             modelElements: ['drupalMedia']
           - name: 'breakText'
             title: 'Break text'
-            icon: 'objectBlockLeft'
+            icon: 'IconObjectLeft'
             isDefault: true
             modelElements: [ 'drupalMedia' ]
       drupalMedia:

@@ -1,0 +1,1 @@
+!function(e){const n=e.ja=e.ja||{};n.dictionary=Object.assign(n.dictionary||{},{"Connected users":"接続ユーザー","Document outline":"ドキュメントの概要","Enter fullscreen mode":"全画面モードに入る","Fullscreen mode":"全画面モード","Leave fullscreen mode":"全画面モードを終了","Toggle fullscreen mode":"全画面モードの切り替え"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

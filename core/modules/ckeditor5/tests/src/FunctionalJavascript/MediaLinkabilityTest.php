@@ -134,10 +134,10 @@ class MediaLinkabilityTest extends MediaTestBase {
     $link_media_button->press();
     // Assert structure of link form balloon.
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
-    $url_input = $balloon->find('css', '.ck-labeled-field-view__input-wrapper .ck-input-text');
-    // Fill in link form balloon's <input> and hit "Save".
+    $url_input = $balloon->find('css', '.ck-labeled-field-view__input-wrapper .ck-input-text[inputmode=url]');
+    // Fill in link form balloon's <input> and hit "Insert".
     $url_input->setValue('http://linking-embedded-media.com');
-    $balloon->pressButton('Save');
+    $balloon->pressButton('Insert');
 
     // Assert the "editingDowncast" HTML after making changes. Assert the link
     // exists, then assert the link exists. Then assert the expected DOM
@@ -266,13 +266,15 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->getBalloonButton('Link media')->click();
 
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
-    $url_input = $balloon->find('css', '.ck-labeled-field-view__input-wrapper .ck-input-text');
+    $url_input = $balloon->find('css', '.ck-labeled-field-view__input-wrapper .ck-input-text[inputmode=url]');
     $url_input->setValue('http://linking-embedded-media.com');
+    $balloon->pressButton('Insert');
+    $this->getBalloonButton('Link properties')->click();
     $this->getBalloonButton($decorator)->click();
-    $balloon->pressButton('Save');
+    $this->getBalloonButton('Back')->click();
 
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media a'));
-    $this->assertVisibleBalloon('.ck-link-actions');
+    $this->assertVisibleBalloon('.ck-link-toolbar');
 
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes"));
@@ -290,7 +292,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $drupalmedia->click();
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('Link media')->click();
-    $this->assertVisibleBalloon('.ck-link-actions');
+    $this->assertVisibleBalloon('.ck-link-toolbar');
     $this->getBalloonButton('Unlink')->click();
 
     $this->assertTrue($assert_session->waitForElementRemoved('css', '.drupal-media a'));

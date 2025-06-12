@@ -331,7 +331,7 @@ class MediaTest extends MediaTestBase {
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
     $this->pressEditorButton('Link');
     $this->assertVisibleBalloon('.ck-link-form');
-    $link_input = $page->find('css', '.ck-balloon-panel .ck-link-form input[type=text]');
+    $link_input = $page->find('css', '.ck-balloon-panel .ck-link-form input[type=text][inputmode=url]');
     $link_input->setValue('https://example.com');
     $page->find('css', '.ck-balloon-panel .ck-link-form button[type=submit]')->click();
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption > a'));

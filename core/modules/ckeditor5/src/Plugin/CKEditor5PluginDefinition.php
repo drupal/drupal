@@ -52,6 +52,35 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
         throw new \InvalidArgumentException(sprintf('Property %s with value %s does not exist on %s.', $property, $value, __CLASS__));
       }
     }
+
+    // In version CKEditor5 45.0.0, the icons were renamed, so if any
+    // drupalElementStyles are specifying icons, deprecate use of the old names
+    // and provide a mapping for backwards compatibility.
+    // @see https://ckeditor.com/docs/ckeditor5/latest/updating/guides/changelog.html#new-installation-methods-improvements-icons-replacement
+    // @see https://github.com/ckeditor/ckeditor5/blob/v44.3.0/packages/ckeditor5-core/src/index.ts
+    // @see https://github.com/ckeditor/ckeditor5/blob/v45.0.0/packages/ckeditor5-icons/src/index.ts
+    if (!isset($this->ckeditor5) || !isset($this->ckeditor5['config']['drupalElementStyles']) || !is_array($this->ckeditor5['config']['drupalElementStyles'])) {
+      return;
+    }
+
+    foreach ($this->ckeditor5['config']['drupalElementStyles'] as &$groups) {
+      if (!is_array($groups)) {
+        continue;
+      }
+
+      foreach ($groups as &$style) {
+        if (is_array($style) && isset($style['icon']) && is_string($style['icon']) && !preg_match('/^(<svg)|(Icon)/', $style['icon'])) {
+          $deprecated_icon = $style['icon'];
+          $style['icon'] = match ($deprecated_icon) {
+            'objectLeft' => 'IconObjectInlineLeft',
+            'objectRight' => 'IconObjectInlineRight',
+            'objectBlockLeft' => 'IconObjectLeft',
+            'objectBlockRight' => 'IconObjectRight',
+            default => 'Icon' . ucfirst($style['icon'])
+          };
+        }
+      }
+    }
   }
 
   /**

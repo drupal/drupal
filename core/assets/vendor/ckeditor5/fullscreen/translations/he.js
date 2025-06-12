@@ -1,0 +1,1 @@
+!function(e){const n=e.he=e.he||{};n.dictionary=Object.assign(n.dictionary||{},{"Connected users":"משתמשים מחוברים","Document outline":"מפת מסמך","Enter fullscreen mode":"היכנס למצב מסך מלא","Fullscreen mode":"מצב מסך מלא","Leave fullscreen mode":"צא ממצב מסך מלא","Toggle fullscreen mode":"החלף מצב מסך מלא"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

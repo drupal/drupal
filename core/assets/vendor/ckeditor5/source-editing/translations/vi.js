@@ -1,1 +1,1 @@
-!function(n){const i=n.vi=n.vi||{};i.dictionary=Object.assign(i.dictionary||{},{"Show source":"Hiển thị nguồn",Source:"Nguồn"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(i){const n=i.vi=i.vi||{};n.dictionary=Object.assign(n.dictionary||{},{"Show source":"Hiển thị nguồn"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
