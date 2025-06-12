@@ -159,10 +159,6 @@ class SystemHooks {
   }
 
   /**
-   * @} End of "defgroup authorize".
-   */
-
-  /**
    * Implements hook_updater_info().
    */
   #[Hook('updater_info')]

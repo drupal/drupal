@@ -90,6 +90,11 @@ function taxonomy_term_is_page(Term $term) {
 }
 
 /**
+ * @addtogroup taxonomy_index
+ * @{
+ */
+
+/**
  * Builds and inserts taxonomy index entries for a given node.
  *
  * The index lists all terms that are related to a given node entity, and is
@@ -152,5 +157,5 @@ function taxonomy_delete_node_index(EntityInterface $node): void {
 }
 
 /**
- * @} End of "defgroup taxonomy_index".
+ * @} End of "addtogroup taxonomy_index".
  */

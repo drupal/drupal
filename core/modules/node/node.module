@@ -387,6 +387,11 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
 }
 
 /**
+ * @addtogroup node_access
+ * @{
+ */
+
+/**
  * Fetches an array of permission IDs granted to the given user ID.
  *
  * The implementation here provides only the universal "all" grant. A node
@@ -656,6 +661,10 @@ function _node_access_rebuild_batch_finished($success, $results, $operations): v
     \Drupal::messenger()->addError(t('The content access permissions have not been properly rebuilt.'));
   }
 }
+
+/**
+ * @} End of "addtogroup node_access".
+ */
 
 /**
  * Marks a node to be re-indexed by the node_search plugin.
