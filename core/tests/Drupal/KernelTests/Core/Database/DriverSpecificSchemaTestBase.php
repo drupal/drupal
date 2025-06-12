@@ -272,6 +272,16 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     // Test the primary key columns.
     $this->assertSame(['test_serial', 'test_composite_primary_key'], $method->invoke($this->schema, 'test_table'));
 
+    // Test adding and removing JSON column.
+    $this->schema->addField('test_table', 'test_json', [
+      'description' => 'I heard you liked JSON.',
+      'type' => 'json',
+      'pgsql_type' => 'jsonb',
+      'mysql_type' => 'json',
+      'sqlite_type' => 'json',
+    ]);
+    $this->schema->dropField('test_table', 'test_json');
+
     // Test renaming of keys and constraints.
     $this->schema->dropTable('test_table');
     $table_specification = [
