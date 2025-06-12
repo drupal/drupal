@@ -307,6 +307,10 @@ function system_authorized_batch_process() {
 }
 
 /**
+ * @} End of "defgroup authorize".
+ */
+
+/**
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function system_preprocess_block(&$variables): void {

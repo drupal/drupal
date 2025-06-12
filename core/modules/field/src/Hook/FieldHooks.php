@@ -257,6 +257,10 @@ class FieldHooks {
   }
 
   /**
+   * @} End of "defgroup field".
+   */
+
+  /**
    * Implements hook_config_import_steps_alter().
    */
   #[Hook('config_import_steps_alter')]

@@ -16,10 +16,6 @@ use Drupal\Core\Form\FormStateInterface;
 require_once __DIR__ . '/field.purge.inc';
 
 /**
- * @} End of "defgroup field".
- */
-
-/**
  * Assembles a partial entity structure with initial IDs.
  *
  * @param object $ids
