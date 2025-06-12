@@ -1,0 +1,1 @@
+!function(e){const n=e.zh=e.zh||{};n.dictionary=Object.assign(n.dictionary||{},{"Connected users":"已連線使用者","Document outline":"文件大綱","Enter fullscreen mode":"進入全螢幕模式","Fullscreen mode":"全螢幕模式","Leave fullscreen mode":"退出全螢幕模式","Toggle fullscreen mode":"切換全螢幕模式"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

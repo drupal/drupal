@@ -1,1 +1,1 @@
-!function(o){const i=o.ja=o.ja||{};i.dictionary=Object.assign(i.dictionary||{},{"Show source":"ソースを表示",Source:"ソース"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(i){const n=i.ja=i.ja||{};n.dictionary=Object.assign(n.dictionary||{},{"Show source":"ソースを表示"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -93,7 +93,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $dialog = $page->find('css', '.ck-dialog');
     $src_input = $dialog->find('css', '.ck-image-insert-url input[type=text]');
     $src_input->setValue($src);
-    $dialog->find('xpath', "//button[span[text()='Accept']]")->click();
+    $dialog->find('xpath', "//button[span[text()='Insert']]")->click();
     // Wait for the image to be uploaded and rendered by CKEditor 5.
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image > img[src="' . $src . '"]'));
   }
@@ -269,10 +269,10 @@ abstract class ImageTestBase extends CKEditor5TestBase {
       $link_image_button->press();
       // Assert structure of link form balloon.
       $balloon = $this->assertVisibleBalloon('.ck-link-form');
-      $url_input = $balloon->find('css', '.ck-labeled-field-view__input-wrapper .ck-input-text');
-      // Fill in link form balloon's <input> and hit "Save".
+      $url_input = $balloon->find('css', '.ck-labeled-field-view__input-wrapper .ck-input-text[inputmode=url]');
+      // Fill in link form balloon's <input> and hit "Insert".
       $url_input->setValue('http://www.drupal.org/association');
-      $balloon->pressButton('Save');
+      $balloon->pressButton('Insert');
 
       // Assert the "editingDowncast" HTML after making changes. First assert the
       // link exists, then assert the expected DOM structure in detail.

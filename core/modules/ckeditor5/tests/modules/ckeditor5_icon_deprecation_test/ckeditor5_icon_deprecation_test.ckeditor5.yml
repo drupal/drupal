@@ -1,0 +1,46 @@
+# This plugin is for testing deprecation of CKEditor 5 icon names before version 45.
+ckeditor5_icon_deprecation_test_plugin:
+  ckeditor5:
+    plugins: []
+    config:
+      drupalElementStyles:
+        align:
+          # This is a valid icon name.
+          - name: 'IconObjectCenter'
+            title: 'Icon object center'
+            icon: IconObjectCenter
+            modelElements: ['drupalMedia']
+          # The next four are deprecated icon names with specifically mapped to v45 icon names.
+          - name: 'objectBlockLeft'
+            title: 'Object block left'
+            icon: objectBlockLeft
+            modelElements: ['drupalMedia']
+          - name: 'objectBlockRight'
+            title: 'Object block right'
+            icon: objectBlockRight
+            modelElements: [ 'drupalMedia' ]
+          - name: 'objectLeft'
+            title: 'Object left'
+            icon: objectLeft
+            modelElements: [ 'drupalMedia' ]
+          - name: 'objectRight'
+            title: 'Object right'
+            icon: objectRight
+            modelElements: [ 'drupalMedia' ]
+        svg:
+          # Icon set as SVG XML.
+          - name: 'svg'
+            title: 'SVG'
+            icon: '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path opacity=".5" d="M2 3h16v1.5H2zm0 12h16v1.5H2z"/><path d="M18.003 7v5.5a1 1 0 0 1-1 1H8.996a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8.007a1 1 0 0 1 1 1zm-1.506.5H9.5V12h6.997V7.5z"/></svg>'
+            modelElements: [ 'drupalMedia' ]
+        threeVerticalDots:
+          # This is a deprecated icon name mapped with general rule 'exampleName' -> 'IconExampleName'.
+          - name: 'threeVerticalDots'
+            title: 'Three vertical dots'
+            icon: threeVerticalDots
+            modelElements: [ 'drupalMedia' ]
+
+  drupal:
+    label: Deprecated icons
+    elements:
+      - <drupal-media>
