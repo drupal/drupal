@@ -9,7 +9,7 @@
     },
     "require": {
         "php": ">=8.1.0",
-        "drupal/core-render": "10.5.0-rc1"
+        "drupal/core-render": "10.5.x-dev"
     },
     "autoload": {
         "psr-4": {
@@ -21,5 +21,5 @@
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
     },
-    "minimum-stability": "RC"
+    "minimum-stability": "dev"
 }
