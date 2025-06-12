@@ -1601,7 +1601,7 @@ services:
     arguments: ['@variation_cache.access_policy', '@variation_cache.access_policy_memory', '@cache.access_policy_memory', '@current_user', '@account_switcher']
     tags:
       - { name: service_collector, call: addAccessPolicy, tag: access_policy }
-  Drupal\Core\Session\AccessPolicyChainInterface: '@access_policy_processor'
+  Drupal\Core\Session\AccessPolicyProcessorInterface: '@access_policy_processor'
   access_policy.super_user:
     class: Drupal\Core\Session\SuperUserAccessPolicy
     tags:
