@@ -4,8 +4,15 @@ namespace Drupal\Core\Test\RunTests;
 
 use PHPUnit\Framework\TestCase;
 
+@trigger_error('Drupal\Core\Test\RunTests\TestFileParser is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
+
 /**
  * Parses class names from PHP files without loading them.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3447698
  *
  * @internal
  */

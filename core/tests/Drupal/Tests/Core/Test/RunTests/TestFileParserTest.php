@@ -6,12 +6,18 @@ namespace Drupal\Tests\Core\Test\RunTests;
 
 use Drupal\Core\Test\RunTests\TestFileParser;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @coversDefaultClass \Drupal\Core\Test\RunTests\TestFileParser
- * @group Test
- * @group RunTests
+ * Tests for the deprecated TestFileParser class.
  */
+#[CoversClass(TestFileParser::class)]
+#[Group('Test')]
+#[Group('RunTest')]
+#[IgnoreDeprecations]
 class TestFileParserTest extends UnitTestCase {
 
   public static function provideTestFileContents() {
@@ -66,9 +72,9 @@ COMPOUND
   }
 
   /**
-   * @covers ::parseContents
-   * @dataProvider provideTestFileContents
+   * @legacy-covers ::parseContents
    */
+  #[DataProvider('provideTestFileContents')]
   public function testParseContents($expected, $contents): void {
     $parser = new TestFileParser();
 
@@ -78,7 +84,7 @@ COMPOUND
   }
 
   /**
-   * @covers ::getTestListFromFile
+   * @legacy-covers ::getTestListFromFile
    */
   public function testGetTestListFromFile(): void {
     $parser = new TestFileParser();

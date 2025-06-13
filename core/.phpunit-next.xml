@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- This is a near-copy of phpunit.xml.dist, used to test with upcoming
+     PHPUnit versions.
+
+     Current differences:
+     * for PHPUnit 11: removed duplicate directories from <testsuites>,
+       required in PHPUnit 10, but that cause duplication warnings in
+       PHPUnit 11.
+-->
+
+
 <!-- For how to customize PHPUnit configuration, see core/tests/README.md. -->
 <!-- TODO set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
 <!-- PHPUnit expects functional tests to be run with either a privileged user
@@ -104,12 +116,6 @@
       <directory>../modules/*/**/tests/src/Kernel</directory>
       <directory>../profiles/*/**/tests/src/Kernel</directory>
       <directory>../themes/*/**/tests/src/Kernel</directory>
-      <!-- @todo remove line(s) below once PHPUnit 10 is no longer used; they
-          are redundant in PHPUnit 11+ that fully implements globstar (**)
-          pattern.
-          @see https://www.drupal.org/project/drupal/issues/3497116
-      -->
-      <directory>profiles/tests/testing/modules/*/tests/src/Kernel</directory>
     </testsuite>
     <testsuite name="functional">
       <directory>tests/Drupal/FunctionalTests</directory>
@@ -120,15 +126,6 @@
       <directory>../modules/*/**/tests/src/Functional</directory>
       <directory>../profiles/*/**/tests/src/Functional</directory>
       <directory>../themes/*/**/tests/src/Functional</directory>
-      <!-- @todo remove line(s) below once PHPUnit 10 is no longer used; they
-          are redundant in PHPUnit 11+ that fully implements globstar (**)
-          pattern.
-          @see https://www.drupal.org/project/drupal/issues/3497116
-      -->
-      <directory>modules/config/tests/config_test/tests/src/Functional</directory>
-      <directory>modules/system/tests/modules/entity_test/tests/src/Functional</directory>
-      <directory>modules/layout_builder/modules/layout_builder_expose_all_field_blocks/tests/src/Functional</directory>
-      <directory>profiles/demo_umami/modules/demo_umami_content/tests/src/Functional</directory>
     </testsuite>
     <testsuite name="functional-javascript">
       <directory>tests/Drupal/FunctionalJavascriptTests</directory>
