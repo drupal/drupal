@@ -672,9 +672,10 @@ class EntityResource {
       return $this->getRelationship($resource_type, $entity, $related, $request, $status);
     }
 
-    $main_property_name = $field_definition->getItemDefinition()->getMainPropertyName();
     foreach ($new_resource_identifiers as $new_resource_identifier) {
-      $new_field_value = [$main_property_name => $this->getEntityFromResourceIdentifier($new_resource_identifier)->id()];
+      // We assume all entity reference fields have an 'entity' computed
+      // property that can be used to assign the needed values.
+      $new_field_value = ['entity' => $this->getEntityFromResourceIdentifier($new_resource_identifier)];
       // Remove `arity` from the received extra properties, otherwise this
       // will fail field validation.
       $new_field_value += array_diff_key($new_resource_identifier->getMeta(), array_flip([ResourceIdentifier::ARITY_KEY]));
@@ -760,9 +761,10 @@ class EntityResource {
    *   The field definition of the entity field to be updated.
    */
   protected function doPatchMultipleRelationship(EntityInterface $entity, array $resource_identifiers, FieldDefinitionInterface $field_definition) {
-    $main_property_name = $field_definition->getItemDefinition()->getMainPropertyName();
-    $entity->{$field_definition->getName()} = array_map(function (ResourceIdentifier $resource_identifier) use ($main_property_name) {
-      $field_properties = [$main_property_name => $this->getEntityFromResourceIdentifier($resource_identifier)->id()];
+    $entity->{$field_definition->getName()} = array_map(function (ResourceIdentifier $resource_identifier) {
+      // We assume all entity reference fields have an 'entity' computed
+      // property that can be used to assign the needed values.
+      $field_properties = ['entity' => $this->getEntityFromResourceIdentifier($resource_identifier)];
       // Remove `arity` from the received extra properties, otherwise this
       // will fail field validation.
       $field_properties += array_diff_key($resource_identifier->getMeta(), array_flip([ResourceIdentifier::ARITY_KEY]));
