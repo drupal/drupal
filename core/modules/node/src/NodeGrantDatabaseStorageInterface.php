@@ -83,6 +83,12 @@ interface NodeGrantDatabaseStorageInterface {
 
   /**
    * Creates the default node access grant entry.
+   *
+   * The default node access grant is a special grant added to the node_access
+   * table when no modules implement hook_node_grants. It grants view access
+   * to any published node.
+   *
+   * @see self::access()
    */
   public function writeDefault();
 

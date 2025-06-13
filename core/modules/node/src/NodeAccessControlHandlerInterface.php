@@ -30,6 +30,8 @@ interface NodeAccessControlHandlerInterface {
 
   /**
    * Creates the default node access grant entry on the grant storage.
+   *
+   * @see \Drupal\node\NodeGrantDatabaseStorageInterface::writeDefault()
    */
   public function writeDefaultGrant();
 
