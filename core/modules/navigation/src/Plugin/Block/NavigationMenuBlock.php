@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\navigation\Menu\NavigationMenuLinkTreeManipulators;
 use Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock as SystemMenuNavigationBlockDeriver;
 use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -85,6 +86,7 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
     $tree = $this->menuTree->load($menu_name, $parameters);
     $manipulators = [
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      ['callable' => NavigationMenuLinkTreeManipulators::class . ':addSecondLevelOverviewLinks'],
       ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
     ];
     $tree = $this->menuTree->transform($tree, $manipulators);

@@ -11,6 +11,7 @@ use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\Routing\UrlGenerator;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\navigation\Plugin\Block\NavigationMenuBlock;
+use Drupal\system\Controller\SystemController;
 use Drupal\system\Entity\Menu;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
@@ -106,9 +107,16 @@ class NavigationMenuBlockTest extends KernelTestBase {
     $options = ['_access_checks' => ['access_check.default']];
     $special_options = $options + ['_no_path' => TRUE];
     $routes->add('example2', new Route('/example2', [], $requirements, $options));
-    $routes->add('example4', new Route('/example4', [], $requirements, $options));
+    $routes->add('example4', new Route('/example4', ['_controller' => SystemController::class . '::systemAdminMenuBlockPage'], $requirements, $options));
     $routes->add('example9', new Route('/example9', [], $requirements, $options));
-    $routes->add('example11', new Route('/example11', [], $requirements, $options));
+    $routes->add('example11', new Route('/example11', ['_controller' => SystemController::class . '::systemAdminMenuBlockPage'], $requirements, $options));
+    $routes->add('example13', new Route('/example13', [], $requirements, $options));
+    $routes->add('example14', new Route('/example14', [], $requirements, $options));
+    $routes->add('example15', new Route('/example15', [], $requirements, $options));
+    $routes->add('example16', new Route('/example16', [], $requirements, $options));
+    $routes->add('example17', new Route('/example17', [], $requirements, $options));
+    $routes->add('example18', new Route('/example18', [], $requirements, $options));
+    $routes->add('example19', new Route('/example19', [], ['_access' => 'FALSE'], $options));
 
     // Mock special routes defined in system.routing.yml.
     $routes->add('<nolink>', new Route('', [], $requirements, $special_options));
@@ -144,15 +152,23 @@ class NavigationMenuBlockTest extends KernelTestBase {
     // - 1 (nolink)
     // - 2
     //   - 3 (nolink)
-    //     - 4
+    //     - 4 (list of child links)
     //       - 9
     // - 5 (button)
     //   - 7 (button)
     //     - 10 (nolink)
     // - 6
     // - 8 (nolink)
-    //   - 11
+    //   - 11 (list of child links)
     //     - 12 (button)
+    // - 13
+    //   - 14 (not a list of child links)
+    //     - 15
+    // - 16
+    //   - 17
+    //     - 18 (disabled)
+    //     - 19 (access denied)
+    //     - 20 (links to same routed URL as 17)
     // With link 6 being the only external link.
     // phpcs:disable
     $links = [
@@ -168,6 +184,14 @@ class NavigationMenuBlockTest extends KernelTestBase {
       10 => MenuLinkMock::create(['id' => 'test.example10', 'route_name' => '<nolink>', 'title' => 'title 10', 'parent' => 'test.example7', 'weight' => 7]),
       11 => MenuLinkMock::create(['id' => 'test.example11', 'route_name' => 'example11', 'title' => 'title 11', 'parent' => 'test.example8', 'weight' => 7]),
       12 => MenuLinkMock::create(['id' => 'test.example12', 'route_name' => '<button>', 'title' => 'title 12', 'parent' => 'test.example11', 'weight' => 7]),
+      13 => MenuLinkMock::create(['id' => 'test.example13', 'route_name' => 'example13', 'title' => 'title 13', 'parent' => '', 'weight' => 8]),
+      14 => MenuLinkMock::create(['id' => 'test.example14', 'route_name' => 'example14', 'title' => 'title 14', 'parent' => 'test.example13', 'weight' => 8]),
+      15 => MenuLinkMock::create(['id' => 'test.example15', 'route_name' => 'example15', 'title' => 'title 15', 'parent' => 'test.example14', 'weight' => 8]),
+      16 => MenuLinkMock::create(['id' => 'test.example16', 'route_name' => 'example16', 'title' => 'title 16', 'parent' => '', 'weight' => 9]),
+      17 => MenuLinkMock::create(['id' => 'test.example17', 'route_name' => 'example17', 'title' => 'title 17', 'parent' => 'test.example16', 'weight' => 9]),
+      18 => MenuLinkMock::create(['id' => 'test.example18', 'route_name' => 'example18', 'title' => 'title 18', 'parent' => 'test.example17', 'weight' => 9, 'enabled' => FALSE]),
+      19 => MenuLinkMock::create(['id' => 'test.example19', 'route_name' => 'example19', 'title' => 'title 19', 'parent' => 'test.example17', 'weight' => 9]),
+      20 => MenuLinkMock::create(['id' => 'test.example20', 'route_name' => 'example17', 'title' => 'title 20', 'parent' => 'test.example17', 'weight' => 9]),
     ];
     // phpcs:enable
     foreach ($links as $instance) {
@@ -234,16 +258,22 @@ class NavigationMenuBlockTest extends KernelTestBase {
       'test.example5' => [],
       'test.example6' => [],
       'test.example8' => [],
+      'test.example13' => [],
+      'test.example16' => [],
     ];
     $expectations['level_2_only'] = [
       'test.example3' => [],
       'test.example7' => [],
       'test.example11' => [],
+      'test.example14' => [],
+      'test.example17' => [],
     ];
     $expectations['level_3_only'] = [
       'test.example4' => [],
       'test.example10' => [],
       'test.example12' => [],
+      'test.example15' => [],
+      'test.example20' => [],
     ];
     $expectations['level_1_and_beyond'] = [
       'test.example1' => [],
@@ -263,6 +293,20 @@ class NavigationMenuBlockTest extends KernelTestBase {
           'test.example12' => [],
         ],
       ],
+      'test.example13' => [
+        'test.example14' => [
+          'test.example14.navigation_overview' => [],
+          'test.example15' => [],
+        ],
+      ],
+      'test.example16' => [
+        // 17 only has inaccessible and disabled child links, and a child item
+        // that links to the same url as 17, so there should be no overview link
+        // child added.
+        'test.example17' => [
+          'test.example20' => [],
+        ],
+      ],
     ];
     $expectations['level_2_and_beyond'] = [
       'test.example3' => [
@@ -276,6 +320,12 @@ class NavigationMenuBlockTest extends KernelTestBase {
       'test.example11' => [
         'test.example12' => [],
       ],
+      'test.example14' => [
+        'test.example15' => [],
+      ],
+      'test.example17' => [
+        'test.example20' => [],
+      ],
     ];
     $expectations['level_3_and_beyond'] = [
       'test.example4' => [
@@ -283,6 +333,8 @@ class NavigationMenuBlockTest extends KernelTestBase {
       ],
       'test.example10' => [],
       'test.example12' => [],
+      'test.example15' => [],
+      'test.example20' => [],
     ];
     // Scenario 1: test all navigation block instances when there's no active
     // trail.
@@ -346,6 +398,10 @@ class NavigationMenuBlockTest extends KernelTestBase {
       "//li[contains(@class,'toolbar-menu__item--level-2')]/span[text()='title 10']",
       "//li[contains(@class,'toolbar-menu__item--level-1')]/button/span[text()='title 11']",
       "//li[contains(@class,'toolbar-menu__item--level-2')]/button[text()='title 12']",
+      "//li[contains(@class,'toolbar-block__list-item')]/button/span[text()='title 13']",
+      "//li[contains(@class,'toolbar-menu__item--level-1')]/button/span[text()='title 14']",
+      "//li[contains(@class,'toolbar-menu__item--level-2')]/a[text()='Overview']",
+      "//li[contains(@class,'toolbar-menu__item--level-1')]/button/span[text()='title 17']",
     ];
     foreach ($items_query as $query) {
       $span = $xpath->query($query);
