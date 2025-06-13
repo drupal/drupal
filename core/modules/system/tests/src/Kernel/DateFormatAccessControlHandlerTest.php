@@ -77,6 +77,8 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
    *   An array of test cases.
    */
   public static function providerTestAccess(): array {
+    $originalContainer = \Drupal::hasContainer() ? \Drupal::getContainer() : NULL;
+
     $c = new ContainerBuilder();
     $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
@@ -84,7 +86,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
     $c->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($c);
 
-    return [
+    $data = [
       'No permission + unlocked' => [
         [],
         'unlocked',
@@ -122,6 +124,13 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
         AccessResult::allowed()->addCacheContexts(['user.permissions']),
       ],
     ];
+
+    // Restore the original container if needed.
+    if ($originalContainer) {
+      \Drupal::setContainer($originalContainer);
+    }
+
+    return $data;
   }
 
 }
