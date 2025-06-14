@@ -24,7 +24,7 @@ trait SchemaCheckTestTrait {
    * @param array $config_data
    *   The configuration data.
    */
-  public function assertConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data) {
+  public function assertConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data): void {
     $check = $this->checkConfigSchema($typed_config, $config_name, $config_data);
     $message = '';
     if ($check === FALSE) {
@@ -46,7 +46,7 @@ trait SchemaCheckTestTrait {
    * @param string $config_name
    *   The configuration name.
    */
-  public function assertConfigSchemaByName($config_name) {
+  public function assertConfigSchemaByName($config_name): void {
     $config = $this->config($config_name);
     $this->assertConfigSchema(\Drupal::service('config.typed'), $config->getName(), $config->get());
   }
