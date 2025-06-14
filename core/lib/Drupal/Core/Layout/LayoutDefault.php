@@ -2,18 +2,17 @@
 
 namespace Drupal\Core\Layout;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginTrait;
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Plugin\ConfigurablePluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
 
 /**
  * Provides a default class for Layout plugins.
  */
-class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInterface, PreviewAwarePluginInterface {
+class LayoutDefault extends ConfigurablePluginBase implements LayoutInterface, PluginFormInterface, PreviewAwarePluginInterface {
 
   use ContextAwarePluginAssignmentTrait;
   use ContextAwarePluginTrait;
@@ -35,14 +34,6 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->setConfiguration($configuration);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function build(array $regions) {
     // Ensure $build only contains defined regions and in the order defined.
     $build = [];
@@ -59,20 +50,6 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
       $build['#attached']['library'][] = $library;
     }
     return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setConfiguration(array $configuration) {
-    $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);
   }
 
   /**

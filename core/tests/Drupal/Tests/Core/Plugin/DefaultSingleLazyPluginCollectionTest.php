@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Plugin;
 
-use Drupal\Component\Plugin\ConfigurableInterface;
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\ConfigurablePluginBase;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
@@ -98,24 +97,5 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
 /**
  * Stub configurable plugin class for testing.
  */
-class ConfigurablePlugin extends PluginBase implements ConfigurableInterface {
-
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->configuration = $configuration + $this->defaultConfiguration();
-  }
-
-  public function defaultConfiguration() {
-    return [];
-  }
-
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  public function setConfiguration(array $configuration): void {
-    $this->configuration = $configuration;
-  }
-
+class ConfigurablePlugin extends ConfigurablePluginBase {
 }

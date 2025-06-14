@@ -2,13 +2,15 @@
 
 namespace Drupal\search\Plugin;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ConfigurableTrait;
 
 /**
  * Provides a base implementation for a configurable Search plugin.
  */
 abstract class ConfigurableSearchPluginBase extends SearchPluginBase implements ConfigurableSearchPluginInterface {
+
+  use ConfigurableTrait;
 
   /**
    * The unique ID for the search page using this plugin.
@@ -24,27 +26,6 @@ abstract class ConfigurableSearchPluginBase extends SearchPluginBase implements 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->setConfiguration($configuration);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setConfiguration(array $configuration) {
-    $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);
   }
 
   /**
