@@ -242,4 +242,27 @@ class LocaleStringTest extends KernelTestBase {
     ])->save();
   }
 
+  /**
+   * Tests that strings are correctly deleted.
+   */
+  public function testDeleteStrings(): void {
+    $source = $this->storage->createString([
+      'source' => 'Revision ID',
+    ])->save();
+
+    $this->storage->createTranslation([
+      'lid' => $source->lid,
+      'language' => 'fr',
+      'translation' => 'Translated Revision ID',
+    ])->save();
+
+    // Confirm that the string has been created.
+    $this->assertNotEmpty($this->storage->findString(['lid' => $source->lid]));
+
+    $this->storage->deleteStrings(['lid' => $source->lid]);
+
+    // Confirm that the string has been deleted.
+    $this->assertEmpty($this->storage->findString(['lid' => $source->lid]));
+  }
+
 }
