@@ -89,7 +89,7 @@ if ($args['list']) {
   // Display all available tests organized by one @group annotation.
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
-  $test_discovery = new PhpUnitTestDiscovery(\Drupal::root() . \DIRECTORY_SEPARATOR . 'core');
+  $test_discovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(\Drupal::root() . \DIRECTORY_SEPARATOR . 'core');
   try {
     $groups = $test_discovery->getTestClasses($args['module']);
     foreach ($test_discovery->getWarnings() as $warning) {
@@ -122,7 +122,7 @@ if ($args['list']) {
 // @see https://www.drupal.org/node/2569585
 if ($args['list-files'] || $args['list-files-json']) {
   // List all files which could be run as tests.
-  $test_discovery = new PhpUnitTestDiscovery(\Drupal::root() . \DIRECTORY_SEPARATOR . 'core');
+  $test_discovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(\Drupal::root() . \DIRECTORY_SEPARATOR . 'core');
   // PhpUnitTestDiscovery::findAllClassFiles() gives us a classmap similar to a
   // Composer 'classmap' array.
   $test_classes = $test_discovery->findAllClassFiles();
@@ -934,14 +934,20 @@ function simpletest_script_command(TestRun $test_run, string $test_class): array
 function simpletest_script_get_test_list() {
   global $args;
 
-  $test_discovery = new PhpUnitTestDiscovery(\Drupal::root() . \DIRECTORY_SEPARATOR . 'core');
+  $test_discovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(\Drupal::root() . \DIRECTORY_SEPARATOR . 'core');
   $test_list = [];
   $slow_tests = [];
   if ($args['all'] || $args['module'] || $args['directory']) {
     try {
       $groups = $test_discovery->getTestClasses($args['module'], $args['types'], $args['directory']);
-      foreach ($test_discovery->getWarnings() as $warning) {
-        simpletest_script_print($warning . "\n", SIMPLETEST_SCRIPT_COLOR_EXCEPTION);
+      $warnings = $test_discovery->getWarnings();
+      if (!empty($warnings)) {
+        simpletest_script_print("Test discovery warnings\n", SIMPLETEST_SCRIPT_COLOR_BRIGHT_WHITE);
+        simpletest_script_print("-----------------------\n", SIMPLETEST_SCRIPT_COLOR_BRIGHT_WHITE);
+        foreach ($warnings as $warning) {
+          simpletest_script_print('* ' . $warning . "\n\n", SIMPLETEST_SCRIPT_COLOR_EXCEPTION);
+        }
+        echo "\n";
       }
     }
     catch (Exception $e) {

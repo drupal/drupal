@@ -38,7 +38,7 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
     if (RunnerVersion::getMajor() >= 11) {
       $configurationFilePath .= \DIRECTORY_SEPARATOR . '.phpunit-next.xml';
     }
-    $phpUnitTestDiscovery = new PhpUnitTestDiscovery($configurationFilePath);
+    $phpUnitTestDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath($configurationFilePath);
     $phpUnitList = $phpUnitTestDiscovery->getTestClasses($extension, $suites, $directory);
 
     // Legacy TestDiscovery.

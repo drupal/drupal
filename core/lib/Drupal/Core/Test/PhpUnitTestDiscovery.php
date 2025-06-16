@@ -6,6 +6,8 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\Test\Exception\MissingGroupException;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
+use PHPUnit\Event\EventFacadeIsSealedException;
+use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +21,13 @@ use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
  * @internal
  */
 class PhpUnitTestDiscovery {
+
+  /**
+   * The singleton.
+   *
+   * @var \Drupal\Core\Test\PhpUnitTestDiscovery|null
+   */
+  private static ?self $instance = NULL;
 
   /**
    * The map of legacy test suite identifiers to phpunit.xml ones.
@@ -42,16 +51,44 @@ class PhpUnitTestDiscovery {
   private array $reverseMap;
 
   /**
+   * Path to PHPUnit's configuration file.
+   */
+  private string $configurationFilePath;
+
+  /**
    * The warnings generated during the discovery.
    *
    * @var list<string>
    */
   private array $warnings = [];
 
-  public function __construct(
-    private string $configurationFilePath,
-  ) {
+  private function __construct() {
     $this->reverseMap = array_flip($this->map);
+    try {
+      EventFacade::instance()->registerTracer(new PhpUnitTestDiscoveryTracer($this));
+      EventFacade::instance()->seal();
+    }
+    catch (EventFacadeIsSealedException) {
+      // Just continue.
+    }
+  }
+
+  /**
+   * Returns the singleton instance.
+   */
+  public static function instance(): self {
+    if (self::$instance === NULL) {
+      self::$instance = new self();
+    }
+    return self::$instance;
+  }
+
+  /**
+   * Sets the configuration file path.
+   */
+  public function setConfigurationFilePath(string $configurationFilePath): self {
+    $this->configurationFilePath = $configurationFilePath;
+    return $this;
   }
 
   /**
@@ -109,9 +146,11 @@ class PhpUnitTestDiscovery {
     }
     $phpUnitTestSuite = (new TestSuiteBuilder())->build($phpUnitConfiguration);
     if (isset($containerObjectId) && $containerObjectId !== spl_object_id(\Drupal::getContainer())) {
-      $this->warnings[] = '*** The service container was changed during the test discovery ***';
-      $this->warnings[] = 'Probably a test data provider method called \\Drupal::setContainer.';
-      $this->warnings[] = 'Ensure that all the data providers restore the original container before returning data.';
+      $this->addWarning(
+        ">>> The service container was changed during the test discovery <<<\n" .
+        "Probably, a test data provider method called \\Drupal::setContainer().\n" .
+        "Ensure that all the data providers restore the original container before returning data."
+      );
       assert(isset($container));
       \Drupal::setContainer($container);
     }
@@ -153,6 +192,16 @@ class PhpUnitTestDiscovery {
   }
 
   /**
+   * Adds warning message generated during the discovery.
+   *
+   * @param string $message
+   *   The warning message.
+   */
+  public function addWarning(string $message): void {
+    $this->warnings[] = $message;
+  }
+
+  /**
    * Returns the warnings generated during the discovery.
    *
    * @return list<string>
@@ -180,6 +229,10 @@ class PhpUnitTestDiscovery {
     $list = [];
     foreach ($phpUnitTestSuite->tests() as $testSuite) {
       foreach ($testSuite->tests() as $testClass) {
+        if ($testClass->isEmpty()) {
+          continue;
+        }
+
         if ($extension !== NULL && !str_starts_with($testClass->name(), "Drupal\\Tests\\{$extension}\\")) {
           continue;
         }
@@ -218,6 +271,10 @@ class PhpUnitTestDiscovery {
 
     // In this case, PHPUnit found a single test class to run tests for.
     if ($phpUnitTestSuite->isForTestClass()) {
+      if ($phpUnitTestSuite->isEmpty()) {
+        return [];
+      }
+
       if ($extension !== NULL && !str_starts_with($phpUnitTestSuite->name(), "Drupal\\Tests\\{$extension}\\")) {
         return [];
       }
@@ -239,6 +296,10 @@ class PhpUnitTestDiscovery {
     // Multiple test classes were found.
     $list = [];
     foreach ($phpUnitTestSuite->tests() as $testClass) {
+      if ($testClass->isEmpty()) {
+        continue;
+      }
+
       if ($extension !== NULL && !str_starts_with($testClass->name(), "Drupal\\Tests\\{$extension}\\")) {
         continue;
       }
