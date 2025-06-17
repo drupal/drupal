@@ -4,20 +4,25 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Build;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
- * Tests installing packages in a stage directory.
+ * Tests installing packages with direct write mode enabled.
  *
- * @group package_manager
- * @group #slow
  * @internal
  */
-class PackageInstallTest extends TemplateProjectTestBase {
+#[Group('package_manager')]
+#[Group('#slow')]
+class PackageInstallDirectWriteTest extends TemplateProjectTestBase {
 
   /**
    * Tests installing packages in a stage directory.
    */
   public function testPackageInstall(): void {
     $this->createTestProject('RecommendedProject');
+    $allow_direct_write = var_export(TRUE, TRUE);
+    $this->writeSettings("\n\$settings['package_manager_allow_direct_write'] = $allow_direct_write;");
+
     $this->setReleaseMetadata([
       'alpha' => __DIR__ . '/../../fixtures/release-history/alpha.1.1.0.xml',
     ]);
