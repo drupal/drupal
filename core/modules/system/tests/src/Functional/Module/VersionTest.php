@@ -8,6 +8,7 @@ namespace Drupal\Tests\system\Functional\Module;
  * Tests module version dependencies.
  *
  * @group Module
+ * @group #slow
  */
 class VersionTest extends ModuleTestBase {
 
