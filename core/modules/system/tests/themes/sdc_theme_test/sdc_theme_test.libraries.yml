@@ -1,0 +1,9 @@
+reset:
+  css:
+    base:
+      css/reset.css: {}
+
+css_load_order_dependent:
+  css:
+    component:
+      css/css-order-dependent.css: {}

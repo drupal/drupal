@@ -5,3 +5,6 @@ version: VERSION
 base theme: sdc_theme_test_base
 
 enforce_prop_schemas: false
+
+libraries:
+  - sdc_theme_test/reset

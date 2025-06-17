@@ -231,7 +231,10 @@ class LibraryDiscoveryParser {
             $options['group'] = JS_LIBRARY;
           }
           elseif ($type == 'css') {
-            $options['group'] = $extension_type == 'theme' ? CSS_AGGREGATE_THEME : CSS_AGGREGATE_DEFAULT;
+            // Component stylesheets should be added in the "theme" aggregate
+            // group to load them alongside the theme.
+            // @see \Drupal\Core\Plugin\Component::getLibraryName
+            $options['group'] = ($extension_type == 'theme' || str_starts_with($id, 'components.')) ? CSS_AGGREGATE_THEME : CSS_AGGREGATE_DEFAULT;
           }
           // By default, all library assets are files.
           if (!isset($options['type'])) {

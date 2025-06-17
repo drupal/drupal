@@ -1,0 +1,10 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: CSS Load Order
+props:
+  type: object
+  properties:
+    dummy:
+      type: string
+libraryOverrides:
+  dependencies:
+    - sdc_theme_test/css_load_order_dependent
