@@ -467,4 +467,26 @@ class AttachedAssetsTest extends KernelTestBase {
     $this->assertStringContainsString('<script src="' . str_replace('&', '&amp;', $this->fileUrlGenerator->generateString('core/modules/system/tests/modules/common_test/querystring.js?arg1=value1&arg2=value2')) . '&amp;' . $query_string . '"></script>', $rendered_js, 'JavaScript file with query string gets version query string correctly appended.');
   }
 
+  /**
+   * Test settings can be loaded even when libraries are not.
+   */
+  public function testAttachedSettingsWithoutLibraries(): void {
+    $assets = new AttachedAssets();
+
+    // First test with no libraries will return no settings.
+    $assets->setSettings(['test' => 'foo']);
+    $js = $this->assetResolver->getJsAssets($assets, TRUE, \Drupal::languageManager()->getCurrentLanguage())[1];
+    $this->assertArrayNotHasKey('drupalSettings', $js);
+
+    // Second test with a warm cache.
+    $js = $this->assetResolver->getJsAssets($assets, TRUE, \Drupal::languageManager()->getCurrentLanguage())[1];
+    $this->assertArrayNotHasKey('drupalSettings', $js);
+
+    // Now test with different settings when drupalSettings is already loaded.
+    $assets->setSettings(['test' => 'bar']);
+    $assets->setAlreadyLoadedLibraries(['core/drupalSettings']);
+    $js = $this->assetResolver->getJsAssets($assets, TRUE, \Drupal::languageManager()->getCurrentLanguage())[1];
+    $this->assertSame('bar', $js['drupalSettings']['data']['test']);
+  }
+
 }
