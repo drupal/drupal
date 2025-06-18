@@ -162,13 +162,13 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
     $this->moduleHandler->invokeAllWith(
       'field_formatter_third_party_settings_form',
       function (callable $hook, string $module) use (&$settings_form, &$plugin, &$field_definition, &$form, &$form_state) {
-        $settings_form[$module] = ($settings_form[$module] ?? []) + $hook(
+        $settings_form[$module] = ($settings_form[$module] ?? []) + ($hook(
           $plugin,
           $field_definition,
           $this->entity->getMode(),
           $form,
           $form_state,
-        );
+        )) ?? [];
       }
     );
     return $settings_form;
