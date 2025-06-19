@@ -243,6 +243,15 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
           }
         }
       }
+      elseif ($source->type == LOCALE_TRANSLATION_CURRENT) {
+        /*
+         * This can happen if the locale_translation_batch_fetch_import
+         * batch was interrupted
+         * and the translation was imported by another batch.
+         */
+        $context['message'] = t('Ignoring already imported translation for %project.', ['%project' => $source->project]);
+        $context['finished'] = 1;
+      }
     }
   }
 }
