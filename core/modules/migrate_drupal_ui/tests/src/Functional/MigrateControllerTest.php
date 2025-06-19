@@ -25,14 +25,6 @@ class MigrateControllerTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -42,8 +34,9 @@ class MigrateControllerTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Log in as user 1. Migrations in the UI can only be performed as user 1.
-    $this->drupalLogin($this->rootUser);
+    // Log in as a user with access to view the migration report.
+    $account = $this->drupalCreateUser(['access site reports', 'administer views']);
+    $this->drupalLogin($account);
 
     // Create a migrate message for testing purposes.
     \Drupal::logger('migrate_drupal_ui')->notice('A test message');
