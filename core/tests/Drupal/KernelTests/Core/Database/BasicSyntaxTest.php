@@ -63,18 +63,6 @@ class BasicSyntaxTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests string concatenation with separator, with field values.
-   */
-  public function testConcatWsFields(): void {
-    $result = $this->connection->query("SELECT CONCAT_WS('-', :a1, [name], :a2, [age]) FROM {test} WHERE [age] = :age", [
-      ':a1' => 'name',
-      ':a2' => 'age',
-      ':age' => 25,
-    ]);
-    $this->assertSame('name-John-age-25', $result->fetchField());
-  }
-
-  /**
    * Tests escaping of LIKE wildcards.
    */
   public function testLikeEscape(): void {

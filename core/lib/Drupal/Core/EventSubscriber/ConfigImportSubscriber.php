@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 use Drupal\Core\Config\ConfigNameException;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ConfigImportModuleUninstallValidatorInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
@@ -48,12 +49,15 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    *   The module extension list.
    * @param \Traversable $uninstallValidators
    *   The uninstall validator services.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
    */
   public function __construct(
     ThemeExtensionList $theme_extension_list,
     ModuleExtensionList $extension_list_module,
     #[AutowireIterator(tag: 'module_install.uninstall_validator')]
     protected \Traversable $uninstallValidators,
+    protected readonly Connection $connection,
   ) {
     $this->themeList = $theme_extension_list;
     $this->moduleExtensionList = $extension_list_module;
@@ -103,6 +107,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     $current_core_extension = $config_importer->getStorageComparer()->getTargetStorage()->read('core.extension');
     $install_profile = $current_core_extension['profile'] ?? NULL;
     $new_install_profile = $core_extension['profile'] ?? NULL;
+    $database_driver_module = $this->connection->getProvider();
 
     // Ensure the profile is not changing.
     if ($install_profile !== $new_install_profile) {
@@ -159,7 +164,10 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     $uninstalls = $config_importer->getExtensionChangelist('module', 'uninstall');
     foreach ($uninstalls as $module) {
       foreach (array_keys($module_data[$module]->required_by) as $dependent_module) {
-        if ($module_data[$dependent_module]->status && !in_array($dependent_module, $uninstalls, TRUE) && $dependent_module !== $install_profile) {
+        if ($module_data[$dependent_module]->status &&
+          !in_array($dependent_module, $uninstalls, TRUE) &&
+          !in_array($dependent_module, [$install_profile, $database_driver_module], TRUE)
+        ) {
           $module_name = $module_data[$module]->info['name'];
           $dependent_module_name = $module_data[$dependent_module]->info['name'];
           $config_importer->logError($this->t('Unable to uninstall the %module module since the %dependent_module module is installed.', [

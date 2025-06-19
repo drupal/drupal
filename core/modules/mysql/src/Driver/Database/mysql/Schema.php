@@ -2,7 +2,7 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Exception\SchemaPrimaryKeyMustBeDroppedException;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
@@ -438,11 +438,11 @@ class Schema extends DatabaseSchema {
     try {
       $this->executeDdlStatement($query);
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (SchemaPrimaryKeyMustBeDroppedException $e) {
       // MySQL error number 4111 (ER_DROP_PK_COLUMN_TO_DROP_GIPK) indicates that
       // when dropping and adding a primary key, the generated invisible primary
       // key (GIPK) column must also be dropped.
-      if (isset($e->getPrevious()->errorInfo[1]) && $e->getPrevious()->errorInfo[1] === 4111 && isset($keys_new['primary key']) && $this->indexExists($table, 'PRIMARY') && $this->findPrimaryKeyColumns($table) === ['my_row_id']) {
+      if (isset($keys_new['primary key']) && $this->indexExists($table, 'PRIMARY') && $this->findPrimaryKeyColumns($table) === ['my_row_id']) {
         $this->executeDdlStatement($query . ', DROP COLUMN [my_row_id]');
       }
       else {

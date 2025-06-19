@@ -1,0 +1,4 @@
+services:
+  mysqli.views.cast_sql:
+    class: Drupal\mysqli\Plugin\views\query\MysqliCastSql
+    public: false

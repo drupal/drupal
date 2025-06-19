@@ -231,6 +231,8 @@ default:
   variables:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
   # Run on MR, schedule, push, parent pipeline and performance test.
   rules:
@@ -265,6 +267,8 @@ default:
   variables:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   trigger:
@@ -281,18 +285,40 @@ default:
   variables:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mariadb-10.6"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
+
+'mysqli - PHP 8.3 MySQL 8.4':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "mysql-8.4"
+    _TARGET_DB_DRIVER: "mysqli"
+    _TARGET_DB_DRIVER_MODULE: "mysqli"
+
+'mysqli - PHP 8.4 MySQL 9.3':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mysql-9"
+    _TARGET_DB_DRIVER: "mysqli"
+    _TARGET_DB_DRIVER_MODULE: "mysqli"
 
 'PHP 8.3 MySQL 8.4':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8.4"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'PHP 8.4 MySQL 9.3':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mysql-9"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'PHP 8.3 PostgreSQL 16':
   <<: [ *default-stage, *run-on-mr ]

@@ -1,0 +1,9 @@
+name: MySQLi
+type: module
+description: 'Database driver for MySQLi.'
+version: VERSION
+package: Core (Experimental)
+lifecycle: experimental
+hidden: true
+dependencies:
+  - drupal:mysql

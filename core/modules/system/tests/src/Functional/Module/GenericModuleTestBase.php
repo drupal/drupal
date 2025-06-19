@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -50,9 +51,12 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
     if (empty($info['required'])) {
       $connection = Database::getConnection();
 
-      // When the database driver is provided by a module, then that module
-      // cannot be uninstalled.
-      if ($module !== $connection->getProvider()) {
+      // The module that provides the database driver, or is a dependency of
+      // the database driver, cannot be uninstalled.
+      $database_module_extension = \Drupal::service(ModuleExtensionList::class)->get($connection->getProvider());
+      $database_modules_required = $database_module_extension->requires ? array_keys($database_module_extension->requires) : [];
+      $database_modules_required[] = $connection->getProvider();
+      if (!in_array($module, $database_modules_required)) {
         // Check that the module can be uninstalled and then re-installed again.
         $this->preUnInstallSteps();
         $this->assertTrue(\Drupal::service('module_installer')->uninstall([$module]), "Failed to uninstall '$module' module");

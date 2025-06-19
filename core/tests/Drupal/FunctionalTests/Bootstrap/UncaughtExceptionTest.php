@@ -203,6 +203,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
     switch ($this->container->get('database')->driver()) {
       case 'pgsql':
       case 'mysql':
+      case 'mysqli':
         $this->expectedExceptionMessage = $incorrect_username;
         break;
 

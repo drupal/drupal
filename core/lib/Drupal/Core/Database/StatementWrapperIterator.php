@@ -48,6 +48,25 @@ class StatementWrapperIterator extends StatementBase {
   }
 
   /**
+   * Returns the client-level database PDO statement object.
+   *
+   * This method should normally be used only within database driver code.
+   *
+   * @return \PDOStatement
+   *   The client-level database PDO statement.
+   *
+   * @throws \RuntimeException
+   *   If the client-level statement is not set.
+   */
+  public function getClientStatement(): \PDOStatement {
+    if (isset($this->clientStatement)) {
+      assert($this->clientStatement instanceof \PDOStatement);
+      return $this->clientStatement;
+    }
+    throw new \LogicException('\\PDOStatement not initialized');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
@@ -71,7 +90,7 @@ class StatementWrapperIterator extends StatementBase {
       $this->result = new PdoResult(
         $this->fetchMode,
         $this->fetchOptions,
-        $this->clientStatement,
+        $this->getClientStatement(),
       );
       $this->markResultsetIterable($return);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Core\Recipe;
 
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\standard\Functional\StandardTest;
 use Drupal\user\RoleInterface;
@@ -35,7 +36,12 @@ class StandardRecipeTest extends StandardTest {
     $theme_installer->uninstall(['claro', 'olivero']);
 
     // Determine which modules to uninstall.
-    $uninstall = array_diff(array_keys(\Drupal::moduleHandler()->getModuleList()), ['user', 'system', 'path_alias', \Drupal::database()->getProvider()]);
+    // If the database module has dependencies, they are expected too.
+    $database_module_extension = \Drupal::service(ModuleExtensionList::class)->get(\Drupal::database()->getProvider());
+    $database_modules = $database_module_extension->requires ? array_keys($database_module_extension->requires) : [];
+    $database_modules[] = \Drupal::database()->getProvider();
+    $keep = array_merge(['user', 'system', 'path_alias'], $database_modules);
+    $uninstall = array_diff(array_keys(\Drupal::moduleHandler()->getModuleList()), $keep);
     foreach (['shortcut', 'field_config', 'filter_format', 'field_storage_config'] as $entity_type) {
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
       $storage->delete($storage->loadMultiple());
