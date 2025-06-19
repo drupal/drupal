@@ -10,8 +10,9 @@ declare(strict_types=1);
 /**
  * Implements hook_TYPE_alter().
  *
- * Same as common_test_drupal_alter_alter(), but here, we verify that themes
- * can also alter and come last.
+ * Same as CommonTestHooks::drupalAlterAlter(), but here, we verify that themes
+ * can also alter and come last. This file gets included by
+ * CommonTestHooks::includeThemeFunction().
  */
 function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
   // Alter first argument.
@@ -39,28 +40,4 @@ function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL): void 
       $arg3->foo .= ' theme';
     }
   }
-}
-
-/**
- * Implements MODULE_preprocess().
- *
- * @see RenderTest::testDrupalRenderThemePreprocessAttached()
- */
-function common_test_preprocess(&$variables, $hook): void {
-  if (!\Drupal::state()->get('theme_preprocess_attached_test', FALSE)) {
-    return;
-  }
-  $variables['#attached']['library'][] = 'test/generic_preprocess';
-}
-
-/**
- * Implements MODULE_preprocess_HOOK().
- *
- * @see RenderTest::testDrupalRenderThemePreprocessAttached()
- */
-function common_test_preprocess_common_test_render_element(&$variables): void {
-  if (!\Drupal::state()->get('theme_preprocess_attached_test', FALSE)) {
-    return;
-  }
-  $variables['#attached']['library'][] = 'test/specific_preprocess';
 }
