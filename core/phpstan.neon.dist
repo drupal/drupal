@@ -36,6 +36,8 @@ parameters:
     # Skip Drupal 6 & 7 code.
     - scripts/dump-database-d?.sh
     - scripts/generate-d?-content.sh
+    # Skip update countries script for fake t() declaration.
+    - scripts/update-countries.sh
     # Skip data files.
     - lib/Drupal/Component/Transliteration/data/*.php
     # The following classes deliberately extend non-existent classes for testing.
