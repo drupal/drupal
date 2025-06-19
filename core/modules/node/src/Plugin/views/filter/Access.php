@@ -36,7 +36,7 @@ class Access extends FilterPluginBase {
    */
   public function query() {
     $account = $this->view->getUser();
-    if (!$account->hasPermission('bypass node access')) {
+    if (!$account->hasPermission('bypass node access') && $this->moduleHandler->hasImplementations('node_grants')) {
       $table = $this->ensureMyTable();
       $grants = $this->query->getConnection()->condition('OR');
       foreach (node_access_grants('view', $account) as $realm => $gids) {

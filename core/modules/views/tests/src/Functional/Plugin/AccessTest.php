@@ -22,7 +22,12 @@ class AccessTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_access_none', 'test_access_static', 'test_access_dynamic'];
+  public static $testViews = [
+    'test_access_none',
+    'test_access_static',
+    'test_access_dynamic',
+    'test_content_access_filter',
+  ];
 
   /**
    * {@inheritdoc}
@@ -111,6 +116,34 @@ class AccessTest extends ViewTestBase {
 
     $this->drupalGet('test_access_static');
     $this->assertSession()->statusCodeEquals(200);
+  }
+
+  /**
+   * Tests that node_access table is joined when hook_node_grants() is implemented.
+   */
+  public function testContentAccessFilter(): void {
+    $view = Views::getView('test_content_access_filter');
+    $view->setDisplay('page_1');
+
+    $view->initQuery();
+    $view->execute();
+    /** @var \Drupal\Core\Database\Query\Select $main_query */
+    $main_query = $view->build_info['query'];
+    $tables = array_keys($main_query->getTables());
+    $this->assertNotContains('node_access', $tables);
+
+    // Enable node access test module to ensure that table is present again.
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    node_access_rebuild();
+
+    $view = Views::getView('test_content_access_filter');
+    $view->setDisplay('page_1');
+    $view->initQuery();
+    $view->execute();
+    /** @var \Drupal\Core\Database\Query\Select $main_query */
+    $main_query = $view->build_info['query'];
+    $tables = array_keys($main_query->getTables());
+    $this->assertContains('node_access', $tables);
   }
 
 }
