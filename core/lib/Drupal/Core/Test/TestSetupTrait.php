@@ -134,7 +134,7 @@ trait TestSetupTrait {
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    * @see drupal_valid_test_ua()
    */
-  protected function prepareDatabasePrefix() {
+  protected function prepareDatabasePrefix(): void {
     $test_db = new TestDatabase();
     $this->siteDirectory = $test_db->getTestSitePath();
     $this->databasePrefix = $test_db->getDatabasePrefix();
@@ -143,7 +143,7 @@ trait TestSetupTrait {
   /**
    * Changes the database connection to the prefixed one.
    */
-  protected function changeDatabasePrefix() {
+  protected function changeDatabasePrefix(): void {
     if (empty($this->databasePrefix)) {
       $this->prepareDatabasePrefix();
     }
@@ -154,7 +154,7 @@ trait TestSetupTrait {
       // Ensure no existing database gets in the way. If a default database
       // exists already it must be removed.
       Database::removeConnection('default');
-      $database = Database::convertDbUrlToConnectionInfo($db_url, $this->root ?? DRUPAL_ROOT, TRUE);
+      $database = Database::convertDbUrlToConnectionInfo($db_url, TRUE);
       Database::addConnectionInfo('default', 'default', $database);
     }
 

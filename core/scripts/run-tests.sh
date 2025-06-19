@@ -667,7 +667,7 @@ function simpletest_script_setup_database($new = FALSE): void {
     // Remove a possibly existing default connection (from settings.php).
     Database::removeConnection('default');
     try {
-      $databases['default']['default'] = Database::convertDbUrlToConnectionInfo($args['dburl'], DRUPAL_ROOT, TRUE);
+      $databases['default']['default'] = Database::convertDbUrlToConnectionInfo($args['dburl'], TRUE);
     }
     catch (\InvalidArgumentException $e) {
       simpletest_script_print_error('Invalid --dburl. Reason: ' . $e->getMessage());

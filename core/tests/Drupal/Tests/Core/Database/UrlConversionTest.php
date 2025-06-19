@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 // cspell:ignore dummydb
 
@@ -31,7 +32,7 @@ class UrlConversionTest extends UnitTestCase {
    * @dataProvider providerConvertDbUrlToConnectionInfo
    */
   public function testDbUrlToConnectionConversion($url, $database_array, $include_test_drivers): void {
-    $result = Database::convertDbUrlToConnectionInfo($url, $this->root, $include_test_drivers);
+    $result = Database::convertDbUrlToConnectionInfo($url, $include_test_drivers);
     $this->assertEquals($database_array, $result);
   }
 
@@ -279,10 +280,10 @@ class UrlConversionTest extends UnitTestCase {
    *
    * @dataProvider providerInvalidArgumentsUrlConversion
    */
-  public function testGetInvalidArgumentExceptionInUrlConversion($url, $root, $expected_exception_message): void {
+  public function testGetInvalidArgumentExceptionInUrlConversion($url, $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
-    Database::convertDbUrlToConnectionInfo($url, $root);
+    Database::convertDbUrlToConnectionInfo($url);
   }
 
   /**
@@ -291,14 +292,12 @@ class UrlConversionTest extends UnitTestCase {
    * @return array
    *   Array of arrays with the following elements:
    *   - An invalid URL string.
-   *   - Drupal root string.
    *   - The expected exception message.
    */
   public static function providerInvalidArgumentsUrlConversion() {
     return [
-      ['foo', '', "Missing scheme in URL 'foo'"],
-      ['foo', 'bar', "Missing scheme in URL 'foo'"],
-      ['foo/bar/baz', 'bar2', "Missing scheme in URL 'foo/bar/baz'"],
+      ['foo', "Missing scheme in URL 'foo'"],
+      ['foo/bar/baz', "Missing scheme in URL 'foo/bar/baz'"],
     ];
   }
 
@@ -307,7 +306,7 @@ class UrlConversionTest extends UnitTestCase {
    */
   public function testNoModuleSpecifiedDefaultsToDriverName(): void {
     $url = 'dummydb://test_user:test_pass@test_host/test_database';
-    $connection_info = Database::convertDbUrlToConnectionInfo($url, $this->root, TRUE);
+    $connection_info = Database::convertDbUrlToConnectionInfo($url, TRUE);
     $expected = [
       'driver' => 'dummydb',
       'username' => 'test_user',
@@ -518,7 +517,7 @@ class UrlConversionTest extends UnitTestCase {
     $url = 'foo_bar_mysql://test_user:test_pass@test_host:3306/test_database?module=foo_bar';
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage("The database_driver Drupal\\foo_bar\\Driver\\Database\\foo_bar_mysql does not exist.");
-    Database::convertDbUrlToConnectionInfo($url, $this->root, TRUE);
+    Database::convertDbUrlToConnectionInfo($url, TRUE);
   }
 
   /**
@@ -528,7 +527,16 @@ class UrlConversionTest extends UnitTestCase {
     $url = 'driver_test_mysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage("The database_driver Drupal\\driver_test\\Driver\\Database\\driver_test_mysql does not exist.");
-    Database::convertDbUrlToConnectionInfo($url, $this->root, TRUE);
+    Database::convertDbUrlToConnectionInfo($url, TRUE);
+  }
+
+  /**
+   * @covers ::convertDbUrlToConnectionInfo
+   */
+  #[IgnoreDeprecations]
+  public function testDeprecationOfRootParameter(): void {
+    $this->expectDeprecation('Passing a string $root value to Drupal\\Core\\Database\\Database::convertDbUrlToConnectionInfo() is deprecated in drupal:11.3.0 and will be removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3511287');
+    Database::convertDbUrlToConnectionInfo('sqlite://localhost/test_database', $this->root, TRUE);
   }
 
 }
