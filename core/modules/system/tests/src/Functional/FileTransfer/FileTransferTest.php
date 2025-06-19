@@ -57,10 +57,7 @@ class FileTransferTest extends BrowserTestBase {
   public function _buildFakeModule() {
     $location = 'temporary://fake';
     if (is_dir($location)) {
-      $ret = 0;
-      $output = [];
-      exec('rm -Rf ' . escapeshellarg($location), $output, $ret);
-      if ($ret != 0) {
+      if (!\Drupal::service('file_system')->deleteRecursive($location)) {
         throw new \Exception('Error removing fake module directory.');
       }
     }
