@@ -52,22 +52,17 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
     // http://php.net/manual/security.filesystem.nullbytes.php
     $filename = str_replace(chr(0), '', $filename);
 
+    if ($filename !== $event->getFilename()) {
+      $event->setFilename($filename)->setSecurityRename();
+    }
+
     // Split up the filename by periods. The first part becomes the basename,
     // the last part the final extension.
     $filename_parts = explode('.', $filename);
     // Remove file basename.
     $filename = array_shift($filename_parts);
-    // Remove final extension.
+    // Remove final extension. In the case of dot filenames this will be empty.
     $final_extension = (string) array_pop($filename_parts);
-    // Check if we're dealing with a dot file that is also an insecure extension
-    // e.g. .htaccess. In this scenario there is only one 'part' and the
-    // extension becomes the filename. We use the original filename from the
-    // event rather than the trimmed version above.
-    $insecure_uploads = $this->configFactory->get('system.file')->get('allow_insecure_uploads');
-    if (!$insecure_uploads && $final_extension === '' && str_contains($event->getFilename(), '.') && in_array(strtolower($filename), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
-      $final_extension = $filename;
-      $filename = '';
-    }
 
     $extensions = $event->getAllowedExtensions();
     if (!empty($extensions) && !in_array(strtolower($final_extension), $extensions, TRUE)) {
@@ -81,7 +76,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    if (!$insecure_uploads && in_array(strtolower($final_extension), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
+    if (!$this->configFactory->get('system.file')->get('allow_insecure_uploads') && in_array(strtolower($final_extension), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
       if (empty($extensions) || in_array('txt', $extensions, TRUE)) {
         // Add .txt to potentially executable files prior to munging to help
         // prevent exploits. This results in a filenames like filename.php being
