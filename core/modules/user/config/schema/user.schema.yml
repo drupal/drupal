@@ -105,6 +105,8 @@ user.mail:
 user.flood:
   type: config_object
   label: 'User flood settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     uid_only:
       type: boolean
@@ -112,15 +114,27 @@ user.flood:
     ip_limit:
       type: integer
       label: 'IP limit'
+      constraints:
+        Range:
+          min: 0
     ip_window:
       type: integer
       label: 'IP window'
+      constraints:
+        Range:
+          min: 0
     user_limit:
       type: integer
       label: 'User limit'
+      constraints:
+        Range:
+          min: 0
     user_window:
       type: integer
       label: 'User window'
+      constraints:
+        Range:
+          min: 0
 
 user.role.*:
   type: config_entity
