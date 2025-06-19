@@ -499,7 +499,12 @@ function template_preprocess_file_widget_multiple(&$variables): void {
   foreach (Element::children($element) as $key) {
     $widgets[] = &$element[$key];
   }
-  usort($widgets, '_field_multiple_value_form_sort_helper');
+  usort($widgets, function ($a, $b) {
+    // Sorts using ['_weight']['#value'].
+    $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
+    $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
+    return $a_weight - $b_weight;
+  });
 
   $rows = [];
   foreach ($widgets as &$widget) {

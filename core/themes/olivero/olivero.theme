@@ -381,13 +381,12 @@ function olivero_preprocess_field_multiple_value_form(&$variables): void {
 
   if (!empty($variables['multiple'])) {
     // Add an additional CSS class for the field label table cell.
-    // This repeats the logic of template_preprocess_field_multiple_value_form()
+    // This repeats the logic of
+    // \Drupal\Core\Field\FieldPreprocess::preprocessFieldMultipleValueForm()
     // without using '#prefix' and '#suffix' for the wrapper element.
     //
     // If the field is multiple, we don't have to check the existence of the
     // table header cell.
-    //
-    // @see template_preprocess_field_multiple_value_form().
     $header_attributes = ['class' => ['form-item__label', 'form-item__label--multiple-value-form']];
     if (!empty($variables['element']['#required'])) {
       $header_attributes['class'][] = 'js-form-required';
