@@ -288,27 +288,52 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
+    $invoke_preprocess_callback = function (mixed $preprocessor_function) use ($invoke_map, &$variables, $hook, $info): mixed {
+      // Preprocess hooks are stored as strings resembling functions.
+      // This is for backwards compatibility and may represent OOP
+      // implementations as well.
+      if (is_string($preprocessor_function) && isset($invoke_map[$preprocessor_function])) {
+        // Invoke module preprocess functions.
+        $this->moduleHandler->invoke(... $invoke_map[$preprocessor_function], args: [&$variables, $hook, $info]);
+      }
+      // Invoke preprocess callbacks that are not in the invoke map, such as
+      // those from themes or an alter hook.
+      elseif (is_callable($preprocessor_function)) {
+        call_user_func_array($preprocessor_function, [&$variables, $hook, $info]);
+      }
+      return $variables;
+    };
+
+    // Global preprocess functions are always called, after initial and
+    // template preprocess and before regular module and theme preprocess
+    // callbacks. template preprocess callbacks are deprecated but still
+    // supported, so they need to be called before the first non-template
+    // preprocess callback, and if that doesn't happen, after the loop.
+    $global_preprocess = $theme_registry->getGlobalPreprocess();
+    $global_preprocess_called = FALSE;
+
     // Invoke preprocess hooks.
-    // By default $info['preprocess functions'] should always be set, but it's
-    // good to check it if default Registry service implementation is
-    // overridden. See \Drupal\Core\Theme\Registry.
     if (isset($info['preprocess functions'])) {
       foreach ($info['preprocess functions'] as $preprocessor_function) {
-        // Preprocess hooks are stored as strings resembling functions.
-        // This is for backwards compatibility and may represent OOP
-        // implementations as well.
-        if (is_string($preprocessor_function) && isset($invoke_map[$preprocessor_function])) {
-          // While themes are not modules, ModuleHandlerInterface::invoke calls
-          // a legacy invoke which can can call any extension, not just
-          // modules.
-          $this->moduleHandler->invoke(... $invoke_map[$preprocessor_function], args: [&$variables, $hook, $info]);
+        // If global preprocess functions have not been called yet and this is
+        // not a template preprocess function, invoke them now.
+        if (!$global_preprocess_called && is_string($preprocessor_function) && !str_starts_with($preprocessor_function, 'template_')) {
+          $global_preprocess_called = TRUE;
+          foreach ($global_preprocess as $global_preprocess_callback) {
+            $invoke_preprocess_callback($global_preprocess_callback);
+          }
         }
-        // Check if hook_theme_registry_alter added a manual callback.
-        elseif (is_callable($preprocessor_function)) {
-          call_user_func_array($preprocessor_function, [&$variables, $hook, $info]);
-        }
+        $invoke_preprocess_callback($preprocessor_function);
       }
     }
+
+    // If global process hasn't been invoked yet, do that now.
+    if (!$global_preprocess_called) {
+      foreach ($global_preprocess as $global_preprocess_callback) {
+        $invoke_preprocess_callback($global_preprocess_callback);
+      }
+    }
+
     // Allow theme preprocess functions to set $variables['#attached'] and
     // $variables['#cache'] and use them like the corresponding element
     // properties on render arrays. This is the officially supported
