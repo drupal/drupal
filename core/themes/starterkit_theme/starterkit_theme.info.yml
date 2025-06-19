@@ -16,6 +16,8 @@ libraries-extend:
     - starterkit_theme/dialog
   file/drupal.file:
     - starterkit_theme/file
+  core/drupal.item-list:
+    - starterkit_theme/item-list
   core/drupal.progress:
     - starterkit_theme/progress
   core/drupal.tablesort:

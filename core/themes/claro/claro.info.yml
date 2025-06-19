@@ -113,6 +113,8 @@ libraries-extend:
     - claro/dropbutton
   core/drupal.checkbox:
     - claro/checkbox
+  core/drupal.item-list:
+    - claro/item-list
   core/drupal.message:
     - claro/messages
   core/drupal.progress:

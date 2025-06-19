@@ -12,7 +12,6 @@ global-styling:
       css/classy/components/field.css: {}
       css/classy/components/icons.css: {}
       css/classy/components/inline-form.css: {}
-      css/classy/components/item-list.css: {}
       css/classy/components/link.css: {}
       css/classy/components/links.css: {}
       css/classy/components/menu.css: {}
@@ -210,6 +209,11 @@ details-focus:
 ajax:
   js:
     js/ajax.js: {}
+
+item-list:
+  css:
+    component:
+      css/classy/components/item-list.css: {}
 
 form.password-confirm:
   css:

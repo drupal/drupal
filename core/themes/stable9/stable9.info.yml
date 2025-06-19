@@ -73,6 +73,11 @@ libraries-override:
       component:
         misc/components/fieldgroup.module.css: css/core/components/fieldgroup.module.css
 
+  core/drupal.item-list:
+    css:
+      component:
+        misc/components/item-list.module.css: css/core/components/item-list.module.css
+
   core/drupal.progress:
     css:
       component:
@@ -238,7 +243,6 @@ libraries-override:
         css/components/container-inline.module.css: css/system/components/container-inline.module.css
         css/components/clearfix.module.css: css/system/components/clearfix.module.css
         css/components/hidden.module.css: css/system/components/hidden.module.css
-        css/components/item-list.module.css: css/system/components/item-list.module.css
         css/components/js.module.css: css/system/components/js.module.css
         css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
   system/admin:

@@ -803,6 +803,7 @@ function template_preprocess_table(&$variables): void {
  */
 function template_preprocess_item_list(&$variables): void {
   $variables['wrapper_attributes'] = new Attribute($variables['wrapper_attributes']);
+  $variables['#attached']['library'][] = 'core/drupal.item-list';
   foreach ($variables['items'] as &$item) {
     $attributes = [];
     // If the item value is an array, then it is a render array.

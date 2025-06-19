@@ -632,6 +632,21 @@ drupal.htmx:
       theme_token: null
     ajaxTrustedUrl: {}
 
+drupal.item-list:
+  version: VERSION
+  css:
+    component:
+      misc/components/item-list.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 11.3.0
+      removed_version: 12.0.0
+      deprecation_link: https://www.drupal.org/node/3530832
+      css:
+        component:
+          css/components/item-list.module.css:
+            base: misc/components/item-list.module.css
+
 drupal.machine-name:
   version: VERSION
   js:
