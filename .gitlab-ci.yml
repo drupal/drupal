@@ -391,9 +391,12 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "4"
-  script:
-    - *prepare-lint-directory
-    - *phpstan-cache
+    _TARGET_PHP: "8.4-ubuntu"
+    _ARTIFACTS_DIR: "test-artifacts/phpstan"
+    _PHPSTAN_NEON: "core/phpstan.neon.dist"
+    _PHPSTAN_BASELINE: "core/.phpstan-baseline.php"
+  before_script:
+    - mkdir -p $_ARTIFACTS_DIR
     - composer validate
     - composer install --optimize-autoloader
     - composer run-script drupal-phpunit-upgrade-check
@@ -401,11 +404,13 @@ default:
         composer update --optimize-autoloader;
         composer outdated;
       fi
+    - *phpstan-cache
+  script:
     - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > $CI_PROJECT_DIR/phpstan-quality-report.json || EXIT_CODE=$?
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > $CI_PROJECT_DIR/phpstan-junit.xml || true
+    - php vendor/bin/phpstan -vvv analyze --configuration=$_PHPSTAN_NEON --error-format=gitlab > $_ARTIFACTS_DIR/phpstan-quality-report.json || EXIT_CODE=$?
+    - php vendor/bin/phpstan -vvv analyze --configuration=$_PHPSTAN_NEON --no-progress --error-format=junit > $_ARTIFACTS_DIR/phpstan-junit.xml || true
     # When the PHPStan scan fails, output a human readable copy of the errors,
     # and regenerate a full baseline.
     # In order to regenerate a baseline artifact that can be copied and pasted
@@ -415,35 +420,36 @@ default:
     - |
       if [ -n "$EXIT_CODE" ]; then
         # Output a copy in plain text for human logs.
-        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
+        php vendor/bin/phpstan analyze --configuration=$_PHPSTAN_NEON --no-progress || true
         # Generate a new baseline.
         echo "Generating an PHPStan baseline file (available as job artifact)."
-        cp $CI_PROJECT_DIR/.gitlab-ci/scripts/.empty-phpstan-baseline.php ./core/.phpstan-baseline.php
-        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=$CI_PROJECT_DIR/core/.phpstan-baseline.php || true
-        sed -i "s/ '\\/\\/build\\/core/ '/g" $CI_PROJECT_DIR/core/.phpstan-baseline.php
-        sed -i "s/ '\\/\\/build/ '\\/../g" $CI_PROJECT_DIR/core/.phpstan-baseline.php
-        php $CI_PROJECT_DIR/.gitlab-ci/scripts/phpstan-baseline-statistics.php
+        cp .gitlab-ci/scripts/.empty-phpstan-baseline.php $_PHPSTAN_BASELINE
+        php vendor/bin/phpstan analyze --configuration=$_PHPSTAN_NEON --no-progress --generate-baseline=$_PHPSTAN_BASELINE || true
+        sed -i "s/ '\\/\\/build\\/core/ '/g" $_PHPSTAN_BASELINE
+        sed -i "s/ '\\/\\/build/ '\\/../g" $_PHPSTAN_BASELINE
+        # Report statistics on the new baseline.
+        php .gitlab-ci/scripts/phpstan-baseline-statistics.php
+        # Copy the new baseline to the artifacts directory.
+        cp $_PHPSTAN_BASELINE $_ARTIFACTS_DIR
         exit $EXIT_CODE
       fi
     # Generate baseline statistics.
-    - php $CI_PROJECT_DIR/.gitlab-ci/scripts/phpstan-baseline-statistics.php
-
+    - php .gitlab-ci/scripts/phpstan-baseline-statistics.php
   artifacts:
-    # Only store the baseline if the job fails.
-    when: on_failure
     reports:
-      codequality: phpstan-quality-report.json
-      junit: phpstan-junit.xml
-      metrics: phpstan-metrics.txt
+      codequality: $_ARTIFACTS_DIR/phpstan-quality-report.json
+      junit: $_ARTIFACTS_DIR/phpstan-junit.xml
+      metrics: $_ARTIFACTS_DIR/phpstan-metrics.txt
+    when: always
     paths:
-      - $CI_PROJECT_DIR/core/.phpstan-baseline.php
+      - $_ARTIFACTS_DIR
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "16"
-  script:
+  before_script:
     - composer validate
     - composer install --optimize-autoloader
     - composer run-script drupal-phpunit-upgrade-check
@@ -451,6 +457,7 @@ default:
         composer update --optimize-autoloader;
         composer outdated;
       fi
+  script:
     - vendor/bin/phpcs --version
     - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
@@ -658,22 +665,28 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
-    - *prepare-lint-directory
+    # Run the Composer install and the PHPStan analysis on the $CI_PROJECT_DIR
+    # directory first, which is the current working directory at this stage.
+    - composer install --optimize-autoloader
+    - composer run-script drupal-phpunit-upgrade-check
     - *phpstan-cache
+    - vendor/bin/phpstan --version
+    - php vendor/bin/phpstan -vvv analyze --configuration=core/phpstan.neon.dist
+    # Prepare a directory to run lint checks that require specifying absolute
+    # paths (/build), and change the working directory to it.
+    - *prepare-lint-directory
     - *cspell-cache
     - *eslint-cache
     - *stylelint-cache
-    - composer install
-    - vendor/bin/phpstan --version
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist
     - *core-spellcheck
     - yarn run lint:core-js-passing --cache --cache-strategy content
     - yarn run build:css --check
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content
-    - mv -f /build/core/phpstan-tmp $CI_PROJECT_DIR/core
+    # Move the cache files from the build directory to the $CI_PROJECT_DIR one,
+    # as the artifacts will be stowed from there.
     - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
-    - mv -f  /build/core/.eslintcache $CI_PROJECT_DIR/core
-    - mv -f  /build/core/.stylelintcache $CI_PROJECT_DIR/core
+    - mv -f /build/core/.eslintcache $CI_PROJECT_DIR/core
+    - mv -f /build/core/.stylelintcache $CI_PROJECT_DIR/core
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
