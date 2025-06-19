@@ -148,7 +148,14 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
         $data .= "/* @license " . $css_asset['license']['name'] . " " . $css_asset['license']['url'] . " */\n";
       }
       $current_license = $css_asset['license'];
-      $data .= $this->optimizer->optimize($css_asset);
+
+      // Append this file if already minified; otherwise optimize it.
+      if (isset($css_asset['minified']) && $css_asset['minified']) {
+        $data .= file_get_contents($css_asset['data']);
+      }
+      else {
+        $data .= $this->optimizer->optimize($css_asset);
+      }
     }
     // Per the W3C specification at
     // https://www.w3.org/TR/REC-CSS2/cascade.html#at-import, @import rules must
