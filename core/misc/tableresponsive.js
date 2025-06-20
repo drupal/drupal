@@ -46,12 +46,10 @@
     );
 
     // Attach a resize handler to the window.
-    $(window)
-      .on(
-        'resize.tableresponsive',
-        this.eventhandlerEvaluateColumnVisibility.bind(this),
-      )
-      .trigger('resize.tableresponsive');
+    $(window).on(
+      'resize.tableresponsive',
+      this.eventhandlerEvaluateColumnVisibility.bind(this),
+    );
   }
 
   /**
@@ -69,6 +67,9 @@
           TableResponsive.tables.push(new TableResponsive(table));
         },
       );
+      if (TableResponsive.tables.length) {
+        $(window).trigger('resize.tableresponsive');
+      }
     },
   };
 
