@@ -424,9 +424,9 @@ class Registry implements DestructableInterface {
     }
     else {
       $cache = [
-        static::PREPROCESS_INVOKES => [],
+        self::PREPROCESS_INVOKES => [],
       ];
-      $cache[static::GLOBAL_PREPROCESS] = $this->collectModulePreprocess($cache, 'preprocess');
+      $cache[self::GLOBAL_PREPROCESS] = $this->collectModulePreprocess($cache, 'preprocess');
       if (defined('MAINTENANCE_MODE') && constant('MAINTENANCE_MODE') === 'install') {
         // System is still set here so preprocess can be updated in install.
         $this->processExtension($cache, 'system', 'install', 'system', $this->moduleList->getPath('system'));
@@ -672,7 +672,7 @@ class Registry implements DestructableInterface {
     // template.
     if ($type == 'theme' || $type == 'base_theme') {
       foreach ($cache as $hook => $info) {
-        if ($hook == static::PREPROCESS_INVOKES) {
+        if ($hook == self::PREPROCESS_INVOKES) {
           continue;
         }
         // Check only if not registered by the theme or engine.
@@ -824,7 +824,7 @@ class Registry implements DestructableInterface {
           // Add missing preprocessor to existing hook.
           $cache[$hook]['preprocess functions'][] = $preprocessor;
           if (isset($invokes[$preprocessor])) {
-            $cache[static::PREPROCESS_INVOKES][$preprocessor] = $invokes[$preprocessor];
+            $cache[self::PREPROCESS_INVOKES][$preprocessor] = $invokes[$preprocessor];
           }
         }
         elseif (!isset($cache[$hook]) && strpos($hook, '__')) {
@@ -834,7 +834,7 @@ class Registry implements DestructableInterface {
           $this->completeSuggestion($hook, $cache);
           $cache[$hook]['preprocess functions'][] = $preprocessor;
           if (isset($invokes[$preprocessor])) {
-            $cache[static::PREPROCESS_INVOKES][$preprocessor] = $invokes[$preprocessor];
+            $cache[self::PREPROCESS_INVOKES][$preprocessor] = $invokes[$preprocessor];
           }
         }
       }
@@ -843,7 +843,7 @@ class Registry implements DestructableInterface {
     // hooks. This ensures that derivative hooks have a complete set of variable
     // preprocess functions.
     foreach ($cache as $hook => $info) {
-      if ($hook == static::PREPROCESS_INVOKES) {
+      if ($hook == self::PREPROCESS_INVOKES) {
         continue;
       }
       // The 'base hook' is only applied to derivative hooks already registered
@@ -959,7 +959,7 @@ class Registry implements DestructableInterface {
     // implementations are not executed.
     $this->moduleHandler->invokeAllWith($hook, function (callable $callable, string $module) use ($hook, &$cache, &$preprocess_functions) {
       $function = $module . '_' . $hook;
-      $cache[static::PREPROCESS_INVOKES][$function] = ['module' => $module, 'hook' => $hook];
+      $cache[self::PREPROCESS_INVOKES][$function] = ['module' => $module, 'hook' => $hook];
       $preprocess_functions[] = $function;
     });
     return $preprocess_functions;

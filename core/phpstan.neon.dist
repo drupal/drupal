@@ -58,3 +58,5 @@ rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
   - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
   - PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
+  # The rule below can be removed when we increase level to 2.
+  - PHPStan\Rules\Classes\AccessPrivateConstantThroughStaticRule
