@@ -183,8 +183,9 @@ class NodeCreationTest extends NodeTestBase {
     // Confirm that the node was created.
     $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
-    // Verify that the creation message contains a link to a node.
-    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
+    // Verify that the creation message doesn't contain a link to a node since
+    // the user cannot view unpublished nodes.
+    $this->assertSession()->elementNotExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
   }
 
   /**
