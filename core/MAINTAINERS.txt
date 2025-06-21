@@ -338,7 +338,7 @@ Page Cache
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
 
 Path
-- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+- ?
 
 Path Alias
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
@@ -402,7 +402,6 @@ System (module)
 
 Taxonomy
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
-- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
 Telephone
 - Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
