@@ -20,7 +20,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class LocaleTranslation implements TranslatorInterface, DestructableInterface {
 
-  use DependencySerializationTrait;
+  use DependencySerializationTrait {
+    __sleep as traitSleep;
+  }
 
   /**
    * Storage for strings.
@@ -159,6 +161,15 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
         }
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep(): array {
+    // ::$translations is an array of LocaleLookup objects, which have the
+    // database service injected and therefore cannot be serialized safely.
+    return array_diff($this->traitSleep(), ['translations']);
   }
 
 }
