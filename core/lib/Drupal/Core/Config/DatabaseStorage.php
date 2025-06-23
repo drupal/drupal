@@ -272,7 +272,7 @@ class DatabaseStorage implements StorageInterface {
    *   be unserialized.
    */
   public function decode($raw) {
-    $data = @unserialize($raw);
+    $data = @unserialize($raw, ['allowed_classes' => FALSE]);
     return is_array($data) ? $data : FALSE;
   }
 
