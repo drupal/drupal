@@ -21,11 +21,29 @@ class LocaleTranslationTest extends KernelTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->installSchema('locale', [
+      'locales_location',
+      'locales_source',
+      'locales_target',
+    ]);
+  }
+
+  /**
    * Tests that \Drupal\locale\LocaleTranslation is serializable.
    */
   public function testSerializable(): void {
+    /** @var \Drupal\locale\LocaleTranslation $translation */
     $translation = $this->container->get('string_translator.locale.lookup');
     $this->assertInstanceOf(LocaleTranslation::class, $translation);
+    // Ensure that the \Drupal\locale\LocaleTranslation::$translations property
+    // has some cached translations in it. Without this, serialization will not
+    // actually be tested fully.
+    $translation->getStringTranslation('es', 'test', '');
 
     // Prove that serialization and deserialization works without errors.
     $this->assertNotNull($translation);
