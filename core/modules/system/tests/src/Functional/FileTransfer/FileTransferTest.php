@@ -88,26 +88,10 @@ class FileTransferTest extends BrowserTestBase {
    */
   public function testJail(): void {
     $source = $this->_buildFakeModule();
-
-    // This convoluted piece of code is here because our testing framework does
-    // not support expecting exceptions.
-    $got_it = FALSE;
-    try {
-      $this->testConnection->copyDirectory($source, sys_get_temp_dir());
-    }
-    catch (FileTransferException) {
-      $got_it = TRUE;
-    }
-    $this->assertTrue($got_it, 'Was not able to copy a directory outside of the jailed area.');
-
-    $got_it = TRUE;
-    try {
-      $this->testConnection->copyDirectory($source, $this->root . '/' . PublicStream::basePath());
-    }
-    catch (FileTransferException) {
-      $got_it = FALSE;
-    }
-    $this->assertTrue($got_it, 'Was able to copy a directory inside of the jailed area');
+    $this->testConnection->copyDirectory($source, $this->root . '/' . PublicStream::basePath());
+    $this->expectException(FileTransferException::class);
+    $this->expectExceptionMessage('@directory is outside of the @jail');
+    $this->testConnection->copyDirectory($source, sys_get_temp_dir());
   }
 
 }
