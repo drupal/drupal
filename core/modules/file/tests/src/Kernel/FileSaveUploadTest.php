@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\KernelTests\KernelTestBase;
+use org\bovigo\vfs\vfsStream;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -32,14 +33,17 @@ class FileSaveUploadTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    \file_put_contents('test.bbb', 'test');
-
     parent::setUp();
+    $filename = 'test.bbb';
+    vfsStream::newFile($filename)
+      ->at($this->vfsRoot)
+      ->withContent('test');
+
     $request = new Request();
     $request->files->set('files', [
       'file' => new UploadedFile(
-        path: 'test.bbb',
-        originalName: 'test.bbb',
+        path: vfsStream::url("root/$filename"),
+        originalName: $filename,
         mimeType: 'text/plain',
         error: \UPLOAD_ERR_OK,
         test: TRUE
