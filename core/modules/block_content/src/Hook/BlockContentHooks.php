@@ -29,11 +29,11 @@ class BlockContentHooks {
         $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
         $output = '';
         $output .= '<h2>' . $this->t('About') . '</h2>';
-        $output .= '<p>' . $this->t('The Block Content module allows you to create and manage custom <em>block types</em> and <em>content-containing blocks</em>. For more information, see the <a href=":online-help">online documentation for the Block Content module</a>.', [':online-help' => 'https://www.drupal.org/documentation/modules/block_content']) . '</p>';
+        $output .= '<p>' . $this->t('The Block Content module manages the creation, editing, and deletion of content blocks. Content blocks are field-able content entities managed by the <a href=":field">Field module</a>. For more information, see the <a href=":block-content">online documentation for the Block Content module</a>.', [':block-content' => 'https://www.drupal.org/documentation/modules/block_content', ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</p>';
         $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
         $output .= '<dt>' . $this->t('Creating and managing block types') . '</dt>';
-        $output .= '<dd>' . $this->t('Users with the <em>Administer blocks</em> permission can create and edit block types with fields and display settings, from the <a href=":types">Block types</a> page under the Structure menu. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a> and <a href=":field">Field module help</a>.', [
+        $output .= '<dd>' . $this->t('Users with the <em>Administer block types</em> permission can create and edit block types with fields and display settings, from the <a href=":types">Block types</a> page under the Structure menu. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a> and <a href=":field">Field module help</a>.', [
           ':types' => Url::fromRoute('entity.block_content_type.collection')->toString(),
           ':field-ui' => $field_ui,
           ':field' => Url::fromRoute('help.page', [
@@ -41,9 +41,9 @@ class BlockContentHooks {
           ])->toString(),
         ]) . '</dd>';
         $output .= '<dt>' . $this->t('Creating content blocks') . '</dt>';
-        $output .= '<dd>' . $this->t('Users with the <em>Administer blocks</em> permission can create, edit, and delete content blocks of each defined block type, from the <a href=":block-library">Content blocks page</a>. After creating a block, place it in a region from the <a href=":blocks">Block layout page</a>, just like blocks provided by other modules.', [
-          ':blocks' => Url::fromRoute('block.admin_display')->toString(),
-          ':block-library' => Url::fromRoute('entity.block_content.collection')->toString(),
+        $output .= '<dd>' . $this->t('Users with the <em>Administer block content</em> or <em>Create new content block</em> permissions for an individual block type are able to add content blocks. These can be created on the <a href=":add-content-block">Add content block page</a> or on the <em>Place block</em> modal on the <a href=":block-layout">Block Layout page</a> and are reusable across the entire site. Content blocks created in Layout Builder for a content type or individual node layouts are not reusable and also called inline blocks.', [
+          ':add-content-block' => Url::fromRoute('block_content.add_page')->toString(),
+          ':block-layout' => Url::fromRoute('block.admin_display')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;
