@@ -1126,6 +1126,68 @@ class RendererTest extends RendererTestBase {
     $this->assertFalse($this->renderer->hasRenderContext());
   }
 
+  /**
+   * @covers ::executeInRenderContext
+   */
+  public function testExecuteInRenderContext(): void {
+    $return = $this->renderer->executeInRenderContext(new RenderContext(), function () {
+      $fiber_callback = function () {
+
+        // Create a #pre_render callback that renders a render array in
+        // isolation. This has its own #pre_render callback that calls
+        // Fiber::suspend(). This ensures that suspending a Fiber within
+        // multiple nested calls to ::executeInRenderContext() doesn't
+        // allow render context to get out of sync. This simulates similar
+        // conditions to BigPipe placeholder rendering.
+        $fiber_suspend_pre_render = function ($elements) {
+          $fiber_suspend = function ($elements) {
+            \Fiber::suspend();
+            return $elements;
+          };
+          $build = [
+            'foo' => [
+              '#markup' => 'foo',
+              '#pre_render' => [$fiber_suspend],
+            ],
+          ];
+          $markup = $this->renderer->renderInIsolation($build);
+          $elements['#markup'] = $markup;
+          return $elements;
+        };
+        $build = [
+          'foo' => [
+            '#pre_render' => [$fiber_suspend_pre_render],
+          ],
+        ];
+        return $this->renderer->render($build);
+      };
+
+      // Build an array of two fibers that executes the code defined above. This
+      // ensures that Fiber::suspend() is called from within two
+      // ::renderInIsolation() calls without either having been completed.
+      $fibers = [];
+      foreach ([0, 1] as $key) {
+        $fibers[] = new \Fiber(static fn () => $fiber_callback());
+      }
+      while ($fibers) {
+        foreach ($fibers as $key => $fiber) {
+          if ($fiber->isTerminated()) {
+            unset($fibers[$key]);
+            continue;
+          }
+          if ($fiber->isSuspended()) {
+            $fiber->resume();
+          }
+          else {
+            $fiber->start();
+          }
+        }
+      }
+      return $fiber->getReturn();
+    });
+    $this->assertEquals(Markup::create('foo'), $return);
+  }
+
 }
 
 /**

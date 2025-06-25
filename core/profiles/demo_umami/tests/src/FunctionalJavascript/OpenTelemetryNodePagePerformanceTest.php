@@ -136,9 +136,12 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
   protected function testNodePageWarmCache(): void {
     // First of all visit the node page to ensure the image style exists.
     $this->drupalGet('node/1');
+    // Allow time for the image style and asset aggregate requests to finish.
+    sleep(1);
     $this->clearCaches();
     // Now visit a different node page to warm non-path-specific caches.
     $this->drupalGet('node/2');
+    sleep(1);
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     }, 'umamiNodePageWarmCache');
