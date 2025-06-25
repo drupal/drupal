@@ -6,12 +6,14 @@ namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\user\Entity\Role;
 
 /**
@@ -155,6 +157,48 @@ class FileItemTest extends FieldKernelTestBase {
     \Drupal::service('renderer')->renderRoot($output);
     $this->assertTrue(!empty($entity->file_test->entity));
     $this->assertEquals($uri, $entity->file_test->entity->getFileUri());
+
+    // Test file URIs with empty and custom directories.
+    $this->validateFileUriForDirectory(
+      '', 'public://'
+    );
+    $this->validateFileUriForDirectory(
+      'custom_directory/subdir', 'public://custom_directory/subdir/'
+    );
+  }
+
+  /**
+   * Tests file URIs generated for a given file directory.
+   *
+   * @param string $file_directory
+   *   The file directory to test (e.g., empty or 'custom_directory/subdir').
+   * @param string $expected_start
+   *   The expected starting string of the file URI (e.g., 'public://').
+   */
+  private function validateFileUriForDirectory(string $file_directory, string $expected_start): void {
+    // Mock the field definition with the specified file directory.
+    $definition = $this->createMock(FieldDefinitionInterface::class);
+    $definition->expects($this->any())
+      ->method('getSettings')
+      ->willReturn([
+        'file_extensions' => 'txt',
+        'file_directory' => $file_directory,
+        'uri_scheme' => 'public',
+        'display_default' => TRUE,
+      ]);
+
+    // Generate a sample file value.
+    $value = FileItem::generateSampleValue($definition);
+    $this->assertNotEmpty($value);
+
+    // Load the file entity and get its URI.
+    $fid = $value['target_id'];
+    $file = File::load($fid);
+    $fileUri = $file->getFileUri();
+
+    // Verify the file URI starts with the expected protocol and structure.
+    $this->assertStringStartsWith($expected_start, $fileUri);
+    $this->assertMatchesRegularExpression('#^' . preg_quote($expected_start, '#') . '[^/]+#', $fileUri);
   }
 
 }
