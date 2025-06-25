@@ -359,8 +359,11 @@ class FileItem extends EntityReferenceItem {
     $dirname = static::doGetUploadLocation($settings);
     \Drupal::service('file_system')->prepareDirectory($dirname, FileSystemInterface::CREATE_DIRECTORY);
 
+    // Ensure directory ends with a slash.
+    $dirname .= str_ends_with($dirname, '/') ? '' : '/';
+
     // Generate a file entity.
-    $destination = $dirname . '/' . $random->name(10, TRUE) . '.txt';
+    $destination = $dirname . $random->name(10) . '.txt';
     $data = $random->paragraphs(3);
     /** @var \Drupal\file\FileRepositoryInterface $file_repository */
     $file_repository = \Drupal::service('file.repository');
