@@ -412,7 +412,6 @@ Text Field
 Theme API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
-- Joël Pittet 'joelpittet' https://www.drupal.org/u/joelpittet
 - Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
 
   Single-Directory Components
