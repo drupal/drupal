@@ -389,7 +389,9 @@ class ImageItem extends FileItem {
         $image->setFileName($file_system->basename($path));
         $destination_dir = static::doGetUploadLocation($settings);
         $file_system->prepareDirectory($destination_dir, FileSystemInterface::CREATE_DIRECTORY);
-        $destination = $destination_dir . '/' . basename($path);
+        // Ensure directory ends with a slash.
+        $destination_dir .= str_ends_with($destination_dir, '/') ? '' : '/';
+        $destination = $destination_dir . basename($path);
         $file = \Drupal::service('file.repository')->move($image, $destination);
         $images[$extension][$min_resolution][$max_resolution][$file->id()] = $file;
       }
