@@ -14,6 +14,9 @@
         "drupal/core-project-message": "self.version",
         "drupal/core-vendor-hardening": "self.version"
     },
+    "conflict": {
+        "dealerdirect/phpcodesniffer-composer-installer": "1.1.0"
+    },
     "require-dev": {
         "behat/mink": "^1.11",
         "behat/mink-browserkit-driver": "^2.2",
