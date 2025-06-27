@@ -12,8 +12,11 @@ use Drupal\Core\Render\Element;
  * Provides an HTML5 input element with type of "range".
  *
  * Properties:
- * - #min: Minimum value (defaults to 0).
- * - #max: Maximum value (defaults to 100).
+ *
+ * @property $min
+ *   Minimum value (defaults to 0).
+ * @property $max
+ *   Maximum value (defaults to 100).
  * Refer to \Drupal\Core\Render\Element\Number for additional properties.
  *
  * Usage example:

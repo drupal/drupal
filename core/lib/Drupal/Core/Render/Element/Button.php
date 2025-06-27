@@ -18,11 +18,15 @@ use Drupal\Core\Render\Element;
  *   using JavaScript or other mechanisms.
  *
  * Properties:
- * - #limit_validation_errors: An array of form element keys that will block
+ *
+ * @property $limit_validation_errors
+ *   An array of form element keys that will block
  *   form submission when validation for these elements or any child elements
  *   fails. Specify an empty array to suppress all form validation errors.
- * - #value: The text to be shown on the button.
- * - #submit_button: This has a default value of TRUE. If set to FALSE, the
+ * @property $value
+ *   The text to be shown on the button.
+ * @property $submit_button
+ *   This has a default value of TRUE. If set to FALSE, the
  *   'type' attribute is set to 'button.'
  *
  *

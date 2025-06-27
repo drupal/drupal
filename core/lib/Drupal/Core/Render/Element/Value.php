@@ -12,7 +12,9 @@ use Drupal\Core\Render\Attribute\FormElement;
  * in validation and submit processing.
  *
  * Properties:
- * - #value: The value of the form element that cannot be edited by the user.
+ *
+ * @property $value
+ *   The value of the form element that cannot be edited by the user.
  *
  * Usage Example:
  * @code

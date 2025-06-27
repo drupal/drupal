@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\element_info_test\Hook;
 
-use Drupal\element_info_test\ElementInfoTestNumberBuilder;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\element_info_test\ElementInfoTestNumberBuilder;
+use Drupal\element_info_test\Render\Element\Details;
 
 /**
  * Hook implementations for element_info_test.
@@ -30,6 +31,9 @@ class ElementInfoTestHooks {
     if (\Drupal::state()->get('hook_element_plugin_alter:remove_weight', FALSE)) {
       unset($definitions['weight']);
     }
+
+    $definitions['details']['class'] = Details::class;
+    $definitions['details']['provider'] = 'element_info_test';
   }
 
 }

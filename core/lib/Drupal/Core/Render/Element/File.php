@@ -13,8 +13,11 @@ use Drupal\Core\Render\Element;
  * will automatically be added to the form element.
  *
  * Properties:
- * - #multiple: A Boolean indicating whether multiple files may be uploaded.
- * - #size: The size of the file input element in characters.
+ *
+ * @property $multiple
+ *   A Boolean indicating whether multiple files may be uploaded.
+ * @property $size
+ *   The size of the file input element in characters.
  *
  * The value of this form element will always be an array of
  * \Symfony\Component\HttpFoundation\File\UploadedFile objects, regardless of

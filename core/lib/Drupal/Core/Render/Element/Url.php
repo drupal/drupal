@@ -11,9 +11,13 @@ use Drupal\Core\Render\Element;
  * Provides a form element for input of a URL.
  *
  * Properties:
- * - #default_value: A valid URL string.
- * - #size: The size of the input element in characters.
- * - #pattern: A string for the native HTML5 pattern attribute.
+ *
+ * @property $default_value
+ *   A valid URL string.
+ * @property $size
+ *   The size of the input element in characters.
+ * @property $pattern
+ *   A string for the native HTML5 pattern attribute.
  *
  * Usage example:
  * @code

@@ -11,10 +11,13 @@ use Drupal\Core\Render\Attribute\FormElement;
  * the form's submit handler.
  *
  * Properties:
- * - #submit: Specifies an alternate callback for form submission when the
+ *
+ * @property $submit
+ *   Specifies an alternate callback for form submission when the
  *   submit button is pressed.  Use '::methodName' format or an array containing
  *   the object and method name (for example, [ $this, 'methodName'] ).
- * - #value: The text to be shown on the button.
+ * @property $value
+ *   The text to be shown on the button.
  *
  * Usage Example:
  * @code

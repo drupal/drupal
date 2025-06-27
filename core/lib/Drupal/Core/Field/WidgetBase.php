@@ -11,6 +11,9 @@ use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\ElementInterface;
+use Drupal\Core\Render\Element\Widget;
+use Drupal\Core\Render\ElementInfoManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -49,19 +52,32 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    *   The widget settings.
    * @param array $third_party_settings
    *   Any third party settings.
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfoManager
+   *   The element info manager.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, protected ?ElementInfoManagerInterface $elementInfoManager = NULL) {
     parent::__construct([], $plugin_id, $plugin_definition);
     $this->fieldDefinition = $field_definition;
     $this->settings = $settings;
     $this->thirdPartySettings = $third_party_settings;
+    if (!$this->elementInfoManager) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $elementInfoManager argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3526683', E_USER_DEPRECATED);
+      $this->elementInfoManager = \Drupal::service('plugin.manager.element_info');
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['third_party_settings']);
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('plugin.manager.element_info'),
+    );
   }
 
   /**
@@ -461,7 +477,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
       '#weight' => $delta,
     ];
 
-    $element = $this->formElement($items, $delta, $element, $form, $form_state);
+    $formObject = $this->elementInfoManager->fromRenderable($form);
+    $widget = $this->elementInfoManager->fromRenderable($element, Widget::class);
+    $element = $this->singleElementObject($items, $delta, $widget, $formObject, $form_state)->toRenderable();
 
     if ($element) {
       // Allow modules to alter the field widget form element.
@@ -479,6 +497,21 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     }
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function singleElementObject(FieldItemListInterface $items, $delta, Widget $widget, ElementInterface $form, FormStateInterface $form_state): ElementInterface {
+    $element = $this->formElement($items, $delta, $widget->toRenderable(), $form->toRenderable(), $form_state);
+    return $this->elementInfoManager->fromRenderable($element);
   }
 
   /**

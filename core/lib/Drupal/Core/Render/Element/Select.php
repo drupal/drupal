@@ -10,7 +10,9 @@ use Drupal\Core\Render\Element;
  * Provides a form element for a drop-down menu or scrolling selection box.
  *
  * Properties:
- * - #options: An associative array of options for the select. Do not use
+ *
+ * @property $options
+ *   An associative array of options for the select. Do not use
  *   placeholders that sanitize data in any labels, as doing so will lead to
  *   double-escaping. Each array value can be:
  *   - A single translated string representing an HTML option element, where
@@ -28,18 +30,22 @@ use Drupal\Core\Render\Element;
  *     is ignored, and the contents of the 'option' property are interpreted as
  *     an array of options to be merged with any other regular options and
  *     option groups found in the outer array.
- * - #sort_options: (optional) If set to TRUE (default is FALSE), sort the
+ * @property $sort_options
+ *   (optional) If set to TRUE (default is FALSE), sort the
  *   options by their labels, after rendering and translation is complete.
  *   Can be set within an option group to sort that group.
- * - #sort_start: (optional) Option index to start sorting at, where 0 is the
+ * @property $sort_start
+ *   (optional) Option index to start sorting at, where 0 is the
  *   first option. Can be used within an option group. If an empty option is
  *   being added automatically (see #empty_option and #empty_value properties),
  *   this defaults to 1 to keep the empty option at the top of the list.
  *   Otherwise, it defaults to 0.
- * - #empty_option: (optional) The label to show for the first default option.
+ * @property $empty_option
+ *   (optional) The label to show for the first default option.
  *   By default, the label is automatically set to "- Select -" for a required
  *   field and "- None -" for an optional field.
- * - #empty_value: (optional) The value for the first default option, which is
+ * @property $empty_value
+ *   (optional) The value for the first default option, which is
  *   used to determine whether the user submitted a value or not.
  *   - If #required is TRUE, this defaults to '' (an empty string). Note that
  *     if #empty_value is the same as a key in #options then the value of
@@ -57,15 +63,19 @@ use Drupal\Core\Render\Element;
  *   - If #required is not TRUE and this value is set (most commonly to an
  *     empty string), then an extra option (see #empty_option above)
  *     representing a "non-selection" is added with this as its value.
- * - #multiple: (optional) Indicates whether one or more options can be
+ * @property $multiple
+ *   (optional) Indicates whether one or more options can be
  *   selected. Defaults to FALSE.
- * - #default_value: Must be NULL or not set in case there is no value for the
+ * @property $default_value
+ *   Must be NULL or not set in case there is no value for the
  *   element yet, in which case a first default option is inserted by default.
  *   Whether this first option is a valid option depends on whether the field
  *   is #required or not.
- * - #required: (optional) Whether the user needs to select an option (TRUE)
+ * @property $required
+ *   (optional) Whether the user needs to select an option (TRUE)
  *   or not (FALSE). Defaults to FALSE.
- * - #size: The number of rows in the list that should be visible at one time.
+ * @property $size
+ *   The number of rows in the list that should be visible at one time.
  *
  * Usage example:
  * @code

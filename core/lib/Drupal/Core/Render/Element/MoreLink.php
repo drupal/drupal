@@ -8,7 +8,9 @@ use Drupal\Core\Render\Attribute\RenderElement;
  * Provides a link render element for a "more" link, like those used in blocks.
  *
  * Properties:
- * - #title: The text of the link to generate (defaults to 'More').
+ *
+ * @property $title
+ *   The text of the link to generate (defaults to 'More').
  *
  * See \Drupal\Core\Render\Element\Link for additional properties.
  *

@@ -12,9 +12,13 @@ use Drupal\Core\Theme\Icon\IconDefinition;
  * Provides a render element to display an icon.
  *
  * Properties:
- * - #pack_id: (string) Icon Pack provider plugin id.
- * - #icon_id: (string) Name of the icon.
- * - #settings: (array) Settings sent to the inline Twig template.
+ *
+ * @property $pack_id
+ *   (string) Icon Pack provider plugin id.
+ * @property $icon_id
+ *   (string) Name of the icon.
+ * @property $settings
+ *   (array) Settings sent to the inline Twig template.
  *
  * Usage Example:
  * @code

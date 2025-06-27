@@ -10,9 +10,13 @@ use Drupal\Core\Render\Element;
  * Provides a form input element for entering an email address.
  *
  * Properties:
- * - #default_value: An RFC-compliant email address.
- * - #size: The size of the input element in characters.
- * - #pattern: A string for the native HTML5 pattern attribute.
+ *
+ * @property $default_value
+ *   An RFC-compliant email address.
+ * @property $size
+ *   The size of the input element in characters.
+ * @property $pattern
+ *   A string for the native HTML5 pattern attribute.
  *
  * Example usage:
  * @code

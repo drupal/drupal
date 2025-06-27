@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element\Number;
 use Drupal\Core\Render\Element\Select;
 use Drupal\Core\Render\Element\Weight;
+use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\element_info_test\ElementInfoTestNumberBuilder;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -40,7 +41,7 @@ class WeightTest extends KernelTestBase {
     $form_state = new FormState();
     $complete_form = [];
 
-    $element_object = new Weight([], 'weight', []);
+    $element_object = new Weight([], 'weight', [], elementInfoManager: $this->createStub(ElementInfoManagerInterface::class));
     $info = $element_object->getInfo();
     $element += $info;
 
