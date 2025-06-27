@@ -258,7 +258,6 @@ JavaScript
 JSON:API
 - Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
 - Björn Brala 'bbrala' https://www.drupal.org/u/bbrala
-- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Language
