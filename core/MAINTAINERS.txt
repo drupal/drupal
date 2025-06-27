@@ -125,14 +125,12 @@ Cache
 - Kristiaan Van den Eynde 'kristiaanvandeneynde' https://www.drupal.org/u/kristiaanvandeneynde
 
 CKEditor 5
-- Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Claro
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
 - Sascha Eggenberger 'saschaeggi' https://www.drupal.org/u/saschaeggi
-- Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Comment
