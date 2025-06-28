@@ -230,7 +230,9 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected function add($type, $name, $path) {
     $pathname = "$path/$name.info.yml";
     $php_file_path = $this->root . "/$path/$name.$type";
-    $filename = file_exists($php_file_path) ? "$name.$type" : NULL;
+    if ($filename = file_exists($php_file_path) ? "$name.$type" : NULL) {
+      include_once $php_file_path;
+    }
     $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
     $this->resetImplementations();
     $hook_collector = HookCollectorPass::collectAllHookImplementations([$name => ['pathname' => $pathname]]);

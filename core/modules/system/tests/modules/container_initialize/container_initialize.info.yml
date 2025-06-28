@@ -1,0 +1,5 @@
+name: 'Container initialize'
+type: module
+description: 'Support module for HookCollectorPass testing.'
+package: Testing
+version: VERSION
