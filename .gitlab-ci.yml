@@ -234,6 +234,7 @@ default:
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
+    OPEN_TELEMETRY_COLLECTOR: $OTEL_COLLECTOR
   # Run on MR, schedule, push, parent pipeline and performance test.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
