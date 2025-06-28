@@ -6,28 +6,28 @@ namespace Drupal\file_test\Form;
 
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * File test form class.
  */
-class FileTestForm implements FormInterface {
+class FileTestForm extends FormBase {
   use FileTestFormTrait;
   use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return '_file_test_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
 
     $form = $this->baseForm($form, $form_state);
 
@@ -42,12 +42,7 @@ class FileTestForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {}
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Process the upload and perform validation. Note: we're using the
     // form value for the $replace parameter.
     if (!$form_state->isValueEmpty('file_subdir')) {
