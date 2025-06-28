@@ -134,8 +134,6 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *   The parent entity.
    */
   public function handleEntityDelete(EntityInterface $entity) {
-    // @todo In https://www.drupal.org/node/3008943 call
-    //   \Drupal\layout_builder\LayoutEntityHelperTrait::isLayoutCompatibleEntity().
     $this->usage->removeByLayoutEntity($entity);
   }
 
