@@ -403,12 +403,6 @@ class HookCollectorPass implements CompilerPassInterface {
       $extension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
 
-      if (($extension === 'module' || $extension === 'profile') && !$iterator->getDepth() && !$skip_procedural) {
-        // There is an expectation for all modules and profiles to be loaded.
-        // .module and .profile files are not supposed to be in subdirectories.
-        // These need to be loaded even if the module has no procedural hooks.
-        include_once $filename;
-      }
       if ($extension === 'php') {
         $cached = $hook_file_cache->get($filename);
         if ($cached) {
@@ -512,11 +506,13 @@ class HookCollectorPass implements CompilerPassInterface {
     $function = $module . '_' . $hook;
     if ($hook === 'hook_info') {
       $this->hookInfo[] = $function;
+      include_once $fileinfo->getPathname();
     }
     elseif ($hook === 'module_implements_alter') {
       $message = "$function without a #[LegacyModuleImplementsAlter] attribute is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3496788";
       @trigger_error($message, E_USER_DEPRECATED);
       $this->moduleImplementsAlters[] = $function;
+      include_once $fileinfo->getPathname();
     }
     $this->proceduralImplementations[$hook][] = $module;
     if ($fileinfo->getExtension() !== 'module') {
