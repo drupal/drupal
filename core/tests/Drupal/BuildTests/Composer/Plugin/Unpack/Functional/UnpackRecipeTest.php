@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Composer\Plugin\Unpack\Functional;
+namespace Drupal\BuildTests\Composer\Plugin\Unpack\Functional;
 
 use Composer\InstalledVersions;
 use Composer\Util\Filesystem;
