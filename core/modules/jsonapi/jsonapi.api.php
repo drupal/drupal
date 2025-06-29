@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\jsonapi\JsonApiFilter;
 
 /**
  * @defgroup jsonapi_architecture JSON:API Architecture
@@ -263,10 +264,10 @@ use Drupal\Core\Access\AccessResult;
  *     viewable.
  *   - AccessResult::neutral() if the implementation has no opinion.
  *   The supported subsets for which an access result may be returned are:
- *   - JSONAPI_FILTER_AMONG_ALL: all entities of the given type.
- *   - JSONAPI_FILTER_AMONG_PUBLISHED: all published entities of the given type.
- *   - JSONAPI_FILTER_AMONG_ENABLED: all enabled entities of the given type.
- *   - JSONAPI_FILTER_AMONG_OWN: all entities of the given type owned by the
+ *   - JsonApiFilter::AMONG_ALL: all entities of the given type.
+ *   - JsonApiFilter::AMONG_PUBLISHED: all published entities of the given type.
+ *   - JsonApiFilter::AMONG_ENABLED: all enabled entities of the given type.
+ *   - JsonApiFilter::AMONG_OWN: all entities of the given type owned by the
  *     user for whom access is being checked.
  *   See the documentation of the above constants for more information about
  *   each subset.
@@ -278,7 +279,7 @@ function hook_jsonapi_entity_filter_access(EntityTypeInterface $entity_type, Acc
   // by all entities of that type to users with that permission.
   if ($admin_permission = $entity_type->getAdminPermission()) {
     return ([
-      JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, $admin_permission),
+      JsonApiFilter::AMONG_ALL => AccessResult::allowedIfHasPermission($account, $admin_permission),
     ]);
   }
 }
@@ -305,9 +306,9 @@ function hook_jsonapi_entity_filter_access(EntityTypeInterface $entity_type, Acc
  */
 function hook_jsonapi_ENTITY_TYPE_filter_access(EntityTypeInterface $entity_type, AccountInterface $account): array {
   return ([
-    JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer llamas'),
-    JSONAPI_FILTER_AMONG_PUBLISHED => AccessResult::allowedIfHasPermission($account, 'view all published llamas'),
-    JSONAPI_FILTER_AMONG_OWN => AccessResult::allowedIfHasPermissions($account, ['view own published llamas', 'view own unpublished llamas'], 'AND'),
+    JsonApiFilter::AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer llamas'),
+    JsonApiFilter::AMONG_PUBLISHED => AccessResult::allowedIfHasPermission($account, 'view all published llamas'),
+    JsonApiFilter::AMONG_OWN => AccessResult::allowedIfHasPermissions($account, ['view own published llamas', 'view own unpublished llamas'], 'AND'),
   ]);
 }
 

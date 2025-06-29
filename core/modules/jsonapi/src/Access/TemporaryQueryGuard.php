@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
+use Drupal\jsonapi\JsonApiFilter;
 use Drupal\jsonapi\Query\EntityCondition;
 use Drupal\jsonapi\Query\EntityConditionGroup;
 use Drupal\jsonapi\Query\Filter;
@@ -323,12 +324,12 @@ class TemporaryQueryGuard {
   }
 
   /**
-   * Gets an access condition for the allowed JSONAPI_FILTER_AMONG_* subsets.
+   * Gets an access condition for the allowed JsonApiFilter::AMONG_* subsets.
    *
-   * If access is allowed for the JSONAPI_FILTER_AMONG_ALL subset, then no
+   * If access is allowed for the JsonApiFilter::AMONG_ALL subset, then no
    * conditions are returned. Otherwise, if access is allowed for
-   * JSONAPI_FILTER_AMONG_PUBLISHED, JSONAPI_FILTER_AMONG_ENABLED, or
-   * JSONAPI_FILTER_AMONG_OWN, then a condition group is returned for the union
+   * JsonApiFilter::AMONG_PUBLISHED, JsonApiFilter::AMONG_ENABLED, or
+   * JsonApiFilter::AMONG_OWN, then a condition group is returned for the union
    * of allowed subsets. If no subsets are allowed, then static::alwaysFalse()
    * is returned.
    *
@@ -344,12 +345,12 @@ class TemporaryQueryGuard {
    *   secure an entity query.
    */
   protected static function getAccessConditionForKnownSubsets(EntityTypeInterface $entity_type, AccountInterface $account, CacheableMetadata $cacheability) {
-    // Get the combined access results for each JSONAPI_FILTER_AMONG_* subset.
+    // Get the combined access results for each JsonApiFilter::AMONG_* subset.
     $access_results = static::getAccessResultsFromEntityFilterHook($entity_type, $account);
 
     // No conditions are needed if access is allowed for all entities.
-    $cacheability->addCacheableDependency($access_results[JSONAPI_FILTER_AMONG_ALL]);
-    if ($access_results[JSONAPI_FILTER_AMONG_ALL]->isAllowed()) {
+    $cacheability->addCacheableDependency($access_results[JsonApiFilter::AMONG_ALL]);
+    if ($access_results[JsonApiFilter::AMONG_ALL]->isAllowed()) {
       return NULL;
     }
 
@@ -363,7 +364,7 @@ class TemporaryQueryGuard {
     // The "published" subset.
     $published_field_name = $entity_type->getKey('published');
     if ($published_field_name) {
-      $access_result = $access_results[JSONAPI_FILTER_AMONG_PUBLISHED];
+      $access_result = $access_results[JsonApiFilter::AMONG_PUBLISHED];
       $cacheability->addCacheableDependency($access_result);
       if ($access_result->isAllowed()) {
         $conditions[] = new EntityCondition($published_field_name, 1);
@@ -375,7 +376,7 @@ class TemporaryQueryGuard {
     // @todo Remove ternary when the 'status' key is added to the User entity type.
     $status_field_name = $entity_type->id() === 'user' ? 'status' : $entity_type->getKey('status');
     if ($status_field_name) {
-      $access_result = $access_results[JSONAPI_FILTER_AMONG_ENABLED];
+      $access_result = $access_results[JsonApiFilter::AMONG_ENABLED];
       $cacheability->addCacheableDependency($access_result);
       if ($access_result->isAllowed()) {
         $conditions[] = new EntityCondition($status_field_name, 1);
@@ -387,7 +388,7 @@ class TemporaryQueryGuard {
     // @todo Remove ternary when the 'uid' key is added to the User entity type.
     $owner_field_name = $entity_type->id() === 'user' ? 'uid' : $entity_type->getKey('owner');
     if ($owner_field_name) {
-      $access_result = $access_results[JSONAPI_FILTER_AMONG_OWN];
+      $access_result = $access_results[JsonApiFilter::AMONG_OWN];
       $cacheability->addCacheableDependency($access_result);
       if ($access_result->isAllowed()) {
         $cacheability->addCacheContexts(['user']);
@@ -415,7 +416,7 @@ class TemporaryQueryGuard {
   }
 
   /**
-   * Gets the combined access result for each JSONAPI_FILTER_AMONG_* subset.
+   * Gets the combined access result for each JsonApiFilter::AMONG_* subset.
    *
    * This invokes hook_jsonapi_entity_filter_access() and
    * hook_jsonapi_ENTITY_TYPE_filter_access() and combines the results from all
@@ -433,10 +434,10 @@ class TemporaryQueryGuard {
   protected static function getAccessResultsFromEntityFilterHook(EntityTypeInterface $entity_type, AccountInterface $account) {
     /** @var \Drupal\Core\Access\AccessResultInterface[] $combined_access_results */
     $combined_access_results = [
-      JSONAPI_FILTER_AMONG_ALL => AccessResult::neutral(),
-      JSONAPI_FILTER_AMONG_PUBLISHED => AccessResult::neutral(),
-      JSONAPI_FILTER_AMONG_ENABLED => AccessResult::neutral(),
-      JSONAPI_FILTER_AMONG_OWN => AccessResult::neutral(),
+      JsonApiFilter::AMONG_ALL => AccessResult::neutral(),
+      JsonApiFilter::AMONG_PUBLISHED => AccessResult::neutral(),
+      JsonApiFilter::AMONG_ENABLED => AccessResult::neutral(),
+      JsonApiFilter::AMONG_OWN => AccessResult::neutral(),
     ];
 
     // Invoke hook_jsonapi_entity_filter_access() and
