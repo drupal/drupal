@@ -2,30 +2,39 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Datetime;
+namespace Drupal\KernelTests\Core\Datetime;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Tests\BrowserTestBase;
-use Drupal\user\Entity\User;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests DrupalDateTime functionality.
  *
  * @group Datetime
  */
-class DrupalDateTimeTest extends BrowserTestBase {
+class DrupalDateTimeTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * Set up required modules.
    *
    * @var string[]
    */
-  protected static $modules = [];
+  protected static $modules = [
+    'system',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installConfig(['system']);
+    $this->installEntitySchema('user');
+  }
 
   /**
    * Tests that DrupalDateTime can detect the right timezone to use.
@@ -68,17 +77,9 @@ class DrupalDateTimeTest extends BrowserTestBase {
 
     // Create user.
     $this->config('system.date')->set('timezone.user.configurable', 1)->save();
-    $test_user = $this->drupalCreateUser([]);
-    $this->drupalLogin($test_user);
-
-    // Set up the user with a different timezone than the site.
-    $edit = ['mail' => $test_user->getEmail(), 'timezone' => 'Asia/Manila'];
-    $this->drupalGet('user/' . $test_user->id() . '/edit');
-    $this->submitForm($edit, 'Save');
-
-    // Reload the user and reset the timezone in AccountProxy::setAccount().
-    \Drupal::entityTypeManager()->getStorage('user')->resetCache();
-    $this->container->get('current_user')->setAccount(User::load($test_user->id()));
+    $this->setUpCurrentUser([
+      'timezone' => 'Asia/Manila',
+    ]);
 
     // Create a date object with an unspecified timezone, which should
     // end up using the user timezone.
