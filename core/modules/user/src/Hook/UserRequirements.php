@@ -49,6 +49,7 @@ class UserRequirements {
     $query->addExpression('LOWER(mail)', 'lower_mail');
     $query->isNotNull('mail');
     $query->groupBy('lower_mail');
+    $query->groupBy('langcode');
     $query->having('COUNT(uid) > :matches', [':matches' => 1]);
     $conflicts = $query->countQuery()->execute()->fetchField();
 
