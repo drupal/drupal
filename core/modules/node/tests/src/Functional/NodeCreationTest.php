@@ -311,6 +311,21 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
+   * Tests exception handling when saving a node through the form.
+   */
+  public function testNodeCreateExceptionHandling(): void {
+    $this->drupalGet('node/add/page');
+
+    $this->submitForm([
+      'title[0][value]' => 'testing_transaction_exception',
+      'body[0][value]' => $this->randomMachineName(16),
+    ], 'Save');
+
+    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error.');
+    $this->assertSession()->pageTextContains('The content could not be saved. Contact the site administrator if the problem persists.');
+  }
+
+  /**
    * Gets the watchdog IDs of the records with the rollback exception message.
    *
    * @return int[]

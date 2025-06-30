@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -278,21 +279,22 @@ class NodeForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $node = $this->entity;
     $insert = $node->isNew();
-    $node->save();
-    $node_link = $node->toLink($this->t('View'))->toString();
-    $context = ['@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link];
-    $t_args = ['@type' => node_get_type_label($node), '%title' => $node->access('view') ? $node->toLink()->toString() : $node->label()];
 
-    if ($insert) {
-      $this->logger('content')->info('@type: added %title.', $context);
-      $this->messenger()->addStatus($this->t('@type %title has been created.', $t_args));
-    }
-    else {
-      $this->logger('content')->info('@type: updated %title.', $context);
-      $this->messenger()->addStatus($this->t('@type %title has been updated.', $t_args));
-    }
+    try {
+      $node->save();
+      $node_link = $node->toLink($this->t('View'))->toString();
+      $context = ['@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link];
+      $t_args = ['@type' => node_get_type_label($node), '%title' => $node->access('view') ? $node->toLink()->toString() : $node->label()];
 
-    if ($node->id()) {
+      if ($insert) {
+        $this->logger('content')->info('@type: added %title.', $context);
+        $this->messenger()->addStatus($this->t('@type %title has been created.', $t_args));
+      }
+      else {
+        $this->logger('content')->info('@type: updated %title.', $context);
+        $this->messenger()->addStatus($this->t('@type %title has been updated.', $t_args));
+      }
+
       $form_state->setValue('nid', $node->id());
       $form_state->set('nid', $node->id());
       if ($node->access('view')) {
@@ -310,10 +312,15 @@ class NodeForm extends ContentEntityForm {
       $store = $this->tempStoreFactory->get('node_preview');
       $store->delete($node->uuid());
     }
-    else {
+    catch (\Exception $e) {
       // In the unlikely case something went wrong on save, the node will be
-      // rebuilt and node form redisplayed the same way as in preview.
-      $this->messenger()->addError($this->t('The post could not be saved.'));
+      // rebuilt and node form redisplayed.
+      $this->messenger()->addError($this->t('The content could not be saved. Contact the site administrator if the problem persists.'));
+      // It's likely that this exception is an EntityStorageException in which
+      // case we won't have the actual backtrace available. Attempt to get the
+      // previous exception if available to include the backtrace.
+      $e = $e->getPrevious() ?: $e;
+      \Drupal::logger('node')->error('%type saving node form: @message in %function (line %line of %file) @backtrace_string.', Error::decodeException($e));
       $form_state->setRebuild();
     }
   }
