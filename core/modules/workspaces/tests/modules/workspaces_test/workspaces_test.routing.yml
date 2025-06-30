@@ -1,0 +1,7 @@
+workspaces_test.get_form:
+  path: '/active-workspace-test-form'
+  defaults:
+    _title: 'Active Workspace Test Form'
+    _form: '\Drupal\workspaces_test\Form\ActiveWorkspaceTestForm'
+  requirements:
+    _access: 'TRUE'

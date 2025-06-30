@@ -3,9 +3,9 @@ services:
     autoconfigure: true
   workspaces.manager:
     class: Drupal\workspaces\WorkspaceManager
-    arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association', '@workspaces.information']
+    autowire: true
     tags:
-      - { name: service_id_collector, tag: workspace_negotiator }
+      - { name: service_collector, call: addNegotiator, tag: workspace_negotiator }
   Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
   workspaces.information:
     class: Drupal\workspaces\WorkspaceInformation

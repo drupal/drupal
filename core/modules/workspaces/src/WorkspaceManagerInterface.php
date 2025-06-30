@@ -24,20 +24,24 @@ interface WorkspaceManagerInterface {
   public function getActiveWorkspace();
 
   /**
-   * Sets the active workspace via the workspace negotiators.
+   * Sets the active workspace.
    *
    * @param \Drupal\workspaces\WorkspaceInterface $workspace
    *   The workspace to set as active.
+   * phpcs:ignore
+   * @param bool $persist
+   *   (optional) Whether to persist this workspace in the first applicable
+   *   negotiator. Defaults to TRUE.
    *
    * @return $this
    *
    * @throws \Drupal\workspaces\WorkspaceAccessException
    *   Thrown when the current user doesn't have access to view the workspace.
    */
-  public function setActiveWorkspace(WorkspaceInterface $workspace);
+  public function setActiveWorkspace(WorkspaceInterface $workspace, /* bool $persist = TRUE */);
 
   /**
-   * Unsets the active workspace via the workspace negotiators.
+   * Unsets the active workspace.
    *
    * @return $this
    */
