@@ -45,8 +45,14 @@ class FileSystemRequirementsTest extends KernelTestBase {
    *   An array of system requirements.
    */
   protected function checkSystemRequirements() {
+    // This loadInclude() is to ensure that the install API is available.
+    // Since we're loading an include of type 'install', this will also
+    // include core/includes/install.inc for us, which is where
+    // drupal_verify_install_file() is currently defined.
+    // @todo Remove this once the function lives in a better place.
+    // @see https://www.drupal.org/project/drupal/issues/3526388
     $this->container->get('module_handler')->loadInclude('system', 'install');
-    return system_requirements('runtime');
+    return \Drupal::moduleHandler()->invoke('system', 'runtime_requirements');
   }
 
 }

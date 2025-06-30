@@ -69,14 +69,14 @@ system.cron:
           type: integer
           label: 'Requirements warning period'
           constraints:
-            # @see system_requirements()
+            # @see \Drupal\system\Hook\SystemRequirementsHooks
             Range:
               min: 60
         requirements_error:
           type: integer
           label: 'Requirements error period'
           constraints:
-            # @see system_requirements()
+            # @see \Drupal\system\Hook\SystemRequirementsHooks
             Range:
               min: 300
     logging:

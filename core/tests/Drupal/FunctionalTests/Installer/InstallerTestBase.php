@@ -271,7 +271,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
    * Override this method to test specific requirements warnings or errors
    * during the installer.
    *
-   * @see system_requirements()
+   * @see \Drupal\system\Install\SystemRequirements
    */
   protected function setUpRequirementsProblem() {
     if (version_compare(phpversion(), PhpRequirements::getMinimumSupportedPhp()) < 0) {

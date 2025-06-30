@@ -29769,6 +29769,24 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ThemeSettingsForm.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$directories might not be defined\\.$#',
+	'identifier' => 'variable.undefined',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/src/Install/Requirements/SystemRequirements.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$pdo_message might not be defined\\.$#',
+	'identifier' => 'variable.undefined',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/src/Install/Requirements/SystemRequirements.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$site_path might not be defined\\.$#',
+	'identifier' => 'variable.undefined',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/src/Install/Requirements/SystemRequirements.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\PhpStorage\\\\MockPhpStorage\\:\\:getConfiguration\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29935,24 +29953,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/TimeZoneResolver.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$directories might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.install',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$pdo_message might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.install',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$site_path might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.install',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function system_authorized_batch_process\\(\\) has no return type specified\\.$#',

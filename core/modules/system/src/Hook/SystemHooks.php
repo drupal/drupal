@@ -339,7 +339,7 @@ class SystemHooks {
     \Drupal::service('file.htaccess_writer')->ensure();
     if (\Drupal::config('system.advisories')->get('enabled')) {
       // Fetch the security advisories so that they will be pre-fetched during
-      // _system_advisories_requirements() and system_page_top().
+      // systemAdvisoriesRequirements() and system_page_top().
       /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
       $fetcher = \Drupal::service('system.sa_fetcher');
       $fetcher->getSecurityAdvisories();

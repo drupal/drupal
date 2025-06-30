@@ -43,7 +43,7 @@ class SiteConfigurationExcluder implements EventSubscriberInterface {
 
     // Exclude site-specific settings files, which are always in the web root.
     // By default, Drupal core will always try to write-protect these files.
-    // @see system_requirements()
+    // @see \Drupal\system\Hook\SystemRequirementsHooks
     $settings_files = [
       'settings.php',
       'settings.local.php',

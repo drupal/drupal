@@ -85,7 +85,7 @@ trait FunctionalTestSetupTrait {
     // - The temporary directory is set and created by install_base_system().
     // - The private file directory is created post install by
     //   FunctionalTestSetupTrait::initConfig().
-    // @see system_requirements()
+    // @see \Drupal\system\Install\SystemRequirements.
     // @see TestBase::prepareEnvironment()
     // @see install_base_system()
     // @see \Drupal\Core\Test\FunctionalTestSetupTrait::initConfig()
@@ -197,8 +197,8 @@ trait FunctionalTestSetupTrait {
   protected function writeSettings(array $settings) {
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
     $filename = $this->siteDirectory . '/settings.php';
-    // system_requirements() removes write permissions from settings.php
-    // whenever it is invoked.
+    // The system runtime_requirements hook removes write permissions from
+    // settings.php whenever it is invoked.
     // Not using File API; a potential error must trigger a PHP warning.
     chmod($filename, 0666);
     SettingsEditor::rewrite($filename, $settings);
