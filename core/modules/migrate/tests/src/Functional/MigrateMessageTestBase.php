@@ -12,10 +12,8 @@ use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
  * Provides base class for testing migrate messages.
- *
- * @group migrate
  */
-class MigrateMessageTestBase extends BrowserTestBase {
+abstract class MigrateMessageTestBase extends BrowserTestBase {
 
   /**
    * {@inheritdoc}

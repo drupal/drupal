@@ -10,7 +10,7 @@ namespace Drupal\Tests\update\Functional;
  * This wires up the protected data from UpdateSemverTestBase for a contrib
  * module with semantic version releases.
  */
-class UpdateSemverContribTestBase extends UpdateSemverTestBase {
+abstract class UpdateSemverContribTestBase extends UpdateSemverTestBase {
 
   /**
    * {@inheritdoc}

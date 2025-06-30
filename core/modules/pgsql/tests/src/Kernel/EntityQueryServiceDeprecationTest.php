@@ -8,17 +8,20 @@ use Drupal\Core\Entity\Query\Sql\QueryFactory as BaseQueryFactory;
 use Drupal\Core\Entity\Query\Sql\pgsql\QueryFactory as DeprecatedQueryFactory;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\pgsql\EntityQuery\QueryFactory;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the move of the 'pgsql.entity.query.sql' service.
  */
-class EntityQueryServiceDeprecation extends KernelTestBase {
+#[Group('Database')]
+#[Group('pgsql')]
+class EntityQueryServiceDeprecationTest extends KernelTestBase {
 
   /**
    * Tests that the core provided service is deprecated.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testPostgresServiceDeprecated(): void {
     $running_driver = $this->container->get('database')->driver();
     if ($running_driver === 'pgsql') {

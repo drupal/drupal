@@ -12,12 +12,9 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 // cspell:ignore imageresize
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
- * @group ckeditor5
- * @group #slow
  * @internal
  */
-class ImageUrlTestBase extends ImageTestBase {
+abstract class ImageUrlTestBase extends ImageTestBase {
 
   /**
    * {@inheritdoc}

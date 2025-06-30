@@ -11,7 +11,7 @@ use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 /**
  * Base class for Settings Tray tests.
  */
-class SettingsTrayTestBase extends OffCanvasTestBase {
+abstract class SettingsTrayTestBase extends OffCanvasTestBase {
 
   use ContextualLinkClickTrait;
 

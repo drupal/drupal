@@ -15,7 +15,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 /**
  * Tests the Field UI "Manage fields" screen.
  */
-class ManageFieldsFunctionalTestBase extends BrowserTestBase {
+abstract class ManageFieldsFunctionalTestBase extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;
   use FieldUiTestTrait;
