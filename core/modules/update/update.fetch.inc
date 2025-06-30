@@ -20,14 +20,6 @@ use Drupal\update\UpdateManagerInterface;
 #[ProceduralHookScanStop]
 function _update_cron_notify(): void {
   $update_config = \Drupal::config('update.settings');
-  // This loadInclude() is to ensure that the install API is available.
-  // Since we're loading an include of type 'install', this will also
-  // include core/includes/install.inc for us, which is where the
-  // REQUIREMENTS* constants are currently defined.
-  // @todo Remove this once those constants live in a better place.
-  // @see https://www.drupal.org/project/drupal/issues/2909480
-  // @see https://www.drupal.org/project/drupal/issues/3410938
-  \Drupal::moduleHandler()->loadInclude('update', 'install');
   $status = \Drupal::moduleHandler()->invoke('update', 'runtime_requirements');
   $params = [];
   $notify_all = ($update_config->get('notification.threshold') == 'all');
