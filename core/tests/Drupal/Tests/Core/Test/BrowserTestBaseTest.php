@@ -25,7 +25,7 @@ class BrowserTestBaseTest extends UnitTestCase {
       ->method('getDriver')
       ->willReturn($driver);
 
-    $btb = $this->getMockBuilder(BrowserTestBaseMockableClass::class)
+    $btb = $this->getMockBuilder(BrowserTestBaseMockableClassTest::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getSession'])
       ->getMock();
@@ -82,7 +82,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   public function testTearDownWithoutSetUp(): void {
     $method = 'cleanupEnvironment';
     $this->assertTrue(method_exists(BrowserTestBase::class, $method));
-    $btb = $this->getMockBuilder(BrowserTestBaseMockableClass::class)
+    $btb = $this->getMockBuilder(BrowserTestBaseMockableClassTest::class)
       ->disableOriginalConstructor()
       ->onlyMethods([$method])
       ->getMock();
@@ -96,6 +96,6 @@ class BrowserTestBaseTest extends UnitTestCase {
 /**
  * A class extending BrowserTestBase for testing purposes.
  */
-class BrowserTestBaseMockableClass extends BrowserTestBase {
+class BrowserTestBaseMockableClassTest extends BrowserTestBase {
 
 }

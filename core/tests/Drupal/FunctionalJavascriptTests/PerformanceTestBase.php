@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup testing
  */
-class PerformanceTestBase extends WebDriverTestBase {
+abstract class PerformanceTestBase extends WebDriverTestBase {
   use PerformanceTestTrait;
 
   /**

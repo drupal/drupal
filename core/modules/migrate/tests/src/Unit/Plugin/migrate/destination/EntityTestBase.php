@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Base test class for entity migration destination functionality.
  */
-class EntityTestBase extends UnitTestCase {
+abstract class EntityTestBase extends UnitTestCase {
 
   /**
    * The migration entity.

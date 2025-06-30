@@ -12,10 +12,9 @@ use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\ValidationResult;
 
 /**
- * @group package_manager
  * @internal
  */
-class ComposerPluginsValidatorTestBase extends PackageManagerKernelTestBase {
+abstract class ComposerPluginsValidatorTestBase extends PackageManagerKernelTestBase {
 
   /**
    * Tests composer plugins are validated during pre-create.

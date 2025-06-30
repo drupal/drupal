@@ -14,7 +14,7 @@ use GuzzleHttp\Psr7\Response;
 /**
  * Base class for Announce Kernel tests.
  */
-class AnnounceTestBase extends KernelTestBase {
+abstract class AnnounceTestBase extends KernelTestBase {
 
   /**
    * {@inheritdoc}
