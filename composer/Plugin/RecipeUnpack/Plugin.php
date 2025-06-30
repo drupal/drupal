@@ -7,7 +7,7 @@ use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer;
 use Composer\IO\IOInterface;
-use Composer\Package\Package;
+use Composer\Package\PackageInterface;
 use Composer\Plugin\Capability\CommandProvider;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
@@ -107,7 +107,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface, Capable
           $packages = $composer->getRepositoryManager()->getLocalRepository()->findPackages($package_name);
           $package = reset($packages);
 
-          if (!$package instanceof Package) {
+          if (!$package instanceof PackageInterface) {
             if (!$isInstalling) {
               $event->getIO()->write('Recipes are not unpacked when the --no-install option is used.', verbosity: IOInterface::VERBOSE);
               return;
