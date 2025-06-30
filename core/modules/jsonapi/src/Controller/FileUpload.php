@@ -84,7 +84,7 @@ class FileUpload {
   ) {
     if (!$this->fileUploadHandler instanceof FileUploadHandler) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $fileUploadHandler argument being an instance of ' . FileUploadHandler::class . ' is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3445266', E_USER_DEPRECATED);
-      $this->fileUploadHandler = \Drupal::service('file.upload.handler');
+      $this->fileUploadHandler = \Drupal::service('file.upload_handler');
     }
     if (!$this->inputStreamFileWriter) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $inputStreamFileWriter argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3445266', E_USER_DEPRECATED);
