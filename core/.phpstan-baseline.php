@@ -44367,6 +44367,18 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/Form/WorkspaceSwitcherForm.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\workspaces\\\\Negotiator\\\\QueryParameterWorkspaceNegotiator\\:\\:setActiveWorkspace\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/src/Negotiator/QueryParameterWorkspaceNegotiator.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\workspaces\\\\Negotiator\\\\QueryParameterWorkspaceNegotiator\\:\\:unsetActiveWorkspace\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/src/Negotiator/QueryParameterWorkspaceNegotiator.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces\\\\Negotiator\\\\SessionWorkspaceNegotiator\\:\\:getActiveWorkspace\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45062,6 +45074,31 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
 ];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:assertWorkspaceAssociation\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:createWorkspaceHierarchy\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
+];
+
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityWorkspaceConflictConstraintValidatorTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
