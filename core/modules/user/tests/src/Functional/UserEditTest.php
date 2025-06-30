@@ -283,4 +283,21 @@ class UserEditTest extends BrowserTestBase {
     $this->assertSession()->fieldEnabled('edit-status-1');
   }
 
+  /**
+   * Tests constraint violations are triggered on the user account form.
+   */
+  public function testRolesValidation(): void {
+    $admin_user = $this->drupalCreateUser(['administer users']);
+    $this->drupalLogin($admin_user);
+    $this->drupalGet("user/" . $admin_user->id() . "/edit");
+    $this->submitForm([], 'Save');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
+    \Drupal::keyvalue('user_form_test')->set('user_form_test_constraint_roles_edit', TRUE);
+    \Drupal::service('module_installer')->install(['entity_test', 'user_form_test']);
+    $this->drupalGet("user/" . $admin_user->id() . "/edit");
+    $this->submitForm([], 'Save');
+    $this->assertSession()->pageTextContains('Widget constraint has failed.');
+    $this->assertSession()->pageTextNotContains('The changes have been saved.');
+  }
+
 }
