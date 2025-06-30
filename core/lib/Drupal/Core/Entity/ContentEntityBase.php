@@ -578,6 +578,17 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
+  public function getBundleEntity(): ?EntityInterface {
+    $entityType = $this->getEntityType();
+    if (!$entityType->hasKey('bundle') || !$entityType->getBundleEntityType()) {
+      return NULL;
+    }
+    return $this->get($entityType->getKey('bundle'))->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function uuid() {
     return $this->getEntityKey('uuid');
   }

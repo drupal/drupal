@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\KernelTests\Core\Entity;
+
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\entity_test\Entity\EntityTestNoBundleWithLabel;
+use Drupal\entity_test\Entity\EntityTestWithBundle;
+
+/**
+ * Tests the getBundleEntity() method.
+ *
+ * @coversDefaultClass \Drupal\Core\Entity\ContentEntityBase
+ *
+ * @group Entity
+ */
+class EntityBundleEntityTest extends EntityKernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['entity_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('entity_test_with_bundle');
+    $this->installEntitySchema('entity_test_no_bundle_with_label');
+  }
+
+  /**
+   * Tests an entity type with config entities for bundles.
+   *
+   * @covers ::getBundleEntity
+   */
+  public function testWithConfigBundleEntity(): void {
+    $bundleEntity = EntityTestBundle::create([
+      'id' => 'bundle_alpha',
+      'label' => 'Alpha',
+    ]);
+    $bundleEntity->save();
+
+    $entity = EntityTestWithBundle::create([
+      'type' => 'bundle_alpha',
+      'name' => 'foo',
+    ]);
+    $entity->save();
+    $this->assertEquals($bundleEntity->id(), $entity->getBundleEntity()->id());
+  }
+
+  /**
+   * Tests an entity type without config entities for bundles.
+   *
+   * EntityTest doesn't have bundles, but does have the bundle entity key.
+   *
+   * @covers ::getBundleEntity
+   */
+  public function testWithoutBundleEntity(): void {
+    $entity = EntityTest::create([
+      'name' => 'foo',
+    ]);
+    $entity->save();
+    $this->assertNull($entity->getBundleEntity());
+  }
+
+  /**
+   * Tests an entity type without the bundle entity key.
+   *
+   * @covers ::getBundleEntity
+   */
+  public function testWithBundleKeyEntity(): void {
+    $entity = EntityTestNoBundleWithLabel::create([
+      'name' => 'foo',
+    ]);
+    $entity->save();
+    $this->assertNull($entity->getBundleEntity());
+  }
+
+}
