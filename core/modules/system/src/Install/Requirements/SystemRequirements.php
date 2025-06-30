@@ -682,7 +682,7 @@ class SystemRequirements implements InstallRequirementsInterface {
     }
 
     // Test the contents of the .htaccess files.
-    if ($phase == 'runtime') {
+    if ($phase == 'runtime' && Settings::get('auto_create_htaccess', TRUE)) {
       // Try to write the .htaccess files first, to prevent false alarms in
       // case (for example) the /tmp directory was wiped.
       /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccessWriter */

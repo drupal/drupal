@@ -1797,7 +1797,7 @@ services:
     alias: plugin.manager.element_info
   file.htaccess_writer:
     class: Drupal\Core\File\HtaccessWriter
-    arguments: ['@logger.channel.security', '@stream_wrapper_manager']
+    arguments: ['@logger.channel.security', '@stream_wrapper_manager', '@settings']
   Drupal\Core\File\HtaccessWriterInterface: '@file.htaccess_writer'
   file.mime_type.guesser:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser

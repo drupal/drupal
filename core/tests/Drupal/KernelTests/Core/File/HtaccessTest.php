@@ -92,6 +92,15 @@ class HtaccessTest extends KernelTestBase {
   }
 
   /**
+   * @covers ::write
+   */
+  public function testHtaccessSaveDisabled(): void {
+    $this->setSetting('auto_create_htaccess', FALSE);
+    $this->assertTrue($this->htaccessWriter->write($this->public, FALSE));
+    $this->assertFileDoesNotExist($this->public . '/.htaccess');
+  }
+
+  /**
    * Asserts expected file permissions for a given file.
    *
    * @param string $uri
