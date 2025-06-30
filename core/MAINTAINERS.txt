@@ -227,6 +227,7 @@ Field UI
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 File
+- Mohit Aghera 'mohit_aghera' https://www.drupal.org/u/mohit_aghera
 - Kim Pepper 'kim.pepper' https://www.drupal.org/u/kimpepper
 
 Filter
