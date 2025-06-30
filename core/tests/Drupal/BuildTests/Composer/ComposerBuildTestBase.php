@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\BuildTests\Composer;
 
 use Drupal\BuildTests\Framework\BuildTestBase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Symfony\Component\Finder\Finder;
 
 /**
  * Base class for Composer build tests.
- *
- * @coversNothing
  */
+#[CoversNothing]
 abstract class ComposerBuildTestBase extends BuildTestBase {
 
   /**

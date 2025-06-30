@@ -6,10 +6,13 @@ namespace Drupal\BuildTests\Composer;
 
 use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Tests\Composer\ComposerIntegrationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Composer
+ * Tests.
  */
+#[Group('Composer')]
 class ComposerValidateTest extends BuildTestBase {
 
   use ComposerIntegrationTrait;
@@ -23,9 +26,7 @@ class ComposerValidateTest extends BuildTestBase {
     return $data;
   }
 
-  /**
-   * @dataProvider provideComposerJson
-   */
+  #[DataProvider('provideComposerJson')]
   public function testValidateComposer($path): void {
     $this->executeCommand('composer validate --strict --no-check-all ' . $path);
     $this->assertCommandSuccessful();

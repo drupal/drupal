@@ -8,6 +8,8 @@ use Drupal\BuildTests\QuickStart\QuickStartTestBase;
 use Drupal\Core\Command\GenerateTheme;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Tester\Constraint\CommandIsSuccessful;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -15,11 +17,9 @@ use Symfony\Component\Process\Process;
 
 /**
  * Tests the generate-theme commands.
- *
- * @requires extension pdo_sqlite
- *
- * @group Command
  */
+#[Group('Command')]
+#[RequiresPhpExtension('pdo_sqlite')]
 class GenerateThemeTest extends QuickStartTestBase {
 
   /**
