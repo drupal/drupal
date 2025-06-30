@@ -22,8 +22,6 @@ settings:
   label: 'Umami Recipes Banner'
   label_display: '0'
   provider: block_content
-  status: true
-  info: ''
   view_mode: full
 visibility:
   request_path:

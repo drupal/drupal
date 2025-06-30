@@ -2,6 +2,7 @@
 
 namespace Drupal\block_content\Hook;
 
+use Drupal\block\BlockConfigUpdater;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block_content\BlockContentInterface;
@@ -158,6 +159,17 @@ class BlockContentHooks {
       }
     }
     return $operations;
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_presave().
+   */
+  #[Hook('block_presave')]
+  public function blockPreSave(BlockInterface $block): void {
+    // Use an inline service since DI would require enabling the block module
+    // in any Kernel test that installs block_content. This is BC code so will
+    // be removed in Drupal 12 anyway.
+    \Drupal::service(BlockConfigUpdater::class)->updateBlock($block);
   }
 
 }
