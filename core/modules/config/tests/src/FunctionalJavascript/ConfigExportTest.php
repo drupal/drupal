@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\FunctionalJavascript;
 
-use Drupal\block_content\Entity\BlockContent;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 
 /**
  * Tests the config export form.
@@ -13,6 +13,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @group config
  */
 class ConfigExportTest extends WebDriverTestBase {
+
+  use BlockContentCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -55,26 +57,6 @@ class ConfigExportTest extends WebDriverTestBase {
         'region' => 'sidebar_first',
       ]);
     }
-  }
-
-  /**
-   * Creates test blocks.
-   *
-   * @param string $title
-   *   Title of the block.
-   *
-   * @return \Drupal\block_content\Entity\BlockContent
-   *   The created block content entity.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  protected function createBlockContent($title) {
-    $block_content = BlockContent::create([
-      'info' => $title,
-      'type' => 'basic',
-    ]);
-    $block_content->save();
-    return $block_content;
   }
 
   /**

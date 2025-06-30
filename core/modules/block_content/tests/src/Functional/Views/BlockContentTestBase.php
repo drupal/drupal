@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Functional\Views;
 
-use Drupal\block_content\Entity\BlockContent;
-use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 
 /**
  * Base class for all block_content tests.
  */
 abstract class BlockContentTestBase extends ViewTestBase {
+
+  use BlockContentCreationTrait {
+    createBlockContent as baseCreateBlockContent;
+    createBlockContentType as baseCreateBlockContentType;
+  }
 
   /**
    * Admin user.
@@ -67,7 +71,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
       'type' => 'basic',
       'langcode' => 'en',
     ];
-    if ($block_content = BlockContent::create($values)) {
+    if ($block_content = $this->baseCreateBlockContent(save: FALSE, values: $values)) {
       $status = $block_content->save();
     }
     $this->assertEquals(SAVED_NEW, $status, "Created block content {$block_content->label()}.");
@@ -84,26 +88,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
    *   Created block type.
    */
   protected function createBlockContentType(array $values = []) {
-    // Find a non-existent random type name.
-    if (!isset($values['id'])) {
-      do {
-        $id = $this->randomMachineName(8);
-      } while (BlockContentType::load($id));
-    }
-    else {
-      $id = $values['id'];
-    }
-    $values += [
-      'id' => $id,
-      'label' => $id,
-      'revision' => FALSE,
-    ];
-    $bundle = BlockContentType::create($values);
-    $status = $bundle->save();
-    block_content_add_body_field($bundle->id());
-
-    $this->assertEquals(SAVED_NEW, $status, sprintf('Created block content type %s.', $bundle->id()));
-    return $bundle;
+    return $this->baseCreateBlockContentType($values, TRUE);
   }
 
 }

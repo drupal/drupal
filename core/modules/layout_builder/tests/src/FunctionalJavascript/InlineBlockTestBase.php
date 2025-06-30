@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
-use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
 // cspell:ignore blockbasic
@@ -15,6 +15,9 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 abstract class InlineBlockTestBase extends WebDriverTestBase {
 
+  use BlockContentCreationTrait {
+    createBlockContentType as baseCreateBlockContentType;
+  }
   use ContextualLinkClickTrait;
 
   /**
@@ -214,13 +217,11 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    *   The block type label.
    */
   protected function createBlockContentType($id, $label) {
-    $bundle = BlockContentType::create([
+    $this->baseCreateBlockContentType([
       'id' => $id,
       'label' => $label,
       'revision' => 1,
-    ]);
-    $bundle->save();
-    block_content_add_body_field($bundle->id());
+    ], TRUE);
   }
 
 }
