@@ -42,8 +42,8 @@ interface NodeGrantDatabaseStorageInterface {
    * @param string $base_table
    *   The base table of the query.
    *
-   * @return int
-   *   Status of the access check.
+   * @return void
+   *   No return value.
    */
   public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table);
 
