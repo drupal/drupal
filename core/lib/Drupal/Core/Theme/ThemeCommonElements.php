@@ -6,6 +6,7 @@ namespace Drupal\Core\Theme;
 
 use Drupal\Core\Datetime\DatePreprocess;
 use Drupal\Core\Field\FieldPreprocess;
+use Drupal\Core\Pager\PagerPreprocess;
 
 /**
  * Provide common theme render elements.
@@ -181,6 +182,7 @@ class ThemeCommonElements {
       ],
       'pager' => [
         'render element' => 'pager',
+        'initial preprocess' => PagerPreprocess::class . ':preprocessPager',
       ],
       'menu' => [
         'variables' => [

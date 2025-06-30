@@ -1902,6 +1902,9 @@ services:
     class: Drupal\Core\Pager\PagerParameters
     arguments: ['@request_stack']
   Drupal\Core\Pager\PagerParametersInterface: '@pager.parameters'
+  Drupal\Core\Pager\PagerPreprocess:
+    class: Drupal\Core\Pager\PagerPreprocess
+    autowire: true
   Drupal\Core\Theme\Component\SchemaCompatibilityChecker: {}
   Drupal\Core\Theme\Component\ComponentValidator:
     calls:

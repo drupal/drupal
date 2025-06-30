@@ -212,12 +212,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/includes/theme.inc',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$items might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/includes/theme.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$custom_theme might not be defined\\.$#',
 	'identifier' => 'variable.undefined',
 	'count' => 1,

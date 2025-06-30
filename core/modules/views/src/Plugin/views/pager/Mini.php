@@ -90,7 +90,8 @@ class Mini extends SqlBase {
    * {@inheritdoc}
    */
   public function render($input) {
-    // The 1, 3 indexes are correct, see template_preprocess_pager().
+    // The 1, 3 indexes are correct, see
+    // \Drupal\Core\Pager\PagerPreprocess::preprocessPager().
     $tags = [
       1 => $this->options['tags']['previous'],
       3 => $this->options['tags']['next'],

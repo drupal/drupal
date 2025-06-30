@@ -79,8 +79,8 @@ class Full extends SqlBase {
    * {@inheritdoc}
    */
   public function render($input) {
-    // The 0, 1, 3, 4 indexes are correct. See the template_preprocess_pager()
-    // documentation.
+    // The 0, 1, 3, 4 indexes are correct. See the
+    // \Drupal\Core\Pager\PagerPreprocess::preprocessPager() documentation.
     $tags = [
       0 => $this->options['tags']['first'],
       1 => $this->options['tags']['previous'],

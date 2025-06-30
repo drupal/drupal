@@ -80,13 +80,14 @@ class Pager extends RenderElementBase {
    *   The render array with cache contexts added.
    */
   public static function preRenderPager(array $pager) {
-    // Note: the default pager theme process function
-    // template_preprocess_pager() also calls
+    // Note: the default pager theme preprocess function
+    // \Drupal\Core\Pager\PagerPreprocess::preprocessPager() also calls
     // \Drupal\Core\Pager\PagerManagerInterface::getUpdatedParameters(), which
     // maintains the existing query string. Therefore
-    // template_preprocess_pager() adds the 'url.query_args' cache context,
-    // which causes the more specific cache context below to be optimized away.
-    // In other themes, however, that may not be the case.
+    // \Drupal\Core\Pager\PagerPreprocess::preprocessPager() adds the
+    // 'url.query_args' cache context which causes the more specific cache
+    // context below to be optimized away. In other themes, however, that may
+    // not be the case.
     $pager['#cache']['contexts'][] = 'url.query_args.pagers:' . $pager['#element'];
     return $pager;
   }

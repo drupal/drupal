@@ -10,9 +10,8 @@
 
 use Drupal\Core\Datetime\DatePreprocess;
 use Drupal\Core\Field\FieldPreprocess;
+use Drupal\Core\Pager\PagerPreprocess;
 use Drupal\Core\Theme\ThemePreprocess;
-use Drupal\Core\Url;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Template\Attribute;
@@ -1212,137 +1211,15 @@ function template_preprocess_breadcrumb(&$variables): void {
  *       to the pager links.
  *     - #route_parameters: An associative array of the route parameters.
  *     - #quantity: The number of pages in the list.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_pager(&$variables): void {
-  $element = $variables['pager']['#element'];
-  $parameters = $variables['pager']['#parameters'];
-  $quantity = empty($variables['pager']['#quantity']) ? 0 : $variables['pager']['#quantity'];
-  $route_name = $variables['pager']['#route_name'];
-  $route_parameters = $variables['pager']['#route_parameters'] ?? [];
-
-  /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
-  $pager_manager = \Drupal::service('pager.manager');
-
-  $pager = $pager_manager->getPager($element);
-
-  // Nothing to do if there is no pager.
-  if (!isset($pager)) {
-    return;
-  }
-
-  $pager_max = $pager->getTotalPages();
-
-  // Nothing to do if there is only one page.
-  if ($pager_max <= 1) {
-    return;
-  }
-
-  $tags = $variables['pager']['#tags'];
-
-  // Calculate various markers within this pager piece:
-  // Middle is used to "center" pages around the current page.
-  $pager_middle = ceil($quantity / 2);
-  $current_page = $pager->getCurrentPage();
-  // The current pager is the page we are currently paged to.
-  $pager_current = $current_page + 1;
-  // The first pager is the first page listed by this pager piece (re quantity).
-  $pager_first = $pager_current - $pager_middle + 1;
-  // The last is the last page listed by this pager piece (re quantity).
-  $pager_last = $pager_current + $quantity - $pager_middle;
-  // End of marker calculations.
-
-  // Prepare for generation loop.
-  $i = $pager_first;
-  if ($pager_last > $pager_max) {
-    // Adjust "center" if at end of query.
-    $i = $i + ($pager_max - $pager_last);
-    $pager_last = $pager_max;
-  }
-  if ($i <= 0) {
-    // Adjust "center" if at start of query.
-    $pager_last = $pager_last + (1 - $i);
-    $i = 1;
-  }
-  // End of generation loop preparation.
-
-  // Create the "first" and "previous" links if we are not on the first page.
-  if ($current_page > 0) {
-    $items['first'] = [];
-    $items['first']['attributes'] = new Attribute();
-    $options = [
-      'query' => $pager_manager->getUpdatedParameters($parameters, $element, 0),
-    ];
-    $items['first']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-    if (isset($tags[0])) {
-      $items['first']['text'] = $tags[0];
-    }
-
-    $items['previous'] = [];
-    $items['previous']['attributes'] = new Attribute();
-    $options = [
-      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current_page - 1),
-    ];
-    $items['previous']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-    if (isset($tags[1])) {
-      $items['previous']['text'] = $tags[1];
-    }
-  }
-
-  // Add an ellipsis if there are further previous pages.
-  if ($i > 1) {
-    $variables['ellipses']['previous'] = TRUE;
-  }
-  // Now generate the actual pager piece.
-  for (; $i <= $pager_last && $i <= $pager_max; $i++) {
-    $options = [
-      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
-    ];
-    $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-    $items['pages'][$i]['attributes'] = new Attribute();
-    if ($i == $pager_current) {
-      $variables['current'] = $i;
-      $items['pages'][$i]['attributes']->setAttribute('aria-current', 'page');
-    }
-  }
-  // Add an ellipsis if there are further next pages.
-  if ($i < $pager_max + 1) {
-    $variables['ellipses']['next'] = TRUE;
-  }
-
-  // Create the "next" and "last" links if we are not on the last page.
-  if ($current_page < ($pager_max - 1)) {
-    $items['next'] = [];
-    $items['next']['attributes'] = new Attribute();
-    $options = [
-      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current_page + 1),
-    ];
-    $items['next']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-    if (isset($tags[3])) {
-      $items['next']['text'] = $tags[3];
-    }
-
-    $items['last'] = [];
-    $items['last']['attributes'] = new Attribute();
-    $options = [
-      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $pager_max - 1),
-    ];
-    $items['last']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-    if (isset($tags[4])) {
-      $items['last']['text'] = $tags[4];
-    }
-  }
-
-  $variables['items'] = $items;
-  $variables['heading_id'] = Html::getUniqueId('pagination-heading');
-  $variables['pagination_heading_level'] = $variables['pager']['#pagination_heading_level'] ?? 'h4';
-  if (!preg_match('/^h[1-6]$/', $variables['pagination_heading_level'])) {
-    $variables['pagination_heading_level'] = 'h4';
-  }
-
-  // The rendered link needs to play well with any other query parameter used
-  // on the page, like exposed filters, so for the cacheability all query
-  // parameters matter.
-  $variables['#cache']['contexts'][] = 'url.query_args';
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(PagerPreprocess::class)->preprocessPager($variables);
 }
 
 /**

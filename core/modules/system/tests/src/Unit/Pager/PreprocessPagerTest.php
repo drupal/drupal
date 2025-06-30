@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Unit\Pager;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Pager\PagerPreprocess;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Tests\UnitTestCase;
 
@@ -12,8 +13,15 @@ use Drupal\Tests\UnitTestCase;
  * Tests pager preprocessing.
  *
  * @group system
+ *
+ * @coversDefaultClass \Drupal\Core\Pager\PagerPreprocess
  */
 class PreprocessPagerTest extends UnitTestCase {
+
+  /**
+   * Pager preprocess instance.
+   */
+  protected PagerPreprocess $pagerPreprocess;
 
   /**
    * {@inheritdoc}
@@ -39,21 +47,19 @@ class PreprocessPagerTest extends UnitTestCase {
     $pager_manager->method('getPager')->willReturn($pager);
     $pager_manager->method('getUpdatedParameters')->willReturn('');
 
+    $this->pagerPreprocess = new PagerPreprocess($pager_manager);
+
     $container = new ContainerBuilder();
-    $container->set('pager.manager', $pager_manager);
     $container->set('url_generator', $url_generator);
-    // template_preprocess_pager() renders translatable attribute values.
-    $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
   }
 
   /**
-   * Tests template_preprocess_pager() when an empty #quantity is passed.
+   * Tests when an empty #quantity is passed.
    *
-   * @covers ::template_preprocess_pager
+   * @covers ::preprocessPager
    */
   public function testQuantityNotSet(): void {
-    require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
         '#element' => '',
@@ -63,18 +69,17 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    $this->pagerPreprocess->preprocessPager($variables);
 
     $this->assertEquals(['first', 'previous'], array_keys($variables['items']));
   }
 
   /**
-   * Tests template_preprocess_pager() when a #quantity value is passed.
+   * Tests when a #quantity value is passed.
    *
-   * @covers ::template_preprocess_pager
+   * @covers ::preprocessPager
    */
   public function testQuantitySet(): void {
-    require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
         '#element' => '2',
@@ -84,7 +89,7 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    $this->pagerPreprocess->preprocessPager($variables);
 
     $this->assertEquals(['first', 'previous', 'pages'], array_keys($variables['items']));
     /** @var \Drupal\Core\Template\AttributeString $attribute */
@@ -94,12 +99,11 @@ class PreprocessPagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests template_preprocess_pager() when an empty #pagination_heading_level value is passed.
+   * Tests when an empty #pagination_heading_level value is passed.
    *
-   * @covers ::template_preprocess_pager
+   * @covers ::preprocessPager
    */
   public function testEmptyPaginationHeadingLevelSet(): void {
-    require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
         '#element' => '2',
@@ -110,18 +114,17 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    $this->pagerPreprocess->preprocessPager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
   }
 
   /**
-   * Tests template_preprocess_pager() when no #pagination_heading_level is passed.
+   * Tests when no #pagination_heading_level is passed.
    *
-   * @covers ::template_preprocess_pager
+   * @covers ::preprocessPager
    */
   public function testPaginationHeadingLevelNotSet(): void {
-    require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
         '#element' => '',
@@ -131,18 +134,17 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    $this->pagerPreprocess->preprocessPager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
   }
 
   /**
-   * Tests template_preprocess_pager() when a #pagination_heading_level value is passed.
+   * Tests when a #pagination_heading_level value is passed.
    *
-   * @covers ::template_preprocess_pager
+   * @covers ::preprocessPager
    */
   public function testPaginationHeadingLevelSet(): void {
-    require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
         '#element' => '2',
@@ -153,18 +155,17 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    $this->pagerPreprocess->preprocessPager($variables);
 
     $this->assertEquals('h5', $variables['pagination_heading_level']);
   }
 
   /**
-   * Test template_preprocess_pager() with an invalid #pagination_heading_level.
+   * Test with an invalid #pagination_heading_level.
    *
-   * @covers ::template_preprocess_pager
+   * @covers ::preprocessPager
    */
   public function testPaginationHeadingLevelInvalid(): void {
-    require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
         '#element' => '2',
@@ -175,7 +176,7 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    $this->pagerPreprocess->preprocessPager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
   }
