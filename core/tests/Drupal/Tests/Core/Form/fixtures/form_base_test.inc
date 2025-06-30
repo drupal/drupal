@@ -36,5 +36,10 @@ function test_form_id() {
     '#type' => 'submit',
     '#value' => 'Submit',
   ];
+  $form['actions']['other_action'] = [
+    '#type' => 'submit',
+    '#name' => 'other_action',
+    '#value' => 'Other action',
+  ];
   return $form;
 }
