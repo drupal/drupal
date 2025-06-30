@@ -2707,9 +2707,10 @@ function hook_validation_constraint_alter(array &$definitions) {
  * the proxy service, and not on all the dependencies of the lazy service.
  *
  * To define a service as lazy, add "lazy: true" to the service definition, and
- * use the "core/scripts/generate-proxy.sh" script to generate the proxy class.
+ * use the "core/scripts/generate-proxy-class.php" script to generate the proxy
+ * class.
  *
- * @see core/scripts/generate-proxy.sh
+ * @see core/scripts/generate-proxy-class.php
  */
 
 /**

@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Provides a console command to generate proxy classes.
  *
  * @see lazy_services
- * @see core/scripts/generate-proxy.sh
+ * @see core/scripts/generate-proxy-class.php
  */
 class GenerateProxyClassCommand extends Command {
 
