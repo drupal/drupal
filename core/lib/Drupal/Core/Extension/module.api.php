@@ -75,7 +75,7 @@ use Drupal\Core\Utility\UpdateException;
  * Once a module requires 12.0.0 as a minimum version of Drupal the module can
  * safely remove hook_hook_info() implementations.
  *
- * @return array
+ * @return array<string, array{group: string}>
  *   An associative array whose keys are hook names and whose values are an
  *   associative array containing:
  *   - group: A string defining the group to which the hook belongs. The module
@@ -114,7 +114,7 @@ function hook_hook_info(): array {
  * you will have to change the order of hook_form_alter() implementation in
  * hook_module_implements_alter().
  *
- * @param array $implementations
+ * @param array<string, string|false> $implementations
  *   An array keyed by the module's name. The value of each item corresponds
  *   to a $group, which is usually FALSE, unless the implementation is in a
  *   file named $module.$group.inc.
