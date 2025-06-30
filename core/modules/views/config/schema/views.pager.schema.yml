@@ -33,3 +33,5 @@ views.pager.full:
     quantity:
       type: integer
       label: 'Number of pager links visible'
+      constraints:
+        PositiveOrZero: []

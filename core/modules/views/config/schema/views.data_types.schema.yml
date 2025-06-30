@@ -633,29 +633,33 @@ views_pager:
     offset:
       type: integer
       label: 'Offset'
+      constraints:
+        PositiveOrZero: []
     pagination_heading_level:
+      # Validating against a string, but the list is populated by a protected
+      # property of the plugin. This could be a callback in the future.
       type: string
       label: 'Pager header element'
     items_per_page:
       type: integer
       label: 'Items per page'
+      constraints:
+        PositiveOrZero: []
 
 views_pager_sql:
   type: views_pager
   label: 'SQL pager'
   mapping:
-    items_per_page:
-      type: integer
-      label: 'Items per page'
-    pagination_heading_level:
-      type: string
-      label: 'Pager header element'
     total_pages:
       type: integer
       label: 'Number of pages'
+      constraints:
+        PositiveOrZero: []
     id:
       type: integer
       label: 'Pager ID'
+      constraints:
+        PositiveOrZero: []
     tags:
       type: mapping
       label: 'Pager link labels'
@@ -669,6 +673,8 @@ views_pager_sql:
         quantity:
           type: integer
           label: 'Number of pager links visible'
+          constraints:
+            PositiveOrZero: []
     expose:
       type: mapping
       label: 'Exposed options'
@@ -682,6 +688,11 @@ views_pager_sql:
         items_per_page_options:
           type: string
           label: 'Exposed items per page options'
+          constraints:
+            # Comma separated list of integers, with optional space in between.
+            Regex:
+              pattern: '/^(\d+)(,\s*\d+)*$/'
+              message: 'Per page should be a valid list of integers.'
         items_per_page_options_all:
           type: boolean
           label: 'Include all items option'
