@@ -422,7 +422,6 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
       '#open' => $new_revision_default,
       '#group' => 'advanced',
       '#weight' => 20,
-      '#access' => $new_revision_default || $this->entity->get($entity_type->getKey('revision'))->access('update'),
       '#optional' => TRUE,
       '#attributes' => [
         'class' => ['entity-content-form-revision-information'],
@@ -436,7 +435,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
       '#type' => 'checkbox',
       '#title' => $this->t('Create new revision'),
       '#default_value' => $new_revision_default,
-      '#access' => !$this->entity->isNew() && $this->entity->get($entity_type->getKey('revision'))->access('update'),
+      '#access' => !$this->entity->isNew(),
       '#group' => 'revision_information',
     ];
     // Get log message field's key from definition.
