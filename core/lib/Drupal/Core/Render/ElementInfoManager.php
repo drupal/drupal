@@ -189,7 +189,8 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
 
     // Otherwise, rebuild and cache.
     $info = [];
-    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
+    $previous_error_handler = get_error_handler();
+    set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
       // Ignore deprecations while building element information.
       if ($severity === E_USER_DEPRECATED) {
         // Don't execute PHP internal error handler.

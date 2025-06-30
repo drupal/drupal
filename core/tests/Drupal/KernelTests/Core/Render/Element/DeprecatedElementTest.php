@@ -43,7 +43,8 @@ class DeprecatedElementTest extends KernelTestBase {
     ], $info_manager->getInfo('deprecated_extends_form'));
 
     // Ensure the constructor is triggering a deprecation error.
-    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
+    $previous_error_handler = get_error_handler();
+    set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
       // Convert deprecation error into a catchable exception.
       if ($severity === E_USER_DEPRECATED) {
         throw new \ErrorException($message, 0, $severity, $file, $line);
@@ -84,7 +85,8 @@ class DeprecatedElementTest extends KernelTestBase {
    * Test use of static methods trigger deprecations.
    */
   public function testDeprecatedStaticMethods(): void {
-    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
+    $previous_error_handler = get_error_handler();
+    set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
       // Convert deprecation error into a catchable exception.
       if ($severity === E_USER_DEPRECATED) {
         throw new \ErrorException($message, 0, $severity, $file, $line);

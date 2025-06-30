@@ -34,6 +34,7 @@
         "symfony/process": "^7.3",
         "symfony/polyfill-iconv": "^1.32",
         "symfony/polyfill-php84": "^1.32",
+        "symfony/polyfill-php85": "^1.32",
         "symfony/yaml": "^7.3",
         "revolt/event-loop": "^1.0",
         "twig/twig": "^3.21.0",

@@ -211,11 +211,15 @@ class Error {
    *
    * @return callable|null
    *   The current error handler as a callable, or NULL if none is set.
+   *
+   * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use
+   *   get_error_handler() instead.
+   *
+   * @see https://www.drupal.org/node/3529500
    */
   public static function currentErrorHandler(): ?callable {
-    $currentHandler = set_error_handler('var_dump');
-    restore_error_handler();
-    return $currentHandler;
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use get_error_handler() instead. See https://www.drupal.org/node/3529500', E_USER_DEPRECATED);
+    return get_error_handler();
   }
 
 }
