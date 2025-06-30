@@ -1314,7 +1314,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         $buttons[] = $element;
         $form_state->setButtons($buttons);
         if ($this->buttonWasClicked($element, $form_state)) {
-          $form_state->setTriggeringElement($element);
+          // A correctly formatted request should only have one triggering
+          // element.
+          if (empty($form_state->getTriggeringElement())) {
+            $form_state->setTriggeringElement($element);
+          }
         }
       }
     }
