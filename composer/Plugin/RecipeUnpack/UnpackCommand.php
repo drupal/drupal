@@ -3,7 +3,7 @@
 namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Command\BaseCommand;
-use Composer\Package\Package;
+use Composer\Package\PackageInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -75,7 +75,7 @@ EOT
       $packages = $local_repo->findPackages($package_name);
       $package = reset($packages);
 
-      if (!$package instanceof Package) {
+      if (!$package instanceof PackageInterface) {
         $io->error(sprintf('<info>%s</info> does not resolve to a package.', $package_name));
         return 1;
       }
