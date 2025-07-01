@@ -100,6 +100,13 @@ class BlockContentType extends ConfigEntityBundleBase implements BlockContentTyp
   /**
    * {@inheritdoc}
    */
+  public function setDescription($description): static {
+    return $this->set('description', $description);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function shouldCreateNewRevision() {
     return $this->revision;
   }

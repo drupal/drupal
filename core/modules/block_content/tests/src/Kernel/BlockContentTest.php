@@ -38,6 +38,19 @@ class BlockContentTest extends KernelTestBase {
   }
 
   /**
+   * Tests BlockContentType functionality.
+   */
+  public function testBlockContentType(): void {
+    $type = BlockContentType::create([
+      'id' => 'foo',
+      'label' => 'Foo',
+    ]);
+    $this->assertSame('', $type->getDescription());
+    $type->setDescription('Test description');
+    $this->assertSame('Test description', $type->getDescription());
+  }
+
+  /**
    * Tests the editing links for BlockContentBlock.
    */
   public function testOperationLinks(): void {
