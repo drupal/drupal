@@ -25,6 +25,7 @@ contains_element() {
   return 1
 }
 
+MEMORY_UNLIMITED=0
 CACHED=0
 DRUPALCI=0
 BRANCH=""
@@ -58,11 +59,21 @@ while test $# -gt 0; do
       DRUPALCI=1
       shift
       ;;
+    --memory-unlimited)
+      MEMORY_UNLIMITED=1
+      shift
+      ;;
     *)
       break
       ;;
   esac
 done
+
+memory_limit=""
+
+if [[ "$MEMORY_UNLIMITED" == "1" ]]; then
+  memory_limit="--memory-limit=-1"
+fi
 
 # Set up variables to make colored output simple. Color output is disabled on
 # DrupalCI because it is breaks reporting.
@@ -244,11 +255,11 @@ printf "\n"
 # APCu is disabled to ensure that the composer classmap is not corrupted.
 if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
   printf "\nRunning PHPStan on *all* files.\n"
-  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
+  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist" $memory_limit
 else
   # Only run PHPStan on changed files locally.
   printf "\nRunning PHPStan on changed files.\n"
-  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES
+  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES $memory_limit
 fi
 
 if [ "$?" -ne "0" ]; then
