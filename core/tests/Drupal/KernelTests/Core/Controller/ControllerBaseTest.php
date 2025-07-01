@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Controller;
 
+use Drupal\dblog\Logger\DbLog;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system_test\Controller\BrokenSystemTestController;
+use Drupal\system_test\Controller\OptionalServiceSystemTestController;
 use Drupal\system_test\Controller\SystemTestController;
 use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
 
@@ -50,6 +52,19 @@ class ControllerBaseTest extends KernelTestBase {
     $this->expectException(AutowiringFailedException::class);
     $this->expectExceptionMessage('Cannot autowire service "Drupal\Core\Lock\LockBackendInterface": argument "$lock" of method "Drupal\system_test\Controller\BrokenSystemTestController::_construct()", you should configure its value explicitly.');
     $this->container->get('class_resolver')->getInstanceFromDefinition(BrokenSystemTestController::class);
+  }
+
+  /**
+   * @covers ::create
+   */
+  public function testCreateOptional(): void {
+    $service = $this->container->get('class_resolver')->getInstanceFromDefinition(OptionalServiceSystemTestController::class);
+    $this->assertInstanceOf(OptionalServiceSystemTestController::class, $service);
+    $this->assertNull($service->dbLog);
+    $this->container->get('module_installer')->install(['dblog']);
+    $service = $this->container->get('class_resolver')->getInstanceFromDefinition(OptionalServiceSystemTestController::class);
+    $this->assertInstanceOf(OptionalServiceSystemTestController::class, $service);
+    $this->assertInstanceOf(DbLog::class, $service->dbLog);
   }
 
 }
