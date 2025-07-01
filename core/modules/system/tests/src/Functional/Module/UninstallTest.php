@@ -22,7 +22,15 @@ class UninstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['module_test', 'user', 'views', 'node'];
+  protected static $modules = [
+    'ckeditor5',
+    'filter',
+    'module_test',
+    'node',
+    'user',
+    'views',
+    'views_ui',
+  ];
 
   /**
    * {@inheritdoc}
@@ -117,6 +125,13 @@ class UninstallTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('There is content for the entity type: Content');
     // Delete the node to allow node to be uninstalled.
     $node->delete();
+
+    // Ensure dependent module full names are shown.
+    $this->assertSession()->pageTextContains('Required by: Views UI');
+    // Ensure matching machine names do not display.
+    $this->assertSession()->pageTextNotContains('Required by: Views UI (views_ui)');
+    // Ensure machine names that do not match do display.
+    $this->assertSession()->pageTextContains('Text Editor (editor)');
 
     // Uninstall module_test.
     $edit = [];
