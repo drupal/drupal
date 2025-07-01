@@ -45069,31 +45069,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:assertWorkspaceAssociation\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:createWorkspaceHierarchy\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
-];
-
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityWorkspaceConflictConstraintValidatorTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45224,6 +45199,30 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityRepositoryTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:assertWorkspaceAssociation\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:createWorkspaceHierarchy\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceFormPersistenceTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceInformationTest\\:\\:assertWorkspaceAssociation\\(\\) has no return type specified\\.$#',
