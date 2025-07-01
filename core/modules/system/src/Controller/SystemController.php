@@ -280,8 +280,6 @@ class SystemController extends ControllerBase {
             continue;
           }
 
-          // @todo Add logic for not displaying hidden modules in
-          //   https://drupal.org/node/3117829.
           $module_name = $modules[$dependency]->info['name'];
           $theme->module_dependencies_list[$dependency] = $modules[$dependency]->status ? $this->t('@module_name', ['@module_name' => $module_name]) : $this->t('@module_name (<span class="admin-disabled">disabled</span>)', ['@module_name' => $module_name]);
 
