@@ -35,6 +35,7 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\user\UserInterface;
+use Drupal\workspaces\Entity\Workspace;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -72,6 +73,7 @@ class ContentImportTest extends BrowserTestBase {
     'system',
     'taxonomy',
     'user',
+    'workspaces',
   ];
 
   /**
@@ -180,6 +182,22 @@ class ContentImportTest extends BrowserTestBase {
       );
     };
     $this->assertTrue($logger->hasRecordThatPasses($predicate, LogLevel::WARNING));
+
+    // Visit a page that is published in a non-live workspace; we should not be
+    // able to see it, because we don't have permission.
+    $node_in_workspace = $this->container->get(EntityRepositoryInterface::class)
+      ->loadEntityByUuid('node', '48475954-e878-439c-9d3d-226724a44269');
+    $this->assertInstanceOf(NodeInterface::class, $node_in_workspace);
+    $node_url = $node_in_workspace->toUrl();
+    $this->drupalGet($node_url);
+    $assert_session = $this->assertSession();
+    $assert_session->statusCodeEquals(403);
+    // If we log in with administrative privileges (i.e., we can look at any
+    // workspace), we should be able to see it.
+    $this->drupalLogin($this->adminAccount);
+    $this->drupalGet($node_url);
+    $assert_session->statusCodeEquals(200);
+    $assert_session->pageTextContains($node_in_workspace->label());
   }
 
   /**
@@ -303,6 +321,11 @@ class ContentImportTest extends BrowserTestBase {
     $this->assertInstanceOf(Section::class, $section);
     $this->assertCount(2, $section->getComponents());
     $this->assertSame('system_powered_by_block', $section->getComponent('03b45f14-cf74-469a-8398-edf3383ce7fa')->getPluginId());
+
+    // Workspaces should have been imported with their parent references intact.
+    $workspaces = Workspace::loadMultiple();
+    $this->assertArrayHasKey('test_workspace', $workspaces);
+    $this->assertSame('test_workspace', $workspaces['inner_test']?->parent->entity->id());
   }
 
   /**

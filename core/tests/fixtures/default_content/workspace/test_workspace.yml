@@ -1,0 +1,19 @@
+_meta:
+  version: '1.0'
+  entity_type: workspace
+  uuid: 384c4c10-cc41-4d7e-a1cc-85d1cdc9e87d
+default:
+  # TRICKY! Default Content does not export the `id` field, but core's exporter should.
+  # Without it, the import will fail.
+  id:
+    -
+      value: test_workspace
+  uid:
+    -
+      target_id: 1
+  label:
+    -
+      value: 'Test Workspace'
+  created:
+    -
+      value: 1751154825

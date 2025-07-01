@@ -1,0 +1,47 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 48475954-e878-439c-9d3d-226724a44269
+  bundle: page
+  default_langcode: en
+  depends:
+    384c4c10-cc41-4d7e-a1cc-85d1cdc9e87d: workspace
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: false
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'A happy little workspace'
+  created:
+    -
+      value: 1751155670
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  # TRICKY! Default Content does not export the `workspace` field because it skips internal
+  # properties, but core's exporter should be sure to include it.
+  workspace:
+    -
+      target_id: test_workspace
+  body:
+    -
+      value: 'This page lives in a workspace! How neat!'
+      format: plain_text
+      summary: ''
