@@ -48,6 +48,11 @@ class FormTestGroupDetailsForm extends FormBase {
         'data-summary-attribute' => 'test',
       ],
     ];
+    $form['description_attributes'] = [
+      '#type' => 'details',
+      '#title' => 'Details element with description',
+      '#description' => 'I am a details description',
+    ];
     return $form;
   }
 

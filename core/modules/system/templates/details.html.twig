@@ -34,7 +34,11 @@
     </div>
   {% endif %}
 
-  {{ description }}
+  {%- if description -%}
+    {% set description_attributes = create_attribute({id: attributes['aria-describedby']}) %}
+    <div{{ description_attributes }}>{{ description }}</div>
+  {%- endif -%}
+
   {{ children }}
   {{ value }}
 </details>
