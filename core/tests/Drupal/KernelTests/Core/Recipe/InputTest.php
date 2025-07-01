@@ -319,4 +319,54 @@ YAML
     $recipe->input->collectAll($collector);
   }
 
+  /**
+   * Tests getting default input values from environment variables.
+   */
+  public function testDefaultInputFromEnvironmentVariables(): void {
+    $this->config('system.site')
+      ->set('name', 'Hello Thar')
+      ->set('slogan', 'Very important')
+      ->save();
+
+    $recipe = $this->createRecipe(<<<YAML
+name: 'Input from environment variables'
+input:
+  name:
+    data_type: string
+    description: The name of the site.
+    default:
+      source: env
+      env: SITE_NAME
+  slogan:
+    data_type: string
+    description: The site slogan.
+    default:
+      source: env
+      env: SITE_SLOGAN
+config:
+  actions:
+    system.site:
+      simpleConfigUpdate:
+        name: \${name}
+        slogan: \${slogan}
+YAML
+    );
+    putenv('SITE_NAME=Input Test');
+
+    // Mock a collector that only returns the default value.
+    $collector = $this->createMock(InputCollectorInterface::class);
+    $collector->expects($this->any())
+      ->method('collectValue')
+      ->withAnyParameters()
+      ->willReturnArgument(2);
+    $recipe->input->collectAll($collector);
+
+    RecipeRunner::processRecipe($recipe);
+    $config = $this->config('system.site');
+    $this->assertSame('Input Test', $config->get('name'));
+    // There was no SITE_SLOGAN environment variable, so it should have been
+    // set to an empty string.
+    $this->assertSame('', $config->get('slogan'));
+  }
+
 }

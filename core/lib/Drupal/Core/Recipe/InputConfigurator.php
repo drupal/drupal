@@ -171,12 +171,17 @@ final class InputConfigurator {
    * Returns the default value for an input definition.
    *
    * @param array $definition
-   *   An input definition. Must contain a `source` element, which can be either
-   *   'config' or 'value'. If `source` is 'config', then there must also be a
-   *   `config` element, which is a two-element indexed array containing
-   *   (in order) the name of an extant config object, and a property path
-   *   within that object. If `source` is 'value', then there must be a `value`
-   *   element, which will be returned as-is.
+   *   An input definition. Must contain a `source` element, which can be one
+   *   of `config`, `env`, or `value`:
+   *   - If `source` is `config`, there must also be a `config` element, which
+   *     is a two-element indexed array containing (in order) the name of an
+   *     extant config object, and a property path within that object.
+   *   - If `source` is `env`, there must also be an `env` element, which is
+   *     the name of an environment variable to return. The value will always
+   *     be returned as a string. If the environment variable is not set, an
+   *     empty string will be returned.
+   *   - If `source` is 'value', then there must be a `value` element, which
+   *    will be returned as-is.
    *
    * @return mixed
    *   The default value.
@@ -191,6 +196,17 @@ final class InputConfigurator {
         throw new \RuntimeException("The '$name' config object does not exist.");
       }
       return $config->get($key);
+    }
+    elseif ($settings['source'] === 'env') {
+      // getenv() accepts NULL to return an array of all environment variables,
+      // but this makes no sense in a recipe. There is no valid situation where
+      // the name of the environment variable should be empty.
+      if (empty($settings['env'])) {
+        throw new \RuntimeException("The name of the environment variable cannot be empty.");
+      }
+      // If the variable doesn't exist, getenv() returns FALSE; we can represent
+      // that as an empty string.
+      return (string) getenv($settings['env']);
     }
     return $settings['value'];
   }

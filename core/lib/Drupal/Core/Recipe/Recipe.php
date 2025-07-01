@@ -237,7 +237,7 @@ final class Recipe {
               'default' => new Required([
                 new Collection([
                   'source' => new Required([
-                    new Choice(['value', 'config']),
+                    new Choice(['value', 'config', 'env']),
                   ]),
                   'value' => new Optional(),
                   'config' => new Optional([
@@ -249,6 +249,10 @@ final class Recipe {
                         new NotBlank(),
                       ]),
                     ]),
+                  ]),
+                  'env' => new Optional([
+                    new Type('string'),
+                    new NotBlank(),
                   ]),
                 ]),
                 new Callback(self::validateDefaultValueDefinition(...)),
