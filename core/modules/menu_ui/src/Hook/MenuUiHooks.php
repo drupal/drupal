@@ -293,6 +293,38 @@ class MenuUiHooks {
   }
 
   /**
+   * Implements hook_ENTITY_TYPE_delete().
+   */
+  #[Hook('menu_delete')]
+  public function menuDelete(EntityInterface $entity): void {
+    if (!$this->entityTypeManager->hasDefinition('node_type')) {
+      return;
+    }
+
+    // Remove the menu from content type third party settings.
+    $menu_id = $entity->id();
+    $parent_prefix = $menu_id . ':';
+    $storage = $this->entityTypeManager->getStorage('node_type');
+    foreach ($storage->loadMultiple() as $content_type) {
+      $third_party_settings = $original_third_party_settings = $content_type->getThirdPartySettings('menu_ui');
+      if (isset($third_party_settings['available_menus']) && in_array($menu_id, $third_party_settings['available_menus'])) {
+        $key = array_search($menu_id, $third_party_settings['available_menus']);
+        if ($key !== FALSE) {
+          unset($third_party_settings['available_menus'][$key]);
+        }
+        $content_type->setThirdPartySetting('menu_ui', 'available_menus', $third_party_settings['available_menus']);
+      }
+      if (isset($third_party_settings['parent']) && substr($third_party_settings['parent'], 0, strlen($parent_prefix)) == $parent_prefix) {
+        $third_party_settings['parent'] = '';
+        $content_type->setThirdPartySetting('menu_ui', 'parent', $third_party_settings['parent']);
+      }
+      if ($third_party_settings != $original_third_party_settings) {
+        $content_type->save();
+      }
+    }
+  }
+
+  /**
    * Implements hook_system_breadcrumb_alter().
    */
   #[Hook('system_breadcrumb_alter')]
