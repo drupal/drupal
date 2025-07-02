@@ -78,7 +78,7 @@ class VariableTranslation extends DrupalSqlBase {
       foreach ($values as $key => $value) {
         if ($values[$key]['language'] === $variable_store['realm_key']) {
           if ($variable_store['serialized']) {
-            $values[$key][$variable_store['name']] = unserialize($variable_store['value']);
+            $values[$key][$variable_store['name']] = unserialize($variable_store['value'], ['allowed_classes' => FALSE]);
             break;
           }
           else {

@@ -269,7 +269,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
         // Convert $source_id into a keyless array so that
         // \Drupal\migrate\Plugin\migrate\id_map\Sql::getSourceHash() works as
         // expected.
-        $source_id_values = array_values(unserialize($source_id));
+        $source_id_values = array_values(unserialize($source_id, ['allowed_classes' => FALSE]));
         $row = $id_map->getRowBySource($source_id_values);
         $destination = serialize($id_map->currentDestination());
         $message = "Migration of $source_id to $destination as part of the {$migration->id()} migration. The source row status is " . $row['source_row_status'];

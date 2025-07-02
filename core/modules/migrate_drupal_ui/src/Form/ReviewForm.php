@@ -286,7 +286,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
     foreach ($migration_state as $source_machine_name => $destination_modules) {
       $data = NULL;
       if (isset($this->systemData['module'][$source_machine_name]['info'])) {
-        $data = unserialize($this->systemData['module'][$source_machine_name]['info']);
+        $data = unserialize($this->systemData['module'][$source_machine_name]['info'], ['allowed_classes' => FALSE]);
       }
       $source_module_name = $data['name'] ?? $source_machine_name;
       // Get the names of all the destination modules.

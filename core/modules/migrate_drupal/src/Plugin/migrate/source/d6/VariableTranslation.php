@@ -78,7 +78,7 @@ class VariableTranslation extends DrupalSqlBase {
     foreach ($result as $i18n_variable) {
       foreach ($values as $key => $value) {
         if ($values[$key]['language'] === $i18n_variable->language) {
-          $values[$key][$i18n_variable->name] = unserialize($i18n_variable->value);
+          $values[$key][$i18n_variable->name] = unserialize($i18n_variable->value, ['allowed_classes' => FALSE]);
           break;
         }
       }

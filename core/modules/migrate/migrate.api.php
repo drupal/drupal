@@ -156,7 +156,7 @@ function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, Migr
   if ($migration->id() == 'd6_filter_formats') {
     $value = $source->getDatabase()->query('SELECT [value] FROM {variable} WHERE [name] = :name', [':name' => 'my_module_filter_foo_' . $row->getSourceProperty('format')])->fetchField();
     if ($value) {
-      $row->setSourceProperty('settings:my_module:foo', unserialize($value));
+      $row->setSourceProperty('settings:my_module:foo', unserialize($value, ['allowed_classes' => FALSE]));
     }
   }
 }
@@ -179,7 +179,7 @@ function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, Migr
 function hook_migrate_MIGRATION_ID_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
   $value = $source->getDatabase()->query('SELECT [value] FROM {variable} WHERE [name] = :name', [':name' => 'my_module_filter_foo_' . $row->getSourceProperty('format')])->fetchField();
   if ($value) {
-    $row->setSourceProperty('settings:my_module:foo', unserialize($value));
+    $row->setSourceProperty('settings:my_module:foo', unserialize($value, ['allowed_classes' => FALSE]));
   }
 }
 

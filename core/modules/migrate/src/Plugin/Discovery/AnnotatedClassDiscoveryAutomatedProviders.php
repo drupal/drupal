@@ -65,7 +65,7 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
                 if (isset($cached['id'])) {
                   // Explicitly unserialize this to create a new object
                   // instance.
-                  $definitions[$cached['id']] = unserialize($cached['content']);
+                  $definitions[$cached['id']] = unserialize($cached['content'], ['allowed_classes' => FALSE]);
                 }
                 continue;
               }
