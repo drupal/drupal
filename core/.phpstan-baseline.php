@@ -32453,12 +32453,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/src/EventSubscriber/ThemeTestSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\theme_test\\\\EventSubscriber\\\\ThemeTestSubscriber\\:\\:onView\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/src/EventSubscriber/ThemeTestSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\theme_test\\\\ThemeTestController\\:\\:generalSuggestionAlter\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
