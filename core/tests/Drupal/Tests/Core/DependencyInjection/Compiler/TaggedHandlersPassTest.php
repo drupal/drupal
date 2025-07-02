@@ -6,6 +6,7 @@ namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 
 use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Reference;
@@ -304,6 +305,31 @@ class TaggedHandlersPassTest extends UnitTestCase {
     $handler_pass = new TaggedHandlersPass();
     $this->expectException(LogicException::class);
     $handler_pass->process($container);
+  }
+
+  /**
+   * Tests child handler with parent service.
+   *
+   * @covers ::process
+   */
+  public function testProcessChildDefinition(): void {
+    $container = $this->buildContainer();
+
+    $container
+      ->register('consumer_id', __NAMESPACE__ . '\ValidConsumer')
+      ->addTag('service_collector');
+    $container
+      ->register('root_handler', __NAMESPACE__ . '\ValidHandler');
+    $container->addDefinitions([
+      'parent_handler' => new ChildDefinition('root_handler'),
+      'child_handler' => (new ChildDefinition('parent_handler'))->addTag('consumer_id'),
+    ]);
+
+    $handler_pass = new TaggedHandlersPass();
+    $handler_pass->process($container);
+
+    $method_calls = $container->getDefinition('consumer_id')->getMethodCalls();
+    $this->assertCount(1, $method_calls);
   }
 
   /**
