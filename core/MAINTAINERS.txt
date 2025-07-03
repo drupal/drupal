@@ -495,7 +495,6 @@ Testing
 
 Usability
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
-- Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 - Bojhan Somers 'Bojhan' https://www.drupal.org/u/bojhan
 
 
