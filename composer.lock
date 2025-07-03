@@ -497,7 +497,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "9c20039d72df439ab096be8a07e6d1e8381e77eb"
+                "reference": "f9ba0abb671af6a6545ab494e61f63cf4267515b"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -545,6 +545,7 @@
                 "twig/twig": "^3.15.0"
             },
             "conflict": {
+                "dealerdirect/phpcodesniffer-composer-installer": "1.1.0",
                 "drush/drush": "<12.4.3"
             },
             "replace": {
@@ -10067,8 +10068,8 @@
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.1.0"
     },

@@ -49,7 +49,8 @@
         "sebastian/diff": "^4"
     },
     "conflict": {
-        "drush/drush": "<12.4.3"
+        "drush/drush": "<12.4.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "1.1.0"
     },
     "replace": {
         "drupal/core-annotation": "self.version",
