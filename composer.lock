@@ -497,7 +497,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "9dc18d846f5077cbc5615fc28a4361adf2f160ba"
+                "reference": "74581f4e5f24dbea4ac0099e4a79f0e0bff77f55"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -550,6 +550,7 @@
                 "twig/twig": "^3.21.0"
             },
             "conflict": {
+                "dealerdirect/phpcodesniffer-composer-installer": "1.1.0",
                 "drupal/automatic_updates": "<4",
                 "drupal/project_browser": "<2.1",
                 "drush/drush": "<12.4.3"
@@ -10127,8 +10128,8 @@
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.3.0"
     },

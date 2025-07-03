@@ -56,7 +56,8 @@
     "conflict": {
         "drupal/automatic_updates": "<4",
         "drupal/project_browser": "<2.1",
-        "drush/drush": "<12.4.3"
+        "drush/drush": "<12.4.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "1.1.0"
     },
     "replace": {
         "drupal/core-annotation": "self.version",
