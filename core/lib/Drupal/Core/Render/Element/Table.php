@@ -402,7 +402,7 @@ class Table extends FormElementBase {
    * @return array
    *   Associative array of rendered child elements for a table.
    *
-   * @see template_preprocess_table()
+   * @see \Drupal\Core\Theme\ThemePreprocess::preprocessTable()
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    * @see drupal_attach_tabledrag()
    */

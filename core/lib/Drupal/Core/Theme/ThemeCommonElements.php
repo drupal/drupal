@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Theme;
 
+use Drupal\Core\Breadcrumb\BreadcrumbPreprocess;
 use Drupal\Core\Datetime\DatePreprocess;
 use Drupal\Core\Field\FieldPreprocess;
+use Drupal\Core\Menu\MenuPreprocess;
 use Drupal\Core\Pager\PagerPreprocess;
 
 /**
@@ -36,6 +38,7 @@ class ThemeCommonElements {
       ],
       'region' => [
         'render element' => 'elements',
+        'initial preprocess' => ThemePreprocess::class . ':preprocessRegion',
       ],
       'time' => [
         'variables' => [
@@ -100,11 +103,13 @@ class ThemeCommonElements {
           'srcset' => [],
           'style_name' => NULL,
         ],
+        'initial preprocess' => ImagePreprocess::class . ':preprocessImage',
       ],
       'breadcrumb' => [
         'variables' => [
           'links' => [],
         ],
+        'initial preprocess' => BreadcrumbPreprocess::class . ':preprocessBreadcrumb',
       ],
       'table' => [
         'variables' => [
@@ -118,11 +123,13 @@ class ThemeCommonElements {
           'responsive' => TRUE,
           'empty' => '',
         ],
+        'initial preprocess' => ThemePreprocess::class . ':preprocessTable',
       ],
       'tablesort_indicator' => [
         'variables' => [
           'style' => NULL,
         ],
+        'initial preprocess' => ThemePreprocess::class . ':preprocessTablesortIndicator',
       ],
       'mark' => [
         'variables' => [
@@ -139,6 +146,7 @@ class ThemeCommonElements {
           'empty' => NULL,
           'context' => [],
         ],
+        'initial preprocess' => ThemePreprocess::class . ':preprocessItemList',
       ],
       'feed_icon' => [
         'variables' => [
@@ -157,12 +165,13 @@ class ThemeCommonElements {
       'indentation' => [
         'variables' => ['size' => 1],
       ],
-      // From theme.maintenance.inc.
       'maintenance_page' => [
         'render element' => 'page',
+        'initial preprocess' => ThemePreprocess::class . ':preprocessMaintenancePage',
       ],
       'install_page' => [
         'render element' => 'page',
+        'initial preprocess' => ThemePreprocess::class . ':preprocessInstallPage',
       ],
       'maintenance_task_list' => [
         'variables' => [
@@ -170,6 +179,7 @@ class ThemeCommonElements {
           'active' => NULL,
           'variant' => NULL,
         ],
+        'initial preprocess' => ThemePreprocess::class . ':preprocessMaintenanceTaskList',
       ],
       'authorize_report' => [
         'variables' => [
@@ -193,9 +203,11 @@ class ThemeCommonElements {
       ],
       'menu_local_task' => [
         'render element' => 'element',
+        'initial preprocess' => MenuPreprocess::class . ':preprocessMenuLocalTask',
       ],
       'menu_local_action' => [
         'render element' => 'element',
+        'initial preprocess' => MenuPreprocess::class . ':preprocessMenuLocalAction',
       ],
       'menu_local_tasks' => [
         'variables' => [

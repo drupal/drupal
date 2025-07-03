@@ -854,6 +854,9 @@ services:
     class: Drupal\Core\Menu\ContextualLinkManager
     arguments: ['@controller_resolver', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user', '@request_stack']
   Drupal\Core\Menu\ContextualLinkManagerInterface: '@plugin.manager.menu.contextual_link'
+  Drupal\Core\Menu\MenuPreprocess:
+    class: Drupal\Core\Menu\MenuPreprocess
+    autowire: true
   plugin.manager.display_variant:
     class: Drupal\Core\Display\VariantManager
     parent: default_plugin_manager
@@ -1535,6 +1538,9 @@ services:
     tags:
       - { name: service_collector, tag: breadcrumb_builder, call: addBuilder }
   Drupal\Core\Breadcrumb\ChainBreadcrumbBuilderInterface: '@breadcrumb'
+  Drupal\Core\Breadcrumb\BreadcrumbPreprocess:
+    class: Drupal\Core\Breadcrumb\BreadcrumbPreprocess
+    autowire: true
   token:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler', '@cache.default', '@language_manager', '@cache_tags.invalidator', '@renderer']
@@ -1574,6 +1580,9 @@ services:
   Drupal\Core\Theme\Registry: '@theme.registry'
   Drupal\Core\Theme\ThemePreprocess:
     class: Drupal\Core\Theme\ThemePreprocess
+    autowire: true
+  Drupal\Core\Theme\ImagePreprocess:
+    class: Drupal\Core\Theme\ImagePreprocess
     autowire: true
   Drupal\Core\Datetime\DatePreprocess:
     class: Drupal\Core\Datetime\DatePreprocess

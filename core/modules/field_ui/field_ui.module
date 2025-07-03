@@ -5,6 +5,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Theme\ThemePreprocess;
 use Drupal\field_ui\FieldUI;
 
 /**
@@ -18,7 +19,7 @@ use Drupal\field_ui\FieldUI;
  *     rendered as a table.
  */
 function template_preprocess_field_ui_table(&$variables): void {
-  template_preprocess_table($variables);
+  \Drupal::service(ThemePreprocess::class)->preprocessTable($variables);
 }
 
 /**

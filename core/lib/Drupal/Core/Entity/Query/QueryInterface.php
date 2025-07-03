@@ -204,9 +204,9 @@ interface QueryInterface extends AlterableInterface {
    *
    * @param array $headers
    *   An array of headers of the same structure as described in
-   *   template_preprocess_table(). Use a 'specifier' in place of a 'field' to
-   *   specify what to sort on. This can be an entity or a field as described
-   *   in condition().
+   *   \Drupal\Core\Theme\ThemePreprocess::preprocessTable(). Use a 'specifier'
+   *   in place of a 'field' to specify what to sort on. This can be an entity
+   *   or a field as described in condition().
    *
    * @return $this
    */

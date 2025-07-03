@@ -1181,7 +1181,7 @@ function claro_preprocess_table(&$variables): void {
         $first_cell_key = array_key_first($row['cells']);
         // The 'attributes' key is always here and it is an
         // \Drupal\Core\Template\Attribute.
-        // @see template_preprocess_table();
+        // @see \Drupal\Core\Theme\ThemePreprocess::preprocessTable();
         $row['cells'][$first_cell_key]['attributes']->addClass('tabledrag-cell');
 
         // Check that the first cell is empty or not.
