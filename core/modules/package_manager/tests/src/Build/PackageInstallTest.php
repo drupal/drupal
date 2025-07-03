@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Build;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests installing packages in a stage directory.
  *
- * @group package_manager
- * @group #slow
  * @internal
  */
+#[Group('package_manager')]
+#[Group('#slow')]
 class PackageInstallTest extends TemplateProjectTestBase {
 
   /**

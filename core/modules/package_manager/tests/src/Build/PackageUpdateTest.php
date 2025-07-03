@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Build;
 
 use Drupal\package_manager_test_api\ControllerSandboxManager;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests updating packages in a stage directory.
  *
- * @group package_manager
- * @group #slow
  * @internal
  */
+#[Group('package_manager')]
+#[Group('#slow')]
 class PackageUpdateTest extends TemplateProjectTestBase {
 
   /**
