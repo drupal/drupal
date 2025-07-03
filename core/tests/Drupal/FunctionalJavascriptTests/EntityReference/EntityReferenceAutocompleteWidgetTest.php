@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests\EntityReference;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the output of entity reference autocomplete widgets.
- *
- * @group entity_reference
  */
+#[Group('entity_reference')]
 class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;

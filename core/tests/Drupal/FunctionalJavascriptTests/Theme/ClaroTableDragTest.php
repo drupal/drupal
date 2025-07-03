@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Theme;
 
 use Drupal\FunctionalJavascriptTests\TableDrag\TableDragTest;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests draggable tables with Claro theme.
  *
- * @group claro
- *
  * @see \Drupal\FunctionalJavascriptTests\TableDrag\TableDragTest
  */
+#[Group('claro')]
 class ClaroTableDragTest extends TableDragTest {
 
   /**

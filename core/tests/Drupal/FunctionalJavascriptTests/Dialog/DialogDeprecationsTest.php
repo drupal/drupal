@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Dialog;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests jQuery events deprecations.
- *
- * @group dialog
  */
+#[Group('dialog')]
 class DialogDeprecationsTest extends WebDriverTestBase {
 
   /**

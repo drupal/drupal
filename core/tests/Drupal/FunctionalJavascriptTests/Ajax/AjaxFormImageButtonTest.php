@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Ajax image buttons work with key press events.
- *
- * @group Ajax
  */
+#[Group('Ajax')]
 class AjaxFormImageButtonTest extends WebDriverTestBase {
 
   /**

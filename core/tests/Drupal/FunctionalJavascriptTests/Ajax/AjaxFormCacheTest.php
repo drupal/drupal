@@ -6,12 +6,12 @@ namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the usage of form caching for AJAX forms.
- *
- * @group Ajax
  */
+#[Group('Ajax')]
 class AjaxFormCacheTest extends WebDriverTestBase {
 
   /**

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+
 /**
  * Tests that unnecessary or untracked XHRs will cause a test failure.
- *
- * @group javascript
- * @group legacy
  */
+#[Group('javascript')]
+#[IgnoreDeprecations]
 class AjaxWaitTest extends WebDriverTestBase {
 
   /**

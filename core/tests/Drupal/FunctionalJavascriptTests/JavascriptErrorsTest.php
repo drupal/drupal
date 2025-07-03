@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests;
 
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that Drupal.throwError will cause a test failure.
- *
- * @group javascript
  */
+#[Group('javascript')]
 class JavascriptErrorsTest extends WebDriverTestBase {
 
   /**

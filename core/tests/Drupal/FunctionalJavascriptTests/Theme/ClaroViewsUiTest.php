@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Theme;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Runs tests on Views UI using Claro.
- *
- * @group claro
  */
+#[Group('claro')]
 class ClaroViewsUiTest extends WebDriverTestBase {
 
   /**

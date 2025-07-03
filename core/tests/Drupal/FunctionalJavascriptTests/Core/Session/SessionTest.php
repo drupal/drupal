@@ -6,12 +6,12 @@ namespace Drupal\FunctionalJavascriptTests\Core\Session;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that sessions don't expire.
- *
- * @group session
  */
+#[Group('session')]
 class SessionTest extends WebDriverTestBase {
 
   /**

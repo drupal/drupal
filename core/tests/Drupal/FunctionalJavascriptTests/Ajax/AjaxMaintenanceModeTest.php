@@ -8,12 +8,12 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests maintenance message during an AJAX call.
- *
- * @group Ajax
  */
+#[Group('Ajax')]
 class AjaxMaintenanceModeTest extends WebDriverTestBase {
 
   use FieldUiTestTrait;

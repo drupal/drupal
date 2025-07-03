@@ -8,12 +8,12 @@ use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementHtmlException;
 use Drupal\Component\Utility\Timer;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the JSWebAssert class.
- *
- * @group javascript
  */
+#[Group('javascript')]
 class JSWebAssertTest extends WebDriverTestBase {
 
   /**

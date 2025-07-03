@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Theme;
 
 use Drupal\Tests\block\FunctionalJavascript\BlockFilterTest;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Runs BlockFilterTest in Claro.
  *
- * @group block
- *
  * @see \Drupal\Tests\block\FunctionalJavascript\BlockFilterTest.
  */
+#[Group('block')]
 class ClaroBlockFilterTest extends BlockFilterTest {
 
   /**

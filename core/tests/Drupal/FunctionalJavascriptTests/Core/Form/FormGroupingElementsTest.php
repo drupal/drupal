@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Core\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for form grouping elements.
- *
- * @group form
  */
+#[Group('form')]
 class FormGroupingElementsTest extends WebDriverTestBase {
 
   /**

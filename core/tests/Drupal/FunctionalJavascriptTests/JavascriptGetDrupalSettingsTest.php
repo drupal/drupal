@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests Drupal settings retrieval in WebDriverTestBase tests.
- *
- * @group javascript
  */
+#[Group('javascript')]
 class JavascriptGetDrupalSettingsTest extends WebDriverTestBase {
 
   /**

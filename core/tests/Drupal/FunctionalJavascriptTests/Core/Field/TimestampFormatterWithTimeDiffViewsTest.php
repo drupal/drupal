@@ -7,12 +7,12 @@ namespace Drupal\FunctionalJavascriptTests\Core\Field;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the timestamp formatter used with time difference setting in views.
- *
- * @group Field
  */
+#[Group('Field')]
 class TimestampFormatterWithTimeDiffViewsTest extends WebDriverTestBase {
 
   /**

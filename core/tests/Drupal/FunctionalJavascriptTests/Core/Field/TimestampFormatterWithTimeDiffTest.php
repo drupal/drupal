@@ -10,12 +10,12 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the 'timestamp' formatter when is used with time difference setting.
- *
- * @group Field
  */
+#[Group('Field')]
 class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
 
   /**

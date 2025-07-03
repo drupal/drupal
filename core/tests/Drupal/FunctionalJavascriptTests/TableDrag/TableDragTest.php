@@ -7,12 +7,12 @@ namespace Drupal\FunctionalJavascriptTests\TableDrag;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests draggable table.
- *
- * @group javascript
  */
+#[Group('javascript')]
 class TableDragTest extends WebDriverTestBase {
 
   /**

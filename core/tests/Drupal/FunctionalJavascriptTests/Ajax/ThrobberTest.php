@@ -6,12 +6,12 @@ namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\hold_test\HoldTestHelper;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the throbber.
- *
- * @group Ajax
  */
+#[Group('Ajax')]
 class ThrobberTest extends WebDriverTestBase {
 
   /**
