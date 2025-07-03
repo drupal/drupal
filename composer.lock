@@ -497,7 +497,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "a2b58b83685c78305e1448a22fc4b6d0efa3e16d"
+                "reference": "cc47b8e83dc7fe1fb24f2baa25102b85a24212de"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -551,6 +551,7 @@
                 "twig/twig": "^3.21.0"
             },
             "conflict": {
+                "dealerdirect/phpcodesniffer-composer-installer": "1.1.0",
                 "drupal/automatic_updates": "<4",
                 "drupal/project_browser": "<2.1",
                 "drush/drush": "<12.4.3"
