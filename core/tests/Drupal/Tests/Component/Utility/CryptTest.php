@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Crypt;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests random byte generation.
- *
- * @group Utility
- *
- * @coversDefaultClass \Drupal\Component\Utility\Crypt
  */
+#[CoversClass(Crypt::class)]
+#[Group('Utility')]
 class CryptTest extends TestCase {
 
   /**
@@ -24,9 +25,9 @@ class CryptTest extends TestCase {
    * @param string $expected_hash
    *   Expected result from hashing $data.
    *
-   * @dataProvider providerTestHashBase64
-   * @covers ::hashBase64
+   * @legacy-covers ::hashBase64
    */
+  #[DataProvider('providerTestHashBase64')]
   public function testHashBase64($data, $expected_hash): void {
     $hash = Crypt::hashBase64($data);
     $this->assertEquals($expected_hash, $hash, 'The correct hash was not calculated.');
@@ -42,9 +43,9 @@ class CryptTest extends TestCase {
    * @param string $expected_hmac
    *   Expected result from hashing $data using $key.
    *
-   * @dataProvider providerTestHmacBase64
-   * @covers ::hmacBase64
+   * @legacy-covers ::hmacBase64
    */
+  #[DataProvider('providerTestHmacBase64')]
   public function testHmacBase64($data, $key, $expected_hmac): void {
     $hmac = Crypt::hmacBase64($data, $key);
     $this->assertEquals($expected_hmac, $hmac, 'The correct hmac was not calculated.');
@@ -58,9 +59,9 @@ class CryptTest extends TestCase {
    * @param string $key
    *   Key to use in hashing process.
    *
-   * @dataProvider providerTestHmacBase64Invalid
-   * @covers ::hmacBase64
+   * @legacy-covers ::hmacBase64
    */
+  #[DataProvider('providerTestHmacBase64Invalid')]
   public function testHmacBase64Invalid($data, $key): void {
     $this->expectException('InvalidArgumentException');
     Crypt::hmacBase64($data, $key);

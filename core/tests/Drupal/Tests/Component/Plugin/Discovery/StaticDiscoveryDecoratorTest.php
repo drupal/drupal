@@ -7,12 +7,16 @@ namespace Drupal\Tests\Component\Plugin\Discovery;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\StaticDiscovery;
 use Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @group Plugin
- * @coversDefaultClass \Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator
+ * Tests Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator.
  */
+#[CoversClass(StaticDiscoveryDecorator::class)]
+#[Group('Plugin')]
 class StaticDiscoveryDecoratorTest extends TestCase {
 
   /**
@@ -58,9 +62,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
   }
 
   /**
-   * @covers ::getDefinition
-   * @dataProvider providerGetDefinition
+   * @legacy-covers ::getDefinition
    */
+  #[DataProvider('providerGetDefinition')]
   public function testGetDefinition($expected, $has_register_definitions, $exception_on_invalid, $definitions, $base_plugin_id): void {
     // Mock our StaticDiscoveryDecorator.
     $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecorator::class)
@@ -123,9 +127,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
   }
 
   /**
-   * @covers ::getDefinitions
-   * @dataProvider providerGetDefinitions
+   * @legacy-covers ::getDefinitions
    */
+  #[DataProvider('providerGetDefinitions')]
   public function testGetDefinitions($has_register_definitions, $definitions): void {
     // Mock our StaticDiscoveryDecorator.
     $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecorator::class)
@@ -186,9 +190,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
   }
 
   /**
-   * @covers ::__call
-   * @dataProvider providerCall
+   * @legacy-covers ::__call
    */
+  #[DataProvider('providerCall')]
   public function testCall($method, $args): void {
     // Mock a decorated object.
     $mock_decorated = $this->getMockBuilder(StaticDiscoveryTestDecoratedClass::class)

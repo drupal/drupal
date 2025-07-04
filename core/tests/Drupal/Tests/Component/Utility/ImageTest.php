@@ -5,19 +5,22 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Image;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Image
- * @group Image
+ * Tests Drupal\Component\Utility\Image.
  */
+#[CoversClass(Image::class)]
+#[Group('Image')]
 class ImageTest extends TestCase {
 
   /**
    * Tests all control flow branches in image_dimensions_scale().
-   *
-   * @dataProvider providerTestScaleDimensions
    */
+  #[DataProvider('providerTestScaleDimensions')]
   public function testScaleDimensions($input, $output): void {
     // Process the test dataset.
     $return_value = Image::scaleDimensions($input['dimensions'], $input['width'], $input['height'], $input['upscale']);
@@ -158,7 +161,7 @@ class ImageTest extends TestCase {
   }
 
   /**
-   * @covers ::getKeywordOffset
+   * @legacy-covers ::getKeywordOffset
    */
   public function testInvalidGetKeywordOffset(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -167,10 +170,9 @@ class ImageTest extends TestCase {
   }
 
   /**
-   * @covers ::getKeywordOffset
-   *
-   * @dataProvider providerTestGetKeywordOffset
+   * @legacy-covers ::getKeywordOffset
    */
+  #[DataProvider('providerTestGetKeywordOffset')]
   public function testGetKeywordOffset(array $input, int $expected): void {
     $this->assertSame($expected, Image::getKeywordOffset($input['anchor'], $input['current'], $input['new']));
   }

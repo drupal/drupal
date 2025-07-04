@@ -8,17 +8,17 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Random;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 // cspell:ignore répét répété
-
 /**
  * Tests \Drupal\Component\Utility\Html.
- *
- * @group Common
- *
- * @coversDefaultClass \Drupal\Component\Utility\Html
  */
+#[CoversClass(Html::class)]
+#[Group('Common')]
 class HtmlTest extends TestCase {
 
   /**
@@ -42,10 +42,9 @@ class HtmlTest extends TestCase {
    *   (optional) An array of string replacements to use on the identifier. If
    *   NULL, no filter will be passed and a default will be used.
    *
-   * @dataProvider providerTestCleanCssIdentifier
-   *
-   * @covers ::cleanCssIdentifier
+   * @legacy-covers ::cleanCssIdentifier
    */
+  #[DataProvider('providerTestCleanCssIdentifier')]
   public function testCleanCssIdentifier($expected, $source, $filter = NULL): void {
     if ($filter !== NULL) {
       $this->assertSame($expected, Html::cleanCssIdentifier($source, $filter));
@@ -94,7 +93,7 @@ class HtmlTest extends TestCase {
   /**
    * Tests that Html::getClass() cleans the class name properly.
    *
-   * @covers ::getClass
+   * @legacy-covers ::getClass
    */
   public function testHtmlClass(): void {
     // Verify Drupal coding standards are enforced.
@@ -116,10 +115,9 @@ class HtmlTest extends TestCase {
    * @param bool $reset
    *   (optional) If TRUE, reset the list of seen IDs. Defaults to FALSE.
    *
-   * @dataProvider providerTestHtmlGetUniqueId
-   *
-   * @covers ::getUniqueId
+   * @legacy-covers ::getUniqueId
    */
+  #[DataProvider('providerTestHtmlGetUniqueId')]
   public function testHtmlGetUniqueId($expected, $source, $reset = FALSE): void {
     if ($reset) {
       Html::resetSeenIds();
@@ -159,10 +157,9 @@ class HtmlTest extends TestCase {
    * @param string $source
    *   The string being transformed to an ID.
    *
-   * @dataProvider providerTestHtmlGetUniqueIdWithAjaxIds
-   *
-   * @covers ::getUniqueId
+   * @legacy-covers ::getUniqueId
    */
+  #[DataProvider('providerTestHtmlGetUniqueIdWithAjaxIds')]
   public function testHtmlGetUniqueIdWithAjaxIds($expected, $source): void {
     Html::setIsAjax(TRUE);
     $id = Html::getUniqueId($source);
@@ -203,10 +200,9 @@ class HtmlTest extends TestCase {
    * @param string $source
    *   The string being transformed to an ID.
    *
-   * @dataProvider providerTestHtmlGetId
-   *
-   * @covers ::getId
+   * @legacy-covers ::getId
    */
+  #[DataProvider('providerTestHtmlGetId')]
   public function testHtmlGetId($expected, $source): void {
     Html::setIsAjax(FALSE);
     $this->assertSame($expected, Html::getId($source));
@@ -238,9 +234,9 @@ class HtmlTest extends TestCase {
   /**
    * Tests Html::decodeEntities().
    *
-   * @dataProvider providerDecodeEntities
-   * @covers ::decodeEntities
+   * @legacy-covers ::decodeEntities
    */
+  #[DataProvider('providerDecodeEntities')]
   public function testDecodeEntities($text, $expected): void {
     $this->assertEquals($expected, Html::decodeEntities($text));
   }
@@ -279,9 +275,9 @@ class HtmlTest extends TestCase {
   /**
    * Tests Html::escape().
    *
-   * @dataProvider providerEscape
-   * @covers ::escape
+   * @legacy-covers ::escape
    */
+  #[DataProvider('providerEscape')]
   public function testEscape($expected, $text): void {
     $this->assertEquals($expected, Html::escape($text));
   }
@@ -313,8 +309,8 @@ class HtmlTest extends TestCase {
   /**
    * Tests relationship between escaping and decoding HTML entities.
    *
-   * @covers ::decodeEntities
-   * @covers ::escape
+   * @legacy-covers ::decodeEntities
+   * @legacy-covers ::escape
    */
   public function testDecodeEntitiesAndEscape(): void {
     $string = "<em>répét&eacute;</em>";
@@ -335,7 +331,7 @@ class HtmlTest extends TestCase {
    * serialization would cause errors in getElementsByTagName() in the
    * serialization function.
    *
-   * @covers ::serialize
+   * @legacy-covers ::serialize
    */
   public function testSerialize(): void {
     $document = new \DOMDocument();
@@ -344,17 +340,17 @@ class HtmlTest extends TestCase {
   }
 
   /**
-   * @covers ::transformRootRelativeUrlsToAbsolute
-   * @dataProvider providerTestTransformRootRelativeUrlsToAbsolute
+   * @legacy-covers ::transformRootRelativeUrlsToAbsolute
    */
+  #[DataProvider('providerTestTransformRootRelativeUrlsToAbsolute')]
   public function testTransformRootRelativeUrlsToAbsolute($html, $scheme_and_host, $expected_html): void {
     $this->assertSame($expected_html ?: $html, Html::transformRootRelativeUrlsToAbsolute($html, $scheme_and_host));
   }
 
   /**
-   * @covers ::transformRootRelativeUrlsToAbsolute
-   * @dataProvider providerTestTransformRootRelativeUrlsToAbsoluteAssertion
+   * @legacy-covers ::transformRootRelativeUrlsToAbsolute
    */
+  #[DataProvider('providerTestTransformRootRelativeUrlsToAbsoluteAssertion')]
   public function testTransformRootRelativeUrlsToAbsoluteAssertion($scheme_and_host): void {
     $this->expectException(\AssertionError::class);
     Html::transformRootRelativeUrlsToAbsolute('', $scheme_and_host);

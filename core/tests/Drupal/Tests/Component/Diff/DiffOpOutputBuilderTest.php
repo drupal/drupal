@@ -6,17 +6,20 @@ namespace Drupal\Tests\Component\Diff;
 
 use Drupal\Component\Diff\DiffOpOutputBuilder;
 use Drupal\Component\Diff\Engine\DiffOpAdd;
-use Drupal\Component\Diff\Engine\DiffOpCopy;
 use Drupal\Component\Diff\Engine\DiffOpChange;
+use Drupal\Component\Diff\Engine\DiffOpCopy;
 use Drupal\Component\Diff\Engine\DiffOpDelete;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\Diff\Differ;
 
 /**
- * @coversDefaultClass \Drupal\Component\Diff\DiffOpOutputBuilder
- *
- * @group Diff
+ * Tests Drupal\Component\Diff\DiffOpOutputBuilder.
  */
+#[CoversClass(DiffOpOutputBuilder::class)]
+#[Group('Diff')]
 class DiffOpOutputBuilderTest extends TestCase {
 
   /**
@@ -91,9 +94,9 @@ class DiffOpOutputBuilderTest extends TestCase {
   /**
    * Tests whether op classes returned match expectations.
    *
-   * @covers ::toOpsArray
-   * @dataProvider provideTestDiff
+   * @legacy-covers ::toOpsArray
    */
+  #[DataProvider('provideTestDiff')]
   public function testToOpsArray(array $expected, array $from, array $to): void {
     $diffOpBuilder = new DiffOpOutputBuilder();
     $differ = new Differ($diffOpBuilder);
@@ -102,9 +105,9 @@ class DiffOpOutputBuilderTest extends TestCase {
   }
 
   /**
-   * @covers ::getDiff
-   * @dataProvider provideTestDiff
+   * @legacy-covers ::getDiff
    */
+  #[DataProvider('provideTestDiff')]
   public function testGetDiff(array $expected, array $from, array $to): void {
     $differ = new Differ(new DiffOpOutputBuilder());
     $diff = $differ->diff($from, $to);
@@ -114,7 +117,7 @@ class DiffOpOutputBuilderTest extends TestCase {
   /**
    * Tests that two files can be successfully diffed.
    *
-   * @covers ::toOpsArray
+   * @legacy-covers ::toOpsArray
    */
   public function testDiffInfiniteLoop(): void {
     $from = explode("\n", file_get_contents(__DIR__ . '/Engine/fixtures/file1.txt'));

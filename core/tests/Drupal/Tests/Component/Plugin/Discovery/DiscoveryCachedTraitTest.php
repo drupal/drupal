@@ -5,13 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait;
+use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait
- * @uses \Drupal\Component\Plugin\Discovery\DiscoveryTrait
- * @group Plugin
+ * Tests Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait.
  */
+#[CoversClass(DiscoveryCachedTrait::class)]
+#[Group('Plugin')]
+#[UsesClass(DiscoveryTrait::class)]
 class DiscoveryCachedTraitTest extends TestCase {
 
   /**
@@ -32,9 +38,9 @@ class DiscoveryCachedTraitTest extends TestCase {
   }
 
   /**
-   * @covers ::getDefinition
-   * @dataProvider providerGetDefinition
+   * @legacy-covers ::getDefinition
    */
+  #[DataProvider('providerGetDefinition')]
   public function testGetDefinition($expected, $cached_definitions, $get_definitions, $plugin_id): void {
     $trait = $this->getMockBuilder(DiscoveryCachedTraitMockableClass::class)
       ->onlyMethods(['getDefinitions'])

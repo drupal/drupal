@@ -6,14 +6,16 @@ namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the TranslatableMarkup class.
- *
- * @coversDefaultClass \Drupal\Component\Render\FormattableMarkup
- * @group utility
  */
+#[CoversClass(FormattableMarkup::class)]
+#[Group('utility')]
 class FormattableMarkupTest extends TestCase {
 
   use ExpectDeprecationTrait;
@@ -33,8 +35,8 @@ class FormattableMarkupTest extends TestCase {
   protected $lastErrorNumber;
 
   /**
-   * @covers ::__toString
-   * @covers ::jsonSerialize
+   * @legacy-covers ::__toString
+   * @legacy-covers ::jsonSerialize
    */
   public function testToString(): void {
     $string = 'Can I have a @replacement';
@@ -46,7 +48,7 @@ class FormattableMarkupTest extends TestCase {
   }
 
   /**
-   * @covers ::count
+   * @legacy-covers ::count
    */
   public function testCount(): void {
     $string = 'Can I have a @replacement';
@@ -72,9 +74,9 @@ class FormattableMarkupTest extends TestCase {
   }
 
   /**
-   * @covers ::__toString
-   * @dataProvider providerTestUnexpectedPlaceholder
+   * @legacy-covers ::__toString
    */
+  #[DataProvider('providerTestUnexpectedPlaceholder')]
   public function testUnexpectedPlaceholder($string, $arguments, $error_number, $error_message): void {
     // We set a custom error handler because of
     // https://github.com/sebastianbergmann/phpunit/issues/487

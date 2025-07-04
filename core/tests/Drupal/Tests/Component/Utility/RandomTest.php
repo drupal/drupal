@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Random;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests random data generation.
- *
- * @group Utility
- *
- * @coversDefaultClass \Drupal\Component\Utility\Random
  */
+#[CoversClass(Random::class)]
+#[Group('Utility')]
 class RandomTest extends TestCase {
 
   /**
@@ -28,7 +28,7 @@ class RandomTest extends TestCase {
   /**
    * Tests unique random string generation.
    *
-   * @covers ::string
+   * @legacy-covers ::string
    */
   public function testRandomStringUniqueness(): void {
     $strings = [];
@@ -43,7 +43,7 @@ class RandomTest extends TestCase {
   /**
    * Tests unique random name generation.
    *
-   * @covers ::name
+   * @legacy-covers ::name
    */
   public function testRandomNamesUniqueness(): void {
     $names = [];
@@ -58,7 +58,7 @@ class RandomTest extends TestCase {
   /**
    * Tests infinite loop prevention whilst generating random names.
    *
-   * @covers ::name
+   * @legacy-covers ::name
    */
   public function testRandomNameException(): void {
     // There are fewer than 100 possibilities so an exception should occur to
@@ -74,7 +74,7 @@ class RandomTest extends TestCase {
   /**
    * Tests infinite loop prevention whilst generating random strings.
    *
-   * @covers ::string
+   * @legacy-covers ::string
    */
   public function testRandomStringException(): void {
     // There are fewer than 100 possibilities so an exception should occur to
@@ -90,7 +90,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random name generation if uniqueness is not enforced.
    *
-   * @covers ::name
+   * @legacy-covers ::name
    */
   public function testRandomNameNonUnique(): void {
     // There are fewer than 100 possibilities if we were forcing uniqueness so
@@ -105,7 +105,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random string if uniqueness is not enforced.
    *
-   * @covers ::string
+   * @legacy-covers ::string
    */
   public function testRandomStringNonUnique(): void {
     // There are fewer than 100 possibilities if we were forcing uniqueness so
@@ -120,7 +120,7 @@ class RandomTest extends TestCase {
   /**
    * Tests unique random name generation.
    *
-   * @covers ::machineName
+   * @legacy-covers ::machineName
    */
   public function testRandomMachineNamesUniqueness(): void {
     $names = [];
@@ -135,7 +135,7 @@ class RandomTest extends TestCase {
   /**
    * Tests infinite loop prevention whilst generating random names.
    *
-   * @covers ::machineName
+   * @legacy-covers ::machineName
    */
   public function testRandomMachineNameException(): void {
     // There are fewer than 100 possibilities so an exception should occur to
@@ -150,7 +150,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random name generation if uniqueness is not enforced.
    *
-   * @covers ::machineName
+   * @legacy-covers ::machineName
    */
   public function testRandomMachineNameNonUnique(): void {
     // There are fewer than 100 possibilities meaning if uniqueness was
@@ -165,7 +165,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random object generation to ensure the expected number of properties.
    *
-   * @covers ::object
+   * @legacy-covers ::object
    */
   public function testRandomObject(): void {
     // For values of 0 and 1 \Drupal\Component\Utility\Random::object() will
@@ -180,7 +180,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random string validation callbacks.
    *
-   * @covers ::string
+   * @legacy-covers ::string
    */
   public function testRandomStringValidator(): void {
     $random = new Random();
@@ -192,7 +192,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random word.
    *
-   * @covers ::word
+   * @legacy-covers ::word
    */
   public function testRandomWordValidator(): void {
     $random = new Random();

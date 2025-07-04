@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Factory;
 
 use Drupal\Component\Plugin\Factory\ReflectionFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @group Plugin
- * @coversDefaultClass \Drupal\Component\Plugin\Factory\ReflectionFactory
+ * Tests Drupal\Component\Plugin\Factory\ReflectionFactory.
  */
+#[CoversClass(ReflectionFactory::class)]
+#[Group('Plugin')]
 class ReflectionFactoryTest extends TestCase {
 
   /**
@@ -77,9 +81,9 @@ class ReflectionFactoryTest extends TestCase {
   }
 
   /**
-   * @covers ::createInstance
-   * @dataProvider providerGetInstanceArguments
+   * @legacy-covers ::createInstance
    */
+  #[DataProvider('providerGetInstanceArguments')]
   public function testCreateInstance($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {
     // Create a mock DiscoveryInterface which can return our plugin definition.
     $mock_discovery = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryInterface')
@@ -102,9 +106,9 @@ class ReflectionFactoryTest extends TestCase {
   }
 
   /**
-   * @covers ::getInstanceArguments
-   * @dataProvider providerGetInstanceArguments
+   * @legacy-covers ::getInstanceArguments
    */
+  #[DataProvider('providerGetInstanceArguments')]
   public function testGetInstanceArguments($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {
     $reflection_factory = $this->getMockBuilder('Drupal\Component\Plugin\Factory\ReflectionFactory')
       ->disableOriginalConstructor()

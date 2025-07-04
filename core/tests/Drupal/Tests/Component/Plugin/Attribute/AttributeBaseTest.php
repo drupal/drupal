@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Attribute;
 
 use Drupal\Component\Plugin\Attribute\AttributeBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Plugin\Attribute\AttributeBase
- * @group Attribute
+ * Tests Drupal\Component\Plugin\Attribute\AttributeBase.
  */
+#[CoversClass(AttributeBase::class)]
+#[Group('Attribute')]
 class AttributeBaseTest extends TestCase {
 
   /**
-   * @covers ::getProvider
-   * @covers ::setProvider
+   * @legacy-covers ::getProvider
+   * @legacy-covers ::setProvider
    */
   public function testSetProvider(): void {
     $plugin = new AttributeBaseStub(id: '1');
@@ -24,7 +27,7 @@ class AttributeBaseTest extends TestCase {
   }
 
   /**
-   * @covers ::getId
+   * @legacy-covers ::getId
    */
   public function testGetId(): void {
     $plugin = new AttributeBaseStub(id: 'example');
@@ -32,8 +35,8 @@ class AttributeBaseTest extends TestCase {
   }
 
   /**
-   * @covers ::getClass
-   * @covers ::setClass
+   * @legacy-covers ::getClass
+   * @legacy-covers ::setClass
    */
   public function testSetClass(): void {
     $plugin = new AttributeBaseStub(id: '1');

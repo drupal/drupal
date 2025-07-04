@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Plugin\Context\Context
- * @group Plugin
+ * Tests Drupal\Component\Plugin\Context\Context.
  */
+#[CoversClass(Context::class)]
+#[Group('Plugin')]
 class ContextTest extends TestCase {
 
   /**
@@ -25,9 +29,9 @@ class ContextTest extends TestCase {
   }
 
   /**
-   * @covers ::getContextValue
-   * @dataProvider providerGetContextValue
+   * @legacy-covers ::getContextValue
    */
+  #[DataProvider('providerGetContextValue')]
   public function testGetContextValue($expected, $context_value, $is_required, $data_type): void {
     // Mock a Context object.
     $mock_context = $this->getMockBuilder('Drupal\Component\Plugin\Context\Context')
@@ -97,9 +101,9 @@ class ContextTest extends TestCase {
   }
 
   /**
-   * @covers ::hasContextValue
-   * @dataProvider providerHasContextValue
+   * @legacy-covers ::hasContextValue
    */
+  #[DataProvider('providerHasContextValue')]
   public function testHasContextValue($has_context_value, $default_value): void {
     $mock_definition = $this->createMock('Drupal\Component\Plugin\Context\ContextDefinitionInterface');
 
@@ -114,7 +118,7 @@ class ContextTest extends TestCase {
   }
 
   /**
-   * @covers ::getContextValue
+   * @legacy-covers ::getContextValue
    */
   public function testDefaultValue(): void {
     $mock_definition = $this->createMock('Drupal\Component\Plugin\Context\ContextDefinitionInterface');

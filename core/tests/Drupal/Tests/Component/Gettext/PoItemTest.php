@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Gettext;
 
 use Drupal\Component\Gettext\PoItem;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Gettext\PoItem
- * @group Gettext
+ * Tests Drupal\Component\Gettext\PoItem.
  */
+#[CoversClass(PoItem::class)]
+#[Group('Gettext')]
 class PoItemTest extends TestCase {
 
   /**
@@ -61,9 +65,7 @@ class PoItemTest extends TestCase {
     // cSpell:enable
   }
 
-  /**
-   * @dataProvider providerStrings
-   */
+  #[DataProvider('providerStrings')]
   public function testFormat($source, $context, $translation, $expected): void {
     $item = new PoItem();
 

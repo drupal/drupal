@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Variable;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test variable export functionality in Variable component.
- *
- * @group Variable
- * @group Utility
- *
- * @coversDefaultClass \Drupal\Component\Utility\Variable
  */
+#[CoversClass(Variable::class)]
+#[Group('Variable')]
+#[Group('Utility')]
 class VariableTest extends TestCase {
 
   /**
@@ -75,10 +76,9 @@ class VariableTest extends TestCase {
    * @param string $expected_name
    *   The expected human-readable name of the callable.
    *
-   * @dataProvider providerCallableToString
-   *
-   * @covers ::callableToString
+   * @legacy-covers ::callableToString
    */
+  #[DataProvider('providerCallableToString')]
   public function testCallableToString($callable, string $expected_name): void {
     $this->assertSame($expected_name, Variable::callableToString($callable));
   }
@@ -171,9 +171,9 @@ class VariableTest extends TestCase {
    * @param mixed $variable
    *   The variable to be exported.
    *
-   * @covers ::export
-   * @dataProvider providerTestExport
+   * @legacy-covers ::export
    */
+  #[DataProvider('providerTestExport')]
   public function testExport($expected, $variable): void {
     $this->assertEquals($expected, Variable::export($variable));
   }

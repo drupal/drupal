@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Attribute;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Plugin\Discovery\AttributeClassDiscovery
- * @group Attribute
- * @runTestsInSeparateProcesses
+ * Tests Drupal\Component\Plugin\Discovery\AttributeClassDiscovery.
  */
+#[CoversClass(AttributeClassDiscovery::class)]
+#[Group('Attribute')]
+#[RunTestsInSeparateProcesses]
 class AttributeClassDiscoveryTest extends TestCase {
 
   /**
@@ -36,8 +40,8 @@ class AttributeClassDiscoveryTest extends TestCase {
   }
 
   /**
-   * @covers ::__construct
-   * @covers ::getPluginNamespaces
+   * @legacy-covers ::__construct
+   * @legacy-covers ::getPluginNamespaces
    */
   public function testGetPluginNamespaces(): void {
     // Path to the classes which we'll discover and parse annotation.
@@ -51,8 +55,8 @@ class AttributeClassDiscoveryTest extends TestCase {
   }
 
   /**
-   * @covers ::getDefinitions
-   * @covers ::prepareAttributeDefinition
+   * @legacy-covers ::getDefinitions
+   * @legacy-covers ::prepareAttributeDefinition
    */
   public function testGetDefinitions(): void {
     $discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . "/../../../../../fixtures/plugins/Plugin"]]);

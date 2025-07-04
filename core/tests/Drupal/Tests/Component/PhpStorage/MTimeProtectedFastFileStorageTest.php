@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\PhpStorage;
 
+use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the MTimeProtectedFastFileStorage implementation.
- *
- * @coversDefaultClass \Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage
- *
- * @group Drupal
- * @group PhpStorage
  */
+#[CoversClass(MTimeProtectedFastFileStorage::class)]
+#[Group('Drupal')]
+#[Group('PhpStorage')]
 class MTimeProtectedFastFileStorageTest extends MTimeProtectedFileStorageBase {
 
   /**

@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Diff\Engine;
 
-// cspell:ignore HWLDFWordAccumulator
-
 use Drupal\Component\Diff\Engine\HWLDFWordAccumulator;
+// cspell:ignore HWLDFWordAccumulator
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 // cspell:ignore wordword
-
 /**
  * Test HWLDFWordAccumulator.
- *
- * @coversDefaultClass \Drupal\Component\Diff\Engine\HWLDFWordAccumulator
- *
- * @group Diff
  */
+#[CoversClass(HWLDFWordAccumulator::class)]
+#[Group('Diff')]
 class HWLDFWordAccumulatorTest extends TestCase {
 
   /**
    * Verify that we only get back a NBSP from an empty accumulator.
    *
-   * @covers ::getLines
-   *
    * @see Drupal\Component\Diff\Engine\HWLDFWordAccumulator::NBSP
+   * @legacy-covers ::getLines
    */
   public function testGetLinesEmpty(): void {
     $acc = new HWLDFWordAccumulator();
@@ -47,9 +45,9 @@ class HWLDFWordAccumulatorTest extends TestCase {
   }
 
   /**
-   * @covers ::addWords
-   * @dataProvider provideAddWords
+   * @legacy-covers ::addWords
    */
+  #[DataProvider('provideAddWords')]
   public function testAddWords($expected, $words, $tag): void {
     $acc = new HWLDFWordAccumulator();
     $acc->addWords($words, $tag);

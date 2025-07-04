@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Attribute;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Plugin\Discovery\AttributeClassDiscovery
- * @covers \Drupal\Component\Discovery\MissingClassDetectionClassLoader
- * @group Attribute
- * @runTestsInSeparateProcesses
+ * @legacy-covers \Drupal\Component\Discovery\MissingClassDetectionClassLoader
  */
+#[CoversClass(AttributeClassDiscovery::class)]
+#[Group('Attribute')]
+#[RunTestsInSeparateProcesses]
 class AttributeClassDiscoveryCachedTest extends TestCase {
 
   /**
@@ -40,7 +43,7 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
   /**
    * Tests that getDefinitions() retrieves the file cache correctly.
    *
-   * @covers ::getDefinitions
+   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     // Path to the classes which we'll discover and parse annotation.
@@ -100,7 +103,7 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
   /**
    * Tests discovery with missing traits.
    *
-   * @covers ::getDefinitions
+   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitionsMissingTrait(): void {
     // Path to the classes which we'll discover and parse annotation.

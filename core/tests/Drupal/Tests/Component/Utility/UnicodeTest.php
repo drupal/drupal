@@ -6,24 +6,25 @@ namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test unicode handling features implemented in Unicode component.
- *
- * @group Utility
- *
- * @coversDefaultClass \Drupal\Component\Utility\Unicode
  */
+#[CoversClass(Unicode::class)]
+#[Group('Utility')]
 class UnicodeTest extends TestCase {
   use ExpectDeprecationTrait;
 
   /**
    * Tests multibyte ucfirst.
    *
-   * @dataProvider providerUcfirst
-   * @covers ::ucfirst
+   * @legacy-covers ::ucfirst
    */
+  #[DataProvider('providerUcfirst')]
   public function testUcfirst($text, $expected): void {
     $this->assertEquals($expected, Unicode::ucfirst($text));
   }
@@ -52,9 +53,9 @@ class UnicodeTest extends TestCase {
   /**
    * Tests multibyte lcfirst.
    *
-   * @dataProvider providerLcfirst
-   * @covers ::lcfirst
+   * @legacy-covers ::lcfirst
    */
+  #[DataProvider('providerLcfirst')]
   public function testLcfirst($text, $expected): void {
     $this->assertEquals($expected, Unicode::lcfirst($text));
   }
@@ -83,9 +84,9 @@ class UnicodeTest extends TestCase {
   /**
    * Tests multibyte ucwords.
    *
-   * @dataProvider providerUcwords
-   * @covers ::ucwords
+   * @legacy-covers ::ucwords
    */
+  #[DataProvider('providerUcwords')]
   public function testUcwords($text, $expected): void {
     $this->assertEquals($expected, Unicode::ucwords($text));
   }
@@ -116,9 +117,9 @@ class UnicodeTest extends TestCase {
   /**
    * Tests multibyte truncate.
    *
-   * @dataProvider providerTruncate
-   * @covers ::truncate
+   * @legacy-covers ::truncate
    */
+  #[DataProvider('providerTruncate')]
   public function testTruncate($text, $max_length, $expected, $wordsafe = FALSE, $add_ellipsis = FALSE): void {
     $this->assertEquals($expected, Unicode::truncate($text, $max_length, $wordsafe, $add_ellipsis));
   }
@@ -215,9 +216,9 @@ EOF;
    * @param string $expected
    *   The expected return from Unicode::truncateBytes().
    *
-   * @dataProvider providerTestTruncateBytes
-   * @covers ::truncateBytes
+   * @legacy-covers ::truncateBytes
    */
+  #[DataProvider('providerTestTruncateBytes')]
   public function testTruncateBytes($text, $max_length, $expected): void {
     $this->assertEquals($expected, Unicode::truncateBytes($text, $max_length), 'The string was not correctly truncated.');
   }
@@ -250,9 +251,9 @@ EOF;
    * @param string $message
    *   The message to display on failure.
    *
-   * @dataProvider providerTestValidateUtf8
-   * @covers ::validateUtf8
+   * @legacy-covers ::validateUtf8
    */
+  #[DataProvider('providerTestValidateUtf8')]
   public function testValidateUtf8($text, $expected, $message): void {
     $this->assertEquals($expected, Unicode::validateUtf8($text), $message);
   }
@@ -290,9 +291,9 @@ EOF;
    * @param string|bool $expected
    *   The expected result.
    *
-   * @dataProvider providerTestConvertToUtf8
-   * @covers ::convertToUtf8
+   * @legacy-covers ::convertToUtf8
    */
+  #[DataProvider('providerTestConvertToUtf8')]
   public function testConvertToUtf8($data, $encoding, $expected): void {
     $this->assertEquals($expected, Unicode::convertToUtf8($data, $encoding));
   }

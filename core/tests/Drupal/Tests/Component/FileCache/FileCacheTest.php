@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\FileCache;
 
 use Drupal\Component\FileCache\FileCache;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\FileCache\FileCache
- * @group FileCache
+ * Tests Drupal\Component\FileCache\FileCache.
  */
+#[CoversClass(FileCache::class)]
+#[Group('FileCache')]
 class FileCacheTest extends TestCase {
 
   /**
@@ -38,8 +41,8 @@ class FileCacheTest extends TestCase {
   }
 
   /**
-   * @covers ::get
-   * @covers ::__construct
+   * @legacy-covers ::get
+   * @legacy-covers ::__construct
    */
   public function testGet(): void {
     // Test a cache miss.
@@ -66,7 +69,7 @@ class FileCacheTest extends TestCase {
   }
 
   /**
-   * @covers ::getMultiple
+   * @legacy-covers ::getMultiple
    */
   public function testGetMultiple(): void {
     // Test a cache miss.
@@ -101,7 +104,7 @@ class FileCacheTest extends TestCase {
   }
 
   /**
-   * @covers ::set
+   * @legacy-covers ::set
    */
   public function testSet(): void {
     $filename = __DIR__ . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR . 'llama-23.txt';
@@ -122,7 +125,7 @@ class FileCacheTest extends TestCase {
   }
 
   /**
-   * @covers ::delete
+   * @legacy-covers ::delete
    */
   public function testDelete(): void {
     $filename = __DIR__ . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR . 'llama-23.txt';

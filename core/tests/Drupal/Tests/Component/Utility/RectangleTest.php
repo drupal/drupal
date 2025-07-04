@@ -5,18 +5,22 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Rectangle;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Rectangle
- * @group Image
+ * Tests Drupal\Component\Utility\Rectangle.
  */
+#[CoversClass(Rectangle::class)]
+#[Group('Image')]
 class RectangleTest extends TestCase {
 
   /**
    * Tests wrong rectangle width.
    *
-   * @covers ::rotate
+   * @legacy-covers ::rotate
    */
   public function testWrongWidth(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -26,7 +30,7 @@ class RectangleTest extends TestCase {
   /**
    * Tests wrong rectangle height.
    *
-   * @covers ::rotate
+   * @legacy-covers ::rotate
    */
   public function testWrongHeight(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -47,12 +51,11 @@ class RectangleTest extends TestCase {
    * @param int $exp_height
    *   The expected height of the rotated rectangle.
    *
-   * @covers ::rotate
-   * @covers ::getBoundingWidth
-   * @covers ::getBoundingHeight
-   *
-   * @dataProvider providerPhp55RotateDimensions
+   * @legacy-covers ::rotate
+   * @legacy-covers ::getBoundingWidth
+   * @legacy-covers ::getBoundingHeight
    */
+  #[DataProvider('providerPhp55RotateDimensions')]
   public function testRotateDimensions($width, $height, $angle, $exp_width, $exp_height): void {
     $rect = new Rectangle($width, $height);
     $rect->rotate($angle);

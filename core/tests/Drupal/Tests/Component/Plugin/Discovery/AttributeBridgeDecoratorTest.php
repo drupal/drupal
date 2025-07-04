@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
+use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Discovery\AttributeBridgeDecorator;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator
- * @group Plugin
+ * Tests Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator.
  */
+#[CoversClass(AnnotationBridgeDecorator::class)]
+#[Group('Plugin')]
 class AttributeBridgeDecoratorTest extends TestCase {
 
   /**
-   * @covers ::getDefinitions
+   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     // Normally the attribute classes would be autoloaded.
@@ -47,7 +51,7 @@ class AttributeBridgeDecoratorTest extends TestCase {
   /**
    * Tests that the decorator of other methods works.
    *
-   * @covers ::__call
+   * @legacy-covers ::__call
    */
   public function testOtherMethod(): void {
     // Normally the attribute classes would be autoloaded.

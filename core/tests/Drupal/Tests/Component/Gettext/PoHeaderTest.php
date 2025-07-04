@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Gettext;
 
 use Drupal\Component\Gettext\PoHeader;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for the Gettext PO file header handling features.
  *
  * @see Drupal\Component\Gettext\PoHeader.
- *
- * @group Gettext
  */
+#[Group('Gettext')]
 class PoHeaderTest extends TestCase {
 
   /**
@@ -26,9 +27,8 @@ class PoHeaderTest extends TestCase {
    *   The plural expression.
    * @param array $expected
    *   Array of expected plural positions keyed by plural value.
-   *
-   * @dataProvider providerTestPluralsFormula
    */
+  #[DataProvider('providerTestPluralsFormula')]
   public function testPluralsFormula($plural, $expected): void {
     $p = new PoHeader();
     [, $new_plural] = $p->parsePluralForms($plural);

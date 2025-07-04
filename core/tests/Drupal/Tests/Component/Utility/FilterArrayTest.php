@@ -5,23 +5,24 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\FilterArray;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test filter array functions.
- *
- * @group Utility
- *
- * @coversDefaultClass \Drupal\Component\Utility\FilterArray
  */
+#[CoversClass(FilterArray::class)]
+#[Group('Utility')]
 class FilterArrayTest extends TestCase {
 
   /**
    * Tests removing empty strings.
    *
-   * @dataProvider providerRemoveEmptyStrings
-   * @covers ::removeEmptyStrings
+   * @legacy-covers ::removeEmptyStrings
    */
+  #[DataProvider('providerRemoveEmptyStrings')]
   public function testRemoveEmptyStrings(array $values, array $expected): void {
     $this->assertEquals($expected, array_values(FilterArray::removeEmptyStrings($values)));
   }

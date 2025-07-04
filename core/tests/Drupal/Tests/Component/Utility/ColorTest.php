@@ -5,25 +5,25 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Color;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests Color utility class conversions.
- *
- * @group Utility
  */
+#[Group('Utility')]
 class ColorTest extends TestCase {
 
   /**
-   * @covers \Drupal\Component\Utility\Color::validateHex
    *
    * @param bool $expected
    *   The expected result of validation.
    * @param string $value
    *   The hex color value.
-   *
-   * @dataProvider providerTestValidateHex
+   * @legacy-covers \Drupal\Component\Utility\Color::validateHex
    */
+  #[DataProvider('providerTestValidateHex')]
   public function testValidateHex($expected, $value): void {
     $this->assertSame($expected, Color::validateHex($value));
   }
@@ -77,9 +77,8 @@ class ColorTest extends TestCase {
    *   The expected rgb color value.
    * @param bool $invalid
    *   Whether this value is invalid and exception should be expected.
-   *
-   * @dataProvider providerTestHexToRgb
    */
+  #[DataProvider('providerTestHexToRgb')]
   public function testHexToRgb($value, $expected, $invalid = FALSE): void {
     if ($invalid) {
       $this->expectException('InvalidArgumentException');
@@ -138,9 +137,8 @@ class ColorTest extends TestCase {
    *   The rgb color value.
    * @param string $expected
    *   The expected hex color value.
-   *
-   * @dataProvider providerTestRbgToHex
    */
+  #[DataProvider('providerTestRbgToHex')]
   public function testRgbToHex($value, $expected): void {
     $this->assertSame($expected, Color::rgbToHex($value));
   }
@@ -205,9 +203,8 @@ class ColorTest extends TestCase {
    *   The input hex color value.
    * @param string $expected
    *   The expected normalized hex color value.
-   *
-   * @dataProvider providerTestNormalizeHexLength
    */
+  #[DataProvider('providerTestNormalizeHexLength')]
   public function testNormalizeHexLength($value, $expected): void {
     $this->assertSame($expected, Color::normalizeHexLength($value));
   }

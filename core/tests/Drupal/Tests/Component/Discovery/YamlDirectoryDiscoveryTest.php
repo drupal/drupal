@@ -8,15 +8,15 @@ use Drupal\Component\Discovery\DiscoveryException;
 use Drupal\Component\Discovery\YamlDirectoryDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * YamlDirectoryDiscoveryTest component unit tests.
- *
- * @coversDefaultClass \Drupal\Component\Discovery\YamlDirectoryDiscovery
- *
- * @group Discovery
  */
+#[CoversClass(YamlDirectoryDiscovery::class)]
+#[Group('Discovery')]
 class YamlDirectoryDiscoveryTest extends TestCase {
 
   /**
@@ -30,7 +30,7 @@ class YamlDirectoryDiscoveryTest extends TestCase {
   /**
    * Tests YAML directory discovery.
    *
-   * @covers ::findAll
+   * @legacy-covers ::findAll
    */
   public function testDiscovery(): void {
     vfsStream::setup('modules', NULL, [
@@ -102,7 +102,7 @@ class YamlDirectoryDiscoveryTest extends TestCase {
   /**
    * Tests YAML directory discovery with an alternate ID key.
    *
-   * @covers ::findAll
+   * @legacy-covers ::findAll
    */
   public function testDiscoveryAlternateId(): void {
     vfsStream::setup('modules', NULL, [
@@ -124,8 +124,8 @@ class YamlDirectoryDiscoveryTest extends TestCase {
   /**
    * Tests YAML directory discovery with a missing ID key.
    *
-   * @covers ::findAll
-   * @covers ::getIdentifier
+   * @legacy-covers ::findAll
+   * @legacy-covers ::getIdentifier
    */
   public function testDiscoveryNoIdException(): void {
     $this->expectException(DiscoveryException::class);
@@ -146,7 +146,7 @@ class YamlDirectoryDiscoveryTest extends TestCase {
   /**
    * Tests YAML directory discovery with invalid YAML.
    *
-   * @covers ::findAll
+   * @legacy-covers ::findAll
    */
   public function testDiscoveryInvalidYamlException(): void {
     $this->expectException(DiscoveryException::class);

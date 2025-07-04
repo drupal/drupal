@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Timer;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Timer system.
- *
- * @group Utility
- *
- * @coversDefaultClass \Drupal\Component\Utility\Timer
  */
+#[CoversClass(Timer::class)]
+#[Group('Utility')]
 class TimerTest extends TestCase {
 
   /**
    * Tests Timer::read() time accumulation accuracy across multiple restarts.
    *
-   * @covers ::start
-   * @covers ::stop
-   * @covers ::read
+   * @legacy-covers ::start
+   * @legacy-covers ::stop
+   * @legacy-covers ::read
    */
   public function testTimer(): void {
     Timer::start('test');

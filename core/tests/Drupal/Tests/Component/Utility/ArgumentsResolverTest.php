@@ -5,19 +5,22 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\ArgumentsResolver;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\ArgumentsResolver
- * @group Access
+ * Tests Drupal\Component\Utility\ArgumentsResolver.
  */
+#[CoversClass(ArgumentsResolver::class)]
+#[Group('Access')]
 class ArgumentsResolverTest extends TestCase {
 
   /**
    * Tests the getArgument() method.
-   *
-   * @dataProvider providerTestGetArgument
    */
+  #[DataProvider('providerTestGetArgument')]
   public function testGetArgument($callable, $scalars, $objects, $wildcards, $expected): void {
     $arguments = (new ArgumentsResolver($scalars, $objects, $wildcards))->getArguments($callable);
     $this->assertSame($expected, $arguments);
@@ -164,9 +167,8 @@ class ArgumentsResolverTest extends TestCase {
 
   /**
    * Tests handleUnresolvedArgument() for missing arguments.
-   *
-   * @dataProvider providerTestHandleUnresolvedArgument
    */
+  #[DataProvider('providerTestHandleUnresolvedArgument')]
   public function testHandleUnresolvedArgument($callable): void {
     $resolver = new ArgumentsResolver([], [], []);
     $this->expectException(\RuntimeException::class);

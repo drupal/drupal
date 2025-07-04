@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Datetime;
 
 use Drupal\Component\Datetime\Time;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests that getRequest(Micro)Time works when no underlying request exists.
- *
- * @coversDefaultClass \Drupal\Component\Datetime\Time
- * @group Datetime
- * @group #slow
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
+#[CoversClass(Time::class)]
+#[Group('Datetime')]
+#[Group('#slow')]
+#[PreserveGlobalState(FALSE)]
+#[RunTestsInSeparateProcesses]
 class TimeWithNoRequestTest extends TestCase {
 
   /**
@@ -40,7 +43,7 @@ class TimeWithNoRequestTest extends TestCase {
   /**
    * Tests the getRequestTime method.
    *
-   * @covers ::getRequestTime
+   * @legacy-covers ::getRequestTime
    */
   public function testGetRequestTimeImmutable(): void {
     $requestTime = $this->time->getRequestTime();
@@ -51,7 +54,7 @@ class TimeWithNoRequestTest extends TestCase {
   /**
    * Tests the getRequestMicroTime method.
    *
-   * @covers ::getRequestMicroTime
+   * @legacy-covers ::getRequestMicroTime
    */
   public function testGetRequestMicroTimeImmutable(): void {
     $requestTime = $this->time->getRequestMicroTime();
