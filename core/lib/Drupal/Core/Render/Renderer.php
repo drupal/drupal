@@ -209,7 +209,13 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function render(&$elements, $is_root_call = FALSE) {
+  public function render(/* array */&$elements, $is_root_call = FALSE) {
+
+    if (!is_array($elements)) {
+      trigger_error('Calling ' . __METHOD__ . ' with NULL is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Either pass an array or skip the call. See https://www.drupal.org/node/3534020.');
+      return '';
+    }
+
     $context = $this->getCurrentRenderContext();
     if (!isset($context)) {
       throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
