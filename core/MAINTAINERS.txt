@@ -152,7 +152,7 @@ Contact
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Content Moderation
-- Sam Becker 'Sam152' https://www.drupal.org/u/sam152
+- ?
 
 Content Translation
 - ?
@@ -451,7 +451,7 @@ Views
 - Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
 
 Workflows
-- Sam Becker 'Sam152' https://www.drupal.org/u/sam152
+- ?
 
 Workspaces
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
