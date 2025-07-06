@@ -97,6 +97,8 @@ class StatusTest extends BrowserTestBase {
 
     $this->drupalGet('admin/reports/status/php');
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('PHP');
+    $this->assertSession()->pageTextNotContains('$_COOKIE');
 
     $settings['settings']['sa_core_2023_004_phpinfo_flags'] = (object) [
       'value' => INFO_ALL,
