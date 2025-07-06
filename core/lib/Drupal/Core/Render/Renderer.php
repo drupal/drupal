@@ -208,7 +208,12 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function render(&$elements, $is_root_call = FALSE) {
+  public function render(/* array */&$elements, $is_root_call = FALSE) {
+
+    if (!is_array($elements)) {
+      return '';
+    }
+
     $context = $this->getCurrentRenderContext();
     if (!isset($context)) {
       throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");

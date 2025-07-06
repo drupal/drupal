@@ -325,10 +325,11 @@ function template_preprocess_node(&$variables): void {
   //   $variables['content'] is more flexible and consistent.
   $submitted_configurable = $node->getFieldDefinition('created')->isDisplayConfigurable('view') || $node->getFieldDefinition('uid')->isDisplayConfigurable('view');
   if (!$skip_custom_preprocessing || !$submitted_configurable) {
-    $variables['date'] = \Drupal::service('renderer')->render($variables['elements']['created']);
-    unset($variables['elements']['created']);
-    $variables['author_name'] = \Drupal::service('renderer')->render($variables['elements']['uid']);
-    unset($variables['elements']['uid']);
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+    $variables['date'] = !empty($variables['elements']['created']) ? $renderer->render($variables['elements']['created']) : '';
+    $variables['author_name'] = !empty($variables['elements']['uid']) ? $renderer->render($variables['elements']['uid']) : '';
+    unset($variables['elements']['created'], $variables['elements']['uid']);
   }
 
   if (isset($variables['elements']['title']) && (!$skip_custom_preprocessing || !$node->getFieldDefinition('title')->isDisplayConfigurable('view'))) {
