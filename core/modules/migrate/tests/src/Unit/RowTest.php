@@ -292,6 +292,43 @@ class RowTest extends UnitTestCase {
   }
 
   /**
+   * Tests checking for and removing destination properties that may be empty.
+   *
+   * @covers ::hasEmptyDestinationProperty
+   * @covers ::removeEmptyDestinationProperty
+   */
+  public function testDestinationOrEmptyProperty(): void {
+    $row = new Row($this->testValues, $this->testSourceIds);
+
+    // Set a destination.
+    $row->setDestinationProperty('nid', 2);
+    $this->assertTrue($row->hasDestinationProperty('nid'));
+    $this->assertFalse($row->hasEmptyDestinationProperty('nid'));
+
+    // Set an empty destination.
+    $row->setEmptyDestinationProperty('a_property_with_no_value');
+    $this->assertTrue($row->hasEmptyDestinationProperty('a_property_with_no_value'));
+    $this->assertFalse($row->hasDestinationProperty('a_property_with_no_value'));
+
+    // Removing an empty destination that is not actually empty has no effect.
+    $row->removeEmptyDestinationProperty('nid');
+    $this->assertTrue($row->hasDestinationProperty('nid'));
+    $this->assertFalse($row->hasEmptyDestinationProperty('nid'));
+
+    // Removing a destination that is actually empty has no effect.
+    $row->removeDestinationProperty('a_property_with_no_value');
+    $this->assertTrue($row->hasEmptyDestinationProperty('a_property_with_no_value'));
+
+    // Remove the empty destination.
+    $row->removeEmptyDestinationProperty('a_property_with_no_value');
+    $this->assertFalse($row->hasEmptyDestinationProperty('a_property_with_no_value'));
+
+    // Removing a destination that does not exist does not throw an error.
+    $this->assertFalse($row->hasEmptyDestinationProperty('not_a_property'));
+    $row->removeEmptyDestinationProperty('not_a_property');
+  }
+
+  /**
    * Tests setting/getting multiple destination IDs.
    */
   public function testMultipleDestination(): void {

@@ -267,6 +267,32 @@ class Row {
   }
 
   /**
+   * Tests if a property is an empty destination.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return bool
+   *   TRUE if the property is an empty destination.
+   */
+  public function hasEmptyDestinationProperty(string $property): bool {
+    return in_array($property, $this->emptyDestinationProperties);
+  }
+
+  /**
+   * Removes an empty destination property.
+   *
+   * @param string $property
+   *   The name of the empty destination property.
+   */
+  public function removeEmptyDestinationProperty(string $property): void {
+    $this->emptyDestinationProperties = array_diff(
+      $this->emptyDestinationProperties,
+      [$property],
+    );
+  }
+
+  /**
    * Returns the whole destination array.
    *
    * @return array
