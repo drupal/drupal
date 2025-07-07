@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore drupaldriver testdriverdatabasedrivertestmysql
 // cspell:ignore testdriverdatabasedrivertestpgsql
-
 /**
  * Tests the interactive installer.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
   /**

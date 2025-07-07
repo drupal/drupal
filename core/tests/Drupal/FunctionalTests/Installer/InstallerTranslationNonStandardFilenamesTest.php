@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests non-standard named translation files get imported during install.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerTranslationNonStandardFilenamesTest extends InstallerTranslationMultipleLanguageNonInteractiveTest {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests multiple distribution profile support.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class MultipleDistributionsProfileTest extends InstallerTestBase {
 
   /**

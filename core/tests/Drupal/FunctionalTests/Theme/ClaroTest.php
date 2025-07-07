@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Theme;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Claro theme.
- *
- * @group claro
  */
+#[Group('claro')]
 class ClaroTest extends BrowserTestBase {
 
   /**

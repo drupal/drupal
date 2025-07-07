@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests installing a profile that implements InstallRequirementsInterface.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class ProfileRequirementsTest extends InstallerTestBase {
 
   /**

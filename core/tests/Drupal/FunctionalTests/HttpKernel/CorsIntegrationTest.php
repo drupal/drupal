@@ -6,6 +6,7 @@ namespace Drupal\FunctionalTests\HttpKernel;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests CORS provided by Drupal.
@@ -13,9 +14,8 @@ use Drupal\Tests\BrowserTestBase;
  * @see sites/default/default.services.yml
  * @see \Asm89\Stack\Cors
  * @see \Asm89\Stack\CorsService
- *
- * @group Http
  */
+#[Group('Http')]
 class CorsIntegrationTest extends BrowserTestBase {
 
   /**

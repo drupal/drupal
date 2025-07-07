@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the installer with database errors.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerDatabaseErrorMessagesTest extends InstallerTestBase {
 
   /**

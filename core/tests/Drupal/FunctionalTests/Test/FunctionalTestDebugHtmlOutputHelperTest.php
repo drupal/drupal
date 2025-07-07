@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Test;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Helper test for FunctionalTestDebugHtmlOutputTest.
  *
  * @see \Drupal\FunctionalTests\Test\FunctionalTestDebugHtmlOutputTest::testFunctionalTestDebugHtmlOutput
- *
- * @group browsertestbase
  */
+#[Group('browsertestbase')]
 class FunctionalTestDebugHtmlOutputHelperTest extends BrowserTestBase {
 
   /**

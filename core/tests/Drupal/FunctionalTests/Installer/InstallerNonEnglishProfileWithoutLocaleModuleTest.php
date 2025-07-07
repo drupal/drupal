@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests installing a profile with non-English language and no locale module.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerNonEnglishProfileWithoutLocaleModuleTest extends InstallerTestBase {
 
   /**

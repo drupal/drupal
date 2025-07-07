@@ -6,14 +6,13 @@ namespace Drupal\FunctionalTests\Asset;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore abcdefghijklmnop
-
 /**
  * Tests asset aggregation.
- *
- * @group asset
  */
+#[Group('asset')]
 class AssetOptimizationTest extends BrowserTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Logger\RfcLogLevel;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verifies that installing from existing configuration works.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerExistingConfigMultilingualTest extends InstallerConfigDirectoryTestBase {
 
   /**

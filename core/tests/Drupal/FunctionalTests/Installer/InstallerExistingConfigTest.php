@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
-// cspell:ignore nmsgid nmsgstr enregistrer
+use PHPUnit\Framework\Attributes\Group;
 
+// cspell:ignore nmsgid nmsgstr enregistrer
 /**
  * Verifies that installing from existing configuration works.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerExistingConfigTest extends InstallerConfigDirectoryTestBase {
 
   /**

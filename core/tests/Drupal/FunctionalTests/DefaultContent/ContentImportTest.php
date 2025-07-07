@@ -8,12 +8,12 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\DefaultContent\PreImportEvent;
 use Drupal\Core\DefaultContent\Existing;
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\DefaultContent\Importer;
 use Drupal\Core\DefaultContent\ImportException;
 use Drupal\Core\DefaultContent\InvalidEntityException;
+use Drupal\Core\DefaultContent\PreImportEvent;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\FileExists;
@@ -36,15 +36,19 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\user\UserInterface;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @covers \Drupal\Core\DefaultContent\Importer
- * @group DefaultContent
- * @group Recipe
- * @group #slow
+ * Tests Content Import.
+ *
+ * @legacy-covers \Drupal\Core\DefaultContent\Importer
  */
+#[Group('DefaultContent')]
+#[Group('Recipe')]
+#[Group('#slow')]
 class ContentImportTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -146,8 +150,9 @@ class ContentImportTest extends BrowserTestBase {
   }
 
   /**
-   * @dataProvider providerImportEntityThatAlreadyExists
-   */
+ * Tests import entity that already exists.
+ */
+  #[DataProvider('providerImportEntityThatAlreadyExists')]
   public function testImportEntityThatAlreadyExists(Existing $existing): void {
     $this->drupalCreateUser(values: ['uuid' => '94503467-be7f-406c-9795-fc25baa22203']);
 

@@ -7,12 +7,12 @@ namespace Drupal\FunctionalTests\Installer;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Test\PerformanceTestRecorder;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the interactive installer.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerPerformanceTest extends BrowserTestBase {
 
   /**

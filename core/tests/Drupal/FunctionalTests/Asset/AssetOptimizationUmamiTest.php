@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Asset;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests asset aggregation with the Umami install profile.
  *
  * Umami includes several core modules as well as the Claro theme, this
  * results in a more complex asset dependency tree to test than the testing
  * profile.
- *
- * @group asset
- * @group #slow
  */
+#[Group('asset')]
+#[Group('#slow')]
 class AssetOptimizationUmamiTest extends AssetOptimizationTest {
 
   /**

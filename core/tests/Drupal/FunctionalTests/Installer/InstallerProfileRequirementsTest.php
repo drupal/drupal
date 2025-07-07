@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests that an install profile can implement hook_requirements().
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerProfileRequirementsTest extends InstallerTestBase {
 
   /**

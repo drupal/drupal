@@ -8,13 +8,13 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\standard\Functional\StandardTest;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Standard recipe installation expectations.
- *
- * @group #slow
- * @group Recipe
  */
+#[Group('#slow')]
+#[Group('Recipe')]
 class StandardRecipeTest extends StandardTest {
 
   use RecipeTestTrait;

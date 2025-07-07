@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests re-visiting the installer after a successful installation.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerPostInstallTest extends InstallerTestBase {
 
   /**

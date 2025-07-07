@@ -6,14 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore montag
-
 /**
  * Tests translation files for multiple languages get imported during install.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerTranslationMultipleLanguageNonInteractiveTest extends BrowserTestBase {
 
   use StringTranslationTrait;

@@ -6,16 +6,18 @@ namespace Drupal\FunctionalTests\Core\Recipe;
 
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
+use Drupal\Core\Recipe\RecipeCommand;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests recipe command.
  *
  * BrowserTestBase is used for a proper Drupal install.
- *
- * @coversDefaultClass \Drupal\Core\Recipe\RecipeCommand
- * @group Recipe
  */
+#[CoversClass(RecipeCommand::class)]
+#[Group('Recipe')]
 class RecipeCommandTest extends BrowserTestBase {
 
   use RecipeTestTrait;

@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Language\LanguageManager;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore xoxo
-
 /**
  * Verifies that the installer language list uses local and remote languages.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerLanguagePageTest extends InstallerTestBase {
 
   /**

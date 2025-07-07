@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Test\PerformanceTestRecorder;
-use Drupal\Core\Extension\ModuleUninstallValidatorException;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore drupalmysqldriverdatabasemysql drupalpgsqldriverdatabasepgsql
-
 /**
  * Tests the interactive installer.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerTest extends InstallerTestBase {
 
   /**

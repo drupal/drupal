@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the installer with an existing Drupal installation.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerExistingInstallationTest extends InstallerTestBase {
 
   /**

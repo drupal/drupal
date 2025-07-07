@@ -7,12 +7,12 @@ namespace Drupal\FunctionalTests\Entity;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that an entity with a UUID as ID can be managed.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityUuidIdTest extends BrowserTestBase {
 
   use ContentTranslationTestTrait;

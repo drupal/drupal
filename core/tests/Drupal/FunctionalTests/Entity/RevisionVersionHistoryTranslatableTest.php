@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Entity;
 
+use Drupal\Core\Entity\Controller\VersionHistoryController;
 use Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests version history page with translations.
- *
- * @group Entity
- * @coversDefaultClass \Drupal\Core\Entity\Controller\VersionHistoryController
  */
+#[CoversClass(VersionHistoryController::class)]
+#[Group('Entity')]
 final class RevisionVersionHistoryTranslatableTest extends BrowserTestBase {
 
   /**

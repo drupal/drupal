@@ -11,12 +11,12 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the functionality of Timestamp core field UI.
- *
- * @group field
  */
+#[Group('field')]
 class TimestampTest extends BrowserTestBase {
 
   /**

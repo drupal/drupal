@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the site name can be set during a non-interactive installation.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class SiteNameTest extends BrowserTestBase {
 
   /**

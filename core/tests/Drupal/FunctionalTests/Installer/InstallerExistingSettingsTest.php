@@ -6,13 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the installer with an existing settings file.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerExistingSettingsTest extends InstallerTestBase {
 
   /**

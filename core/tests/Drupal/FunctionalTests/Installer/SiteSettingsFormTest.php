@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the extension of the site settings form.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class SiteSettingsFormTest extends BrowserTestBase {
 
   /**

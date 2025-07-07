@@ -8,10 +8,13 @@ use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @group Recipe
+ * Tests Rollback.
  */
+#[Group('Recipe')]
 class RollbackTest extends BrowserTestBase {
 
   use RecipeTestTrait;
@@ -39,10 +42,11 @@ class RollbackTest extends BrowserTestBase {
   ];
 
   /**
-   * @testWith ["invalid_config", "core.date_format.invalid"]
-   *           ["recipe_depend_on_invalid", "core.date_format.invalid"]
-   *           ["recipe_depend_on_invalid_config_and_valid_modules", "core.date_format.invalid"]
-   */
+ * Tests rollback for invalid config.
+ */
+  #[TestWith(["invalid_config", "core.date_format.invalid"])]
+  #[TestWith(["recipe_depend_on_invalid", "core.date_format.invalid"])]
+  #[TestWith(["recipe_depend_on_invalid_config_and_valid_modules", "core.date_format.invalid"])]
   public function testRollbackForInvalidConfig(string $recipe_fixture, string $expected_invalid_config_name): void {
     $expected_core_extension_modules = $this->config('core.extension')->get('module');
 

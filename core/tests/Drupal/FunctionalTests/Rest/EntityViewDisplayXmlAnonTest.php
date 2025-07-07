@@ -6,10 +6,12 @@ namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Entity View Display Xml Anon.
  */
+#[Group('rest')]
 class EntityViewDisplayXmlAnonTest extends EntityViewDisplayResourceTestBase {
 
   use AnonResourceTestTrait;

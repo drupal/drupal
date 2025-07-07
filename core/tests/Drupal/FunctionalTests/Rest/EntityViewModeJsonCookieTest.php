@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Entity View Mode Json Cookie.
  */
+#[Group('rest')]
 class EntityViewModeJsonCookieTest extends EntityViewModeResourceTestBase {
 
   use CookieResourceTestTrait;

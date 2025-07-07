@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the installer with empty settings file.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerEmptySettingsTest extends InstallerTestBase {
 
   /**

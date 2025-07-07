@@ -7,12 +7,12 @@ namespace Drupal\FunctionalTests\Menu;
 use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that 403 active trail behavior does not overwrite original entry.
- *
- * @group menu
  */
+#[Group('menu')]
 class MenuActiveTrail403Test extends BrowserTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test for BrowserTestBase::getTestMethodCaller() in child classes.
- *
- * @group browsertestbase
  */
+#[Group('browsertestbase')]
 class GetTestMethodCallerExtendsTest extends GetTestMethodCallerTest {
 
   /**

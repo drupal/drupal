@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Verifies that the installer skipped permission hardening.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
 
   /**

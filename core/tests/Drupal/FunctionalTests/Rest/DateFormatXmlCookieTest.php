@@ -6,10 +6,12 @@ namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Date Format Xml Cookie.
  */
+#[Group('rest')]
 class DateFormatXmlCookieTest extends DateFormatResourceTestBase {
 
   use CookieResourceTestTrait;

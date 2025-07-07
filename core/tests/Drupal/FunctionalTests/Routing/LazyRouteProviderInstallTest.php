@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group routing
+ * Tests Lazy Route Provider Install.
  */
+#[Group('routing')]
 class LazyRouteProviderInstallTest extends BrowserTestBase {
 
   /**

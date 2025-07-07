@@ -8,15 +8,15 @@ use Drupal\contact\Entity\ContactForm;
 use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\standard\Traits\StandardTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
 /**
  * Tests installing the Standard recipe via the installer.
- *
- * @group #slow
- * @group Recipe
  */
+#[Group('#slow')]
+#[Group('Recipe')]
 class StandardRecipeInstallTest extends InstallerTestBase {
   use StandardTestTrait {
     testStandard as doTestStandard;

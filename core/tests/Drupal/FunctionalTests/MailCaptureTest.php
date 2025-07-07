@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Test\AssertMailTrait;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the collection of emails during testing.
  *
  * The test mail collector, test.mail.collector, intercepts any email sent
  * during a test so it does not leave the test server.
- *
- * @group browsertestbase
  */
+#[Group('browsertestbase')]
 class MailCaptureTest extends BrowserTestBase {
   use AssertMailTrait {
     getMails as drupalGetMails;

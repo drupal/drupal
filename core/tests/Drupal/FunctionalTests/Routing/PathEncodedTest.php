@@ -7,13 +7,13 @@ namespace Drupal\FunctionalTests\Routing;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests URL generation and routing for route paths with encoded characters.
- *
- * @group path
- * @group routing
  */
+#[Group('path')]
+#[Group('routing')]
 class PathEncodedTest extends BrowserTestBase {
 
   use PathAliasTestTrait;

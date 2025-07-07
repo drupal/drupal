@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Entity Form Display Json Basic Auth.
  */
+#[Group('rest')]
 class EntityFormDisplayJsonBasicAuthTest extends EntityFormDisplayResourceTestBase {
 
   use BasicAuthResourceTestTrait;

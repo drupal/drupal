@@ -6,12 +6,12 @@ namespace Drupal\FunctionalTests\Update;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Site\Settings;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the update path base class.
- *
- * @group Update
  */
+#[Group('Update')]
 class UpdatePathTestBaseTest extends UpdatePathTestBase {
 
   /**

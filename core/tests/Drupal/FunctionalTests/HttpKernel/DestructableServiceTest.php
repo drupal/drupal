@@ -7,14 +7,14 @@ namespace Drupal\FunctionalTests\HttpKernel;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests invocation of services performing deferred tasks after response flush.
  *
  * @see \Drupal\Core\DestructableInterface
- *
- * @group Http
  */
+#[Group('Http')]
 class DestructableServiceTest extends BrowserTestBase {
 
   /**
