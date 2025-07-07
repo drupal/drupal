@@ -7,12 +7,12 @@ namespace Drupal\Tests\responsive_image\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the responsive image field UI.
- *
- * @group responsive_image
  */
+#[Group('responsive_image')]
 class ResponsiveImageFieldUiTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;

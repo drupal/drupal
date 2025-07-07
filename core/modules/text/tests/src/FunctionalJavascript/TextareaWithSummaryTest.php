@@ -7,12 +7,12 @@ namespace Drupal\Tests\text\FunctionalJavascript;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the JavaScript functionality of the text_textarea_with_summary widget.
- *
- * @group text
  */
+#[Group('text')]
 class TextareaWithSummaryTest extends WebDriverTestBase {
 
   /**

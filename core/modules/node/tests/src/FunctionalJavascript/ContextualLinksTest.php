@@ -7,12 +7,12 @@ namespace Drupal\Tests\node\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Create a node with revisions and test contextual links.
- *
- * @group node
  */
+#[Group('node')]
 class ContextualLinksTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

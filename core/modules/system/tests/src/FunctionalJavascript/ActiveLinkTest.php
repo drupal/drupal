@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests active link JS behavior.
  *
  * @see Drupal.behaviors.activeLinks
- *
- * @group system
  */
+#[Group('system')]
 class ActiveLinkTest extends WebDriverTestBase {
 
   /**

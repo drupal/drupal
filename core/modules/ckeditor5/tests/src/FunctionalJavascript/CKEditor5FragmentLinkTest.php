@@ -14,13 +14,14 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the fragment link points to CKEditor 5.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class CKEditor5FragmentLinkTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;

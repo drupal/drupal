@@ -8,12 +8,12 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Database\Database;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI preview functionality.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class PreviewTest extends WebDriverTestBase {
 
   /**

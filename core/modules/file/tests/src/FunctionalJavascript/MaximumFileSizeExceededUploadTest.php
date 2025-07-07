@@ -6,14 +6,14 @@ namespace Drupal\Tests\file\FunctionalJavascript;
 
 use Drupal\Component\Utility\Bytes;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
+use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests uploading a file that exceeds the maximum file size.
- *
- * @group file
  */
+#[Group('file')]
 class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
 
   use FileFieldCreationTrait;

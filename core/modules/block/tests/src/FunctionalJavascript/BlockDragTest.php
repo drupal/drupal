@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests drag and drop blocks on block layout page.
- *
- * @group block
  */
+#[Group('block')]
 class BlockDragTest extends WebDriverTestBase {
 
   /**

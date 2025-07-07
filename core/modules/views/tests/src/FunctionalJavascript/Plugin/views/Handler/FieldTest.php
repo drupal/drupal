@@ -10,12 +10,12 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the field handler UI.
- *
- * @group views
  */
+#[Group('views')]
 class FieldTest extends WebDriverTestBase {
   use SchemaCheckTestTrait;
 

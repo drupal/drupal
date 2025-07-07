@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\FunctionalJavascript;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore dailymotion Schipulcon
-
 /**
  * Tests the oembed:video media source.
- *
- * @group media
  */
+#[Group('media')]
 class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
 
   /**

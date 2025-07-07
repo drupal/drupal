@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the off-canvas dialog functionality.
- *
- * @group system
  */
+#[Group('system')]
 class OffCanvasTest extends OffCanvasTestBase {
 
   /**
@@ -34,9 +36,8 @@ class OffCanvasTest extends OffCanvasTestBase {
 
   /**
    * Tests that non-contextual links will work with the off-canvas dialog.
-   *
-   * @dataProvider themeDataProvider
    */
+  #[DataProvider('themeDataProvider')]
   public function testOffCanvasLinks($theme): void {
     $this->enableTheme($theme);
     $this->drupalGet('/off-canvas-test-links');

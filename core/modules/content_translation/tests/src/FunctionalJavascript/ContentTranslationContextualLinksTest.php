@@ -6,12 +6,12 @@ namespace Drupal\Tests\content_translation\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that contextual links are available for content translation.
- *
- * @group content_translation
  */
+#[Group('content_translation')]
 class ContentTranslationContextualLinksTest extends WebDriverTestBase {
 
   /**

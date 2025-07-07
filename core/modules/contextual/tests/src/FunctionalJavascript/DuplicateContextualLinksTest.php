@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\contextual\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI for correct contextual links.
- *
- * @group contextual
  */
+#[Group('contextual')]
 class DuplicateContextualLinksTest extends WebDriverTestBase {
 
   /**

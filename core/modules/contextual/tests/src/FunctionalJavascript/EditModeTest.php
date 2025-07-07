@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\contextual\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests edit mode.
- *
- * @group contextual
- * @group #slow
  */
+#[Group('contextual')]
+#[Group('#slow')]
 class EditModeTest extends WebDriverTestBase {
 
   /**

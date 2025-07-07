@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore sulaco
-
 /**
- * @group editor
+ * Tests Editor Admin.
  */
+#[Group('editor')]
 class EditorAdminTest extends WebDriverTestBase {
 
   /**

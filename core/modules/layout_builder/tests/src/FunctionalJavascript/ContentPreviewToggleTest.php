@@ -8,14 +8,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore blocknodebundle testbody
-
 /**
  * Tests toggling of content preview.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class ContentPreviewToggleTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

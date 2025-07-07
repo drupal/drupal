@@ -9,14 +9,14 @@ use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 use Drupal\Tests\workspaces\Functional\WorkspaceTestUtilities;
 use Drupal\user\UserInterface;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for layout editing in workspaces.
- *
- * @group layout_builder
- * @group workspaces
- * @group #slow
  */
+#[Group('layout_builder')]
+#[Group('workspaces')]
+#[Group('#slow')]
 class WorkspacesLayoutBuilderIntegrationTest extends InlineBlockTestBase {
 
   use OffCanvasTestTrait;
@@ -191,7 +191,7 @@ class WorkspacesLayoutBuilderIntegrationTest extends InlineBlockTestBase {
   /**
    * Tests workspace specific layout tempstore data.
    *
-   * @covers \Drupal\workspaces\WorkspacesLayoutTempstoreRepository::getKey
+   * @legacy-covers \Drupal\workspaces\WorkspacesLayoutTempstoreRepository::getKey
    */
   public function testWorkspacesLayoutTempstore(): void {
     $assert_session = $this->assertSession();

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the contextual links added while rendering the block.
- *
- * @group block
  */
+#[Group('block')]
 class BlockContextualLinksTest extends WebDriverTestBase {
 
   /**

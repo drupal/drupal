@@ -8,12 +8,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the numeric field widget.
- *
- * @group field
  */
+#[Group('field')]
 class NumberFieldTest extends WebDriverTestBase {
 
   /**

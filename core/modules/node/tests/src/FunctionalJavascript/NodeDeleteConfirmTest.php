@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests JavaScript functionality specific to delete operations.
- *
- * @group node
  */
+#[Group('node')]
 class NodeDeleteConfirmTest extends WebDriverTestBase {
 
   /**

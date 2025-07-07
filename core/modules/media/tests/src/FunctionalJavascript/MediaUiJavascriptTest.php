@@ -8,12 +8,12 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaSourceInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that media UI works correctly.
- *
- * @group media
  */
+#[Group('media')]
 class MediaUiJavascriptTest extends MediaJavascriptTestBase {
 
   /**

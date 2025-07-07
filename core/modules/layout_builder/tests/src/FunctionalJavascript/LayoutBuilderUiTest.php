@@ -7,14 +7,13 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore blocknodebundle fieldbody fieldlayout
-
 /**
  * Tests the Layout Builder UI.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderUiTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

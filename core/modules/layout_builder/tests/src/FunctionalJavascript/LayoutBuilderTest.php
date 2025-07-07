@@ -10,12 +10,12 @@ use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Layout Builder UI.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

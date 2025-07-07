@@ -9,12 +9,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests media widget nested inside another widget.
- *
- * @group media_library
  */
+#[Group('media_library')]
 class EmbeddedFormWidgetTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;
@@ -94,9 +95,8 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
 
   /**
    * Tests media inside another widget that validates too enthusiastically.
-   *
-   * @dataProvider insertionReselectionProvider
    */
+  #[DataProvider('insertionReselectionProvider')]
   public function testInsertionAndReselection($widget): void {
     $this->container
       ->get('entity_display.repository')

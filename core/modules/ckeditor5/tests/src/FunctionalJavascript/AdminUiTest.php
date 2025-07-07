@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-// cspell:ignore sourceediting xmlhttprequest
+use PHPUnit\Framework\Attributes\Group;
 
+// cspell:ignore sourceediting xmlhttprequest
 /**
  * Tests for CKEditor 5 in the admin UI.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class AdminUiTest extends CKEditor5TestBase {
 
   /**

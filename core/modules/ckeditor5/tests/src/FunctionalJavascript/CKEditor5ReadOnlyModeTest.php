@@ -6,13 +6,14 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests read-only mode for CKEditor 5.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class CKEditor5ReadOnlyModeTest extends CKEditor5TestBase {
 
   /**

@@ -7,13 +7,14 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\views_ui\Traits\FilterEntityReferenceTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests views creation wizard.
  *
- * @group views_ui
  * @see \Drupal\views\Plugin\views\filter\EntityReference
  */
+#[Group('views_ui')]
 class FilterEntityReferenceTest extends WebDriverTestBase {
 
   use FilterEntityReferenceTrait;

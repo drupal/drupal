@@ -7,12 +7,12 @@ namespace Drupal\Tests\workspaces\FunctionalJavascript;
 use Drupal\Tests\media_library\FunctionalJavascript\EntityReferenceWidgetTest;
 use Drupal\user\UserInterface;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Media library entity reference widget in a workspace.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspacesMediaLibraryIntegrationTest extends EntityReferenceWidgetTest {
 
   /**

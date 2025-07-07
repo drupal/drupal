@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
- * @covers ::media_filter_format_edit_form_validate
- * @group media
- * @group #slow
+ * Tests Media Embed Filter Configuration Ui Edit.
+ *
+ * @legacy-covers ::media_filter_format_edit_form_validate
  */
+#[Group('media')]
+#[Group('#slow')]
 class MediaEmbedFilterConfigurationUiEditTest extends MediaEmbedFilterTestBase {
 
   /**
-   * @covers \Drupal\media\Hook\MediaHooks::formFilterFormatEditFormAlter
-   * @dataProvider providerTestValidations
+   * Tests validation when editing.
+   *
+   * @legacy-covers \Drupal\media\Hook\MediaHooks::formFilterFormatEditFormAlter
    */
+  #[DataProvider('providerTestValidations')]
   public function testValidationWhenEditing($filter_html_status, $filter_align_status, $filter_caption_status, $filter_html_image_secure_status, $media_embed, $allowed_html, $expected_error_message): void {
     $this->drupalGet('admin/config/content/formats/manage/media_embed_test');
 

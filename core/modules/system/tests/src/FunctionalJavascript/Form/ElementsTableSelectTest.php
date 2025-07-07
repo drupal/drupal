@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\FunctionalJavascript\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the tableselect form element for expected behavior.
- *
- * @group Form
  */
+#[Group('Form')]
 class ElementsTableSelectTest extends WebDriverTestBase {
 
   /**

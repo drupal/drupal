@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -15,17 +15,21 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore alternatif drupalelementstyle hurlant layercake tatou texte
 // cspell:ignore zartan
-
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
- * @group ckeditor5
- * @group #slow
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media.
+ *
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::class)]
+#[Group('ckeditor5')]
+#[Group('#slow')]
 class MediaTest extends MediaTestBase {
 
   /**
@@ -759,9 +763,8 @@ class MediaTest extends MediaTestBase {
    * Tests that view mode is reflected onto the CKEditor 5 Widget wrapper, that
    * the media style toolbar allows changing the view mode and that the changes
    * are reflected on the widget and downcast drupal-media tag.
-   *
-   * @dataProvider providerTestViewMode
    */
+  #[DataProvider('providerTestViewMode')]
   public function testViewMode(bool $with_alignment): void {
     EntityViewMode::create([
       'id' => 'media.view_mode_3',

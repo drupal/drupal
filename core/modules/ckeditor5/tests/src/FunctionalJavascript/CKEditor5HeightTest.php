@@ -6,13 +6,14 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests ckeditor height respects field rows config.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class CKEditor5HeightTest extends CKEditor5TestBase {
 
   use CKEditor5TestTrait;

@@ -9,12 +9,12 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the file field widget, single and multi-valued, using AJAX upload.
- *
- * @group file
  */
+#[Group('file')]
 class FileFieldWidgetTest extends WebDriverTestBase {
 
   use FieldUiTestTrait;

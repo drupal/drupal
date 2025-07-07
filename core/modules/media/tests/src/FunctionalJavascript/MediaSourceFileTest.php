@@ -6,12 +6,12 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\media\Entity\Media;
 use Drupal\media\Plugin\media\Source\File;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the file media source.
- *
- * @group media
  */
+#[Group('media')]
 class MediaSourceFileTest extends MediaSourceTestBase {
 
   /**

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests copy field value functionality.
  *
  * @see Drupal.behaviors.copyFieldValue.
- *
- * @group system
  */
+#[Group('system')]
 class CopyFieldValueTest extends WebDriverTestBase {
 
   /**

@@ -7,14 +7,13 @@ namespace Drupal\Tests\navigation\FunctionalJavascript;
 use Behat\Mink\Element\Element;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore navigationuser linksuserwrapper
-
 /**
  * Tests for \Drupal\navigation\Plugin\NavigationBlock\NavigationUserBlock.
- *
- * @group navigation
  */
+#[Group('navigation')]
 class NavigationUserBlockTest extends WebDriverTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the contextual filter handler UI.
- *
- * @group views
  */
+#[Group('views')]
 class ContextualFilterTest extends WebDriverTestBase {
 
   /**

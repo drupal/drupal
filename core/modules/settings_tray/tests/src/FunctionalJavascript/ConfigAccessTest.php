@@ -6,12 +6,12 @@ namespace Drupal\Tests\settings_tray\FunctionalJavascript;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests handling of configuration overrides.
- *
- * @group settings_tray
  */
+#[Group('settings_tray')]
 class ConfigAccessTest extends SettingsTrayTestBase {
 
   /**

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the grid-style media overview page.
- *
- * @group media_library
  */
+#[Group('media_library')]
 class MediaOverviewTest extends MediaLibraryTestBase {
 
   /**

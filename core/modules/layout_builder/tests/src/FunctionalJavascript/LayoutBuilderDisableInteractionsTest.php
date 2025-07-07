@@ -11,15 +11,14 @@ use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore blocknodebundle fieldbody
-
 /**
  * Tests the Layout Builder disables interactions of rendered blocks.
- *
- * @group layout_builder
- * @group #slow
  */
+#[Group('layout_builder')]
+#[Group('#slow')]
 class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

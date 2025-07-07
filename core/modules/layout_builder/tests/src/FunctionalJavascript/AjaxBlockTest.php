@@ -7,12 +7,12 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ajax blocks tests.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class AjaxBlockTest extends WebDriverTestBase {
 
   use OffCanvasTestTrait;

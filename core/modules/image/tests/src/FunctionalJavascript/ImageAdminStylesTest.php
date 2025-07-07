@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\image\FunctionalJavascript;
 
 use Drupal\image\Entity\ImageStyle;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests creation, deletion, and editing of image styles and effects.
- *
- * @group image
  */
+#[Group('image')]
 class ImageAdminStylesTest extends ImageFieldTestBase {
 
   /**

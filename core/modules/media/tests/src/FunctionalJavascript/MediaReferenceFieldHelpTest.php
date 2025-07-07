@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests related to media reference fields.
- *
- * @group media
  */
+#[Group('media')]
 class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
 
   /**

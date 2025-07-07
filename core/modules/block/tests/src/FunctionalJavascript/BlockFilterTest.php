@@ -6,12 +6,12 @@ namespace Drupal\Tests\block\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the JavaScript functionality of the block add filter.
- *
- * @group block
  */
+#[Group('block')]
 class BlockFilterTest extends WebDriverTestBase {
 
   /**

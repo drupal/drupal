@@ -9,12 +9,12 @@ use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Daterange field.
- *
- * @group datetime
  */
+#[Group('datetime')]
 class DateRangeFieldTest extends WebDriverTestBase {
 
   /**

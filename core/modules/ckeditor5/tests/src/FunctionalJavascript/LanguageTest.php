@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore คำพูดบล็อก sourceediting
-
 /**
  * Tests for CKEditor 5 UI translations.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class LanguageTest extends CKEditor5TestBase {
 
   /**
@@ -33,9 +34,8 @@ class LanguageTest extends CKEditor5TestBase {
    *   The CKEditor 5 plugin to enable.
    * @param string $toolbar_item_translation
    *   The expected translation for CKEditor 5 plugin toolbar button.
-   *
-   * @dataProvider provider
    */
+  #[DataProvider('provider')]
   public function test(string $langcode, string $toolbar_item_name, string $toolbar_item_translation): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();

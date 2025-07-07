@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the media entity type integration into the wizard.
  *
- * @group media
- *
  * @see \Drupal\media\Plugin\views\wizard\Media
  * @see \Drupal\media\Plugin\views\wizard\MediaRevision
  */
+#[Group('media')]
 class MediaViewsWizardTest extends MediaJavascriptTestBase {
 
   /**

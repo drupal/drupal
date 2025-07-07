@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\FunctionalJavascript\Batch;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Batch
+ * Tests Processing.
  */
+#[Group('Batch')]
 class ProcessingTest extends WebDriverTestBase {
 
   /**

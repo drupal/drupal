@@ -9,13 +9,14 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests functionality of \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
  *
- * @group Form
  * @todo Add tests for other aspects of form rebuilding.
  */
+#[Group('Form')]
 class RebuildTest extends WebDriverTestBase {
 
   /**

@@ -6,6 +6,7 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 // cspell:ignore imageresize
 
@@ -18,9 +19,8 @@ trait ImageTestProviderTrait {
    * Tests that alt text is required for images.
    *
    * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/architecture/editing-engine.html#conversion
-   *
-   * @dataProvider providerAltTextRequired
    */
+  #[DataProvider('providerAltTextRequired')]
   public function testAltTextRequired(bool $unrestricted): void {
     // Disable filter_html.
     if ($unrestricted) {
@@ -122,9 +122,8 @@ trait ImageTestProviderTrait {
 
   /**
    * Tests alignment integration.
-   *
-   * @dataProvider providerAlignment
    */
+  #[DataProvider('providerAlignment')]
   public function testAlignment(string $image_type): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
@@ -198,9 +197,8 @@ trait ImageTestProviderTrait {
    *
    * @param string $width
    *   The width input for the image.
-   *
-   * @dataProvider providerWidth
    */
+  #[DataProvider('providerWidth')]
   public function testWidth(string $width): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
@@ -264,9 +262,8 @@ trait ImageTestProviderTrait {
    *
    * @param bool $is_resize_enabled
    *   Boolean flag to test enabled or disabled.
-   *
-   * @dataProvider providerResize
    */
+  #[DataProvider('providerResize')]
   public function testResize(bool $is_resize_enabled): void {
     // Disable resize plugin because it is enabled by default.
     if (!$is_resize_enabled) {

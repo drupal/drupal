@@ -8,14 +8,13 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore onewidgetfield
-
 /**
  * Tests the Field UI "Manage display" and "Manage form display" screens.
- *
- * @group field_ui
  */
+#[Group('field_ui')]
 class ManageDisplayTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;

@@ -7,17 +7,16 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\SourceString;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cSpell:ignore Blokk hozzáadása
-
 /**
  * Tests the display UI.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class DisplayTest extends WebDriverTestBase {
 
   use NodeCreationTrait;

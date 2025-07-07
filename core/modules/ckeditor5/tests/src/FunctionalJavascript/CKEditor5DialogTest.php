@@ -9,14 +9,15 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Tests for CKEditor 5 to ensure correct focus management in dialogs.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class CKEditor5DialogTest extends CKEditor5TestBase {
 
   use CKEditor5TestTrait;

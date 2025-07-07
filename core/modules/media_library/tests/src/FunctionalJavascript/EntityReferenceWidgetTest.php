@@ -8,12 +8,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\SortableTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Media library entity reference widget.
- *
- * @group media_library
  */
+#[Group('media_library')]
 class EntityReferenceWidgetTest extends MediaLibraryTestBase {
 
   use SortableTestTrait;

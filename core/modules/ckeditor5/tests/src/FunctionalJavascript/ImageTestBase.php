@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-use Drupal\Tests\TestFileCreationTrait;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore imageresize
-
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
- * @group ckeditor5
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image.
+ *
  * @internal
  */
+#[CoversClass(Image::class)]
+#[Group('ckeditor5')]
 abstract class ImageTestBase extends CKEditor5TestBase {
 
   use CKEditor5TestTrait;

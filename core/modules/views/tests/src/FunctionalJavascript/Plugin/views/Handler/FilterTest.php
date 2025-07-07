@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the add filter handler UI.
- *
- * @group views
  */
+#[Group('views')]
 class FilterTest extends WebDriverTestBase {
 
   /**

@@ -7,13 +7,14 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the JavaScript functionality of the block add filter.
- *
- * @group layout_builder
- * @group legacy
  */
+#[Group('layout_builder')]
+#[IgnoreDeprecations]
 class BlockFilterTest extends WebDriverTestBase {
 
   /**

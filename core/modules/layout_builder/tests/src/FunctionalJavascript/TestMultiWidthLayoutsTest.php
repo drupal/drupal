@@ -6,12 +6,12 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the multi-width layout plugins.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class TestMultiWidthLayoutsTest extends WebDriverTestBase {
 
   /**

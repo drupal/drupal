@@ -9,12 +9,12 @@ use Drupal\media\Entity\Media;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the media library UI access.
- *
- * @group media_library
  */
+#[Group('media_library')]
 class WidgetAccessTest extends MediaLibraryTestBase {
 
   /**

@@ -12,16 +12,16 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore esque māori sourceediting splitbutton upcasted
-
 /**
  * Tests for CKEditor 5.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class CKEditor5MarkupTest extends CKEditor5TestBase {
 
   use TestFileCreationTrait;

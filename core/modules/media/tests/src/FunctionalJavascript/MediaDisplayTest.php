@@ -11,12 +11,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Basic display tests for Media.
- *
- * @group media
  */
+#[Group('media')]
 class MediaDisplayTest extends MediaJavascriptTestBase {
 
   /**

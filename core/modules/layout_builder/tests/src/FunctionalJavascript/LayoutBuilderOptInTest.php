@@ -6,12 +6,12 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ability for opting in and out of Layout Builder.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderOptInTest extends WebDriverTestBase {
 
   use EnableLayoutBuilderTrait;

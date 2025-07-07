@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the View UI filter criteria group dialog.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class FilterCriteriaTest extends WebDriverTestBase {
 
   /**

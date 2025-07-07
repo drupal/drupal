@@ -6,12 +6,12 @@ namespace Drupal\Tests\config_translation\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Translate settings and entities to various languages.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigTranslationUiTest extends WebDriverTestBase {
 
   /**

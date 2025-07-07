@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the off-canvas dialog functionality.
- *
- * @group system
  */
+#[Group('system')]
 class FrameworkTest extends WebDriverTestBase {
 
   /**

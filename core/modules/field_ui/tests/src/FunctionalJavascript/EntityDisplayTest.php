@@ -7,12 +7,12 @@ namespace Drupal\Tests\field_ui\FunctionalJavascript;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI for entity displays.
- *
- * @group field_ui
  */
+#[Group('field_ui')]
 class EntityDisplayTest extends WebDriverTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\toolbar\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the JavaScript functionality of the toolbar.
- *
- * @group toolbar
  */
+#[Group('toolbar')]
 class ToolbarIntegrationTest extends WebDriverTestBase {
 
   /**

@@ -8,12 +8,12 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the basic AJAX functionality of Views exposed forms.
- *
- * @group views
  */
+#[Group('views')]
 class ExposedFilterAJAXTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;

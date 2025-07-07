@@ -12,12 +12,12 @@ use Drupal\media\Entity\MediaType;
 use Drupal\media\Plugin\media\Source\Image;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the image media source.
- *
- * @group media
  */
+#[Group('media')]
 class MediaSourceImageTest extends MediaSourceTestBase {
 
   /**

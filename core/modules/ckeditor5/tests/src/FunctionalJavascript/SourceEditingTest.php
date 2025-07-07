@@ -5,23 +5,29 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing;
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore gramma sourceediting
-
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
- * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
- * @group ckeditor5
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing.
+ *
  * @internal
+ * @legacy-covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
  */
+#[CoversClass(SourceEditing::class)]
+#[Group('ckeditor5')]
 class SourceEditingTest extends SourceEditingTestBase {
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::buildConfigurationForm
+   * Tests source editing settings form.
+   *
+   * @legacy-covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::buildConfigurationForm
    */
   public function testSourceEditingSettingsForm(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer filters']));

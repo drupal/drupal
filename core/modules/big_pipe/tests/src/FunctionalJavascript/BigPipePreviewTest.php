@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\big_pipe\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests placeholder preview functionality.
- *
- * @group big_pipe
  */
+#[Group('big_pipe')]
 class BigPipePreviewTest extends WebDriverTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\FunctionalJavascript\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that FAPI correctly determines the triggering element.
- *
- * @group Form
  */
+#[Group('Form')]
 class TriggeringElementTest extends WebDriverTestBase {
 
   /**

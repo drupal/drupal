@@ -7,16 +7,16 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 // cspell:ignore esque imageUpload sourceediting Editing's
-
 /**
  * Tests for CKEditor 5.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
   /**

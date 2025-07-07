@@ -6,15 +6,15 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\media\Entity\Media;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that uploads in the 'media_library_widget' works as expected.
  *
- * @group media_library
- *
  * @todo This test will occasionally fail with SQLite until
  *   https://www.drupal.org/node/3066447 is addressed.
  */
+#[Group('media_library')]
 class WidgetUploadTest extends MediaLibraryTestBase {
 
   use TestFileCreationTrait;

@@ -6,12 +6,12 @@ namespace Drupal\Tests\config\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the config export form.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigExportTest extends WebDriverTestBase {
 
   use BlockContentCreationTrait;

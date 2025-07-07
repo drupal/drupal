@@ -6,12 +6,12 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the widget works as expected for anonymous users.
- *
- * @group media_library
  */
+#[Group('media_library')]
 class WidgetAnonymousTest extends MediaLibraryTestBase {
 
   /**

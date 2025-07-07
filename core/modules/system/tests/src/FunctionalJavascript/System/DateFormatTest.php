@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\FunctionalJavascript\System;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that date formats UI with JavaScript enabled.
- *
- * @group system
  */
+#[Group('system')]
 class DateFormatTest extends WebDriverTestBase {
 
   /**

@@ -10,12 +10,12 @@ use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the announcement block test visibility.
- *
- * @group announcements_feed
  */
+#[Group('announcements_feed')]
 class AnnounceBlockTest extends WebDriverTestBase {
 
   /**

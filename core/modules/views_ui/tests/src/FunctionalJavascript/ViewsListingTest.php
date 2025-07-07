@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the JavaScript filtering on the Views listing page.
  *
  * @see core/modules/views_ui/js/views_ui.listing.js
- * @group views_ui
  */
+#[Group('views_ui')]
 class ViewsListingTest extends WebDriverTestBase {
 
   /**

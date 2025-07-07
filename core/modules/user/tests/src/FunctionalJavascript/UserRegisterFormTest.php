@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user registration forms via JS.
- *
- * @group user
  */
+#[Group('user')]
 class UserRegisterFormTest extends WebDriverTestBase {
 
   /**

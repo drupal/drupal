@@ -7,13 +7,14 @@ namespace Drupal\Tests\system\FunctionalJavascript\Form;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests development settings form items for expected behavior.
- *
- * @group Form
  */
+#[Group('Form')]
 class DevelopmentSettingsFormTest extends WebDriverTestBase {
 
   /**
@@ -40,9 +41,8 @@ class DevelopmentSettingsFormTest extends WebDriverTestBase {
 
   /**
    * Tests turning on Twig development mode.
-   *
-   * @dataProvider twigDevelopmentData
    */
+  #[DataProvider('twigDevelopmentData')]
   public function testTwigDevelopmentMode(bool $twig_development_mode, ?bool $twig_debug, ?bool $twig_cache_disable): void {
     $twig_debug = $twig_debug ?? $twig_development_mode;
     $twig_cache_disable = $twig_cache_disable ?? $twig_development_mode;

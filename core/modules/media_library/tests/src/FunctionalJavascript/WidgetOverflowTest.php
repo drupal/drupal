@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that uploads in the 'media_library_widget' works as expected.
  *
- * @group media_library
- * @group #slow
- *
  * @todo This test will occasionally fail with SQLite until
  *   https://www.drupal.org/node/3066447 is addressed.
  */
+#[Group('media_library')]
+#[Group('#slow')]
 class WidgetOverflowTest extends MediaLibraryTestBase {
 
   use TestFileCreationTrait;
@@ -95,9 +96,8 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
    *   The operation of the button to click. For example, if this is "insert",
    *   the "Save and insert" button will be pressed. If NULL, the "Save" button
    *   will be pressed.
-   *
-   * @dataProvider providerWidgetOverflow
    */
+  #[DataProvider('providerWidgetOverflow')]
   public function testWidgetOverflow(?string $selected_operation): void {
     // If we want to press the "Save and insert" or "Save and select" buttons,
     // we need to enable the advanced UI.
@@ -138,9 +138,8 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
    *   The operation of the button to click. For example, if this is "insert",
    *   the "Save and insert" button will be pressed. If NULL, the "Save" button
    *   will be pressed.
-   *
-   * @dataProvider providerWidgetOverflow
    */
+  #[DataProvider('providerWidgetOverflow')]
   public function testUnlimitedCardinality(?string $selected_operation): void {
     if ($selected_operation) {
       $this->config('media_library.settings')->set('advanced_ui', TRUE)->save();

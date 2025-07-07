@@ -12,12 +12,12 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the inline errors fragment link to a CKEditor5-enabled textarea.
- *
- * @group ckeditor5
  */
+#[Group('ckeditor5')]
 class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
 
   /**

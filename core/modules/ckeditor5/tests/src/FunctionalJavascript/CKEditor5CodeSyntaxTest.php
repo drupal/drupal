@@ -7,13 +7,14 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Behat\Mink\Element\NodeElement;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests code block configured languages are respected.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class CKEditor5CodeSyntaxTest extends CKEditor5TestBase {
 
   use CKEditor5TestTrait;

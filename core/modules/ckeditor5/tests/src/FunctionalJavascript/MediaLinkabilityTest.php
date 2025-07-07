@@ -4,23 +4,28 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media;
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
- * @group ckeditor5
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media.
+ *
  * @internal
  */
+#[CoversClass(Media::class)]
+#[Group('ckeditor5')]
 class MediaLinkabilityTest extends MediaTestBase {
 
   /**
    * Ensures arbitrary attributes can be added on links wrapping media via GHS.
-   *
-   * @dataProvider providerLinkability
    */
+  #[DataProvider('providerLinkability')]
   public function testLinkedMediaArbitraryHtml(bool $unrestricted): void {
     $assert_session = $this->assertSession();
 
@@ -84,9 +89,8 @@ class MediaLinkabilityTest extends MediaTestBase {
    * "dataDowncast" results. These are CKEditor 5 concepts.
    *
    * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/architecture/editing-engine.html#conversion
-   *
-   * @dataProvider providerLinkability
    */
+  #[DataProvider('providerLinkability')]
   public function testLinkability(bool $unrestricted): void {
     // Disable filter_html.
     if ($unrestricted) {
@@ -235,9 +239,8 @@ class MediaLinkabilityTest extends MediaTestBase {
 
   /**
    * Ensure that manual link decorators work with linkable media.
-   *
-   * @dataProvider providerLinkability
    */
+  #[DataProvider('providerLinkability')]
   public function testLinkManualDecorator(bool $unrestricted): void {
     \Drupal::service('module_installer')->install(['ckeditor5_manual_decorator_test']);
     $this->resetAll();

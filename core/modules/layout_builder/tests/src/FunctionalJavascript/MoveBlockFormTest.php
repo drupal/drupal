@@ -8,14 +8,13 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore blocknodebundle fieldbody fieldlinks
-
 /**
  * Tests moving blocks via the form.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class MoveBlockFormTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

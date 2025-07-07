@@ -6,14 +6,15 @@ namespace Drupal\Tests\jsonapi\FunctionalJavascript;
 
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
  * Tests performance for JSON:API routes.
- *
- * @group Common
- * @group #slow
- * @requires extension apcu
  */
+#[Group('Common')]
+#[Group('#slow')]
+#[RequiresPhpExtension('apcu')]
 class JsonApiPerformanceTest extends PerformanceTestBase {
 
   /**

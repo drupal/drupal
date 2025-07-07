@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the JavaScript updating of summaries on content type form.
- *
- * @group node
  */
+#[Group('node')]
 class SettingSummariesContentTypeTest extends WebDriverTestBase {
 
   /**

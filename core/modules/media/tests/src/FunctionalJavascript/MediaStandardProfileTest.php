@@ -11,14 +11,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore Drupalin Hustlin Schipulcon
-
 /**
  * Basic tests for Media configuration in the standard profile.
- *
- * @group media
  */
+#[Group('media')]
 class MediaStandardProfileTest extends MediaJavascriptTestBase {
 
   use OEmbedTestTrait;

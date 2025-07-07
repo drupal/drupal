@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the bulk operations.
- *
- * @group views
  */
+#[Group('views')]
 class BulkOperationsTest extends WebDriverTestBase {
 
   /**

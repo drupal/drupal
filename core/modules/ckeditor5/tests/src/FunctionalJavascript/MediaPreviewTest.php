@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\filter\Entity\FilterFormat;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore drupalmediaediting
-
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
- * @group ckeditor5
- * @group #slow
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media.
+ *
  * @internal
  */
+#[CoversClass(Media::class)]
+#[Group('ckeditor5')]
+#[Group('#slow')]
 class MediaPreviewTest extends MediaTestBase {
 
   /**
@@ -138,9 +143,8 @@ class MediaPreviewTest extends MediaTestBase {
    *   Whether to test with media_embed filter enabled on the text format.
    * @param bool $can_use_format
    *   Whether the logged in user is allowed to use the text format.
-   *
-   * @dataProvider previewAccessProvider
    */
+  #[DataProvider('previewAccessProvider')]
   public function testEmbedPreviewAccess($media_embed_enabled, $can_use_format): void {
     // Reconfigure the host entity's text format to suit our needs.
     /** @var \Drupal\filter\FilterFormatInterface $format */

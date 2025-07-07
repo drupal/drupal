@@ -9,12 +9,12 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the image field widget support multiple upload correctly.
- *
- * @group image
  */
+#[Group('image')]
 class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
 
   use ImageFieldCreationTrait;

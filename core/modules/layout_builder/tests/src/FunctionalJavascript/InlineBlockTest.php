@@ -6,13 +6,14 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the inline block feature works correctly.
- *
- * @group layout_builder
- * @group #slow
  */
+#[Group('layout_builder')]
+#[Group('#slow')]
 class InlineBlockTest extends InlineBlockTestBase {
 
   /**
@@ -113,9 +114,8 @@ class InlineBlockTest extends InlineBlockTestBase {
 
   /**
    * Tests adding a new entity block and then not saving the layout.
-   *
-   * @dataProvider layoutNoSaveProvider
    */
+  #[DataProvider('layoutNoSaveProvider')]
   public function testNoLayoutSave($operation, $no_save_button_text, $confirm_button_text): void {
     $this->drupalLogin($this->drupalCreateUser([
       'access contextual links',

@@ -10,12 +10,12 @@ use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensure that password reset methods work as expected.
- *
- * @group user
  */
+#[Group('user')]
 class UserPasswordResetTest extends WebDriverTestBase {
 
   use AssertMailTrait {

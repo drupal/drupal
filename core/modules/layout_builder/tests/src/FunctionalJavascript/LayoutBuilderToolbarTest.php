@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test Layout Builder integration with Toolbar.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderToolbarTest extends WebDriverTestBase {
 
   /**

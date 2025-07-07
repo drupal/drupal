@@ -8,13 +8,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Options field UI functionality.
- *
- * @group options
- * @group #slow
  */
+#[Group('options')]
+#[Group('#slow')]
 class OptionsFieldUITest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;

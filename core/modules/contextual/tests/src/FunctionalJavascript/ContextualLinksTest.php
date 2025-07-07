@@ -7,12 +7,12 @@ namespace Drupal\Tests\contextual\FunctionalJavascript;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI for correct contextual links.
- *
- * @group contextual
  */
+#[Group('contextual')]
 class ContextualLinksTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

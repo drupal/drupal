@@ -8,12 +8,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the grouped exposed filter admin UI.
- *
- * @group views
  */
+#[Group('views')]
 class GroupedExposedFilterTest extends WebDriverTestBase {
 
   /**
