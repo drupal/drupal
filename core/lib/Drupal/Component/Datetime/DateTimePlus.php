@@ -53,62 +53,6 @@ class DateTimePlus {
   const RFC7231 = 'D, d M Y H:i:s \G\M\T';
 
   /**
-   * An array of possible date parts.
-   *
-   * @var string[]
-   */
-  protected static $dateParts = [
-    'year',
-    'month',
-    'day',
-    'hour',
-    'minute',
-    'second',
-  ];
-
-  /**
-   * The value of the time value passed to the constructor.
-   *
-   * @var string
-   */
-  protected $inputTimeRaw = '';
-
-  /**
-   * The prepared time, without timezone, for this date.
-   *
-   * @var string
-   */
-  protected $inputTimeAdjusted = '';
-
-  /**
-   * The value of the timezone passed to the constructor.
-   *
-   * @var string
-   */
-  protected $inputTimeZoneRaw = '';
-
-  /**
-   * The prepared timezone object used to construct this date.
-   *
-   * @var string
-   */
-  protected $inputTimeZoneAdjusted = '';
-
-  /**
-   * The value of the format passed to the constructor.
-   *
-   * @var string
-   */
-  protected $inputFormatRaw = '';
-
-  /**
-   * The prepared format, if provided.
-   *
-   * @var string
-   */
-  protected $inputFormatAdjusted = '';
-
-  /**
    * The value of the language code passed to the constructor.
    *
    * @var string|null
