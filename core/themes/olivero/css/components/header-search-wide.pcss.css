@@ -12,7 +12,6 @@
 
 .block-search-wide__wrapper {
   position: absolute;
-  z-index: 1; /* Ensure left border shows above social region in IE11. */
   inset-block-start: 100%;
   inset-inline-start: calc(-1 * var(--content-left));
   display: none;
@@ -126,21 +125,6 @@
 
       & span::after {
         transform: scaleX(1);
-      }
-
-      @media screen and (-ms-high-contrast: active) {
-        border-bottom-width: var(--sp0-5);
-
-        & span::after {
-          content: none;
-        }
-      }
-    }
-
-    @media screen and (-ms-high-contrast: active) {
-      /* Edge's high contrast does show the background image, so we hide it. */
-      & .icon--search {
-        display: none;
       }
     }
   }

@@ -48,7 +48,6 @@ body:not(.is-always-mobile-nav) {
 
     & .primary-nav__menu-link--button {
       &.primary-nav__menu-link--has-children {
-        overflow: visible; /* Necessary to view icon in IE11 */
         padding-inline-end: 9px;
 
         &:focus::before {

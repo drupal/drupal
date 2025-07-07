@@ -47,7 +47,6 @@
     border-radius: 0.25rem;
   }
   body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-    overflow: visible; /* Necessary to view icon in IE11 */
     padding-inline-end: 0.5625rem;
   }
 

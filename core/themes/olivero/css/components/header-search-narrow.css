@@ -39,7 +39,7 @@
   color: var(--color--white);
   border: solid 1px transparent;
   background-color: transparent;
-  background-image: linear-gradient(var(--color--primary-50), var(--color--primary-50)); /* Two values are needed for IE11 support. */
+  background-image: linear-gradient(var(--color--primary-50));
   background-repeat: no-repeat;
   background-position: bottom left; /* LTR */
   background-size: 0% 0.3125rem;
@@ -131,36 +131,9 @@
   transform: scaleX(1);
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .block-search-narrow .search-form__submit:focus {
-    border-bottom-width: var(--sp0-5);
-  }
-
-  .block-search-narrow .search-form__submit:focus span::after {
-    content: none;
-  }
-}
-
 @media (min-width: 43.75rem) {
   .block-search-narrow .search-form__submit {
     width: 5rem;
-  }
-}
-
-@media screen and (-ms-high-contrast: active) {
-  /* IE11's high contrast show will not show the background image, so we show the text. */
-  .block-search-narrow .search-form__submit .visually-hidden {
-    position: static;
-    overflow: visible;
-    clip: auto;
-    width: auto;
-    height: auto;
-    text-align: center;
-  }
-
-  /* Edge's high contrast does show the background image, so we hide it. */
-  .block-search-narrow .search-form__submit .icon--search {
-    display: none;
   }
 }
 

@@ -6,12 +6,13 @@
 @import "../base/media-queries.pcss.css";
 
 .button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   height: var(--sp3);
   margin-block: var(--sp1);
   margin-inline-start: 0;
   margin-inline-end: var(--sp1);
-  padding-block: calc((var(--sp3) - var(--line-height-s)) / 2);
+  padding-block: 1px 0;
   padding-inline: var(--sp1-5);
   cursor: pointer;
   text-align: center;
@@ -23,6 +24,7 @@
   font-family: var(--font-sans);
   font-size: var(--font-size-l);
   font-weight: 700;
+  line-height: var(--line-height-s);
   appearance: none;
   -webkit-font-smoothing: antialiased;
 
@@ -50,20 +52,6 @@
     cursor: default;
     color: var(--color--gray-90);
     border-color: var(--color--gray-90);
-  }
-
-  /*
-    IE11 doesn't work properly on button elements so we only do
-    inline-flex on modern browsers.
-  */
-  @supports (display: inline-flex) {
-    display: inline-flex;
-    align-items: center;
-
-    /* Top padding accounts for font not being vertically centered within line-height. */
-    padding-block: 1px 0;
-    padding-inline: var(--sp1-5);
-    line-height: var(--line-height-s);
   }
 }
 
