@@ -42,7 +42,6 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: var(--sp2);
   text-decoration: none;
   color: inherit;
 
@@ -98,13 +97,14 @@ body:not(.is-always-mobile-nav) {
       &:focus {
         position: relative;
         outline: 0;
+        padding-block: var(--sp0-5);
 
         &::before {
           position: absolute;
           top: 50%;
           left: 50%;
           width: calc(100% + var(--sp));
-          height: var(--sp3);
+          height: 100%;
           content: "";
           transform: translate(-50%, -50%);
           border: solid 2px var(--color--primary-50);
