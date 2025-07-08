@@ -505,12 +505,14 @@ services:
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
     arguments: ['@service_container', '%factory.keyvalue%']
+  Drupal\Core\KeyValueStore\KeyValueFactoryInterface: '@keyvalue'
   keyvalue.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseFactory
     arguments: ['@serialization.phpserialize', '@database']
   keyvalue.expirable:
     class: Drupal\Core\KeyValueStore\KeyValueExpirableFactory
     arguments: ['@service_container', '%factory.keyvalue.expirable%']
+  Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface: '@keyvalue.expirable'
   keyvalue.expirable.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory
     arguments: ['@serialization.phpserialize', '@database', '@datetime.time']
