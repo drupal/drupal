@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path\Functional;
 
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+
 /**
  * Tests the Path Node form UI.
  *
@@ -14,7 +17,7 @@ class PathNodeFormTest extends PathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'path'];
+  protected static $modules = ['node', 'path', 'path_test_misc'];
 
   /**
    * {@inheritdoc}
@@ -57,6 +60,29 @@ class PathNodeFormTest extends PathTestBase {
     // See if the whole fieldset is gone now.
     $assert_session->elementNotExists('css', '.js-form-type-vertical-tabs #edit-path-0');
     $assert_session->fieldNotExists('path[0][alias]');
+  }
+
+  /**
+   * Tests that duplicate path aliases don't get created.
+   */
+  public function testAliasDuplicationPrevention(): void {
+    $this->drupalGet('node/add/page');
+    $edit['title[0][value]'] = 'path duplication test';
+    $edit['path[0][alias]'] = '/my-alias';
+    $this->submitForm($edit, 'Save');
+
+    // Test that PathItem::postSave detects if a path alias exists
+    // before creating one.
+    $aliases = \Drupal::entityTypeManager()
+      ->getStorage('path_alias')
+      ->loadMultiple();
+    static::assertCount(1, $aliases);
+    $node = Node::load(1);
+    static::assertInstanceOf(NodeInterface::class, $node);
+
+    // This updated title gets set in PathTestMiscHooks::nodePresave. This
+    // is a way of ensuring that bit of test code runs.
+    static::assertEquals('path duplication test ran', $node->getTitle());
   }
 
 }
