@@ -529,7 +529,7 @@ default:
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
   variables:
     TESTSUITE: PHPUnit-Unit
-    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
     _TARGET_PHP: "8.3-ubuntu"
 
@@ -537,7 +537,7 @@ default:
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
   variables:
     TESTSUITE: PHPUnit-Unit
-    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
     _TARGET_PHP: "8.4-ubuntu"
 
@@ -546,7 +546,7 @@ default:
   allow_failure: true
   variables:
     TESTSUITE: PHPUnit-Unit
-    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
     _TARGET_PHP: "8.5-ubuntu"
 
