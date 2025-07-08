@@ -32,7 +32,7 @@ class HtmxTestAjaxForm extends FormBase {
         '#ajax' => [
           'callback' => [
             HtmxTestAttachmentsController::class,
-            'generateHtmxButton',
+            'replaceWithAjax',
           ],
           'wrapper' => 'ajax-test-container',
         ],

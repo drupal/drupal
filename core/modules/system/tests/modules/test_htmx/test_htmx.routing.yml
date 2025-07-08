@@ -6,6 +6,22 @@ test_htmx.attachments.page:
   requirements:
     _permission: 'access content'
 
+test_htmx.attachments.before:
+  path: '/htmx-test-attachments/before'
+  defaults:
+    _title: 'Page'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::before'
+  requirements:
+    _permission: 'access content'
+
+test_htmx.attachments.after:
+  path: '/htmx-test-attachments/after'
+  defaults:
+    _title: 'Page'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::after'
+  requirements:
+    _permission: 'access content'
+
 test_htmx.attachments.replace:
   path: '/htmx-test-attachments/replace'
   defaults:

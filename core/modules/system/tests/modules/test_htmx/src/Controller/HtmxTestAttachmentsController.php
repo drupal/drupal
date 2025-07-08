@@ -23,6 +23,26 @@ final class HtmxTestAttachmentsController extends ControllerBase {
   }
 
   /**
+   * Builds a response with a `beforebegin` swap.
+   *
+   * @return mixed[]
+   *   A render array.
+   */
+  public function before(): array {
+    return self::generateHtmxButton('beforebegin');
+  }
+
+  /**
+   * Builds a response with an `afterend` swap..
+   *
+   * @return mixed[]
+   *   A render array.
+   */
+  public function after(): array {
+    return self::generateHtmxButton('afterend');
+  }
+
+  /**
    * Builds the HTMX response.
    *
    * @return mixed[]
@@ -44,12 +64,22 @@ final class HtmxTestAttachmentsController extends ControllerBase {
   }
 
   /**
+   * We need a static callback that ignores callback parameters.
+   *
+   * @return array
+   *   The render array.
+   */
+  public static function replaceWithAjax(): array {
+    return static::generateHtmxButton();
+  }
+
+  /**
    * Static helper to for reusable render array.
    *
    * @return array
    *   The render array.
    */
-  public static function generateHtmxButton(): array {
+  public static function generateHtmxButton(string $swap = ''): array {
     $url = Url::fromRoute('test_htmx.attachments.replace');
     $build['replace'] = [
       '#type' => 'html_tag',
@@ -68,6 +98,9 @@ final class HtmxTestAttachmentsController extends ControllerBase {
         ],
       ],
     ];
+    if ($swap !== '') {
+      $build['replace']['#attributes']['data-hx-swap'] = $swap;
+    }
 
     $build['content'] = [
       '#type' => 'container',

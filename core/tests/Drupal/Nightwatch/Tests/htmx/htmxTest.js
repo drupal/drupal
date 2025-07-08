@@ -41,8 +41,54 @@ module.exports = {
       .assert.not.elementPresent(cssSelector)
       .waitForElementVisible('[name="replace"]', 1000)
       .click('[name="replace"]')
-      .waitForElementVisible(elementSelector, 6000)
-      .waitForElementVisible(elementInitSelector, 6000)
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+
+  'Swap Before': (browser) => {
+    // Load the route htmx will use for the request on click and confirm the
+    // markup we will be looking for is present in the source markup.
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/replace')
+      .waitForElementVisible('body', 1000)
+      .assert.elementPresent(elementInitSelector);
+    // Now load the page with the htmx enhanced button and verify the absence
+    // of the markup to be inserted. Click the button
+    // and check for inserted javascript and markup.
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/before')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+
+  'Swap After': (browser) => {
+    // Load the route htmx will use for the request on click and confirm the
+    // markup we will be looking for is present in the source markup.
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/replace')
+      .waitForElementVisible('body', 1000)
+      .assert.elementPresent(elementInitSelector);
+    // Now load the page with the htmx enhanced button and verify the absence
+    // of the markup to be inserted. Click the button
+    // and check for inserted javascript and markup.
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/after')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
       .assert.elementPresent(scriptSelector)
       .assert.elementPresent(cssSelector);
   },
@@ -69,8 +115,8 @@ module.exports = {
       .waitForElementVisible('[name="replace"]', 1000)
       .pause(1000)
       .click('[name="replace"]')
-      .waitForElementVisible(elementSelector, 6000)
-      .waitForElementVisible(elementInitSelector, 6000)
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
       .assert.elementPresent(scriptSelector)
       .assert.elementPresent(cssSelector);
   },

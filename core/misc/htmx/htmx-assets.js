@@ -166,7 +166,8 @@
   // @see https://htmx.org/events/#htmx:afterSettle
   htmx.on('htmx:afterSettle', ({ detail }) => {
     requestAssetsLoaded.get(detail.xhr).then(() => {
-      htmx.trigger(detail.elt, 'htmx:drupal:load');
+      // Some HTMX swaps put the incoming element before or after detail.elt.
+      htmx.trigger(detail.elt.parentNode, 'htmx:drupal:load');
       // This should be automatic but don't wait for the garbage collector.
       requestAssetsLoaded.delete(detail.xhr);
     });
