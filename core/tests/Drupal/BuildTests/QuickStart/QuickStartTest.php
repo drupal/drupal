@@ -2,14 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Command;
+namespace Drupal\BuildTests\QuickStart;
 
 use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
+use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\BrowserTestBase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -18,15 +22,12 @@ use Symfony\Component\Process\Process;
  *
  * These tests are run in a separate process because they load Drupal code via
  * an include.
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @requires extension pdo_sqlite
- *
- * @group Command
- * @group #slow
  */
-class QuickStartTest extends TestCase {
+#[Group('Command')]
+#[PreserveGlobalState(FALSE)]
+#[RequiresPhpExtension('pdo_sqlite')]
+#[RunTestsInSeparateProcesses]
+class QuickStartTest extends BuildTestBase {
 
   /**
    * The PHP executable path.
