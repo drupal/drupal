@@ -139,6 +139,36 @@ class AjaxTestController {
   }
 
   /**
+   * Returns a render array of links that directly Drupal.ajax().
+   *
+   * @return array
+   *   Renderable array of AJAX response contents.
+   */
+  public function insertLinksTableWrapper(): array {
+    $build['links'] = [
+      'ajax_target' => [
+        '#markup' => '<div class="ajax-target-wrapper"><table><tbody id="ajax-target"></tbody></table></div>',
+      ],
+      'links' => [
+        '#theme' => 'links',
+        '#attached' => ['library' => ['ajax_test/ajax_insert']],
+      ],
+    ];
+
+    $build['links']['links']['#links']['table-row'] = [
+      'title' => 'Link table-row',
+      'url' => Url::fromRoute('ajax_test.ajax_render_types', ['type' => 'table-row']),
+      'attributes' => [
+        'class' => ['ajax-insert'],
+        'data-method' => 'html',
+        'data-effect' => 'none',
+      ],
+    ];
+
+    return $build;
+  }
+
+  /**
    * Returns a render array that will be rendered by AjaxRenderer.
    *
    * Verifies that the response incorporates JavaScript settings generated
@@ -334,6 +364,7 @@ class AjaxTestController {
       'comment-not-wrapped' => '<!-- COMMENT --><div class="comment-not-wrapped">comment-not-wrapped</div>',
       'svg' => '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect x="0" y="0" height="10" width="10" fill="green"></rect></svg>',
       'empty' => '',
+      'table-row' => '<tr><td>table-row</td></tr>',
     ];
     $render_multiple_root = [
       'mixed' => ' foo <!-- COMMENT -->  foo bar<div class="a class"><p>some string</p></div> additional not wrapped strings, <!-- ANOTHER COMMENT --> <p>final string</p>',
