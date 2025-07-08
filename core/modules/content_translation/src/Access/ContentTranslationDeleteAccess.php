@@ -11,7 +11,6 @@ use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
-use Drupal\workflows\Entity\Workflow;
 
 /**
  * Access check for entity translation deletion.
@@ -83,13 +82,9 @@ class ContentTranslationDeleteAccess implements AccessInterface {
 
     $entity_type_id = $entity->getEntityTypeId();
     $result->addCacheableDependency($entity);
-    // Add the cache dependencies used by
-    // ContentTranslationManager::isPendingRevisionSupportEnabled().
-    if (\Drupal::moduleHandler()->moduleExists('content_moderation')) {
-      foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
-        $result->addCacheableDependency($workflow);
-      }
-    }
+    // The information about workflows is stored in entity bundle info, depend
+    // on that cache tag.
+    $result->addCacheTags(['entity_bundles']);
     if (!ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id, $entity->bundle())) {
       return $result;
     }

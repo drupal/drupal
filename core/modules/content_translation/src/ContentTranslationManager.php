@@ -3,7 +3,6 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\workflows\Entity\Workflow;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
@@ -168,24 +167,13 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
       return FALSE;
     }
 
-    foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
-      /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $plugin */
-      $plugin = $workflow->getTypePlugin();
-      $entity_type_ids = array_flip($plugin->getEntityTypes());
-      if (isset($entity_type_ids[$entity_type_id])) {
-        if (!isset($bundle_id)) {
-          return TRUE;
-        }
-        else {
-          $bundle_ids = array_flip($plugin->getBundlesForEntityType($entity_type_id));
-          if (isset($bundle_ids[$bundle_id])) {
-            return TRUE;
-          }
-        }
-      }
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    if ($bundle_id) {
+      return \Drupal::service('content_moderation.moderation_information')->shouldModerateEntitiesOfBundle($entity_type, $bundle_id);
     }
-
-    return FALSE;
+    else {
+      return \Drupal::service('content_moderation.moderation_information')->canModerateEntitiesOfEntityType($entity_type);
+    }
   }
 
 }
