@@ -375,7 +375,7 @@ class ViewsHooks {
   #[Hook('view_presave')]
   public function viewPresave(ViewEntityInterface $view): void {
     /** @var \Drupal\views\ViewsConfigUpdater $config_updater */
-    $config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+    $config_updater = \Drupal::service(ViewsConfigUpdater::class);
     $config_updater->updateAll($view);
   }
 
