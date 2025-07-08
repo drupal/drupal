@@ -278,3 +278,9 @@
       0 0 0 calc(var(--tabs--focus-height) + 2px) var(--color-focus);
   }
 }
+
+@media (forced-colors: active) {
+  .tabs__trigger svg path {
+    fill: currentColor;
+  }
+}
