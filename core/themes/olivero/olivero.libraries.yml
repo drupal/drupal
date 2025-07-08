@@ -45,7 +45,6 @@ global-styling:
       css/components/site-header.css: {}
       css/components/skip-link.css: {}
       css/components/pager.css: {}
-      css/components/table.css: {}
       css/components/text-content.css: {}
       css/components/wide-content.css: {}
 
@@ -291,3 +290,18 @@ tags:
   css:
     theme:
       css/components/tags.css: {}
+
+olivero.table:
+  version: VERSION
+  css:
+    component:
+      css/components/table.css: {}
+  moved_files:
+    olivero/global-styling:
+      deprecation_version: 11.3.0
+      removed_version: 12.0.0
+      deprecation_link: https://www.drupal.org/node/3517675
+      css:
+        component:
+          css/components/table.css:
+            base: css/components/table.css
