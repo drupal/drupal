@@ -18,10 +18,11 @@
 
 .breadcrumb__item,
 .breadcrumb__link {
-  display: inline;
+  display: inline-block;
   text-decoration: none;
   color: var(--color-text);
   font-weight: bold;
+  line-height: 1.5rem;
 }
 
 .breadcrumb__item + .breadcrumb__item::before {
