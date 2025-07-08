@@ -43,6 +43,13 @@ ajax_test.insert_links_inline_wrapper:
   requirements:
     _access: 'TRUE'
 
+ajax_test.insert_links_table_wrapper:
+  path: '/ajax-test/insert-table-wrapper'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::insertLinksTableWrapper'
+  requirements:
+    _access: 'TRUE'
+
 ajax_test.dialog_close:
   path: '/ajax-test/dialog-close'
   defaults:
