@@ -14,9 +14,6 @@ services:
   Drupal\package_manager\ExecutableFinder:
     public: false
     decorates: 'PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface'
-  Drupal\package_manager\ProcessFactory:
-    public: false
-    decorates: 'PhpTuf\ComposerStager\API\Process\Factory\ProcessFactoryInterface'
   Drupal\package_manager\TranslatableStringFactory:
     public: false
     decorates: 'PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface'
@@ -175,7 +172,7 @@ services:
   PhpTuf\ComposerStager\API\Process\Factory\ProcessFactoryInterface:
     class: PhpTuf\ComposerStager\Internal\Process\Factory\ProcessFactory
   PhpTuf\ComposerStager\API\Process\Service\ComposerProcessRunnerInterface:
-    class: PhpTuf\ComposerStager\Internal\Process\Service\ComposerProcessRunner
+    class: Drupal\package_manager\ComposerRunner
   PhpTuf\ComposerStager\API\Process\Service\OutputCallbackInterface:
     class: PhpTuf\ComposerStager\Internal\Process\Service\OutputCallback
   PhpTuf\ComposerStager\API\Process\Service\ProcessInterface:
