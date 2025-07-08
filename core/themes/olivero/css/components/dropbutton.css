@@ -75,6 +75,10 @@
   outline-offset: -2px;
 }
 
+.dropbutton-toggle button:dir(rtl) {
+  border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius);
+}
+
 .dropbutton-toggle button::before {
   display: block;
   width: var(--sp0-5);
@@ -85,12 +89,8 @@
   border-bottom: solid 2px var(--dropbutton--outline-color);
 }
 
-.dropbutton-wrapper.open :is(.dropbutton-toggle button::before) {
+.dropbutton-wrapper.open :is(.dropbutton-toggle button)::before {
   transform: translateY(25%) rotate(225deg);
-}
-
-.dropbutton-toggle button:dir(rtl) {
-  border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius);
 }
 
 /* This is the first <li> element in the list of actions. */

@@ -66,6 +66,10 @@
     outline-offset: -2px;
   }
 
+  &:dir(rtl) {
+    border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius);
+  }
+
   &::before {
     display: block;
     width: var(--sp0-5);
@@ -74,14 +78,12 @@
     transform: translateY(-25%) rotate(45deg);
     border-right: solid 2px var(--dropbutton--outline-color);
     border-bottom: solid 2px var(--dropbutton--outline-color);
-
-    .dropbutton-wrapper.open & {
-      transform: translateY(25%) rotate(225deg);
-    }
   }
 
-  &:dir(rtl) {
-    border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius);
+  .dropbutton-wrapper.open & {
+    &::before {
+      transform: translateY(25%) rotate(225deg);
+    }
   }
 }
 
