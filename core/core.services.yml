@@ -512,6 +512,8 @@ services:
     arguments: ['%app.root%', '@keyvalue.expirable', '@module_handler', '@current_user', '@csrf_token', '@logger.channel.form', '@request_stack', '@page_cache_request_policy']
     public: false  # Private to form_builder
   Drupal\Core\Form\FormCacheInterface: '@form_cache'
+  Drupal\Core\Form\FormPreprocess:
+    class: Drupal\Core\Form\FormPreprocess
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
     arguments: ['@service_container', '%factory.keyvalue%']
