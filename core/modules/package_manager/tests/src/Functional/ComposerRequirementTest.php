@@ -47,7 +47,10 @@ class ComposerRequirementTest extends PackageManagerTestBase {
     $config->set('executables.composer', '/path/to/composer')->save();
     $this->getSession()->reload();
     $assert_session->statusCodeEquals(200);
-    $assert_session->pageTextContains('Composer was not found. The error message was: Failed to run process: The command "\'/path/to/composer\' \'--format=json\'" failed.');
+    $assert_session->pageTextContains('Composer was not found. The error message was: ');
+    // Check for the part of the command string that is constant (the path to
+    // the PHP interpreter will vary).
+    $assert_session->pageTextContains("/php' '/path/to/composer' '--format=json'\" failed.");
   }
 
 }
