@@ -37,7 +37,7 @@ body:not(.is-always-mobile-nav) {
           top: 50%;
           left: 50%;
           width: calc(100% + var(--sp));
-          height: var(--sp3);
+          height: calc(100% - var(--sp3));
           content: "";
           transform: translate(-50%, -50%);
           border: solid 2px var(--color--primary-50);
