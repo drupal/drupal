@@ -82,12 +82,28 @@ class PathItem extends FieldItemBase {
 
     // If we have an alias, we need to create or update a path alias entity.
     if ($alias) {
-      if (!$update || !$pid) {
-        $path_alias = $path_alias_storage->create([
-          'path' => '/' . $entity->toUrl()->getInternalPath(),
-          'alias' => $alias,
-          'langcode' => $alias_langcode,
-        ]);
+      $properties = [
+        'path' => '/' . $entity->toUrl()->getInternalPath(),
+        'alias' => $alias,
+        'langcode' => $alias_langcode,
+      ];
+
+      if (!$pid) {
+        // Try to load it from storage before creating it. In some cases the
+        // path alias could be created before this function runs. For example,
+        // \Drupal\workspaces\EntityOperations::entityTranslationInsert will
+        // create a translation, and an associated path alias will be created
+        // with it.
+        $query = $path_alias_storage->getQuery()->accessCheck(FALSE);
+        foreach ($properties as $field => $value) {
+          $query->condition($field, $value);
+        }
+        $ids = $query->execute();
+        $pid = $ids ? reset($ids) : $pid;
+      }
+
+      if (!$pid) {
+        $path_alias = $path_alias_storage->create($properties);
         $path_alias->save();
         $this->set('pid', $path_alias->id());
       }

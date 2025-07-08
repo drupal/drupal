@@ -1,0 +1,5 @@
+name: 'Path test miscellaneous utilities'
+type: module
+description: 'Utilities for path testing'
+package: Testing
+version: VERSION
