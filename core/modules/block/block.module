@@ -92,6 +92,10 @@ function block_page_top(array &$page_top) {
  * @see block_modules_installed()
  */
 function block_themes_installed($theme_list) {
+  // Do not create blocks during config sync.
+  if (\Drupal::service('config.installer')->isSyncing()) {
+    return;
+  }
   // Disable this functionality prior to install profile installation because
   // block configuration is often optional or provided by the install profile
   // itself. block_theme_initialize() will be called when the install profile is
@@ -151,7 +155,12 @@ function block_theme_initialize($theme) {
  *
  * @see block_themes_installed()
  */
-function block_modules_installed($modules) {
+function block_modules_installed($modules, bool $is_syncing) {
+  // Do not create blocks during config sync.
+  if ($is_syncing) {
+    return;
+  }
+
   // block_themes_installed() does not call block_theme_initialize() during site
   // installation because block configuration can be optional or provided by the
   // profile. Now, when the profile is installed, this configuration exists,
