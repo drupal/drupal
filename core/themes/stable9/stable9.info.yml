@@ -109,6 +109,11 @@ libraries-override:
       component:
         misc/vertical-tabs.css: css/core/vertical-tabs.css
 
+  core/drupal.reset-appearance:
+    css:
+      component:
+        misc/components/reset-appearance.module.css: css/core/components/reset-appearance.module.css
+
   # Load version 3.0.3 of normalize.css for backwards compatibility.
   core/normalize: stable9/normalize
 
@@ -244,7 +249,6 @@ libraries-override:
         css/components/clearfix.module.css: css/system/components/clearfix.module.css
         css/components/hidden.module.css: css/system/components/hidden.module.css
         css/components/js.module.css: css/system/components/js.module.css
-        css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
   system/admin:
     css:
       theme:

@@ -59,7 +59,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 41350,
+      'StylesheetBytes' => 40800,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
@@ -90,7 +90,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 41350,
+      'StylesheetBytes' => 40800,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
@@ -122,7 +122,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 41350,
+      'StylesheetBytes' => 40800,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
@@ -454,7 +454,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 41200,
+      'StylesheetBytes' => 41000,
     ];
     $this->assertMetrics($expected, $performance_data);
   }

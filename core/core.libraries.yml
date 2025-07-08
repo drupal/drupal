@@ -695,6 +695,21 @@ drupal.textarea-resize:
           css/components/resize.module.css:
             component: misc/components/resize.module.css
 
+drupal.reset-appearance:
+  version: VERSION
+  css:
+    component:
+      misc/components/reset-appearance.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 11.3.0
+      removed_version: 12.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/reset-appearance.module.css:
+            component: misc/components/reset-appearance.module.css
+
 drupal.states:
   version: VERSION
   js:
