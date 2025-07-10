@@ -94,6 +94,7 @@ class ConfigurablePluginTest extends KernelTestBase {
         'properties' => [
           'reversed' => TRUE,
           'startIndex' => TRUE,
+          'styles' => TRUE,
         ],
         'multiBlock' => TRUE,
       ],

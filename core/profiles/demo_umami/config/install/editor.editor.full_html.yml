@@ -42,6 +42,7 @@ settings:
       properties:
         reversed: false
         startIndex: false
+        styles: true
       multiBlock: true
     ckeditor5_sourceEditing:
       allowed_tags: {  }

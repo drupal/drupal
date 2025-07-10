@@ -235,39 +235,6 @@ JS;
 
       // Edge case: `style`.
       // @todo https://www.drupal.org/project/drupal/issues/3304832
-
-      // Edge case: `type` attribute on lists.
-      // @todo Remove in https://www.drupal.org/project/drupal/issues/3274635.
-      'no numberedList-related additions to the Source Editing configuration' => [
-        '<ol type="A"><li>foo</li><li>bar</li></ol>',
-        '<ol><li>foo</li><li>bar</li></ol>',
-        '',
-      ],
-      '<ol type>' => [
-        '<ol type="A"><li>foo</li><li>bar</li></ol>',
-        '<ol type="A"><li>foo</li><li>bar</li></ol>',
-        '<ol type>',
-      ],
-      '<ol type="A">' => [
-        '<ol type="A"><li>foo</li><li>bar</li></ol>',
-        '<ol type="A"><li>foo</li><li>bar</li></ol>',
-        '<ol type="A">',
-      ],
-      'no bulletedList-related additions to the Source Editing configuration' => [
-        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
-        '<ul><li>foo</li><li>bar</li></ul>',
-        '',
-      ],
-      '<ul type>' => [
-        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
-        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
-        '<ul type>',
-      ],
-      '<ul type="circle">' => [
-        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
-        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
-        '<ul type="circle">',
-      ],
     ];
   }
 

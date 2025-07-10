@@ -37,6 +37,7 @@ settings:
       properties:
         reversed: false
         startIndex: true
+        styles: true
       multiBlock: false
     ckeditor5_sourceEditing:
       allowed_tags:
@@ -46,8 +47,6 @@ settings:
         - '<dd>'
         - '<a hreflang>'
         - '<blockquote cite>'
-        - '<ul type>'
-        - '<ol type>'
         - '<h2 id>'
         - '<h3 id>'
         - '<h4 id>'

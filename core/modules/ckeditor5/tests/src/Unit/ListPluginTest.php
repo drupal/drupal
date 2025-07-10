@@ -26,6 +26,7 @@ class ListPluginTest extends UnitTestCase {
           'properties' => [
             'reversed' => TRUE,
             'startIndex' => FALSE,
+            'styles' => TRUE,
           ],
           'multiBlock' => TRUE,
         ],
@@ -34,7 +35,9 @@ class ListPluginTest extends UnitTestCase {
             'properties' => [
               'reversed' => TRUE,
               'startIndex' => FALSE,
-              'styles' => FALSE,
+              'styles' => [
+                'useAttribute' => TRUE,
+              ],
             ],
             'multiBlock' => TRUE,
           ],
@@ -45,6 +48,7 @@ class ListPluginTest extends UnitTestCase {
           'properties' => [
             'reversed' => FALSE,
             'startIndex' => TRUE,
+            'styles' => TRUE,
           ],
           'multiBlock' => TRUE,
         ],
@@ -53,17 +57,40 @@ class ListPluginTest extends UnitTestCase {
             'properties' => [
               'reversed' => FALSE,
               'startIndex' => TRUE,
+              'styles' => [
+                'useAttribute' => TRUE,
+              ],
+            ],
+            'multiBlock' => TRUE,
+          ],
+        ],
+      ],
+      'styles is false' => [
+        [
+          'properties' => [
+            'reversed' => TRUE,
+            'startIndex' => TRUE,
+            'styles' => FALSE,
+          ],
+          'multiBlock' => TRUE,
+        ],
+        [
+          'list' => [
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => TRUE,
               'styles' => FALSE,
             ],
             'multiBlock' => TRUE,
           ],
         ],
       ],
-      'both disabled' => [
+      'all disabled' => [
         [
           'properties' => [
             'reversed' => FALSE,
             'startIndex' => FALSE,
+            'styles' => FALSE,
           ],
           'multiBlock' => TRUE,
         ],
@@ -78,11 +105,12 @@ class ListPluginTest extends UnitTestCase {
           ],
         ],
       ],
-      'both enabled' => [
+      'all enabled' => [
         [
           'properties' => [
             'reversed' => TRUE,
             'startIndex' => TRUE,
+            'styles' => TRUE,
           ],
           'multiBlock' => TRUE,
         ],
@@ -91,7 +119,9 @@ class ListPluginTest extends UnitTestCase {
             'properties' => [
               'reversed' => TRUE,
               'startIndex' => TRUE,
-              'styles' => FALSE,
+              'styles' => [
+                'useAttribute' => TRUE,
+              ],
             ],
             'multiBlock' => TRUE,
           ],

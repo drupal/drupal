@@ -394,11 +394,8 @@ ckeditor5_list:
     plugins:
       - list.List
       - list.ListProperties
-    config:
-      list:
-        properties:
-          # @todo Make this configurable in https://www.drupal.org/project/drupal/issues/3274635
-          styles: false
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin::getDynamicPluginConfig()
+    config: {}
   drupal:
     label: List
     library: core/ckeditor5.list
@@ -414,6 +411,8 @@ ckeditor5_list:
       - <ol>
       - <ol reversed start>
       - <li>
+      - <ol type>
+      - <ul type>
 
 ckeditor5_horizontalLine:
   ckeditor5:

@@ -6,12 +6,14 @@ use Drupal\Core\Hook\Order\OrderAfter;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Render\Element;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\editor\EditorInterface;
 
 /**
  * Hook implementations for ckeditor5.
@@ -375,6 +377,43 @@ class Ckeditor5Hooks {
     $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['filters'] = $definitions['filter.format.*']['mapping']['filters'];
     // @see @see editor.editor.*.image_upload
     $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['image_upload'] = $definitions['editor.editor.*']['mapping']['image_upload'];
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_presave() for editor entities.
+   */
+  #[Hook('editor_presave')]
+  public function editorPresave(EditorInterface $editor): void {
+    if ($editor->getEditor() === 'ckeditor5') {
+      $settings = $editor->getSettings();
+      // @see ckeditor5_post_update_list_type()
+      if (array_key_exists('ckeditor5_list', $settings['plugins']) && array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
+        $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
+        $format_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
+
+        // If neither <ol type> or <ul type> are allowed through Source Editing
+        // (the only way it could possibly be supported until now), and it is
+        // not an unrestricted text format (such as "Full HTML"), then set the
+        // new "styles" setting for the List plugin to false.
+        $ol_type = HTMLRestrictions::fromString('<ol type>');
+        $ul_type = HTMLRestrictions::fromString('<ul type>');
+        if (!array_key_exists('styles', $settings['plugins']['ckeditor5_list']['properties'])) {
+          $settings['plugins']['ckeditor5_list']['properties']['styles'] =
+            $ol_type->diff($source_edited)->allowsNothing() ||
+            $ul_type->diff($source_edited)->allowsNothing() ||
+            $format_restrictions->isUnrestricted();
+        }
+
+        // Update the Source Editing configuration too.
+        $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
+          ->diff($ol_type)
+          ->diff($ul_type)
+          ->toCKEditor5ElementsArray();
+      }
+
+      $editor->setSettings($settings);
+
+    }
   }
 
 }

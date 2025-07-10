@@ -142,12 +142,20 @@ ckeditor5.plugin.ckeditor5_list:
       mapping:
         reversed:
           type: boolean
+          # @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol#reversed
           label: 'Allow reverse list'
           constraints:
             NotNull: []
         startIndex:
           type: boolean
+          # @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol#start
           label: 'Allow start index'
+          constraints:
+            NotNull: []
+        styles:
+          type: boolean
+          # @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol#type
+          label: 'Allow list style type'
           constraints:
             NotNull: []
     multiBlock:

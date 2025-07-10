@@ -566,13 +566,14 @@ JS;
       ],
       'settings' => [
         'toolbar' => [
-          'items' => ['sourceEditing', 'numberedList'],
+          'items' => ['sourceEditing', 'numberedList', 'bulletedList'],
         ],
         'plugins' => [
           'ckeditor5_list' => [
             'properties' => [
               'reversed' => FALSE,
               'startIndex' => FALSE,
+              'styles' => FALSE,
             ],
             'multiBlock' => TRUE,
           ],
@@ -605,7 +606,7 @@ JS;
     $numbered_list_dropdown_selector = '.ck-splitbutton__arrow';
 
     // Check that there is no dropdown available for the numbered list because
-    // both reversed and startIndex are FALSE.
+    // reversed, startIndex and styles are FALSE.
     $assert_session->elementNotExists('css', $numbered_list_dropdown_selector);
     // Save content so source content is kept after changing the editor config.
     $page->pressButton('Save');
@@ -640,6 +641,70 @@ JS;
     $assert_session->elementExists('css', $reversed_order_button_selector);
     $assert_session->elementTextEquals('css', $reversed_order_button_selector, 'Reversed order');
     $assert_session->elementExists('css', $start_index_element_selector);
+
+    // Enable list style types.
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+    $settings['plugins']['ckeditor5_list']['properties']['styles'] = TRUE;
+    $editor->setSettings($settings);
+    $editor->save();
+    $this->getSession()->reload();
+    $this->waitForEditor();
+
+    $list_types = [
+      'ol' => [
+        'Lower-roman' => 'i',
+        'Upper-roman' => 'I',
+        'Lower-latin' => 'a',
+        'Upper-latin' => 'A',
+      ],
+      'ul' => [
+        'Square' => 'square',
+        'Disc' => 'disc',
+        'Circle' => 'circle',
+      ],
+    ];
+
+    foreach ($list_types as $list_tag => $types) {
+      foreach ($types as $type => $type_attribute) {
+        $list_to_edit = $assert_session->waitForElementVisible('css', ".ck-editor__editable_inline > *:first-child");
+        $list_to_edit->click();
+
+        // Open the list type toolbar and choose a type.
+        $list_button_tip_text = $list_tag === 'ol' ? 'Numbered List' : 'Bulleted List';
+        $toolbar_selector = '[aria-label="' . str_replace(' L', ' l', $list_button_tip_text) . ' styles toolbar"]';
+        $button_selector = '[data-cke-tooltip-text="' . $list_button_tip_text . '"]';
+        $page->find('css', '[aria-expanded="false"]' . $button_selector)->click();
+        $open_splitbutton = $assert_session->waitForElementVisible('css', '[aria-expanded="true"]' . $button_selector);
+        $this->assertNotNull($open_splitbutton, "$list_button_tip_text splitbutton is open");
+        $toolbar = $assert_session->waitForElementVisible('css', $toolbar_selector);
+        $this->assertNotNull($toolbar, "Toolbar for selecting $type is available at $toolbar_selector ");
+        $toolbar_with_tips = $assert_session->waitForElementVisible('css', $toolbar_selector . ' [data-cke-tooltip-text]');
+        $this->assertNotNull($toolbar_with_tips);
+        $toolbar_buttons = $toolbar->findAll('css', 'button');
+        // While this is a bit of an indirect way to find the correct button, it
+        // accounts for the mixed dash characters and worked better than other
+        // attempts.
+        $toolbar_button_tips = array_map(fn($item) => str_replace('–', '-', $item->getAttribute('data-cke-tooltip-text')), $toolbar_buttons);
+        $this->assertNotFalse(array_search($type, $toolbar_button_tips));
+        $toolbar_buttons[array_search($type, $toolbar_button_tips)]->click();
+        $widget_selector = '.ck-editor__editable_inline > ' . $list_tag . '[type="' . $type_attribute . '"]';
+        $widget = $assert_session->waitForElementVisible('css', $widget_selector);
+        $this->assertNotNull($widget, "The widget exists at $widget_selector");
+
+        // Confirm the style applied in-editor is for the type of list chosen.
+        $list_style_type = $this->getSession()->evaluateScript('window.getComputedStyle(document.querySelector(\'' . $widget_selector . '\')).listStyleType');
+        $this->assertSame(str_replace('latin', 'alpha', strtolower($type)), $list_style_type, "The $list_style_type list should have the correct style.");
+        $page->pressButton('Save');
+
+        $fe_list_style_type = $this->getSession()->evaluateScript('window.getComputedStyle(document.querySelector(\'' . $list_tag . '[type]\')).listStyleType');
+        // Confirm the style applied on the default theme is for the type of
+        // list chosen.
+        $this->assertSame(str_replace('latin', 'alpha', strtolower($type)), strtolower($fe_list_style_type));
+        $this->drupalGet($edit_url);
+        $this->waitForEditor();
+      }
+    }
   }
 
   /**
