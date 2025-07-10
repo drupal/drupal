@@ -119,15 +119,6 @@ views.field.numeric:
     format_plural_string:
       type: plural_label
       label: 'Plural variants'
-      constraints:
-        Regex:
-          # Normally, labels cannot contain invisible control characters. In this particular
-          # case, an invisible character (ASCII 3, 0x03) is used to encode translation
-          # information, so carve out an exception for that only.
-          # @see \Drupal\views\Plugin\views\field\NumericField
-          pattern: '/([^\PC\x03])/u'
-          match: false
-          message: 'Labels are not allowed to span multiple lines or contain control characters.'
     prefix:
       type: label
       label: 'Prefix'
