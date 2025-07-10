@@ -75,7 +75,7 @@ class ViewsUiHooks {
   #[Hook('theme')]
   public function theme() : array {
     return [
-          // Edit a view
+          // Edit a view.
       'views_ui_display_tab_setting' => [
         'variables' => [
           'description' => '',
@@ -127,7 +127,7 @@ class ViewsUiHooks {
         'render element' => 'form',
         'file' => 'views_ui.theme.inc',
       ],
-          // On behalf of a plugin
+          // On behalf of a plugin.
       'views_ui_style_plugin_table' => [
         'render element' => 'form',
         'file' => 'views_ui.theme.inc',

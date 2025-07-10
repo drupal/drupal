@@ -161,7 +161,7 @@ class DisplayTest extends UITestBase {
     $path = 'admin/structure/views/view/test_display/edit/block_1';
     $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
 
-    // Test the link text displays 'None' and not 'Block 1'
+    // Test the link text displays 'None' and not 'Block 1'.
     $this->drupalGet($path);
     $this->assertSession()->elementTextEquals('xpath', "//a[contains(@href, '{$link_display_path}')]", 'None');
 
@@ -187,7 +187,7 @@ class DisplayTest extends UITestBase {
 
     $this->assertSession()->linkExists('Custom URL', 0, 'The link option has custom URL as summary.');
 
-    // Test the default link_url value for new display
+    // Test the default link_url value for new display.
     $this->submitForm([], 'Add Block');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
     $this->clickLink('Custom URL');

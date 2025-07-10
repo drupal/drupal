@@ -174,7 +174,7 @@ class TestRun {
       foreach (file($error_log_path) as $line) {
         if (preg_match('/\[.*?\] (.*?): (.*?) in (.*) on line (\d+)/', $line, $match)) {
           // Parse PHP fatal errors for example: PHP Fatal error: Call to
-          // undefined function break_me() in /path/to/file.php on line 17
+          // undefined function break_me() in /path/to/file.php on line 17.
           $this->insertLogEntry([
             'test_class' => $test_class,
             'status' => 'fail',

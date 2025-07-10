@@ -253,7 +253,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
   public function testSingleLanguageUI(): void {
     $this->drupalLogin($this->adminUser);
 
-    // Delete French language
+    // Delete French language.
     $this->drupalGet('admin/config/regional/language/delete/fr');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('The French (fr) language has been removed.');
@@ -266,7 +266,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('Configuration saved.');
 
-    // Delete English language
+    // Delete English language.
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('The English (en) language has been removed.');

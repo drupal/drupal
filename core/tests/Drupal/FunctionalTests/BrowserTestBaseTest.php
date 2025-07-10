@@ -491,7 +491,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   public function testLocalTimeZone(): void {
     $expected = 'Australia/Sydney';
-    // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
+    // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php.
     $this->assertEquals($expected, date_default_timezone_get());
 
     // The 'Australia/Sydney' time zone is also set in

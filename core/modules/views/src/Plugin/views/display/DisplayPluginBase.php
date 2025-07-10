@@ -763,7 +763,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       return $this->view->displayHandlers->get($display_id)->getRoutedDisplay();
     }
 
-    // No routed display exists, so return NULL
+    // No routed display exists, so return NULL.
     return NULL;
   }
 

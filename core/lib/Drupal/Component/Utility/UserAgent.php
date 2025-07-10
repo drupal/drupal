@@ -45,7 +45,7 @@ class UserAgent {
     //                  1#( language-range [ ";" "q" "=" qvalue ] )
     //   language-range  = ( ( 1*8ALPHA *( "-" 1*8ALPHA ) ) | "*" )
     // @endcode
-    // Samples: "hu, en-us;q=0.66, en;q=0.33", "hu,en-us;q=0.5"
+    // Samples: "hu, en-us;q=0.66, en;q=0.33", "hu,en-us;q=0.5".
     $ua_langcodes = [];
     if (preg_match_all('@(?<=[, ]|^)([a-zA-Z-]+|\*)(?:;q=([0-9.]+))?(?:$|\s*,\s*)@', trim($http_accept_language), $matches, PREG_SET_ORDER)) {
       foreach ($matches as $match) {

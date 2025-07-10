@@ -101,7 +101,7 @@ class BasicTest extends ViewsKernelTestBase {
    * Tests simple argument.
    */
   public function testSimpleArgument(): void {
-    // Execute with a view
+    // Execute with a view.
     $view = Views::getView('test_simple_argument');
     $view->setArguments([27]);
     $this->executeView($view);

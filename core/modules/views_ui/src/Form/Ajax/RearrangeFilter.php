@@ -69,7 +69,7 @@ class RearrangeFilter extends ViewsFormBase {
     }
     $count = 0;
 
-    // Get relationship labels
+    // Get relationship labels.
     $relationships = [];
     foreach ($display->getHandlers('relationship') as $id => $handler) {
       $relationships[$id] = $handler->adminLabel();
@@ -242,7 +242,7 @@ class RearrangeFilter extends ViewsFormBase {
     // Whatever button was clicked, re-calculate field information.
     $new_fields = $order = [];
 
-    // Make an array with the weights
+    // Make an array with the weights.
     foreach ($form_state->getValue('filters') as $field => $info) {
       // Add each value that is a field with a weight to our list, but only if
       // it has had its 'removed' checkbox checked.
@@ -258,7 +258,7 @@ class RearrangeFilter extends ViewsFormBase {
       }
     }
 
-    // Sort the array
+    // Sort the array.
     asort($order);
 
     // Create a new list of fields in the new order.
@@ -271,7 +271,7 @@ class RearrangeFilter extends ViewsFormBase {
     $triggering_element = $form_state->getTriggeringElement();
     if (!empty($triggering_element['#group'])) {
       if ($triggering_element['#group'] == 'add') {
-        // Add a new group
+        // Add a new group.
         $groups['groups'][] = 'AND';
       }
       else {

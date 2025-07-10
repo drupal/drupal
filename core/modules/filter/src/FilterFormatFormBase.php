@@ -86,7 +86,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     // Filter order (tabledrag).
     $form['filters']['order'] = [
       '#type' => 'table',
-      // For filter.admin.js
+      // For filter.admin.js.
       '#attributes' => ['id' => 'filter-order'],
       '#title' => $this->t('Filter processing order'),
       '#tabledrag' => [

@@ -232,7 +232,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         throw new EntityStorageException(sprintf("Missing entity bundle. The \"%s\" bundle does not exist", $bundle));
       }
       $values[$bundle_key] = $bundle;
-      // Bundle is already set
+      // Bundle is already set.
       $forbidden_keys[] = $bundle_key;
     }
     // Forbid sample generation on any keys whose values were submitted.

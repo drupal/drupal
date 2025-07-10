@@ -89,7 +89,7 @@ class FileItemTest extends FieldKernelTestBase {
     $handler_id = $field_definition->getSetting('handler');
     $this->assertEquals('default:file', $handler_id);
 
-    // Create a test entity with the
+    // Create a test entity with the test file field.
     $entity = EntityTest::create();
     $entity->file_test->target_id = $this->file->id();
     $entity->file_test->display = 1;

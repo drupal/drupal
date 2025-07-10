@@ -123,7 +123,7 @@ function locale_schema(): array {
       'customized' => [
         'type' => 'int',
         'not null' => TRUE,
-        // LOCALE_NOT_CUSTOMIZED
+        // LOCALE_NOT_CUSTOMIZED.
         'default' => 0,
         'description' => 'Boolean indicating whether the translation is custom to this site.',
       ],

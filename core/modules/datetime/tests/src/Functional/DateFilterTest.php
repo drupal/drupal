@@ -88,7 +88,8 @@ class DateFilterTest extends ViewTestBase {
     $this->drupalGet('test_exposed_filter_datetime');
     $this->assertSession()->statusCodeEquals(200);
 
-    // Ensure that invalid date format entries in the exposed filter are validated
+    // Ensure that invalid date format entries in the exposed filter are
+    // validated.
     $edit = ['edit-field-date-value-value' => 'lun 2018-04-27'];
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('Invalid date format.');

@@ -190,7 +190,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
       $group = empty($groups) ? 1 : max(array_keys($groups)) + 1;
     }
 
-    // Create an empty group
+    // Create an empty group.
     if (empty($groups[$group])) {
       $groups[$group] = ['conditions' => [], 'args' => []];
     }

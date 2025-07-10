@@ -70,7 +70,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Ensure that there is no textfield for email.
     $this->assertSession()->fieldNotExists('mail');
 
-    // Logout and retrieve the page as an anonymous user
+    // Logout and retrieve the page as an anonymous user.
     $this->drupalLogout();
     user_role_grant_permissions('anonymous', ['access site-wide contact form']);
     $this->drupalGet('contact');

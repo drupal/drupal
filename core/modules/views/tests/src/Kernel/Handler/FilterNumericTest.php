@@ -55,7 +55,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    // Change the filtering
+    // Change the filtering.
     $view->displayHandlers->get('default')->overrideOption('filters', [
       'age' => [
         'id' => 'age',
@@ -85,7 +85,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->newDisplay('page', 'Page', 'page_1');
 
-    // Filter: Age, Operator: =, Value: 28
+    // Filter: Age, Operator: =, Value: 28.
     $filters['age']['group_info']['default_group'] = 1;
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
@@ -212,7 +212,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->newDisplay('page', 'Page', 'page_1');
 
-    // Filter: Age, Operator: between, Value: 26 and 29
+    // Filter: Age, Operator: between, Value: 26 and 29.
     $filters['age']['group_info']['default_group'] = 2;
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
@@ -244,7 +244,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->newDisplay('page', 'Page', 'page_1');
 
-    // Filter: Age, Operator: between, Value: 26 and 29
+    // Filter: Age, Operator: between, Value: 26 and 29.
     $filters['age']['group_info']['default_group'] = 3;
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
@@ -348,7 +348,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->newDisplay('page', 'Page', 'page_1');
 
-    // Filter: Age, Operator: regular_expression, Value: 2[7-8]
+    // Filter: Age, Operator: regular_expression, Value: 2[7-8].
     $filters['age']['group_info']['default_group'] = 6;
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
@@ -379,7 +379,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->newDisplay('page', 'Page', 'page_1');
 
-    // Filter: Age, Operator: not_regular_expression, Value: 2[7-8]
+    // Filter: Age, Operator: not_regular_expression, Value: 2[7-8].
     $filters['age']['group_info']['default_group'] = 7;
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
@@ -410,7 +410,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    // Change the filtering
+    // Change the filtering.
     $view->displayHandlers->get('default')->overrideOption('filters', [
       'age' => [
         'id' => 'age',
@@ -428,7 +428,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view->destroy();
     $view->setDisplay();
 
-    // Change the filtering
+    // Change the filtering.
     $view->displayHandlers->get('default')->overrideOption('filters', [
       'age' => [
         'id' => 'age',

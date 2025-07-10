@@ -514,7 +514,7 @@ function _filter_url($text, $filter) {
       $text = implode($chunks);
     }
 
-    // Revert to the original comment contents
+    // Revert to the original comment contents.
     _filter_url_escape_comments('', FALSE);
     $text = $text ? preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text) : $text;
   }
@@ -630,14 +630,14 @@ function _filter_url_trim($text, $length = NULL) {
  * Based on: http://photomatt.net/scripts/autop
  */
 function _filter_autop($text) {
-  // All block level tags
+  // All block level tags.
   $block = '(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|option|form|map|area|blockquote|address|math|input|p|h[1-6]|fieldset|legend|hr|article|aside|details|figcaption|figure|footer|header|hgroup|menu|nav|section|summary)';
 
   // Split at opening and closing PRE, SCRIPT, STYLE, OBJECT, IFRAME tags
   // and comments. We don't apply any processing to the contents of these tags
   // to avoid messing up code. We look for matched pairs and allow basic
   // nesting. For example:
-  // "processed<pre>ignored<script>ignored</script>ignored</pre>processed"
+  // "processed<pre>ignored<script>ignored</script>ignored</pre>processed".
   $chunks = preg_split('@(<!--.*?-->|</?(?:pre|script|style|object|iframe|drupal-media|svg|!--)[^>]*>)@i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
   // Note: PHP ensures the array consists of alternating delimiters and literals
   // and begins and ends with a literal (inserting NULL as required).
@@ -688,28 +688,28 @@ function _filter_autop($text) {
         }
       }
 
-      // Just to make things a little easier, pad the end
+      // Just to make things a little easier, pad the end.
       $chunk = preg_replace('|\n*$|', '', $chunk) . "\n\n";
       $chunk = preg_replace('|<br />\s*<br />|', "\n\n", $chunk);
-      // Space things out a little
+      // Space things out a little.
       $chunk = preg_replace('!(<' . $block . '[^>]*>)!', "\n$1", $chunk);
-      // Space things out a little
+      // Space things out a little.
       $chunk = preg_replace('!(</' . $block . '>)!', "$1\n\n", $chunk);
-      // Take care of duplicates
+      // Take care of duplicates.
       $chunk = preg_replace("/\n\n+/", "\n\n", $chunk);
       $chunk = preg_replace('/^\n|\n\s*\n$/', '', $chunk);
-      // Make paragraphs, including one at the end
+      // Make paragraphs, including one at the end.
       $chunk = '<p>' . preg_replace('/\n\s*\n\n?(.)/', "</p>\n<p>$1", $chunk) . "</p>\n";
-      // Problem with nested lists
+      // Problem with nested lists.
       $chunk = preg_replace("|<p>(<li.+?)</p>|", "$1", $chunk);
       $chunk = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $chunk);
       $chunk = str_replace('</blockquote></p>', '</p></blockquote>', $chunk);
       // Under certain strange conditions it could create a P of entirely
-      // whitespace
+      // whitespace.
       $chunk = preg_replace('|<p>\s*</p>\n?|', '', $chunk);
       $chunk = preg_replace('!<p>\s*(</?' . $block . '[^>]*>)!', "$1", $chunk);
       $chunk = preg_replace('!(</?' . $block . '[^>]*>)\s*</p>!', "$1", $chunk);
-      // Make line breaks
+      // Make line breaks.
       $chunk = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $chunk);
       $chunk = preg_replace('!(</?' . $block . '[^>]*>)\s*<br />!', "$1", $chunk);
       $chunk = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)>)!', '$1', $chunk);

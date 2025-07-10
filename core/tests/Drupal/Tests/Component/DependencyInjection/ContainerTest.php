@@ -988,7 +988,7 @@ class ContainerTest extends TestCase {
       'configurator' => 'configurator_service_test_does_not_exist',
     ];
 
-    // Raw argument
+    // Raw argument.
     $services['service_with_raw_argument'] = [
       'class' => '\Drupal\Tests\Component\DependencyInjection\MockInstantiationService',
       'arguments' => $this->getCollection([$this->getRaw('ccc')]),

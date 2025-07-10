@@ -436,13 +436,13 @@ class Views {
     if (!isset(static::$handlerTypes)) {
       static::$handlerTypes = [
         'field' => [
-          // Title
+          // Title.
           'title' => static::t('Fields'),
           // Lowercase title for mid-sentence.
           'ltitle' => static::t('fields'),
           // Singular title.
           'stitle' => static::t('Field'),
-          // Singular lowercase title for mid sentence
+          // Singular lowercase title for mid sentence.
           'lstitle' => static::t('field'),
           'plural' => 'fields',
         ],

@@ -164,7 +164,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     ]);
     $term->save();
 
-    // Overview page in the other language shows the translated term
+    // Overview page in the other language shows the translated term.
     $this->drupalGet('bb/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $this->assertSession()->responseMatches('|<a[^>]*>' . $translated_title . '</a>|');
   }

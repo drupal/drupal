@@ -107,7 +107,7 @@ class Cron implements CronInterface {
       // Add watchdog message.
       $this->logger->info('Cron run completed.');
 
-      // Return TRUE so other functions can check if it did run successfully
+      // Return TRUE so other functions can check if it did run successfully.
       $return = TRUE;
     }
 

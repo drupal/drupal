@@ -42,7 +42,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
     $this->installConfig(static::$modules);
 
     // ConfigTest::create doesn't work with the following exception:
-    // "Multiple entity types found for Drupal\config_test\Entity\ConfigTest."
+    // "Multiple entity types found for Drupal\config_test\Entity\ConfigTest".
     $this->entity = \Drupal::entityTypeManager()->getStorage('config_test')->create([
       'id' => 'system',
       'label' => 'foobar',

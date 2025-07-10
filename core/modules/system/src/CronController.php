@@ -37,7 +37,7 @@ class CronController extends ControllerBase {
   public function run() {
     $this->cron->run();
 
-    // HTTP 204 is "No content", meaning "I did what you asked and we're done."
+    // HTTP 204 is "No content", meaning "I did what you asked and we're done.".
     return new Response('', 204);
   }
 

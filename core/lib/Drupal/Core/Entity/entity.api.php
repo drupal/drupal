@@ -2226,7 +2226,7 @@ function hook_entity_field_access_alter(array &$grants, array $context) {
     // take out node module's part in the access handling of this field. We also
     // don't want to switch node module's grant to
     // AccessResultInterface::isAllowed() , because the grants of other modules
-    // should still decide on their own if this field is accessible or not
+    // should still decide on their own if this field is accessible or not.
     $grants['node'] = AccessResult::neutral()->inheritCacheability($grants['node']);
   }
 }

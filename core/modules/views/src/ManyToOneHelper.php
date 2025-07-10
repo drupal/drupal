@@ -92,7 +92,7 @@ class ManyToOneHelper {
     // need to create a new relationship to use.
     $relationship = $this->handler->relationship;
 
-    // Determine the primary table to seek
+    // Determine the primary table to seek.
     if (empty($this->handler->query->relationships[$relationship])) {
       $base_table = $this->handler->view->storage->get('base_table');
     }
@@ -140,7 +140,7 @@ class ManyToOneHelper {
     $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
     $join = $this->getJoin();
 
-    // Shortcuts
+    // Shortcuts.
     $options = $this->handler->options;
     $view = $this->handler->view;
     $query = $this->handler->query;

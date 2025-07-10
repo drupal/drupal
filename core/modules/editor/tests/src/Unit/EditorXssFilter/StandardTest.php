@@ -510,7 +510,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
       '<META http-equiv="refresh" content="text/html base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K">',
     ];
 
-    // META with additional URL parameter
+    // META with additional URL parameter.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#META
     $data[] = [
       '<META HTTP-EQUIV="refresh" CONTENT="0; URL=http://;URL=javascript:alert(\'XSS\');">',

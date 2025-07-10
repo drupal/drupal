@@ -78,9 +78,8 @@ function template_preprocess_responsive_image_formatter(&$variables): void {
  *   - responsive_image_style_id: The ID of the responsive image style.
  */
 function template_preprocess_responsive_image(&$variables): void {
-  // Make sure that width and height are proper values
-  // If they exists we'll output them
-  // @see https://www.w3.org/community/respimg/2012/06/18/florians-compromise/
+  // Make sure that width and height are proper values, if they exist we'll
+  // output them.
   if (isset($variables['width']) && empty($variables['width'])) {
     unset($variables['width']);
     unset($variables['height']);

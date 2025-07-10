@@ -511,7 +511,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       $plugin->validateOptionsForm($form['argument_default'][$default_id], $form_state, $option_values['argument_default'][$default_id]);
     }
 
-    // Summary plugin
+    // Summary plugin.
     $summary_id = $option_values['summary']['format'];
     $plugin = $this->getPlugin('style', $summary_id);
     if ($plugin) {
@@ -548,7 +548,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       $option_values['default_argument_options'] = $options;
     }
 
-    // Summary plugin
+    // Summary plugin.
     $summary_id = $option_values['summary']['format'];
     $plugin = $this->getPlugin('style', $summary_id);
     if ($plugin) {
@@ -1000,7 +1000,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * code that goes into summaryQuery()
    */
   public function summaryBasics($count_field = TRUE) {
-    // Add the number of nodes counter
+    // Add the number of nodes counter.
     $distinct = ($this->view->display_handler->getOption('distinct') && empty($this->query->no_distinct));
 
     $count_alias = $this->query->addField($this->view->storage->get('base_table'), $this->view->storage->get('base_field'), 'num_records', ['count' => TRUE, 'distinct' => $distinct]);

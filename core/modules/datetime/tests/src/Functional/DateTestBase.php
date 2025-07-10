@@ -64,7 +64,7 @@ abstract class DateTestBase extends BrowserTestBase {
   protected static $timezones = [
     // UTC-12, no DST.
     'Pacific/Kwajalein',
-    // UTC-11, no DST
+    // UTC-11, no DST.
     'Pacific/Midway',
     // UTC-7, no DST.
     'America/Phoenix',
@@ -72,7 +72,7 @@ abstract class DateTestBase extends BrowserTestBase {
     'UTC',
     // UTC+5:30, no DST.
     'Asia/Kolkata',
-    // UTC+12, no DST
+    // UTC+12, no DST.
     'Pacific/Funafuti',
     // UTC+13, no DST.
     'Pacific/Tongatapu',

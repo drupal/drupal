@@ -171,7 +171,7 @@ abstract class Schema implements PlaceholderInterface {
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $info = $this->connection->getConnectionOptions();
 
-    // Retrieve the table name and schema
+    // Retrieve the table name and schema.
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
     $condition = $this->connection->condition('AND');

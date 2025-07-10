@@ -92,7 +92,7 @@ class Node extends WizardPluginBase {
    * {@inheritdoc}
    */
   public function getAvailableSorts() {
-    // You can't execute functions in properties, so override the method
+    // You can't execute functions in properties, so override the method.
     return [
       'node_field_data-title:ASC' => $this->t('Title'),
     ];

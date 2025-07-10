@@ -127,7 +127,7 @@ class ArgumentDefaultTest extends ViewTestBase {
 
     $this->assertEquals($random, $view->argument['null']->getDefaultArgument(), 'Fixed argument should be used by default.');
 
-    // Make sure that a normal argument provided is used
+    // Make sure that a normal argument provided is used.
     $random_string = $this->randomMachineName();
     $view->executeDisplay('default', [$random_string]);
 

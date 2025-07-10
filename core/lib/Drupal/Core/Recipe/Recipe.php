@@ -209,7 +209,7 @@ final class Recipe {
                 ]),
               ],
               // The `prompt` and `form` elements, though optional, have their
-              // own sets of constraints,
+              // own sets of constraints.
               'prompt' => new Optional([
                 new Collection([
                   'method' => [

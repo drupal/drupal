@@ -115,7 +115,7 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->assertSession()->pageTextContains('Username');
 
-    // Log back in, set the custom 403 page to /user/login and remove the block
+    // Log back in, set the custom 403 page to /user/login and remove the block.
     $this->drupalLogin($this->adminUser);
     $this->config('system.site')->set('page.403', '/user/login')->save();
     $block->disable()->save();

@@ -166,7 +166,7 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
 
-    // Ensure we're returning state objects and they are set up correctly
+    // Ensure we're returning state objects and they are set up correctly.
     $this->assertInstanceOf(State::class, $workflow->getTypePlugin()->getState('draft'));
     $this->assertEquals('archived', $workflow->getTypePlugin()->getState('archived')->id());
     $this->assertEquals('Archived', $workflow->getTypePlugin()->getState('archived')->label());
@@ -447,7 +447,7 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
 
-    // Ensure we're returning state objects and they are set up correctly
+    // Ensure we're returning state objects and they are set up correctly.
     $this->assertInstanceOf(Transition::class, $workflow->getTypePlugin()->getTransition('create_new_draft'));
     $this->assertEquals('publish', $workflow->getTypePlugin()->getTransition('publish')->id());
     $this->assertEquals('Publish', $workflow->getTypePlugin()->getTransition('publish')->label());

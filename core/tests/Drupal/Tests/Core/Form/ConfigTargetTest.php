@@ -357,7 +357,7 @@ class ConfigTargetTest extends UnitTestCase {
         'second',
       ],
       // In case of multiple targets, the return value must be an array with the
-      // keys matching
+      // keys matching.
       // @see ::testMultiTarget()
       fromConfig: fn (int $first, int $second): string => "$first|$second",
       toConfig: fn (): mixed => $toConfigReturnValue,

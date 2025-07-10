@@ -137,7 +137,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
       $active_theme->getExtension()->load();
     }
     else {
-      // Include non-engine theme files
+      // Include non-engine theme files.
       foreach (array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
         // Include the theme file or the engine.
         if ($base->owner) {
@@ -222,10 +222,10 @@ class ThemeInitialization implements ThemeInitializationInterface {
       }
     }
 
-    // Do basically the same as the above for libraries
+    // Do basically the same as the above for libraries.
     $values['libraries'] = [];
 
-    // Grab libraries from base theme
+    // Grab libraries from base theme.
     foreach ($base_themes as $base) {
       if (!empty($base->libraries)) {
         foreach ($base->libraries as $library) {

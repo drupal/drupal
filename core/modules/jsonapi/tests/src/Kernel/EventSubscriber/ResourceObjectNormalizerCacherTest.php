@@ -131,7 +131,7 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
     $this->installEntitySchema('entity_test_computed_field');
 
     // Use EntityTestComputedField since ComputedTestCacheableStringItemList has
-    // a max age of 800
+    // a max age of 800.
     $baseMaxAge = 800;
     $entity = EntityTestComputedField::create([]);
     $entity->save();
@@ -149,7 +149,7 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
     $event = new TerminateEvent($http_kernel->reveal(), $request->reveal(), $response->reveal());
     $this->cacher->onTerminate($event);
 
-    // Change request time to 500 seconds later
+    // Change request time to 500 seconds later.
     $current_request = \Drupal::requestStack()->getCurrentRequest();
     $current_request->server->set('REQUEST_TIME', $current_request->server->get('REQUEST_TIME') + 500);
     $resource_normalization = $this->serializer

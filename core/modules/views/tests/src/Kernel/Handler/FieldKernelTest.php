@@ -808,7 +808,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
       $this->assertEquals($expect[$key], $result_text);
     }
 
-    // Test also word_boundary
+    // Test also word_boundary.
     $alter['word_boundary'] = TRUE;
     $expect = [
       'Tuy nhiên',

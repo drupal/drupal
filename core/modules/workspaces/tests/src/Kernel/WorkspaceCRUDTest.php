@@ -231,7 +231,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $workspace->save();
     $this->workspaceManager->setActiveWorkspace($workspace);
 
-    // Create a new node in the 'stage' workspace
+    // Create a new node in the 'stage' workspace.
     $node = $this->createNode(['status' => TRUE]);
 
     // Create an additional workspace-specific revision for the node.

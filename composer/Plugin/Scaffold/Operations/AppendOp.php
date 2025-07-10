@@ -140,7 +140,7 @@ class AppendOp extends AbstractOperation {
       $io->write($interpolator->interpolate("  - Append to <info>[dest-rel-path]</info> from <info>[append-rel-path]</info>"));
     }
 
-    // Write the resulting data
+    // Write the resulting data.
     file_put_contents($destination_path, $this->contents());
 
     // Return a ScaffoldResult with knowledge of whether this file is managed.

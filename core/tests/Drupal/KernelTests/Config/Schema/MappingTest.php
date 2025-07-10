@@ -100,7 +100,6 @@ class MappingTest extends KernelTestBase {
           // Avoid showing "Powered by Drupal" on 404 responses.
           'visibility' => [
             'I_CAN_CHOOSE_THIS' => [
-              // This is what determines the
               'id' => 'response_status',
               'negate' => FALSE,
               'status_codes' => [
@@ -219,7 +218,7 @@ class MappingTest extends KernelTestBase {
     // Special case: deprecated  is needed for deprecated config schema:
     // - deprecated keys are treated as optional
     // - if a deprecated property path is itself a mapping, then the keys inside
-    //   are not optional
+    //   are not optional.
     yield 'No dynamic type: config_schema_deprecated_test.settings' => [
       'config_schema_deprecated_test.settings',
       NULL,

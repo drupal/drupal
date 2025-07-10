@@ -11,7 +11,7 @@ declare(strict_types=1);
  * Implements hook_preprocess_field_multiple_value_form().
  */
 function olivero_test_preprocess_field_multiple_value_form(&$variables): void {
-  // Set test multiple value form field to disabled
+  // Set test multiple value form field to disabled.
   if ($variables["element"]["#field_name"] === "field_multiple_value_form_field") {
     $variables['element']['#disabled'] = TRUE;
   }

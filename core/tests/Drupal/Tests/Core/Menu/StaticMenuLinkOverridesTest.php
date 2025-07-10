@@ -53,7 +53,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $data[] = [['test1' => ['parent' => 'test0']], 'test1', ['parent' => 'test0']];
     // Non existing ID.
     $data[] = [['test1' => ['parent' => 'test0']], 'test2', []];
-    // Ensure that the ID is encoded properly
+    // Ensure that the ID is encoded properly.
     $data[] = [['test1__la___ma' => ['parent' => 'test0']], 'test1.la__ma', ['parent' => 'test0']];
 
     return $data;

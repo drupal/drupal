@@ -208,7 +208,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Assert we can now only upload one more media item.
     $this->openMediaLibraryForField('field_twin_media');
     $this->switchToMediaType('Four');
-    // We set the multiple to FALSE if only one file can be uploaded
+    // We set the multiple to FALSE if only one file can be uploaded.
     $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
     $assert_session->pageTextContains('One file only.');
     $choose_files = $assert_session->elementExists('css', '.form-managed-file');
@@ -559,7 +559,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->openMediaLibraryForField('field_twin_media');
     $this->switchToMediaType('Four');
 
-    // We set the multiple to FALSE if only one file can be uploaded
+    // We set the multiple to FALSE if only one file can be uploaded.
     $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
     $assert_session->pageTextContains('One file only.');
     $choose_files = $assert_session->elementExists('css', '.form-managed-file');

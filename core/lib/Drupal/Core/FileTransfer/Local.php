@@ -38,7 +38,7 @@ class Local extends FileTransfer implements ChmodInterface {
    * {@inheritdoc}
    */
   public function connect() {
-    // No-op
+    // No-op.
   }
 
   /**

@@ -87,7 +87,7 @@ class PackageGenerator {
    */
   protected function generateMetapackage(IOInterface $io, BuilderInterface $builder) {
 
-    // Load the existing composer.json file for drupal/core-recommended
+    // Load the existing composer.json file for drupal/core-recommended.
     $relative_path = $builder->getPath() . '/composer.json';
     $composer_json_path = $this->generatedProjectBaseDir . '/' . $relative_path;
     $original_composer_json = file_exists($composer_json_path) ? file_get_contents($composer_json_path) : '';
@@ -104,7 +104,7 @@ class PackageGenerator {
     // Warn the user that a metapackage file has been updated..
     $io->write("Updated metapackage file <info>composer/Metapackage/$relative_path</info>.");
 
-    // Write the composer.json file back to disk
+    // Write the composer.json file back to disk.
     $fs = new Filesystem();
     $fs->ensureDirectoryExists(dirname($composer_json_path));
     file_put_contents($composer_json_path, $updated_composer_json);

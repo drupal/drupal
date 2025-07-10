@@ -127,11 +127,11 @@ class DecimalItem extends NumericItemBase {
     $max = is_numeric($settings['max']) ? $settings['max'] : pow(10, ($precision - $scale)) - 1;
     $min = is_numeric($settings['min']) ? $settings['min'] : -pow(10, ($precision - $scale)) + 1;
 
-    // Get the number of decimal digits for the $max
+    // Get the number of decimal digits for the $max.
     $decimal_digits = self::getDecimalDigits($max);
     // Do the same for the min and keep the higher number of decimal digits.
     $decimal_digits = max(self::getDecimalDigits($min), $decimal_digits);
-    // If $min = 1.234 and $max = 1.33 then $decimal_digits = 3
+    // If $min = 1.234 and $max = 1.33 then $decimal_digits = 3.
     $scale = rand($decimal_digits, $scale);
 
     // @see "Example #1 Calculate a random floating-point number" in

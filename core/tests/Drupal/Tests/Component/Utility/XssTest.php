@@ -607,7 +607,7 @@ class XssTest extends TestCase {
    */
   public static function providerTestFilterXssAdminNotNormalized() {
     return [
-      // DRUPAL-SA-2008-044
+      // DRUPAL-SA-2008-044.
       ['<object />', 'object', 'Admin HTML filter -- should not allow object tag.'],
       ['<script />', 'script', 'Admin HTML filter -- should not allow script tag.'],
     ];

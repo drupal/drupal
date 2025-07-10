@@ -94,7 +94,7 @@ class DrupalTestBrowser extends AbstractBrowser {
       if (str_starts_with($key, 'http-')) {
         $headers[substr($key, 5)] = $val;
       }
-      // CONTENT_* are not prefixed with HTTP_
+      // "CONTENT_*" are not prefixed with "HTTP_".
       elseif (isset($content_headers[$key])) {
         $headers[$key] = $val;
       }
@@ -134,7 +134,7 @@ class DrupalTestBrowser extends AbstractBrowser {
     $method = $request->getMethod();
     $uri = $request->getUri();
 
-    // Let BrowserKit handle redirects
+    // Let BrowserKit handle redirects.
     try {
       $response = $this->getClient()->request($method, $uri, $request_options);
     }

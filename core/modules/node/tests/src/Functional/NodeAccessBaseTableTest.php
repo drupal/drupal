@@ -128,7 +128,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     $num_simple_users = 2;
     $simple_users = [];
 
-    // Nodes keyed by uid and nid: $nodes[$uid][$nid] = $is_private;
+    // Nodes keyed by uid and nid: "$nodes[$uid][$nid] = $is_private".
     $this->nodesByUser = [];
     // Titles keyed by nid.
     $titles = [];

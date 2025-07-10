@@ -503,7 +503,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $expected = 'short_entity_type_revision__short_field_name';
     $this->assertEquals($expected, $this->tableMapping->getDedicatedRevisionTableName($field_storage));
 
-    // Short entity type, long field name
+    // Short entity type, long field name.
     $entity_type = 'short_entity_type';
     $field_name = 'long_field_name_abcdefghijklmnopqrstuvwxyz';
     $field_storage = FieldStorageConfig::create([
@@ -516,7 +516,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $expected = 'short_entity_type_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedRevisionTableName($field_storage));
 
-    // Long entity type, short field name
+    // Long entity type, short field name.
     $entity_type = 'long_entity_type_all_forty_three_characters';
     $field_name = 'short_field_name';
     $field_storage = FieldStorageConfig::create([

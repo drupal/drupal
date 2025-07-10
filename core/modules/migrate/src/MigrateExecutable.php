@@ -106,7 +106,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $this->message = $message ?: new MigrateMessage();
     $this->getIdMap()->setMessage($this->message);
     $this->eventDispatcher = $event_dispatcher;
-    // Record the memory limit in bytes
+    // Record the memory limit in bytes.
     $limit = trim(ini_get('memory_limit'));
     if ($limit == '-1') {
       $this->memoryLimit = PHP_INT_MAX;
@@ -557,7 +557,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $usage = $this->attemptMemoryReclaim();
       $pct_memory = $usage / $this->memoryLimit;
       // Use a lower threshold - we don't want to be in a situation where we
-      // keep coming back here and trimming a tiny amount
+      // keep coming back here and trimming a tiny amount.
       if ($pct_memory > (0.90 * $threshold)) {
         $this->message->display(
           $this->t(

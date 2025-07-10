@@ -201,7 +201,7 @@ class SortDateTest extends ViewsKernelTestBase {
           ],
         ]);
 
-        // Change the ordering
+        // Change the ordering.
         $view->displayHandlers->get('default')->overrideOption('sorts', [
           'created' => [
             'id' => 'created',

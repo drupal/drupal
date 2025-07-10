@@ -348,17 +348,17 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     $required_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
 
-    // Check that the expected cacheability metadata is present in:
-    // - the built render array;
+    // Check that the expected cacheability metadata is present in the built
+    // render array.
     $build = $this->getBlockRenderArray();
     $this->assertSame($expected_keys, $build['#cache']['keys']);
     $this->assertEqualsCanonicalizing($expected_contexts, $build['#cache']['contexts']);
     $this->assertEqualsCanonicalizing($expected_tags, $build['#cache']['tags']);
     $this->assertSame($expected_max_age, $build['#cache']['max-age']);
     $this->assertFalse(isset($build['#create_placeholder']));
-    // - the rendered render array;
+    // And also in the rendered render array.
     $this->renderer->renderRoot($build);
-    // - the render cache item.
+    // And also in the render cache item.
     $final_cache_contexts = Cache::mergeContexts($expected_contexts, $required_cache_contexts);
     $cache_item = $cache_bin->get($expected_keys, CacheableMetadata::createFromRenderArray($build));
     $this->assertNotEmpty($cache_item, 'The block render element has been cached with the expected cache keys.');

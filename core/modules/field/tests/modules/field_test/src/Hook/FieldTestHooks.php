@@ -95,7 +95,7 @@ class FieldTestHooks {
    */
   #[Hook('entity_extra_field_info_alter')]
   public function entityExtraFieldInfoAlter(&$info): void {
-    // Remove all extra fields from the 'no_fields' content type;
+    // Remove all extra fields from the 'no_fields' content type.
     unset($info['node']['no_fields']);
   }
 

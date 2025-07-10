@@ -21,7 +21,7 @@ class FileCopyTest extends FileTestBase {
    * Copy a normal file.
    */
   public function testNormal(): void {
-    // Create a file for testing
+    // Create a file for testing.
     $uri = $this->createUri();
 
     // Copying to a new name.
@@ -51,7 +51,7 @@ class FileCopyTest extends FileTestBase {
    * Copy a non-existent file.
    */
   public function testNonExistent(): void {
-    // Copy non-existent file
+    // Copy non-existent file.
     $desired_filepath = $this->randomMachineName();
     $this->assertFileDoesNotExist($desired_filepath);
     $this->expectException(FileNotExistsException::class);
@@ -63,7 +63,7 @@ class FileCopyTest extends FileTestBase {
    * Copy a file onto itself.
    */
   public function testOverwriteSelf(): void {
-    // Create a file for testing
+    // Create a file for testing.
     $uri = $this->createUri();
 
     // Copy the file onto itself with renaming works.

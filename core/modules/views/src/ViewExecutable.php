@@ -157,7 +157,7 @@ class ViewExecutable {
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $feedIcons = [];
 
-  // Exposed widget input
+  // Exposed widget input.
 
   /**
    * All the form data from $form_state->getValues().
@@ -1177,7 +1177,7 @@ class ViewExecutable {
         // use whatever value the argument handler now has, not the raw value.
         $substitutions["{{ raw_arguments.$id }}"] = strip_tags(Html::decodeEntities($argument->getValue()));
 
-        // Test to see if we should use this argument's title
+        // Test to see if we should use this argument's title.
         if (!empty($argument->options['title_enable']) && !empty($argument->options['title'])) {
           $title = $argument->options['title'];
         }
@@ -1385,7 +1385,7 @@ class ViewExecutable {
     $this->built = TRUE;
     $this->build_time = microtime(TRUE) - $start;
 
-    // Attach displays
+    // Attach displays.
     $this->attachDisplays();
 
     // Let modules modify the view just after building it.
@@ -1688,7 +1688,7 @@ class ViewExecutable {
 
     $this->preExecute($args);
 
-    // Execute the view
+    // Execute the view.
     $output = $this->display_handler->execute();
 
     $this->postExecute();
@@ -1750,7 +1750,7 @@ class ViewExecutable {
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
     $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->id() . \Drupal::time()->getRequestTime() . mt_rand());
 
-    // Allow the display handler to set up for execution
+    // Allow the display handler to set up for execution.
     $this->display_handler->preExecute();
   }
 
@@ -2336,10 +2336,10 @@ class ViewExecutable {
   public function getHandler($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
     $types = static::getHandlerTypes();
-    // Initialize the display
+    // Initialize the display.
     $this->setDisplay($display_id);
 
-    // Get the existing configuration
+    // Get the existing configuration.
     $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
 
     return $fields[$id] ?? NULL;

@@ -98,7 +98,7 @@ EOS;
 
     $output .= $this->buildUseStatements();
 
-    // The actual class;
+    // The actual class.
     $properties = <<<'EOS'
 /**
  * The id of the original proxied service.
@@ -324,7 +324,7 @@ EOS;
       $output .= "    \\$class_name::$function_name(";
     }
 
-    // Add parameters;
+    // Add parameters.
     $parameters = [];
     foreach ($reflection_method->getParameters() as $parameter) {
       $parameters[] = '$' . $parameter->getName();

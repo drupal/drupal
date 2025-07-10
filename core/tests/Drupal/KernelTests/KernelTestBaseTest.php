@@ -250,7 +250,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the assumption that local time is in 'Australia/Sydney'.
    */
   public function testLocalTimeZone(): void {
-    // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
+    // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php.
     $this->assertEquals('Australia/Sydney', date_default_timezone_get());
   }
 

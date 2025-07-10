@@ -424,7 +424,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     }
 
     // If we are tracking changes, we also need to retrieve all rows to compare
-    // hashes
+    // hashes.
     if ($this->trackChanges) {
       return FALSE;
     }

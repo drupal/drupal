@@ -19,16 +19,16 @@ function demo_umami_content_install($is_syncing): void {
       return;
     }
 
-    // Sort node IDs in descending order
+    // Sort node IDs in descending order.
     rsort($nids);
 
     $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
 
-    // Use a counter to determine the "days ago" offset
+    // Use a counter to determine the "days ago" offset.
     $counter = 1;
 
     foreach ($nodes as $node) {
-      // Get all translation languages for the node
+      // Get all translation languages for the node.
       $languages = $node->getTranslationLanguages();
       foreach ($languages as $language) {
         // Load the translated version of the node.
@@ -54,7 +54,7 @@ function demo_umami_content_install($is_syncing): void {
           \Drupal::logger('system')->error($e->getMessage());
         }
       }
-      // Increment the counter for the next node
+      // Increment the counter for the next node.
       $counter++;
     }
   }

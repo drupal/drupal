@@ -575,7 +575,7 @@ abstract class StylePluginBase extends PluginBase {
       $groupings = [['field' => $groupings, 'rendered' => $rendered]];
     }
 
-    // Make sure fields are rendered
+    // Make sure fields are rendered.
     $this->renderFields($this->view->result);
     $sets = [];
     if ($groupings) {
@@ -710,7 +710,7 @@ abstract class StylePluginBase extends PluginBase {
           // - HTML views are rendered inside a render context: then we want to
           //   use ::render(), so that attachments and cacheability are bubbled.
           // - non-HTML views are rendered outside a render context: then we
-          //   want to use ::renderInIsolation(), so that no bubbling happens
+          //   want to use ::renderInIsolation(), so that no bubbling happens.
           if ($renderer->hasRenderContext()) {
             $renderer->render($data);
           }

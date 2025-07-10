@@ -100,7 +100,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     $form['expose_button'] = [
       '#prefix' => '<div class="views-expose clearfix">',
       '#suffix' => '</div>',
-      // Should always come first
+      // Should always come first.
       '#weight' => -1000,
     ];
 

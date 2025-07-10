@@ -227,7 +227,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         $this->limit_values = TRUE;
       }
 
-      // If "First and last only" is chosen, limit the values
+      // If "First and last only" is chosen, limit the values.
       if (!empty($this->options['delta_first_last'])) {
         $this->limit_values = TRUE;
       }

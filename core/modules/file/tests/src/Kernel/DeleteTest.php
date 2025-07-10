@@ -74,7 +74,7 @@ class DeleteTest extends FileManagedUnitTestBase {
       ->execute();
     \Drupal::service('cron')->run();
 
-    // file_cron() loads
+    // file_cron() loads.
     $this->assertFileHooksCalled(['delete']);
     $this->assertFileDoesNotExist($file->getFileUri());
     $this->assertNull(File::load($file->id()), 'File was removed from the database.');

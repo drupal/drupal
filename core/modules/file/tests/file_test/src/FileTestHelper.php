@@ -19,7 +19,7 @@ class FileTestHelper {
    * @see Drupal\file_test\FileTestHelper::reset()
    */
   public static function reset(): void {
-    // Keep track of calls to these hooks
+    // Keep track of calls to these hooks.
     $results = [
       'load' => [],
       'validate' => [],

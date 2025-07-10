@@ -184,7 +184,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     $variables = array_flip($variables);
     $mergedParams = array_replace($defaults, $this->context->getParameters(), $parameters);
 
-    // All params must be given
+    // All params must be given.
     if ($diff = array_diff_key($variables, $mergedParams)) {
       throw new MissingMandatoryParametersException($name, array_keys($diff));
     }
@@ -217,7 +217,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     foreach ($tokens as $token) {
       if ('variable' === $token[0]) {
         if (!$optional || !array_key_exists($token[3], $defaults) || (isset($mergedParams[$token[3]]) && (string) $mergedParams[$token[3]] !== (string) $defaults[$token[3]])) {
-          // Check requirement
+          // Check requirement.
           if (!preg_match('#^' . $token[2] . '$#', $mergedParams[$token[3]])) {
             $message = sprintf('Parameter "%s" for route "%s" must match "%s" ("%s" given) to generate a corresponding URL.', $token[3], $name, $token[2], $mergedParams[$token[3]]);
             throw new InvalidParameterException($message);
@@ -228,7 +228,7 @@ class UrlGenerator implements UrlGeneratorInterface {
         }
       }
       else {
-        // Static text
+        // Static text.
         $url = $token[1] . $url;
         $optional = FALSE;
       }
@@ -330,7 +330,7 @@ class UrlGenerator implements UrlGeneratorInterface {
       // http://tools.ietf.org/html/rfc3986#section-3.3 so we need to encode
       // them as they are not used for this purpose here otherwise we would
       // generate a URI that, when followed by a user agent (e.g. browser), does
-      // not match this route
+      // not match this route.
       $path = strtr($path, ['/../' => '/%2E%2E/', '/./' => '/%2E/']);
       if (str_ends_with($path, '/..')) {
         $path = substr($path, 0, -2) . '%2E%2E';

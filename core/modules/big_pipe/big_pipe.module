@@ -25,7 +25,7 @@ function big_pipe_theme_suggestions_big_pipe_interface_preview(array $variables)
     // phpcs:ignore Drupal.Files.LineLength
     // big-pipe-interface-preview--Drupal-block-BlockViewBuilder--lazyBuilder--<BLOCK ID>.html.twig
     // to
-    // big-pipe-interface-preview--block--<BLOCK ID>.html.twig
+    // big-pipe-interface-preview--block--<BLOCK ID>.html.twig.
     if (isset($common_callbacks_simplified_suggestions[$callback])) {
       $callback = $common_callbacks_simplified_suggestions[$callback];
     }

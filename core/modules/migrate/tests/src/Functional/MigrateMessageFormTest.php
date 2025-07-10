@@ -45,7 +45,7 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
       $this->assertEquals($expected_count, $count[$level], sprintf('Count for level %s failed', $level));
     }
 
-    // Reset the filter
+    // Reset the filter.
     $this->submitForm([], 'Reset');
     $messages = $this->getMessages();
     $this->assertCount(4, $messages);

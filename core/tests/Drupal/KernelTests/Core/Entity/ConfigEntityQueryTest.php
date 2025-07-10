@@ -551,28 +551,28 @@ class ConfigEntityQueryTest extends KernelTestBase {
     ];
 
     // Sort key: id
-    // Sorting with 'DESC' upper case
+    // Sorting with 'DESC' upper case.
     $this->queryResults = $this->entityStorage->getQuery()
       ->tableSort($header)
       ->sort('id', 'DESC')
       ->execute();
     $this->assertSame(['7', '6', '5', '4', '3', '2', '1'], array_values($this->queryResults));
 
-    // Sorting with 'ASC' upper case
+    // Sorting with 'ASC' upper case.
     $this->queryResults = $this->entityStorage->getQuery()
       ->tableSort($header)
       ->sort('id', 'ASC')
       ->execute();
     $this->assertSame(['1', '2', '3', '4', '5', '6', '7'], array_values($this->queryResults));
 
-    // Sorting with 'desc' lower case
+    // Sorting with 'desc' lower case.
     $this->queryResults = $this->entityStorage->getQuery()
       ->tableSort($header)
       ->sort('id', 'desc')
       ->execute();
     $this->assertSame(['7', '6', '5', '4', '3', '2', '1'], array_values($this->queryResults));
 
-    // Sorting with 'asc' lower case
+    // Sorting with 'asc' lower case.
     $this->queryResults = $this->entityStorage->getQuery()
       ->tableSort($header)
       ->sort('id', 'asc')
@@ -580,28 +580,28 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->assertSame(['1', '2', '3', '4', '5', '6', '7'], array_values($this->queryResults));
 
     // Sort key: number
-    // Sorting with 'DeSc' mixed upper and lower case
+    // Sorting with 'DeSc' mixed upper and lower case.
     $this->queryResults = $this->entityStorage->getQuery()
       ->tableSort($header)
       ->sort('number', 'DeSc')
       ->execute();
     $this->assertSame(['7', '3', '5', '2', '1', '4', '6'], array_values($this->queryResults));
 
-    // Sorting with 'AsC' mixed upper and lower case
+    // Sorting with 'AsC' mixed upper and lower case.
     $this->queryResults = $this->entityStorage->getQuery()
       ->tableSort($header)
       ->sort('number', 'AsC')
       ->execute();
     $this->assertSame(['6', '4', '1', '2', '5', '3', '7'], array_values($this->queryResults));
 
-    // Sorting with 'dEsC' mixed upper and lower case
+    // Sorting with 'dEsC' mixed upper and lower case.
     $this->queryResults = $this->entityStorage->getQuery()
       ->tableSort($header)
       ->sort('number', 'dEsC')
       ->execute();
     $this->assertSame(['7', '3', '5', '2', '1', '4', '6'], array_values($this->queryResults));
 
-    // Sorting with 'aSc' mixed upper and lower case
+    // Sorting with 'aSc' mixed upper and lower case.
     $this->queryResults = $this->entityStorage->getQuery()
       ->tableSort($header)
       ->sort('number', 'aSc')

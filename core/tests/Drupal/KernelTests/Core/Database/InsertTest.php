@@ -168,7 +168,7 @@ class InsertTest extends DatabaseTestBase {
     // INSERT INTO test (age, name, job)
     // SELECT tp.age AS age, tp.name AS name, tp.job AS job
     // FROM test_people tp
-    // WHERE tp.name = 'Meredith'
+    // WHERE tp.name = 'Meredith'.
     $this->connection->insert('test')
       ->from($query)
       ->execute();
@@ -189,7 +189,7 @@ class InsertTest extends DatabaseTestBase {
     // INSERT INTO test_people_copy
     // SELECT *
     // FROM test_people tp
-    // WHERE tp.name = 'Meredith'
+    // WHERE tp.name = 'Meredith'.
     $this->connection->insert('test_people_copy')
       ->from($query)
       ->execute();

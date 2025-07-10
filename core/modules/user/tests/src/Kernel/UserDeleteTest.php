@@ -40,7 +40,7 @@ class UserDeleteTest extends KernelTestBase {
 
     $uids = [$user_a->id(), $user_b->id(), $user_c->id()];
 
-    // These users should have a role
+    // These users should have a role.
     $connection = Database::getConnection();
     $query = $connection->select('user__roles', 'r');
     $roles_created = $query

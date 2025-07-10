@@ -123,7 +123,7 @@ class EntityViewsDataTest extends KernelTestBase {
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 255);
 
-    // A base field with cardinality > 1
+    // A base field with cardinality > 1.
     $this->commonBaseFields['string'] = BaseFieldDefinition::create('string')
       ->setLabel('Strong')
       ->setTranslatable(TRUE)

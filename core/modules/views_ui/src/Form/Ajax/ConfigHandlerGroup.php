@@ -105,10 +105,10 @@ class ConfigHandlerGroup extends ViewsFormBase {
 
     $handler->submitGroupByForm($form, $form_state);
 
-    // Store the item back on the view
+    // Store the item back on the view.
     $executable->setHandler($form_state->get('display_id'), $form_state->get('type'), $form_state->get('id'), $item);
 
-    // Write to cache
+    // Write to cache.
     $view->cacheSet();
   }
 

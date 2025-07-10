@@ -244,7 +244,7 @@ class ConfigHandler extends ViewsFormBase {
     // extra stuff on the form is not sent through.
     $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
-    // Store the item back on the view
+    // Store the item back on the view.
     $executable->setHandler($display_id, $type, $id, $handler->options);
 
     // Ensure any temporary options are removed.
@@ -252,7 +252,7 @@ class ConfigHandler extends ViewsFormBase {
       unset($view->temporary_options[$type][$id]);
     }
 
-    // Write to cache
+    // Write to cache.
     $view->cacheSet();
   }
 
@@ -264,7 +264,7 @@ class ConfigHandler extends ViewsFormBase {
     $display_id = $form_state->get('display_id');
     $type = $form_state->get('type');
     $id = $form_state->get('id');
-    // Store the item back on the view
+    // Store the item back on the view.
     [$was_defaulted, $is_defaulted] = $view->getOverrideValues($form, $form_state);
     $executable = $view->getExecutable();
     // If the display selection was changed toggle the override value.
@@ -274,7 +274,7 @@ class ConfigHandler extends ViewsFormBase {
     }
     $executable->removeHandler($display_id, $type, $id);
 
-    // Write to cache
+    // Write to cache.
     $view->cacheSet();
   }
 

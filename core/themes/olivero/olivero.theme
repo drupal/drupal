@@ -22,7 +22,7 @@ function olivero_preprocess_html(&$variables): void {
     $variables['attributes']['class'][] = 'is-always-mobile-nav';
   }
 
-  // Convert custom hex to hsl so we can use the hue value
+  // Convert custom hex to hsl so we can use the hue value.
   $brand_color_hex = theme_get_setting('base_primary_color') ?? '#1b9ae4';
   [$h, $s, $l] = _olivero_hex_to_hsl($brand_color_hex);
 

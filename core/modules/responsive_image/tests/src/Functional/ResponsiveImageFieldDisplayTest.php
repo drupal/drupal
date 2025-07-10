@@ -537,7 +537,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Ensure that preview works.
     $this->previewNodeImage($test_image, $field_name, 'article');
 
-    // Look for a picture tag in the preview output
+    // Look for a picture tag in the preview output.
     $this->assertSession()->responseMatches('/picture/');
 
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');

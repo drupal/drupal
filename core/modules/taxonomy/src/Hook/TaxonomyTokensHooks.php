@@ -65,7 +65,7 @@ class TaxonomyTokensHooks {
       'name' => $this->t("Term count"),
       'description' => $this->t("The number of terms belonging to the taxonomy vocabulary."),
     ];
-    // Chained tokens for taxonomies
+    // Chained tokens for taxonomies.
     $term['vocabulary'] = [
       'name' => $this->t("Vocabulary"),
       'description' => $this->t("The vocabulary the taxonomy term belongs to."),

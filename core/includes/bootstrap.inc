@@ -456,7 +456,7 @@ function &drupal_register_shutdown_function($callback = NULL, ...$args) {
     if (empty($callbacks)) {
       register_shutdown_function('_drupal_shutdown_function');
     }
-    // Save callback and arguments
+    // Save callback and arguments.
     $callbacks[] = ['callback' => $callback, 'arguments' => $args];
   }
   return $callbacks;

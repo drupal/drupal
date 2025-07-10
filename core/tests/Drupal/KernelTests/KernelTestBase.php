@@ -967,7 +967,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       ->save();
 
     // The installation profile is provided by a container parameter. Saving
-    // the configuration doesn't automatically trigger invalidation
+    // the configuration doesn't automatically trigger invalidation.
     $this->container->get('kernel')->rebuildContainer();
   }
 

@@ -116,7 +116,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $visible_categories = $this->filterVisibleElements($categories);
     $this->assertCount(3, $visible_categories);
 
-    // Test blocks reappear after being filtered by repeating search for "a"
+    // Test blocks reappear after being filtered by repeating search for "a".
     $filter->setValue('a');
     $this->assertAnnounceContains('All available blocks are listed.');
 

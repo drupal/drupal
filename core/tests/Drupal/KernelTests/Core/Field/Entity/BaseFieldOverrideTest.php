@@ -96,7 +96,8 @@ class BaseFieldOverrideTest extends KernelTestBase {
       ->setTargetEntityTypeId('entity_test')
       ->setReadOnly(TRUE)
       // Ensure that the internal property is inherited from the base field and
-      // not the parent class. @see FieldConfigBase::isInternal
+      // not the parent class.
+      // @see FieldConfigBase::isInternal
       ->setInternal(TRUE)
       ->setComputed(FALSE);
 

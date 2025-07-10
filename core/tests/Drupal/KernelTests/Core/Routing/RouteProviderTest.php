@@ -706,7 +706,7 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertEquals(0, $result->count());
     $candidates = $provider->getCandidateOutlines(explode('/', trim($shortest, '/')));
     $this->assertCount(7, $candidates);
-    // A longer patten is not found and returns no candidates
+    // A longer patten is not found and returns no candidates.
     $path_to_test = '/test/1/test2/2/test3/3/4/5/6/test4';
     $result = $provider->getRoutesByPattern($path_to_test);
     $this->assertEquals(0, $result->count());

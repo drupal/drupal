@@ -35,7 +35,7 @@ class ArgumentNullTest extends ViewsKernelTestBase {
    * Tests the NullArgument handler for text areas.
    */
   public function testAreaText(): void {
-    // Test validation
+    // Test validation.
     $view = Views::getView('test_view');
     $view->setDisplay();
 

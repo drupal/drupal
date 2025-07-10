@@ -83,7 +83,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->fail('Expected exception not thrown from exists()');
     }
     catch (DatabaseExceptionWrapper) {
-      // Exception was expected
+      // Exception was expected.
     }
 
     try {
@@ -91,7 +91,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->fail('Expected exception not thrown from read()');
     }
     catch (DatabaseExceptionWrapper) {
-      // Exception was expected
+      // Exception was expected.
     }
 
     try {
@@ -99,7 +99,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->fail('Expected exception not thrown from readMultiple()');
     }
     catch (DatabaseExceptionWrapper) {
-      // Exception was expected
+      // Exception was expected.
     }
 
     try {
@@ -107,7 +107,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->fail('Expected exception not thrown from deleteAll()');
     }
     catch (DatabaseExceptionWrapper) {
-      // Exception was expected
+      // Exception was expected.
     }
 
     try {
@@ -115,7 +115,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->fail('Expected exception not thrown from listAll()');
     }
     catch (DatabaseExceptionWrapper) {
-      // Exception was expected
+      // Exception was expected.
     }
 
     try {
@@ -123,7 +123,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->fail('Expected exception not thrown from deleteAll()');
     }
     catch (DatabaseExceptionWrapper) {
-      // Exception was expected
+      // Exception was expected.
     }
 
     try {
@@ -131,7 +131,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->fail('Expected exception not thrown from getAllCollectionNames()');
     }
     catch (DatabaseExceptionWrapper) {
-      // Exception was expected
+      // Exception was expected.
     }
 
     $this->assertTrue(TRUE);

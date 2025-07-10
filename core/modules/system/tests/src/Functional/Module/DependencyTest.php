@@ -142,7 +142,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertSession()->fieldEnabled('modules[system_no_module_version_dependency_test][enable]');
     $this->assertSession()->fieldDisabled('modules[system_no_module_version_test][enable]');
 
-    // Remove the version requirement from the dependency definition
+    // Remove the version requirement from the dependency definition.
     $info = [
       'type' => 'module',
       'core_version_requirement' => '*',
@@ -253,9 +253,8 @@ class DependencyTest extends ModuleTestBase {
     $this->resetAll();
     $this->assertModules(['module_test'], TRUE);
     \Drupal::state()->set('module_test.dependency', 'dependency');
-    // module_test creates a dependency chain:
-    // - dblog depends on config
-    // - config depends on help
+    // module_test creates a dependency chain: dblog depends on config which
+    // depends on help.
     $expected_order = ['help', 'config', 'dblog'];
 
     // Enable the modules through the UI, verifying that the dependency chain

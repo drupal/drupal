@@ -138,7 +138,7 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
         foreach ($invalid_target_ids as $delta => $target_id) {
           // Check if any of the invalid existing references are simply not
           // accessible by the user, in which case they need to be excluded from
-          // validation
+          // validation.
           if (isset($previously_referenced_ids[$target_id]) && isset($existing_entities[$target_id]) && !$existing_entities[$target_id]->access('view')) {
             continue;
           }

@@ -329,7 +329,7 @@ class ModulesListForm extends FormBase {
     // Disable the checkbox for required modules.
     if (!empty($module->info['required'])) {
       // Used when displaying modules that are required by the installation
-      // profile
+      // profile.
       $row['enable']['#disabled'] = TRUE;
       $row['#required_by'][] = $distribution . (!empty($module->info['explanation']) ? ' (' . $module->info['explanation'] . ')' : '');
     }

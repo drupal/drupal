@@ -193,7 +193,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
       $this->assertInstanceOf(\InvalidArgumentException::class, $e);
     }
 
-    // Delete terms so we have nothing to reference and try again
+    // Delete terms so we have nothing to reference and try again.
     $term->delete();
     $term2->delete();
     $entity = EntityTest::create(['name' => $this->randomMachineName()]);
@@ -302,7 +302,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEquals($vocabulary2->id(), $entity->field_test_taxonomy_vocabulary->entity->id());
     $this->assertEquals($vocabulary2->label(), $entity->field_test_taxonomy_vocabulary->entity->label());
 
-    // Delete terms so we have nothing to reference and try again
+    // Delete terms so we have nothing to reference and try again.
     $this->vocabulary->delete();
     $vocabulary2->delete();
     $entity = EntityTest::create(['name' => $this->randomMachineName()]);

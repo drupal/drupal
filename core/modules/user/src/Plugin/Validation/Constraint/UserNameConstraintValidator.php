@@ -32,23 +32,23 @@ class UserNameConstraintValidator extends ConstraintValidator {
     }
     if (preg_match('/[^\x{80}-\x{F7} a-z0-9@+_.\'-]/i', $name)
       || preg_match(
-        // Non-printable ISO-8859-1 + NBSP
+        // Non-printable ISO-8859-1 + NBSP.
         '/[\x{80}-\x{A0}' .
-        // Soft-hyphen
+        // Soft-hyphen.
         '\x{AD}' .
-        // Various space characters
+        // Various space characters.
         '\x{2000}-\x{200F}' .
-        // Bidirectional text overrides
+        // Bidirectional text overrides.
         '\x{2028}-\x{202F}' .
-        // Various text hinting characters
+        // Various text hinting characters.
         '\x{205F}-\x{206F}' .
-        // Byte order mark
+        // Byte order mark.
         '\x{FEFF}' .
-        // Full-width latin
+        // Full-width latin.
         '\x{FF01}-\x{FF60}' .
-        // Replacement characters
+        // Replacement characters.
         '\x{FFF9}-\x{FFFD}' .
-        // NULL byte and control characters
+        // NULL byte and control characters.
         '\x{0}-\x{1F}]/u',
         $name)
     ) {

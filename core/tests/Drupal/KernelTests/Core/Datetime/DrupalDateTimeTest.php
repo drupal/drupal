@@ -92,7 +92,7 @@ class DrupalDateTimeTest extends KernelTestBase {
    * Tests the ability to override the time zone in the format method.
    */
   public function testTimezoneFormat(): void {
-    // Create a date in UTC
+    // Create a date in UTC.
     $date = DrupalDateTime::createFromTimestamp(87654321, 'UTC');
 
     // Verify that the date format method displays the default time zone.

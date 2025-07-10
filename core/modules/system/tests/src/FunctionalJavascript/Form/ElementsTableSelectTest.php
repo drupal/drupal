@@ -51,7 +51,7 @@ class ElementsTableSelectTest extends WebDriverTestBase {
       $this->click($row);
       $this->assertSession()->assertWaitOnAjaxRequest();
       $page->hasCheckedField($row);
-      // Check other rows are not checked
+      // Check other rows are not checked.
       for ($j = 1; $j <= 3; $j++) {
         if ($j == $i) {
           continue;

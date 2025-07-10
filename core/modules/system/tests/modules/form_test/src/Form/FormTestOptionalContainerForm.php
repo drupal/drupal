@@ -37,7 +37,7 @@ class FormTestOptionalContainerForm extends FormBase {
       '#optional' => FALSE,
     ];
 
-    // Non-empty containers
+    // Non-empty containers.
     $form['nonempty_optional'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['nonempty_optional']],

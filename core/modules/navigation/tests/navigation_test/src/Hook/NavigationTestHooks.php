@@ -97,7 +97,7 @@ class NavigationTestHooks {
         unset($tree[$key]);
       }
 
-      // Updates title for items in menu2
+      // Updates title for items in menu2.
       if ($menu_name == 'menu2') {
         $item->link->updateLink(['title' => 'New Link Title'], FALSE);
       }

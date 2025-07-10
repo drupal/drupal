@@ -171,7 +171,7 @@ class CommentNonNodeTest extends BrowserTestBase {
         break;
     }
     $match = [];
-    // Get comment ID
+    // Get comment ID.
     preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
 
     // Get comment.

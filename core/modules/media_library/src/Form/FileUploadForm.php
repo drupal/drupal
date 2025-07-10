@@ -166,7 +166,7 @@ class FileUploadForm extends AddFormBase {
       '#process' => array_merge(['::validateUploadElement'], $process, ['::processUploadElement']),
       '#upload_validators' => $item->getUploadValidators(),
       // Set multiple to true only if available slots is not exactly one
-      // to ensure correct language (singular or plural) in UI
+      // to ensure correct language (singular or plural) in UI.
       '#multiple' => $slots != 1 ? TRUE : FALSE,
       // Do not limit the number uploaded. There is validation based on the
       // number selected in the media library that prevents overages.

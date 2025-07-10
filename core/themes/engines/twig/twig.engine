@@ -104,7 +104,7 @@ function twig_render_template($template_file, array $variables): string|MarkupIn
         $output['debug_info'] .= "\n-->";
       }
     }
-    // Check if the template_file belongs to a custom theme
+    // Check if the template_file belongs to a custom theme.
     $template_override_status_output = "BEGIN OUTPUT";
     $template_override_suffix_output = "END OUTPUT";
     if (str_starts_with($template_file, $variables['directory'])) {

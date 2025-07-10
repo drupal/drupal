@@ -279,7 +279,7 @@ class UserCancelTest extends BrowserTestBase {
   public function testUserBlockUnpublishNodeAccess(): void {
     \Drupal::service('module_installer')->install(['node_access_test', 'user_form_test']);
 
-    // Setup node access
+    // Setup node access.
     node_access_rebuild();
     $this->addPrivateField(NodeType::load('page'));
     \Drupal::state()->set('node_access_test.private', TRUE);

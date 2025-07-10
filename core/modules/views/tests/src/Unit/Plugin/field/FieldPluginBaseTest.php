@@ -181,7 +181,7 @@ class FieldPluginBaseTest extends UnitTestCase {
       ->willReturnCallback(
         // Pretend to do a render.
         function (&$elements, $is_root_call = FALSE) {
-          // Mock the ability to theme links
+          // Mock the ability to theme links.
           $link = $this->linkGenerator->generate($elements['#title'], $elements['#url']);
           if (isset($elements['#prefix'])) {
             $link = $elements['#prefix'] . $link;
@@ -367,7 +367,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     // entity_type flag.
     $entity_type_id = 'node';
     $data[] = ['test-path', ['entity_type' => $entity_type_id], '<a href="/test-path">value</a>'];
-    // Prefix
+    // Prefix.
     $data[] = ['test-path', ['prefix' => 'test_prefix'], 'test_prefix<a href="/test-path">value</a>'];
     // suffix.
     $data[] = ['test-path', ['suffix' => 'test_suffix'], '<a href="/test-path">value</a>test_suffix'];

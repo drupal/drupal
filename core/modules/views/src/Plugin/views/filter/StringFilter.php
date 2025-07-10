@@ -389,7 +389,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
     $operator = $this->getConditionOperator('LIKE');
     foreach ($matches as $match) {
       $phrase = FALSE;
-      // Strip off phrase quotes
+      // Strip off phrase quotes.
       if ($match[2][0] == '"') {
         $match[2] = substr($match[2], 1, -1);
         $phrase = TRUE;

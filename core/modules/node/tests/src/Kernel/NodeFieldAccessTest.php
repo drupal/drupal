@@ -82,7 +82,7 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
     // An unprivileged user.
     $page_unrelated_user = $this->createUser(['access content']);
 
-    // List of all users
+    // List of all users.
     $test_users = [
       $content_admin_user,
       $page_creator_user,

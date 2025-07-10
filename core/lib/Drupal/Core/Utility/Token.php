@@ -305,7 +305,8 @@ class Token {
 
     // Iterate through the matches, building an associative array containing
     // $tokens grouped by $types, pointing to the version of the token found in
-    // the source text. For example, $results['node']['title'] = '[node:title]';
+    // the source text. For example,
+    // "$results['node']['title'] = '[node:title]'".
     $results = [];
     for ($i = 0; $i < count($tokens); $i++) {
       $results[$types[$i]][$tokens[$i]] = $matches[0][$i];

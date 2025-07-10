@@ -59,7 +59,7 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
 
     // Tests migration of user_register using the AccountSettingsForm.
 
-    // Map D6 value to D8 value
+    // Map D6 value to D8 value.
     $user_register_map = [
       [0, UserInterface::REGISTER_ADMINISTRATORS_ONLY],
       [1, UserInterface::REGISTER_VISITORS],
@@ -67,7 +67,7 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
     ];
 
     foreach ($user_register_map as $map) {
-      // Tests migration of user_register = 1
+      // Tests migration of "user_register = 1".
       Database::getConnection('default', 'migrate')
         ->update('variable')
         ->fields(['value' => serialize($map[0])])

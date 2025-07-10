@@ -47,7 +47,7 @@ class TokenHooks {
             $replacements[$original] = $file->uuid();
             break;
 
-          // Essential file data
+          // Essential file data.
           case 'name':
             $replacements[$original] = $file->getFilename();
             break;

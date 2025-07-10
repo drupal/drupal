@@ -234,7 +234,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       return 'config_translation';
     }
     // Get the module handling this configuration object from the config_name,
-    // which is of the form <module_name>.<configuration object name>
+    // which is of the form "<module_name>.<configuration object name>".
     return !empty($this->configuration['config_name']) ? explode('.', $this->configuration['config_name'], 2)[0] : NULL;
   }
 

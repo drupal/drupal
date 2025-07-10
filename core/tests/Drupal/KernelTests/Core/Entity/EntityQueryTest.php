@@ -426,6 +426,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // As we do not have any conditions, here are the possible colors and
     // language codes, already in order, with the first occurrence of the
     // entity id marked with *:
+
     // 8  NULL pl *
     // 12 NULL pl *
 

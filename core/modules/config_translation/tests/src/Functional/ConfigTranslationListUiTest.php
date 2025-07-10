@@ -511,7 +511,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->doFieldListTest();
 
     // Views is tested in
-    // Drupal\config_translation\Tests\ConfigTranslationViewListUiTest
+    // Drupal\config_translation\Tests\ConfigTranslationViewListUiTest.
 
     // Test the maintenance settings page.
     $this->doSettingsPageTest('admin/config/development/maintenance');

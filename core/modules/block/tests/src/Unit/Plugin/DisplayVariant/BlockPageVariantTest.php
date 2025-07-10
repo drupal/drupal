@@ -72,7 +72,7 @@ class BlockPageVariantTest extends UnitTestCase {
   public static function providerBuild() {
     $blocks_config = [
       'block1' => [
-        // region, is main content block, is messages block, is title block
+        // region, is main content block, is messages block, is title block.
         'top', FALSE, FALSE, FALSE,
       ],
       // Test multiple blocks in the same region.

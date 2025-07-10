@@ -200,7 +200,7 @@ class Renderer implements RendererInterface {
    * {@inheritdoc}
    */
   public function renderPlaceholder($placeholder, array $elements) {
-    // Get the render array for the given placeholder
+    // Get the render array for the given placeholder.
     $placeholder_element = $elements['#attached']['placeholders'][$placeholder];
     $markup = $this->doRenderPlaceholder($placeholder_element);
     return $this->doReplacePlaceholder($placeholder, $markup, $elements, $placeholder_element);
@@ -753,7 +753,7 @@ class Renderer implements RendererInterface {
         $message_placeholders[] = $placeholder;
       }
       else {
-        // Get the render array for the given placeholder
+        // Get the render array for the given placeholder.
         $fibers[$placeholder] = new \Fiber(function () use ($placeholder_element) {
           return [$this->doRenderPlaceholder($placeholder_element), $placeholder_element];
         });

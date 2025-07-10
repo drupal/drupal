@@ -147,7 +147,7 @@ class NodeTypeTest extends NodeTestBase {
     $assert->pageTextContains('Foo');
     $assert->pageTextContains('Body');
 
-    // Change the name through the API
+    // Change the name through the API.
     /** @var \Drupal\node\NodeTypeInterface $node_type */
     $node_type = NodeType::load('page');
     $node_type->set('name', 'NewBar');
@@ -277,7 +277,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('admin/structure/types/manage/page/delete');
     $this->submitForm([], 'Delete');
 
-    // Navigate to content type administration screen
+    // Navigate to content type administration screen.
     $this->drupalGet('admin/structure/types');
     $this->assertSession()->pageTextContains("No content types available. Add content type.");
     $this->assertSession()->linkExists("Add content type");

@@ -70,7 +70,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE, $modules = []): void {
     parent::setUp($import_test_views, $modules);
 
-    // Create a new content type
+    // Create a new content type.
     $content_type = $this->drupalCreateContentType();
 
     // Add a node of the new content type.

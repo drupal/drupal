@@ -446,7 +446,7 @@ class JavascriptStatesForm extends FormBase {
       '#title' => 'Textfield in details',
     ];
 
-    // Select trigger
+    // Select trigger.
     $form['header_select'] = [
       '#type' => 'html_tag',
       '#tag' => 'h3',

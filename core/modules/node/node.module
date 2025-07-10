@@ -558,7 +558,7 @@ function node_access_rebuild($batch_mode = FALSE): void {
       }
     }
     else {
-      // Try to allocate enough time to rebuild node grants
+      // Try to allocate enough time to rebuild node grants.
       Environment::setTimeLimit(240);
 
       // Rebuild newest nodes first so that recent content becomes available

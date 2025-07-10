@@ -109,7 +109,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
     $this->assertSame('default', $view->getQuery()->getConnection()->getKey());
     $this->assertSame('default', $view->getQuery()->getConnection()->getTarget());
 
-    // Test the database connection with the option 'replica' set to TRUE;
+    // Test the database connection with the option 'replica' set to TRUE.
     $view->getQuery()->options['replica'] = TRUE;
     $this->assertSame('default', $view->getQuery()->getConnection()->getKey());
     $this->assertSame('replica', $view->getQuery()->getConnection()->getTarget());

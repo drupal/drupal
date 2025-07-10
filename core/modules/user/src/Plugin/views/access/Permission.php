@@ -129,7 +129,7 @@ class Permission extends AccessPluginBase implements CacheableDependencyInterfac
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    // Get list of permissions
+    // Get list of permissions.
     $perms = [];
     $permissions = $this->permissionHandler->getPermissions();
     foreach ($permissions as $perm => $perm_item) {

@@ -81,7 +81,7 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
       ->getProjectRoot();
     $inspector = $this->container->get(ComposerInspector::class);
 
-    // Overwrite the composer.json file and treat it as a
+    // Overwrite the composer.json file and treat it as a.
     $file = new JsonFile($project_root . '/composer.json');
     $this->assertTrue($file->exists());
     $data = $file->read();

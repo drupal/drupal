@@ -179,7 +179,7 @@ class PagerTest extends BrowserTestBase {
 
     // We loop through the page with the test data query parameters, and check
     // that the active page for each pager element has the expected page
-    // (1-indexed) and resulting query parameter
+    // (1-indexed) and resulting query parameter.
     foreach ($test_data as $data) {
       $input_query = str_replace(' ', '%20', $data['input_query']);
       $this->drupalGet($this->getAbsoluteUrl(parse_url($this->getUrl())['path'] . $input_query), ['external' => TRUE]);

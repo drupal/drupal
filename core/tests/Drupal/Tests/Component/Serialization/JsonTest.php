@@ -53,7 +53,7 @@ class JsonTest extends TestCase {
     // Characters that must be escaped.
     // We check for unescaped " separately.
     $this->htmlUnsafe = ['<', '>', '\'', '&'];
-    // The following are the encoded forms of: < > ' & "
+    // The following are the encoded forms of '<', '>', "'", '&', and '"'.
     $this->htmlUnsafeEscaped = ['\u003C', '\u003E', '\u0027', '\u0026', '\u0022'];
   }
 
@@ -110,7 +110,7 @@ class JsonTest extends TestCase {
     foreach ($this->htmlUnsafe as $char) {
       $this->assertStringNotContainsString($char, $json, sprintf('A JSON encoded string does not contain %s.', $char));
     }
-    // Verify that JSON encoding escapes the HTML unsafe characters
+    // Verify that JSON encoding escapes the HTML unsafe characters.
     foreach ($this->htmlUnsafeEscaped as $char) {
       $this->assertStringContainsString($char, $json, sprintf('A JSON encoded string contains %s.', $char));
     }

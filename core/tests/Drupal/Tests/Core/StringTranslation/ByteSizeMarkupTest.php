@@ -51,15 +51,15 @@ class ByteSizeMarkupTest extends UnitTestCase {
       ['1 ZB', pow($kb, 7)],
       ['1 YB', pow($kb, 8)],
       ['1024 YB', pow($kb, 9)],
-      // Rounded to 1 MB - not 1000 or 1024 kilobytes
+      // Rounded to 1 MB - not 1000 or 1024 kilobytes.
       ['1 MB', ($kb * $kb) - 1],
       ['-1 MB', -(($kb * $kb) - 1)],
-      // Decimal Megabytes
+      // Decimal Megabytes.
       ['3.46 MB', 3623651],
       ['3.77 GB', 4053371676],
-      // Decimal Petabytes
+      // Decimal Petabytes.
       ['59.72 PB', 67234178751368124],
-      // Decimal Yottabytes
+      // Decimal Yottabytes.
       ['194.67 YB', 235346823821125814962843827],
     ];
   }

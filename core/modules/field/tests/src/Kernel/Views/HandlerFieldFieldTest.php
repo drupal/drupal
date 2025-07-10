@@ -199,7 +199,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
     $view->style_plugin->getField(4, $this->fieldStorages[4]->getName());
     $view->destroy();
 
-    // Test delta limit + offset
+    // Test delta limit + offset.
     $this->prepareView($view);
     $view->displayHandlers->get('default')->options['fields'][$field_name]['group_rows'] = TRUE;
     $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_limit'] = 3;

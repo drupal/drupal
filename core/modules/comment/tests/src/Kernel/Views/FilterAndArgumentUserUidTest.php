@@ -90,7 +90,7 @@ class FilterAndArgumentUserUidTest extends KernelTestBase {
       'entity_type' => 'node',
       'field_name' => 'comment',
     ])->save();
-    // Comment added by $other_account on $node_commented_by_account
+    // Comment added by $other_account on $node_commented_by_account.
     Comment::create([
       'uid' => $other_account->id(),
       'entity_id' => $node_commented_by_account->id(),

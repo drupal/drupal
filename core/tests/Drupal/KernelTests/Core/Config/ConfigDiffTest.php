@@ -48,7 +48,7 @@ class ConfigDiffTest extends KernelTestBase {
       [$change_key . ': ' . $original_data[$change_key]],
       [$change_key . ': ' . $change_data]);
 
-    // Reset data back to original, and remove a key
+    // Reset data back to original, and remove a key.
     $sync_data = $original_data;
     unset($sync_data[$remove_key]);
     $sync->write($config_name, $sync_data);
@@ -62,7 +62,7 @@ class ConfigDiffTest extends KernelTestBase {
       FALSE
     );
 
-    // Reset data back to original and add a key
+    // Reset data back to original and add a key.
     $sync_data = $original_data;
     $sync_data[$add_key] = $add_data;
     $sync->write($config_name, $sync_data);

@@ -248,7 +248,7 @@ class DrupalKernelTest extends KernelTestBase {
     $classloader = $this->prophesize(ClassLoader::class);
 
     // Assert that we call the setApcuPrefix on the classloader if
-    // class_loader_auto_detect is set to TRUE;
+    // class_loader_auto_detect is set to TRUE.
     if ($value) {
       $classloader->setApcuPrefix(Argument::type('string'))->shouldBeCalled();
     }

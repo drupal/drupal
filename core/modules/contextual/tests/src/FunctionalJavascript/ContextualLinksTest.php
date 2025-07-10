@@ -62,7 +62,7 @@ class ContextualLinksTest extends WebDriverTestBase {
     $contextualLinks = $this->assertSession()->waitForElement('css', '.contextual button');
     $this->assertNotEmpty($contextualLinks);
 
-    // Confirm touchevents detection is loaded with Contextual Links
+    // Confirm touchevents detection is loaded with Contextual Links.
     $this->assertSession()->elementExists('css', 'html.no-touchevents');
 
     // Ensure visibility remains correct after cached paged load.

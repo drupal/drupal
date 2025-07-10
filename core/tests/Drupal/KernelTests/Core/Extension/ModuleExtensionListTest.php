@@ -22,7 +22,7 @@ class ModuleExtensionListTest extends KernelTestBase {
       ->save();
 
     // The installation profile is provided by a container parameter.
-    // Saving the configuration doesn't automatically trigger invalidation
+    // Saving the configuration doesn't automatically trigger invalidation.
     $this->container->get('kernel')->rebuildContainer();
 
     /** @var \Drupal\Core\Extension\ModuleExtensionList $module_extension_list */

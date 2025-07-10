@@ -392,7 +392,7 @@ class DisplayTest extends ViewTestBase {
 
     // Remove the relationship used by other handlers.
     $view->removeHandler('default', 'relationship', 'uid');
-    // Validate display
+    // Validate display.
     $errors = $view->validate();
     // Check that the error messages are shown.
     $this->assertCount(2, $errors['default'], 'Error messages found for required relationship');

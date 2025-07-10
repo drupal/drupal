@@ -65,7 +65,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   // - a full fledged $field structure, check that all the values are there
   // - a minimal $field structure, check all default values are set
   // defer actual $field comparison to a helper function, used for the two cases above,
-  // and for testUpdateField
+  // and for testUpdateField.
 
   /**
    * Tests the creation of a field.

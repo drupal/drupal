@@ -62,7 +62,7 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
     $this->assertTrue($view->argument['null']->validateArgument($this->account->id()));
     // Reset argument validation.
     $view->argument['null']->argument_validated = NULL;
-    // Fail for a valid numeric, but for a user that doesn't exist
+    // Fail for a valid numeric, but for a user that doesn't exist.
     $this->assertFalse($view->argument['null']->validateArgument(32));
 
     $form = [];
@@ -82,7 +82,7 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
     $this->assertTrue($view->argument['null']->validateArgument($this->account->getAccountName()));
     // Reset argument validation.
     $view->argument['null']->argument_validated = NULL;
-    // Fail for a valid string, but for a user that doesn't exist
+    // Fail for a valid string, but for a user that doesn't exist.
     $this->assertFalse($view->argument['null']->validateArgument($this->randomMachineName()));
   }
 

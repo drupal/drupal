@@ -120,7 +120,7 @@ class SystemManager {
    *   An array of system requirements.
    */
   public function listRequirements() {
-    // Load .install files
+    // Load .install files.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
     drupal_load_updates();
 

@@ -112,10 +112,10 @@ class ConfigHandlerExtra extends ViewsFormBase {
       $item[$key] = $value;
     }
 
-    // Store the item back on the view
+    // Store the item back on the view.
     $view->getExecutable()->setHandler($form_state->get('display_id'), $form_state->get('type'), $form_state->get('id'), $item);
 
-    // Write to cache
+    // Write to cache.
     $view->cacheSet();
   }
 

@@ -148,7 +148,7 @@ class TimestampFormatterTest extends KernelTestBase {
     foreach (range(1, 7) as $granularity) {
       $request_time = \Drupal::requestStack()->getCurrentRequest()->server->get('REQUEST_TIME');
 
-      // Test a timestamp in the past
+      // Test a timestamp in the past.
       $value = $request_time - 87654321;
       $interval = \Drupal::service('date.formatter')->formatTimeDiffSince($value, ['granularity' => $granularity]);
       $expected = $interval . ' ago';
@@ -164,7 +164,7 @@ class TimestampFormatterTest extends KernelTestBase {
       $this->renderEntityFields($entity, $this->display);
       $this->assertRaw($expected);
 
-      // Test a timestamp in the future
+      // Test a timestamp in the future.
       $value = $request_time + 87654321;
       $interval = \Drupal::service('date.formatter')->formatTimeDiffUntil($value, ['granularity' => $granularity]);
       $expected = $interval . ' hence';

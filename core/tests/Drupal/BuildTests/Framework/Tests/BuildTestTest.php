@@ -196,7 +196,7 @@ class BuildTestTest extends BuildTestBase {
     $this->assertFileExists($full_path . DIRECTORY_SEPARATOR . 'docroot/sites/default/default.settings.php');
     $this->assertFileExists($full_path . DIRECTORY_SEPARATOR . 'vendor');
 
-    // Verify expected files do not exist
+    // Verify expected files do not exist.
     $this->assertFileDoesNotExist($full_path . DIRECTORY_SEPARATOR . 'docroot/sites/default/settings.php');
     $this->assertFileDoesNotExist($full_path . DIRECTORY_SEPARATOR . 'docroot/sites/default/settings.local.php');
     $this->assertFileDoesNotExist($full_path . DIRECTORY_SEPARATOR . 'docroot/sites/default/files');

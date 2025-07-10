@@ -106,7 +106,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit, 'Save and configure');
 
-    // Save our block permanently
+    // Save our block permanently.
     $this->submitForm(['region' => 'content'], 'Save block');
 
     // Set test_view_mode as a custom display to be available on the list.

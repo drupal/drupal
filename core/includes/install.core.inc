@@ -1197,7 +1197,7 @@ function install_database_errors($database, $settings_file) {
 
   try {
     $driverExtension = Database::getDriverList()->get($database['namespace']);
-    // Run driver specific validation
+    // Run driver specific validation.
     $errors = $driverExtension->getInstallTasks()->validateDatabaseSettings($database);
     if (!empty($errors)) {
       // No point to try further.

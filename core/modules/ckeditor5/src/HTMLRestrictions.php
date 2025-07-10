@@ -492,7 +492,7 @@ final class HTMLRestrictions {
     }
 
     // When allowing all tags on an attribute, transform FilterHtml output from
-    // ['tag' => ['*'=> TRUE]] to ['tag' => TRUE]
+    // "['tag' => ['*'=> TRUE]]" to "['tag' => TRUE]".
     $allowed = $restrictions['allowed'];
     foreach ($allowed as $element => $attributes) {
       if (is_array($attributes) && isset($attributes['*']) && $attributes['*'] === TRUE) {
@@ -580,7 +580,7 @@ final class HTMLRestrictions {
     }
 
     // When allowing all tags on an attribute, transform FilterHtml output from
-    // ['tag' => ['*'=> TRUE]] to ['tag' => TRUE]
+    // "['tag' => ['*'=> TRUE]]" to "['tag' => TRUE]".
     foreach ($allowed_elements as $element => $attributes) {
       if (is_array($attributes) && isset($attributes['*']) && $attributes['*'] === TRUE) {
         $allowed_elements[$element] = TRUE;

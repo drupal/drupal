@@ -77,7 +77,7 @@ class CommentOrphanTest extends EntityKernelTestBase {
       'label' => 'Comment',
     ])->save();
 
-    // Make two comments
+    // Make two comments.
     $comment1 = $comment_storage->create([
       'field_name' => 'comment',
       'comment_body' => 'test',

@@ -468,7 +468,8 @@ function locale_translate_file_attach_properties($file, array $options = []) {
   }
 
   // Extract project, version and language code from the file name. Supported:
-  // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po
+  // "{project}-{version}.{langcode}.po", "{prefix}.{langcode}.po" or
+  // "{langcode}.po".
   preg_match('!
     (                       # project OR project and version OR empty (group 1)
       ([a-z_]+)             # project name (group 2)

@@ -407,7 +407,7 @@ JS;
     // Close the dropdown.
     $style_dropdown->click();
 
-    // Select the <ul> and check the available styles
+    // Select the <ul> and check the available styles.
     $this->selectTextInsideElement('ul');
     $this->assertSame('Styles', $style_dropdown->getText());
     $style_dropdown->click();
@@ -448,7 +448,7 @@ JS;
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
     $this->assertSame('Items', $style_dropdown->getText());
 
-    // Select the <ol> and check the available styles
+    // Select the <ol> and check the available styles.
     $this->selectTextInsideElement('ol');
     $this->assertSame('Styles', $style_dropdown->getText());
     $style_dropdown->click();
@@ -489,7 +489,7 @@ JS;
     $this->assertTrue($buttons[8]->hasClass('ck-off'));
     $this->assertSame('Steps', $style_dropdown->getText());
 
-    // Select the table and check the available styles
+    // Select the table and check the available styles.
     $this->selectTextInsideElement('table td');
     $this->assertSame('Styles', $style_dropdown->getText());
     $style_dropdown->click();

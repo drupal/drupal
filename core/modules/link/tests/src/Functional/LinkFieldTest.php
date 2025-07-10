@@ -188,9 +188,9 @@ class LinkFieldTest extends BrowserTestBase {
     $validation_error_2 = 'Manually entered paths should start with one of the following characters: / ? #';
     $validation_error_3 = "The path '@link_path' is inaccessible.";
     $invalid_external_entries = [
-      // Invalid protocol
+      // Invalid protocol.
       'invalid://not-a-valid-protocol' => $validation_error_1,
-      // Missing host name
+      // Missing host name.
       'http://' => $validation_error_1,
     ];
     $invalid_internal_entries = [

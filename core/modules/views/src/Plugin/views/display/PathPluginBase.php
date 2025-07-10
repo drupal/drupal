@@ -213,7 +213,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // Store whether the view will return a response.
     $route->setOption('returns_response', !empty($this->getPluginDefinition()['returns_response']));
 
-    // Symfony 4 requires that UTF-8 route patterns have the "utf8" option set
+    // Symfony 4 requires that UTF-8 route patterns have the "utf8" option set.
     $route->setOption('utf8', TRUE);
 
     return $route;

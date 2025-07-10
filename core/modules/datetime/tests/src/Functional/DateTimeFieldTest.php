@@ -426,7 +426,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
     $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
 
-    // Assert that Hour and Minute Elements do not appear on Date Only
+    // Assert that Hour and Minute Elements do not appear on Date Only.
     $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
     $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-minute\"]");
 

@@ -86,7 +86,7 @@ class SiteConfigureForm extends ConfigFormBase {
     global $install_state;
     $form['#title'] = $this->t('Configure site');
 
-    // Warn about settings.php permissions risk
+    // Warn about settings.php permissions risk.
     $settings_dir = $this->sitePath;
     $settings_file = $settings_dir . '/settings.php';
     // Check that $_POST is empty so we only show this message when the form is

@@ -366,7 +366,7 @@ class BigPipePlaceholderTestCases {
     ];
     $exception->embeddedHtmlResponse = NULL;
 
-    // cSpell:disable-next-line.
+    // cSpell:disable-next-line
     $token = 'PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU';
     // 8. Edge case: response filter throwing an exception for this placeholder.
     $embedded_response_exception = new BigPipePlaceholderTestCase(

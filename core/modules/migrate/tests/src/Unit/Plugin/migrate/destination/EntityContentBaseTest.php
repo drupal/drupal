@@ -47,7 +47,7 @@ class EntityContentBaseTest extends EntityTestBase {
     // Syncing should be set once.
     $entity->setSyncing(Argument::exact(TRUE))
       ->shouldBeCalledTimes(1);
-    // Set an id for the entity
+    // Set an id for the entity.
     $entity->id()
       ->willReturn(5);
     $destination->setEntity($entity->reveal());

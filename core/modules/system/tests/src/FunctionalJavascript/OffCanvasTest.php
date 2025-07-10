@@ -96,7 +96,7 @@ class OffCanvasTest extends OffCanvasTestBase {
     $page->clickLink('Display more links!');
     $this->waitForOffCanvasToOpen();
     $web_assert->linkExists('Off_canvas link!');
-    // Click off-canvas link inside off-canvas dialog
+    // Click off-canvas link inside off-canvas dialog.
     $page->clickLink('Off_canvas link!');
     $this->waitForOffCanvasToOpen();
     $web_assert->elementTextContains('css', '.ui-dialog[aria-describedby="drupal-off-canvas"]', 'Thing 2 says hello');
@@ -109,7 +109,7 @@ class OffCanvasTest extends OffCanvasTestBase {
     $page->clickLink('Display more links!');
     $this->waitForOffCanvasToOpen();
     $web_assert->linkExists('Off_canvas link!');
-    // Click off-canvas link inside off-canvas dialog
+    // Click off-canvas link inside off-canvas dialog.
     $page->clickLink('Off_canvas link!');
     $this->waitForOffCanvasToOpen();
     $web_assert->elementTextContains('css', '.ui-dialog[aria-describedby="drupal-off-canvas"]', 'Thing 2 says hello');

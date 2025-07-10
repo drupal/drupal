@@ -90,7 +90,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     unset($core_extension['module']['telephone']);
     $sync->write('core.extension', $core_extension);
 
-    // Stage the field deletion
+    // Stage the field deletion.
     $sync->delete('field.storage.entity_test.field_test');
     $sync->delete('field.field.entity_test.entity_test.field_test');
 

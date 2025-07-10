@@ -99,7 +99,7 @@ class TypeResolver {
       }
       $previous_name = $name;
       if (!is_array($data) || !isset($data[$name])) {
-        // Key not found, return original value
+        // Key not found, return original value.
         return $expression;
       }
       if (!$parts) {
@@ -126,7 +126,7 @@ class TypeResolver {
       }
       $data = $data[$name];
     }
-    // Return the original value
+    // Return the original value.
     return $expression;
   }
 

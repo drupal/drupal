@@ -32,7 +32,7 @@ function update_process_project_info(&$projects): void {
     $info = $project['info'];
 
     if (isset($info['version'])) {
-      // Check for development snapshots
+      // Check for development snapshots.
       if (preg_match('@(dev|HEAD)@', $info['version'])) {
         $install_type = 'dev';
       }

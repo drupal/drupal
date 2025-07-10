@@ -76,7 +76,7 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal7TestBase {
     $this->assertSame($config->get('default_langcode'), 'und');
 
     // Assert that a content type without a 'language_content_type' variable is
-    // not translatable
+    // not translatable.
     $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'book');
     $this->assertTrue($config->isDefaultConfiguration());
     $this->assertFalse($config->isLanguageAlterable());

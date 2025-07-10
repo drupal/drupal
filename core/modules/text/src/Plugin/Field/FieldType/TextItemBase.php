@@ -133,7 +133,7 @@ abstract class TextItemBase extends FieldItemBase {
     $settings = $field_definition->getSettings();
 
     if (empty($settings['max_length'])) {
-      // Textarea handling
+      // Textarea handling.
       $value = $random->paragraphs();
     }
     else {

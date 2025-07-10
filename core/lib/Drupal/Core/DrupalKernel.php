@@ -1315,11 +1315,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Get a list of namespaces and put it onto the container.
     $namespaces = $this->getModuleNamespacesPsr4($this->getModuleFileNames());
-    // Add all components in \Drupal\Core and \Drupal\Component that have one of
-    // the following directories:
-    // - Element
-    // - Entity
-    // - Plugin
+    // Add all components in \Drupal\Core and \Drupal\Component that have one or
+    // more of Element, Entity and Plugin directories.
     foreach (['Core', 'Component'] as $parent_directory) {
       $path = 'core/lib/Drupal/' . $parent_directory;
       $parent_namespace = 'Drupal\\' . $parent_directory;

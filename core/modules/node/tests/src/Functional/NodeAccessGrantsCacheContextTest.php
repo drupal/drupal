@@ -171,7 +171,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
       3 => 'view.all',
     ]);
 
-    // Uninstall the node_access_test module
+    // Uninstall the node_access_test module.
     $this->container->get('module_installer')->uninstall(['node_access_test']);
     drupal_static_reset('node_access_view_all_nodes');
     $this->assertUserCacheContext([

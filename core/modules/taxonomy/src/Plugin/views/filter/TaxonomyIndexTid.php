@@ -289,7 +289,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     if (!$form_state->get('exposed')) {
-      // Retain the helper option
+      // Retain the helper option.
       $this->helper->buildOptionsForm($form, $form_state);
 
       // Show help text if not exposed to end users.
@@ -330,7 +330,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     // If view is an attachment and is inheriting exposed filters, then assume
-    // exposed input has already been validated
+    // exposed input has already been validated.
     if (!empty($this->view->is_attachment) && $this->view->display_handler->usesExposed()) {
       $this->validated_exposed_input = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];
     }
@@ -418,7 +418,7 @@ class TaxonomyIndexTid extends ManyToOne {
    * {@inheritdoc}
    */
   public function adminSummary() {
-    // Set up $this->valueOptions for the parent summary
+    // Set up $this->valueOptions for the parent summary.
     $this->valueOptions = [];
 
     if ($this->value) {

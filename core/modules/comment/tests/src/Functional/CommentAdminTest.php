@@ -45,7 +45,7 @@ class CommentAdminTest extends CommentTestBase {
     // Ensure that doesn't require contact info.
     $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAYNOT_CONTACT);
 
-    // Test that the comments page loads correctly when there are no comments
+    // Test that the comments page loads correctly when there are no comments.
     $this->drupalGet('admin/content/comment');
     $this->assertSession()->pageTextContains('No comments available.');
 

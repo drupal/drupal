@@ -177,7 +177,7 @@ class ImageHooks {
     // Private file access for image style derivatives.
     if (str_starts_with($path, 'styles/')) {
       $args = explode('/', $path);
-      // Discard "styles", style name, and scheme from the path
+      // Discard "styles", style name, and scheme from the path.
       $args = array_slice($args, 3);
       // Then the remaining parts are the path to the image.
       $original_uri = StreamWrapperManager::getScheme($uri) . '://' . implode('/', $args);

@@ -138,7 +138,7 @@ class ModulesUninstallForm extends FormBase {
     $form['modules'] = [];
 
     // Only build the rest of the form if there are any modules available to
-    // uninstall;
+    // uninstall.
     if (empty($uninstallable)) {
       return $form;
     }

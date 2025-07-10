@@ -18,7 +18,7 @@ class EntityShortcutSet extends EntityConfigBase {
   protected function getEntity(Row $row, array $old_destination_id_values) {
     $entity = parent::getEntity($row, $old_destination_id_values);
     // Set the "syncing" flag to TRUE, to avoid duplication of default
-    // shortcut links
+    // shortcut links.
     $entity->setSyncing(TRUE);
     return $entity;
   }

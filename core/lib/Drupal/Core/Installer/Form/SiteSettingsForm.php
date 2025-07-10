@@ -255,7 +255,7 @@ class SiteSettingsForm extends FormBase {
     // configure one.
     if (empty(Settings::get('config_sync_directory'))) {
       if (empty($install_state['config_install_path'])) {
-        // Add a randomized config directory name to settings.php
+        // Add a randomized config directory name to settings.php.
         $config_sync_directory = $this->createRandomConfigDirectory();
       }
       else {

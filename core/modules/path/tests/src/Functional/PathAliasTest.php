@@ -153,7 +153,7 @@ class PathAliasTest extends PathTestBase {
 
     // Set alias to second test node.
     $edit['path[0][value]'] = '/node/' . $node2->id();
-    // Leave $edit['alias'] the same
+    // Leave "$edit['alias']" the same.
     $this->drupalGet('admin/config/search/path/add');
     $this->submitForm($edit, 'Save');
 

@@ -200,7 +200,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $this->assertFalse($this->schema->fieldExists($table_name_new, $field_name));
     $this->assertTrue($this->schema->fieldExists($table_name_new, $field_name_new));
 
-    // Adding an unique key
+    // Adding an unique key.
     $unique_key_name = $unique_key_introspect_name = 'unique';
     $this->schema->addUniqueKey($table_name_new, $unique_key_name, [$field_name_new]);
 
@@ -210,7 +210,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $unique_key_introspect_name = $ensure_identifiers_length->invoke($this->schema, $table_name_new, $unique_key_name, 'key');
     $this->assertEquals([$field_name_new], $introspect_index_schema->invoke($this->schema, $table_name_new)['unique keys'][$unique_key_introspect_name]);
 
-    // Dropping an unique key
+    // Dropping an unique key.
     $this->schema->dropUniqueKey($table_name_new, $unique_key_name);
 
     // Dropping a field.

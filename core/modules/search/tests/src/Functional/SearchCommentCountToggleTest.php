@@ -76,12 +76,12 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     $this->searchableNodes['1 comment'] = $this->drupalCreateNode($node_params);
     $this->searchableNodes['0 comments'] = $this->drupalCreateNode($node_params);
 
-    // Create a comment array
+    // Create a comment array.
     $edit_comment = [];
     $edit_comment['subject[0][value]'] = $this->randomMachineName();
     $edit_comment['comment_body[0][value]'] = $this->randomMachineName();
 
-    // Post comment to the test node with comment
+    // Post comment to the test node with comment.
     $this->drupalGet('comment/reply/node/' . $this->searchableNodes['1 comment']->id() . '/comment');
     $this->submitForm($edit_comment, 'Save');
 
@@ -99,12 +99,12 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     ];
     $this->drupalGet('search/node');
 
-    // Test comment count display for nodes with comment status set to Open
+    // Test comment count display for nodes with comment status set to Open.
     $this->submitForm($edit, 'Search');
     $this->assertSession()->pageTextContains('0 comments');
     $this->assertSession()->pageTextContains('1 comment');
 
-    // Test comment count display for nodes with comment status set to Closed
+    // Test comment count display for nodes with comment status set to Closed.
     $this->searchableNodes['0 comments']->set('comment', CommentItemInterface::CLOSED);
     $this->searchableNodes['0 comments']->save();
     $this->searchableNodes['1 comment']->set('comment', CommentItemInterface::CLOSED);
@@ -114,7 +114,7 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('0 comments');
     $this->assertSession()->pageTextContains('1 comment');
 
-    // Test comment count display for nodes with comment status set to Hidden
+    // Test comment count display for nodes with comment status set to Hidden.
     $this->searchableNodes['0 comments']->set('comment', CommentItemInterface::HIDDEN);
     $this->searchableNodes['0 comments']->save();
     $this->searchableNodes['1 comment']->set('comment', CommentItemInterface::HIDDEN);

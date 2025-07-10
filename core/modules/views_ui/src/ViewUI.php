@@ -477,7 +477,7 @@ class ViewUI implements ViewEntityInterface {
         }
         $id = $this->getExecutable()->addHandler($display_id, $type, $table, $field);
 
-        // Check to see if we have group by settings
+        // Check to see if we have group by settings.
         $key = $type;
         // Footer,header and empty text have a different internal handler
         // type(area).
@@ -494,11 +494,11 @@ class ViewUI implements ViewEntityInterface {
         }
 
         // Check to see if this type has settings, if so add the settings form
-        // first
+        // first.
         if ($handler && $handler->hasExtraOptions()) {
           $this->addFormToStack('handler-extra', $display_id, $type, $id);
         }
-        // Then add the form to the stack
+        // Then add the form to the stack.
         $this->addFormToStack('handler', $display_id, $type, $id);
       }
     }
@@ -507,7 +507,7 @@ class ViewUI implements ViewEntityInterface {
       unset($this->form_cache);
     }
 
-    // Store in cache
+    // Store in cache.
     $this->cacheSet();
   }
 

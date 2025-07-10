@@ -132,7 +132,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $field = FieldStorageConfig::load('node.field_term_entityreference');
     $this->assertEquals('taxonomy_term', $field->getSetting('target_type'));
 
-    // Make sure that datetime fields get the right datetime_type setting
+    // Make sure that datetime fields get the right datetime_type setting.
     $field = FieldStorageConfig::load('node.field_date');
     $this->assertEquals('datetime', $field->getSetting('datetime_type'));
     $field = FieldStorageConfig::load('node.field_date_without_time');

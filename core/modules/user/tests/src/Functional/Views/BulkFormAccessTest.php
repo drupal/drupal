@@ -65,7 +65,7 @@ class BulkFormAccessTest extends UserTestBase {
     $no_edit_user = User::load($no_edit_user->id());
     $this->assertFalse($no_edit_user->isBlocked(), 'The user is not blocked.');
 
-    // Create a normal user which can be edited by the admin user
+    // Create a normal user which can be edited by the admin user.
     $normal_user = $this->drupalCreateUser();
     $this->assertTrue($normal_user->access('update', $admin_user));
 

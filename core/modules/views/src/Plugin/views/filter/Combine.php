@@ -35,7 +35,7 @@ class Combine extends StringFilter {
     parent::buildOptionsForm($form, $form_state);
     $this->view->initStyle();
 
-    // Allow to choose all fields as possible
+    // Allow to choose all fields as possible.
     if ($this->view->style_plugin->usesFields()) {
       $options = [];
       foreach ($this->view->display_handler->getHandlers('field') as $name => $field) {

@@ -207,7 +207,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
-    // NEUTRAL && ALLOW == NEUTRAL
+    // NEUTRAL && ALLOW == NEUTRAL.
     $access = $neutral->andIf($allowed);
     $this->assertFalse($access->isAllowed());
     $this->assertFalse($access->isForbidden());
@@ -231,7 +231,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
-    // FORBIDDEN && ALLOWED = FORBIDDEN
+    // FORBIDDEN && ALLOWED = FORBIDDEN.
     $access = $forbidden->andIf($allowed);
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
@@ -239,7 +239,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
-    // FORBIDDEN && NEUTRAL = FORBIDDEN
+    // FORBIDDEN && NEUTRAL = FORBIDDEN.
     $access = $forbidden->andIf($neutral);
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
@@ -247,7 +247,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals('forbidden message', $access->getReason());
     $this->assertDefaultCacheability($access);
 
-    // FORBIDDEN && FORBIDDEN = FORBIDDEN
+    // FORBIDDEN && FORBIDDEN = FORBIDDEN.
     $access = $forbidden->andIf($forbidden);
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());

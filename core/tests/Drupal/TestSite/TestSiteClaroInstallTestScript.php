@@ -32,17 +32,17 @@ class TestSiteClaroInstallTestScript implements TestSetupInterface {
     $system_theme_config = \Drupal::configFactory()->getEditable('system.theme');
     $system_theme_config->set('default', 'claro')->save();
 
-    // Create an article that will have no comments
+    // Create an article that will have no comments.
     $article_no_comments = Node::create(['type' => 'article']);
     $article_no_comments->set('title', 'Article without comments');
-    // Enable comments
+    // Enable comments.
     $article_no_comments->set('comment', 2);
     $article_no_comments->save();
 
-    // Create an article that will have comments
+    // Create an article that will have comments.
     $article_with_comments = Node::create(['type' => 'article']);
     $article_with_comments->set('title', 'Article with comments');
-    // Enable comments
+    // Enable comments.
     $article_with_comments->set('comment', 2);
     $article_with_comments->save();
 
@@ -60,7 +60,7 @@ class TestSiteClaroInstallTestScript implements TestSetupInterface {
       // Whether the comment is 'approved' or not.
       'status' => 1,
     ];
-    // Create comment entities out of our field values
+    // Create comment entities out of our field values.
     $comment1 = Comment::create($values);
     $comment1->save();
 

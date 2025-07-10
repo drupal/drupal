@@ -111,11 +111,11 @@ class View extends AreaPluginBase {
       }
       $view->setDisplay($display_id);
 
-      // Avoid recursion
+      // Avoid recursion.
       $view->parent_views += $this->view->parent_views;
       $view->parent_views[] = "$view_name:$display_id";
 
-      // Check if the view is part of the parent views of this view
+      // Check if the view is part of the parent views of this view.
       $search = "$view_name:$display_id";
       if (in_array($search, $this->view->parent_views)) {
         \Drupal::messenger()->addError($this->t("Recursion detected in view @view display @display.", ['@view' => $view_name, '@display' => $display_id]));
