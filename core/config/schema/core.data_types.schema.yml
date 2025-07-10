@@ -1152,29 +1152,25 @@ mailer_dsn.options.smtp:
       nullable: true
       label: 'Maximum number of messages to send before re-starting the transport (defaults to 100 messages)'
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
     restart_threshold_sleep:
       type: float
       nullable: true
       label: 'Number of seconds to sleep between stopping and re-starting the transport (defaults to no delay)'
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
     ping_threshold:
       type: integer
       nullable: true
       label: 'The minimum number of seconds between two messages required to ping the server (defaults to 100 seconds)'
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
     max_per_second:
       type: integer
       nullable: true
       label: 'The number of messages to send per second (defaults to no limit)'
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
 
 mailer_dsn.options.smtps:
   type: mailer_dsn.options.smtp

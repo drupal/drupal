@@ -32,22 +32,19 @@ navigation.settings:
               label: 'Maximum file sizes (bytes)'
               constraints:
                 NotNull: [ ]
-                Range:
-                  min: 0
+                PositiveOrZero: ~
             height:
               type: integer
               label: 'Logo expected height'
               constraints:
                 NotNull: [ ]
-                Range:
-                  min: 0
+                PositiveOrZero: ~
             width:
               type: integer
               label: 'Logo expected width'
               constraints:
                 NotNull: [ ]
-                Range:
-                  min: 0
+                PositiveOrZero: ~
           constraints:
             ValidKeys: '<infer>'
       constraints:

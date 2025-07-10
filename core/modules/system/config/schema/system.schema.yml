@@ -157,15 +157,13 @@ system.diff:
           label: 'Number of leading lines in a diff'
           constraints:
             # @see \Drupal\Component\Diff\DiffFormatter
-            Range:
-              min: 0
+            PositiveOrZero: ~
         lines_trailing:
           type: integer
           label: 'Number of trailing lines in a diff'
           constraints:
             # @see \Drupal\Component\Diff\DiffFormatter
-            Range:
-              min: 0
+            PositiveOrZero: ~
 
 system.logging:
   type: config_object
@@ -355,8 +353,7 @@ system.file:
       type: integer
       label: 'Maximum age for temporary files'
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
 
 system.image:
   type: config_object
@@ -426,8 +423,7 @@ system.advisories:
       # Minimum can be set to 0 as it just means the advisories will be retrieved on every call.
       # @see \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher::getSecurityAdvisories
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
 
 block.settings.system_branding_block:
   type: block_settings

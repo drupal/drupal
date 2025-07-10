@@ -115,27 +115,22 @@ user.flood:
       type: integer
       label: 'IP limit'
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
     ip_window:
       type: integer
       label: 'IP window'
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
     user_limit:
       type: integer
       label: 'User limit'
       constraints:
-        Range:
-          min: 0
+        PositiveOrZero: ~
     user_window:
       type: integer
       label: 'User window'
       constraints:
-        Range:
-          min: 0
-
+        PositiveOrZero: ~
 user.role.*:
   type: config_entity
   label: 'User role settings'
