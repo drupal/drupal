@@ -127,15 +127,6 @@ function language_negotiation_url_prefixes_update(): void {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block templates.
- */
-function language_preprocess_block(&$variables): void {
-  if ($variables['configuration']['provider'] == 'language') {
-    $variables['attributes']['role'] = 'navigation';
-  }
-}
-
-/**
  * Returns language mappings between browser and Drupal language codes.
  *
  * @return array

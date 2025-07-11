@@ -9,22 +9,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\search\SearchTextProcessorInterface;
 
 /**
- * Implements hook_theme_suggestions_HOOK().
- */
-function search_theme_suggestions_search_result(array $variables): array {
-  return ['search_result__' . $variables['plugin_id']];
-}
-
-/**
- * Implements hook_preprocess_HOOK() for block templates.
- */
-function search_preprocess_block(&$variables): void {
-  if ($variables['plugin_id'] == 'search_form_block') {
-    $variables['attributes']['role'] = 'search';
-  }
-}
-
-/**
  * @defgroup search Search interface
  * @{
  * The Drupal search interface manages a global search mechanism.

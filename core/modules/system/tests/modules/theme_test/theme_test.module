@@ -8,30 +8,6 @@
 declare(strict_types=1);
 
 /**
- * Implements hook_preprocess_HOOK() for HTML document templates.
- */
-function theme_test_preprocess_html(&$variables): void {
-  $variables['html_attributes']['theme_test_html_attribute'] = 'theme test html attribute value';
-  $variables['attributes']['theme_test_body_attribute'] = 'theme test body attribute value';
-
-  $variables['attributes']['theme_test_page_variable'] = 'Page variable is an array.';
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK().
- */
-function theme_test_theme_suggestions_theme_test_preprocess_suggestions($variables): array {
-  return ['theme_test_preprocess_suggestions__' . $variables['foo']];
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function theme_test_preprocess_theme_test_preprocess_suggestions(&$variables): void {
-  $variables['foo'] = 'Theme hook implementor=theme_theme_test_preprocess_suggestions().';
-}
-
-/**
  * Prepares variables for test render element templates.
  *
  * Default template: theme-test-render-element.html.twig.
@@ -42,23 +18,6 @@ function theme_test_preprocess_theme_test_preprocess_suggestions(&$variables): v
  */
 function template_preprocess_theme_test_render_element(&$variables): void {
   $variables['attributes']['data-variables-are-preprocessed'] = TRUE;
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK().
- */
-function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables): array {
-  return ['theme_test_suggestion_provided__foo'];
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK().
- */
-function theme_test_theme_suggestions_node(array $variables): array {
-  $xss = '<script type="text/javascript">alert(\'yo\');</script>';
-  $suggestions[] = 'node__' . $xss;
-
-  return $suggestions;
 }
 
 /**

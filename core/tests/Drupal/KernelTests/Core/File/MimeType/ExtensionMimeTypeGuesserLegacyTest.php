@@ -60,7 +60,7 @@ class ExtensionMimeTypeGuesserLegacyTest extends KernelTestBase {
     ];
 
     $this->expectDeprecation(
-      'The deprecated alter hook hook_file_mimetype_mapping_alter() is implemented in these locations: file_deprecated_test_file_mimetype_mapping_alter. This hook is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Implement a \Drupal\Core\File\Event\MimeTypeMapLoadedEvent listener instead. See https://www.drupal.org/node/3494040'
+      'The deprecated alter hook hook_file_mimetype_mapping_alter() is implemented in these locations: Drupal\file_deprecated_test\Hook\FileDeprecatedTestThemeHooks::fileMimetypeMappingAlter. This hook is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Implement a \Drupal\Core\File\Event\MimeTypeMapLoadedEvent listener instead. See https://www.drupal.org/node/3494040'
     );
 
     /** @var \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser $guesser */

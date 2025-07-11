@@ -44,17 +44,6 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
 }
 
 /**
- * Implements hook_preprocess_HOOK() for views table templates.
- */
-function views_test_data_preprocess_views_view_table(&$variables): void {
-  if ($variables['view']->storage->id() == 'test_view_render') {
-    $views_render_test = \Drupal::state()->get('views_render.test');
-    $views_render_test++;
-    \Drupal::state()->set('views_render.test', $views_render_test);
-  }
-}
-
-/**
  * Prepares variables for the mapping row style test templates.
  *
  * Default template: views-view-mapping-test.html.twig.

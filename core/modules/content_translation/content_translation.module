@@ -159,11 +159,3 @@ function content_translation_language_configuration_element_submit(array $form, 
     \Drupal::service('router.builder')->setRebuildNeeded();
   }
 }
-
-/**
- * Implements hook_preprocess_HOOK() for language-content-settings-table.html.twig.
- */
-function content_translation_preprocess_language_content_settings_table(&$variables): void {
-  \Drupal::moduleHandler()->loadInclude('content_translation', 'inc', 'content_translation.admin');
-  _content_translation_preprocess_language_content_settings_table($variables);
-}

@@ -5,15 +5,6 @@
  */
 
 /**
- * Implements hook_preprocess_HOOK() for block templates.
- */
-function help_preprocess_block(&$variables): void {
-  if ($variables['plugin_id'] == 'help_block') {
-    $variables['attributes']['role'] = 'complementary';
-  }
-}
-
-/**
  * Ensure that search is updated when extensions are installed or uninstalled.
  *
  * @param string[] $extensions

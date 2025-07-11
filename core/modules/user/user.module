@@ -112,19 +112,6 @@ function user_is_blocked($name) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block templates.
- */
-function user_preprocess_block(&$variables): void {
-  if ($variables['configuration']['provider'] == 'user') {
-    switch ($variables['elements']['#plugin_id']) {
-      case 'user_login_block':
-        $variables['attributes']['role'] = 'form';
-        break;
-    }
-  }
-}
-
-/**
  * Prepares variables for username templates.
  *
  * Default template: username.html.twig.

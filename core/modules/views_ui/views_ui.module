@@ -4,47 +4,8 @@
  * @file
  */
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
-
-/**
- * Implements hook_preprocess_HOOK() for views templates.
- */
-function views_ui_preprocess_views_view(&$variables): void {
-  $view = $variables['view'];
-
-  // Render title for the admin preview.
-  if (!empty($view->live_preview)) {
-    $variables['title'] = [
-      '#markup' => $view->getTitle(),
-      '#allowed_tags' => Xss::getHtmlTagList(),
-    ];
-  }
-
-  if (!empty($view->live_preview) && \Drupal::moduleHandler()->moduleExists('contextual')) {
-    $view->setShowAdminLinks(FALSE);
-    foreach (['title', 'header', 'exposed', 'rows', 'pager', 'more', 'footer', 'empty', 'attachment_after', 'attachment_before'] as $section) {
-      if (!empty($variables[$section])) {
-        $variables[$section] = [
-          '#theme' => 'views_ui_view_preview_section',
-          '#view' => $view,
-          '#section' => $section,
-          '#content' => $variables[$section],
-          '#theme_wrappers' => ['views_ui_container'],
-          '#attributes' => ['class' => ['contextual-region']],
-        ];
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK().
- */
-function views_ui_theme_suggestions_views_ui_view_preview_section(array $variables): array {
-  return ['views_ui_view_preview_section__' . $variables['section']];
-}
 
 /**
  * Returns contextual links for each handler of a certain section.

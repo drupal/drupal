@@ -5,34 +5,6 @@
  */
 
 /**
- * Implements hook_preprocess_HOOK() for form element templates.
- */
-function inline_form_errors_preprocess_form_element(&$variables): void {
-  _inline_form_errors_set_errors($variables);
-}
-
-/**
- * Implements hook_preprocess_HOOK() for details element templates.
- */
-function inline_form_errors_preprocess_details(&$variables): void {
-  _inline_form_errors_set_errors($variables);
-}
-
-/**
- * Implements hook_preprocess_HOOK() for fieldset element templates.
- */
-function inline_form_errors_preprocess_fieldset(&$variables): void {
-  _inline_form_errors_set_errors($variables);
-}
-
-/**
- * Implements hook_preprocess_HOOK() for datetime form wrapper templates.
- */
-function inline_form_errors_preprocess_datetime_wrapper(&$variables): void {
-  _inline_form_errors_set_errors($variables);
-}
-
-/**
  * Populates form errors in the template.
  */
 function _inline_form_errors_set_errors(&$variables): void {

@@ -10,21 +10,6 @@ use Drupal\Core\Render\Element;
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Implements hook_theme_suggestions_HOOK().
- */
-function taxonomy_theme_suggestions_taxonomy_term(array $variables): array {
-  $suggestions = [];
-
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  $term = $variables['elements']['#taxonomy_term'];
-
-  $suggestions[] = 'taxonomy_term__' . $term->bundle();
-  $suggestions[] = 'taxonomy_term__' . $term->id();
-
-  return $suggestions;
-}
-
-/**
  * Prepares variables for taxonomy term templates.
  *
  * Default template: taxonomy-term.html.twig.

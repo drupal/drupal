@@ -118,17 +118,6 @@ function toolbar_menu_navigation_links(array $tree) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for HTML document templates.
- */
-function toolbar_preprocess_html(&$variables): void {
-  if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
-    return;
-  }
-
-  $variables['attributes']['class'][] = 'toolbar-loading';
-}
-
-/**
  * Returns the rendered subtree of each top-level toolbar link.
  *
  * @return array

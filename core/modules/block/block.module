@@ -5,36 +5,6 @@
  */
 
 use Drupal\block\Hook\BlockHooks;
-use Drupal\Core\Installer\InstallerKernel;
-
-/**
- * Initializes blocks for installed themes.
- *
- * @param string[] $theme_list
- *   An array of theme names.
- *
- * @see block_modules_installed()
- */
-function block_themes_installed($theme_list): void {
-  // Do not create blocks during config sync.
-  if (\Drupal::service('config.installer')->isSyncing()) {
-    return;
-  }
-  // Disable this functionality prior to install profile installation because
-  // block configuration is often optional or provided by the install profile
-  // itself. block_theme_initialize() will be called when the install profile is
-  // installed.
-  if (InstallerKernel::installationAttempted() && \Drupal::config('core.extension')->get('module.' . \Drupal::installProfile()) === NULL) {
-    return;
-  }
-
-  foreach ($theme_list as $theme) {
-    // Don't initialize themes that are not displayed in the UI.
-    if (\Drupal::service('theme_handler')->hasUi($theme)) {
-      block_theme_initialize($theme);
-    }
-  }
-}
 
 /**
  * Assigns an initial, default set of blocks for a theme.
@@ -72,37 +42,6 @@ function block_theme_initialize($theme): void {
       $block->save();
     }
   }
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK().
- */
-function block_theme_suggestions_block(array $variables): array {
-  $suggestions = [];
-
-  $suggestions[] = 'block__' . $variables['elements']['#configuration']['provider'];
-  // Hyphens (-) and underscores (_) play a special role in theme suggestions.
-  // Theme suggestions should only contain underscores, because within
-  // drupal_find_theme_templates(), underscores are converted to hyphens to
-  // match template file names, and then converted back to underscores to match
-  // pre-processing and other function names. So if your theme suggestion
-  // contains a hyphen, it will end up as an underscore after this conversion,
-  // and your function names won't be recognized. So, we need to convert
-  // hyphens to underscores in block deltas for the theme suggestions.
-
-  // We can safely explode on : because we know the Block plugin type manager
-  // enforces that delimiter for all derivatives.
-  $parts = explode(':', $variables['elements']['#plugin_id']);
-  $suggestion = 'block';
-  while ($part = array_shift($parts)) {
-    $suggestions[] = $suggestion .= '__' . strtr($part, '-', '_');
-  }
-
-  if (!empty($variables['elements']['#id'])) {
-    $suggestions[] = 'block__' . $variables['elements']['#id'];
-  }
-
-  return $suggestions;
 }
 
 /**
