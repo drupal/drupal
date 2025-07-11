@@ -109,7 +109,7 @@ class NodeTokensHooks {
             break;
 
           case 'type-name':
-            $type_name = node_get_type_label($node);
+            $type_name = $node->getBundleEntity()->label();
             $replacements[$original] = $type_name;
             break;
 

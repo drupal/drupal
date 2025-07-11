@@ -80,11 +80,12 @@ class ModerationActionsTest extends BrowserTestBase {
     ], 'Apply to selected items');
 
     if ($warning_appears) {
+      $typeLabel = $node->getBundleEntity()->label();
       if ($action == 'node_publish_action') {
-        $this->assertSession()->statusMessageContains(node_get_type_label($node) . ' content items were skipped as they are under moderation and may not be directly published.', 'warning');
+        $this->assertSession()->statusMessageContains($typeLabel . ' content items were skipped as they are under moderation and may not be directly published.', 'warning');
       }
       else {
-        $this->assertSession()->statusMessageContains(node_get_type_label($node) . ' content items were skipped as they are under moderation and may not be directly unpublished.', 'warning');
+        $this->assertSession()->statusMessageContains($typeLabel . ' content items were skipped as they are under moderation and may not be directly unpublished.', 'warning');
       }
     }
     else {

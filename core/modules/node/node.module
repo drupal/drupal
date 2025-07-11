@@ -109,10 +109,11 @@ function node_type_get_names() {
  * @return string|false
  *   The node type label or FALSE if the node type is not found.
  *
- * @todo Add this as generic helper method for config entities representing
- *   entity bundles.
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use $node->getBundleEntity()->label() instead.
+ * @see https://www.drupal.org/node/3533301
  */
 function node_get_type_label(NodeInterface $node) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use $node->getBundleEntity()->label(). See https://www.drupal.org/node/3533301', E_USER_DEPRECATED);
   $type = NodeType::load($node->bundle());
   return $type ? $type->label() : FALSE;
 }

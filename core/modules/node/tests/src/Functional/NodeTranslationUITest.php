@@ -479,7 +479,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       ->getStorage($this->entityTypeId);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
-    $type_name = node_get_type_label($entity);
+    $type_name = $entity->getBundleEntity()->label();
 
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.

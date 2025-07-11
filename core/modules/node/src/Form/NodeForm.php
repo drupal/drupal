@@ -125,7 +125,7 @@ class NodeForm extends ContentEntityForm {
 
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('<em>Edit @type</em> @title', [
-        '@type' => node_get_type_label($node),
+        '@type' => $node->getBundleEntity()->label(),
         '@title' => $node->label(),
       ]);
     }
@@ -284,7 +284,7 @@ class NodeForm extends ContentEntityForm {
       $node->save();
       $node_link = $node->toLink($this->t('View'))->toString();
       $context = ['@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link];
-      $t_args = ['@type' => node_get_type_label($node), '%title' => $node->access('view') ? $node->toLink()->toString() : $node->label()];
+      $t_args = ['@type' => $node->getBundleEntity()->label(), '%title' => $node->access('view') ? $node->toLink()->toString() : $node->label()];
 
       if ($insert) {
         $this->logger('content')->info('@type: added %title.', $context);
