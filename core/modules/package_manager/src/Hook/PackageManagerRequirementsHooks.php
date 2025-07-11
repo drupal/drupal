@@ -6,6 +6,7 @@ use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Url;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Exception\FailureMarkerExistsException;
 use Drupal\package_manager\FailureMarker;
@@ -53,8 +54,9 @@ class PackageManagerRequirementsHooks {
 
       $requirements['package_manager_composer'] = [
         'title' => $title,
-        'description' => $this->t('Composer was not found. The error message was: @message', [
+        'description' => $this->t('Composer was not found. The error message was: @message. The path to Composer can be configured in <a href=":settings-form">the settings form</a>.', [
           '@message' => $message,
+          ':settings-form' => Url::fromRoute('package_manager.settings')->toString(),
         ]),
         'severity' => RequirementSeverity::Error,
       ];

@@ -21,6 +21,16 @@ class ComposerRequirementTest extends PackageManagerTestBase {
   protected static $modules = ['package_manager'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $configSchemaCheckerExclusions = [
+    // We test what happens when the configured path to Composer is invalid,
+    // so we need to be able to skip schema-based validation, which would
+    // normally confirm that the configured path to Composer is executable.
+    'package_manager.settings',
+  ];
+
+  /**
    * Tests that Composer version and path are listed on the status report.
    */
   public function testComposerInfoShown(): void {
