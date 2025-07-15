@@ -26,3 +26,4 @@ services:
   media.config_subscriber:
     class: Drupal\media\EventSubscriber\MediaConfigSubscriber
     arguments: ['@router.builder', '@cache_tags.invalidator', '@entity_type.manager']
+  Drupal\media\EventSubscriber\DefaultContentSubscriber: ~

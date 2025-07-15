@@ -27,7 +27,7 @@ default:
       value: true
   path:
     -
-      alias: ''
+      alias: null
       langcode: en
   field_media_image:
     -

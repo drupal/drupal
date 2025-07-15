@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_test
+    - taxonomy
+id: taxonomy_term.field_serialized_stuff
+field_name: field_serialized_stuff
+entity_type: taxonomy_term
+type: serialized_property_item_test
+settings: {  }
+module: entity_test
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

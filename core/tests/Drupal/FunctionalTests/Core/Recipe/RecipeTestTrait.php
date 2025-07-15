@@ -61,17 +61,41 @@ trait RecipeTestTrait {
    *   The `drupal recipe` command process, after having run.
    */
   protected function applyRecipe(string $path, int $expected_exit_code = 0, array $options = [], string $command = 'recipe'): Process {
-    assert($this instanceof BrowserTestBase);
-
-    $arguments = [
-      (new PhpExecutableFinder())->find(),
-      'core/scripts/drupal',
+    $process = $this->runDrupalCommand([
       $command,
       // Never apply recipes interactively.
       '--no-interaction',
       ...$options,
       $path,
-    ];
+    ]);
+    $this->assertSame($expected_exit_code, $process->getExitCode(), $process->getErrorOutput());
+    // Applying a recipe:
+    // - creates new checkpoints, hence the "state" service in the test runner
+    //   is outdated
+    // - may install modules, which would cause the entire container in the test
+    //   runner to be outdated.
+    // Hence the entire environment must be rebuilt for assertions to target the
+    // actual post-recipe-application result.
+    // @see \Drupal\Core\Config\Checkpoint\LinearHistory::__construct()
+    assert($this instanceof BrowserTestBase);
+    $this->rebuildAll();
+    return $process;
+  }
+
+  /**
+   * Runs the `core/scripts/drupal` script with the given arguments.
+   *
+   * @param string[] $arguments
+   *   The arguments and options to pass to the script.
+   *
+   * @return \Symfony\Component\Process\Process
+   *   The started process.
+   */
+  protected function runDrupalCommand(array $arguments): Process {
+    assert($this instanceof BrowserTestBase);
+
+    array_unshift($arguments, (new PhpExecutableFinder())->find(), 'core/scripts/drupal');
+
     $process = (new Process($arguments))
       ->setWorkingDirectory($this->getDrupalRoot())
       ->setEnv([
@@ -84,16 +108,6 @@ trait RecipeTestTrait {
       ->setTimeout(500);
 
     $process->run();
-    $this->assertSame($expected_exit_code, $process->getExitCode(), $process->getErrorOutput());
-    // Applying a recipe:
-    // - creates new checkpoints, hence the "state" service in the test runner
-    //   is outdated
-    // - may install modules, which would cause the entire container in the test
-    //   runner to be outdated.
-    // Hence the entire environment must be rebuilt for assertions to target the
-    // actual post-recipe-application result.
-    // @see \Drupal\Core\Config\Checkpoint\LinearHistory::__construct()
-    $this->rebuildAll();
     return $process;
   }
 

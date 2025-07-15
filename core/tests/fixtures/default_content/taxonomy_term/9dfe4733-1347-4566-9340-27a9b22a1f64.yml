@@ -1,0 +1,28 @@
+default:
+  status:
+    -
+      value: true
+  name:
+    -
+      value: Import
+  weight:
+    -
+      value: 0
+  parent:
+    -
+      entity: 550f86ad-aa11-4047-953f-636d42889f85
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: null
+      langcode: en
+_meta:
+  version: '1.0'
+  entity_type: taxonomy_term
+  uuid: 9dfe4733-1347-4566-9340-27a9b22a1f64
+  bundle: tags
+  default_langcode: en
+  depends:
+    550f86ad-aa11-4047-953f-636d42889f85: taxonomy_term

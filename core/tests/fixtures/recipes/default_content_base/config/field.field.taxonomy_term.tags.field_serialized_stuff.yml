@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_serialized_stuff
+    - taxonomy.vocabulary.tags
+  module:
+    - entity_test
+id: taxonomy_term.tags.field_serialized_stuff
+field_name: field_serialized_stuff
+entity_type: taxonomy_term
+bundle: tags
+label: 'Serialized Stuff'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: serialized_property_item_test

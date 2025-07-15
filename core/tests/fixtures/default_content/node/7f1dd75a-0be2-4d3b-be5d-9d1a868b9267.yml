@@ -35,8 +35,14 @@ default:
       value: true
   path:
     -
-      alias: ''
+      alias: null
       langcode: en
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
   body:
     -
       value: 'This page was authored by a non-existent user.'

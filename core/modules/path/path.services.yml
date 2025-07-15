@@ -1,2 +1,8 @@
 parameters:
   path.skip_procedural_hook_scan: true
+
+services:
+  _defaults:
+    autoconfigure: true
+    autowire: true
+  Drupal\path\EventSubscriber\DefaultContentSubscriber: ~

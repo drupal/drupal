@@ -18,8 +18,8 @@ default:
       # cspell:disable
       value: $2y$10$3GlpQmjbJ9raJNQ.JZmg/OVS7avJ7KPQxucunwovUtOvpKbe3k8lK
       # cspell:enable
-      existing: ''
-      pre_hashed: false
+      existing: null
+      pre_hashed: true
   mail:
     -
       value: author@example.com

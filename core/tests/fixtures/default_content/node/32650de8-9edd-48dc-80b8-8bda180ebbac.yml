@@ -4,6 +4,8 @@ _meta:
   uuid: 32650de8-9edd-48dc-80b8-8bda180ebbac
   bundle: page
   default_langcode: en
+  depends:
+    d9b72b2f-a5ea-4a3f-b10c-28deb7b3b7bf: block_content
 default:
   revision_uid:
     -
@@ -29,6 +31,16 @@ default:
   revision_translation_affected:
     -
       value: true
+  path:
+    -
+      alias: null
+      langcode: en
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
   layout_builder__layout:
     -
       section:
@@ -40,7 +52,7 @@ default:
             uuid: 199f7eea-3e6e-4a91-bf5e-7b1d6f13fecd
             region: content
             configuration:
-              id: 'extra_field_block:node:test:links'
+              id: 'extra_field_block:node:page:links'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
@@ -57,4 +69,16 @@ default:
               context_mapping: {  }
             weight: 0
             additional: {  }
+          1f1533a4-6897-4257-b6d5-8765e5006369:
+            uuid: 1f1533a4-6897-4257-b6d5-8765e5006369
+            region: content
+            configuration:
+              id: 'block_content:d9b72b2f-a5ea-4a3f-b10c-28deb7b3b7bf'
+              label: 'Useful Info'
+              label_display: visible
+              provider: block_content
+              view_mode: full
+              context_mapping: { }
+            weight: 1
+            additional: { }
         third_party_settings: {  }

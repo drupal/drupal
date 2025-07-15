@@ -6,7 +6,6 @@ namespace Drupal\FunctionalTests\DefaultContent;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\block_content\BlockContentInterface;
-use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\DefaultContent\Existing;
 use Drupal\Core\DefaultContent\Finder;
@@ -14,26 +13,18 @@ use Drupal\Core\DefaultContent\Importer;
 use Drupal\Core\DefaultContent\ImportException;
 use Drupal\Core\DefaultContent\InvalidEntityException;
 use Drupal\Core\DefaultContent\PreImportEvent;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\FileInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
-use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\layout_builder\Section;
 use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
-use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
-use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\user\UserInterface;
 use Drupal\workspaces\Entity\Workspace;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -51,10 +42,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 #[Group('#slow')]
 class ContentImportTest extends BrowserTestBase {
 
-  use EntityReferenceFieldCreationTrait;
-  use MediaTypeCreationTrait;
   use RecipeTestTrait;
-  use TaxonomyTestTrait;
 
   /**
    * {@inheritdoc}
@@ -97,45 +85,13 @@ class ContentImportTest extends BrowserTestBase {
     parent::setUp();
     $this->adminAccount = $this->setUpCurrentUser(admin: TRUE);
 
-    BlockContentType::create(['id' => 'basic', 'label' => 'Basic'])->save();
-    block_content_add_body_field('basic');
+    // Apply the recipe that sets up the fields and configuration for our
+    // default content.
+    $fixtures_dir = $this->getDrupalRoot() . '/core/tests/fixtures';
+    $this->applyRecipe($fixtures_dir . '/recipes/default_content_base');
 
-    $this->createVocabulary(['vid' => 'tags']);
-    $this->createMediaType('image', ['id' => 'image']);
-    $this->drupalCreateContentType(['type' => 'page']);
-    $this->drupalCreateContentType(['type' => 'article']);
-    $this->createEntityReferenceField('node', 'article', 'field_tags', 'Tags', 'taxonomy_term');
-
-    // Create a field with custom serialization, so we can ensure that the
-    // importer handles that properly.
-    $field_storage = FieldStorageConfig::create([
-      'entity_type' => 'taxonomy_term',
-      'field_name' => 'field_serialized_stuff',
-      'type' => 'serialized_property_item_test',
-    ]);
-    $field_storage->save();
-    FieldConfig::create([
-      'field_storage' => $field_storage,
-      'bundle' => 'tags',
-    ])->save();
-
-    ConfigurableLanguage::createFromLangcode('fr')->save();
-    ContentLanguageSettings::create([
-      'target_entity_type_id' => 'node',
-      'target_bundle' => 'article',
-    ])
-      ->setThirdPartySetting('content_translation', 'enabled', TRUE)
-      ->save();
-
-    $this->contentDir = $this->getDrupalRoot() . '/core/tests/fixtures/default_content';
+    $this->contentDir = $fixtures_dir . '/default_content';
     \Drupal::service('file_system')->copy($this->contentDir . '/file/druplicon_copy.png', $this->publicFilesDirectory . '/druplicon_copy.png', FileExists::Error);
-
-    // Enable Layout Builder for the Page content type, with custom overrides.
-    \Drupal::service(EntityDisplayRepositoryInterface::class)
-      ->getViewDisplay('node', 'page')
-      ->enableLayoutBuilder()
-      ->setOverridable()
-      ->save();
   }
 
   /**
@@ -209,7 +165,14 @@ class ContentImportTest extends BrowserTestBase {
    * Tests importing content directly, via the API, with a different user.
    */
   public function testDirectContentImportWithDifferentUser(): void {
-    $user = $this->createUser();
+    // During import, Content Moderation will assume that new moderated entities
+    // are in the default workflow state, and the user will need permission to
+    // change its state. This isn't really relevant to this test, since in
+    // practice, importing requires administrative privileges anyway.
+    $user = $this->createUser([
+      'use editorial transition publish',
+      'use editorial transition create_new_draft',
+    ]);
     $importer = $this->container->get(Importer::class);
     $importer->importContent(new Finder($this->contentDir), account: $user);
     $this->assertContentWasImported($user);
@@ -249,6 +212,8 @@ class ContentImportTest extends BrowserTestBase {
     $this->assertSame('Crikey it works!', $node->body->value);
     $this->assertSame('article', $node->bundle());
     $this->assertSame('Test Article', $node->label());
+    $this->assertTrue($node->isPublished());
+    $this->assertSame('published', $node->moderation_state->value);
     $tag = $node->field_tags->entity;
     $this->assertInstanceOf(TermInterface::class, $tag);
     $this->assertSame('Default Content', $tag->label());
@@ -315,6 +280,8 @@ class ContentImportTest extends BrowserTestBase {
     // Ensure a node with a translation is imported properly.
     $node = $entity_repository->loadEntityByUuid('node', '2d3581c3-92c7-4600-8991-a0d4b3741198');
     $this->assertInstanceOf(NodeInterface::class, $node);
+    $this->assertFalse($node->isPublished());
+    $this->assertSame('draft', $node->moderation_state->value);
     $translation = $node->getTranslation('fr');
     $this->assertSame('Perdu en traduction', $translation->label());
     $this->assertSame("Içi c'est la version français.", $translation->body->value);
@@ -324,13 +291,22 @@ class ContentImportTest extends BrowserTestBase {
     $this->assertInstanceOf(NodeInterface::class, $node);
     $section = $node->layout_builder__layout[0]->section;
     $this->assertInstanceOf(Section::class, $section);
-    $this->assertCount(2, $section->getComponents());
-    $this->assertSame('system_powered_by_block', $section->getComponent('03b45f14-cf74-469a-8398-edf3383ce7fa')->getPluginId());
+    $components = $section->getComponents();
+    $this->assertCount(3, $components);
+    // None of the components should be using the `broken` fallback plugin.
+    foreach ($components as $component) {
+      $this->assertNotSame('broken', $component->getPlugin()->getPluginId());
+    }
 
     // Workspaces should have been imported with their parent references intact.
     $workspaces = Workspace::loadMultiple();
     $this->assertArrayHasKey('test_workspace', $workspaces);
     $this->assertSame('test_workspace', $workspaces['inner_test']?->parent->entity->id());
+
+    // A taxonomy term's parent reference should be intact.
+    $term = $entity_repository->loadEntityByUuid('taxonomy_term', '9dfe4733-1347-4566-9340-27a9b22a1f64');
+    $this->assertInstanceOf(TermInterface::class, $term);
+    $this->assertSame('Default Content', $term->parent->entity?->label());
   }
 
   /**

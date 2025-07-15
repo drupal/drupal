@@ -14,15 +14,12 @@ default:
   weight:
     -
       value: 0
-  parent:
-    -
-      target_id: 0
   revision_translation_affected:
     -
       value: true
   path:
     -
-      alias: ''
+      alias: null
       langcode: en
   field_serialized_stuff:
     -

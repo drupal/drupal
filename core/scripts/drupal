@@ -10,6 +10,7 @@ use Drupal\Core\Command\GenerateTheme;
 use Drupal\Core\Command\QuickStartCommand;
 use Drupal\Core\Command\InstallCommand;
 use Drupal\Core\Command\ServerCommand;
+use Drupal\Core\DefaultContent\ContentExportCommand;
 use Drupal\Core\Recipe\RecipeCommand;
 use Drupal\Core\Recipe\RecipeInfoCommand;
 use Symfony\Component\Console\Application;
@@ -28,5 +29,6 @@ $application->add(new ServerCommand($classloader));
 $application->add(new GenerateTheme());
 $application->add(new RecipeCommand($classloader));
 $application->add(new RecipeInfoCommand($classloader));
+$application->add(new ContentExportCommand($classloader));
 
 $application->run();

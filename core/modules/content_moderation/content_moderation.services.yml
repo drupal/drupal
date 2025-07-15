@@ -26,3 +26,5 @@ services:
   content_moderation.workspace_subscriber:
     class: Drupal\content_moderation\EventSubscriber\WorkspaceSubscriber
     arguments: ['@entity_type.manager', '@?workspaces.association']
+  Drupal\content_moderation\EventSubscriber\DefaultContentSubscriber:
+    autowire: true

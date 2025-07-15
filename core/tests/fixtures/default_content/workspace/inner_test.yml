@@ -5,8 +5,6 @@ _meta:
   depends:
     384c4c10-cc41-4d7e-a1cc-85d1cdc9e87d: workspace
 default:
-  # TRICKY! Default Content does not export the `id` field, but core's exporter should.
-  # Without it, the import will fail.
   id:
     -
       value: inner_test
@@ -18,7 +16,7 @@ default:
       value: 'Inner Test'
   parent:
     -
-      entity: 384c4c10-cc41-4d7e-a1cc-85d1cdc9e87d
+      target_id: test_workspace
   created:
     -
       value: 1751154834

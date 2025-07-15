@@ -76,6 +76,8 @@ services:
     arguments: ['@config.manager', '@config.storage', '@config.typed', '@config.factory']
   Drupal\Core\DefaultContent\Importer:
     autowire: true
+  Drupal\Core\DefaultContent\Exporter:
+    autowire: true
   Drupal\Core\DefaultContent\AdminAccountSwitcher:
     arguments:
       $isSuperUserAccessEnabled: '%security.enable_super_user%'

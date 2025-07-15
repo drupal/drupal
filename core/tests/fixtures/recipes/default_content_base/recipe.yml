@@ -1,0 +1,46 @@
+name: Default content base
+description: Sets up the fields and configuration needed to import the `default_content` fixture.
+type: Testing
+recipes:
+  - core/recipes/article_tags
+  - core/recipes/basic_block_type
+  - core/recipes/image_media_type
+  - core/recipes/page_content_type
+  - core/recipes/editorial_workflow
+install:
+  - content_translation
+  - entity_test
+  - filter
+  - language
+  - layout_builder
+  - menu_link_content
+  - node
+  - path
+  - workspaces
+config:
+  strict: false
+  import:
+    content_translation: '*'
+    entity_test: '*'
+    filter: '*'
+    language: '*'
+    layout_builder: '*'
+    menu_link_content: '*'
+    path: '*'
+  actions:
+    core.entity_view_display.node.page.default:
+      enableLayoutBuilder: []
+      allowLayoutOverrides: true
+    language.entity.fr:
+      create:
+        id: fr
+        label: Français
+    language.content_settings.node.article:
+      create:
+        target_entity_type_id: node
+        target_bundle: article
+        third_party_settings:
+          content_translation:
+            enabled: true
+    workflows.workflow.editorial:
+      addNodeTypes: ['article']
