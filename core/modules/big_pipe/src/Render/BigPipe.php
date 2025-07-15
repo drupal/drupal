@@ -277,7 +277,7 @@ class BigPipe {
     // that strings in inline JavaScript or CDATA sections aren't used instead.
     $parts = explode('</body>', $content);
     $post_body = array_pop($parts);
-    $pre_body = implode('', $parts);
+    $pre_body = implode('</body>', $parts);
 
     $this->sendPreBody($pre_body, $nojs_placeholders, $cumulative_assets);
     $this->sendPlaceholders($placeholders, $this->getPlaceholderOrder($pre_body, $placeholders), $cumulative_assets);
