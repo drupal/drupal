@@ -6,10 +6,14 @@ namespace Drupal\Tests\Core\Config\Checkpoint;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Config\Checkpoint\CheckpointExistsException;
 use Drupal\Core\Config\Checkpoint\UnknownCheckpointException;
 use Drupal\Core\Config\Checkpoint\LinearHistory;
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Lock\NullLockBackend;
+use Drupal\Core\State\State;
 use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
@@ -116,23 +120,33 @@ class LinearHistoryTest extends UnitTestCase {
    * @covers ::delete
    */
   public function testDelete(): void {
-    $state = $this->prophesize(StateInterface::class);
+    // Create a real State object so that we can manipulate it.
+    $state = new State(new KeyValueMemoryFactory(), new NullBackend(''), new NullLockBackend());
     $test_data = [
       'hash1' => new Checkpoint('hash1', 'One', 1701539510, NULL),
       'hash2' => new Checkpoint('hash2', 'Two', 1701539520, 'hash1'),
       'hash3' => new Checkpoint('hash3', 'Three', 1701539530, 'hash2'),
     ];
-    $state->get(self::CHECKPOINT_KEY, [])->willReturn($test_data);
-    unset($test_data['hash1'], $test_data['hash2']);
-    $state->set(self::CHECKPOINT_KEY, $test_data)->willReturn();
+    $state->set(self::CHECKPOINT_KEY, $test_data);
     $time = $this->prophesize(TimeInterface::class);
-    $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
+    $checkpoints = new LinearHistory($state, $time->reveal());
 
     $this->assertCount(3, $checkpoints);
     $this->assertSame('hash3', $checkpoints->getActiveCheckpoint()?->id);
     $checkpoints->delete('hash2');
     $this->assertCount(1, $checkpoints);
     $this->assertSame('hash3', $checkpoints->getActiveCheckpoint()?->id);
+    // We can call getParents without an exception.
+    foreach ($checkpoints->getParents('hash3') as $parent) {
+      $this->fail('Checkpoint should not have a parent ' . $parent->id);
+    }
+    $this->assertNull($checkpoints->getActiveCheckpoint()->parent);
+
+    // Now if we delete also the third one, the active one will be null.
+    $checkpoints->delete('hash3');
+    $this->assertCount(0, $checkpoints);
+    $this->assertNull($checkpoints->getActiveCheckpoint());
+    $this->assertNull($state->get(self::CHECKPOINT_KEY));
   }
 
   /**
