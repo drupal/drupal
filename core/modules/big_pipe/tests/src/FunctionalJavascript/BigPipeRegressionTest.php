@@ -54,10 +54,10 @@ class BigPipeRegressionTest extends WebDriverTestBase {
     $this->drupalGet(Url::fromRoute('big_pipe_regression_test.2678662'));
 
     // Confirm that AJAX behaviors were instantiated, if not, this points to a
-    // JavaScript syntax error.
+    // JavaScript syntax error and the JS variable has the appropriate content.
     $javascript = <<<JS
     (function(){
-      return Object.keys(Drupal.ajax.instances).length > 0;
+      return Object.keys(Drupal.ajax.instances).length > 0 && hitsTheFloor === "</body>";
     }())
 JS;
     $this->assertJsCondition($javascript);
@@ -73,6 +73,9 @@ JS;
     // in an inline script.
     $this->assertSession()
       ->responseNotContains($js_code_until_closing_body_tag . "\n" . BigPipe::START_SIGNAL);
+    // But the inline script itself should not be altered.
+    $this->assertSession()
+      ->responseContains(BigPipeRegressionTestController::MARKER_2678662);
   }
 
   /**
