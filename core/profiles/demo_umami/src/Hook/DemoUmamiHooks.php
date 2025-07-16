@@ -159,17 +159,11 @@ class DemoUmamiHooks {
         '#weight' => 3400,
         '#cache' => [
           'contexts' => [
-            'route',
             'user.permissions',
           ],
         ],
       ],
     ];
-
-    // Show warning only on administration pages.
-    if (!$this->adminContext->isAdminRoute()) {
-      return $build;
-    }
 
     $link_to_help_page = $this->moduleHandler->moduleExists('help') && $this->currentUser->hasPermission('access help pages');
     $url = $link_to_help_page ? Url::fromRoute('help.page', ['name' => 'demo_umami'])->toString()
