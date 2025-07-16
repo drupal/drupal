@@ -114,6 +114,7 @@ class CommentFieldsTest extends CommentTestBase {
     $node = $this->drupalCreateNode([
       'title' => 'Baloney',
       'type' => 'test_node_type',
+      'promote' => TRUE,
     ]);
 
     // Go to the node first so that web_user2 see new comments.

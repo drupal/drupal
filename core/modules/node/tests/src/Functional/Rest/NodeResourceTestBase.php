@@ -158,7 +158,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
       ],
       'promote' => [
         [
-          'value' => TRUE,
+          'value' => FALSE,
         ],
       ],
       'sticky' => [

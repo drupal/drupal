@@ -357,7 +357,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setLabel(t('Promoted to front page'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
-      ->setDefaultValue(TRUE)
+      ->setDefaultValue(FALSE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
         'settings' => [

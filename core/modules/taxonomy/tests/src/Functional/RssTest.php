@@ -101,6 +101,7 @@ class RssTest extends TaxonomyTestBase {
     $node = $this->drupalCreateNode([
       'type' => 'article',
       $this->fieldName => $term1->id(),
+      'promote' => TRUE,
     ]);
 
     // Check that the term is displayed when the RSS feed is viewed.

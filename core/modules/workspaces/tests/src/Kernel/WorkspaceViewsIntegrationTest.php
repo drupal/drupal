@@ -114,11 +114,13 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
       'body' => 'node 1',
       'created' => $this->createdTimestamp++,
       'field_reference' => $test_entity->id(),
+      'promote' => TRUE,
     ]);
     $node_2 = $this->createNode([
       'title' => 'node - live - 2',
       'body' => 'node 2',
       'created' => $this->createdTimestamp++,
+      'promote' => TRUE,
     ]);
 
     // Create a new workspace and activate it.

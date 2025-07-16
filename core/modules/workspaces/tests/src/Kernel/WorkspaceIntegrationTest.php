@@ -110,12 +110,14 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       'body' => 'node 1',
       'created' => $this->createdTimestamp++,
       'status' => TRUE,
+      'promote' => TRUE,
     ]);
     $this->nodes[] = $this->createNode([
       'title' => 'live - 2 - r2 - unpublished',
       'body' => 'node 2',
       'created' => $this->createdTimestamp++,
       'status' => FALSE,
+      'promote' => TRUE,
     ]);
 
     $translation = $this->nodes[0]->addTranslation('de');
@@ -355,6 +357,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       'title' => 'stage - 4 - r6 - published',
       'created' => $this->createdTimestamp++,
       'status' => TRUE,
+      'promote' => TRUE,
     ]);
     $this->assertWorkspaceStatus($test_scenarios['add_published_node_in_stage'], 'node');
     $this->assertWorkspaceAssociation($expected_workspace_association['add_published_node_in_stage'], 'node');

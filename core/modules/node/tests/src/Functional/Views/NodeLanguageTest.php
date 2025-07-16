@@ -92,7 +92,7 @@ class NodeLanguageTest extends NodeTestBase {
       $node = $this->drupalCreateNode(['title' => $title, 'langcode' => 'es', 'type' => 'page', 'promote' => 1]);
       foreach (['en', 'fr'] as $langcode) {
         if (isset($this->nodeTitles[$langcode][$index])) {
-          $translation = $node->addTranslation($langcode, ['title' => $this->nodeTitles[$langcode][$index]]);
+          $translation = $node->addTranslation($langcode, ['title' => $this->nodeTitles[$langcode][$index], 'promote' => TRUE]);
           $translation->body->value = $this->randomMachineName(32);
         }
       }
