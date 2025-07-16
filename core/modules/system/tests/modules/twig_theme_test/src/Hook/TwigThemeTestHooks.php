@@ -65,4 +65,12 @@ class TwigThemeTestHooks {
     return $items;
   }
 
+  /**
+   * Implements hook_preprocess_HOOK().
+   */
+  #[Hook('preprocess_status_messages')]
+  public function preprocessStatusMessages(array &$variables): void {
+    $variables['attributes']['class'][] = 'custom-test-messages-class';
+  }
+
 }

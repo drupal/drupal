@@ -7,11 +7,13 @@
 
 declare(strict_types=1);
 
+use Drupal\twig_theme_test\TwigThemeTestUtils;
+
 /**
  * Implements THEME_preprocess_twig_theme_test_php_variables().
  */
 function test_theme_preprocess_twig_theme_test_php_variables(&$variables): void {
-  $variables['php_values'] = _test_theme_twig_php_values();
+  $variables['php_values'] = TwigThemeTestUtils::phpValues();
 }
 
 /**
