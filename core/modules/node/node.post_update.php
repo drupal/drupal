@@ -35,8 +35,10 @@ function node_post_update_create_promote_base_field_overrides(&$sandbox = []): v
       $config = $promoteFieldDefinition->getConfig($node_type->id());
       $changed = FALSE;
       if ($config->isNew()) {
-        // Set the default value for existing node types that didn't already
-        // have a base_field_override to TRUE, maintaining the previous default.
+        // Prior to this update, the "Promoted to front page" configuration for
+        // node types defaulted to TRUE. Therefore, set the default value for
+        // existing node types that didn't already have a base_field_override to
+        // TRUE, which will maintain their previous default.
         $config->setDefaultValue(TRUE)->save();
         $changed = TRUE;
       }
