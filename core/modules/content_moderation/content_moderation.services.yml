@@ -1,5 +1,5 @@
 parameters:
-  content_moderation.skip_procedural_hook_scan: false
+  content_moderation.skip_procedural_hook_scan: true
 
 services:
   _defaults:

@@ -4,7 +4,6 @@
  * @file
  */
 
-use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
@@ -55,7 +54,6 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
  *
  * @see locale_translation_build_projects()
  */
-#[ProceduralHookScanStop]
 function locale_translation_get_projects(array $project_names = []) {
   $projects = &drupal_static(__FUNCTION__, []);
 

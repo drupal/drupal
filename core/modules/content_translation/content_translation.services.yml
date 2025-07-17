@@ -5,6 +5,8 @@ parameters:
       deprecation_version: drupal:11.2.0
       removed_version: drupal:12.0.0
       change_record: https://www.drupal.org/node/3439256
+  content_translation.skip_procedural_hook_scan: true
+
 services:
   _defaults:
     autoconfigure: true

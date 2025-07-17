@@ -8,13 +8,11 @@
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_install().
  */
-#[ProceduralHookScanStop]
 function media_install(): void {
   $source = \Drupal::service('extension.list.module')->getPath('media') . '/images/icons';
   $destination = \Drupal::config('media.settings')->get('icon_base_uri');

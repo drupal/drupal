@@ -1,5 +1,5 @@
 parameters:
-  shortcut.skip_procedural_hook_scan: false
+  shortcut.skip_procedural_hook_scan: true
 
 services:
   _defaults:

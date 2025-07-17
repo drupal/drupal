@@ -1,5 +1,5 @@
 parameters:
-  field_ui.skip_procedural_hook_scan: false
+  field_ui.skip_procedural_hook_scan: true
 
 services:
   _defaults:

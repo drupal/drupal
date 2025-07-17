@@ -1,0 +1,2 @@
+parameters:
+  telephone.skip_procedural_hook_scan: true

@@ -5,7 +5,6 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Utility\ProjectInfo;
 
 /**
@@ -18,7 +17,6 @@ require_once __DIR__ . '/locale.translation.inc';
 /**
  * Clear the project data table.
  */
-#[ProceduralHookScanStop]
 function locale_translation_flush_projects(): void {
   \Drupal::service('locale.project')->deleteAll();
 }

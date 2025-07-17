@@ -1,5 +1,5 @@
 parameters:
-  filter.skip_procedural_hook_scan: false
+  filter.skip_procedural_hook_scan: true
 
 services:
   _defaults:

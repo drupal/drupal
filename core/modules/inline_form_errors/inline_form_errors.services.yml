@@ -1,2 +1,2 @@
 parameters:
-  inline_form_errors.skip_procedural_hook_scan: false
+  inline_form_errors.skip_procedural_hook_scan: true

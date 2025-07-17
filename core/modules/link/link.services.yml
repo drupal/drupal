@@ -1,5 +1,5 @@
 parameters:
-  link.skip_procedural_hook_scan: false
+  link.skip_procedural_hook_scan: true
 
 services:
   _defaults:

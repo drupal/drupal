@@ -1,5 +1,5 @@
 parameters:
-  block_content.skip_procedural_hook_scan: false
+  block_content.skip_procedural_hook_scan: true
 
   block_content.moved_classes:
     Drupal\block_content\Access\AccessGroupAnd:

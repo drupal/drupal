@@ -4,7 +4,6 @@
  * @file
  */
 
-use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\update\UpdateManagerInterface;
 
@@ -17,7 +16,6 @@ use Drupal\update\UpdateManagerInterface;
  *
  * @see update_requirements()
  */
-#[ProceduralHookScanStop]
 function _update_cron_notify(): void {
   $update_config = \Drupal::config('update.settings');
   $status = \Drupal::moduleHandler()->invoke('update', 'runtime_requirements');

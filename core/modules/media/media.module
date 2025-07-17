@@ -5,7 +5,6 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 
@@ -46,7 +45,6 @@ function template_preprocess_media(array &$variables): void {
  * @internal
  *   This function is internal and may be removed in a minor release.
  */
-#[ProceduralHookScanStop]
 function _media_get_add_url($allowed_bundles) {
   $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('media');
   $create_bundles = array_filter($allowed_bundles, [$access_handler, 'createAccess']);

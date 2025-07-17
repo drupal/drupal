@@ -1,5 +1,5 @@
 parameters:
-  views.skip_procedural_hook_scan: true
+  views.skip_procedural_hook_scan: false
 
 services:
   _defaults:

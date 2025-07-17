@@ -1,5 +1,5 @@
 parameters:
-  settings_tray.skip_procedural_hook_scan: false
+  settings_tray.skip_procedural_hook_scan: true
 
 services:
   _defaults:

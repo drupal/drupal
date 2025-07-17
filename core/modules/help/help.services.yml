@@ -1,5 +1,5 @@
 parameters:
-  help.skip_procedural_hook_scan: false
+  help.skip_procedural_hook_scan: true
 
 services:
   _defaults:

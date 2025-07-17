@@ -1,2 +1,2 @@
 parameters:
-  responsive_image.skip_procedural_hook_scan: false
+  responsive_image.skip_procedural_hook_scan: true

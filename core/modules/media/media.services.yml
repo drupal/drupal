@@ -1,5 +1,6 @@
 parameters:
   media.resource_fetcher_timeout: 5
+  media.skip_procedural_hook_scan: true
 
 services:
   _defaults:

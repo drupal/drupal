@@ -7,12 +7,10 @@
 
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 
 /**
  * Implements hook_install().
  */
-#[ProceduralHookScanStop]
 function locale_install(): void {
   // Create the interface translations directory and ensure it's writable.
   if (!$directory = \Drupal::config('locale.settings')->get('translation.path')) {
