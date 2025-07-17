@@ -45,4 +45,12 @@ class MediaLibraryThemeHooks {
     }
   }
 
+  /**
+   * Implements hook_preprocess_HOOK() for the 'media_library' view.
+   */
+  #[Hook('preprocess_views_view__media_library')]
+  public function preprocessViewsViewMediaLibrary(array &$variables): void {
+    $variables['attributes']['data-view-display-id'] = $variables['view']->current_display;
+  }
+
 }

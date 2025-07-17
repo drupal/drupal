@@ -12,44 +12,6 @@ use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
 /**
- * Allows view-based node templates if called from a view.
- *
- * The 'modules/node.views.inc' file is a better place for this, but
- * we haven't got a chance to load that file before Drupal builds the
- * node portion of the theme registry.
- */
-function views_preprocess_node(&$variables): void {
-  // The 'view' attribute of the node is added in
-  // \Drupal\views\Plugin\views\row\EntityRow::preRender().
-  if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
-    $variables['view'] = $variables['node']->view;
-
-    // The view variable is deprecated.
-    $variables['deprecations']['view'] = "'view' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3459903";
-
-    // If a node is being rendered in a view, and the view does not have a path,
-    // prevent drupal from accidentally setting the $page variable:
-    if (!empty($variables['view']->current_display)
-        && $variables['page']
-        && $variables['view_mode'] == 'full'
-        && !$variables['view']->display_handler->hasPath()) {
-      $variables['page'] = FALSE;
-    }
-  }
-}
-
-/**
- * Allows view-based comment templates if called from a view.
- */
-function views_preprocess_comment(&$variables): void {
-  // The view data is added to the comment in
-  // \Drupal\views\Plugin\views\row\EntityRow::preRender().
-  if (!empty($variables['comment']->view) && $variables['comment']->view->storage->id()) {
-    $variables['view'] = $variables['comment']->view;
-  }
-}
-
-/**
  * Adds contextual links associated with a view display to a renderable array.
  *
  * This function should be called when a view is being rendered in a particular

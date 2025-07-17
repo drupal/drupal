@@ -1,5 +1,5 @@
 parameters:
-  media_library.skip_procedural_hook_scan: false
+  media_library.skip_procedural_hook_scan: true
 
 services:
   _defaults:
