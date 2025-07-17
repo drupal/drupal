@@ -92,7 +92,7 @@ Base system
 - See "Framework managers" above.
 
 Basic Auth
-- Juampy Novillo Requena 'juampy' https://www.drupal.org/u/juampy
+- ?
 
 Batch API
 - John Cook 'John Cook' https://www.drupal.org/u/john-cook
