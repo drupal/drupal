@@ -1,0 +1,11 @@
+field.storage_settings.jsonapi_test_field_type_entity_reference_uuid:
+  type: field.storage_settings.entity_reference
+  label: 'Entity reference field storage settings'
+
+field.field_settings.jsonapi_test_field_type_entity_reference_uuid:
+  type: field.field_settings.entity_reference
+  label: 'Entity reference field settings'
+
+field.value.jsonapi_test_field_type_entity_reference_uuid:
+  type: field.value.entity_reference
+  label: 'Default value'
