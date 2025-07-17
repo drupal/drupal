@@ -2,12 +2,13 @@
 
 namespace Drupal\file\Hook;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\file\Entity\File;
-use Drupal\Core\Url;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 
 /**
  * Hook implementations for file.
@@ -182,7 +183,16 @@ class FileHooks {
       '#title' => $this->t('Convert to lowercase'),
       '#default_value' => $config->get('filename_sanitization.lowercase'),
     ];
-    $form['#submit'][] = 'file_system_settings_submit';
+    $form['#submit'][] = [FileHooks::class, 'settingsSubmit'];
+  }
+
+  /**
+   * Form submission handler for file system settings form.
+   */
+  public static function settingsSubmit(array &$form, FormStateInterface $form_state): void {
+    $config = \Drupal::service(ConfigFactoryInterface::class)->getEditable('file.settings')
+      ->set('filename_sanitization', $form_state->getValue('filename_sanitization'));
+    $config->save();
   }
 
 }
