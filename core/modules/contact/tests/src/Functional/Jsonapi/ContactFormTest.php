@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\contact\Functional\Jsonapi;
 
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Url;
+use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 
 /**
  * JSON:API integration test for the "ContactForm" config entity type.
  *
- * @group jsonapi
+ * @group contact
  */
 class ContactFormTest extends ConfigEntityResourceTestBase {
 

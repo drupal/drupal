@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\contact\Functional\Jsonapi;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\contact\Entity\Message;
 use Drupal\Core\Url;
+use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
 use GuzzleHttp\RequestOptions;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * JSON:API integration test for the "Message" content entity type.
  *
- * @group jsonapi
+ * @group contact
  */
 class MessageTest extends ResourceTestBase {
 
