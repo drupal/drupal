@@ -13,7 +13,7 @@ services:
   Drupal\workspaces\WorkspaceInformationInterface: '@workspaces.information'
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
-    arguments: ['@entity_type.manager', '@database', '@workspaces.manager', '@workspaces.association', '@event_dispatcher', '@logger.channel.workspaces']
+    autowire: true
   Drupal\workspaces\WorkspaceOperationFactory: '@workspaces.operation_factory'
   workspaces.association:
     class: Drupal\workspaces\WorkspaceAssociation
