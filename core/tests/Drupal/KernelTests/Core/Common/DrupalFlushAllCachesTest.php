@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Common;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\system_test\Hook\SystemTestHooks;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -30,7 +29,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
    * Tests that drupal_flush_all_caches() uses core.extension properly.
    */
   public function testDrupalFlushAllCachesModuleList(): void {
-    $this->assertFalse(function_exists('system_test_help'));
+    $this->assertFalse(\Drupal::moduleHandler()->hasImplementations('help', ['system_test']));
     $core_extension = \Drupal::configFactory()->getEditable('core.extension');
     $module = $core_extension->get('module');
     $module['system_test'] = -10;
@@ -47,7 +46,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
     sort($container_modules);
     $this->assertSame($module_list, $container_modules);
     $this->assertSame(1, $this->containerBuilds);
-    $this->assertTrue(method_exists(SystemTestHooks::class, 'help'));
+    $this->assertTrue(\Drupal::moduleHandler()->hasImplementations('help', ['system_test']));
 
     $core_extension->clear('module.system_test')->save();
     $this->containerBuilds = 0;
