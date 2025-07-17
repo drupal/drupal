@@ -103,7 +103,6 @@ BigPipe
 
 Block
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
-- Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
 
 Block Content
 - Adam Bramley 'acbramley' https://www.drupal.org/u/acbramley
