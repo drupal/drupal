@@ -605,8 +605,9 @@ function hook_preprocess(&$variables, $hook): void {
  *   The variables array (modify in place).
  */
 function hook_preprocess_HOOK(&$variables): void {
-  // This example is from node_preprocess_html(). It adds the node type to
-  // the body classes, when on an individual node page or node preview page.
+  // This example is from \Drupal\node\Hook\NodeThemeHooks::preprocessHtml().
+  // It adds the node type to the body classes, when on an individual node page
+  // or node preview page.
   if (($node = \Drupal::routeMatch()->getParameter('node')) || ($node = \Drupal::routeMatch()->getParameter('node_preview'))) {
     if ($node instanceof NodeInterface) {
       $variables['node_type'] = $node->getType();

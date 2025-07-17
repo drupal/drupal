@@ -112,37 +112,6 @@ class NodeHooks1 {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'node' => [
-        'render element' => 'elements',
-      ],
-      'node_add_list' => [
-        'variables' => [
-          'content' => NULL,
-        ],
-      ],
-      'node_edit_form' => [
-        'render element' => 'form',
-      ],
-          // @todo Delete the next three entries as part of
-          // https://www.drupal.org/node/3015623
-      'field__node__title' => [
-        'base hook' => 'field',
-      ],
-      'field__node__uid' => [
-        'base hook' => 'field',
-      ],
-      'field__node__created' => [
-        'base hook' => 'field',
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_entity_view_display_alter().
    */
   #[Hook('entity_view_display_alter')]

@@ -27,7 +27,9 @@ class NodeTemplateSuggestionsTest extends KernelTestBase {
   ];
 
   /**
-   * Tests if template_preprocess_node() generates the correct suggestions.
+   * Tests node template suggestions.
+   *
+   * @see \Drupal\node\Hook\NodeThemeHooks::themeSuggestionsNode
    */
   public function testNodeThemeHookSuggestions(): void {
     $this->installEntitySchema('user');
