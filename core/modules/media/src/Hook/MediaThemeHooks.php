@@ -18,10 +18,10 @@ class MediaThemeHooks {
   #[Hook('preprocess_media_reference_help')]
   public function preprocessMediaReferenceHelp(&$variables): void {
     // Most of these attribute checks are copied from
-    // template_preprocess_fieldset(). Our template extends
-    // field-multiple-value-form.html.twig to provide our help text, but also
-    // groups the information within a semantic fieldset with a legend. So, we
-    // incorporate parity for both.
+    // \Drupal\Core\Form\FormPreprocess::preprocessFieldset(). Our template
+    // extends field-multiple-value-form.html.twig to provide our help text, but
+    // also groups the information within a semantic fieldset with a legend. So,
+    // we incorporate parity for both.
     $element = $variables['element'];
     Element::setAttributes($element, [
       'id',
