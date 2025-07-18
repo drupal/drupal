@@ -26,3 +26,10 @@ big_pipe_test_multiple_replacements:
     _controller: '\Drupal\big_pipe_regression_test\BigPipeRegressionTestController::multipleReplacements'
   requirements:
     _access: 'TRUE'
+
+big_pipe_regression_test.inline_script:
+  path: /big_pipe_regression_inline_script
+  defaults:
+    _controller: '\Drupal\big_pipe_regression_test\BigPipeRegressionTestController::inlineScriptContent'
+  requirements:
+    _access: 'TRUE'

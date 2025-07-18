@@ -617,6 +617,7 @@ drupal.form:
 drupal.htmx:
   version: VERSION
   js:
+    misc/htmx/htmx-utils.js: {}
     misc/htmx/htmx-assets.js: {}
     misc/htmx/htmx-behaviors.js: {}
   dependencies:
