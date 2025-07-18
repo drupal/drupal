@@ -194,7 +194,6 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       }
     }
 
-    $this->moduleHandler->loadAllIncludes('admin.inc');
     $count = $this->formatPlural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
     $done = $total - $remaining;
     // Use floor() to calculate the percentage, so if it is not quite 100%, it

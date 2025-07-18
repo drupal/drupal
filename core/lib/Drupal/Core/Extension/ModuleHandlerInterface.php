@@ -141,6 +141,11 @@ interface ModuleHandlerInterface {
    * @param string $name
    *   (optional) The base file name (without the $type extension). If omitted,
    *   each module's name is used; i.e., "$module.$type" by default.
+   *
+   * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3536432
    */
   public function loadAllIncludes($type, $name = NULL);
 

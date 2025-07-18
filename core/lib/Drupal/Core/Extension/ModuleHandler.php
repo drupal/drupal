@@ -294,6 +294,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function loadAllIncludes($type, $name = NULL) {
+    @trigger_error("ModuleHandler::loadAllIncludes() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3536432", E_USER_DEPRECATED);
     foreach ($this->moduleList as $module => $filename) {
       $this->loadInclude($module, $type, $name);
     }
