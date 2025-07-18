@@ -66,7 +66,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  _TARGET_PHP: "8.3-ubuntu"
+  _TARGET_PHP: "8.4-ubuntu"
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: false
 
 #############
@@ -226,11 +226,10 @@ default:
       allow_failure: true
 
 # Default configuration.
-'DEFAULT: PHP 8.3 MySQL 8.0':
+'DEFAULT: PHP 8.4 MySQL 8.4':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mysql-8"
+    _TARGET_DB: "mysql-8.4"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
@@ -246,7 +245,7 @@ default:
     - if: $PERFORMANCE_TEST == "1"
 
 # Re-run the pipeline, but with Composer updates.
-'DEFAULT: Updated dependencies (PHP 8.3 MySQL 8.0)':
+'DEFAULT: Updated dependencies (PHP 8.4 MySQL 8.4)':
   <<: *default-stage
   # Run daily and allow manual runs on MRs.
   rules:
@@ -261,13 +260,12 @@ default:
     include: .gitlab-ci.yml
 
 # Special job for MRs for test-only checks.
-'DEFAULT: Test-only (PHP 8.3 MySQL 8.0)':
+'DEFAULT: Test-only (PHP 8.4 MySQL 8.4)':
   <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mysql-8"
+    _TARGET_DB: "mysql-8.4"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
   rules:
@@ -300,23 +298,21 @@ default:
 'mysqli - PHP 8.4 MySQL 9.3':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mysql-9"
     _TARGET_DB_DRIVER: "mysqli"
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
-'PHP 8.3 MySQL 8.4':
+'PHP 8.3 MySQL 8.0':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mysql-8.4"
+    _TARGET_DB: "mysql-8"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'PHP 8.4 MySQL 9.3':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mysql-9"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
@@ -330,7 +326,6 @@ default:
 'PHP 8.4 PostgreSQL 17':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "pgsql-17"
 
 'PHP 8.3 SQLite 3.45':
@@ -339,17 +334,16 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "sqlite-3"
 
-'PHP 8.4 MySQL 8.4':
+'PHP 8.4 MySQL 8.0':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "mysql-8.4"
+    _TARGET_DB: "mysql-8"
 
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.3 PostgreSQL 16':
   extends: 'PHP 8.3 PostgreSQL 16'
-  needs: [ 'DEFAULT: PHP 8.3 MySQL 8.0' ]
+  needs: [ 'DEFAULT: PHP 8.4 MySQL 8.4' ]
   <<: [ *run-on-commit ]
 
 '[Commit] PHP 8.3 SQLite 3.45':
@@ -361,7 +355,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Daily] PHP 8.3 PostgreSQL 16':
   extends: 'PHP 8.3 PostgreSQL 16'
-  needs: [ 'DEFAULT: PHP 8.3 MySQL 8.0' ]
+  needs: [ 'DEFAULT: PHP 8.4 MySQL 8.4' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.3 SQLite 3.45':
@@ -374,14 +368,14 @@ default:
   needs: [ '[Daily] PHP 8.3 SQLite 3.45' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.4 MySQL 8.4':
-  extends: 'PHP 8.4 MySQL 8.4'
+'[Daily] PHP 8.4 MySQL 8.0':
+  extends: 'PHP 8.4 MySQL 8.0'
   needs: [ '[Daily] PHP 8.3 MariaDB 10.6' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.4 PostgreSQL 17':
   extends: 'PHP 8.4 PostgreSQL 17'
-  needs: [ '[Daily] PHP 8.4 MySQL 8.4' ]
+  needs: [ '[Daily] PHP 8.4 MySQL 8.0' ]
   <<: [ *run-daily ]
 
 ################
@@ -418,7 +412,6 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "4"
-    _TARGET_PHP: "8.4-ubuntu"
     _ARTIFACTS_DIR: "test-artifacts/phpstan"
     _PHPSTAN_NEON: "core/phpstan.neon.dist"
     _PHPSTAN_BASELINE: "core/.phpstan-baseline.php"
@@ -476,6 +469,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "16"
+    _ARTIFACTS_DIR: "test-artifacts/phpcs"
   before_script:
     - composer validate
     - composer install --optimize-autoloader
@@ -484,16 +478,20 @@ default:
         composer update --optimize-autoloader;
         composer outdated;
       fi
+    - mkdir -p $_ARTIFACTS_DIR
   script:
     - vendor/bin/phpcs --version
-    - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+    - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=$_ARTIFACTS_DIR/phpcs-quality-report.json
   artifacts:
+    reports:
+      codequality: $_ARTIFACTS_DIR/phpcs-quality-report.json
     expire_in: 1 week
     expose_as: 'web-vendor'
     paths:
       - vendor/
-    reports:
-      codequality: phpcs-quality-report.json
+      - composer.lock
+      - composer/Metapackage/
+      - $_ARTIFACTS_DIR
 
 '🧹 JavaScript linting (eslint)':
   stage: 🪄 Lint
@@ -566,7 +564,6 @@ default:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
-    _TARGET_PHP: "8.4-ubuntu"
 
 '⚡️ PHPUnit Unit tests on PHP 8.5':
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
@@ -587,7 +584,6 @@ default:
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-    _TARGET_PHP: "8.4-ubuntu"
 
 '⚡️ Component unit tests on PHP 8.5':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
@@ -627,7 +623,6 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-    _TARGET_PHP: "8.3-ubuntu"
   # Run on MRs if config schema files have changed, or manually.
   rules:
     - if: $PERFORMANCE_TEST != "1"
