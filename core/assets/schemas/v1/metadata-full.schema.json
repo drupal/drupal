@@ -177,6 +177,11 @@
         "obsolete"
       ]
     },
+    "noUi": {
+      "type": "boolean",
+      "title": "Exclude from UI",
+      "description": "Use this property to exclude a component from the UI."
+    },
     "props": {
       "$ref": "#/$defs/propDefinition"
     },

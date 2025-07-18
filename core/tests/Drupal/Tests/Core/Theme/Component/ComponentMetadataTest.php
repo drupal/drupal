@@ -28,6 +28,7 @@ class ComponentMetadataTest extends UnitTestCaseTest {
     $this->assertSame($expectations['status'], $metadata->status);
     $this->assertSame($expectations['thumbnail'], $metadata->getThumbnailPath());
     $this->assertEquals($expectations['props'], $metadata->schema);
+    $this->assertEquals($expectations['noUi'] ?? TRUE, $metadata->noUi);
   }
 
   /**
@@ -62,12 +63,14 @@ class ComponentMetadataTest extends UnitTestCaseTest {
           'libraryOverrides' => ['dependencies' => ['core/drupal']],
           'group' => 'my-group',
           'description' => 'My description',
+          'noUi' => TRUE,
         ],
         [
           'path' => 'bar/component-name',
           'status' => 'stable',
           'thumbnail' => '',
           'props' => NULL,
+          'noUi' => TRUE,
         ],
         TRUE,
       ],
@@ -81,6 +84,7 @@ class ComponentMetadataTest extends UnitTestCaseTest {
           'description' => 'JavaScript enhanced button that tracks the number of times a user clicked it.',
           'libraryOverrides' => ['dependencies' => ['core/drupal']],
           'group' => 'my-group',
+          'noUi' => FALSE,
           'props' => [
             'type' => 'object',
             'required' => ['text'],
@@ -110,6 +114,7 @@ class ComponentMetadataTest extends UnitTestCaseTest {
           'thumbnail' => '',
           'group' => 'my-group',
           'additionalProperties' => FALSE,
+          'noUi' => FALSE,
           'props' => [
             'type' => 'object',
             'required' => ['text'],
@@ -185,6 +190,7 @@ class ComponentMetadataTest extends UnitTestCaseTest {
           'thumbnail' => '',
           'group' => 'my-group',
           'additionalProperties' => FALSE,
+          'noUi' => FALSE,
           'props' => [
             'type' => 'object',
             'required' => ['text'],
@@ -248,6 +254,7 @@ class ComponentMetadataTest extends UnitTestCaseTest {
           'thumbnail' => '',
           'group' => 'my-group',
           'additionalProperties' => FALSE,
+          'noUi' => FALSE,
           'props' => [
             'type' => 'object',
             'required' => ['text'],
@@ -316,6 +323,7 @@ class ComponentMetadataTest extends UnitTestCaseTest {
           'thumbnail' => '',
           'group' => 'my-group',
           'additionalProperties' => FALSE,
+          'noUi' => FALSE,
           'props' => [
             'type' => 'object',
             'required' => ['text'],
@@ -392,6 +400,7 @@ class ComponentMetadataTest extends UnitTestCaseTest {
           'thumbnail' => '',
           'group' => 'my-group',
           'additionalProperties' => FALSE,
+          'noUi' => FALSE,
           'props' => [
             'type' => 'object',
             'required' => ['text'],
@@ -467,6 +476,7 @@ class ComponentMetadataTest extends UnitTestCaseTest {
           'thumbnail' => '',
           'group' => 'my-group',
           'additionalProperties' => FALSE,
+          'noUi' => FALSE,
           'props' => [
             'type' => 'object',
             'required' => ['text'],
