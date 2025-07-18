@@ -143,8 +143,12 @@ function node_type_get_description(NodeTypeInterface $node_type) {
  *
  * @return \Drupal\field\Entity\FieldConfig
  *   A Body field object.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.
+ * @see https://www.drupal.org/node/3516778
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3516778', E_USER_DEPRECATED);
   // Add or remove the body field, as needed.
   $field_storage = FieldStorageConfig::loadByName('node', 'body');
   $field = FieldConfig::loadByName('node', $type->id(), 'body');

@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests importing recreated configuration entities.
@@ -15,6 +16,8 @@ use Drupal\node\Entity\NodeType;
  * @group config
  */
 class ConfigImportRecreateTest extends KernelTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * Config Importer object used for testing.
@@ -64,12 +67,10 @@ class ConfigImportRecreateTest extends KernelTestBase {
    */
   public function testRecreateEntity(): void {
     $type_name = $this->randomMachineName(16);
-    $content_type = NodeType::create([
+    $content_type = $this->createContentType([
       'type' => $type_name,
       'name' => 'Node type one',
     ]);
-    $content_type->save();
-    node_add_body_field($content_type);
     /** @var \Drupal\Core\Config\StorageInterface $active */
     $active = $this->container->get('config.storage');
     /** @var \Drupal\Core\Config\StorageInterface $sync */
@@ -83,12 +84,10 @@ class ConfigImportRecreateTest extends KernelTestBase {
     $content_type->delete();
     $this->assertFalse($active->exists($config_name), 'Content type\'s old name does not exist active store.');
     // Recreate with the same type - this will have a different UUID.
-    $content_type = NodeType::create([
+    $this->createContentType([
       'type' => $type_name,
       'name' => 'Node type two',
     ]);
-    $content_type->save();
-    node_add_body_field($content_type);
 
     $this->configImporter->reset();
     // A node type, a field, an entity view display and an entity form display

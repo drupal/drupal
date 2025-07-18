@@ -2,6 +2,8 @@
 
 namespace Drupal\node\Plugin\migrate\destination;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
@@ -36,7 +38,51 @@ class EntityNodeType extends EntityConfigBase {
     $entity_ids = parent::import($row, $old_destination_id_values);
     if ($row->getDestinationProperty('create_body')) {
       $node_type = $this->storage->load(reset($entity_ids));
-      node_add_body_field($node_type, $row->getDestinationProperty('create_body_label'));
+      $field_storage = FieldStorageConfig::loadByName('node', 'body');
+      $field = FieldConfig::loadByName('node', $node_type->id(), 'body');
+
+      if (!$field) {
+        $field = FieldConfig::create([
+          'field_storage' => $field_storage,
+          'bundle' => $node_type->id(),
+          'label' => $row->getDestinationProperty('create_body_label'),
+          'settings' => [
+            'display_summary' => TRUE,
+            'allowed_formats' => [],
+          ],
+        ]);
+        $field->save();
+
+        /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+        $display_repository = \Drupal::service('entity_display.repository');
+
+        // Assign widget settings for the default form mode.
+        $display_repository->getFormDisplay('node', $node_type->id())
+          ->setComponent('body', [
+            'type' => 'text_textarea_with_summary',
+          ])
+          ->save();
+
+        // Assign display settings for the 'default' and 'teaser' view modes.
+        $display_repository->getViewDisplay('node', $node_type->id())
+          ->setComponent('body', [
+            'label' => 'hidden',
+            'type' => 'text_default',
+          ])
+          ->save();
+
+        // The teaser view mode is created by the Standard profile and might not
+        // exist.
+        $view_modes = $display_repository->getViewModes('node');
+        if (isset($view_modes['teaser'])) {
+          $display_repository->getViewDisplay('node', $node_type->id(), 'teaser')
+            ->setComponent('body', [
+              'label' => 'hidden',
+              'type' => 'text_summary_or_trimmed',
+            ])
+            ->save();
+        }
+      }
     }
     return $entity_ids;
   }

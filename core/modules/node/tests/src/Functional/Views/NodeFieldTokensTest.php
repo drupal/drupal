@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Tests replacement of Views tokens supplied by the Node module.
@@ -32,10 +31,7 @@ class NodeFieldTokensTest extends NodeTestBase {
    */
   public function testViewsTokenReplacement(): void {
     // Create the Article content type with a standard body field.
-    /** @var \Drupal\node\NodeTypeInterface $node_type */
-    $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
-    $node_type->save();
-    node_add_body_field($node_type);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create a user and a node.
     $account = $this->createUser();

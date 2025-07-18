@@ -7,7 +7,7 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 
 /**
@@ -16,6 +16,8 @@ use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
  * @group node
  */
 class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -29,9 +31,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     parent::setUp();
     $this->installConfig(['filter', 'node']);
 
-    $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
-    $node_type->save();
-    node_add_body_field($node_type);
+    $this->createContentType(['type' => 'article', 'name' => 'Article']);
   }
 
   /**

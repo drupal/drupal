@@ -7,7 +7,6 @@ namespace Drupal\Tests\editor\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -115,10 +114,8 @@ class EditorAdminTest extends BrowserTestBase {
     // Install the node module.
     $this->container->get('module_installer')->install(['node']);
     $this->resetAll();
-    // Create a new node type and attach the 'body' field to it.
-    $node_type = NodeType::create(['type' => $this->randomMachineName(), 'name' => $this->randomString()]);
-    $node_type->save();
-    node_add_body_field($node_type, $this->randomString());
+    // Create a new node type and attach a text field to it.
+    $node_type = $this->drupalCreateContentType(['type' => $this->randomMachineName(), 'name' => $this->randomString()]);
 
     $permissions = ['administer filters', "edit any {$node_type->id()} content"];
     foreach ($formats as $format => $name) {

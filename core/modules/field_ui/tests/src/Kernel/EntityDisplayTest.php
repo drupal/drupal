@@ -367,7 +367,6 @@ class EntityDisplayTest extends KernelTestBase {
       'name' => 'Article',
     ]);
     $type->save();
-    node_add_body_field($type);
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
     $display_repository->getViewDisplay('node', 'article')->save();
