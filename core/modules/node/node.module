@@ -8,7 +8,6 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\StatementInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -261,17 +260,6 @@ function template_preprocess_node_add_list(&$variables): void {
 function template_preprocess_node(&$variables): void {
   @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNode($variables); instead. See https://www.drupal.org/node/3533060', E_USER_DEPRECATED);
   \Drupal::service(NodeThemeHooks::class)->preprocessNode($variables);
-}
-
-/**
- * Form submission handler for system_themes_admin_form().
- *
- * @see node_form_system_themes_admin_form_alter()
- */
-function node_form_system_themes_admin_form_submit($form, FormStateInterface $form_state): void {
-  \Drupal::configFactory()->getEditable('node.settings')
-    ->set('use_admin_theme', $form_state->getValue('use_admin_theme'))
-    ->save();
 }
 
 /**

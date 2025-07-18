@@ -10,7 +10,6 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Form\NodePreviewForm;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Component\Utility\Xss;
@@ -255,28 +254,6 @@ class NodeHooks1 {
         'view_mode' => \Drupal::formBuilder()->getForm(NodePreviewForm::class, $route_match->getParameter('node_preview')),
       ];
     }
-  }
-
-  /**
-   * Implements hook_form_FORM_ID_alter().
-   *
-   * Alters the theme form to use the admin theme on node editing.
-   *
-   * @see node_form_system_themes_admin_form_submit()
-   */
-  #[Hook('form_system_themes_admin_form_alter')]
-  public function formSystemThemesAdminFormAlter(&$form, FormStateInterface $form_state, $form_id) : void {
-    $form['admin_theme']['use_admin_theme'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Use the administration theme when editing or creating content'),
-      '#description' => $this->t('Control which roles can "View the administration theme" on the <a href=":permissions">Permissions page</a>.', [
-        ':permissions' => Url::fromRoute('user.admin_permissions.module', [
-          'modules' => 'system',
-        ])->toString(),
-      ]),
-      '#default_value' => \Drupal::configFactory()->getEditable('node.settings')->get('use_admin_theme'),
-    ];
-    $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
   }
 
   /**
