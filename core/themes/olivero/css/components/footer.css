@@ -21,11 +21,11 @@
   list-style: none;
 }
 
-.site-footer .menu ul {
+:is(.site-footer .menu) ul {
   margin-inline-start: var(--sp);
 }
 
-.site-footer .menu li {
+:is(.site-footer .menu) li {
   margin-block-end: var(--sp0-5);
 }
 
@@ -33,7 +33,7 @@
   color: inherit;
 }
 
-.site-footer a:hover {
+:is(.site-footer a):hover {
   -webkit-text-decoration: none;
   text-decoration: none;
 }

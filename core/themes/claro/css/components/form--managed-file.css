@@ -87,7 +87,7 @@
     */
 }
 
-.form-managed-file__meta .form-item:last-child {
+:is(.form-managed-file__meta .form-item):last-child {
   margin-block-end: var(--space-xs);
 }
 

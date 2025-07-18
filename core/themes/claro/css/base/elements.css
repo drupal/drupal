@@ -220,7 +220,7 @@ details summary {
   padding: 0.95em 1.45em;
 }
 
-details summary:focus {
+:is(details summary):focus {
   outline: none;
 }
 

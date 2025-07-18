@@ -103,10 +103,10 @@
   border-top-color: transparent;
 }
 
-.mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon::before {
+:is(.mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon)::before {
   transform: translateY(-0.1875rem) rotate(-45deg);
 }
 
-.mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon::after {
+:is(.mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon)::after {
   transform: translateY(-0.1875rem) rotate(45deg);
 }

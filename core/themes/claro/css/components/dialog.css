@@ -53,14 +53,14 @@
   line-height: calc(var(--space-m) * 2);
 }
 
-.ui-dialog .ui-dialog-titlebar .ui-dialog-title {
+:is(.ui-dialog .ui-dialog-titlebar) .ui-dialog-title {
   -webkit-font-smoothing: antialiased;
   margin: 0;
   font-size: var(--jui-dialog-title-font-size);
   font-weight: bold;
 }
 
-.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+:is(.ui-dialog .ui-dialog-titlebar) .ui-dialog-titlebar-close {
   position: absolute;
   inset-block-start: 50%;
   inset-inline-end: 0;
@@ -76,17 +76,17 @@
   background: none;
 }
 
-.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover {
+:is(:is(.ui-dialog .ui-dialog-titlebar) .ui-dialog-titlebar-close):hover {
   border-color: var(--color-white);
 }
 
-.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:focus {
+:is(:is(.ui-dialog .ui-dialog-titlebar) .ui-dialog-titlebar-close):focus {
   border-color: var(--color-focus);
   outline: var(--jui-dialog--focus-outline);
   box-shadow: none;
 }
 
-.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-icon.ui-icon-closethick {
+:is(:is(.ui-dialog .ui-dialog-titlebar) .ui-dialog-titlebar-close) .ui-icon.ui-icon-closethick {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -95,7 +95,7 @@
 }
 
 @media (forced-colors: active) {
-  .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-icon.ui-icon-closethick {
+  :is(:is(.ui-dialog .ui-dialog-titlebar) .ui-dialog-titlebar-close) .ui-icon.ui-icon-closethick {
     background: buttontext;
     mask: url("data:image/svg+xml,%3csvg width='12' height='12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 1.318l-10 10M11 11.318l-10-10' stroke='%23D3D4D9' stroke-width='1.5'/%3e%3c/svg%3e") no-repeat 50%;
   }
@@ -108,8 +108,8 @@
   background: var(--color-white);
 }
 
-.ui-dialog > .ui-dialog-content .form-actions,
-.ui-dialog > .ui-dialog-content .field-actions {
+:is(.ui-dialog > .ui-dialog-content) .form-actions,
+:is(.ui-dialog > .ui-dialog-content) .field-actions {
   margin: 0;
   padding: 0;
 }
@@ -121,7 +121,7 @@
   background: var(--color-gray-050);
 }
 
-.ui-dialog > .ui-dialog-buttonpane .ui-dialog-buttonset {
+:is(.ui-dialog > .ui-dialog-buttonpane) .ui-dialog-buttonset {
   display: flex;
   gap: var(--space-s);
   justify-content: flex-end;
@@ -129,11 +129,11 @@
   margin-inline-end: var(--space-l);
 }
 
-.ui-dialog > .ui-dialog-buttonpane .ui-dialog-buttonset > * {
+:is(:is(.ui-dialog > .ui-dialog-buttonpane) .ui-dialog-buttonset) > * {
   margin: 0;
 }
 
-.ui-dialog > .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
+:is(.ui-dialog > .ui-dialog-buttonpane) .ui-button-text-only .ui-button-text {
   padding: 0;
 }
 

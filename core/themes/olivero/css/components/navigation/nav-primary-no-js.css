@@ -62,8 +62,8 @@
   html:not(.js) .primary-nav__button-toggle {
     display: none;
   }
-  html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children::before,
-  html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children::after {
+  :is(html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children)::before,
+  :is(html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children)::after {
     content: none;
   }
 }
@@ -72,25 +72,25 @@
   /**
      * Styles for 'always on mobile navigation' when JS is disabled.
      */
-  html:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-1 {
+  :is(html:not(.js) body.is-always-mobile-nav) .primary-nav__menu--level-1 {
     column-width: var(--no-js-nav-column-width);
     column-gap: var(--no-js-nav-column-gap);
   }
 
-  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-item {
+  :is(html:not(.js) body.is-always-mobile-nav) .primary-nav__menu-item {
     page-break-inside: avoid;
     break-inside: avoid;
   }
 
-  html:not(.js) body.is-always-mobile-nav .site-header__inner__container {
+  :is(html:not(.js) body.is-always-mobile-nav) .site-header__inner__container {
     flex-wrap: wrap;
   }
 
-  html:not(.js) body.is-always-mobile-nav .mobile-buttons {
+  :is(html:not(.js) body.is-always-mobile-nav) .mobile-buttons {
     display: none;
   }
 
-  html:not(.js) body.is-always-mobile-nav .header-nav {
+  :is(html:not(.js) body.is-always-mobile-nav) .header-nav {
     position: static;
     visibility: visible;
     flex-basis: 100%;
@@ -107,25 +107,23 @@
     box-shadow: 0 0 36px var(--color--gray-90);
   }
 
-  html:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-2 {
+  :is(html:not(.js) body.is-always-mobile-nav) .primary-nav__menu--level-2 {
     border-inline-start: 0;
   }
 
-  html:not(.js) body.is-always-mobile-nav .primary-nav__button-toggle {
+  :is(html:not(.js) body.is-always-mobile-nav) .primary-nav__button-toggle {
     display: none;
   }
-  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children::before,
-  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children::after {
+  :is(:is(html:not(.js) body.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children)::before,
+  :is(:is(html:not(.js) body.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children)::after {
     content: none;
   }
 
   /**
      * Styles for traditional dropdown primary navigation when JS is disabled.
      */
-  html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu--level-2,
-  html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu--level-2,
-  html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu-🥕,
-  html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu-🥕 {
+  :is(:is(html:not(.js) body:not(.is-always-mobile-nav)) .primary-nav__menu-item--level-1:hover, :is(html:not(.js) body:not(.is-always-mobile-nav)) .primary-nav__menu-item--level-1:focus-within) .primary-nav__menu--level-2,
+  :is(:is(html:not(.js) body:not(.is-always-mobile-nav)) .primary-nav__menu-item--level-1:hover, :is(html:not(.js) body:not(.is-always-mobile-nav)) .primary-nav__menu-item--level-1:focus-within) .primary-nav__menu-🥕 {
     visibility: visible;
     transform: translate(-50%, 0);
     opacity: 1;

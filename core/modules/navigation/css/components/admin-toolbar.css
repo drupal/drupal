@@ -294,7 +294,7 @@ body {
   border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
   border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
 }
-.admin-toolbar__footer > .toolbar-block:last-of-type {
+:is(.admin-toolbar__footer > .toolbar-block):last-of-type {
   margin-block-end: var(--admin-toolbar-space-12);
 }
 @media (min-width: 64rem) {
@@ -317,8 +317,7 @@ body {
     display: flex;
   }
 }
-[data-admin-toolbar="expanded"] :is([data-drupal-tooltip]:hover + .admin-toolbar__tooltip),
-[data-admin-toolbar="expanded"] :is([data-drupal-tooltip]:focus + .admin-toolbar__tooltip) {
+[data-admin-toolbar="expanded"] :is([data-drupal-tooltip]:hover + .admin-toolbar__tooltip, [data-drupal-tooltip]:focus + .admin-toolbar__tooltip) {
   display: none;
 }
 /**

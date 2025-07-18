@@ -28,7 +28,7 @@
   padding-block: var(--off-canvas-padding);
 }
 
-#drupal-off-canvas-wrapper form > *:first-child {
+:is(#drupal-off-canvas-wrapper form) > *:first-child {
   margin-top: 0;
   padding-top: 0;
 }
@@ -98,8 +98,7 @@
   font-size: var(--drupal-off-canvas-input-font-size);
 }
 
-:is(#drupal-off-canvas-wrapper input[type="checkbox"]) + label,
-:is(#drupal-off-canvas-wrapper input[type="radio"]) + label {
+:is(#drupal-off-canvas-wrapper input[type="checkbox"], #drupal-off-canvas-wrapper input[type="radio"]) + label {
   display: inline;
 }
 
@@ -122,7 +121,7 @@
   background-size: 0.75rem;
 }
 
-#drupal-off-canvas-wrapper select:dir(rtl) {
+:is(#drupal-off-canvas-wrapper select):dir(rtl) {
   background-position: center left 5px;
 }
 
@@ -145,11 +144,11 @@
   background-position: center right 1px; /* LTR */
 }
 
-#drupal-off-canvas-wrapper .form-autocomplete.ui-autocomplete-loading {
+.ui-autocomplete-loading:is(#drupal-off-canvas-wrapper .form-autocomplete) {
   background-image: url(../../../icons/spinner.gif);
 }
 
-#drupal-off-canvas-wrapper .form-autocomplete:dir(rtl) {
+:is(#drupal-off-canvas-wrapper .form-autocomplete):dir(rtl) {
   background-position: center left 1px;
 }
 
@@ -164,7 +163,7 @@
   box-shadow: 0 1px 1px 0 var(--off-canvas-background-color); /* Ensure edge is visible if appearing over another form element. */
 }
 
-#drupal-off-canvas-wrapper .ui-autocomplete a {
+:is(#drupal-off-canvas-wrapper .ui-autocomplete) a {
   display: block;
   padding: var(--drupal-off-canvas-input-padding);
   cursor: pointer;
@@ -172,12 +171,12 @@
   font-size: var(--drupal-off-canvas-input-font-size);
 }
 
-#drupal-off-canvas-wrapper .ui-autocomplete a:hover {
+:is(:is(#drupal-off-canvas-wrapper .ui-autocomplete) a):hover {
   background-color: #eee;
 }
 
-#drupal-off-canvas-wrapper .ui-autocomplete a:focus,
-#drupal-off-canvas-wrapper .ui-autocomplete a.ui-state-active {
+:is(:is(#drupal-off-canvas-wrapper .ui-autocomplete) a):focus,
+.ui-state-active:is(:is(#drupal-off-canvas-wrapper .ui-autocomplete) a) {
   outline: solid 2px currentColor;
   outline-offset: -2px;
 }

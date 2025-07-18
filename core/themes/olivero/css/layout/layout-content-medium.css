@@ -37,19 +37,15 @@
 */
 
 @media (min-width: 43.75rem) {
-  .layout--pass--content-medium > * .layout--content-medium,
-  .layout--content-medium .layout--content-medium,
-  .layout--pass--content-medium > * .layout--pass--content-medium > *,
-  .layout--content-medium .layout--pass--content-medium > * {
+  :is(.layout--pass--content-medium > *, .layout--content-medium) .layout--content-medium,
+  :is(.layout--pass--content-medium > *, .layout--content-medium) .layout--pass--content-medium > * {
     grid-column: 1 / 13;
   }
 }
 
 @media (min-width: 62.5rem) {
-  .layout--pass--content-medium > * .layout--content-medium,
-  .layout--content-medium .layout--content-medium,
-  .layout--pass--content-medium > * .layout--pass--content-medium > *,
-  .layout--content-medium .layout--pass--content-medium > * {
+  :is(.layout--pass--content-medium > *, .layout--content-medium) .layout--content-medium,
+  :is(.layout--pass--content-medium > *, .layout--content-medium) .layout--pass--content-medium > * {
     grid-column: 1 / 11;
   }
 }

@@ -28,16 +28,16 @@
     grid-column: 3 / 11;
   }
 
-  .sidebar-grid > .site-main > .region--content-above,
-  .sidebar-grid > .site-main > .region--content {
+  :is(.sidebar-grid > .site-main) > .region--content-above,
+  :is(.sidebar-grid > .site-main) > .region--content {
     grid-template-columns: repeat(8, minmax(0, 1fr));
     grid-column: 1 / 9;
   }
 
-  .sidebar-grid > .site-main .layout--content-narrow,
-  .sidebar-grid > .site-main .layout--pass--content-narrow > *,
-  .sidebar-grid > .site-main .layout--content-medium,
-  .sidebar-grid > .site-main .layout--pass--content-medium > * {
+  :is(.sidebar-grid > .site-main) .layout--content-narrow,
+  :is(.sidebar-grid > .site-main) .layout--pass--content-narrow > *,
+  :is(.sidebar-grid > .site-main) .layout--content-medium,
+  :is(.sidebar-grid > .site-main) .layout--pass--content-medium > * {
     grid-column: 1 / 9;
   }
 }

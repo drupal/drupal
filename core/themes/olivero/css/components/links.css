@@ -22,6 +22,6 @@
   display: inline;
 }
 
-.links.inline > *:not(:last-child) {
+:is(.links.inline > *):not(:last-child) {
   padding-inline-end: 1em;
 }

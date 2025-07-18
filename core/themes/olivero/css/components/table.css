@@ -34,7 +34,7 @@
   line-height: var(--sp);
 }
 
-:is(.text-content table, .views-table, .draggable-table) tr:last-child td {
+:is(:is(.text-content table, .views-table, .draggable-table) tr):last-child td {
   border-block-end: 0;
 }
 
@@ -77,8 +77,8 @@
   margin-top: 0;
 }
 
-.text-content table td,
-.text-content table th {
+:is(.text-content table) td,
+:is(.text-content table) th {
   vertical-align: middle;
 }
 

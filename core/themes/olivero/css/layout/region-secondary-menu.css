@@ -27,7 +27,7 @@
 
     /* If the secondary nav is the first item within the header, it does not need left separator. */
   }
-  body:not(.is-always-mobile-nav) .region--secondary-menu:first-child .secondary-nav::before {
+  :is(body:not(.is-always-mobile-nav) .region--secondary-menu):first-child .secondary-nav::before {
     content: none;
   }
 }

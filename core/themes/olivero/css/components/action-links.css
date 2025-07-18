@@ -20,7 +20,7 @@
 .action-links li {
   display: inline-block;
 }
-.action-links li a {
+:is(.action-links li) a {
   color: var(--color-text-primary-medium);
 }
 .action-links-item {

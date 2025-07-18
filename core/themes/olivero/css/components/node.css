@@ -56,8 +56,8 @@
   background-size: 0 0.1875rem;
 }
 
-.node__title a:hover,
-.node__title a:focus {
+:is(.node__title a):hover,
+:is(.node__title a):focus {
   color: var(--color-text-primary-medium);
 }
 

@@ -142,22 +142,18 @@ tr .form-item,
   margin-block: var(--space-xs);
 }
 
-.form-actions .form-wrapper,
-.field-actions .form-wrapper {
+:is(.form-actions, .field-actions) .form-wrapper {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xs) 0;
 }
 
-.form-actions .button,
-.field-actions .button,
-.form-actions .action-link,
-.field-actions .action-link {
+:is(.form-actions, .field-actions) .button,
+:is(.form-actions, .field-actions) .action-link {
   margin-block: var(--space-xs);
 }
 
-.form-actions .ajax-progress--throbber,
-.field-actions .ajax-progress--throbber {
+:is(.form-actions, .field-actions) .ajax-progress--throbber {
   align-self: center;
 }
 

@@ -284,11 +284,11 @@
   border: 0;
 }
 
-.js .vertical-tabs .vertical-tabs__item.first,
-.js .vertical-tabs .vertical-tabs__item.last {
+.first:is(.js .vertical-tabs .vertical-tabs__item),
+.last:is(.js .vertical-tabs .vertical-tabs__item) {
   border-radius: 0;
 }
 
-.js .vertical-tabs .vertical-tabs__item > summary {
+:is(.js .vertical-tabs .vertical-tabs__item) > summary {
   display: none;
 }

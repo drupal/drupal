@@ -13,7 +13,7 @@
   display: grid;
   gap: var(--admin-toolbar-space-4);
 }
-.admin-toolbar__content .toolbar-block:nth-last-child(n + 2)::after {
+:is(.admin-toolbar__content .toolbar-block):nth-last-child(n + 2)::after {
   margin-top: var(--admin-toolbar-space-8);
   content: "";
   border-top: 1px solid var(--admin-toolbar-color-gray-200);

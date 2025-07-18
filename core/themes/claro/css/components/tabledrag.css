@@ -177,7 +177,7 @@ body.drag-y {
   opacity: 0.4;
 }
 
-.tabledrag-disabled .tabledrag-handle.tabledrag-handle::before {
+.tabledrag-handle:is(.tabledrag-disabled .tabledrag-handle)::before {
   content: none;
 }
 
@@ -305,50 +305,50 @@ body.drag-y {
 
 /* LTR tree child. */
 
-.tree-child path:not(.tree__item-child-ltr) {
+:is(.tree-child path):not(.tree__item-child-ltr) {
   display: none;
 }
 
-.tree-child path.tree__item-child-ltr {
+.tree__item-child-ltr:is(.tree-child path) {
   display: block;
 }
 
 /* RTL tree child. */
 
-[dir="rtl"] .tree-child path:not(.tree__item-child-rtl) {
+:is([dir="rtl"] .tree-child path):not(.tree__item-child-rtl) {
   display: none;
 }
 
-[dir="rtl"] .tree-child path.tree__item-child-rtl {
+.tree__item-child-rtl:is([dir="rtl"] .tree-child path) {
   display: block;
 }
 
 /* Last RTL tree child. */
 
-[dir="rtl"] .tree-child-last path:not(.tree__item-child-last-rtl) {
+:is([dir="rtl"] .tree-child-last path):not(.tree__item-child-last-rtl) {
   display: none;
 }
 
-[dir="rtl"] .tree-child-last path.tree__item-child-last-rtl {
+.tree__item-child-last-rtl:is([dir="rtl"] .tree-child-last path) {
   display: block;
 }
 
 /* Last LTR tree child. */
 
-.tree-child-last path:not(.tree__item-child-last-ltr) {
+:is(.tree-child-last path):not(.tree__item-child-last-ltr) {
   display: none;
 }
 
-.tree-child-last path.tree__item-child-last-ltr {
+.tree__item-child-last-ltr:is(.tree-child-last path) {
   display: block;
 }
 
 /* Horizontal line. */
 
-.tree-child-horizontal path:not(.tree__item-horizontal) {
+:is(.tree-child-horizontal path):not(.tree__item-horizontal) {
   display: none;
 }
 
-.tree-child-horizontal path.tree__item-horizontal {
+.tree__item-horizontal:is(.tree-child-horizontal path) {
   display: block;
 }

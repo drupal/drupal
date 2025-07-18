@@ -57,7 +57,7 @@
   color: var(--messages__link-color);
 }
 
-.messages a:hover {
+:is(.messages a):hover {
   color: var(--messages__link--hover-color);
 }
 

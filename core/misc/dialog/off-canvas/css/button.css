@@ -43,18 +43,18 @@
   line-height: normal;
   appearance: none;
 }
-#drupal-off-canvas-wrapper .button:hover,
-#drupal-off-canvas-wrapper .button:active {
+:is(#drupal-off-canvas-wrapper .button):hover,
+:is(#drupal-off-canvas-wrapper .button):active {
   z-index: 10;
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--off-canvas-button-text-color-hover);
   background-color: var(--off-canvas-button-background-color-hover);
 }
-#drupal-off-canvas-wrapper .button:disabled,
-#drupal-off-canvas-wrapper .button:disabled:active,
-#drupal-off-canvas-wrapper .button.is-disabled,
-#drupal-off-canvas-wrapper .button.is-disabled:active {
+:is(#drupal-off-canvas-wrapper .button):disabled,
+:is(#drupal-off-canvas-wrapper .button):disabled:active,
+.is-disabled:is(#drupal-off-canvas-wrapper .button),
+.is-disabled:is(#drupal-off-canvas-wrapper .button):active {
   cursor: default;
   color: #5c5c5c;
   background: #555;
@@ -65,8 +65,8 @@
   color: var(--off-canvas-primary-button-text-color);
   background: var(--off-canvas-primary-button-background-color);
 }
-#drupal-off-canvas-wrapper .button--primary:hover,
-#drupal-off-canvas-wrapper .button--primary:active {
+:is(#drupal-off-canvas-wrapper .button--primary):hover,
+:is(#drupal-off-canvas-wrapper .button--primary):active {
   color: var(--off-canvas-primary-button-text-color-hover);
   background: var(--off-canvas-primary-button-background-color-hover);
 }
@@ -78,8 +78,8 @@
   background: transparent;
   font-size: var(--off-canvas-button-font-size);
 }
-#drupal-off-canvas-wrapper button.link:hover,
-#drupal-off-canvas-wrapper button.link:focus {
+:is(#drupal-off-canvas-wrapper button.link):hover,
+:is(#drupal-off-canvas-wrapper button.link):focus {
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--off-canvas-link-color);
@@ -91,16 +91,16 @@
   border-radius: 0;
   font-weight: 400;
 }
-#drupal-off-canvas-wrapper .button--danger:hover,
-#drupal-off-canvas-wrapper .button--danger:focus,
-#drupal-off-canvas-wrapper .button--danger:active {
+:is(#drupal-off-canvas-wrapper .button--danger):hover,
+:is(#drupal-off-canvas-wrapper .button--danger):focus,
+:is(#drupal-off-canvas-wrapper .button--danger):active {
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #ff2a00;
   text-shadow: none;
 }
-#drupal-off-canvas-wrapper .button--danger:disabled,
-#drupal-off-canvas-wrapper .button--danger.is-disabled {
+:is(#drupal-off-canvas-wrapper .button--danger):disabled,
+.is-disabled:is(#drupal-off-canvas-wrapper .button--danger) {
   cursor: default;
   color: #737373;
 }

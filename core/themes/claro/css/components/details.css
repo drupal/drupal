@@ -154,7 +154,7 @@ td .claro-details {
   background-size: contain;
 }
 
-[dir="rtl"] .claro-details__summary::before {
+[dir="rtl"] :is(.claro-details__summary::before) {
   transform: rotate(-270deg);
 }
 
@@ -177,7 +177,7 @@ td .claro-details {
     background: none;
   }
 
-  [dir="rtl"] .claro-details__summary::before {
+  [dir="rtl"] :is(.claro-details__summary::before) {
     transform: rotate(-225deg);
   }
 }
@@ -328,9 +328,7 @@ td .claro-details {
   box-shadow: none;
 }
 
-[dir="rtl"] :is([open] > .claro-details__summary--accordion:not(:focus, :active)::after),
-[dir="rtl"] :is([open] > .claro-details__summary--accordion-item:not(:focus, :active)::after),
-[dir="rtl"] :is([open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after) {
+[dir="rtl"] :is([open] > .claro-details__summary--accordion:not(:focus, :active)::after, [open] > .claro-details__summary--accordion-item:not(:focus, :active)::after, [open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after) {
   border-width: 0 var(--details-summary-focus-border-size) 0 0;
 }
 

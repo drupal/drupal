@@ -25,11 +25,11 @@
   display: inline-block;
 }
 
-.action-links__item + .action-links__item > .action-link {
+:is(.action-links__item + .action-links__item) > .action-link {
   margin-inline-start: var(--space-s);
 }
 
-.action-links__item + .action-links__item > .action-link--small {
+:is(.action-links__item + .action-links__item) > .action-link--small {
   margin-inline-start: var(--space-xs);
 }
 

@@ -33,12 +33,10 @@
   vertical-align: middle;
 }
 
-#drupal-off-canvas-wrapper td:first-child,
-#drupal-off-canvas-wrapper th:first-child {
+:is(#drupal-off-canvas-wrapper td, #drupal-off-canvas-wrapper th):first-child {
   padding-inline-start: var(--off-canvas-first-cell-padding-start);
 }
 
-#drupal-off-canvas-wrapper td:not(:last-child) td,
-#drupal-off-canvas-wrapper th:not(:last-child) td {
+:is(#drupal-off-canvas-wrapper td, #drupal-off-canvas-wrapper th):not(:last-child) td {
   border-bottom: solid 1px var(--off-canvas-border-color);
 }

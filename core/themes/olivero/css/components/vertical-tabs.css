@@ -82,9 +82,9 @@
   background-color: var(--color--gray-95);
 }
 
-.vertical-tabs__menu-item a:focus,
-.vertical-tabs__menu-item a:hover,
-.vertical-tabs__menu-item a:active {
+:is(.vertical-tabs__menu-item a):focus,
+:is(.vertical-tabs__menu-item a):hover,
+:is(.vertical-tabs__menu-item a):active {
   background-color: var(--color--gray-100);
 }
 

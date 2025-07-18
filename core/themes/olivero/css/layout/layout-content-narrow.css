@@ -40,27 +40,15 @@
 */
 
 @media (min-width: 43.75rem) {
-  .layout--content-narrow .layout--content-narrow,
-  .layout--pass--content-narrow > * .layout--content-narrow,
-  .layout--content-medium .layout--content-narrow,
-  .layout--pass--content-medium > * .layout--content-narrow,
-  .layout--content-narrow .layout--pass--content-narrow > *,
-  .layout--pass--content-narrow > * .layout--pass--content-narrow > *,
-  .layout--content-medium .layout--pass--content-narrow > *,
-  .layout--pass--content-medium > * .layout--pass--content-narrow > * {
+  :is(.layout--content-narrow, .layout--pass--content-narrow > *, .layout--content-medium, .layout--pass--content-medium > *) .layout--content-narrow,
+  :is(.layout--content-narrow, .layout--pass--content-narrow > *, .layout--content-medium, .layout--pass--content-medium > *) .layout--pass--content-narrow > * {
     grid-column: 1 / 13;
   }
 }
 
 @media (min-width: 62.5rem) {
-  .layout--content-narrow .layout--content-narrow,
-  .layout--pass--content-narrow > * .layout--content-narrow,
-  .layout--content-medium .layout--content-narrow,
-  .layout--pass--content-medium > * .layout--content-narrow,
-  .layout--content-narrow .layout--pass--content-narrow > *,
-  .layout--pass--content-narrow > * .layout--pass--content-narrow > *,
-  .layout--content-medium .layout--pass--content-narrow > *,
-  .layout--pass--content-medium > * .layout--pass--content-narrow > * {
+  :is(.layout--content-narrow, .layout--pass--content-narrow > *, .layout--content-medium, .layout--pass--content-medium > *) .layout--content-narrow,
+  :is(.layout--content-narrow, .layout--pass--content-narrow > *, .layout--content-medium, .layout--pass--content-medium > *) .layout--pass--content-narrow > * {
     grid-column: 1 / 9;
   }
 }
@@ -71,19 +59,13 @@
 */
 
 @media (min-width: 43.75rem) {
-  .layout--content-narrow.text-content blockquote::before,
-  .layout--pass--content-narrow > *.text-content blockquote::before,
-  .layout--content-narrow .text-content blockquote::before,
-  .layout--pass--content-narrow > * .text-content blockquote::before {
+  :is(:is(.text-content:is(.layout--content-narrow, .layout--pass--content-narrow > *), :is(.layout--content-narrow, .layout--pass--content-narrow > *) .text-content) blockquote)::before {
     inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
   }
 }
 
 @media (min-width: 43.75rem) {
-  .layout--content-narrow.text-content blockquote::after,
-  .layout--pass--content-narrow > *.text-content blockquote::after,
-  .layout--content-narrow .text-content blockquote::after,
-  .layout--pass--content-narrow > * .text-content blockquote::after {
+  :is(:is(.text-content:is(.layout--content-narrow, .layout--pass--content-narrow > *), :is(.layout--content-narrow, .layout--pass--content-narrow > *) .text-content) blockquote)::after {
     inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
     width: var(--sp);
     height: calc(100% - 2.8125rem);
@@ -92,10 +74,7 @@
 }
 
 @media (min-width: 43.75rem) {
-  .layout--content-narrow.text-content blockquote,
-  .layout--pass--content-narrow > *.text-content blockquote,
-  .layout--content-narrow .text-content blockquote,
-  .layout--pass--content-narrow > * .text-content blockquote {
+  :is(.text-content:is(.layout--content-narrow, .layout--pass--content-narrow > *), :is(.layout--content-narrow, .layout--pass--content-narrow > *) .text-content) blockquote {
     width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
     margin-block: var(--sp3);
     padding-inline-start: 0;
@@ -103,19 +82,13 @@
 }
 
 @media (min-width: 43.75rem) {
-  .layout--content-narrow.text-content pre,
-  .layout--pass--content-narrow > *.text-content pre,
-  .layout--content-narrow .text-content pre,
-  .layout--pass--content-narrow > * .text-content pre {
+  :is(.text-content:is(.layout--content-narrow, .layout--pass--content-narrow > *), :is(.layout--content-narrow, .layout--pass--content-narrow > *) .text-content) pre {
     margin-block: var(--sp3);
   }
 }
 
 @media (min-width: 62.5rem) {
-  .layout--content-narrow.text-content pre,
-  .layout--pass--content-narrow > *.text-content pre,
-  .layout--content-narrow .text-content pre,
-  .layout--pass--content-narrow > * .text-content pre {
+  :is(.text-content:is(.layout--content-narrow, .layout--pass--content-narrow > *), :is(.layout--content-narrow, .layout--pass--content-narrow > *) .text-content) pre {
     width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
     margin-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
   }
@@ -126,13 +99,7 @@
  * into sidebar region when present.
  */
 
-.sidebar-grid .layout--content-narrow.text-content blockquote,
-.sidebar-grid .layout--pass--content-narrow > *.text-content blockquote,
-.sidebar-grid .layout--content-narrow .text-content blockquote,
-.sidebar-grid .layout--pass--content-narrow > * .text-content blockquote,
-.sidebar-grid .layout--content-narrow.text-content pre,
-.sidebar-grid .layout--pass--content-narrow > *.text-content pre,
-.sidebar-grid .layout--content-narrow .text-content pre,
-.sidebar-grid .layout--pass--content-narrow > * .text-content pre {
+:is(.text-content:is(.sidebar-grid .layout--content-narrow, .sidebar-grid .layout--pass--content-narrow > *), :is(.sidebar-grid .layout--content-narrow, .sidebar-grid .layout--pass--content-narrow > *) .text-content) blockquote,
+:is(.text-content:is(.sidebar-grid .layout--content-narrow, .sidebar-grid .layout--pass--content-narrow > *), :is(.sidebar-grid .layout--content-narrow, .sidebar-grid .layout--pass--content-narrow > *) .text-content) pre {
   width: auto;
 }

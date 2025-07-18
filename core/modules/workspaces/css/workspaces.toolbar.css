@@ -34,7 +34,7 @@
    */
 }
 
-.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab:dir(rtl) {
+:is(.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab):dir(rtl) {
   float: left;
 }
 
@@ -51,7 +51,7 @@
      * @see https://github.com/csstools/postcss-plugins/issues/632
      */
   }
-  .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab:dir(rtl) {
+  :is(.toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab):dir(rtl) {
     float: left;
   }
 }

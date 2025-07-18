@@ -96,6 +96,6 @@
   list-style: none;
 }
 
-#drupal-off-canvas-wrapper .links li {
+:is(#drupal-off-canvas-wrapper .links) li {
   margin: calc(var(--off-canvas-vertical-spacing-unit) / 2) 0;
 }

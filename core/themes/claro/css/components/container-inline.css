@@ -10,10 +10,10 @@
  * Inline items.
  */
 
-.container-inline .form-radios label::after {
+:is(.container-inline .form-radios) label::after {
   content: "";
 }
 
-.container-inline .form-radios .form-type-radio {
+:is(.container-inline .form-radios) .form-type-radio {
   margin-inline-end: 1em;
 }

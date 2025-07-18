@@ -198,7 +198,7 @@
     padding: calc(var(--tabs--focus-height) + 0.1875rem) calc(var(--tabs--focus-height) + 0.1875rem) 0;
     border-radius: 0;
   }
-  .is-horizontal .tabs--secondary::after {
+  :is(.is-horizontal .tabs--secondary)::after {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -207,15 +207,15 @@
     content: "";
     border-bottom: 1px solid var(--color-gray-200);
   }
-  .is-horizontal .tabs--secondary .tabs__tab {
+  :is(.is-horizontal .tabs--secondary) .tabs__tab {
     font-size: var(--font-size-s);
   }
-  .is-horizontal .tabs--secondary .tabs__link {
+  :is(.is-horizontal .tabs--secondary) .tabs__link {
     min-height: var(--tabs-secondary-link-height);
     padding-top: var(--space-xs);
     padding-bottom: var(--space-xs);
   }
-  .is-horizontal .tabs--secondary .tabs__link:focus {
+  :is(:is(.is-horizontal .tabs--secondary) .tabs__link):focus {
     min-height: var(--tabs-secondary-link-height);
   }
   .is-horizontal .tabs__tab {
@@ -225,15 +225,15 @@
     background: none;
     font-size: var(--font-size-base);
   }
-  .is-horizontal .tabs__tab.is-active {
+  .is-active:is(.is-horizontal .tabs__tab) {
     order: 0;
     background: none;
     box-shadow: none;
   }
-  .is-horizontal .tabs__tab.is-active::before {
+  .is-active:is(.is-horizontal .tabs__tab)::before {
     content: none;
   }
-  .is-horizontal .tabs__tab .tabs__link.is-active::before {
+  .is-active:is(:is(.is-horizontal .tabs__tab) .tabs__link)::before {
     border-radius: 0;
   }
   .is-horizontal .tabs__link {
@@ -241,7 +241,7 @@
     padding-left: 2rem;
     border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;
   }
-  .is-horizontal .tabs__link:focus {
+  :is(.is-horizontal .tabs__link):focus {
     min-height: var(--tabs-link-height);
     margin: 0;
     padding-right: 2rem;
@@ -254,11 +254,11 @@
       0 0 0 2px var(--color-white),
       0 0 0 calc(var(--tabs--focus-height) + 2px) var(--color-focus);
   }
-  .is-horizontal .tabs__link:hover {
+  :is(.is-horizontal .tabs__link):hover {
     color: var(--color-absolutezero-hover);
     background: var(--tabs--hover-bg-color);
   }
-  .is-horizontal .tabs__link.is-active::before {
+  .is-active:is(.is-horizontal .tabs__link)::before {
     top: auto;
     right: 0;
     bottom: 0;
@@ -272,7 +272,7 @@
   .is-horizontal .tabs__trigger {
     display: none;
   }
-  .is-horizontal .tabs--primary .tabs__link:focus {
+  :is(:is(.is-horizontal .tabs--primary) .tabs__link):focus {
     box-shadow:
       0 0 0 2px var(--color-gray-050),
       0 0 0 calc(var(--tabs--focus-height) + 2px) var(--color-focus);

@@ -50,23 +50,21 @@ th {
   color: inherit;
 }
 
-.sortable-heading > a:focus,
-.sortable-heading > a:hover {
+:is(.sortable-heading > a):focus,
+:is(.sortable-heading > a):hover {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.sortable-heading > a:focus::before,
-.sortable-heading > a:hover::before {
+:is(:is(.sortable-heading > a):focus, :is(.sortable-heading > a):hover)::before {
   border-color: inherit;
 }
 
-.sortable-heading > a:focus::after,
-.sortable-heading > a:hover::after {
+:is(:is(.sortable-heading > a):focus, :is(.sortable-heading > a):hover)::after {
   opacity: 1;
 }
 
-.sortable-heading > a::before {
+:is(.sortable-heading > a)::before {
   position: absolute;
   z-index: 0;
   inset-block-start: 0;
@@ -78,7 +76,7 @@ th {
   border-bottom: 0.125rem solid transparent;
 }
 
-.sortable-heading > a::after {
+:is(.sortable-heading > a)::after {
   position: absolute;
   inset-block-start: 50%;
   inset-inline-end: 1rem;
@@ -91,20 +89,20 @@ th {
   background-size: contain;
 }
 
-[dir="rtl"] :is(.sortable-heading > a::after) {
+[dir="rtl"] :is(:is(.sortable-heading > a)::after) {
   /* Horizontally flip the element. */
   transform: scaleX(-1);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M1.75.25v1.5h10.5V.25zm0 3v1.5h7.5v-1.5zm0 3v1.5h4.5v-1.5z' fill='%23000f33'/%3e%3c/svg%3e");
 }
 
 @media (forced-colors: active) {
-  [dir="rtl"] :is(.sortable-heading > a::after) {
+  [dir="rtl"] :is(:is(.sortable-heading > a)::after) {
     mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M1.75.25v1.5h10.5V.25zm0 3v1.5h7.5v-1.5zm0 3v1.5h4.5v-1.5z' fill='%23000f33'/%3e%3c/svg%3e") no-repeat 50% 50%;
   }
 }
 
 @media (forced-colors: active) {
-  .sortable-heading > a::after {
+  :is(.sortable-heading > a)::after {
     opacity: 1;
     background: linktext;
     mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M1.75.25v1.5h10.5V.25zm0 3v1.5h7.5v-1.5zm0 3v1.5h4.5v-1.5z' fill='%23000f33'/%3e%3c/svg%3e") no-repeat 50% 50%;
@@ -115,11 +113,11 @@ th {
   color: var(--color-absolutezero);
 }
 
-.sortable-heading.is-active > a::before {
+:is(.sortable-heading.is-active > a)::before {
   border-bottom: 0.1875rem solid var(--color-absolutezero);
 }
 
-.sortable-heading.is-active > a::after {
+:is(.sortable-heading.is-active > a)::after {
   content: none;
 }
 
@@ -229,11 +227,11 @@ tfoot {
   font-weight: bold;
 }
 
-tfoot tr:last-child {
+:is(tfoot tr):last-child {
   border-bottom: 0;
 }
 
-tfoot tr:first-child td {
+:is(tfoot tr):first-child td {
   border-top: 0.0625rem solid var(--color-gray-500);
 }
 

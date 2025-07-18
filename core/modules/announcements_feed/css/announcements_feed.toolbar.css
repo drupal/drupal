@@ -30,6 +30,6 @@
   float: right; /* LTR */
 }
 
-.toolbar .toolbar-bar .announce-toolbar-tab.toolbar-tab:dir(rtl) {
+:is(.toolbar .toolbar-bar .announce-toolbar-tab.toolbar-tab):dir(rtl) {
   float: left;
 }

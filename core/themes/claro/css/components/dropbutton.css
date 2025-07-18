@@ -216,11 +216,11 @@
     border-style: solid;
     background: none;
   }
-  .dropbutton-wrapper.open .dropbutton__toggle::before {
+  .dropbutton-wrapper.open :is(.dropbutton__toggle::before) {
     margin-top: calc(0.5625rem / (2 * 1.41429));
     transform: translate(50%, -50%) rotate(315deg);
   }
-  [dir="rtl"] .dropbutton-wrapper.open .dropbutton__toggle::before {
+  [dir="rtl"] .dropbutton-wrapper.open :is(.dropbutton__toggle::before) {
     transform: translate(50%, -50%) rotate(-45deg);
   }
 

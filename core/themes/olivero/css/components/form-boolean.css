@@ -26,15 +26,13 @@ input[type="radio"] {
   appearance: none;
 }
 
-input[type="checkbox"]:focus,
-input[type="radio"]:focus {
+:is(input[type="checkbox"], input[type="radio"]):focus {
   border: solid 2px var(--color--primary-50);
   outline: solid 2px var(--color--primary-50);
 }
 
 @supports (outline-style: double) {
-  input[type="checkbox"]:focus,
-  input[type="radio"]:focus {
+  :is(input[type="checkbox"], input[type="radio"]):focus {
     border-width: 1px;
     outline-width: 6px;
     outline-style: double;
@@ -42,44 +40,36 @@ input[type="radio"]:focus {
   }
 }
 
-input[type="checkbox"]:hover,
-input[type="radio"]:hover {
+:is(input[type="checkbox"], input[type="radio"]):hover {
   border-color: var(--color--primary-60);
 }
 
-input[type="checkbox"][disabled],
-input[type="radio"][disabled] {
+[disabled]:is(input[type="checkbox"], input[type="radio"]) {
   background-color: var(--color--gray-100);
 }
 
-input[type="checkbox"][disabled]:hover,
-input[type="radio"][disabled]:hover {
+[disabled]:is(input[type="checkbox"], input[type="radio"]):hover {
   border-color: var(--color--gray-60);
 }
 
-input[type="checkbox"][disabled]:checked,
-input[type="radio"][disabled]:checked {
+[disabled]:is(input[type="checkbox"], input[type="radio"]):checked {
   border-width: 1px;
 }
 
-input[type="checkbox"]:checked,
-input[type="radio"]:checked {
+:is(input[type="checkbox"], input[type="radio"]):checked {
   border-width: 2px;
 }
 
-input.error[type="checkbox"],
-input.error[type="radio"] {
+.error:is(input[type="checkbox"], input[type="radio"]) {
   border: solid 2px var(--color--red);
 }
 
-input.error[type="checkbox"]:focus,
-input.error[type="radio"]:focus {
+.error:is(input[type="checkbox"], input[type="radio"]):focus {
   outline-color: var(--color--red);
   outline-offset: -2px;
 }
 
-input[type="checkbox"] + label,
-input[type="radio"] + label {
+:is(input[type="checkbox"], input[type="radio"]) + label {
   display: inline-block;
   padding-inline-start: var(--sp0-5);
 }

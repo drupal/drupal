@@ -172,23 +172,23 @@ html:not(.js) .tabs__trigger {
     top var(--tabs-transition-duration);
   border-block-start: solid 2px var(--tabs-highlight-color);
 }
-.tabs__trigger-icon > span:nth-child(1) {
+:is(.tabs__trigger-icon > span):nth-child(1) {
   inset-block-start: 0;
 }
-.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(1)) {
+.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span):nth-child(1) {
   inset-block-start: calc(50% + 1px);
   transform: rotate(45deg);
 }
-.tabs__trigger-icon > span:nth-child(2) {
+:is(.tabs__trigger-icon > span):nth-child(2) {
   inset-block-start: calc(50% + 1px);
 }
-.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(2)) {
+.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span):nth-child(2) {
   opacity: 0;
 }
-.tabs__trigger-icon > span:nth-child(3) {
+:is(.tabs__trigger-icon > span):nth-child(3) {
   inset-block-start: calc(100% + 2px);
 }
-.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(3)) {
+.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span):nth-child(3) {
   inset-block-start: calc(50% + 1px);
   transform: rotate(-45deg);
 }

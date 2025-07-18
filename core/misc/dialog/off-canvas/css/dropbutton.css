@@ -29,33 +29,33 @@
      * Styles for when the dropbutton is expanded.
      */
 }
-#drupal-off-canvas-wrapper .dropbutton-wrapper.open {
+.open:is(#drupal-off-canvas-wrapper .dropbutton-wrapper) {
   position: relative;
   z-index: 100;
 }
-#drupal-off-canvas-wrapper .dropbutton-wrapper.open .secondary-action {
+.open:is(#drupal-off-canvas-wrapper .dropbutton-wrapper) .secondary-action {
   visibility: visible;
 }
-#drupal-off-canvas-wrapper .dropbutton-wrapper.open .dropbutton-widget {
+.open:is(#drupal-off-canvas-wrapper .dropbutton-wrapper) .dropbutton-widget {
   border-radius: var(--off-canvas-dropbutton-border-radius) var(--off-canvas-dropbutton-border-radius) 0 0;
 }
-#drupal-off-canvas-wrapper .dropbutton-wrapper.open .dropbutton-toggle button::before {
+.open:is(#drupal-off-canvas-wrapper .dropbutton-wrapper) .dropbutton-toggle button::before {
   transform: translateY(25%) rotate(225deg);
 }
 /*
     * Styles for single link variant of dropbutton.
     */
-#drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-widget {
+.dropbutton-single:is(#drupal-off-canvas-wrapper .dropbutton-wrapper) .dropbutton-widget {
   padding-inline-end: 0;
 }
-#drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
+:is(.dropbutton-single:is(#drupal-off-canvas-wrapper .dropbutton-wrapper) .dropbutton-action):first-child {
   border-right: solid 1px var(--off-canvas-dropbutton-border-color); /* LTR */
   border-radius: var(--off-canvas-dropbutton-border-radius);
 }
-#drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child:dir(rtl) {
+:is(.dropbutton-single:is(#drupal-off-canvas-wrapper .dropbutton-wrapper) .dropbutton-action):first-child:dir(rtl) {
   border: solid 1px var(--off-canvas-dropbutton-border-color);
 }
-#drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action a {
+:is(.dropbutton-single:is(#drupal-off-canvas-wrapper .dropbutton-wrapper) .dropbutton-action) a {
   justify-content: center;
 }
 #drupal-off-canvas-wrapper .dropbutton-widget {
@@ -79,7 +79,7 @@
   padding: 0;
   border: 0;
 }
-#drupal-off-canvas-wrapper .dropbutton-toggle button {
+:is(#drupal-off-canvas-wrapper .dropbutton-toggle) button {
   position: absolute;
   top: 0;
   display: flex;
@@ -94,11 +94,11 @@
   background: var(--off-canvas-dropbutton-primary-background-color);
   inset-inline-end: 0;
 }
-#drupal-off-canvas-wrapper .dropbutton-toggle button:focus {
+:is(:is(#drupal-off-canvas-wrapper .dropbutton-toggle) button):focus {
   outline: solid 2px var(--off-canvas-dropbutton-focus-outline-color);
   outline-offset: -2px;
 }
-#drupal-off-canvas-wrapper .dropbutton-toggle button::before {
+:is(:is(#drupal-off-canvas-wrapper .dropbutton-toggle) button)::before {
   display: block;
   width: 0.375rem;
   height: 0.375rem;
@@ -107,21 +107,21 @@
   border-right: solid 2px var(--off-canvas-dropbutton-text-color);
   border-bottom: solid 2px var(--off-canvas-dropbutton-text-color);
 }
-#drupal-off-canvas-wrapper .dropbutton-toggle button:dir(rtl) {
+:is(:is(#drupal-off-canvas-wrapper .dropbutton-toggle) button):dir(rtl) {
   border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius);
 }
 /* This is the first <li> element in the list of actions. */
-#drupal-off-canvas-wrapper .dropbutton-action:first-child {
+:is(#drupal-off-canvas-wrapper .dropbutton-action):first-child {
   margin-inline-end: 2px;
   border: solid var(--off-canvas-dropbutton-border-width) var(--off-canvas-dropbutton-border-color);
   border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius); /* LTR */
   background: var(--off-canvas-dropbutton-primary-background-color);
 }
-#drupal-off-canvas-wrapper .dropbutton-action:first-child:dir(rtl) {
+:is(#drupal-off-canvas-wrapper .dropbutton-action):first-child:dir(rtl) {
   border: solid var(--off-canvas-dropbutton-border-width) var(--off-canvas-dropbutton-border-color);
   border-radius: 0 var(--off-canvas-dropbutton-border-radius) var(--off-canvas-dropbutton-border-radius) 0;
 }
-#drupal-off-canvas-wrapper .dropbutton-action a {
+:is(#drupal-off-canvas-wrapper .dropbutton-action) a {
   display: flex;
   align-items: center;
   min-height: var(--off-canvas-dropbutton-height);
@@ -132,10 +132,10 @@
   color: var(--off-canvas-dropbutton-text-color);
   font-weight: 600;
 }
-#drupal-off-canvas-wrapper .dropbutton-action a:hover {
+:is(:is(#drupal-off-canvas-wrapper .dropbutton-action) a):hover {
   color: var(--off-canvas-dropbutton-text-color);
 }
-#drupal-off-canvas-wrapper .dropbutton-action a:focus {
+:is(:is(#drupal-off-canvas-wrapper .dropbutton-action) a):focus {
   outline: solid 2px var(--off-canvas-dropbutton-focus-outline-color);
   outline-offset: -1px; /* Overlap parent container by 1px. */
 }
@@ -148,10 +148,10 @@
   border-left: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
   background-color: var(--off-canvas-dropbutton-primary-background-color);
 }
-#drupal-off-canvas-wrapper .secondary-action:last-child {
+:is(#drupal-off-canvas-wrapper .secondary-action):last-child {
   border-bottom: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
 }
-#drupal-off-canvas-wrapper .secondary-action a:hover {
+:is(#drupal-off-canvas-wrapper .secondary-action) a:hover {
   color: var(--off-canvas-dropbutton-text-color-hover);
   background-color: var(--off-canvas-dropbutton-secondary-background-color);
 }

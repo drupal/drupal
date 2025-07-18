@@ -43,7 +43,7 @@
   font-size: var(--entity-meta-font-size-base);
 }
 
-.entity-meta__header .form-type--item .form-item__label::after {
+:is(.entity-meta__header .form-type--item .form-item__label)::after {
   content: ":";
 }
 

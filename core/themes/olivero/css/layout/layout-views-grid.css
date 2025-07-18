@@ -40,7 +40,7 @@
   column-gap: var(--views-grid--layout-gap);
 }
 
-.views-view-grid--vertical .views-view-grid__item > * {
+:is(.views-view-grid--vertical .views-view-grid__item) > * {
   padding-block-end: var(--views-grid--layout-gap);
   page-break-inside: avoid;
   break-inside: avoid;

@@ -71,7 +71,7 @@ tr.selected td {
   margin-inline-end: 0;
 }
 
-.views-bulk-actions__item .form-element:hover {
+:is(.views-bulk-actions__item .form-element):hover {
   border: var(--input-border-size) solid var(--input-border-color);
   box-shadow: none;
 }
@@ -80,7 +80,7 @@ tr.selected td {
   background: var(--color-blue-400);
 }
 
-.views-bulk-actions__item .button--primary:not(:disabled, .is-disabled):hover {
+:is(.views-bulk-actions__item .button--primary:not(:disabled, .is-disabled)):hover {
   background: var(--color-blue-500);
 }
 
@@ -89,7 +89,7 @@ tr.selected td {
   padding-inline-end: var(--space-xs);
 }
 
-.views-bulk-actions__item .form-item__label::after {
+:is(.views-bulk-actions__item .form-item__label)::after {
   content: ":";
 }
 

@@ -30,8 +30,16 @@
   --sp: 1.125rem;
   --content-left: 5.625rem;
   --site-header-height-wide: var(--sp10);
-  --container-padding: var(--sp);
+  --container-padding: var(--sp); /* Inline padding on .container elements. */
+}
 
+@media (min-width: 75rem) {
+  :root {
+    --container-padding: var(--sp2);
+  }
+}
+
+:root {
   /**
    * Grid helpers.
    *
@@ -43,8 +51,35 @@
   --grid-gap: var(--sp);
   --grid-gap-count: calc(var(--grid-col-count) - 1); /* Count of grid-gaps. */
   --grid-full-width: calc(100vw - var(--sp2) - var(--scrollbar-width)); /* Width of the entire grid. */
-  --grid-col-width: calc((var(--grid-full-width) - (var(--grid-gap-count) * var(--grid-gap))) / var(--grid-col-count));
+  --grid-col-width: calc((var(--grid-full-width) - (var(--grid-gap-count) * var(--grid-gap))) / var(--grid-col-count)); /* Width of a grid column. */
+}
 
+@media (min-width: 43.75rem) {
+  :root {
+    --grid-col-count: 14;
+    --grid-gap: var(--sp2);
+  }
+}
+
+@media (min-width: 62.5rem) {
+  :root {
+    --scrollbar-width: 0.9375rem; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
+  }
+}
+
+@media (min-width: 75rem) {
+  :root {
+    --grid-full-width: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
+  }
+}
+
+@media (min-width: 90rem) {
+  :root {
+    --grid-full-width: calc(var(--max-width) - var(--sp4));
+  }
+}
+
+:root {
   /* Layout helpers */
   --sp0-25: calc(0.25 * var(--sp));
   --sp0-5: calc(0.5 * var(--sp));
@@ -125,38 +160,5 @@
   --mobile-nav-width: 31.25rem;
 
   /* Border radius */
-  --border-radius: 0.1875rem; /* Inline padding on .container elements. */
-}
-
-@media (min-width: 75rem) {
-  :root {
-    --container-padding: var(--sp2);
-  }
-}
-
-/* Width of a grid column. */
-
-@media (min-width: 43.75rem) {
-  :root {
-    --grid-col-count: 14;
-    --grid-gap: var(--sp2);
-  }
-}
-
-@media (min-width: 62.5rem) {
-  :root {
-    --scrollbar-width: 0.9375rem; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
-  }
-}
-
-@media (min-width: 75rem) {
-  :root {
-    --grid-full-width: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
-  }
-}
-
-@media (min-width: 90rem) {
-  :root {
-    --grid-full-width: calc(var(--max-width) - var(--sp4));
-  }
+  --border-radius: 0.1875rem;
 }

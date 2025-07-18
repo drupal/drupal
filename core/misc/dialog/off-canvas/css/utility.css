@@ -25,7 +25,7 @@
   word-wrap: normal;
 }
 
-#drupal-off-canvas-wrapper .visually-hidden.focusable:is(:active, :focus) {
+.focusable:is(#drupal-off-canvas-wrapper .visually-hidden):is(:active, :focus) {
   position: static !important;
   overflow: visible;
   clip: auto;

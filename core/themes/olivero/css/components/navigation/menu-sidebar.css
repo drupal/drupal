@@ -34,7 +34,7 @@
   /* Bottom divider line. */
 }
 
-.menu--sidebar .menu__link::after {
+:is(.menu--sidebar .menu__link)::after {
   position: absolute;
   inset-block-end: 0;
   inset-inline-start: 0;
@@ -51,7 +51,7 @@
   font-weight: 600;
 }
 
-.menu--sidebar .menu__link--link:hover {
+:is(.menu--sidebar .menu__link--link):hover {
   color: var(--color--primary-50);
 }
 

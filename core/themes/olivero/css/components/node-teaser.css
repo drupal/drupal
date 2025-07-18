@@ -14,7 +14,7 @@
   margin-block-end: var(--sp);
 }
 
-.node--view-mode-teaser .node__meta a {
+:is(.node--view-mode-teaser .node__meta) a {
   color: var(--color-text-primary-medium);
   font-weight: bold;
 }

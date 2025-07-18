@@ -38,15 +38,15 @@
   all: revert;
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar::before {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar)::before {
   content: none;
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar .ui-dialog-title {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar) .ui-dialog-title {
   display: none;
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar) .ui-dialog-titlebar-close {
   inset-block-start: 1em;
   inset-inline-end: 1em;
   z-index: 1;
@@ -83,7 +83,7 @@
   line-height: 1.2;
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .active-workspace__label::before {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .active-workspace__label)::before {
   position: absolute;
   inset-inline-start: 0;
   display: block;
@@ -95,7 +95,7 @@
 }
 
 @media (min-width: 47.9375rem) {
-  #drupal-off-canvas-wrapper.workspaces-dialog .active-workspace__label::before {
+  :is(#drupal-off-canvas-wrapper.workspaces-dialog .active-workspace__label)::before {
     width: 2.5rem;
     height: 2.5rem;
   }
@@ -125,11 +125,11 @@
   }
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .workspaces > h3 {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .workspaces) > h3 {
   margin-top: 0;
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .workspaces ul {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .workspaces) ul {
   display: flex;
   flex-direction: column;
   grid-row: 2;
@@ -141,12 +141,12 @@
 }
 
 @media (min-width: 47.9375rem) {
-  #drupal-off-canvas-wrapper.workspaces-dialog .workspaces ul {
+  :is(#drupal-off-canvas-wrapper.workspaces-dialog .workspaces) ul {
     flex-direction: row;
   }
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .workspaces li {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .workspaces) li {
   flex: 1;
 }
 
@@ -173,12 +173,12 @@
   font-weight: bold;
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item:hover,
-#drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item:focus {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item):hover,
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item):focus {
   background-color: #666;
 }
 
-#drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item::before {
+:is(#drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item)::before {
   position: absolute;
   inset-inline-start: var(--off-canvas-padding);
   display: block;

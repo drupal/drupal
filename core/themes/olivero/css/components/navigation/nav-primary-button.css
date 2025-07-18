@@ -44,8 +44,8 @@
   border-radius: 2px;
 }
 
-.primary-nav__button-toggle .icon--menu-toggle::before,
-.primary-nav__button-toggle .icon--menu-toggle::after {
+:is(.primary-nav__button-toggle .icon--menu-toggle)::before,
+:is(.primary-nav__button-toggle .icon--menu-toggle)::after {
   position: absolute;
   /* stylelint-disable csstools/use-logical */
   top: 50%;
@@ -59,7 +59,7 @@
   border-top: solid 3px var(--color--primary-50);
 }
 
-.primary-nav__button-toggle .icon--menu-toggle::after {
+:is(.primary-nav__button-toggle .icon--menu-toggle)::after {
   transition: opacity 0.2s;
   transform: translate(-50%, -50%) rotate(90deg);
 }
@@ -86,25 +86,25 @@
     margin-inline-end: calc(-1 * var(--sp2));
   }
 
-  body:not(.is-always-mobile-nav) .primary-nav__button-toggle:focus {
+  :is(body:not(.is-always-mobile-nav) .primary-nav__button-toggle):focus {
     border: 0;
     outline: 0;
   }
 
-  body:not(.is-always-mobile-nav) .primary-nav__button-toggle:focus .icon--menu-toggle {
+  :is(body:not(.is-always-mobile-nav) .primary-nav__button-toggle):focus .icon--menu-toggle {
     border: solid 2px var(--color--primary-40);
   }
 
-  body:not(.is-always-mobile-nav) .primary-nav__button-toggle:active {
+  :is(body:not(.is-always-mobile-nav) .primary-nav__button-toggle):active {
     /* Necessary for Safari. */
     color: currentColor;
   }
 
-  body:not(.is-always-mobile-nav) .primary-nav__button-toggle[aria-expanded="true"] .icon--menu-toggle::after {
+  [aria-expanded="true"]:is(body:not(.is-always-mobile-nav) .primary-nav__button-toggle) .icon--menu-toggle::after {
     opacity: 0.8;
   }
 
-  body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle {
+  :is(body:not(.is-always-mobile-nav) .primary-nav__button-toggle) .icon--menu-toggle {
     inset-inline-start: 0.1875rem;
     width: 1.125rem;
     transform: translateY(-50%);
@@ -112,11 +112,11 @@
     background-color: var(--color--white);
   }
 
-  body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle::before {
+  :is(:is(body:not(.is-always-mobile-nav) .primary-nav__button-toggle) .icon--menu-toggle)::before {
     content: none;
   }
 
-  body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle::after {
+  :is(:is(body:not(.is-always-mobile-nav) .primary-nav__button-toggle) .icon--menu-toggle)::after {
     /* stylelint-disable csstools/use-logical */
     top: calc(50% - 2px);
     left: 0.1875rem;

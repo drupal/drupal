@@ -34,8 +34,8 @@
   background-position: 0 50%;
 }
 
-.no-touchevents .form-element--type-select.form-element--extrasmall,
-.no-touchevents .form-element--type-select[name$="][_weight]"] {
+.form-element--extrasmall:is(.no-touchevents .form-element--type-select),
+[name$="][_weight]"]:is(.no-touchevents .form-element--type-select) {
   padding-inline-end: calc(1.5rem - var(--input-border-size));
   background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
 }

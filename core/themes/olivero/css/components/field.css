@@ -32,8 +32,7 @@
    */
 }
 
-.field--label-inline .field__label:dir(rtl),
-.field--label-inline .field__items:dir(rtl) {
+:is(.field--label-inline .field__label, .field--label-inline .field__items):dir(rtl) {
   float: right;
 }
 

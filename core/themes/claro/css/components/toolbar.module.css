@@ -51,7 +51,7 @@
 .toolbar .menu-item {
   display: block;
 }
-.toolbar .toolbar-bar .toolbar-tab.hidden {
+.hidden:is(:is(.toolbar .toolbar-bar) .toolbar-tab) {
   display: none;
 }
 .toolbar a {
@@ -183,7 +183,7 @@
   display: block;
 }
 /* Bring the tray into the viewport. By default it is just off-screen. */
-.toolbar-oriented .toolbar-tray-vertical.is-active {
+.is-active:is(.toolbar-oriented .toolbar-tray-vertical) {
   inset-inline-start: 0;
 }
 /* When the configured standard breakpoint is active, the tray appears to push
@@ -201,21 +201,21 @@
  */
 /* Hide the orientation toggle when the configured narrow breakpoint is not
  * active. */
-.toolbar .toolbar-tray .toolbar-toggle-orientation {
+:is(.toolbar .toolbar-tray) .toolbar-toggle-orientation {
   display: none;
 }
 /* Show the orientation toggle when the configured narrow breakpoint is
  * active. */
-.toolbar-oriented .toolbar-tray .toolbar-toggle-orientation {
+:is(.toolbar-oriented .toolbar-tray) .toolbar-toggle-orientation {
   display: block;
 }
-.toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
+:is(.toolbar-oriented .toolbar-tray-horizontal) .toolbar-toggle-orientation {
   position: absolute;
   inset-block-start: auto;
   inset-inline-end: 0;
   inset-block-end: 0;
 }
-.toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
+:is(.toolbar-oriented .toolbar-tray-vertical) .toolbar-toggle-orientation {
   float: right; /* LTR */
   width: 100%;
 }
@@ -225,10 +225,10 @@
 /**
  * Toolbar home button toggle.
  */
-.toolbar .toolbar-bar .home-toolbar-tab {
+:is(.toolbar .toolbar-bar) .home-toolbar-tab {
   display: none;
 }
-.path-admin .toolbar-bar .home-toolbar-tab {
+:is(.path-admin .toolbar-bar) .home-toolbar-tab {
   display: block;
 }
 /* Anti flicker styling. */

@@ -22,11 +22,11 @@
  * Quick inline admin links.
  */
 
-small .admin-link::before {
+:is(small .admin-link)::before {
   content: " [";
 }
 
-small .admin-link::after {
+:is(small .admin-link)::after {
   content: "]";
 }
 

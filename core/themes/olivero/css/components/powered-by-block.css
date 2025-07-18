@@ -21,8 +21,8 @@
   text-decoration: underline;
 }
 
-.block-system-powered-by-block a:hover,
-.block-system-powered-by-block a:focus {
+:is(.block-system-powered-by-block a):hover,
+:is(.block-system-powered-by-block a):focus {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
@@ -40,10 +40,10 @@
   fill: currentColor;
 }
 
-.site-footer .block-system-powered-by-block a {
+:is(.site-footer .block-system-powered-by-block) a {
   color: var(--color--white);
 }
 
-.site-footer .block-system-powered-by-block svg path {
+:is(.site-footer .block-system-powered-by-block) svg path {
   fill: var(--color--white);
 }

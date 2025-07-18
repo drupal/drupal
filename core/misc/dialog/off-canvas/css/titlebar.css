@@ -32,7 +32,7 @@
   /* The pencil icon. */
 }
 
-#drupal-off-canvas-wrapper .ui-dialog-titlebar::before {
+:is(#drupal-off-canvas-wrapper .ui-dialog-titlebar)::before {
   position: absolute;
   top: 0;
   inset-inline-start: 1em;
@@ -48,7 +48,7 @@
 }
 
 @media (forced-colors: active) {
-  #drupal-off-canvas-wrapper .ui-dialog-titlebar::before {
+  :is(#drupal-off-canvas-wrapper .ui-dialog-titlebar)::before {
     background-color: canvastext;
   }
 }
@@ -71,15 +71,15 @@
   appearance: none;
 }
 
-#drupal-off-canvas-wrapper .ui-dialog-titlebar-close:focus {
+:is(#drupal-off-canvas-wrapper .ui-dialog-titlebar-close):focus {
   outline: solid 2px currentColor;
   outline-offset: 2px;
 }
 
 /* The plus icon. */
 
-#drupal-off-canvas-wrapper .ui-dialog-titlebar-close::before,
-#drupal-off-canvas-wrapper .ui-dialog-titlebar-close::after {
+:is(#drupal-off-canvas-wrapper .ui-dialog-titlebar-close)::before,
+:is(#drupal-off-canvas-wrapper .ui-dialog-titlebar-close)::after {
   position: absolute;
   top: calc(50% - 1px);
   left: 50%;
@@ -89,16 +89,16 @@
   border-top: solid 2px currentColor;
 }
 
-#drupal-off-canvas-wrapper .ui-dialog-titlebar-close::before {
+:is(#drupal-off-canvas-wrapper .ui-dialog-titlebar-close)::before {
   transform: translate(-50%, 50%) rotate(-45deg);
 }
 
-#drupal-off-canvas-wrapper .ui-dialog-titlebar-close::after {
+:is(#drupal-off-canvas-wrapper .ui-dialog-titlebar-close)::after {
   transform: translate(-50%, 50%) rotate(45deg);
 }
 
 /* Hide the default jQuery UI dialog close button. */
 
-#drupal-off-canvas-wrapper .ui-dialog-titlebar-close .ui-icon {
+:is(#drupal-off-canvas-wrapper .ui-dialog-titlebar-close) .ui-icon {
   display: none;
 }

@@ -47,20 +47,20 @@
   font-size: var(--off-canvas-details-summary-font-size);
 }
 
-#drupal-off-canvas-wrapper summary:hover {
+:is(#drupal-off-canvas-wrapper summary):hover {
   color: var(--off-canvas-details-summary-text-color-hover);
   background-color: var(--off-canvas-details-summary-background-color-hover);
 }
 
-#drupal-off-canvas-wrapper summary:focus {
+:is(#drupal-off-canvas-wrapper summary):focus {
   outline-offset: -4px; /* Ensure focus doesn't get cut off. */
 }
 
-#drupal-off-canvas-wrapper summary a {
+:is(#drupal-off-canvas-wrapper summary) a {
   color: var(--off-canvas-details-text-color);
 }
 
-#drupal-off-canvas-wrapper summary a:hover {
+:is(:is(#drupal-off-canvas-wrapper summary) a):hover {
   color: var(--off-canvas-details-summary-text-color-hover);
 }
 

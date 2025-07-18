@@ -47,7 +47,7 @@
   background-size: 0 0.1875rem;
 }
 
-.search-result__title a:hover {
+:is(.search-result__title a):hover {
   color: var(--color-text-primary-medium);
 }
 

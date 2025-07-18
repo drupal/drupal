@@ -35,7 +35,7 @@
   background-position: right center;
   background-size: 2.5rem;
 }
-[dir="rtl"] .system-status-counter__status-icon::before {
+[dir="rtl"] :is(.system-status-counter__status-icon::before) {
   background-position: left center;
 }
 @media (forced-colors: active) {

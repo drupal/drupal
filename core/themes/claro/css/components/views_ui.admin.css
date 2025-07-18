@@ -54,7 +54,7 @@
   .views-display-columns > *:first-child {
     margin-inline-start: 0;
   }
-  [dir="rtl"] .views-display-columns > * {
+  :is([dir="rtl"] .views-display-columns) > * {
     float: right;
   }
 }
@@ -83,6 +83,6 @@ html.js .js-only {
   display: inherit;
 }
 
-html.js span.js-only {
+.js-only:is(html.js span) {
   display: inline;
 }
