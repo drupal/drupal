@@ -5,9 +5,9 @@
  */
 
 use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
+use Drupal\update\Hook\UpdateThemeHooks;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 
@@ -254,11 +254,89 @@ function _update_project_status_sort($a, $b) {
  *   An associative array containing:
  *   - last: The timestamp when the site last checked for available updates.
  *
- * @see theme_update_report()
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *  template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_update_last_check(&$variables): void {
-  $variables['time'] = \Drupal::service('date.formatter')->formatTimeDiffSince($variables['last']);
-  $variables['link'] = Link::fromTextAndUrl(t('Check manually'), Url::fromRoute('update.manual_status', [], ['query' => \Drupal::destination()->getAsArray()]))->toString();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(UpdateThemeHooks::class)->preprocessUpdateLastCheck($variables);
+}
+
+/**
+ * Prepares variables for project status report templates.
+ *
+ * Default template: update-report.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - data: An array of data about each project's status.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_update_report(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(UpdateThemeHooks::class)->preprocessUpdateReport($variables);
+}
+
+/**
+ * Prepares variables for update version templates.
+ *
+ * Default template: update-version.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - version: An array of information about the release version.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_update_version(array &$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(UpdateThemeHooks::class)->preprocessUpdateVersion($variables);
+}
+
+/**
+ * Prepares variables for update project status templates.
+ *
+ * Default template: update-project-status.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - project: An array of information about the project.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_update_project_status(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(UpdateThemeHooks::class)->preprocessUpdateProjectStatus($variables);
+}
+
+/**
+ * Prepares variables for update fetch error message templates.
+ *
+ * Default template: update-fetch-error-message.html.twig.
+ *
+ * @param array $variables
+ *   An associative array of template variables.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_update_fetch_error_message(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(UpdateThemeHooks::class)->preprocessUpdateFetchErrorMessage($variables);
 }
 
 /**

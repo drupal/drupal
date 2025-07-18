@@ -107,49 +107,6 @@ class UpdateHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'update_last_check' => [
-        'variables' => [
-          'last' => 0,
-        ],
-      ],
-      'update_report' => [
-        'variables' => [
-          'data' => NULL,
-        ],
-        'file' => 'update.report.inc',
-      ],
-      'update_project_status' => [
-        'variables' => [
-          'project' => [],
-        ],
-        'file' => 'update.report.inc',
-      ],
-      // We are using template instead of '#type' => 'table' here to keep markup
-      // out of preprocess and allow for easier changes to markup.
-      'update_version' => [
-        'variables' => [
-          'version' => NULL,
-          'title' => NULL,
-          'attributes' => [],
-        ],
-        'file' => 'update.report.inc',
-      ],
-      'update_fetch_error_message' => [
-        'file' => 'update.report.inc',
-        'render element' => 'element',
-        'variables' => [
-          'error_message' => [],
-        ],
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_cron().
    */
   #[Hook('cron')]
