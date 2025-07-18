@@ -393,31 +393,41 @@ trait PerformanceTestTrait {
     // 'encodedDataLength' for network requests, however in the case that the
     // file has already been requested by the browser, this will be the length
     // of a HEAD response for 304 not modified or similar. Additionally, core's
-    // aggregation adds the base path to CSS aggregates, resulting in slightly
+    // aggregation adds the basepath to CSS aggregates, resulting in slightly
     // different file sizes depending on whether tests run in a subdirectory or
     // not.
     foreach ($stylesheet_urls as $url) {
       $stylesheet_count++;
-      if ($GLOBALS['base_path'] === '/') {
-        $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
-        $stylesheet_bytes += strlen(file_get_contents($filename));
+      if (!str_starts_with($url, $GLOBALS['base_url'])) {
+        $stylesheet_bytes += strlen(file_get_contents($url));
       }
       else {
-        $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
-        // Strip the base path from the contents of the file so that tests
-        // running in a subdirectory get the same results.
-        $stylesheet_bytes += strlen(str_replace($GLOBALS['base_path'], '/', file_get_contents($filename)));
+        if ($GLOBALS['base_path'] === '/') {
+          $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
+          $stylesheet_bytes += strlen(file_get_contents($filename));
+        }
+        else {
+          $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
+          // Strip the basepath from the contents of the file so that tests
+          // running in a subdirectory get the same results.
+          $stylesheet_bytes += strlen(str_replace($GLOBALS['base_path'], '/', file_get_contents($filename)));
+        }
       }
     }
     foreach ($script_urls as $url) {
       $script_count++;
-      if ($GLOBALS['base_path'] === '/') {
-        $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
+      if (!str_starts_with($url, $GLOBALS['base_url'])) {
+        $script_bytes += strlen(file_get_contents($url));
       }
       else {
-        $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
+        if ($GLOBALS['base_path'] === '/') {
+          $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
+        }
+        else {
+          $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
+        }
+        $script_bytes += strlen(file_get_contents($filename));
       }
-      $script_bytes += strlen(file_get_contents($filename));
     }
 
     $performance_data->setStylesheetCount($stylesheet_count);
