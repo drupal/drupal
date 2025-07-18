@@ -464,39 +464,6 @@ class NodeHooks1 {
   }
 
   /**
-   * Implements hook_ENTITY_TYPE_insert() for comment entities.
-   */
-  #[Hook('comment_insert')]
-  public function commentInsert($comment): void {
-    // Reindex the node when comments are added.
-    if ($comment->getCommentedEntityTypeId() == 'node') {
-      node_reindex_node_search($comment->getCommentedEntityId());
-    }
-  }
-
-  /**
-   * Implements hook_ENTITY_TYPE_update() for comment entities.
-   */
-  #[Hook('comment_update')]
-  public function commentUpdate($comment): void {
-    // Reindex the node when comments are changed.
-    if ($comment->getCommentedEntityTypeId() == 'node') {
-      node_reindex_node_search($comment->getCommentedEntityId());
-    }
-  }
-
-  /**
-   * Implements hook_ENTITY_TYPE_delete() for comment entities.
-   */
-  #[Hook('comment_delete')]
-  public function commentDelete($comment): void {
-    // Reindex the node when comments are deleted.
-    if ($comment->getCommentedEntityTypeId() == 'node') {
-      node_reindex_node_search($comment->getCommentedEntityId());
-    }
-  }
-
-  /**
    * Implements hook_config_translation_info_alter().
    */
   #[Hook('config_translation_info_alter')]
