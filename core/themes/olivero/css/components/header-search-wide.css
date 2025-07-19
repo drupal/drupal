@@ -244,7 +244,7 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 
 [dir] .block-search-wide__wrapper input[type="search"] {
   background-color: transparent;
-  background-image: linear-gradient(var(--color--primary-50), var(--color--primary-50)); /* Two values are needed for IE11 support. */
+  background-image: linear-gradient(var(--color--primary-50));
   background-repeat: no-repeat;
   background-position: bottom left; /* LTR */
   background-size: 0% 0.625rem;
