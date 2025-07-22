@@ -111,6 +111,7 @@ class UnpackRecipeTest extends BuildTestBase {
     $this->assertSame("fixtures/recipe-c unpacked.\nfixtures/recipe-a unpacked.\nfixtures/recipe-b unpacked.\n", $stdOut);
     $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
     $this->assertSame([
+      'ext-json',
       'composer/installers',
       'drupal/core-recipe-unpack',
       'fixtures/module-a',
@@ -159,7 +160,7 @@ class UnpackRecipeTest extends BuildTestBase {
 
     // Assert the state of the root composer.json as no unpacking has occurred.
     $this->assertSame(['fixtures/recipe-a'], array_keys($root_composer_json['require-dev']));
-    $this->assertSame(['composer/installers', 'drupal/core-recipe-unpack', 'fixtures/module-a'], array_keys($root_composer_json['require']));
+    $this->assertSame(['composer/installers', 'drupal/core-recipe-unpack', 'ext-json', 'fixtures/module-a'], array_keys($root_composer_json['require']));
 
     // Ensure the resulting Composer files are valid.
     $this->runComposer('validate');
@@ -418,6 +419,7 @@ class UnpackRecipeTest extends BuildTestBase {
     $this->assertSame([
       'composer/installers',
       'drupal/core-recipe-unpack',
+      'ext-json',
       'fixtures/recipe-a',
     ], array_keys($root_composer_json['require']));
 
@@ -427,6 +429,7 @@ class UnpackRecipeTest extends BuildTestBase {
     $this->assertSame([
       'composer/installers',
       'drupal/core-recipe-unpack',
+      'ext-json',
     ], array_keys($root_composer_json['require']));
 
     // Ensure the resulting Composer files are valid.
@@ -452,6 +455,7 @@ class UnpackRecipeTest extends BuildTestBase {
     $this->assertSame([
       'composer/installers',
       'drupal/core-recipe-unpack',
+      'ext-json',
       'fixtures/recipe-a',
     ], array_keys($root_composer_json['require']));
 
@@ -487,6 +491,7 @@ class UnpackRecipeTest extends BuildTestBase {
     $this->assertStringContainsString("fixtures/recipe-a unpacked.", $stdOut);
 
     $this->assertSame([
+      'ext-json',
       'composer/installers',
       'drupal/core-recipe-unpack',
       'fixtures/module-b',
@@ -543,6 +548,7 @@ class UnpackRecipeTest extends BuildTestBase {
     $this->assertSame([
       'composer/installers',
       'drupal/core-recipe-unpack',
+      'ext-json',
       'fixtures/recipe-a',
     ], array_keys($root_composer_json['require']));
     $this->assertFileDoesNotExist($root_project_path . '/recipes/recipe-a/recipe.yml');
@@ -554,6 +560,7 @@ class UnpackRecipeTest extends BuildTestBase {
     $this->assertSame([
       'composer/installers',
       'drupal/core-recipe-unpack',
+      'ext-json',
       'fixtures/recipe-a',
     ], array_keys($root_composer_json['require']));
     $this->assertFileExists($root_project_path . '/recipes/recipe-a/recipe.yml');

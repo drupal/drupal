@@ -4,6 +4,7 @@ namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Command\BaseCommand;
 use Composer\Package\PackageInterface;
+use Composer\Repository\PlatformRepository;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,7 +55,14 @@ EOT
     // root package.
     if (empty($package_names)) {
       foreach ($composer->getPackage()->getRequires() as $link) {
-        $package = $local_repo->findPackage($link->getTarget(), $link->getConstraint());
+        $target = $link->getTarget();
+        // Skip platform requirements, since those don't resolve to a real
+        // package.
+        // @see https://getcomposer.org/doc/articles/composer-platform-dependencies.md
+        if (PlatformRepository::isPlatformPackage($target)) {
+          continue;
+        }
+        $package = $local_repo->findPackage($target, $link->getConstraint());
         if ($package->getType() === Plugin::RECIPE_PACKAGE_TYPE) {
           $package_names[] = $package->getName();
         }
