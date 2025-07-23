@@ -458,6 +458,8 @@ block.settings.field_block:*:*:*:
   mapping:
     formatter:
       type: field_formatter
+  constraints:
+    FullyValidatable: ~
 
 block.settings.extra_field_block:*:*:*:
   type: block_settings
