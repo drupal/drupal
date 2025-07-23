@@ -42,7 +42,8 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
   public function tokenForm(&$form, FormStateInterface $form_state) {
     $form['tokenize'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Use replacement tokens from the first row'),
+      '#title' => $this->t('Include tokens from the first row'),
+      '#description' => $this->t('Enable this to use tokens from fields in the first result row, if present. Global tokens (e.g., site name) and contextual argument tokens are always available.'),
       '#default_value' => $this->options['tokenize'],
     ];
 
