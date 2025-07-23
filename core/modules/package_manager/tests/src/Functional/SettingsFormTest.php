@@ -68,8 +68,10 @@ final class SettingsFormTest extends BrowserTestBase {
       'composer' => 'rm -rf /',
       'rsync' => 'cat /etc/passwd',
     ], 'Save configuration');
-    $assert_session->statusMessageContains('"rm -rf /" is not an executable file.', 'error');
+    $assert_session->statusMessageContains('The file could not be found.', 'error');
     $assert_session->statusMessageContains('"cat /etc/passwd" is not an executable file.', 'error');
+    $this->assertTrue($assert_session->fieldExists('composer')->hasClass('error'));
+    $this->assertTrue($assert_session->fieldExists('rsync')->hasClass('error'));
   }
 
 }
