@@ -191,11 +191,9 @@ Database Update API
 
 DateTime
 - Jonathan Hedstrom 'jhedstrom' https://www.drupal.org/u/jhedstrom
-- Matthew Donadio 'mpdonadio' https://www.drupal.org/u/mpdonadio
 
 DateTime Range
 - Jonathan Hedstrom 'jhedstrom' https://www.drupal.org/u/jhedstrom
-- Matthew Donadio 'mpdonadio' https://www.drupal.org/u/mpdonadio
 
 Default Content
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
