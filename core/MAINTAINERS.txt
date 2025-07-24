@@ -171,7 +171,7 @@ Database API
 - David Bekker 'daffie' https://www.drupal.org/u/daffie
 
   MySQL DB driver
-  - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
+  - ?
 
   PostgreSQL DB driver
   - ?
