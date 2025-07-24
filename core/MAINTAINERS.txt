@@ -278,6 +278,7 @@ Layout Builder
 - Daniel Veza 'DanielVeza' https://www.drupal.org/u/DanielVeza
 
 Link Field
+- David Cameron 'dcam' https://www.drupal.org/u/dcam
 - Weber Macedo 'Mac_Weber' https://www.drupal.org/u/mac_weber
 
 Lock
