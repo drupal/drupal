@@ -13,3 +13,11 @@ pager_test.query_parameters:
     _controller: '\Drupal\pager_test\Controller\PagerTestController::queryParameters'
   requirements:
     _access: 'TRUE'
+
+pager_test.modal_pager:
+  path: '/pager-test/modal-pager'
+  defaults:
+    _title: 'Page with a modal link with pagers'
+    _controller: '\Drupal\pager_test\Controller\TestModalController::modal'
+  requirements:
+    _access: 'TRUE'

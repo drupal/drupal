@@ -3,8 +3,10 @@
 namespace Drupal\Core\Pager;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Pager theme preprocess.
@@ -13,7 +15,10 @@ use Drupal\Core\Url;
  */
 class PagerPreprocess {
 
-  public function __construct(protected PagerManagerInterface $pagerManager) {
+  public function __construct(
+    protected PagerManagerInterface $pagerManager,
+    protected RequestStack $requestStack,
+  ) {
   }
 
   /**
@@ -43,6 +48,16 @@ class PagerPreprocess {
     $quantity = empty($variables['pager']['#quantity']) ? 0 : $variables['pager']['#quantity'];
     $route_name = $variables['pager']['#route_name'];
     $route_parameters = $variables['pager']['#route_parameters'] ?? [];
+
+    $link_attributes = [];
+
+    if ($this->requestStack->getCurrentRequest()?->get(MainContentViewSubscriber::WRAPPER_FORMAT) === 'drupal_modal') {
+      $link_attributes = [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'modal',
+        'data-accepts' => 'application/json',
+      ];
+    }
 
     $pager = $this->pagerManager->getPager($element);
 
@@ -91,7 +106,7 @@ class PagerPreprocess {
     $items = [];
     if ($current_page > 0) {
       $items['first'] = [];
-      $items['first']['attributes'] = new Attribute();
+      $items['first']['attributes'] = new Attribute($link_attributes);
       $options = [
         'query' => $this->pagerManager->getUpdatedParameters($parameters, $element, 0),
       ];
@@ -101,7 +116,7 @@ class PagerPreprocess {
       }
 
       $items['previous'] = [];
-      $items['previous']['attributes'] = new Attribute();
+      $items['previous']['attributes'] = new Attribute($link_attributes);
       $options = [
         'query' => $this->pagerManager->getUpdatedParameters($parameters, $element, $current_page - 1),
       ];
@@ -121,7 +136,7 @@ class PagerPreprocess {
         'query' => $this->pagerManager->getUpdatedParameters($parameters, $element, $i - 1),
       ];
       $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-      $items['pages'][$i]['attributes'] = new Attribute();
+      $items['pages'][$i]['attributes'] = new Attribute($link_attributes);
       if ($i == $pager_current) {
         $variables['current'] = $i;
         $items['pages'][$i]['attributes']->setAttribute('aria-current', 'page');
@@ -135,7 +150,7 @@ class PagerPreprocess {
     // Create the "next" and "last" links if we are not on the last page.
     if ($current_page < ($pager_max - 1)) {
       $items['next'] = [];
-      $items['next']['attributes'] = new Attribute();
+      $items['next']['attributes'] = new Attribute($link_attributes);
       $options = [
         'query' => $this->pagerManager->getUpdatedParameters($parameters, $element, $current_page + 1),
       ];

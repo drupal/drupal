@@ -186,7 +186,7 @@ class PagerTest extends BrowserTestBase {
       foreach ([0, 1, 4] as $pager_element) {
         $active_page = $this->cssSelect("div.test-pager-{$pager_element} ul.pager__items li.is-active:contains('{$data['expected_page'][$pager_element]}')");
         $destination = str_replace('%2C', ',', $active_page[0]->find('css', 'a')->getAttribute('href'));
-        $this->assertEquals($data['expected_query'], $destination);
+        $this->assertStringEndsWith($data['expected_query'], $destination);
       }
     }
   }

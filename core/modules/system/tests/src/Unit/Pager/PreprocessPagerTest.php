@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Unit\Pager;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Pager\PagerPreprocess;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests pager preprocessing.
@@ -47,7 +50,16 @@ class PreprocessPagerTest extends UnitTestCase {
     $pager_manager->method('getPager')->willReturn($pager);
     $pager_manager->method('getUpdatedParameters')->willReturn('');
 
-    $this->pagerPreprocess = new PagerPreprocess($pager_manager);
+    $request_stack = $this->createMock(RequestStack::class);
+    $request = Request::createFromGlobals();
+    $request->query->set(MainContentViewSubscriber::WRAPPER_FORMAT, 'drupal_modal');
+
+    // Mocks the request stack getting the current request.
+    $request_stack->expects($this->any())
+      ->method('getCurrentRequest')
+      ->willReturn($request);
+
+    $this->pagerPreprocess = new PagerPreprocess($pager_manager, $request_stack);
 
     $container = new ContainerBuilder();
     $container->set('url_generator', $url_generator);
@@ -179,6 +191,27 @@ class PreprocessPagerTest extends UnitTestCase {
     $this->pagerPreprocess->preprocessPager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
+  }
+
+  /**
+   * Tests pager links get modal attributes when request is in a modal.
+   */
+  public function testPagerModalAttributes(): void {
+    $variables = [
+      'pager' => [
+        '#element' => '',
+        '#parameters' => [],
+        '#quantity' => '',
+        '#route_name' => '',
+        '#tags' => '',
+      ],
+    ];
+    $this->pagerPreprocess->preprocessPager($variables);
+
+    foreach (['first', 'previous'] as $key) {
+      $attributes = $variables['items'][$key]['attributes']->toArray();
+      $this->assertEquals(['use-ajax'], $attributes['class']);
+    }
   }
 
 }
