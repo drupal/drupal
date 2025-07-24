@@ -622,9 +622,10 @@ function user_role_revoke_permissions($rid, array $permissions = []): void {
  *   The user object of the account being notified. Must contain at
  *   least the fields 'uid', 'name', and 'mail'.
  *
- * @return array
- *   An array containing various information about the message.
- *   See \Drupal\Core\Mail\MailManagerInterface::mail() for details.
+ * @return array|null
+ *   An array containing various information about the message. See
+ *   \Drupal\Core\Mail\MailManagerInterface::mail() for details. Or null if the
+ *   account does not have an email address.
  *
  * @see user_mail_tokens()
  */
@@ -643,7 +644,15 @@ function _user_mail_notify($op, AccountInterface $account) {
     if (empty($site_mail)) {
       $site_mail = ini_get('sendmail_from');
     }
-    $mail = \Drupal::service('plugin.manager.mail')->mail('user', $op, $account->getEmail(), $account->getPreferredLangcode(), $params, $site_mail);
+    if ($account->getEmail()) {
+      $mail = \Drupal::service('plugin.manager.mail')->mail('user', $op, $account->getEmail(), $account->getPreferredLangcode(), $params, $site_mail);
+    }
+    else {
+      \Drupal::logger('user')->info('The User module could not send an email for the operation "%op" because the user account %account does not have an email address.', [
+        '%op' => $op,
+        '%account' => $account->getDisplayName(),
+      ]);
+    }
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.

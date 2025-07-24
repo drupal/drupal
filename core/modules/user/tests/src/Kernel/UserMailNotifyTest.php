@@ -8,6 +8,7 @@ use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Hook\UserHooks;
+use Psr\Log\LoggerInterface;
 
 /**
  * Tests _user_mail_notify() use of user.settings.notify.*.
@@ -108,6 +109,41 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertNull($return);
     $this->assertEmpty($this->getMails());
+  }
+
+  /**
+   * Tests mails are not sent when the account has no email address.
+   *
+   * @param string $op
+   *   The operation being performed on the account.
+   *
+   * @dataProvider userMailsProvider
+   */
+  public function testUserMailsWithoutAccountEmail($op): void {
+    $this->installConfig('user');
+    $this->config('user.settings')->set('notify.' . $op, TRUE)->save();
+
+    $logger = $this->createMock(LoggerInterface::class);
+    $logger->expects($this->once())
+      ->method('log');
+    /** @var \Drupal\Core\Logger\LoggerChannelFactory $logger_factory */
+    $logger_factory = $this->container->get('logger.factory');
+    $logger_factory->get('user')
+      ->addLogger($logger);
+
+    $return = _user_mail_notify($op, $this->createUser([], NULL, FALSE, [
+      'mail' => NULL,
+    ]));
+
+    $this->assertNull($return);
+    if ($op == 'register_pending_approval') {
+      // The register_pending_approval op will cause an email to be sent to the
+      // site address.
+      $this->assertCount(1, $this->getMails());
+    }
+    else {
+      $this->assertEmpty($this->getMails());
+    }
   }
 
   /**
