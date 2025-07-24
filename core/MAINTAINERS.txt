@@ -468,7 +468,6 @@ provides more information on their responsibilities.
 Accessibility
 - Rain Breaw Michaels 'rainbreaw' https://www.drupal.org/u/rainbreaw
 - Mike Gifford 'mgifford' https://www.drupal.org/u/mgifford
-- Andrew Macpherson 'andrewmacpherson' https://www.drupal.org/u/andrewmacpherson
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Documentation
