@@ -80,8 +80,8 @@ class PhpUnitTestDiscoveryTest extends KernelTestBase {
     $configurationFilePath = $this->root . \DIRECTORY_SEPARATOR . 'core';
     // @todo once PHPUnit 10 is no longer used, remove the condition.
     // @see https://www.drupal.org/project/drupal/issues/3497116
-    if (RunnerVersion::getMajor() >= 11) {
-      $configurationFilePath .= \DIRECTORY_SEPARATOR . '.phpunit-next.xml';
+    if (RunnerVersion::getMajor() < 11) {
+      $configurationFilePath .= \DIRECTORY_SEPARATOR . '.phpunit-10.xml';
     }
 
     // PHPUnit's test discovery - via CLI execution.

@@ -67,6 +67,7 @@ variables:
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.4-ubuntu"
+  PHPUNIT_CONFIGURATION_FILE_PATH: $CI_PROJECT_DIR/core
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: false
 
 #############
@@ -114,7 +115,7 @@ default:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
   script:
-    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --verbose --non-html --all
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --verbose --non-html --all
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
   artifacts:

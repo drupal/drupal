@@ -29,6 +29,11 @@ use Symfony\Component\Process\Process;
 class PhpUnitTestRunner implements ContainerInjectionInterface {
 
   /**
+   * Path to PHPUnit's configuration file.
+   */
+  private string $configurationFilePath;
+
+  /**
    * Constructs a test runner.
    *
    * @param string $appRoot
@@ -51,6 +56,14 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       (string) $container->getParameter('app.root'),
       (string) $container->get('file_system')->realpath('public://simpletest')
     );
+  }
+
+  /**
+   * Sets the configuration file path.
+   */
+  public function setConfigurationFilePath(string $configurationFilePath): self {
+    $this->configurationFilePath = $configurationFilePath;
+    return $this;
   }
 
   /**
@@ -150,6 +163,8 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     // Build the command line for the PHPUnit CLI invocation.
     $command = [
       $phpunit_bin,
+      '--configuration',
+      $this->configurationFilePath,
       '--testdox',
       '--log-junit',
       $log_junit_file_path,

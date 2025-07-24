@@ -26,6 +26,7 @@ default:
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - echo "SIMPLETEST_DB = $SIMPLETEST_DB"
+    - export PHPUNIT_CONFIGURATION_FILE_PATH=$CI_PROJECT_DIR/core
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
@@ -104,7 +105,7 @@ variables:
   script:
     - sudo -u www-data -E -H composer run-script drupal-phpunit-upgrade-check
     # Need to pass this along directly.
-    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --debug-discovery --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --debug-discovery --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
 
 .run-repeat-class-test: &run-repeat-class-test
   script:
@@ -116,7 +117,7 @@ variables:
         echo '   "Key" to "REPEAT_TEST_CLASS" and "Value" to "Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest"';
         exit 1;
       else
-        sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "$REPEAT_COUNT" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
+        sudo -u www-data -E -H php ./core/scripts/run-tests.sh --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --color --keep-results --concurrency "$CONCURRENCY" --repeat "$REPEAT_COUNT" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
       fi
 
 ################
@@ -234,7 +235,7 @@ variables:
   script:
     - sudo -u www-data -E -H composer run-script drupal-phpunit-upgrade-check
     # Run a small subset of tests to prove non W3C testing still works.
-    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --debug-discovery --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --debug-discovery --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
 
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
@@ -277,4 +278,4 @@ variables:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit -c core/.phpunit-next.xml --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
