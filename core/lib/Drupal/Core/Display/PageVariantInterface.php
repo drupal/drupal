@@ -10,7 +10,7 @@ namespace Drupal\Core\Display;
  * display variants may choose to render that main content in a certain way:
  * decorated in a certain way, laid out in a certain way, et cetera.
  *
- * For example, the \Drupal\block\Plugin\DisplayVariant\FullPageVariant page
+ * For example, the \Drupal\block\Plugin\DisplayVariant\BlockPageVariant page
  * display variant is used by the Block module to control regions and output
  * blocks placed in those regions.
  *
