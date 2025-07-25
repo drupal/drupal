@@ -266,7 +266,7 @@ JSON:API
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Language
-- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+- ?
 
 Layout Builder
 - Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
