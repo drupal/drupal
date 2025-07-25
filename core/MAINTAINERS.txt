@@ -492,7 +492,6 @@ Testing
 
 Usability
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
-- Bojhan Somers 'Bojhan' https://www.drupal.org/u/bojhan
 
 
 Security team
