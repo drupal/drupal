@@ -45,7 +45,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface, Plu
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getErrors() && $form_state->getValue('context_mapping')) {
       $this->configuration['context_mapping'] = $form_state->getValue('context_mapping');
     }
