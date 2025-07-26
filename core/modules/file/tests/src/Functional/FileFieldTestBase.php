@@ -227,8 +227,13 @@ abstract class FileFieldTestBase extends BrowserTestBase {
 
   /**
    * Asserts that a file does not exist in the database.
+   *
+   * @param \Drupal\file\FileInterface $file
+   *   The file to be validated.
+   * @param string|null $message
+   *   (optional) A message to display with the assertion.
    */
-  public function assertFileEntryNotExists($file, $message) {
+  public function assertFileEntryNotExists(FileInterface $file, ?string $message = NULL): void {
     $this->container->get('entity_type.manager')->getStorage('file')->resetCache();
     $message = $message ?? sprintf('File %s exists in database at the correct path.', $file->getFileUri());
     $this->assertNull(File::load($file->id()), $message);
