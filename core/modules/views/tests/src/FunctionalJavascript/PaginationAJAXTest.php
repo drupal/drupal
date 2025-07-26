@@ -30,8 +30,9 @@ class PaginationAJAXTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * @var array
    * Test Views to enable.
+   *
+   * @var array
    */
   public static $testViews = ['test_content_ajax'];
 

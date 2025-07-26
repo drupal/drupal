@@ -151,6 +151,8 @@ class OffCanvasTest extends OffCanvasTestBase {
   }
 
   /**
+   * Asserts that the off-canvas dialog opens and renders expected content.
+   *
    * @param int $link_index
    *   The index of the link to test.
    * @param string $position

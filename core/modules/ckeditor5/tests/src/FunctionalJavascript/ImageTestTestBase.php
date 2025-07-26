@@ -13,6 +13,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 // cspell:ignore imageresize imageupload
 
 /**
+ * Provides a base class for testing CKEditor 5 image embedding and uploads.
+ *
  * @internal
  */
 abstract class ImageTestTestBase extends ImageTestBase {
