@@ -58,6 +58,7 @@
   </rule>
   <rule  ref="Drupal.Commenting.DocComment.MissingShort">
     <include-pattern>core/*/Unit/*</include-pattern>
+    <include-pattern>core/*/FunctionalJavascript/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.DocCommentAlignment"/>
   <rule ref="Drupal.Commenting.DocCommentLongArraySyntax"/>

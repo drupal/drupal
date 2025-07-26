@@ -36,16 +36,22 @@ class ManageDisplayTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * The content type.
+   *
    * @var string
    */
   protected $type;
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\entityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
+   * The display storage.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $displayStorage;

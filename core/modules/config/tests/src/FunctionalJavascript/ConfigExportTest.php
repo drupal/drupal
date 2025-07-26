@@ -27,8 +27,9 @@ class ConfigExportTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * A prefix string used in naming the test blocks.
+   *
    * @var string
-   *  A prefix string used in naming the test blocks.
    */
   protected string $blockNamePrefix = 'aaaaaa_config_export_test_block';
 

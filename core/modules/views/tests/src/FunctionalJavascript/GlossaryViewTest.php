@@ -37,8 +37,9 @@ class GlossaryViewTest extends WebDriverTestBase {
   protected $defaultTheme = 'starterkit_theme';
 
   /**
-   * @var array
    * The test Views to enable.
+   *
+   * @var array
    */
   public static $testViews = ['test_glossary'];
 
