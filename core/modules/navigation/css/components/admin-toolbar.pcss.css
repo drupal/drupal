@@ -144,13 +144,13 @@ body {
   height: calc(2.25 * var(--admin-toolbar-rem));
   margin-inline-start: calc(0.125 * var(--admin-toolbar-rem));
   cursor: pointer;
-  color: var(--admin-toolbar-color-gray-500);
+  color: var(--admin-toolbar-color-gray-800);
   border: 1px solid var(--admin-toolbar-color-gray-300);
   border-radius: 50%;
   background-color: transparent;
 
   &:hover {
-    color: var(--admin-toolbar-color-blue-700);
+    color: var(--admin-toolbar-color-gray-990);
   }
 
   @media (--admin-toolbar-desktop) {
