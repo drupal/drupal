@@ -72,7 +72,6 @@ use Drupal\user\EntityOwnerTrait;
     'singular' => '@count comment',
     'plural' => '@count comments',
   ],
-  uri_callback: 'comment_uri',
   field_ui_base_route: 'entity.comment_type.edit_form',
   constraints: [
     'CommentName' => [],

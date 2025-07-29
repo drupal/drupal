@@ -13052,6 +13052,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentUninstallTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\CommentUriDeprecationTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentUriDeprecationTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\CommentValidationTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

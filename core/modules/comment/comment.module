@@ -26,13 +26,9 @@ define('COMMENT_NEW_LIMIT', ((int) $_SERVER['REQUEST_TIME']) - 30 * 24 * 60 * 60
  * Entity URI callback.
  */
 function comment_uri(CommentInterface $comment) {
-  return new Url(
-    'entity.comment.canonical',
-    [
-      'comment' => $comment->id(),
-    ],
-    ['fragment' => 'comment-' . $comment->id()]
-  );
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\comment\Entity\Comment::permalink() instead. See https://www.drupal.org/node/3384294', E_USER_DEPRECATED);
+
+  return $comment->permalink();
 }
 
 /**
