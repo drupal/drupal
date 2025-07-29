@@ -66,14 +66,10 @@ class SystemTestHooks {
    */
   #[Hook('system_info_alter')]
   public function systemInfoAlter(&$info, Extension $file, $type): void {
-    // We need a static otherwise the last test will fail to alter common_test.
-    static $test;
-    if (($dependencies = \Drupal::state()->get('system_test.dependencies')) || $test) {
+    if (($dependencies = \Drupal::state()->get('system_test.dependency'))) {
       if ($file->getName() == 'module_test') {
         $info['hidden'] = FALSE;
-        $info['dependencies'][] = array_shift($dependencies);
-        \Drupal::state()->set('system_test.dependencies', $dependencies);
-        $test = TRUE;
+        $info['dependencies'][] = $dependencies;
       }
       if ($file->getName() == 'common_test') {
         $info['hidden'] = FALSE;
