@@ -1,0 +1,6 @@
+/* This is a minified CSS file with relative paths */
+body{margin:0;padding:0;background:#edf5fa url(../images/background.png) repeat-x;font:76%/170% Verdana,sans-serif;color:#494949;}
+.icon{background-image:url(../images/icon.png);}
+.logo{background:url(images/logo.png) no-repeat center center;}
+.banner{background-image:url('./images/banner.jpg');}
+.data-uri{background-image:url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");}

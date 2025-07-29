@@ -149,8 +149,12 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
       }
       $current_license = $css_asset['license'];
 
-      // Append this file if already minified; otherwise optimize it.
-      if (isset($css_asset['minified']) && $css_asset['minified']) {
+      // Only external minified files can skip optimization.
+      // Local files (even if minified) must be processed to ensure resource
+      // paths are rewritten relative to the cached aggregated file location.
+      $is_minified = isset($css_asset['minified']) && $css_asset['minified'];
+      $is_external = isset($css_asset['type']) && $css_asset['type'] === 'external';
+      if ($is_minified && $is_external) {
         $data .= file_get_contents($css_asset['data']);
       }
       else {
