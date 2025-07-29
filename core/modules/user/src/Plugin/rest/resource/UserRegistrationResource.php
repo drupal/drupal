@@ -179,10 +179,8 @@ class UserRegistrationResource extends ResourceBase {
     $approval_settings = $this->userSettings->get('register');
     // No email verification is required. Activating the user.
     if ($approval_settings == UserInterface::REGISTER_VISITORS) {
-      if ($this->userSettings->get('verify_mail')) {
-        // No administrator approval required.
-        _user_mail_notify('register_no_approval_required', $account);
-      }
+      // No administrator approval required.
+      _user_mail_notify('register_no_approval_required', $account);
     }
     // Administrator approval required.
     elseif ($approval_settings == UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) {
