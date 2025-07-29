@@ -158,9 +158,6 @@ abstract class FormTestBase extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Add functions to the global namespace for testing.
-    require_once __DIR__ . '/fixtures/form_base_test.inc';
-
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->formCache = $this->createMock('Drupal\Core\Form\FormCacheInterface');
