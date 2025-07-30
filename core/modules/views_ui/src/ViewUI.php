@@ -338,7 +338,11 @@ class ViewUI implements ViewEntityInterface {
     }
 
     // Create a "Cancel" button. For purely informational forms, label it "OK".
-    $cancel_submit = function_exists($form_id . '_cancel') ? $form_id . '_cancel' : [$this, 'standardCancel'];
+    $cancel_submit = [$this, 'standardCancel'];
+    if (function_exists($form_id . '_cancel')) {
+      @trigger_error('Support for magic cancel submit handlers such as ' . $form_id . '_cancel() is deprecated in drupal:11.3.0 and removed in drupal:13.0.0. Specify a submit handler in a class method instead. See https://www.drupal.org/node/3536715', E_USER_DEPRECATED);
+      $cancel_submit = $form_id . '_cancel';
+    }
     $form['actions']['cancel'] = [
       '#type' => 'submit',
       '#value' => !$form_state->get('ok_button') ? $this->t('Cancel') : $this->t('Ok'),
