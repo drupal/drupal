@@ -79,6 +79,15 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * Tests the basic translation UI.
    */
   public function testTranslationUI(): void {
+    // Enable promote and sticky fields.
+    \Drupal::service('entity_display.repository')->getFormDisplay('node', 'article')
+      ->setComponent('promote', [
+        'type' => 'boolean_checkbox',
+      ])
+      ->setComponent('sticky', [
+        'type' => 'boolean_checkbox',
+      ])
+      ->save();
     parent::testTranslationUI();
     $this->doUninstallTest();
   }

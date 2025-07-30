@@ -353,11 +353,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setTranslatable(TRUE)
       ->setDefaultValue(FALSE)
       ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => TRUE,
-        ],
-        'weight' => 15,
+        'region' => 'hidden',
       ])
       ->setDisplayConfigurable('form', TRUE);
 
@@ -367,11 +363,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setTranslatable(TRUE)
       ->setDefaultValue(FALSE)
       ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => TRUE,
-        ],
-        'weight' => 16,
+        'region' => 'hidden',
       ])
       ->setDisplayConfigurable('form', TRUE);
 

@@ -58,6 +58,12 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
       ->setComponent($this->fieldName, [
         'type' => 'text_textfield',
       ])
+      ->setComponent('promote', [
+        'type' => 'boolean_checkbox',
+      ])
+      ->setComponent('sticky', [
+        'type' => 'boolean_checkbox',
+      ])
       ->save();
 
     $edit = [

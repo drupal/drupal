@@ -401,7 +401,9 @@ class ManageDisplayTest extends WebDriverTestBase {
     $field_test_drag_handle = $page->find('css', '#field-test .tabledrag-handle');
     $field_region = $page->findField('fields[field_test][region]');
     $weight_toggle = $page->find('css', '.tabledrag-toggle-weight');
-    $target = $page->find('css', '.region-hidden-message');
+    // The promote field is hidden by default, dragging field_test to it will
+    // hide field_test.
+    $target = $page->find('css', '#promote');
 
     // Checks if the select elements contain the specified options.
     $this->assertFieldSelectOptions($field_test_type, [
