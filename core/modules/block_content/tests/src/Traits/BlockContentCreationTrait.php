@@ -6,11 +6,14 @@ namespace Drupal\Tests\block_content\Traits;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Tests\field\Traits\BodyFieldCreationTrait;
 
 /**
  * Provides methods for creating block_content entities and types.
  */
 trait BlockContentCreationTrait {
+
+  use BodyFieldCreationTrait;
 
   /**
    * Creates a content block.
@@ -86,7 +89,7 @@ trait BlockContentCreationTrait {
     }
     $bundle->save();
     if ($create_body) {
-      block_content_add_body_field($bundle->id());
+      $this->createBodyField('block_content', $bundle->id());
     }
     return $bundle;
   }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('layout_builder')]
 class LayoutBuilderTest extends WebDriverTestBase {
 
+  use BlockContentCreationTrait;
   use ContextualLinkClickTrait;
   use LayoutBuilderSortTrait;
   use OffCanvasTestTrait;
@@ -63,12 +64,11 @@ class LayoutBuilderTest extends WebDriverTestBase {
 
     $this->drupalPlaceBlock('local_tasks_block');
 
-    $bundle = BlockContentType::create([
+    $this->createBlockContentType([
       'id' => 'basic',
       'label' => 'Basic',
-    ]);
-    $bundle->save();
-    block_content_add_body_field($bundle->id());
+    ], TRUE);
+
     BlockContent::create([
       'info' => 'My content block',
       'type' => 'basic',

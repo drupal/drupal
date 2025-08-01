@@ -117,7 +117,6 @@ class BlockContentTypeForm extends BundleEntityFormBase {
       $logger->notice('Block type %label has been updated.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }
     else {
-      block_content_add_body_field($block_type->id());
       $this->messenger()->addStatus($this->t('Block type %label has been added.', ['%label' => $block_type->label()]));
       $logger->notice('Block type %label has been added.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }

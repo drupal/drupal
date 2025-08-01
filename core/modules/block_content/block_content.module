@@ -18,8 +18,13 @@ use Drupal\Core\Database\Query\ConditionInterface;
  *
  * @return \Drupal\field\Entity\FieldConfig
  *   A Body field object.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.
+ * @see https://www.drupal.org/node/3535528
  */
 function block_content_add_body_field($block_type_id, $label = 'Body') {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3535528', E_USER_DEPRECATED);
+
   // Add or remove the body field, as needed.
   $field = FieldConfig::loadByName('block_content', $block_type_id, 'body');
   if (empty($field)) {

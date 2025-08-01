@@ -9,6 +9,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
+use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 
 /**
@@ -18,6 +19,7 @@ use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
  */
 class BlockContentTest extends ResourceTestBase {
 
+  use BlockContentCreationTrait;
   use CommonCollectionFilterAccessTestPatternsTrait;
 
   /**
@@ -105,13 +107,11 @@ class BlockContentTest extends ResourceTestBase {
    */
   public function createEntity() {
     if (!BlockContentType::load('basic')) {
-      $block_content_type = BlockContentType::create([
+      $this->createBlockContentType([
         'id' => 'basic',
         'label' => 'basic',
         'revision' => TRUE,
-      ]);
-      $block_content_type->save();
-      block_content_add_body_field($block_content_type->id());
+      ], TRUE);
     }
 
     // Create a "Llama" content block.

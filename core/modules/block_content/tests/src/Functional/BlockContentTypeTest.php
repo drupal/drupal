@@ -106,9 +106,6 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $block_type = BlockContentType::load('foo');
     $this->assertInstanceOf(BlockContentType::class, $block_type);
 
-    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'foo');
-    $this->assertTrue(isset($field_definitions['body']), 'Body field created when using the UI to create block content types.');
-
     // Check that the block type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     $this->assertEquals($block_type->language()->getId(), $default_langcode);
