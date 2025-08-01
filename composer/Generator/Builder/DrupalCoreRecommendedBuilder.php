@@ -38,6 +38,11 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
       // to use any compatible version without needing to switch off of
       // drupal/core-recommended.
       'psr/http-message',
+      // Remove constraint to allow sites to use PHPUnit 10 or 11, which require
+      // different major versions of this package.
+      // @todo Restore constraint when PHPUnit 10 is no longer supported?
+      // @see https://www.drupal.org/project/drupal/issues/3537104
+      'sebastian/diff',
     ];
 
     // Copy the 'packages' section from the Composer lock into our 'require'
