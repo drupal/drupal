@@ -29,10 +29,16 @@ class ContentModerationStateStorageSchema extends SqlContentEntityStorageSchema 
       $schema[$data_table]['unique keys'] += [
         'content_moderation_state__lookup' => $unique_keys,
       ];
+      $schema[$data_table]['indexes'] += [
+        'content_moderation_state__moderation_state' => ['moderation_state'],
+      ];
     }
     if ($revision_data_table = $this->storage->getRevisionDataTable()) {
       $schema[$revision_data_table]['unique keys'] += [
         'content_moderation_state__lookup' => $unique_keys,
+      ];
+      $schema[$revision_data_table]['indexes'] += [
+        'content_moderation_state__moderation_state' => ['moderation_state'],
       ];
     }
 
