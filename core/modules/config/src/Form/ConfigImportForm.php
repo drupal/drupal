@@ -121,9 +121,14 @@ class ConfigImportForm extends FormBase {
         $archiver = new ArchiveTar($path, 'gz');
         $files = [];
         foreach ($archiver->listContent() as $file) {
-          $files[] = $file['filename'];
+          if (str_ends_with($file['filename'], '.yml')) {
+            $files[] = $file['filename'];
+          }
         }
         $archiver->extractList($files, $this->settings->get('config_sync_directory'), '', FALSE, FALSE);
+        foreach ($files as $file) {
+          $this->fileSystem->chmod($this->settings->get('config_sync_directory') . DIRECTORY_SEPARATOR . $file);
+        }
         $this->messenger()->addStatus($this->t('Your configuration files were successfully uploaded and are ready for import.'));
         $form_state->setRedirect('config.sync');
       }
