@@ -22,7 +22,7 @@ interface ConditionInterface {
    * $operator having a value of =.
    *
    * Do not use this method to test for NULL values. Instead, use
-   * QueryConditionInterface::isNull() or QueryConditionInterface::isNotNull().
+   * ConditionInterface::isNull() or ConditionInterface::isNotNull().
    *
    * To improve readability, the operators EXISTS and NOT EXISTS have their own
    * utility method defined.
@@ -41,7 +41,7 @@ interface ConditionInterface {
    * operator will also be case insensitive.
    *
    * @param string|\Drupal\Core\Database\Query\ConditionInterface $field
-   *   The name of the field to check. This can also be QueryConditionInterface
+   *   The name of the field to check. This can also be ConditionInterface
    *   in itself. Use where(), if you would like to add a more complex condition
    *   involving operators or functions, or an already compiled condition.
    * @param string|int|array|\Drupal\Core\Database\Query\SelectInterface|null $value
@@ -79,7 +79,7 @@ interface ConditionInterface {
    *   A portion of a WHERE clause as a prepared statement. It must use named
    *   placeholders, not ? placeholders. The caller is responsible for providing
    *   unique placeholders that do not interfere with the placeholders generated
-   *   by this QueryConditionInterface object.
+   *   by this ConditionInterface object.
    * @param array $args
    *   An associative array of arguments keyed by the named placeholders.
    *
