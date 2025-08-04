@@ -167,3 +167,18 @@ function system_update_11201(): void {
     $schema->addIndex('router', 'alias', ['alias'], $spec);
   }
 }
+
+/**
+ * Add an [exit_code] column to the {simpletest} table, if existing.
+ */
+function system_update_11202(): void {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('simpletest') && !$schema->fieldExists('simpletest', 'exit_code')) {
+    $schema->addField('simpletest', 'exit_code', [
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'The exit code of the test executed.',
+    ]);
+  }
+}

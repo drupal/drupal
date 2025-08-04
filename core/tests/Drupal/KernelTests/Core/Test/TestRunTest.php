@@ -131,6 +131,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
       1 => (object) [
         'message_id' => '1',
@@ -143,6 +144,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
     ], $test_run->getLogEntriesByTestClass());
     $this->assertEquals('oddity1234', $test_run->getDatabasePrefix());
@@ -171,6 +173,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '18',
         'file' => '/var/www/core/tests/Drupal/FunctionalTests/Bootstrap/ErrorContainer.php on line 20 in /var/www/core/tests/Drupal/FunctionalTests/Bootstrap/ErrorContainer.php',
         'time' => '0',
+        'exit_code' => '0',
       ],
       1 => (object) [
         'message_id' => '2',
@@ -183,6 +186,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
       2 => (object) [
         'message_id' => '3',
@@ -195,6 +199,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
       3 => (object) [
         'message_id' => '4',
@@ -207,6 +212,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
       4 => (object) [
         'message_id' => '5',
@@ -219,6 +225,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
       5 => (object) [
         'message_id' => '6',
@@ -231,6 +238,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '17',
         'file' => '/var/www/core/tests/Drupal/FunctionalTests/Bootstrap/ExceptionContainer.php',
         'time' => '0',
+        'exit_code' => '0',
       ],
       6 => (object) [
         'message_id' => '7',
@@ -243,6 +251,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
       7 => (object) [
         'message_id' => '8',
@@ -255,6 +264,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
       8 => (object) [
         'message_id' => '9',
@@ -267,6 +277,7 @@ class TestRunTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
     ], $test_run->getLogEntriesByTestClass());
   }

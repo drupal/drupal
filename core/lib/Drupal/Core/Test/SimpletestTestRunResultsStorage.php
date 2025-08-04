@@ -250,6 +250,12 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
           'default' => 0,
           'description' => 'Time elapsed for the execution of the test.',
         ],
+        'exit_code' => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'The exit code of the test executed.',
+        ],
       ],
       'primary key' => ['message_id'],
       'indexes' => [

@@ -155,6 +155,7 @@ class SimpletestTestRunResultsStorageTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
       1 => (object) [
         'message_id' => '1',
@@ -167,6 +168,7 @@ class SimpletestTestRunResultsStorageTest extends KernelTestBase {
         'line' => '0',
         'file' => 'Unknown',
         'time' => '0',
+        'exit_code' => '0',
       ],
     ], $this->testRunResultsStorage->getLogEntriesByTestClass($test_run));
   }

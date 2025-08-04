@@ -80,6 +80,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
       'function' => '*** Process execution output ***',
       'line' => '0',
       'file' => $log_path,
+      'exit_code' => 3,
     ];
     $this->assertEquals($fail_row, $row);
   }

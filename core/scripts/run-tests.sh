@@ -1252,6 +1252,7 @@ function simpletest_script_reporter_init(): void {
     'fail' => 'Fail',
     'error' => 'Error',
     'skipped' => 'Skipped',
+    'cli_fail' => 'Failure',
     'exception' => 'Exception',
     'debug' => 'Log',
   ];
@@ -1307,6 +1308,10 @@ function simpletest_script_reporter_display_summary($class, $results, $duration 
     $summary[] = $results['#debug'] . ' log(s)';
   }
 
+  if ($results['#cli_fail']) {
+    $summary[] = 'exit code ' . $results['#exit_code'];
+  }
+
   if ($results['#time']) {
     $time = sprintf('%8.3fs', $results['#time']);
   }
@@ -1315,7 +1320,7 @@ function simpletest_script_reporter_display_summary($class, $results, $duration 
   }
 
   $output = vsprintf('%s %s %s', [$time, trim_with_ellipsis($class, 70, STR_PAD_LEFT), implode(', ', $summary)]);
-  $status = ($results['#fail'] || $results['#exception'] || $results['#error'] ? 'fail' : 'pass');
+  $status = ($results['#fail'] || $results['#cli_fail'] || $results['#exception'] || $results['#error'] ? 'fail' : 'pass');
   simpletest_script_print($output . "\n", simpletest_script_color_code($status));
 }
 
@@ -1520,7 +1525,7 @@ function simpletest_script_print($message, $color_code): void {
 function simpletest_script_color_code($status) {
   return match ($status) {
     'pass' => SIMPLETEST_SCRIPT_COLOR_PASS,
-    'fail', 'error', 'exception' => SIMPLETEST_SCRIPT_COLOR_FAIL,
+    'fail', 'cli_fail', 'error', 'exception' => SIMPLETEST_SCRIPT_COLOR_FAIL,
     'skipped' => SIMPLETEST_SCRIPT_COLOR_YELLOW,
     'debug' => SIMPLETEST_SCRIPT_COLOR_CYAN,
     default => 0,
