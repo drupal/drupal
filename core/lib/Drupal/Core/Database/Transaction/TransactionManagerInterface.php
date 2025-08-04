@@ -50,6 +50,26 @@ interface TransactionManagerInterface {
   public function push(string $name = ''): Transaction;
 
   /**
+   * Purges a Drupal transaction from the manager.
+   *
+   * This is only called by a Transaction object's ::__destruct() method and
+   * should only be called internally by a database driver.
+   *
+   * @param string $name
+   *   The name of the transaction.
+   * @param string $id
+   *   The id of the transaction.
+   *
+   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
+   *   If a Drupal Transaction with the specified name does not exist.
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
+   *   If the commit of the root transaction failed.
+   *
+   * @internal
+   */
+  public function purge(string $name, string $id): void;
+
+  /**
    * Removes a Drupal transaction from the stack.
    *
    * The unpiled item does not necessarily need to be the last on the stack.
