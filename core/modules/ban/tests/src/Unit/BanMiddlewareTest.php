@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @coversDefaultClass \Drupal\ban\BanMiddleware
  * @group ban
+ * @group legacy
  */
 class BanMiddlewareTest extends UnitTestCase {
 

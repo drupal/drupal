@@ -2,5 +2,7 @@ name: Ban
 type: module
 description: 'Allows banning visits from specific IP addresses.'
 package: Core
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-ban
 version: VERSION
 configure: ban.admin_page

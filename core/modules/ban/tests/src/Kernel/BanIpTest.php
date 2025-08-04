@@ -10,6 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @group ban
+ * @group legacy
  */
 class BanIpTest extends KernelTestBase {
 

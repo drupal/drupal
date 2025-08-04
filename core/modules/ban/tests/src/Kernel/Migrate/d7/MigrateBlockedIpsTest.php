@@ -11,6 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Migrate blocked IPs.
  *
  * @group ban
+ * @group legacy
  */
 class MigrateBlockedIpsTest extends MigrateDrupal7TestBase {
 

@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @coversDefaultClass \Drupal\ban\Form\BanAdmin
  * @group ban
+ * @group legacy
  */
 class BanAdminTest extends UnitTestCase {
 

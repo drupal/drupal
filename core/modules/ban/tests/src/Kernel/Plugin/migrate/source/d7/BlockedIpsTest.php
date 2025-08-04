@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\ban\Plugin\migrate\source\d7\BlockedIps
  * @group ban
+ * @group legacy
  */
 class BlockedIpsTest extends MigrateSqlSourceTestBase {
 
