@@ -902,6 +902,7 @@ services:
     arguments: ['@service_container']
   Psr\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
+  Symfony\Component\EventDispatcher\EventDispatcher: '@event_dispatcher'
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
     arguments: ['@callable_resolver']
