@@ -999,7 +999,7 @@ class Sql extends QueryPluginBase {
    * @param array $args
    *   An associative array of arguments.
    *
-   * @see QueryConditionInterface::where()
+   * @see ConditionInterface::where()
    */
   public function addWhereExpression($group, $snippet, $args = []) {
     // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
@@ -1037,7 +1037,7 @@ class Sql extends QueryPluginBase {
    * @param array $args
    *   An associative array of arguments.
    *
-   * @see QueryConditionInterface::having()
+   * @see SelectInterface::having()
    */
   public function addHavingExpression($group, $snippet, $args = []) {
     // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
