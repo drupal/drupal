@@ -372,7 +372,7 @@ class NodeHooks1 {
     if (!\Drupal::moduleHandler()->hasImplementations('node_grants')) {
       return;
     }
-    if ($op == 'view' && node_access_view_all_nodes($account)) {
+    if ($op == 'view' && \Drupal::entityTypeManager()->getAccessControlHandler('node')->checkAllGrants($account)) {
       return;
     }
     $tables = $query->getTables();

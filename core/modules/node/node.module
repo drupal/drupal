@@ -319,30 +319,21 @@ function node_access_grants($operation, AccountInterface $account) {
  * @return bool
  *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
  *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal::entityTypeManager()->getAccessControlHandler('node')->checkAllGrants()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3038909
  * @see hook_node_grants()
  * @see node_query_node_access_alter()
  */
 function node_access_view_all_nodes($account = NULL) {
-
-  if (!$account) {
-    $account = \Drupal::currentUser();
-  }
-
-  // Statically cache results in an array keyed by $account->id().
-  $access = &drupal_static(__FUNCTION__);
-  if (isset($access[$account->id()])) {
-    return $access[$account->id()];
-  }
-
+  @trigger_error('node_access_view_all_nodes() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use  \Drupal::entityTypeManager()->getAccessControlHandler(\'node\')->checkAllGrants(). See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
   // If no modules implement the node access system, access is always TRUE.
   if (!\Drupal::moduleHandler()->hasImplementations('node_grants')) {
-    $access[$account->id()] = TRUE;
+    return TRUE;
   }
-  else {
-    $access[$account->id()] = \Drupal::entityTypeManager()->getAccessControlHandler('node')->checkAllGrants($account);
-  }
-
-  return $access[$account->id()];
+  return \Drupal::entityTypeManager()->getAccessControlHandler('node')->checkAllGrants($account ?? \Drupal::currentUser());
 }
 
 /**

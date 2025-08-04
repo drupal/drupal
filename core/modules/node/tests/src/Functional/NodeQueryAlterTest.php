@@ -169,11 +169,11 @@ class NodeQueryAlterTest extends NodeTestBase {
   /**
    * Tests 'node_access' query alter override.
    *
-   * Verifies that node_access_view_all_nodes() is called from
-   * node_query_node_access_alter(). We do this by checking that a user who
-   * normally would not have view privileges is able to view the nodes when we
-   * add a record to {node_access} paired with a corresponding privilege in
-   * hook_node_grants().
+   * Checks that \Drupal\node\NodeGrantDatabaseStorage::checkAllGrants() is
+   * called from node_query_node_access_alter(). We do this by checking that a
+   * user who normally would not have view privileges is able to view the nodes
+   * when we add a record to {node_access} paired with a corresponding privilege
+   * in hook_node_grants().
    */
   public function testNodeQueryAlterOverride(): void {
     $record = [
@@ -189,42 +189,33 @@ class NodeQueryAlterTest extends NodeTestBase {
 
     // Test that the noAccessUser still doesn't have the 'view'
     // privilege after adding the node_access record.
-    drupal_static_reset('node_access_view_all_nodes');
-    try {
-      $query = $connection->select('node', 'n')
-        ->fields('n');
-      $query->addTag('node_access');
-      $query->addMetaData('op', 'view');
-      $query->addMetaData('account', $this->noAccessUser);
+    \Drupal::service('node.view_all_nodes_memory_cache')->deleteAll();
+    $query = $connection->select('node', 'n')
+      ->fields('n');
+    $query->addTag('node_access');
+    $query->addMetaData('op', 'view');
+    $query->addMetaData('account', $this->noAccessUser);
 
-      $result = $query->execute()->fetchAll();
-      $this->assertCount(0, $result, 'User view privileges are not overridden');
-    }
-    catch (\Exception) {
-      $this->fail('Altered query is malformed');
-    }
+    $result = $query->execute()->fetchAll();
+    $this->assertCount(0, $result, 'User view privileges are not overridden');
 
     // Have node_test_node_grants return a node_access_all privilege,
     // to grant the noAccessUser 'view' access.  To verify that
-    // node_access_view_all_nodes is properly checking the specified
-    // $account instead of the current user, we will log in as
-    // noAccessUser2.
+    // \Drupal\node\NodeGrantDatabaseStorage::checkAllGrants() is
+    // properly checking the specified $account instead of the current user, we
+    // will log in as noAccessUser2.
     $this->drupalLogin($this->noAccessUser2);
     \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->id());
-    drupal_static_reset('node_access_view_all_nodes');
-    try {
-      $query = $connection->select('node', 'n')
-        ->fields('n');
-      $query->addTag('node_access');
-      $query->addMetaData('op', 'view');
-      $query->addMetaData('account', $this->noAccessUser);
+    \Drupal::service('node.view_all_nodes_memory_cache')->deleteAll();
 
-      $result = $query->execute()->fetchAll();
-      $this->assertCount(4, $result, 'User view privileges are overridden');
-    }
-    catch (\Exception) {
-      $this->fail('Altered query is malformed');
-    }
+    $query = $connection->select('node', 'n')
+      ->fields('n');
+    $query->addTag('node_access');
+    $query->addMetaData('op', 'view');
+    $query->addMetaData('account', $this->noAccessUser);
+
+    $result = $query->execute()->fetchAll();
+    $this->assertCount(4, $result, 'User view privileges are overridden');
     \Drupal::state()->delete('node_access_test.no_access_uid');
   }
 

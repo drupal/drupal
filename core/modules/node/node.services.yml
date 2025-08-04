@@ -18,7 +18,7 @@ services:
     class: Drupal\node\Routing\RouteSubscriber
   node.grant_storage:
     class: Drupal\node\NodeGrantDatabaseStorage
-    arguments: ['@database', '@module_handler', '@language_manager']
+    autowire: true
     tags:
       - { name: backend_overridable }
   Drupal\node\NodeGrantDatabaseStorageInterface: '@node.grant_storage'
@@ -38,7 +38,7 @@ services:
     lazy: true
   cache_context.user.node_grants:
     class: Drupal\node\Cache\NodeAccessGrantsCacheContext
-    arguments: ['@current_user']
+    arguments: ['@current_user', '@entity_type.manager']
     tags:
       - { name: cache.context }
   node.node_route_context:
@@ -46,3 +46,6 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: 'context_provider' }
+  node.view_all_nodes_memory_cache:
+    class: Drupal\Core\Cache\MemoryCache\MemoryCache
+    autowire: true
