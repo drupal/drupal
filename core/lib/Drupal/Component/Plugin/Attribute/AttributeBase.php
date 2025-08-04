@@ -20,6 +20,17 @@ abstract class AttributeBase implements AttributeInterface {
   protected string|null $provider = NULL;
 
   /**
+   * The dependencies for the attribute class.
+   *
+   * Dependencies are keyed by type. If the type is 'class', 'interface', or
+   * 'trait', the values for the type are class names. If the type is
+   * 'provider', the values for the type are provider names.
+   *
+   * @var array{"class"?: list<class-string>, "interface"?: list<class-string>, "trait"?: list<class-string>, "provider"?: list<string>}|null
+   */
+  protected array|null $dependencies = NULL;
+
+  /**
    * @param string $id
    *   The attribute class ID.
    */
@@ -65,12 +76,26 @@ abstract class AttributeBase implements AttributeInterface {
   /**
    * {@inheritdoc}
    */
+  public function getDependencies(): ?array {
+    return $this->dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDependencies(?array $dependencies): void {
+    $this->dependencies = $dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function get(): array|object {
     return array_filter(get_object_vars($this) + [
       'class' => $this->getClass(),
       'provider' => $this->getProvider(),
     ], function ($value, $key) {
-      return !($value === NULL && ($key === 'deriver' || $key === 'provider'));
+      return !($value === NULL && (in_array($key, ['deriver', 'provider', 'dependencies'])));
     }, ARRAY_FILTER_USE_BOTH);
   }
 

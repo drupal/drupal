@@ -19,7 +19,7 @@ class ConfigDependenciesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['rest', 'entity_test', 'serialization'];
+  protected static $modules = ['rest', 'entity_test', 'serialization', 'user'];
 
   /**
    * @covers ::calculateDependencies

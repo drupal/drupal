@@ -8,7 +8,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\plugin_test\Plugin\Annotation\PluginExample as AnnotationPluginExample;
 use Drupal\plugin_test\Plugin\Attribute\PluginExample as AttributePluginExample;
-use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests the default plugin manager.
@@ -29,7 +28,7 @@ class DefaultPluginManagerTest extends KernelTestBase {
   public function testDefaultPluginManager(): void {
     $subdir = 'Plugin/plugin_test/custom_annotation';
     $base_directory = $this->root . '/core/modules/system/tests/modules/plugin_test/src';
-    $namespaces = new \ArrayObject(['Drupal\plugin_test' => $base_directory]);
+    $namespaces = \Drupal::service('container.namespaces');
     $module_handler = $this->container->get('module_handler');
 
     // Ensure broken files exist as expected.
@@ -72,20 +71,10 @@ class DefaultPluginManagerTest extends KernelTestBase {
     // attribute should be picked up.
     $this->assertArrayHasKey('example_attribute_not_annotation', $definitions);
     $this->assertArrayNotHasKey('example_annotation_not_attribute', $definitions);
+    // Plugin class with an external dependency should not be found.
+    $this->assertArrayNotHasKey("example_with_other_module_dependency", $definitions);
 
     // Attributes only.
-    // \Drupal\Component\Plugin\Discovery\AttributeClassDiscovery does not
-    // support parsing classes that cannot be reflected. Therefore, we use VFS
-    // to create a directory remove plugin_test's plugins and remove the broken
-    // plugins.
-    vfsStream::setup('plugin_test');
-    $dir = vfsStream::create(['src' => ['Plugin' => ['plugin_test' => ['custom_annotation' => []]]]]);
-    $plugin_directory = $dir->getChild('src/' . $subdir);
-    vfsStream::copyFromFileSystem($base_directory . '/' . $subdir, $plugin_directory);
-    $plugin_directory->removeChild('ExtendingNonInstalledClass.php');
-    $plugin_directory->removeChild('UsingNonInstalledTraitClass.php');
-
-    $namespaces = new \ArrayObject(['Drupal\plugin_test' => vfsStream::url('plugin_test/src')]);
     $manager = new DefaultPluginManager($subdir, $namespaces, $module_handler, NULL, AttributePluginExample::class);
     $definitions = $manager->getDefinitions();
     $this->assertArrayNotHasKey('example_1', $definitions);
@@ -99,6 +88,28 @@ class DefaultPluginManagerTest extends KernelTestBase {
     // attribute should be picked up.
     $this->assertArrayHasKey('example_attribute_not_annotation', $definitions);
     $this->assertArrayNotHasKey('example_annotation_not_attribute', $definitions);
+    // Plugin class with an external dependency should not be found.
+    $this->assertArrayNotHasKey("example_with_other_module_dependency", $definitions);
+
+    // Test that example with dependencies is discovered after module dependency
+    // is installed.
+    \Drupal::service('module_installer')->install(['plugin_test_extended']);
+    $namespaces = \Drupal::service('container.namespaces');
+    // There is a new module handler instance after module install.
+    $module_handler = \Drupal::moduleHandler();
+    $manager = new DefaultPluginManager($subdir, $namespaces, $module_handler, NULL, AttributePluginExample::class, AnnotationPluginExample::class);
+    $definitions = $manager->getDefinitions();
+    $this->assertArrayHasKey("example_with_other_module_dependency", $definitions);
+
+    // Test that example with dependencies is not discovered after module
+    // dependency is back to being uninstalled.
+    \Drupal::service('module_installer')->uninstall(['plugin_test_extended']);
+    $namespaces = \Drupal::service('container.namespaces');
+    // There is a new module handler instance after module uninstall.
+    $module_handler = \Drupal::moduleHandler();
+    $manager = new DefaultPluginManager($subdir, $namespaces, $module_handler, NULL, AttributePluginExample::class, AnnotationPluginExample::class);
+    $definitions = $manager->getDefinitions();
+    $this->assertArrayNotHasKey("example_with_other_module_dependency", $definitions);
   }
 
   /**

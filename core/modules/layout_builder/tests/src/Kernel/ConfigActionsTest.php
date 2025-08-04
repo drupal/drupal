@@ -22,6 +22,7 @@ class ConfigActionsTest extends KernelTestBase {
     'field',
     'layout_builder',
     'layout_discovery',
+    'user',
   ];
 
   /**

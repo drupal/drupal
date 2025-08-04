@@ -26,6 +26,7 @@ class EntityTypeInfoTest extends KernelTestBase {
     'content_moderation',
     'workflows',
     'entity_test',
+    'user',
   ];
 
   /**

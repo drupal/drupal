@@ -48,6 +48,7 @@ class ValidatorsTest extends KernelTestBase {
     'filter_test',
     'media',
     'media_library',
+    'user',
     'views',
   ];
 

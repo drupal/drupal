@@ -22,7 +22,7 @@ class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test'];
+  protected static $modules = ['entity_test', 'user'];
 
   /**
    * {@inheritdoc}

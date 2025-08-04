@@ -206,7 +206,7 @@ class SqlBaseTest extends MigrateTestBase {
    */
   public function testPrepareQuery(): void {
     $this->prepareSourceData();
-    $this->enableModules(['migrate_sql_prepare_query_test', 'entity_test']);
+    $this->enableModules(['migrate_sql_prepare_query_test', 'entity_test', 'user']);
 
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->container->get('plugin.manager.migration')

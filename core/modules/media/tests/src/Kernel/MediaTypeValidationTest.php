@@ -19,7 +19,7 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'media', 'media_test_source', 'user', 'image'];
+  protected static $modules = ['field', 'file', 'media', 'media_test_source', 'user', 'image'];
 
   /**
    * {@inheritdoc}

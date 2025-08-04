@@ -17,7 +17,7 @@ class CommentTypeValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['comment', 'node'];
+  protected static $modules = ['comment', 'node', 'user'];
 
   /**
    * {@inheritdoc}

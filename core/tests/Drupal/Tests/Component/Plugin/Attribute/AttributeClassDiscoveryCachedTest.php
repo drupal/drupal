@@ -146,6 +146,9 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
         'id' => 'discovery_test_missing_trait',
         'class' => 'com\example\PluginNamespace\AttributeDiscoveryTestMissingTrait',
         'title' => 'Discovery test plugin missing trait',
+        'dependencies' => [
+          'trait' => ['Drupal\a_module_that_does_not_exist\Plugin\CustomTrait'],
+        ],
       ],
     ], $discovery->getDefinitions());
 

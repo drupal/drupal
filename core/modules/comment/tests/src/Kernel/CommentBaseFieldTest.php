@@ -26,6 +26,7 @@ class CommentBaseFieldTest extends KernelTestBase {
     'user',
     'comment',
     'comment_base_field_test',
+    'entity_test',
   ];
 
   /**

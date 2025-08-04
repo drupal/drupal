@@ -23,6 +23,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
     'field_layout_test',
     'field_test',
     'system',
+    'user',
   ];
 
   /**
@@ -30,6 +31,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
    * @covers ::calculateDependencies
    */
   public function testPreSave(): void {
+    $this->installSchema('user', ['users_data']);
     // Create an entity display with one hidden and one visible field.
     $entity_display = FieldLayoutEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',

@@ -28,6 +28,7 @@ class ConfigActionValidationTest extends KernelTestBase {
     'node',
     'shortcut',
     'system',
+    'user',
   ];
 
   /**

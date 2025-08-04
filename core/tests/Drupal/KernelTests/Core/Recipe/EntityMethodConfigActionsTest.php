@@ -24,7 +24,7 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'config_test', 'entity_test', 'system'];
+  protected static $modules = ['block', 'config_test', 'entity_test', 'system', 'user'];
 
   /**
    * The configuration action manager.

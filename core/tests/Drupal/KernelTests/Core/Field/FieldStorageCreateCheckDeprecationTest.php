@@ -23,7 +23,7 @@ class FieldStorageCreateCheckDeprecationTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'field'];
+  protected static $modules = ['entity_test', 'field', 'user'];
 
   /**
    * {@inheritdoc}

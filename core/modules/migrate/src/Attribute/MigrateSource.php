@@ -24,12 +24,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * @ingroup migration
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class MigrateSource extends Plugin implements MultipleProviderAttributeInterface {
-
-  /**
-   * The providers of the source plugin.
-   */
-  protected array $providers = [];
+class MigrateSource extends Plugin {
 
   /**
    * Constructs a migrate source plugin attribute object.
@@ -58,32 +53,5 @@ class MigrateSource extends Plugin implements MultipleProviderAttributeInterface
     public readonly mixed $minimum_version = NULL,
     public readonly ?string $deriver = NULL,
   ) {}
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setProvider(string $provider): void {
-    $this->setProviders([$provider]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getProviders(): array {
-    return $this->providers;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setProviders(array $providers): void {
-    if ($providers) {
-      parent::setProvider(reset($providers));
-    }
-    else {
-      $this->provider = NULL;
-    }
-    $this->providers = $providers;
-  }
 
 }

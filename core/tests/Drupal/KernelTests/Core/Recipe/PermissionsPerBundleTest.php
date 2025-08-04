@@ -36,6 +36,7 @@ class PermissionsPerBundleTest extends KernelTestBase {
    */
   protected static $modules = [
     'field',
+    'file',
     'media',
     'media_test_source',
     'image',

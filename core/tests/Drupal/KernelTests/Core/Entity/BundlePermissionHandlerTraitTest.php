@@ -20,7 +20,7 @@ class BundlePermissionHandlerTraitTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test'];
+  protected static $modules = ['entity_test', 'user'];
 
   /**
    * @covers ::generatePermissions

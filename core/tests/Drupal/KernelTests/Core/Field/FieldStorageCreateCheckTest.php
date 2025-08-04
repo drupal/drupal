@@ -19,7 +19,7 @@ class FieldStorageCreateCheckTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'field'];
+  protected static $modules = ['entity_test', 'field', 'user'];
 
   /**
    * Tests the field storage create check subscriber.

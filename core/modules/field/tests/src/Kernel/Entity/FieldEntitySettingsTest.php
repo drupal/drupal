@@ -19,7 +19,7 @@ class FieldEntitySettingsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'field'];
+  protected static $modules = ['entity_test', 'field', 'user'];
 
   /**
    * {@inheritdoc}

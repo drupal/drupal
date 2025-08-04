@@ -7,9 +7,10 @@ use Drupal\Component\Annotation\AnnotationInterface;
 /**
  * Defines a common interface for classed annotations with multiple providers.
  *
- * @todo This is a temporary solution to the fact that migration source plugins
- *   have more than one provider. This functionality will be moved to core in
- *   https://www.drupal.org/node/2786355.
+ * @todo This provides backwards compatibility for migration source plugins
+ *   using annotations and having more than one provider. This functionality
+ *   will be deprecated with plugin discovery by annotations in
+ *   https://www.drupal.org/project/drupal/issues/3522409.
  */
 interface MultipleProviderAnnotationInterface extends AnnotationInterface {
 

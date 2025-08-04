@@ -90,8 +90,16 @@ class MigrationPluginManager extends BaseMigrationPluginManager {
     $source_id = $definition['source']['plugin'];
     $source_definition = $this->sourceManager->getDefinition($source_id);
     // If the source plugin uses annotations, then the 'provider' key is the
-    // array of providers and the 'providers' key is not defined.
-    $providers = $source_definition['providers'] ?? $source_definition['provider'];
+    // array of providers. If the source plugin uses attributes, then combine
+    // the singular string provider with the providers for the plugin
+    // dependencies.
+    if (is_array($source_definition['provider'])) {
+      $providers = $source_definition['provider'];
+    }
+    else {
+      $providers = $source_definition['dependencies']['provider'] ?? [];
+      $providers[] = $source_definition['provider'];
+    }
 
     // Check if the migration has any of the tags that trigger source_module
     // enforcement.

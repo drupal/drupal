@@ -19,7 +19,7 @@ class MenuDeleteTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'menu_ui', 'system'];
+  protected static $modules = ['node', 'menu_ui', 'system', 'user'];
 
   /**
    * @covers \Drupal\menu_ui\Hook\MenuUiHooks::menuDelete

@@ -7,30 +7,21 @@ namespace Drupal\migrate\Plugin\Discovery;
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser as BaseStaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\ClassFinder\ClassFinder;
-use Drupal\Component\Plugin\Attribute\AttributeInterface;
+use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
 use Drupal\Core\Plugin\Discovery\AttributeDiscoveryWithAnnotations;
 
 /**
  * Enables both attribute and annotation discovery for plugin definitions.
  *
  * @internal
- *   This is a temporary solution to the fact that migration source plugins have
- *   more than one provider. This functionality will be moved to core in
- *   https://www.drupal.org/node/2786355.
+ *   This provides backwards compatibility for migration source plugins
+ *   using annotations and having more than one provider. This functionality
+ *   will be deprecated with plugin discovery by annotations in
+ *   https://www.drupal.org/project/drupal/issues/3522409.
  */
 class AttributeDiscoveryWithAnnotationsAutomatedProviders extends AttributeDiscoveryWithAnnotations {
 
   use AnnotatedDiscoveryAutomatedProvidersTrait;
-
-  /**
-   * Instance of attribute class discovery with automatic providers.
-   *
-   * Since there isn't multiple inheritance, instantiate the attribute only
-   * discovery for code reuse.
-   *
-   * @var \Drupal\migrate\Plugin\Discovery\AttributeClassDiscoveryAutomatedProviders
-   */
-  private AttributeClassDiscoveryAutomatedProviders $attributeDiscovery;
 
   public function __construct(
     string $subdir,
@@ -41,14 +32,6 @@ class AttributeDiscoveryWithAnnotationsAutomatedProviders extends AttributeDisco
   ) {
     parent::__construct($subdir, $rootNamespaces, $pluginDefinitionAttributeName, $pluginDefinitionAnnotationName, $additionalNamespaces);
     $this->finder = new ClassFinder();
-    $this->attributeDiscovery = new AttributeClassDiscoveryAutomatedProviders($subdir, $rootNamespaces, $pluginDefinitionAttributeName);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function prepareAttributeDefinition(AttributeInterface $attribute, string $class): void {
-    $this->attributeDiscovery->prepareAttributeDefinition($attribute, $class);
   }
 
   /**
@@ -56,7 +39,7 @@ class AttributeDiscoveryWithAnnotationsAutomatedProviders extends AttributeDisco
    */
   protected function parseClass(string $class, \SplFileInfo $fileinfo): array {
     // Parse using attributes first.
-    $definition = $this->attributeDiscovery->parseClass($class, $fileinfo);
+    $definition = AttributeClassDiscovery::parseClass($class, $fileinfo);
     if (isset($definition['id'])) {
       return $definition;
     }

@@ -20,7 +20,7 @@ class LogTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'migrate'];
+  protected static $modules = ['node', 'migrate', 'user'];
 
   /**
    * The Log process plugin.

@@ -31,6 +31,7 @@ class MediaLibraryWidgetTest extends KernelTestBase {
     'media',
     'media_library',
     'field',
+    'file',
     'filter',
     'image',
     'system',
