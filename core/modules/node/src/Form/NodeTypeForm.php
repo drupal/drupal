@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\node\NodePreviewMode;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -117,12 +118,8 @@ class NodeTypeForm extends BundleEntityFormBase {
     $form['submission']['preview_mode'] = [
       '#type' => 'radios',
       '#title' => $this->t('Preview before submitting'),
-      '#default_value' => $type->getPreviewMode(),
-      '#options' => [
-        DRUPAL_DISABLED => $this->t('Disabled'),
-        DRUPAL_OPTIONAL => $this->t('Optional'),
-        DRUPAL_REQUIRED => $this->t('Required'),
-      ],
+      '#default_value' => $type->getPreviewMode(FALSE)->value,
+      '#options' => NodePreviewMode::asOptions(),
     ];
     $form['submission']['help'] = [
       '#type' => 'textarea',

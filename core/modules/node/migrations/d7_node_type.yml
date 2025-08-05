@@ -6,7 +6,7 @@ migration_tags:
 source:
   plugin: d7_node_type
   constants:
-    preview: 1 # DRUPAL_OPTIONAL
+    preview: 1 # NodePreviewMode::Optional
 process:
   type: type
   name: name

@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\Form\NodeTypeDeleteConfirm;
+use Drupal\node\NodePreviewMode;
 use Drupal\node\NodeTypeAccessControlHandler;
 use Drupal\node\Form\NodeTypeForm;
 use Drupal\node\NodeTypeInterface;
@@ -108,7 +109,7 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
    *
    * @var int
    */
-  protected $preview_mode = DRUPAL_OPTIONAL;
+  protected $preview_mode = NodePreviewMode::Optional->value;
 
   /**
    * Display setting for author and date Submitted by post information.
@@ -158,16 +159,26 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPreviewMode() {
-    return $this->preview_mode;
+  public function getPreviewMode(bool $returnAsInt = TRUE) {
+    $previewMode = NodePreviewMode::from($this->preview_mode);
+    if ($returnAsInt) {
+      @trigger_error('Calling ' . __METHOD__ . ' with the $returnAsInt parameter is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. See https://www.drupal.org/node/3538666', E_USER_DEPRECATED);
+      return $previewMode->value;
+    }
+    return $previewMode;
   }
 
   /**
    * {@inheritdoc}
    */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Set preview mode'), pluralize: FALSE)]
-  public function setPreviewMode($preview_mode) {
-    $this->preview_mode = $preview_mode;
+  public function setPreviewMode(/* NodePreviewMode|int */ $preview_mode) {
+    if (!$preview_mode instanceof NodePreviewMode) {
+      @trigger_error('Calling ' . __METHOD__ . ' with an integer $preview_mode parameter is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use the \Drupal\node\NodePreviewMode enum instead. See https://www.drupal.org/node/3538666', E_USER_DEPRECATED);
+      $this->preview_mode = $preview_mode;
+      return;
+    }
+    $this->preview_mode = $preview_mode->value;
   }
 
   /**

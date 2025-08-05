@@ -32,12 +32,8 @@ class TestViewsTest extends KernelTestBase {
     'views',
     // For NodeType config entities to exist, its module must be installed.
     'node',
-    // The `DRUPAL_OPTIONAL` constant is used by the NodeType config entity type
-    // and only available if the system module is installed.
     // `system.menu.tools` is a config dependency. It is one of the default
     // config of the System module.
-    // @see \DRUPAL_OPTIONAL
-    // @see \Drupal\node\Entity\NodeType::$preview_mode
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_row_render_cache_none.yml
     'system',
     // There are a number of `field.storage.*.*` config dependencies. For these

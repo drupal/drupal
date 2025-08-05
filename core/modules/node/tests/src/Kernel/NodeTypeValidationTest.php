@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\node\NodePreviewMode;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests validation of node_type entities.
@@ -43,18 +45,16 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
   /**
    * Tests that a node type's preview mode is constrained to certain values.
    */
+  #[IgnoreDeprecations]
   public function testPreviewModeValidation(): void {
+    $this->expectDeprecation('Calling Drupal\node\Entity\NodeType::setPreviewMode with an integer $preview_mode parameter is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use the \Drupal\node\NodePreviewMode enum instead. See https://www.drupal.org/node/3538666');
     $this->entity->setPreviewMode(38);
     $this->assertValidationErrors(['preview_mode' => 'The value you selected is not a valid choice.']);
 
     $this->entity->setPreviewMode(-1);
     $this->assertValidationErrors(['preview_mode' => 'The value you selected is not a valid choice.']);
 
-    $allowed_values = [
-      DRUPAL_DISABLED,
-      DRUPAL_OPTIONAL,
-      DRUPAL_REQUIRED,
-    ];
+    $allowed_values = NodePreviewMode::cases();
     foreach ($allowed_values as $allowed_value) {
       $this->entity->setPreviewMode($allowed_value);
       $this->assertValidationErrors([]);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\node\NodePreviewMode;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\NodeType;
 
@@ -39,7 +40,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertSame('test_page', $node_type_page->id(), 'Node type test_page loaded');
     $this->assertTrue($node_type_page->displaySubmitted());
     $this->assertFalse($node_type_page->shouldCreateNewRevision());
-    $this->assertSame(DRUPAL_OPTIONAL, $node_type_page->getPreviewMode());
+    $this->assertSame(NodePreviewMode::Optional, $node_type_page->getPreviewMode(FALSE));
     $this->assertSame($id_map->lookupDestinationIds(['test_page']), [['test_page']]);
 
     // Test we have a body field.
@@ -58,7 +59,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 
     $this->assertTrue($node_type_story->displaySubmitted());
     $this->assertFalse($node_type_story->shouldCreateNewRevision());
-    $this->assertSame(DRUPAL_OPTIONAL, $node_type_story->getPreviewMode());
+    $this->assertSame(NodePreviewMode::Optional, $node_type_story->getPreviewMode(FALSE));
     $this->assertSame([['test_story']], $id_map->lookupDestinationIds(['test_story']));
 
     // Test we don't have a body field.
@@ -77,7 +78,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 
     $this->assertTrue($node_type_event->displaySubmitted());
     $this->assertTrue($node_type_event->shouldCreateNewRevision());
-    $this->assertSame(DRUPAL_OPTIONAL, $node_type_event->getPreviewMode());
+    $this->assertSame(NodePreviewMode::Optional, $node_type_event->getPreviewMode(FALSE));
     $this->assertSame([['test_event']], $id_map->lookupDestinationIds(['test_event']));
 
     // Test we have a body field.

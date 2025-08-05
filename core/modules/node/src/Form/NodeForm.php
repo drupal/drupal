@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Utility\Error;
+use Drupal\node\NodePreviewMode;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -227,13 +228,13 @@ class NodeForm extends ContentEntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
     $node = $this->entity;
-    $preview_mode = $node->type->entity->getPreviewMode();
+    $preview_mode = $node->type->entity->getPreviewMode(FALSE);
 
-    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || $form_state->get('has_been_previewed');
+    $element['submit']['#access'] = $preview_mode != NodePreviewMode::Required || $form_state->get('has_been_previewed');
 
     $element['preview'] = [
       '#type' => 'submit',
-      '#access' => $preview_mode != DRUPAL_DISABLED && ($node->access('create') || $node->access('update')),
+      '#access' => $preview_mode != NodePreviewMode::Disabled && ($node->access('create') || $node->access('update')),
       '#value' => $this->t('Preview'),
       '#weight' => 20,
       '#submit' => ['::submitForm', '::preview'],

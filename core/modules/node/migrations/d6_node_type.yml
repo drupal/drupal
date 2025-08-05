@@ -6,7 +6,7 @@ migration_tags:
 source:
   plugin: d6_node_type
   constants:
-    preview: 1 # DRUPAL_OPTIONAL
+    preview: 1 # NodePreviewMode::Optional
     create_body: false
 process:
   type: type
