@@ -30,13 +30,13 @@ class CommentThemeHooks {
    *   An associative array containing:
    *   - element: An associative array containing render arrays for the list of
    *     comments, and the comment form. Array keys: comments, comment_form.
-   *
-   * @todo Rename to template_preprocess_field__comment() once
-   *   https://www.drupal.org/node/939462 is resolved.
    */
-  #[Hook('preprocess_field')]
+  #[Hook('preprocess_field__comment')]
   public function preprocessField(&$variables): void {
     $element = $variables['element'];
+    // We need to check for the field type even though we are using the comment
+    // theme hook suggestion. This is because there may be a bundle or field
+    // with the same name.
     if ($element['#field_type'] == 'comment') {
       // Provide contextual information.
       $variables['comment_display_mode'] = $element[0]['#comment_display_mode'];
