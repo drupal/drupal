@@ -667,6 +667,11 @@ function hook_theme_suggestions_HOOK(array $variables): array {
 
   $suggestions[] = 'hookname__' . $variables['elements']['#langcode'];
 
+  // Theme suggestions can be deprecated by specifying them in the __DEPRECATED
+  // key.
+  $suggestions[] = 'hookname__outdated';
+  $suggestions['__DEPRECATED']['hookname__outdated'] = 'Theme suggestion hookname__outdated is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. See http://drupal.org/node/the-change-notice-nid.';
+
   return $suggestions;
 }
 

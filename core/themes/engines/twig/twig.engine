@@ -93,6 +93,11 @@ function twig_render_template($template_file, array $variables): string|MarkupIn
         }
         $template = strtr($suggestion, '_', '-') . $extension;
         $prefix = ($template == $current_template) ? '✅' : '▪️';
+
+        // Add deprecated hint.
+        if (isset($variables['theme_hook_suggestions__DEPRECATED'][$suggestion])) {
+          $template .= ' (deprecated)';
+        }
         $suggestion = $prefix . ' ' . $template;
       }
       $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . Html::escape(implode("\n   ", $suggestions)) . "\n-->";

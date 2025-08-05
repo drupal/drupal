@@ -50,6 +50,32 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
   }
 
   /**
+   * Testing deprecated suggestions.
+   *
+   * @group legacy
+   */
+  public function testDeprecatedTemplateSuggestions(): void {
+
+    $this->expectDeprecation('Theme suggestion theme_test_suggestion_provided__deprecated is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. This is a test.');
+
+    \Drupal::service('theme_installer')->install(['test_deprecated_suggestion_theme']);
+
+    $this->config('system.theme')
+      ->set('default', 'test_deprecated_suggestion_theme')
+      ->save();
+
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['debug'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
+    $this->rebuildContainer();
+    $this->resetAll();
+
+    $this->drupalGet('theme-test/suggestion-provided');
+    $this->assertSession()->pageTextContains('Template overridden based on a deprecated theme suggestion.');
+    $this->assertSession()->responseContains('✅ theme-test-suggestion-provided--deprecated.html.twig (deprecated)');
+  }
+
+  /**
    * Tests hook_theme_suggestions_alter().
    */
   public function testGeneralSuggestionsAlter(): void {

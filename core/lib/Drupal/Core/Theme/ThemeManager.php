@@ -225,6 +225,12 @@ class ThemeManager implements ThemeManagerInterface {
 
     $suggestions = $this->buildThemeHookSuggestions($hook, $info['base hook'] ?? '', $variables);
 
+    $deprecated_suggestions = [];
+    if (isset($suggestions['__DEPRECATED'])) {
+      $deprecated_suggestions = $suggestions['__DEPRECATED'];
+      unset($suggestions['__DEPRECATED']);
+    }
+
     // Check if each suggestion exists in the theme registry, and if so,
     // use it instead of the base hook. For example, a function may use
     // '#theme' => 'node', but a module can add 'node__article' as a suggestion
@@ -233,6 +239,9 @@ class ThemeManager implements ThemeManagerInterface {
     foreach (array_reverse($suggestions) as $suggestion) {
       if ($theme_registry->has($suggestion)) {
         $info = $theme_registry->get($suggestion);
+        if (isset($deprecated_suggestions[$suggestion])) {
+          @trigger_error($deprecated_suggestions[$suggestion], E_USER_DEPRECATED);
+        }
         break;
       }
     }
@@ -393,10 +402,12 @@ class ThemeManager implements ThemeManagerInterface {
       $template_file = $info['path'] . '/' . $template_file;
     }
     // Add the theme suggestions to the variables array just before rendering
-    // the template for backwards compatibility with template engines.
+    // the template to expose it to the template engine, for example to
+    // display debug information.
     $variables['theme_hook_suggestions'] = $suggestions;
-    // For backwards compatibility, pass 'theme_hook_suggestion' on to the
-    // template engine. This is only set when calling a direct suggestion like
+    $variables['theme_hook_suggestions__DEPRECATED'] = $deprecated_suggestions;
+    // Pass 'theme_hook_suggestion' on to the template engine. This is only
+    // set when calling a direct suggestion like
     // '#theme' => 'menu__shortcut_default' when the template exists in the
     // current theme.
     if (isset($theme_hook_suggestion)) {
