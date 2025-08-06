@@ -6,6 +6,7 @@
 
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
+use Drupal\views_ui\Hook\ViewsUiThemeHooks;
 
 /**
  * Returns contextual links for each handler of a certain section.
@@ -16,8 +17,14 @@ use Drupal\views\ViewExecutable;
  *
  * @param string $title
  *   Add a bolded title of this section.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ *  @see https://www.drupal.org/node/3535324
  */
 function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type, $title = FALSE): array {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3535324', E_USER_DEPRECATED);
   $display = $view->display_handler->display;
   $handlers = $view->display_handler->getHandlers($type);
   $links = [];
@@ -48,8 +55,14 @@ function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type
 
 /**
  * Returns a link to editing a certain display setting.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *    replacement.
+ *
+ * @see https://www.drupal.org/node/3535324
  */
 function views_ui_view_preview_section_display_category_links(ViewExecutable $view, $type, $title): array {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3535324', E_USER_DEPRECATED);
   $display = $view->display_handler->display;
   $links = [
     $type . '-edit' => [
@@ -64,8 +77,14 @@ function views_ui_view_preview_section_display_category_links(ViewExecutable $vi
 
 /**
  * Returns all contextual links for the main content part of the view.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3535324
  */
 function views_ui_view_preview_section_rows_links(ViewExecutable $view): array {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3535324', E_USER_DEPRECATED);
   $links = [];
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'filter', TRUE));
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'field', TRUE));
@@ -112,4 +131,149 @@ function views_ui_contextual_links_suppress_push(): void {
  */
 function views_ui_contextual_links_suppress_pop(): void {
   views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress()) - 1);
+}
+
+/**
+ * Prepares variables for Views UI display tab setting templates.
+ *
+ * Default template: views-ui-display-tab-setting.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - link: The setting's primary link.
+ *   - settings_links: An array of links for this setting.
+ *   - defaulted: A boolean indicating the setting is in its default state.
+ *   - overridden: A boolean indicating the setting has been overridden from
+ *     the default.
+ *   - description: The setting's description.
+ *   - description_separator: A boolean indicating a separator colon should be
+ *     appended to the setting's description.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_views_ui_display_tab_setting(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ViewsUiThemeHooks::class)->preprocessDisplayTabSetting($variables);
+}
+
+/**
+ * Prepares variables for Views UI view listing templates.
+ *
+ * Default template: views-ui-view-listing-table.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - headers: An associative array containing the headers for the view
+ *     listing table.
+ *   - rows: An associative array containing the rows data for the view
+ *     listing table.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_views_ui_views_listing_table(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ViewsUiThemeHooks::class)->preprocessViewsListingTable($variables);
+}
+
+/**
+ * Prepares variables for Views UI display tab bucket templates.
+ *
+ * Default template: views-ui-display-tab-bucket.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #name, #overridden, #children, #title, #actions.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_views_ui_display_tab_bucket(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ViewsUiThemeHooks::class)->preprocessDisplayTabBucket($variables);
+}
+
+/**
+ * Prepares variables for Views UI build group filter form templates.
+ *
+ * Default template: views-ui-build-group-filter-form.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *  template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_views_ui_build_group_filter_form(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ViewsUiThemeHooks::class)->preprocessBuildGroupFilterForm($variables);
+}
+
+/**
+ * Prepares variables for Views UI rearrange filter form templates.
+ *
+ * Default template: views-ui-rearrange-filter-form.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *  template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_views_ui_rearrange_filter_form(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ViewsUiThemeHooks::class)->preprocessRearrangeFilterForm($variables);
+}
+
+/**
+ * Prepares variables for style plugin table templates.
+ *
+ * Default template: views-ui-style-plugin-table.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *  template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_views_ui_style_plugin_table(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ViewsUiThemeHooks::class)->preprocessStylePluginTable($variables);
+}
+
+/**
+ * Prepares variables for views UI view preview section templates.
+ *
+ * Default template: views-ui-view-preview-section.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - section: The section name of a View (e.g. title, rows or pager).
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *  template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_views_ui_view_preview_section(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ViewsUiThemeHooks::class)->preprocessViewPreviewSection($variables);
 }
