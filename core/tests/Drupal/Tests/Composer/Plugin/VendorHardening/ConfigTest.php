@@ -110,21 +110,4 @@ class ConfigTest extends TestCase {
     }
   }
 
-  /**
-   * @covers ::getAllCleanupPaths
-   */
-  public function testSkipClean(): void {
-    $root = $this->createMock(RootPackageInterface::class);
-    $root->expects($this->once())
-      ->method('getExtra')
-      ->willReturn([
-        'drupal-core-vendor-hardening' => [
-          'composer/composer' => FALSE,
-        ],
-      ]);
-
-    $plugin_config = (new Config($root))->getAllCleanupPaths();
-    $this->assertArrayNotHasKey('composer/composer', $plugin_config);
-  }
-
 }

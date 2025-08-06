@@ -19,9 +19,7 @@ package_manager.settings:
           label: 'Absolute path to Composer executable, or NULL to auto-detect'
           nullable: true
           constraints:
-            # The file has to exist but need not be directly executable, because it is
-            # always passed to the PHP interpreter.
-            File: []
+            IsExecutable: []
         rsync:
           type: string
           label: 'Absolute path to rsync executable, or NULL to auto-detect'
