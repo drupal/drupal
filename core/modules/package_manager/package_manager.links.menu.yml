@@ -1,5 +1,0 @@
-package_manager.settings:
-  title: 'Package Manager settings'
-  description: "Configure Package Manager and the locations of its required executables."
-  parent: system.admin_config_system
-  route_name: package_manager.settings

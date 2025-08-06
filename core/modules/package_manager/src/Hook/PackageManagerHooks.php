@@ -3,7 +3,6 @@
 namespace Drupal\package_manager\Hook;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Url;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -21,8 +20,6 @@ class PackageManagerHooks {
   public function help($route_name) : ?string {
     switch ($route_name) {
       case 'help.page.package_manager':
-        $settings_form = Url::fromRoute('package_manager.settings')->toString();
-
         $output = '<h3 id="package-manager-about">' . $this->t('About') . '</h3>';
         $output .= '<p>' . $this->t('Package Manager is a framework for updating Drupal core and installing contributed modules and themes via Composer. It has no user interface, but it provides an API for creating a temporary copy of the current site, making changes to the copy, and then syncing those changes back into the live site.') . '</p>';
         $output .= '<p>' . $this->t('Package Manager dispatches events before and after various operations, and external code can integrate with it by subscribing to those events. For more information, see <code>package_manager.api.php</code>.') . '</p>';
@@ -57,7 +54,8 @@ class PackageManagerHooks {
         $output .= '    <p>' . $this->t('Ask your system administrator to remove <code>proc_open()</code> from the <a href=":url">disable_functions</a> setting in <code>php.ini</code>.', [':url' => 'https://www.php.net/manual/en/ini.core.php#ini.disable-functions']) . '</p>';
         $output .= '  </li>';
         $output .= '  <li>' . $this->t('What if it says the <code>composer</code> executable cannot be found?');
-        $output .= '    <p>' . $this->t("If the <code>composer</code> executable's path cannot be automatically determined, you can set it in the <a href=\":settings_form\">settings form</a>.", [':settings_form' => $settings_form]) . '</p>';
+        $output .= '    <p>' . $this->t("If the <code>composer</code> executable's path cannot be automatically determined, it can be explicitly set by adding the following line to <code>settings.php</code>:") . '</p>';
+        $output .= "    <pre><code>\$config['package_manager.settings']['executables']['composer'] = '/full/path/to/composer.phar';</code></pre>";
         $output .= '  </li>';
         $output .= '  <li>' . $this->t('What if it says the detected version of Composer is not supported?');
         $output .= '    <p>' . $this->t('The version of the <code>composer</code> executable must satisfy <code>@version</code>. See the <a href=":url">the Composer documentation</a> for more information, or use this command to update Composer:', [
@@ -71,7 +69,8 @@ class PackageManagerHooks {
         $output .= '  </li>';
         $output .= '</ul>';
         $output .= '<h4 id="package-manager-faq-rsync">' . $this->t('Using rsync') . '</h4>';
-        $output .= '<p>' . $this->t('Package Manager must be able to run <code>rsync</code> to copy files between the live site and the stage directory. Package Manager will try to detect the path to <code>rsync</code>, but if it cannot be detected, you can set it in the <a href=":settings_form">settings form</a>.', [':settings_form' => $settings_form]) . '</p>';
+        $output .= '<p>' . $this->t('Package Manager must be able to run <code>rsync</code> to copy files between the live site and the stage directory. Package Manager will try to detect the path to <code>rsync</code>, but if it cannot be detected, you can set it explicitly by adding the following line to <code>settings.php</code>:') . '</p>';
+        $output .= "<pre><code>\$config['package_manager.settings']['executables']['rsync'] = '/full/path/to/rsync';</code></pre>";
         $output .= '<h4 id="package-manager-tuf-info">' . $this->t('Enabling PHP-TUF protection') . '</h4>';
         $output .= '<p>' . $this->t('Package Manager requires <a href=":php-tuf">PHP-TUF</a>, which implements <a href=":tuf">The Update Framework</a> as a way to help secure Composer package downloads via the <a href=":php-tuf-plugin">PHP-TUF Composer integration plugin</a>. This plugin must be installed and configured properly in order to use Package Manager.', [
           ':php-tuf' => 'https://github.com/php-tuf/php-tuf',

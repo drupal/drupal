@@ -7,4 +7,3 @@ lifecycle: experimental
 dependencies:
   - drupal:update
 hidden: true
-configure: package_manager.settings
