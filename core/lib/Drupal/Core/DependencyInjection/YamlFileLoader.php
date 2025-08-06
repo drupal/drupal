@@ -528,6 +528,11 @@ class YamlFileLoader
             //return new Expression(substr($value, 2));
             throw new InvalidArgumentException(sprintf("'%s' is an Expression, but expressions are not supported.", $value));
         } elseif (is_string($value) && str_starts_with($value, '@')) {
+            if (str_starts_with($value, '@>')) {
+                $argument = $this->resolveServices(substr_replace($value, '', 1, 1));
+
+                return new ServiceClosureArgument($argument);
+            }
             if (str_starts_with($value, '@@')) {
                 $value = substr($value, 1);
                 $invalidBehavior = null;

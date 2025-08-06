@@ -44,6 +44,9 @@ services:
   example_service_closure:
     class: \Drupal\Core\ExampleClass
     arguments: [!service_closure '@example_service_1']
+  example_service_closure_shorthand:
+    class: \Drupal\Core\ExampleClass
+    arguments: ['@>example_service_1']
 YAML;
 
     vfsStream::setup('drupal', NULL, [
@@ -71,6 +74,12 @@ YAML;
 
     // Test service closures.
     $service_closure = $builder->getDefinition('example_service_closure')->getArgument(0);
+    $this->assertInstanceOf(ServiceClosureArgument::class, $service_closure);
+    $ref = $service_closure->getValues()[0];
+    $this->assertInstanceOf(Reference::class, $ref);
+    $this->assertEquals('example_service_1', $ref);
+
+    $service_closure = $builder->getDefinition('example_service_closure_shorthand')->getArgument(0);
     $this->assertInstanceOf(ServiceClosureArgument::class, $service_closure);
     $ref = $service_closure->getValues()[0];
     $this->assertInstanceOf(Reference::class, $ref);
