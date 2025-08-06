@@ -671,21 +671,33 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Retrieve a table or column comment.
+   * Retrieves a table or column comment.
+   *
+   * @param string $table
+   *   The table name.
+   * @param string|null $column
+   *   (optional) The column name.
+   *
+   * @return string|false
+   *   The table or column comment. FALSE if the table or column does not exist.
    */
   public function getComment($table, $column = NULL) {
     $condition = $this->buildTableNameCondition($table);
     if (isset($column)) {
+      if (!$this->tableExists($table)) {
+        // If the table is a view it will be present in
+        // information_schema.columns so we need to check if the table exists.
+        return FALSE;
+      }
       $condition->condition('column_name', $column);
       $condition->compile($this->connection, $this);
       // Don't use {} around information_schema.columns table.
       return $this->connection->query("SELECT column_comment AS column_comment FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
     }
+    $condition->condition('table_type', 'BASE TABLE');
     $condition->compile($this->connection, $this);
     // Don't use {} around information_schema.tables table.
-    $comment = $this->connection->query("SELECT table_comment AS table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
-    // Work-around for MySQL 5.0 bug http://bugs.mysql.com/bug.php?id=11379
-    return preg_replace('/; InnoDB free:.*$/', '', $comment);
+    return $this->connection->query("SELECT table_comment AS table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
   }
 
 }

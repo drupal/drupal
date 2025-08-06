@@ -1056,16 +1056,24 @@ EOD;
   }
 
   /**
-   * Retrieve a table or column comment.
+   * Retrieves a table or column comment.
+   *
+   * @param string $table
+   *   The table name.
+   * @param string|null $column
+   *   (optional) The column name.
+   *
+   * @return string|false
+   *   The table or column comment. FALSE if the table or column does not exist.
    */
   public function getComment($table, $column = NULL) {
     $info = $this->getPrefixInfo($table);
     // Don't use {} around pg_class, pg_attribute tables.
     if (isset($column)) {
-      return $this->connection->query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', [$info['table'], $column])->fetchField();
+      return $this->connection->query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', [$info['table'], $column])->fetchField() ?? FALSE;
     }
     else {
-      return $this->connection->query('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', ['pg_class', $info['table']])->fetchField();
+      return $this->connection->query('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', ['pg_class', $info['table']])->fetchField() ?? FALSE;
     }
   }
 
