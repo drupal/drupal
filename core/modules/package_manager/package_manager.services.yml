@@ -17,8 +17,6 @@ services:
   Drupal\package_manager\ExecutableFinder:
     public: false
     decorates: 'PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface'
-    calls:
-      - [setLogger, ['@logger.channel.package_manager']]
   Drupal\package_manager\TranslatableStringFactory:
     public: false
     decorates: 'PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface'
