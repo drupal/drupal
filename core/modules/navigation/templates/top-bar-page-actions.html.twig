@@ -21,22 +21,24 @@
   } only %}
 {% endfor %}
 
-{% include 'navigation:toolbar-button' with {
-  icon: { icon_id: 'dots' },
-  action: 'More actions'|t,
-  attributes: create_attribute(
-    {
-      'aria-expanded': 'false',
-      'aria-controls': dropdown_id,
-      'data-drupal-dropdown': 'true'
-    }
-  ),
-} only %}
+{% if page_actions %}
+  {% include 'navigation:toolbar-button' with {
+    icon: { icon_id: 'dots' },
+    action: 'More actions'|t,
+    attributes: create_attribute(
+      {
+        'aria-expanded': 'false',
+        'aria-controls': dropdown_id,
+        'data-drupal-dropdown': 'true'
+      }
+    ),
+  } only %}
 
-<div class="toolbar-dropdown__menu" id={{ dropdown_id }}>
-  <ul class="toolbar-dropdown__list">
-    {% for page_action in page_actions %}
-      {{ page_action }}
-    {% endfor %}
-  </ul>
-</div>
+  <div class="toolbar-dropdown__menu" id={{ dropdown_id }}>
+    <ul class="toolbar-dropdown__list">
+      {% for page_action in page_actions %}
+        {{ page_action }}
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
