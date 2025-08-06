@@ -33,7 +33,7 @@
     if (isOriented) {
       document
         .querySelector('#toolbar-administration')
-        .classList.add('toolbar-oriented');
+        ?.classList.add('toolbar-oriented');
     }
   })();
 
