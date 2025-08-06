@@ -16,7 +16,6 @@ use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\StatusCheckTrait;
 use Drupal\package_manager\ValidationResult;
-use Drupal\package_manager_test_validation\TestExecutableFinder;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
@@ -34,11 +33,6 @@ class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubsc
 
   use StatusCheckTrait;
   use StringTranslationTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['package_manager_test_validation'];
 
   /**
    * Whether we are in maintenance mode before a require operation.
@@ -250,10 +244,12 @@ class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubsc
    */
   public function testPreconditionBypass(string $service_class): void {
     // Set up conditions where the active and sandbox directories are the same,
-    // and detecting rsync will fail.
+    // and the path to rsync isn't valid.
     $path = $this->container->get(PathFactoryInterface::class)
       ->create('/the/absolute/apex');
-    TestExecutableFinder::throwFor('rsync');
+    $this->config('package_manager.settings')
+      ->set('executables.rsync', "C:\Not Rsync.exe")
+      ->save();
 
     /** @var \PhpTuf\ComposerStager\API\Precondition\Service\PreconditionInterface $precondition */
     $precondition = $this->container->get($service_class);

@@ -11,21 +11,11 @@ package_manager.settings:
   label: 'Package Manager settings'
   mapping:
     executables:
-      type: mapping
+      type: sequence
       label: 'Absolute paths to required executables, or NULL to rely on PATH'
-      mapping:
-        composer:
-          type: string
-          label: 'Absolute path to Composer executable, or NULL to auto-detect'
-          nullable: true
-          constraints:
-            IsExecutable: []
-        rsync:
-          type: string
-          label: 'Absolute path to rsync executable, or NULL to auto-detect'
-          nullable: true
-          constraints:
-            IsExecutable: []
+      sequence:
+        type: string
+        label: 'Absolute path to executable, or NULL'
     additional_trusted_composer_plugins:
       type: sequence
       label: 'Additional trusted composer plugins'
