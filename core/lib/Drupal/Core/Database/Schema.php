@@ -194,7 +194,6 @@ abstract class Schema implements PlaceholderInterface {
    */
   public function tableExists($table, bool $add_prefix = TRUE) {
     $condition = $this->buildTableNameCondition($table, '=', $add_prefix);
-    $condition->condition('table_type', 'BASE TABLE');
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
     // concatenation for conditionals like this however, we
@@ -222,7 +221,6 @@ abstract class Schema implements PlaceholderInterface {
     // Load all the tables up front in order to take into account per-table
     // prefixes. The actual matching is done at the bottom of the method.
     $condition = $this->buildTableNameCondition('%', 'LIKE');
-    $condition->condition('table_type', 'BASE TABLE');
     $condition->compile($this->connection, $this);
 
     $prefix = $this->connection->getPrefix();
