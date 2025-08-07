@@ -221,7 +221,6 @@ Field API
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 Field UI
-- Yves Chedemois 'yched' https://www.drupal.org/u/yched
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 File
