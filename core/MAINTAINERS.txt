@@ -440,7 +440,6 @@ Umami demo
 - Mark Conroy 'markconroy' https://www.drupal.org/u/markconroy
 - Gareth Goodwin 'smaz' https://www.drupal.org/u/smaz
 - Keith Jay 'kjay' https://www.drupal.org/u/kjay
-- Ofer Shaal 'shaal' https://www.drupal.org/u/shaal
 - Ivan Berdinsky 'finnsky' https://www.drupal.org/u/finnsky
 
 Update Manager
