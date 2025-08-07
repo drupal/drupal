@@ -366,7 +366,6 @@ REST
 Responsive Image
 - Peter Droogmans 'attiks' https://www.drupal.org/u/attiks
 - Heather Brooke Drummond 'RainbowArray' https://www.drupal.org/u/rainbowarray
-- Jelle Sebreghts 'Jelle_S' https://www.drupal.org/u/jelle_s
 
 Routing
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
