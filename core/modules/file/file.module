@@ -22,7 +22,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
-use Drupal\file\Hook\FileHooks;
+use Drupal\file\Hook\FileFormHooks;
 use Drupal\file\IconMimeTypes;
 use Drupal\file\Plugin\Field\FieldFormatter\FileVideoFormatter;
 use Drupal\file\Upload\FileUploadHandlerInterface;
@@ -774,7 +774,7 @@ function file_field_find_file_reference_column(FieldDefinitionInterface $field) 
  */
 function file_system_settings_submit(array &$form, FormStateInterface $form_state): void {
   @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\file\Hook\FileHooks::settingsSubmit() instead. See https://www.drupal.org/node/3534099', E_USER_DEPRECATED);
-  \Drupal::service(FileHooks::class)->settingsSubmit($form, $form_state);
+  \Drupal::service(FileFormHooks::class)->settingsSubmit($form, $form_state);
 }
 
 /**
