@@ -326,7 +326,6 @@ Node Access
 
 Olivero
 - Mike Herchel 'mherchel' https://www.drupal.org/u/mherchel
-- Putra Bonaccorsi 'proeung' https://www.drupal.org/u/proeung
 - Jen Witkowski 'jwitkowski79' https://www.drupal.org/u/jwitkowski79
 - Konstantin Shupenko 'kostyashupenko' https://www.drupal.org/u/kostyashupenko
 - Andy Blum 'andy-blum' https://www.drupal.org/u/andy-blum
