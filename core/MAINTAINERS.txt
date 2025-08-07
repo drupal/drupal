@@ -247,7 +247,7 @@ Image
 - ?
 
 Inline Form Errors
-- Daniël Smidt 'dmsmidt' https://www.drupal.org/u/dmsmidt
+- ?
 
 Installer
 - ?
