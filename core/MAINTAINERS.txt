@@ -383,7 +383,6 @@ Search
 
 Serialization
 - Brad Jones 'bradjones1' https://www.drupal.org/u/bradjones1
-- Damian Lee 'damiankloip' https://www.drupal.org/u/damiankloip
 
 Settings Tray
 - Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
@@ -457,7 +456,6 @@ User
 
 Views
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
-- Damian Lee 'damiankloip' https://www.drupal.org/u/damiankloip
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
 
