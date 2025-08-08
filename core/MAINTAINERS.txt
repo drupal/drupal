@@ -375,7 +375,7 @@ Serialization
 - Brad Jones 'bradjones1' https://www.drupal.org/u/bradjones1
 
 Settings Tray
-- Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
+- ?
 
 Shortcut
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
