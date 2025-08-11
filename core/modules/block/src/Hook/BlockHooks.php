@@ -158,10 +158,11 @@ class BlockHooks {
       return;
     }
 
-    // block_themes_installed() does not call block_theme_initialize() during
-    // site installation because block configuration can be optional or provided
-    // by the profile. Now, when the profile is installed, this configuration
-    // exists, call block_theme_initialize() for all installed themes.
+    // BlockHooks::themesInstalled() does not call block_theme_initialize()
+    // during site installation because block configuration can be optional or
+    // provided by the profile. Now, when the profile is installed, this
+    // configuration exists, call block_theme_initialize() for all installed
+    // themes.
     $profile = \Drupal::installProfile();
     if (in_array($profile, $modules, TRUE)) {
       foreach (\Drupal::service('theme_handler')->listInfo() as $theme => $data) {

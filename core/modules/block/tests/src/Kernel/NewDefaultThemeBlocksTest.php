@@ -51,7 +51,10 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
   }
 
   /**
-   * Check the blocks are correctly copied by block_themes_installed().
+   * Check the blocks are correctly copied.
+   *
+   * This tests that blocks are correctly copied by
+   * \Drupal\block\Hook\BlockHooks::themesInstalled().
    */
   public function testNewDefaultThemeBlocks(): void {
     $default_theme = $this->defaultTheme;
