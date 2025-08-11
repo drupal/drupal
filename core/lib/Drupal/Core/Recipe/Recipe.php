@@ -250,6 +250,9 @@ final class Recipe {
                       ]),
                     ]),
                   ]),
+                  // An optional fallback value if trying to get a default value
+                  // from a non-existent config object.
+                  'fallback' => new Optional(),
                   'env' => new Optional([
                     new Type('string'),
                     new NotBlank(),

@@ -163,25 +163,48 @@ YAML
   }
 
   /**
-   * Tests getting the default value from non-existing configuration.
+   * Tests getting the fallback default value from non-existing configuration.
    *
    * @covers \Drupal\Core\Recipe\InputConfigurator::getDefaultValue
    */
-  public function testDefaultValueFromNonExistentConfig(): void {
-    $recipe = $this->createRecipe(<<<YAML
-name: 'Default value from non-existent config'
-input:
-  capital:
-    data_type: string
-    description: This will be erroneous.
-    default:
-      source: config
-      config: ['foo.baz', 'bar']
-YAML
-    );
+  public function testDefaultValueFromNonExistentConfigWithFallback(): void {
+    $recipe_data = [
+      'name' => 'Default value from non-existent config',
+      'input' => [
+        'capital' => [
+          'data_type' => 'string',
+          'description' => 'This will use the fallback value.',
+          'default' => [
+            'source' => 'config',
+            'config' => ['foo.baz', 'bar'],
+            'fallback' => 'fallback',
+          ],
+        ],
+      ],
+    ];
+    $recipe = $this->createRecipe($recipe_data);
+    // Mock an input collector that will return the default value.
+    $collector = $this->createMock(InputCollectorInterface::class);
+    $collector->expects($this->atLeastOnce())
+      ->method('collectValue')
+      ->withAnyParameters()
+      ->willReturnArgument(2);
+
+    $recipe->input->collectAll($collector);
+    $this->assertSame(['capital' => 'fallback'], $recipe->input->getValues());
+
+    // NULL is an allowable fallback value.
+    $recipe_data['input']['capital']['default']['fallback'] = NULL;
+    $recipe = $this->createRecipe($recipe_data);
+    $recipe->input->collectAll($collector);
+    $this->assertSame(['capital' => NULL], $recipe->input->getValues());
+
+    // If there's no fallback value at all, we should get an exception.
+    unset($recipe_data['input']['capital']['default']['fallback']);
+    $recipe = $this->createRecipe($recipe_data);
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage("The 'foo.baz' config object does not exist.");
-    $recipe->input->collectAll($this->createMock(InputCollectorInterface::class));
+    $recipe->input->collectAll($collector);
   }
 
   /**
@@ -337,18 +360,11 @@ input:
     default:
       source: env
       env: SITE_NAME
-  slogan:
-    data_type: string
-    description: The site slogan.
-    default:
-      source: env
-      env: SITE_SLOGAN
 config:
   actions:
     system.site:
       simpleConfigUpdate:
         name: \${name}
-        slogan: \${slogan}
 YAML
     );
     putenv('SITE_NAME=Input Test');
@@ -364,9 +380,51 @@ YAML
     RecipeRunner::processRecipe($recipe);
     $config = $this->config('system.site');
     $this->assertSame('Input Test', $config->get('name'));
-    // There was no SITE_SLOGAN environment variable, so it should have been
-    // set to an empty string.
-    $this->assertSame('', $config->get('slogan'));
+  }
+
+  /**
+   * Tests getting a fallback value for an undefined environment variable.
+   *
+   * @covers \Drupal\Core\Recipe\InputConfigurator::getDefaultValue
+   */
+  public function testFallbackValueForUndefinedEnvironmentVariable(): void {
+    $recipe_data = [
+      'name' => 'Default value from undefined environment variable',
+      'input' => [
+        'capital' => [
+          'data_type' => 'string',
+          'description' => 'This will use the fallback value.',
+          'default' => [
+            'source' => 'env',
+            'env' => 'NO_SUCH_THING',
+            'fallback' => 'fallback',
+          ],
+        ],
+      ],
+    ];
+    // Mock an input collector that will return the default value.
+    $collector = $this->createMock(InputCollectorInterface::class);
+    $collector->expects($this->atLeastOnce())
+      ->method('collectValue')
+      ->withAnyParameters()
+      ->willReturnArgument(2);
+
+    $recipe = $this->createRecipe($recipe_data);
+    $recipe->input->collectAll($collector);
+    $this->assertSame(['capital' => 'fallback'], $recipe->input->getValues());
+
+    // NULL is an allowable fallback value.
+    $recipe_data['input']['capital']['default']['fallback'] = NULL;
+    $recipe = $this->createRecipe($recipe_data);
+    $recipe->input->collectAll($collector);
+    $this->assertSame(['capital' => NULL], $recipe->input->getValues());
+
+    // If there's no fallback value at all, we should get an exception.
+    unset($recipe_data['input']['capital']['default']['fallback']);
+    $recipe = $this->createRecipe($recipe_data);
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage("The 'NO_SUCH_THING' environment variable is not defined.");
+    $recipe->input->collectAll($collector);
   }
 
 }
