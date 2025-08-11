@@ -131,11 +131,16 @@ class Query extends QueryBase implements QueryInterface {
       $this->sqlFields["base_table.$id_field"] = ['base_table', $id_field];
     }
 
-    // Add a self-join to the base revision table if we're querying only the
-    // latest revisions.
+    // Use max and group by to only return the latest revision in the most
+    // optimal way.
     if ($this->latestRevision && $revision_field) {
-      $this->sqlQuery->leftJoin($base_table, 'base_table_2', "[base_table].[$id_field] = [base_table_2].[$id_field] AND [base_table].[$revision_field] < [base_table_2].[$revision_field]");
-      $this->sqlQuery->isNull("base_table_2.$id_field");
+      // Fetch all latest revision ids in a sub-query.
+      $revision_subquery = $this->connection->select($base_table, 'base_table');
+      $revision_subquery->addExpression("MAX(base_table.$revision_field)");
+      $revision_subquery->groupBy("base_table.$id_field");
+
+      // Restrict results only to latest ids.
+      $this->sqlQuery->condition("base_table.$revision_field", $revision_subquery, 'IN');
     }
 
     if (is_null($this->accessCheck)) {
