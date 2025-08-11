@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\CommentPreviewMode;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -131,7 +132,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $edit['comment_body[0][value]'] = $comment;
 
     $field = FieldConfig::loadByName('entity_test', 'entity_test', 'comment');
-    $preview_mode = $field->getSetting('preview');
+    $preview_mode = CommentPreviewMode::from($field->getSetting('preview'));
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {
@@ -152,19 +153,19 @@ class CommentNonNodeTest extends BrowserTestBase {
       $edit += $contact;
     }
     switch ($preview_mode) {
-      case DRUPAL_REQUIRED:
+      case CommentPreviewMode::Required:
         // Preview required so no save button should be found.
         $this->assertSession()->buttonNotExists('Save');
         $this->submitForm($edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
-      case DRUPAL_OPTIONAL:
+      case CommentPreviewMode::Optional:
         $this->assertSession()->buttonExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
 
-      case DRUPAL_DISABLED:
+      case CommentPreviewMode::Disabled:
         $this->assertSession()->buttonNotExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');

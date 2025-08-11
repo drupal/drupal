@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\CommentPreviewMode;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Entity\Comment;
@@ -148,20 +149,21 @@ abstract class CommentTestBase extends BrowserTestBase {
     if ($contact !== NULL && is_array($contact)) {
       $edit += $contact;
     }
+    $preview_mode = CommentPreviewMode::from($preview_mode);
     switch ($preview_mode) {
-      case DRUPAL_REQUIRED:
+      case CommentPreviewMode::Required:
         // Preview required so no save button should be found.
         $this->assertSession()->buttonNotExists('Save');
         $this->submitForm($edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
-      case DRUPAL_OPTIONAL:
+      case CommentPreviewMode::Optional:
         $this->assertSession()->buttonExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
 
-      case DRUPAL_DISABLED:
+      case CommentPreviewMode::Disabled:
         $this->assertSession()->buttonNotExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
@@ -258,27 +260,18 @@ abstract class CommentTestBase extends BrowserTestBase {
   /**
    * Sets the value governing the previewing mode for the comment form.
    *
-   * @param int $mode
-   *   The preview mode: DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
+   * @param \Drupal\comment\CommentPreviewMode|int $mode
+   *   The preview mode, a case of the CommentPreviewMode enum.
    * @param string $field_name
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  protected function setCommentPreview($mode, $field_name = 'comment') {
-    switch ($mode) {
-      case DRUPAL_DISABLED:
-        $mode_text = 'disabled';
-        break;
-
-      case DRUPAL_OPTIONAL:
-        $mode_text = 'optional';
-        break;
-
-      case DRUPAL_REQUIRED:
-        $mode_text = 'required';
-        break;
+  protected function setCommentPreview(CommentPreviewMode|int $mode, $field_name = 'comment') {
+    if (!$mode instanceof CommentPreviewMode) {
+      @trigger_error('Calling ' . __METHOD__ . ' with an integer $mode parameter is deprecated in drupal:11.3.0 and it will be removed in drupal:13.0.0. Use the \Drupal\comment\CommentPreviewMode enum instead. See https://www.drupal.org/node/3538678', E_USER_DEPRECATED);
+      $mode = CommentPreviewMode::from($mode);
     }
-    $this->setCommentSettings('preview', $mode, new FormattableMarkup('Comment preview @mode_text.', ['@mode_text' => $mode_text]), $field_name);
+    $this->setCommentSettings('preview', $mode->value, '', $field_name);
   }
 
   /**

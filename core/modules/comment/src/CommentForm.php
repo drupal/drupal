@@ -254,7 +254,7 @@ class CommentForm extends ContentEntityForm {
     $comment = $this->entity;
     $entity = $comment->getCommentedEntity();
     $field_definition = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
-    $preview_mode = $field_definition->getSetting('preview');
+    $preview_mode = CommentPreviewMode::tryFrom($field_definition->getSetting('preview'));
 
     // No delete action on the comment form.
     unset($element['delete']);
@@ -264,12 +264,12 @@ class CommentForm extends ContentEntityForm {
 
     // Only show the save button if comment previews are optional or if we are
     // already previewing the submission.
-    $element['submit']['#access'] = ($comment->id() && $this->currentUser->hasPermission('administer comments')) || $preview_mode != DRUPAL_REQUIRED || $form_state->get('comment_preview');
+    $element['submit']['#access'] = ($comment->id() && $this->currentUser->hasPermission('administer comments')) || $preview_mode != CommentPreviewMode::Required || $form_state->get('comment_preview');
 
     $element['preview'] = [
       '#type' => 'submit',
       '#value' => $this->t('Preview'),
-      '#access' => $preview_mode != DRUPAL_DISABLED,
+      '#access' => $preview_mode != CommentPreviewMode::Disabled,
       '#submit' => ['::submitForm', '::preview'],
     ];
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentManagerInterface;
+use Drupal\comment\CommentPreviewMode;
 use Drupal\node\Entity\Node;
 
 /**
@@ -28,7 +29,7 @@ class CommentPagerTest extends CommentTestBase {
     // Set comment variables.
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentPreview(CommentPreviewMode::Disabled);
 
     // Create a node and three comments.
     $node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
@@ -118,7 +119,7 @@ class CommentPagerTest extends CommentTestBase {
     // Set comment variables.
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentPreview(CommentPreviewMode::Disabled);
 
     // Create a node and three comments.
     $node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
@@ -150,7 +151,7 @@ class CommentPagerTest extends CommentTestBase {
     // Set comment variables.
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentPreview(CommentPreviewMode::Disabled);
 
     // Display all the comments on the same page.
     $this->setCommentsPerPage(1000);
@@ -251,7 +252,7 @@ class CommentPagerTest extends CommentTestBase {
     // Set comment variables.
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentPreview(CommentPreviewMode::Disabled);
 
     // Set comments to one per page so that we are able to test paging without
     // needing to insert large numbers of comments.
@@ -379,7 +380,7 @@ class CommentPagerTest extends CommentTestBase {
     $comments = [];
     foreach (['comment', 'comment_2'] as $field_name) {
       $this->setCommentForm(TRUE, $field_name);
-      $this->setCommentPreview(DRUPAL_OPTIONAL, $field_name);
+      $this->setCommentPreview(CommentPreviewMode::Optional, $field_name);
       $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_FLAT, 'Comment paging changed.', $field_name);
 
       // Set comments to one per page so that we are able to test paging without

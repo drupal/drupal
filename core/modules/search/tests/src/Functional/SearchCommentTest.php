@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\search\Functional;
 
 use Behat\Mink\Exception\ResponseTextException;
+use Drupal\comment\CommentPreviewMode;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldConfig;
@@ -116,7 +117,7 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Make preview optional.
     $field = FieldConfig::loadByName('node', 'article', 'comment');
-    $field->setSetting('preview', DRUPAL_OPTIONAL);
+    $field->setSetting('preview', CommentPreviewMode::Optional->value);
     $field->save();
 
     // Allow anonymous users to search content.
@@ -248,7 +249,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Create a node.
     // Make preview optional.
     $field = FieldConfig::loadByName('node', 'article', 'comment');
-    $field->setSetting('preview', DRUPAL_OPTIONAL);
+    $field->setSetting('preview', CommentPreviewMode::Optional->value);
     $field->save();
     $this->node = $this->drupalCreateNode(['type' => 'article']);
 
