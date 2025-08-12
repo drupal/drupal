@@ -6,19 +6,25 @@ namespace Drupal\Tests\layout_builder\Kernel\Plugin\ConfigAction;
 
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionManager;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\layout_builder\Plugin\ConfigAction\AddComponent;
+use Drupal\layout_builder\Plugin\ConfigAction\Deriver\AddComponentDeriver;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Plugin\ConfigAction\AddComponent
- *
- * @group layout_builder
+ * Tests that `addComponentToLayout` config action.
  */
+#[Group('layout_builder')]
+#[CoversClass(AddComponent::class)]
+#[CoversClass(AddComponentDeriver::class)]
 class AddComponentTest extends KernelTestBase {
 
   /**
@@ -396,6 +402,73 @@ class AddComponentTest extends KernelTestBase {
           ],
         ],
       ]);
+  }
+
+  /**
+   * Tests that the deriver produces the expected derivatives.
+   */
+  public function testDerivativeDefinitions(): void {
+    $singular = $this->configActionManager->getDefinition('add_layout_component:addComponentToLayout');
+    $plural = $this->configActionManager->getDefinition('add_layout_component:addComponentsToLayout');
+    // These actions should be limited to entity types that carry section lists.
+    $this->assertSame(['entity_view_display'], $singular['entity_types']);
+    // The `multiple` flag should differ.
+    $this->assertFalse($singular['multiple']);
+    $this->assertTrue($plural['multiple']);
+
+    // There should only be two derivatives (the singular and the plural).
+    $definitions = array_filter(
+      array_keys($this->configActionManager->getDefinitions()),
+      fn (string $id): bool => str_starts_with($id, 'add_layout_component:'),
+    );
+    $this->assertCount(2, $definitions);
+  }
+
+  /**
+   * Tests adding multiple components at once.
+   */
+  public function testAddMultipleComponents(): void {
+    $uuid1 = '955493d5-f4c0-4fd1-a8aa-6bcf92d455e6';
+    $uuid2 = 'b6e2f3d1-a496-426c-b0e5-eff1d14fc461';
+
+    $this->configActionManager->applyAction(
+      'addComponentsToLayout',
+      'core.entity_view_display.entity_test.bundle_with_extra_fields.default',
+      [
+        [
+          'section' => 0,
+          'position' => 0,
+          'component' => [
+            'region' => [
+              'layout_twocol_section' => 'first',
+            ],
+            'default_region' => 'content',
+            'configuration' => [
+              'id' => 'my_plugin_id',
+            ],
+            'uuid' => $uuid1,
+          ],
+        ],
+        [
+          'section' => 0,
+          'position' => 1,
+          'component' => [
+            'region' => [
+              'layout_twocol_section' => 'first',
+            ],
+            'default_region' => 'content',
+            'configuration' => [
+              'id' => 'my_plugin_id',
+            ],
+            'uuid' => $uuid2,
+          ],
+        ],
+      ],
+    );
+    $display = EntityViewDisplay::load('entity_test.bundle_with_extra_fields.default');
+    $components = $display?->getSection(0)->getComponents();
+    $this->assertArrayHasKey($uuid1, $components);
+    $this->assertArrayHasKey($uuid2, $components);
   }
 
 }
