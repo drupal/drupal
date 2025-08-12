@@ -58,7 +58,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 #[ConfigAction(
   id: 'add_layout_component',
-  admin_label: new TranslatableMarkup('Add component to layout'),
+  admin_label: new TranslatableMarkup('Add component(s) to layout'),
   deriver: AddComponentDeriver::class,
 )]
 final class AddComponent implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
@@ -67,6 +67,7 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
     private readonly ConfigManagerInterface $configManager,
     private readonly UuidInterface $uuidGenerator,
     private readonly string $pluginId,
+    private readonly bool $multiple,
   ) {}
 
   /**
@@ -78,24 +79,47 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
       $container->get(ConfigManagerInterface::class),
       $container->get(UuidInterface::class),
       $plugin_id,
+      $plugin_definition['multiple'],
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function apply(string $configName, mixed $value): void {
-    assert(is_array($value));
-    $section_delta = $value['section'];
-    $position = $value['position'];
+  public function apply(string $configName, mixed $values): void {
+    assert(is_array($values));
 
-    assert(is_int($section_delta));
-    assert(is_int($position));
+    if ($this->multiple) {
+      assert(array_is_list($values));
+    }
+    else {
+      $values = [$values];
+    }
 
     $entity = $this->configManager->loadConfigEntityByName($configName);
     if (!$entity instanceof SectionListInterface) {
       throw new ConfigActionException("No entity found for applying the addComponentToLayout action.");
     }
+    foreach ($values as $value) {
+      $this->applySingle($entity, $value);
+    }
+    $entity->save();
+  }
+
+  /**
+   * Adds a single component to the layout.
+   *
+   * @param \Drupal\layout_builder\SectionListInterface $entity
+   *   The entity with a layout.
+   * @param array $value
+   *   The data for the config action.
+   */
+  private function applySingle(SectionListInterface $entity, array $value): void {
+    $section_delta = $value['section'];
+    $position = $value['position'];
+
+    assert(is_int($section_delta));
+    assert(is_int($position));
 
     $section = $entity->getSection($section_delta);
     $component = $value['component'];
@@ -127,7 +151,6 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
     $position = min($position, count($section->getComponentsByRegion($region)));
     $section->insertComponent($position, $component);
     $entity->setSection($section_delta, $section);
-    $entity->save();
   }
 
 }

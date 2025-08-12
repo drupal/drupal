@@ -41,7 +41,12 @@ final class AddComponentDeriver extends DeriverBase implements ContainerDeriverI
       }
     }
     $base_plugin_definition['entity_types'] = $entity_types;
-    $this->derivatives['addComponentToLayout'] = $base_plugin_definition;
+    $this->derivatives['addComponentToLayout'] = $base_plugin_definition + [
+      'multiple' => FALSE,
+    ];
+    $this->derivatives['addComponentsToLayout'] = $base_plugin_definition + [
+      'multiple' => TRUE,
+    ];
     return $this->derivatives;
   }
 
