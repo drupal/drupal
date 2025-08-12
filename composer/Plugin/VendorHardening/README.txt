@@ -80,3 +80,14 @@ paths specified for this package might look like this:
 This would then cause the plugin to try and remove
 web/modules/contrib/module_name/tests and
 web/modules/contrib/module_name/src/Tests.
+
+The plugin can be configured to NOT clean certain packages. This is not
+recommended, but it may be useful for advanced use cases, such as allowing
+Drupal to use a copy of Composer installed locally in the project. For
+example, to prevent the plugin from cleaning `composer/composer`:
+
+    "extra": {
+      "drupal-core-vendor-hardening": {
+        "composer/composer": false
+      }
+    }
