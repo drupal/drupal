@@ -19,38 +19,29 @@ use Drupal\Core\Site\Settings;
  * entities, which can come from all or specific bundles of an entity type.
  *
  * Properties:
- *
- * @property $target_type
- *   (required) The ID of the target entity type.
- * @property $tags
- *   (optional) TRUE if the element allows multiple selection. Defaults
+ * - #target_type: (required) The ID of the target entity type.
+ * - #tags: (optional) TRUE if the element allows multiple selection. Defaults
  *   to FALSE.
- * @property $default_value
- *   (optional) The default entity or an array of default
+ * - #default_value: (optional) The default entity or an array of default
  *   entities, depending on the value of #tags.
- * @property $selection_handler
- *   (optional) The plugin ID of the entity reference
+ * - #selection_handler: (optional) The plugin ID of the entity reference
  *   selection handler (a plugin of type EntityReferenceSelection). The default
  *   value is the lowest-weighted plugin that is compatible with #target_type.
- * @property $selection_settings
- *   (optional) An array of settings for the selection
+ * - #selection_settings: (optional) An array of settings for the selection
  *   handler. Settings for the default selection handler
  *   \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection are:
  *   - target_bundles: Array of bundles to allow (omit to allow all bundles).
  *   - sort: Array with 'field' and 'direction' keys, determining how results
  *     will be sorted. Defaults to unsorted.
- * @property $autocreate
- *   (optional) Array of settings used to auto-create entities
+ * - #autocreate: (optional) Array of settings used to auto-create entities
  *   that do not exist (omit to not auto-create entities). Elements:
  *   - bundle: (required) Bundle to use for auto-created entities.
  *   - uid: User ID to use as the author of auto-created entities. Defaults to
  *     the current user.
- * @property $process_default_value
- *   (optional) Set to FALSE if the #default_value
+ * - #process_default_value: (optional) Set to FALSE if the #default_value
  *   property is processed and access checked elsewhere (such as by a Field API
  *   widget). Defaults to TRUE.
- * @property $validate_reference
- *   (optional) Set to FALSE if validation of the selected
+ * - #validate_reference: (optional) Set to FALSE if validation of the selected
  *   entities is performed elsewhere. Defaults to TRUE.
  *
  * Usage example:

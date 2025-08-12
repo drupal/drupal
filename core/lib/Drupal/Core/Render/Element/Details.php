@@ -13,14 +13,10 @@ use Drupal\Core\Render\Element;
  * element, showing or hiding the contained elements.
  *
  * Properties:
- *
- * @property $title
- *   The title of the details container. Defaults to "Details".
- * @property $open
- *   Indicates whether the container should be open by default.
+ * - #title: The title of the details container. Defaults to "Details".
+ * - #open: Indicates whether the container should be open by default.
  *   Defaults to FALSE.
- * @property $summary_attributes
- *   An array of attributes to apply to the <summary>
+ * - #summary_attributes: An array of attributes to apply to the <summary>
  *   element.
  *
  * Usage example:

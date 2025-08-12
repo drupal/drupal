@@ -11,9 +11,7 @@ use Drupal\Component\Utility\Color as ColorUtility;
  * Provides a form element for choosing a color.
  *
  * Properties:
- *
- * @property $default_value
- *   Default value, in a format like #ffffff.
+ * - #default_value: Default value, in a format like #ffffff.
  *
  * Example usage:
  * @code

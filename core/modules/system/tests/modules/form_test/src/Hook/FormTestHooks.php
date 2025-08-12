@@ -6,8 +6,6 @@ namespace Drupal\form_test\Hook;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Render\Element\Submit;
-use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\form_test\Callbacks;
 
@@ -17,8 +15,6 @@ use Drupal\form_test\Callbacks;
 class FormTestHooks {
 
   use StringTranslationTrait;
-
-  public function __construct(protected ElementInfoManagerInterface $elementInfoManager) {}
 
   /**
    * Implements hook_form_FORM_ID_alter().
@@ -59,10 +55,13 @@ class FormTestHooks {
    */
   #[Hook('form_user_register_form_alter')]
   public function formUserRegisterFormAlter(&$form, FormStateInterface $form_state) : void {
-    $submit = $this->elementInfoManager->fromRenderable($form)
-      ->createChild('test_rebuild', Submit::class);
-    $submit->value = $this->t('Rebuild');
-    $submit->submit = [[Callbacks::class, 'userRegisterFormRebuild']];
+    $form['test_rebuild'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Rebuild'),
+      '#submit' => [
+        [Callbacks::class, 'userRegisterFormRebuild'],
+      ],
+    ];
   }
 
   /**
@@ -70,12 +69,11 @@ class FormTestHooks {
    */
   #[Hook('form_form_test_vertical_tabs_access_form_alter')]
   public function formFormTestVerticalTabsAccessFormAlter(&$form, &$form_state, $form_id) : void {
-    $element_object = $this->elementInfoManager->fromRenderable($form);
-    $element_object->getChild('vertical_tabs1')->access = FALSE;
-    $element_object->getChild('vertical_tabs2')->access = FALSE;
-    $element_object->getChild('tab3')->access = FALSE;
-    $element_object->getChild('fieldset1')->access = FALSE;
-    $element_object->getChild('container')->access = FALSE;
+    $form['vertical_tabs1']['#access'] = FALSE;
+    $form['vertical_tabs2']['#access'] = FALSE;
+    $form['tabs3']['#access'] = TRUE;
+    $form['fieldset1']['#access'] = FALSE;
+    $form['container']['#access'] = FALSE;
   }
 
 }

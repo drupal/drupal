@@ -10,9 +10,7 @@ use Drupal\Core\Render\Element;
  * Provides a form element for a single checkbox.
  *
  * Properties:
- *
- * @property $return_value
- *   The value to return when the checkbox is checked.
+ * - #return_value: The value to return when the checkbox is checked.
  *
  * Usage example:
  * @code

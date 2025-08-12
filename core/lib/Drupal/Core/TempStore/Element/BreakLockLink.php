@@ -7,7 +7,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
-use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,13 +14,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a link to break a tempstore lock.
  *
  * Properties:
- *
- * @property $label
- *   The label of the object that is locked.
- * @property $lock
- *   \Drupal\Core\TempStore\Lock object.
- * @property $url
- *   \Drupal\Core\Url object pointing to the break lock form.
+ * - #label: The label of the object that is locked.
+ * - #lock: \Drupal\Core\TempStore\Lock object.
+ * - #url: \Drupal\Core\Url object pointing to the break lock form.
  *
  * Usage example:
  * @code
@@ -72,19 +67,9 @@ class BreakLockLink extends RenderElementBase implements ContainerFactoryPluginI
    *   The entity type manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfoManager
-   *   The element info manager.
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    DateFormatterInterface $date_formatter,
-    EntityTypeManagerInterface $entity_type_manager,
-    RendererInterface $renderer,
-    ElementInfoManagerInterface $elementInfoManager,
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $elementInfoManager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter, EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->dateFormatter = $date_formatter;
     $this->entityTypeManager = $entity_type_manager;
@@ -101,8 +86,7 @@ class BreakLockLink extends RenderElementBase implements ContainerFactoryPluginI
       $plugin_definition,
       $container->get('date.formatter'),
       $container->get('entity_type.manager'),
-      $container->get('renderer'),
-      $container->get('plugin.manager.element_info')
+      $container->get('renderer')
     );
   }
 

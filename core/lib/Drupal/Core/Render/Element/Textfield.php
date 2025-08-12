@@ -10,21 +10,13 @@ use Drupal\Core\Render\Element;
  * Provides a one-line text field form element.
  *
  * Properties:
- *
- * @property $maxlength
- *   Maximum number of characters of input allowed.
- * @property $size
- *   The size of the input element in characters.
- * @property $autocomplete_route_name
- *   A route to be used as callback URL by the
+ * - #maxlength: Maximum number of characters of input allowed.
+ * - #size: The size of the input element in characters.
+ * - #autocomplete_route_name: A route to be used as callback URL by the
  *   autocomplete JavaScript library.
- * @property $autocomplete_route_parameters
- *   An array of parameters to be used in
+ * - #autocomplete_route_parameters: An array of parameters to be used in
  *   conjunction with the route name.
- * @property $pattern
- *   A string for the native HTML5 pattern attribute.
- * @property $placeholder
- *   A string to displayed in a textfield when it has no value.
+ * - #pattern: A string for the native HTML5 pattern attribute.
  *
  * Usage example:
  *

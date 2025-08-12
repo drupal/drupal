@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Theme\Icon;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\Element\Icon;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Icon\IconDefinition;
@@ -42,7 +41,7 @@ class IconTest extends UnitTestCase {
    * Test the Icon::getInfo method.
    */
   public function testGetInfo(): void {
-    $icon = new Icon([], 'test', 'test', elementInfoManager: $this->createStub(ElementInfoManagerInterface::class));
+    $icon = new Icon([], 'test', 'test');
     $info = $icon->getInfo();
 
     $this->assertArrayHasKey('#pre_render', $info);

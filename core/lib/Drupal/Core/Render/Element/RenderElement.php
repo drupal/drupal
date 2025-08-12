@@ -18,8 +18,7 @@ abstract class RenderElement extends RenderElementBase {
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    $elementInfoManager = \Drupal::service('plugin.manager.element_info');
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $elementInfoManager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     @trigger_error('\Drupal\Core\Render\Element\RenderElement is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Render\Element\RenderElementBase instead. See https://www.drupal.org/node/3436275', E_USER_DEPRECATED);
   }
 

@@ -17,8 +17,7 @@ class Deprecated extends RenderElementBase {
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    $elementInfoManager = \Drupal::service('plugin.manager.element_info');
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $elementInfoManager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3068104', E_USER_DEPRECATED);
   }
 

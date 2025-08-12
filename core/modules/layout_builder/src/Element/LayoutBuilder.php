@@ -11,7 +11,6 @@ use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElementBase;
-use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
@@ -53,11 +52,9 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
    *   The plugin implementation definition.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface|null $elementInfoManager
-   *   The element info manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EventDispatcherInterface $event_dispatcher, ?ElementInfoManagerInterface $elementInfoManager = NULL) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $elementInfoManager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EventDispatcherInterface $event_dispatcher) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->eventDispatcher = $event_dispatcher;
   }
 
@@ -69,8 +66,7 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('event_dispatcher'),
-      $container->get('plugin.manager.element_info')
+      $container->get('event_dispatcher')
     );
   }
 

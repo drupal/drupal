@@ -29,10 +29,16 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class FileWidget extends WidgetBase {
 
   /**
+   * The element info manager.
+   */
+  protected ElementInfoManagerInterface $elementInfo;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ElementInfoManagerInterface $element_info) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $element_info);
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+    $this->elementInfo = $element_info;
   }
 
   /**
@@ -232,7 +238,7 @@ class FileWidget extends WidgetBase {
 
     // Essentially we use the managed_file type, extended with some
     // enhancements.
-    $element_info = $this->elementInfoManager->getInfo('managed_file');
+    $element_info = $this->elementInfo->getInfo('managed_file');
     $element += [
       '#type' => 'managed_file',
       '#upload_location' => $items[$delta]->getUploadLocation(),

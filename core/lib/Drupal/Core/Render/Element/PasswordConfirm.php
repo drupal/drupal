@@ -12,9 +12,7 @@ use Drupal\Core\Render\Attribute\FormElement;
  * entered passwords match.
  *
  * Properties:
- *
- * @property $size
- *   The size of the input element in characters.
+ * - #size: The size of the input element in characters.
  *
  * Usage example:
  * @code

@@ -12,9 +12,7 @@ use Drupal\Core\Render\Attribute\FormElement;
  * the order.
  *
  * Properties:
- *
- * @property $delta
- *   The range of possible weight values used. A delta of 10 would
+ * - #delta: The range of possible weight values used. A delta of 10 would
  *   indicate possible weight values between -10 and 10.
  *
  * Usage example:

@@ -2,9 +2,6 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
-use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -14,7 +11,6 @@ use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\ElementInterface;
 use Drupal\Core\Render\Element\FormElementInterface;
-use Drupal\Core\Render\Element\Generic;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
@@ -38,16 +34,6 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    * @var array
    */
   protected $elementInfo;
-
-  /**
-   * Class => plugin id mapping.
-   *
-   * More performant than reflecting runtime.
-   *
-   * @var array
-   * @internal
-   */
-  protected array $reverseMapping = [];
 
   /**
    * Constructs an ElementInfoManager object.
@@ -74,79 +60,6 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
     $this->setCacheBackend($cache_backend, 'element_info');
     parent::__construct('Element', $namespaces, $module_handler, ElementInterface::class, RenderElement::class, 'Drupal\Core\Render\Annotation\RenderElement');
     $this->alterInfo('element_plugin');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getDiscovery(): DiscoveryInterface {
-    $discovery = parent::getDiscovery();
-    return new class ($discovery, $this->reverseMapping) implements DiscoveryInterface {
-      use DiscoveryTrait;
-
-      public function __construct(protected DiscoveryInterface $decorated, protected array &$reverseMapping) {}
-
-      public function getDefinitions(): array {
-        $definitions = $this->decorated->getDefinitions();
-        foreach ($definitions as $element_type => $definition) {
-          $this->reverseMapping[$definition['class']] = $element_type;
-        }
-        return $definitions;
-      }
-
-    };
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getCachedDefinitions(): ?array {
-    if (!isset($this->definitions) && $cache = $this->cacheGet($this->cacheKey)) {
-      $this->definitions = $cache->data['definitions'];
-      $this->reverseMapping = $cache->data['reverse_mapping'];
-    }
-    return $this->definitions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setCachedDefinitions($definitions): void {
-    $data = [
-      'definitions' => $definitions,
-      'reverse_mapping' => $this->reverseMapping,
-    ];
-    $this->cacheSet($this->cacheKey, $data, Cache::PERMANENT, $this->cacheTags);
-    $this->definitions = $definitions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clearCachedDefinitions(): void {
-    $this->elementInfo = NULL;
-
-    $cids = [];
-    foreach ($this->themeHandler->listInfo() as $theme_name => $info) {
-      $cids[] = $this->getCid($theme_name);
-    }
-
-    $this->cacheBackend->deleteMultiple($cids);
-
-    parent::clearCachedDefinitions();
-  }
-
-  /**
-   * Returns the CID used to cache the element info.
-   *
-   * @param string $theme_name
-   *   The theme name.
-   *
-   * @return string
-   *   The cache ID.
-   */
-  protected function getCid($theme_name): string {
-    return 'element_info_build:' . $theme_name;
   }
 
   /**
@@ -232,47 +145,37 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    * @return \Drupal\Core\Render\Element\ElementInterface
    *   The render element plugin instance.
    */
-  public function createInstance($plugin_id, array $configuration = [], &$element = []): ElementInterface {
-    $instance = parent::createInstance($plugin_id, $configuration);
-    assert($instance instanceof ElementInterface);
-    $instance->initializeInternalStorage($element);
-    return $instance;
+  public function createInstance($plugin_id, array $configuration = []) {
+    return parent::createInstance($plugin_id, $configuration);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function fromClass(string $class, array $configuration = []): ElementInterface {
-    $this->getDefinitions();
-    if ($id = $this->getIdFromClass($class)) {
-      return $this->createInstance($id, $configuration);
+  public function clearCachedDefinitions() {
+    $this->elementInfo = NULL;
+
+    $cids = [];
+    foreach ($this->themeHandler->listInfo() as $theme_name => $info) {
+      $cids[] = $this->getCid($theme_name);
     }
-    throw new \LogicException("$class is not a valid element class.");
+
+    $this->cacheBackend->deleteMultiple($cids);
+
+    parent::clearCachedDefinitions();
   }
 
   /**
-   * {@inheritdoc}
+   * Returns the CID used to cache the element info.
+   *
+   * @param string $theme_name
+   *   The theme name.
+   *
+   * @return string
+   *   The cache ID.
    */
-  public function getIdFromClass(string $class): ?string {
-    $this->getDefinitions();
-    return $this->reverseMapping[$class] ?? NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fromRenderable(ElementInterface|array &$element, string $class = Generic::class): ElementInterface {
-    if ($element instanceof ElementInterface) {
-      return $element;
-    }
-    if (isset($element['##object']) && $element['##object'] instanceof ElementInterface) {
-      return $element['##object']->initializeInternalStorage($element);
-    }
-    $type = $element['#type'] ?? $this->getIdFromClass($class);
-    if (!$type) {
-      throw new \LogicException('The element passed to ElementInfoManager::fromRenderable must have a #type or a valid class must be provided.');
-    }
-    return $this->createInstance($type, element: $element);
+  protected function getCid($theme_name) {
+    return 'element_info_build:' . $theme_name;
   }
 
 }

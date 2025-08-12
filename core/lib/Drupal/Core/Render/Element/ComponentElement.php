@@ -11,16 +11,11 @@ use Drupal\Core\Security\DoTrustedCallbackTrait;
  * Provides a Single-Directory Component render element.
  *
  * Properties:
- *
- * @property $component
- *   The machine name of the component.
- * @property $variant
- *   (optional) The variant to be used for the component.
- * @property $props
- *   an associative array where the keys are the names of the
+ * - #component: The machine name of the component.
+ * - #variant: (optional) The variant to be used for the component.
+ * - #props: an associative array where the keys are the names of the
  *   component props, and the values are the prop values.
- * @property $slots
- *   an associative array where the keys are the slot names, and the
+ * - #slots: an associative array where the keys are the slot names, and the
  *   values are the slot values. Expected slot values are renderable arrays.
  * - #propsAlter: an array of trusted callbacks. These are used to prepare the
  *   context. Typical uses include replacing tokens in props.

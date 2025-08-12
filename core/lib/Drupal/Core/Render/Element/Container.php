@@ -14,9 +14,7 @@ use Drupal\Core\Render\Element;
  * an HTML ID.
  *
  * Properties:
- *
- * @property $optional
- *   Indicates whether the container should render when it has no
+ * - #optional: Indicates whether the container should render when it has no
  *   visible children. Defaults to FALSE.
  *
  * Usage example:

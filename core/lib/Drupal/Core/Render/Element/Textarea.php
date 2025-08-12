@@ -9,16 +9,11 @@ use Drupal\Core\Render\Attribute\FormElement;
  * Provides a form element for input of multiple-line text.
  *
  * Properties:
- *
- * @property $rows
- *   Number of rows in the text box.
- * @property $cols
- *   Number of columns in the text box.
- * @property $resizable
- *   Controls whether the text area is resizable.  Allowed values
+ * - #rows: Number of rows in the text box.
+ * - #cols: Number of columns in the text box.
+ * - #resizable: Controls whether the text area is resizable.  Allowed values
  *   are "none", "vertical", "horizontal", or "both" (defaults to "vertical").
- * @property $maxlength
- *   The maximum amount of characters to accept as input.
+ * - #maxlength: The maximum amount of characters to accept as input.
  *
  * Usage example:
  * @code

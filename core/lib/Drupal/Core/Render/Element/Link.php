@@ -14,11 +14,8 @@ use Drupal\Core\Url as CoreUrl;
  * Provides a link render element.
  *
  * Properties:
- *
- * @property $title
- *   The link text.
- * @property $url
- *   \Drupal\Core\Url object containing URL information pointing to an
+ * - #title: The link text.
+ * - #url: \Drupal\Core\Url object containing URL information pointing to an
  *   internal or external link. See \Drupal\Core\Utility\LinkGeneratorInterface.
  *
  * Usage example:

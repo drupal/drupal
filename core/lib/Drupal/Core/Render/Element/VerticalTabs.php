@@ -13,9 +13,7 @@ use Drupal\Core\Render\Element;
  * this element's name as vertical tabs.
  *
  * Properties:
- *
- * @property $default_tab
- *   The HTML ID of the rendered details element to be used as
+ * - #default_tab: The HTML ID of the rendered details element to be used as
  *   the default tab. View the source of the rendered page to determine the ID.
  *
  * Usage example:
