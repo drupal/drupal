@@ -84,7 +84,7 @@ trait RecipeTestTrait {
       ->setTimeout(500);
 
     $process->run();
-    $this->assertSame($expected_exit_code, $process->getExitCode(), $process->getErrorOutput());
+    $this->assertSame($expected_exit_code, $process->getExitCode(), sprintf("Process exit code mismatch.\nExpected: %d\nActual: %d\n\nSTDOUT:\n%s\n\nSTDERR:\n%s", $expected_exit_code, $process->getExitCode(), $process->getOutput(), $process->getErrorOutput()));
     // Applying a recipe:
     // - creates new checkpoints, hence the "state" service in the test runner
     //   is outdated
