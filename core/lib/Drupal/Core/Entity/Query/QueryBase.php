@@ -368,14 +368,14 @@ abstract class QueryBase implements QueryInterface {
    * {@inheritdoc}
    */
   public function hasAllTags() {
-    return !(boolean) array_diff(func_get_args(), array_keys($this->alterTags));
+    return !(bool) array_diff(func_get_args(), array_keys($this->alterTags));
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasAnyTag() {
-    return (boolean) array_intersect(func_get_args(), array_keys($this->alterTags));
+    return (bool) array_intersect(func_get_args(), array_keys($this->alterTags));
   }
 
   /**

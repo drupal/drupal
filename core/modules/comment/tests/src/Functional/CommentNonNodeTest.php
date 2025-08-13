@@ -207,7 +207,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $regex .= $comment->comment_body->value . '(.*?)';
       $regex .= '/s';
 
-      return (boolean) preg_match($regex, $this->getSession()->getPage()->getContent());
+      return (bool) preg_match($regex, $this->getSession()->getPage()->getContent());
     }
     else {
       return FALSE;
