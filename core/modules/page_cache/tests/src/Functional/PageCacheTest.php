@@ -651,7 +651,6 @@ class PageCacheTest extends BrowserTestBase {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_USERAGENT, drupal_generate_test_ua($this->databasePrefix));
     $output = curl_exec($ch);
-    curl_close($ch);
 
     $headers = [];
     foreach (explode("\n", $output) as $header) {
