@@ -31,7 +31,7 @@ class Number {
    * @see http://opensource.apple.com/source/WebCore/WebCore-1298/html/NumberInputType.cpp
    */
   public static function validStep($value, $step, $offset = 0.0) {
-    $double_value = (double) abs($value - $offset);
+    $double_value = (float) abs($value - $offset);
 
     // The fractional part of a double has 53 bits. The greatest number that
     // could be represented with that is 2^53. If the given value is even bigger
@@ -44,13 +44,13 @@ class Number {
     }
 
     // Now compute that remainder of a division by $step.
-    $remainder = (double) abs($double_value - $step * round($double_value / $step));
+    $remainder = (float) abs($double_value - $step * round($double_value / $step));
 
     // $remainder is a double precision floating point number. Remainders that
     // can't be represented with single precision floats are acceptable. The
     // fractional part of a float has 24 bits. That means remainders smaller than
     // $step * 2^-24 are acceptable.
-    $computed_acceptable_error = (double) ($step / pow(2.0, 24));
+    $computed_acceptable_error = (float) ($step / pow(2.0, 24));
 
     return $computed_acceptable_error >= $remainder || $remainder >= ($step - $computed_acceptable_error);
   }
