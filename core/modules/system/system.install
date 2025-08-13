@@ -415,11 +415,15 @@ function system_requirements($phase) {
     $requirements['php_apcu_enabled']['title'] = t('PHP APCu caching');
     $requirements['php_apcu_available']['title'] = t('PHP APCu available caching');
     if (extension_loaded('apcu') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)) {
+      // The apc.shm_segments ini option was removed in APCu 5.1.25, so fall
+      // back to 1 if ini_get('apc.shm_segments') is empty.
+      // @see https://pecl.php.net/package/APCu/5.1.25
+      $apcu_shm_segments = ini_get('apc.shm_segments') ?: 1;
       $memory_info = apcu_sma_info(TRUE);
-      $apcu_actual_size = ByteSizeMarkup::create($memory_info['seg_size'] * $memory_info['num_seg']);
+      $apcu_actual_size = ByteSizeMarkup::create($memory_info['seg_size'] * $apcu_shm_segments);
       $apcu_recommended_size = '32 MB';
       $requirements['php_apcu_enabled']['value'] = t('Enabled (@size)', ['@size' => $apcu_actual_size]);
-      if (Bytes::toNumber(ini_get('apc.shm_size')) * ini_get('apc.shm_segments') < Bytes::toNumber($apcu_recommended_size)) {
+      if ((Bytes::toNumber(ini_get('apc.shm_size')) * $apcu_shm_segments) < Bytes::toNumber($apcu_recommended_size)) {
         $requirements['php_apcu_enabled']['severity'] = REQUIREMENT_WARNING;
         $requirements['php_apcu_enabled']['description'] = t('Depending on your configuration, Drupal can run with a @apcu_size APCu limit. However, a @apcu_default_size APCu limit (the default) or above is recommended, especially if your site uses additional custom or contributed modules.', [
           '@apcu_size' => $apcu_actual_size,
@@ -427,7 +431,7 @@ function system_requirements($phase) {
         ]);
       }
       else {
-        $memory_available = $memory_info['avail_mem'] / ($memory_info['seg_size'] * $memory_info['num_seg']);
+        $memory_available = $memory_info['avail_mem'] / ($memory_info['seg_size'] * $apcu_shm_segments);
         if ($memory_available < 0.1) {
           $requirements['php_apcu_available']['severity'] = REQUIREMENT_ERROR;
           $requirements['php_apcu_available']['description'] = t('APCu is using over 90% of its allotted memory (@apcu_actual_size). To improve APCu performance, consider increasing this limit.', [
