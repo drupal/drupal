@@ -48349,12 +48349,6 @@ https\\://github\\.com/sebastianbergmann/phpunit/issues/6052$#',
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Asset/CssOptimizerUnitTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function Drupal\\\\Core\\\\Asset\\\\file_uri_scheme\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Asset/CssOptimizerUnitTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Asset\\\\CssOptimizerUnitTest\\:\\:providerTestOptimize\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

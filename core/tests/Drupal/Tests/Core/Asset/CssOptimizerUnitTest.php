@@ -289,16 +289,3 @@ class CssOptimizerUnitTest extends UnitTestCase {
   }
 
 }
-
-/**
- * CssCollectionRenderer uses file_uri_scheme() which need to be mocked.
- */
-namespace Drupal\Core\Asset;
-
-if (!function_exists('Drupal\Core\Asset\file_uri_scheme')) {
-
-  function file_uri_scheme($uri) {
-    return FALSE;
-  }
-
-}
