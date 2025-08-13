@@ -44,7 +44,6 @@ class AttributeClassDiscoveryTest extends TestCase {
     $discovery = new AttributeClassDiscovery(['com/example' => [__DIR__]]);
 
     $reflection = new \ReflectionMethod($discovery, 'getPluginNamespaces');
-    $reflection->setAccessible(TRUE);
 
     $result = $reflection->invoke($discovery);
     $this->assertEquals(['com/example' => [__DIR__]], $result);

@@ -97,7 +97,6 @@ class EntityCreateAccessCustomCidTest extends UnitTestCase {
    */
   protected function setUpAccessCache(EntityAccessControlHandler $handler, bool $in_cache, string $cid): \ReflectionProperty {
     $access_cache = new \ReflectionProperty($handler, 'accessCache');
-    $access_cache->setAccessible(TRUE);
 
     $cache = [];
     if ($in_cache) {
