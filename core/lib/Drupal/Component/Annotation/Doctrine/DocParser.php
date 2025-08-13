@@ -264,7 +264,7 @@ final class DocParser
      */
     public function setIgnoreNotImportedAnnotations($bool)
     {
-        $this->ignoreNotImportedAnnotations = (boolean) $bool;
+        $this->ignoreNotImportedAnnotations = (bool) $bool;
     }
 
     /**
