@@ -3,11 +3,11 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface as BaseUrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
@@ -30,6 +30,12 @@ use Symfony\Component\Routing\RouterInterface;
  *    See ::applyRouteEnhancers().
  */
 class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterface {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * The service properties that should raise a deprecation error.
+   */
+  private array $deprecatedProperties = ['urlGenerator' => 'url_generator'];
 
   /**
    * The route provider responsible for the first-pass match.
@@ -53,26 +59,16 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   protected $filters = [];
 
   /**
-   * The URL generator.
-   *
-   * @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
    * Constructs a new Router.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
    *   The current path stack.
-   * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $url_generator
-   *   The URL generator.
    */
-  public function __construct(RouteProviderInterface $route_provider, CurrentPathStack $current_path, BaseUrlGeneratorInterface $url_generator) {
+  public function __construct(RouteProviderInterface $route_provider, CurrentPathStack $current_path) {
     parent::__construct($current_path);
     $this->routeProvider = $route_provider;
-    $this->urlGenerator = $url_generator;
   }
 
   /**

@@ -1115,7 +1115,7 @@ services:
   Drupal\Core\Routing\AccessAwareRouterInterface: '@router'
   router.no_access_checks:
     class: \Drupal\Core\Routing\Router
-    arguments: ['@router.route_provider', '@path.current', '@url_generator']
+    arguments: ['@router.route_provider', '@path.current']
     tags:
       - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer  }
       - { name: service_collector, tag: route_filter, call: addRouteFilter }
