@@ -67,7 +67,6 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
 
     // Gain access to the file cache.
     $ref_file_cache = new \ReflectionProperty($discovery, 'fileCache');
-    $ref_file_cache->setAccessible(TRUE);
     /** @var \Drupal\Component\FileCache\FileCacheInterface $file_cache */
     $file_cache = $ref_file_cache->getValue($discovery);
 
@@ -125,7 +124,6 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
 
     // Gain access to the file cache.
     $ref_file_cache = new \ReflectionProperty($discovery, 'fileCache');
-    $ref_file_cache->setAccessible(TRUE);
     /** @var \Drupal\Component\FileCache\FileCacheInterface $file_cache */
     $file_cache = $ref_file_cache->getValue($discovery);
 

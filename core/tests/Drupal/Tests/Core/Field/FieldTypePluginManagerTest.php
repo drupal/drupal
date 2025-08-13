@@ -72,7 +72,6 @@ class FieldTypePluginManagerTest extends UnitTestCase {
 
     $this->discovery = $this->prophesize(DiscoveryInterface::class);
     $property = new \ReflectionProperty(FieldTypePluginManager::class, 'discovery');
-    $property->setAccessible(TRUE);
     $property->setValue($this->fieldTypeManager, $this->discovery->reveal());
   }
 

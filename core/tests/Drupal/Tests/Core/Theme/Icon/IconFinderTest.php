@@ -644,7 +644,6 @@ class IconFinderTest extends UnitTestCase {
    */
   public function testGetFilesFromPathEmptyWarning(): void {
     $method = new \ReflectionMethod(IconFinder::class, 'getFilesFromPath');
-    $method->setAccessible(TRUE);
 
     $this->logger->expects($this->once())
       ->method('warning')
@@ -658,7 +657,6 @@ class IconFinderTest extends UnitTestCase {
    */
   public function testGetFilesFromPathInvalidExtensionWarning(): void {
     $method = new \ReflectionMethod(IconFinder::class, 'getFilesFromPath');
-    $method->setAccessible(TRUE);
 
     $this->logger->expects($this->once())
       ->method('warning');
@@ -671,7 +669,6 @@ class IconFinderTest extends UnitTestCase {
    */
   public function testGetFileFromUrlWarning(): void {
     $method = new \ReflectionMethod(IconFinder::class, 'getFileFromUrl');
-    $method->setAccessible(TRUE);
 
     $this->logger->expects($this->once())
       ->method('warning')
@@ -685,7 +682,6 @@ class IconFinderTest extends UnitTestCase {
    */
   public function testFindFilesWarning(): void {
     $method = new \ReflectionMethod(IconFinder::class, 'findFiles');
-    $method->setAccessible(TRUE);
 
     $this->logger->expects($this->once())
       ->method('warning')
@@ -699,7 +695,6 @@ class IconFinderTest extends UnitTestCase {
    */
   public function testFindFilesEmptyWarning(): void {
     $method = new \ReflectionMethod(IconFinder::class, 'findFiles');
-    $method->setAccessible(TRUE);
 
     $this->logger->expects($this->once())
       ->method('warning');
@@ -765,7 +760,6 @@ class IconFinderTest extends UnitTestCase {
    */
   public function testExtractIconIdFromFilename(string $filename, string $filename_pattern, string $expected): void {
     $method = new \ReflectionMethod(IconFinder::class, 'extractIconIdFromFilename');
-    $method->setAccessible(TRUE);
 
     $this->assertEquals($expected, $method->invoke($this->iconFinder, $filename, $filename_pattern));
   }
@@ -775,7 +769,6 @@ class IconFinderTest extends UnitTestCase {
    */
   public function testExtractIconIdFromFilenameWarning(): void {
     $method = new \ReflectionMethod(IconFinder::class, 'extractIconIdFromFilename');
-    $method->setAccessible(TRUE);
 
     // PHPUnit 10 cannot expect warnings, so we have to catch them ourselves.
     // Thanks to: Drupal\Tests\Component\PhpStorage\FileStorageTest.
