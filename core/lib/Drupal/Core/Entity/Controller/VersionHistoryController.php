@@ -22,6 +22,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * This controller is agnostic to any entity type by using
  * \Drupal\Core\Entity\RevisionLogInterface.
+ *
+ * For full functionality, entity types should define the following link
+ * templates in their attributes:
+ * - 'revision-revert-form': Path to the form for reverting a revision.
+ *   Required to show revert links in the revision history table.
+ * - 'revision-delete-form': Path to the form for deleting a revision.
+ *   Required to show delete links in the revision history table.
+ * - 'revision': Path to view a specific revision. Used to make revision
+ *   dates/labels clickable links to the revision view.
+ *
+ * @see \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider
+ * @see \Drupal\Core\Entity\RevisionableInterface
  */
 class VersionHistoryController extends ControllerBase {
 
@@ -84,7 +96,8 @@ class VersionHistoryController extends ControllerBase {
    *
    * @return array|null
    *   A link to revert an entity revision, or NULL if the entity type does not
-   *   have an a route to revert an entity revision.
+   *   define a 'revision-revert-form' link template or the user does not have
+   *   access to the revert form.
    */
   protected function buildRevertRevisionLink(RevisionableInterface $revision): ?array {
     if (!$revision->hasLinkTemplate('revision-revert-form')) {
@@ -111,7 +124,9 @@ class VersionHistoryController extends ControllerBase {
    *   The entity to build a delete revision link for.
    *
    * @return array|null
-   *   A link render array.
+   *   A link render array, or NULL if the entity type does not define a
+   *   'revision-delete-form' link template or the user does not have access
+   *   to the delete form.
    */
   protected function buildDeleteRevisionLink(RevisionableInterface $revision): ?array {
     if (!$revision->hasLinkTemplate('revision-delete-form')) {
