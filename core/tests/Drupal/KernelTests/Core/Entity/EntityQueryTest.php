@@ -387,6 +387,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->getQuery()
       ->latestRevision()
       ->notExists("$figures.color")
+      ->sort('id')
       ->accessCheck(TRUE)
       ->execute();
     $expected = [16 => '4', 8 => '8', 20 => '12'];
@@ -402,6 +403,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $results = $this->queryResults = $this->storage
       ->getQuery()
       ->latestRevision()
+      ->sort('id')
       ->notExists("$figures.color")
       ->accessCheck(TRUE)
       ->execute();
