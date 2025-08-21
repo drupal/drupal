@@ -30,7 +30,7 @@ trait WorkspaceTestTrait {
   /**
    * Enables the Workspaces module and creates two workspaces.
    */
-  protected function initializeWorkspacesModule() {
+  protected function initializeWorkspacesModule(): void {
     // Enable the Workspaces module here instead of the static::$modules array
     // so we can test it with default content.
     $this->enableModules(['workspaces']);
@@ -68,7 +68,7 @@ trait WorkspaceTestTrait {
    * @param string $workspace_id
    *   The ID of the workspace to switch to.
    */
-  protected function switchToWorkspace($workspace_id) {
+  protected function switchToWorkspace($workspace_id): void {
     // Switch the test runner's context to the specified workspace.
     $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
     \Drupal::service('workspaces.manager')->setActiveWorkspace($workspace);
@@ -93,7 +93,7 @@ trait WorkspaceTestTrait {
    *     - local_2
    * - qa
    */
-  protected function createWorkspaceHierarchy() {
+  protected function createWorkspaceHierarchy(): void {
     $this->workspaces['dev'] = Workspace::create(['id' => 'dev', 'parent' => 'stage', 'label' => 'dev']);
     $this->workspaces['dev']->save();
     $this->workspaces['local_1'] = Workspace::create(['id' => 'local_1', 'parent' => 'dev', 'label' => 'local_1']);
@@ -112,7 +112,7 @@ trait WorkspaceTestTrait {
    * @param string $entity_type_id
    *   The ID of the entity type that is being tested.
    */
-  protected function assertWorkspaceAssociation(array $expected, $entity_type_id) {
+  protected function assertWorkspaceAssociation(array $expected, $entity_type_id): void {
     /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
     $workspace_association = \Drupal::service('workspaces.association');
     foreach ($expected as $workspace_id => $expected_tracked_revision_ids) {
