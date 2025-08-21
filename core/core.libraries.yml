@@ -853,10 +853,10 @@ internal.floating-ui:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "4.0.0-beta.2"
+  version: "4.0.0-rc.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/4.0.0-beta.2/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/4.0.0-rc.1/LICENSE.txt
     gpl-compatible: true
   js:
     # jquery.min.js is explicitly set to preprocess: false to prevent its
