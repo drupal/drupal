@@ -117,22 +117,6 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
   }
 
   /**
-   * Page title callback for a node revision.
-   *
-   * @param \Drupal\node\NodeInterface $node_revision
-   *   The node revision.
-   *
-   * @return string
-   *   The page title.
-   */
-  public function revisionPageTitle(NodeInterface $node_revision) {
-    return $this->t('Revision of %title from %date', [
-      '%title' => $node_revision->label(),
-      '%date' => $this->dateFormatter->format($node_revision->getRevisionCreationTime()),
-    ]);
-  }
-
-  /**
    * Generates an overview table of older revisions of a node.
    *
    * @param \Drupal\node\NodeInterface $node
