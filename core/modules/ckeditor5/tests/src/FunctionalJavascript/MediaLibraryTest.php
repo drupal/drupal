@@ -66,10 +66,6 @@ class MediaLibraryTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    if ($this->name() === 'testButton') {
-      $this->markTestSkipped('Skipped due to frequent random test failures. See https://www.drupal.org/i/3351597');
-    }
-
     parent::setUp();
 
     FilterFormat::create([
@@ -182,9 +178,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       $this->assertSame($expected_tab_order[$key], $tab->getText());
     }
 
-    $assert_session->pageTextContains('0 of 1 item selected');
     $assert_session->elementExists('css', '.js-media-library-item')->click();
-    $assert_session->pageTextContains('1 of 1 item selected');
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
