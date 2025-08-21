@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Template to test the deprecation messages for the page variable.
+ * @see \Drupal\Tests\node\Functional\NodePageVariableDeprecationTest
+ */
+#}
+<article{{ attributes }}>
+  {% if page %}
+    The page variable is set.
+  {% endif %}
+</article>

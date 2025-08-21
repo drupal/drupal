@@ -54,7 +54,6 @@
  *   displayed after the main title tag that appears in the template.
  * - view_mode: View mode; for example, "teaser" or "full".
  * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
- * - page: Flag for the full page state. Will be true if view_mode is 'full'.
  *
  * @see \Drupal\node\Hook\NodeThemeHooks::preprocessNode()
  */
@@ -76,7 +75,7 @@
 
   {{ title_prefix }}
   {% if label %}
-    {% if page %}
+    {% if view_mode == "full" %}
       <header class="node__header">
         <h1 class="page-title">
           {{ label }}

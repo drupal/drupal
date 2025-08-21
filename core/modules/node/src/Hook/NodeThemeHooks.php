@@ -166,10 +166,15 @@ class NodeThemeHooks {
 
     $variables['url'] = !$node->isNew() ? $node->toUrl('canonical')->toString() : NULL;
 
+    // The page variable is deprecated.
+    $variables['deprecations']['page'] = "'page' is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3458593";
     // The 'page' variable is set to TRUE in two occasions:
     // - The view mode is 'full' and we are on the 'node.view' route.
     // - The node is in preview and view mode is either 'full' or 'default'.
-    $variables['page'] = ($variables['view_mode'] == 'full' && (node_is_page($node)) || (isset($node->in_preview) && in_array($node->preview_view_mode, ['full', 'default'])));
+    $variables['page'] = FALSE;
+    if ($variables['view_mode'] == 'full' && ($this->routeMatch->getRouteName() == 'entity.node.canonical' && $this->routeMatch->getRawParameter('node') == $node->id() || (isset($node->in_preview) && in_array($node->preview_view_mode, ['full', 'default'])))) {
+      $variables['page'] = TRUE;
+    }
 
     // Helpful $content variable for templates.
     $variables += ['content' => []];
