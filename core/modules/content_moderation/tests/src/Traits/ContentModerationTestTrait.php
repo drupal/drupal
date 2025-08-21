@@ -103,7 +103,7 @@ trait ContentModerationTestTrait {
    * @param string $bundle
    *   The bundle ID to add.
    */
-  protected function addEntityTypeAndBundleToWorkflow(WorkflowInterface $workflow, $entity_type_id, $bundle) {
+  protected function addEntityTypeAndBundleToWorkflow(WorkflowInterface $workflow, $entity_type_id, $bundle): void {
     $moderation = $workflow->getTypePlugin();
     if ($moderation instanceof ContentModerationInterface) {
       $moderation->addEntityTypeAndBundle($entity_type_id, $bundle);
