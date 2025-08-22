@@ -45,13 +45,7 @@ class InstallerIsolationLevelExistingSettingsTest extends InstallerExistingSetti
     unset($driver_test_connection['isolation_level']);
     unset($driver_test_connection['init_commands']);
 
-    Database::renameConnection('default', 'original_database_connection');
-    Database::addConnectionInfo('default', 'default', $driver_test_connection);
-    // Close and reopen the database connection, so the database init commands
-    // get executed.
-    Database::closeConnection('default', 'default');
     $connection = Database::getConnection('default', 'default');
-
     $query = 'SELECT @@SESSION.tx_isolation';
     // The database variable "tx_isolation" has been removed in MySQL v8.0 and
     // has been replaced by "transaction_isolation".
@@ -59,9 +53,16 @@ class InstallerIsolationLevelExistingSettingsTest extends InstallerExistingSetti
     if (!$connection->isMariaDb() && version_compare($connection->version(), '8.0.0-AnyName', '>')) {
       $query = 'SELECT @@SESSION.transaction_isolation';
     }
+    $original_transaction_level = $connection->query($query)->fetchField();
+    Database::renameConnection('default', 'original_database_connection');
+    Database::addConnectionInfo('default', 'default', $driver_test_connection);
+    // Close and reopen the database connection, so the database init commands
+    // get executed.
+    Database::closeConnection('default', 'default');
+    $connection = Database::getConnection('default', 'default');
 
-    // Test that transaction level is REPEATABLE READ.
-    $this->assertEquals('REPEATABLE-READ', $connection->query($query)->fetchField());
+    // Test that transaction level has not changed.
+    $this->assertEquals($original_transaction_level, $connection->query($query)->fetchField());
 
     // Restore the old database connection.
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
