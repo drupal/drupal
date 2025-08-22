@@ -31,7 +31,6 @@ class ImageFactory {
    */
   public function __construct(ImageToolkitManager $toolkit_manager) {
     $this->toolkitManager = $toolkit_manager;
-    $this->toolkitId = $this->toolkitManager->getDefaultToolkitId();
   }
 
   /**
@@ -54,6 +53,9 @@ class ImageFactory {
    *   The ID of the image toolkit in use by the image factory.
    */
   public function getToolkitId() {
+    if ($this->toolkitId === NULL) {
+      $this->toolkitId = $this->toolkitManager->getDefaultToolkitId();
+    }
     return $this->toolkitId;
   }
 
@@ -81,7 +83,7 @@ class ImageFactory {
    * @see ImageFactory::setToolkitId()
    */
   public function get($source = NULL, $toolkit_id = NULL) {
-    $toolkit_id = $toolkit_id ?: $this->toolkitId;
+    $toolkit_id = $toolkit_id ?: $this->getToolkitId();
     return new Image($this->toolkitManager->createInstance($toolkit_id), $source);
   }
 
@@ -98,7 +100,7 @@ class ImageFactory {
    * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::getSupportedExtensions()
    */
   public function getSupportedExtensions($toolkit_id = NULL) {
-    $toolkit_id = $toolkit_id ?: $this->toolkitId;
+    $toolkit_id = $toolkit_id ?: $this->getToolkitId();
     $definition = $this->toolkitManager->getDefinition($toolkit_id);
     return call_user_func($definition['class'] . '::getSupportedExtensions');
   }
