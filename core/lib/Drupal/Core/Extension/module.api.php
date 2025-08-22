@@ -862,6 +862,12 @@ function hook_update_N(&$sandbox) {
  * Drupal also ensures to not execute the same hook_post_update_NAME() function
  * twice.
  *
+ * Post update hooks are not executed at module install time. During install
+ * they are skipped and added to an internal "already executed" list in the
+ * key_value database table, making them appear as if they have been executed
+ * properly. For tasks that need to run at module installation time, use
+ * hook_install() instead.
+ *
  * @section sec_bulk Batch updates
  * If running your update all at once could possibly cause PHP to time out, use
  * the $sandbox parameter to indicate that the Batch API should be used for your
