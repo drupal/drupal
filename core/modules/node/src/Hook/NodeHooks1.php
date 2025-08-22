@@ -223,7 +223,7 @@ class NodeHooks1 {
   #[Hook('user_predelete')]
   public function userPredelete($account): void {
     // Delete nodes (current revisions).
-    // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
+    // @todo Introduce node_mass_delete() or make NodeBulkUpdate::process() more flexible.
     $nids = \Drupal::entityQuery('node')->condition('uid', $account->id())->accessCheck(FALSE)->execute();
     // Delete old revisions.
     $storage_controller = \Drupal::entityTypeManager()->getStorage('node');

@@ -1,4 +1,5 @@
 parameters:
+  node.skip_procedural_hook_scan: true
   node.moved_classes:
     'Drupal\node\NodeForm':
       class: 'Drupal\node\Form\NodeForm'
@@ -48,4 +49,6 @@ services:
       - { name: 'context_provider' }
   node.view_all_nodes_memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
+    autowire: true
+  Drupal\node\NodeBulkUpdate:
     autowire: true

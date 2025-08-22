@@ -394,6 +394,8 @@ class UserCancelTest extends BrowserTestBase {
 
   /**
    * Delete account and anonymize all content using a batch process.
+   *
+   * @see \Drupal\node\NodeBulkUpdate::process()
    */
   public function testUserAnonymizeBatch(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -406,8 +408,7 @@ class UserCancelTest extends BrowserTestBase {
     // Load a real user object.
     $account = $user_storage->load($account->id());
 
-    // Create 11 nodes in order to trigger batch processing in
-    // node_mass_update().
+    // Create 11 nodes in order to trigger batch processing.
     $nodes = [];
     for ($i = 0; $i < 11; $i++) {
       $node = $this->drupalCreateNode(['uid' => $account->id()]);
