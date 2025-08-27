@@ -90,18 +90,20 @@ class NonPublicSchemaTest extends DriverSpecificKernelTestBase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    // We overwrite this function because the regular teardown will not drop the
-    // tables from a specified schema.
-    $tables = $this->testingFakeConnection->schema()->findTables('%');
-    foreach ($tables as $table) {
-      if ($this->testingFakeConnection->schema()->dropTable($table)) {
-        unset($tables[$table]);
+    if (isset($this->testingFakeConnection)) {
+      // We overwrite this function because the regular teardown will not drop the
+      // tables from a specified schema.
+      $tables = $this->testingFakeConnection->schema()->findTables('%');
+      foreach ($tables as $table) {
+        if ($this->testingFakeConnection->schema()->dropTable($table)) {
+          unset($tables[$table]);
+        }
       }
+
+      $this->assertEmpty($this->testingFakeConnection->schema()->findTables('%'));
+
+      Database::removeConnection('testing_fake');
     }
-
-    $this->assertEmpty($this->testingFakeConnection->schema()->findTables('%'));
-
-    Database::removeConnection('testing_fake');
 
     parent::tearDown();
   }

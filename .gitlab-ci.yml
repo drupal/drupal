@@ -318,6 +318,15 @@ default:
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
+'PHP 8.5 MySQL 9.3':
+  <<: [ *default-stage, *run-on-mr ]
+  allow_failure: true
+  variables:
+    _TARGET_PHP: "8.5-ubuntu"
+    _TARGET_DB: "mysql-9"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
+
 'PHP 8.3 PostgreSQL 16':
   <<: [ *default-stage, *run-on-mr ]
   variables:
