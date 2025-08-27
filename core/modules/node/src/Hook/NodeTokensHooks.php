@@ -10,7 +10,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for node.
+ * Token hook implementations for node.
  */
 class NodeTokensHooks {
 

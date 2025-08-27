@@ -13,7 +13,7 @@ use Drupal\user\UserInterface;
 /**
  * Hook implementations for the node module.
  */
-class NodeHooks {
+class NodeUserHooks {
 
   /**
    * The Node Storage.
@@ -22,9 +22,6 @@ class NodeHooks {
    */
   protected NodeStorageInterface $nodeStorage;
 
-  /**
-   * NodeHooks constructor.
-   */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
     protected NodeBulkUpdate $nodeBulkUpdate,
@@ -59,15 +56,6 @@ class NodeHooks {
       $vids = $this->nodeStorage->userRevisionIds($account);
       $this->nodeBulkUpdate->process($vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE);
     }
-  }
-
-  /**
-   * Implements hook_block_alter().
-   */
-  #[Hook('block_alter')]
-  public function blockAlter(&$definitions): void {
-    // Hide the deprecated Syndicate block from the UI.
-    $definitions['node_syndicate_block']['_block_ui_hidden'] = TRUE;
   }
 
 }

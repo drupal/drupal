@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\node\Hook;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
@@ -12,10 +13,11 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
+use Drupal\node\Form\NodePreviewForm;
 use Drupal\node\NodeInterface;
 
 /**
- * Hook implementations for the node module.
+ * Theme hook implementations for the node module.
  */
 class NodeThemeHooks {
 
@@ -23,6 +25,7 @@ class NodeThemeHooks {
     protected readonly RouteMatchInterface $routeMatch,
     protected readonly RendererInterface $renderer,
     protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly FormBuilderInterface $formBuilder,
   ) {
 
   }
@@ -259,6 +262,26 @@ class NodeThemeHooks {
           $variables['attributes']['role'] = 'complementary';
           break;
       }
+    }
+  }
+
+  /**
+   * Implements hook_page_top().
+   */
+  #[Hook('page_top')]
+  public function pageTop(array &$page_top): void {
+    // Add 'Back to content editing' link on preview page.
+    if ($this->routeMatch->getRouteName() == 'entity.node.preview') {
+      $page_top['node_preview'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => [
+            'node-preview-container',
+            'container-inline',
+          ],
+        ],
+        'view_mode' => $this->formBuilder->getForm(NodePreviewForm::class, $this->routeMatch->getParameter('node_preview')),
+      ];
     }
   }
 
