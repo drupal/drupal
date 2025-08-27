@@ -18,16 +18,6 @@ class CommentViewsHooks {
    */
   #[Hook('views_data_alter')]
   public function viewsDataAlter(&$data): void {
-    // New comments are only supported for node table because it requires the
-    // history table.
-    $data['node']['new_comments'] = [
-      'title' => $this->t('New comments'),
-      'help' => $this->t('The number of new comments on the node.'),
-      'field' => [
-        'id' => 'node_new_comments',
-        'no group by' => TRUE,
-      ],
-    ];
     // Provides an integration for each entity type except comment.
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type_id == 'comment' || !$entity_type->entityClassImplements(ContentEntityInterface::class) || !$entity_type->getBaseTable()) {

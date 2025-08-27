@@ -1,0 +1,9 @@
+name: 'History test views'
+type: module
+description: 'Provides default views for history comments tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:comment
+  - drupal:history
+  - drupal:views

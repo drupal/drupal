@@ -52,4 +52,24 @@ class HistoryViewsHooks {
     return $data;
   }
 
+  /**
+   * Implements hook_views_data_alter().
+   */
+  #[Hook('views_data_alter')]
+  public function viewsDataAlter(&$data): void {
+    if (!\Drupal::moduleHandler()->moduleExists('comment')) {
+      return;
+    }
+    // New comments are only supported for node table because it requires the
+    // history table.
+    $data['node']['new_comments'] = [
+      'title' => $this->t('New comments'),
+      'help' => $this->t('The number of new comments on the node.'),
+      'field' => [
+        'id' => 'node_new_comments',
+        'no group by' => TRUE,
+      ],
+    ];
+  }
+
 }
