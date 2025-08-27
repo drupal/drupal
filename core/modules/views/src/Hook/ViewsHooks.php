@@ -232,8 +232,10 @@ class ViewsHooks {
     $node = $variables['elements']['#node'];
     if (!empty($node->view) && $node->view->storage->id()) {
       $suggestions[] = 'node__view__' . $node->view->storage->id();
+      $suggestions['__DEPRECATED']['node__view__' . $node->view->storage->id()] = 'Theme suggestion node__view__' . $node->view->storage->id() . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3541462';
       if (!empty($node->view->current_display)) {
         $suggestions[] = 'node__view__' . $node->view->storage->id() . '__' . $node->view->current_display;
+        $suggestions['__DEPRECATED']['node__view__' . $node->view->storage->id() . '__' . $node->view->current_display] = 'Theme suggestion node__view__' . $node->view->storage->id() . '__' . $node->view->current_display . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3541462';
       }
     }
   }
@@ -246,8 +248,10 @@ class ViewsHooks {
     $comment = $variables['elements']['#comment'];
     if (!empty($comment->view) && $comment->view->storage->id()) {
       $suggestions[] = 'comment__view__' . $comment->view->storage->id();
+      $suggestions['__DEPRECATED']['comment__view__' . $comment->view->storage->id()] = 'Theme suggestion comment__view__' . $comment->view->storage->id() . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3541462';
       if (!empty($comment->view->current_display)) {
         $suggestions[] = 'comment__view__' . $comment->view->storage->id() . '__' . $comment->view->current_display;
+        $suggestions['__DEPRECATED']['comment__view__' . $comment->view->storage->id() . '__' . $comment->view->current_display] = 'Theme suggestion comment__view__' . $comment->view->storage->id() . '__' . $comment->view->current_display . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3541462';
       }
     }
   }

@@ -48,6 +48,8 @@ class ViewsThemeHooks {
     // \Drupal\views\Plugin\views\row\EntityRow::preRender().
     if (!empty($variables['comment']->view) && $variables['comment']->view->storage->id()) {
       $variables['view'] = $variables['comment']->view;
+      // The view variable is deprecated.
+      $variables['deprecations']['view'] = "'view' is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3541463";
     }
   }
 
