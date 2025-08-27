@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.test
+label: 'Taxonomy test'
+description: ''
+targetEntityType: taxonomy_term
+cache: true
