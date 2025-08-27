@@ -17,6 +17,9 @@ use Drupal\rest\ResourceResponseInterface;
 use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\serialization\Encoder\XmlEncoder;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -26,15 +29,18 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @coversDefaultClass \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
- * @group rest
+ * Tests Drupal\rest\EventSubscriber\ResourceResponseSubscriber.
  */
+#[CoversClass(ResourceResponseSubscriber::class)]
+#[Group('rest')]
 class ResourceResponseSubscriberTest extends UnitTestCase {
 
   /**
-   * @covers ::onResponse
-   * @dataProvider providerTestSerialization
+   * Tests serialization.
+   *
+   * @legacy-covers ::onResponse
    */
+  #[DataProvider('providerTestSerialization')]
   public function testSerialization($data, $expected_response = FALSE): void {
     $request = new Request();
     $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'rest_plugin'], ['_format' => 'json']));
@@ -79,9 +85,9 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    * accepted by the server, because the routing system would have already
    * prevented those from reaching the controller.
    *
-   * @covers ::getResponseFormat
-   * @dataProvider providerTestResponseFormat
+   * @legacy-covers ::getResponseFormat
    */
+  #[DataProvider('providerTestResponseFormat')]
   public function testResponseFormat($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
@@ -112,13 +118,14 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onResponse
-   * @covers ::getResponseFormat
-   * @covers ::renderResponseBody
-   * @covers ::flattenResponse
+   * Tests on response with cacheable response.
    *
-   * @dataProvider providerTestResponseFormat
+   * @legacy-covers ::onResponse
+   * @legacy-covers ::getResponseFormat
+   * @legacy-covers ::renderResponseBody
+   * @legacy-covers ::flattenResponse
    */
+  #[DataProvider('providerTestResponseFormat')]
   public function testOnResponseWithCacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
@@ -162,13 +169,14 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onResponse
-   * @covers ::getResponseFormat
-   * @covers ::renderResponseBody
-   * @covers ::flattenResponse
+   * Tests on response with uncacheable response.
    *
-   * @dataProvider providerTestResponseFormat
+   * @legacy-covers ::onResponse
+   * @legacy-covers ::getResponseFormat
+   * @legacy-covers ::renderResponseBody
+   * @legacy-covers ::flattenResponse
    */
+  #[DataProvider('providerTestResponseFormat')]
   public function testOnResponseWithUncacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);

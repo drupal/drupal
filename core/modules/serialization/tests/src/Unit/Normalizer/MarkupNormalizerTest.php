@@ -9,11 +9,14 @@ use Drupal\Core\Template\Attribute;
 use Drupal\serialization\Normalizer\MarkupNormalizer;
 use Drupal\Tests\serialization\Traits\JsonSchemaTestTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\MarkupNormalizer
- * @group serialization
+ * Tests Drupal\serialization\Normalizer\MarkupNormalizer.
  */
+#[CoversClass(MarkupNormalizer::class)]
+#[Group('serialization')]
 final class MarkupNormalizerTest extends UnitTestCase {
 
   use JsonSchemaTestTrait;

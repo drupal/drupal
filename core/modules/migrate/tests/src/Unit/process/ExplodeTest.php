@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
-use Drupal\migrate\Plugin\migrate\process\Explode;
 use Drupal\migrate\Plugin\migrate\process\Concat;
+use Drupal\migrate\Plugin\migrate\process\Explode;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Explode process plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class ExplodeTest extends MigrateProcessTestCase {
 
   /**
@@ -65,9 +66,8 @@ class ExplodeTest extends MigrateProcessTestCase {
 
   /**
    * Tests that explode works on non-strings but with strict set to FALSE.
-   *
-   * @dataProvider providerExplodeWithNonStrictAndEmptySource
    */
+  #[DataProvider('providerExplodeWithNonStrictAndEmptySource')]
   public function testExplodeWithNonStrictAndEmptySource($value, $expected): void {
     $plugin = new Explode(['delimiter' => '|', 'strict' => FALSE], 'map', []);
 

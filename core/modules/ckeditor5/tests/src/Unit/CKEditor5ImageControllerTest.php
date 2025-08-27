@@ -17,6 +17,8 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,10 +26,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Tests CKEditor5ImageController.
- *
- * @group ckeditor5
- * @coversDefaultClass \Drupal\ckeditor5\Controller\CKEditor5ImageController
  */
+#[CoversClass(CKEditor5ImageController::class)]
+#[Group('ckeditor5')]
 final class CKEditor5ImageControllerTest extends UnitTestCase {
 
   /**

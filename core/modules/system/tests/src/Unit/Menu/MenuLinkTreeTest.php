@@ -14,11 +14,15 @@ use Drupal\Core\Url;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Menu\MenuLinkTree
- * @group Menu
+ * Tests Drupal\Core\Menu\MenuLinkTree.
  */
+#[CoversClass(MenuLinkTree::class)]
+#[Group('Menu')]
 class MenuLinkTreeTest extends UnitTestCase {
 
   /**
@@ -97,9 +101,9 @@ class MenuLinkTreeTest extends UnitTestCase {
    *
    * @see \Drupal\menu_link_content\Tests\MenuLinkContentCacheabilityBubblingTest
    *
-   * @covers ::build
-   * @dataProvider providerTestBuildCacheability
+   * @legacy-covers ::build
    */
+  #[DataProvider('providerTestBuildCacheability')]
   public function testBuildCacheability($description, $tree, $expected_build, $access, array $access_cache_contexts = []): void {
     if ($access !== NULL) {
       $access->addCacheContexts($access_cache_contexts);

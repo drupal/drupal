@@ -8,22 +8,26 @@ use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\big_pipe\StackMiddleware\ContentLength;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Defines a test for ContentLength middleware.
- *
- * @group big_pipe
- * @coversDefaultClass \Drupal\big_pipe\StackMiddleware\ContentLength
  */
+#[CoversClass(ContentLength::class)]
+#[Group('big_pipe')]
 final class ContentLengthTest extends UnitTestCase {
 
   /**
-   * @covers ::handle
-   * @dataProvider providerTestSetContentLengthHeader
+   * Tests handle.
+   *
+   * @legacy-covers ::handle
    */
+  #[DataProvider('providerTestSetContentLengthHeader')]
   public function testHandle(false|int $expected_header, Response $response): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);
     $request = Request::create('/');

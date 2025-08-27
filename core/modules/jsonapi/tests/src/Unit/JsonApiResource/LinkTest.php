@@ -11,19 +11,25 @@ use Drupal\Core\Url;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\JsonApiResource\Link
- * @group jsonapi
+ * Tests Drupal\jsonapi\JsonApiResource\Link.
  *
  * @internal
  */
+#[CoversClass(Link::class)]
+#[Group('jsonapi')]
 class LinkTest extends UnitTestCase {
 
   /**
-   * @covers ::compare
-   * @dataProvider linkComparisonProvider
+   * Tests link comparison.
+   *
+   * @legacy-covers ::compare
    */
+  #[DataProvider('linkComparisonProvider')]
   public function testLinkComparison(array $a, array $b, bool $expected): void {
     $this->mockUrlAssembler();
 
@@ -90,9 +96,11 @@ class LinkTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::merge
-   * @dataProvider linkMergeProvider
+   * Tests link merge.
+   *
+   * @legacy-covers ::merge
    */
+  #[DataProvider('linkMergeProvider')]
   public function testLinkMerge(array $a, array $b, array $expected): void {
     $this->mockUrlAssembler();
 
@@ -120,7 +128,9 @@ class LinkTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getLinkRelationType
+   * Tests get link relation type.
+   *
+   * @legacy-covers ::getLinkRelationType
    */
   public function testGetLinkRelationType(): void {
     $this->mockUrlAssembler();

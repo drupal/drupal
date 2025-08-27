@@ -6,14 +6,14 @@ namespace Drupal\Tests\field\Unit;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigAccessControlHandler;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the field config access controller.
- *
- * @group field
- *
- * @coversDefaultClass \Drupal\field\FieldConfigAccessControlHandler
  */
+#[CoversClass(FieldConfigAccessControlHandler::class)]
+#[Group('field')]
 class FieldConfigAccessControlHandlerTest extends FieldStorageConfigAccessControlHandlerTest {
 
   /**

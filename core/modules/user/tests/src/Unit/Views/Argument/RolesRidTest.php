@@ -9,17 +9,20 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Plugin\views\argument\RolesRid;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\user\Plugin\views\argument\RolesRid
- * @group user
+ * Tests Drupal\user\Plugin\views\argument\RolesRid.
  */
+#[CoversClass(RolesRid::class)]
+#[Group('user')]
 class RolesRidTest extends UnitTestCase {
 
   /**
    * Tests the titleQuery method.
    *
-   * @covers ::titleQuery
+   * @legacy-covers ::titleQuery
    */
   public function testTitleQuery(): void {
     $role1 = new Role([

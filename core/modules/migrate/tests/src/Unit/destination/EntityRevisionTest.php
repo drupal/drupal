@@ -17,15 +17,16 @@ use Drupal\migrate\Plugin\migrate\destination\EntityRevision as RealEntityRevisi
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Tests entity revision destination.
- *
- * @group migrate
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\EntityRevision
  */
+#[CoversClass(RealEntityRevision::class)]
+#[Group('migrate')]
 class EntityRevisionTest extends UnitTestCase {
 
   /**
@@ -96,7 +97,7 @@ class EntityRevisionTest extends UnitTestCase {
   /**
    * Tests that passed old destination values are used by default.
    *
-   * @covers ::getEntity
+   * @legacy-covers ::getEntity
    */
   public function testGetEntityDestinationValues(): void {
     $destination = $this->getEntityRevisionDestination([]);
@@ -114,7 +115,7 @@ class EntityRevisionTest extends UnitTestCase {
   /**
    * Tests that revision updates update.
    *
-   * @covers ::getEntity
+   * @legacy-covers ::getEntity
    */
   public function testGetEntityUpdateRevision(): void {
     $destination = $this->getEntityRevisionDestination([]);
@@ -136,7 +137,7 @@ class EntityRevisionTest extends UnitTestCase {
   /**
    * Tests that new revisions are flagged to be written as new.
    *
-   * @covers ::getEntity
+   * @legacy-covers ::getEntity
    */
   public function testGetEntityNewRevision(): void {
     $destination = $this->getEntityRevisionDestination([]);
@@ -161,7 +162,7 @@ class EntityRevisionTest extends UnitTestCase {
   /**
    * Tests entity load failure.
    *
-   * @covers ::getEntity
+   * @legacy-covers ::getEntity
    */
   public function testGetEntityLoadFailure(): void {
     $destination = $this->getEntityRevisionDestination([]);
@@ -179,7 +180,7 @@ class EntityRevisionTest extends UnitTestCase {
   /**
    * Tests entity revision save.
    *
-   * @covers ::save
+   * @legacy-covers ::save
    */
   public function testSave(): void {
     $entity = $this->prophesize(ContentEntityInterface::class);

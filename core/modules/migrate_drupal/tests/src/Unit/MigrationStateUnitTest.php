@@ -15,29 +15,29 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Defines a class for testing \Drupal\migrate_drupal\MigrationState.
- *
- * @group migrate_drupal
- *
- * @coversDefaultClass \Drupal\migrate_drupal\MigrationState
  */
+#[CoversClass(MigrationState::class)]
+#[Group('migrate_drupal')]
 class MigrationStateUnitTest extends UnitTestCase {
 
   /**
    * Tests ::getUpgradeStates.
    *
-   * @dataProvider providerGetUpgradeStates
-   *
-   * @covers ::getUpgradeStates
-   * @covers ::buildDiscoveredDestinationsBySource
-   * @covers ::buildDeclaredStateBySource
-   * @covers ::buildUpgradeState
-   * @covers ::getMigrationStates
-   * @covers ::getSourceState
-   * @covers ::getDestinationsForSource
+   * @legacy-covers ::getUpgradeStates
+   * @legacy-covers ::buildDiscoveredDestinationsBySource
+   * @legacy-covers ::buildDeclaredStateBySource
+   * @legacy-covers ::buildUpgradeState
+   * @legacy-covers ::getMigrationStates
+   * @legacy-covers ::getSourceState
+   * @legacy-covers ::getDestinationsForSource
    */
+  #[DataProvider('providerGetUpgradeStates')]
   public function testGetUpgradeStates($modules_to_enable, $files, $field_plugins, $migrations, $source_system_data, $expected_7, $expected_6): void {
     $fieldPluginManager = $this->prophesize(MigrateFieldPluginManagerInterface::class);
     $fieldPluginManager->getDefinitions()->willReturn($field_plugins);

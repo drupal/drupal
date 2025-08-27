@@ -8,17 +8,21 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
+use Drupal\views\Plugin\views\area\Result;
 use Drupal\views\Plugin\views\pager\PagerPluginBase;
 use Drupal\views\Plugin\ViewsPluginManager;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\area\Result;
 use Drupal\views\ViewsData;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\area\Result
- * @group views
+ * Tests Drupal\views\Plugin\views\area\Result.
  */
+#[CoversClass(Result::class)]
+#[Group('views')]
 class ResultTest extends UnitTestCase {
 
   /**
@@ -80,9 +84,8 @@ class ResultTest extends UnitTestCase {
    *   The expected content string.
    * @param int $items_per_page
    *   The items per page of the configuration.
-   *
-   * @dataProvider providerTestResultArea
    */
+  #[DataProvider('providerTestResultArea')]
   public function testResultArea($content, $expected, $items_per_page = 0): void {
     $this->setupViewPager($items_per_page);
     $this->resultHandler->options['content'] = $content;

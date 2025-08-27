@@ -11,13 +11,16 @@ use Drupal\layout_builder\LayoutEntityHelperTrait;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophet;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\LayoutEntityHelperTrait
- *
- * @group layout_builder
+ * Tests Drupal\layout_builder\LayoutEntityHelperTrait.
  */
+#[CoversClass(LayoutEntityHelperTrait::class)]
+#[Group('layout_builder')]
 class LayoutEntityHelperTraitTest extends UnitTestCase {
 
   /**
@@ -90,20 +93,22 @@ class LayoutEntityHelperTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getInlineBlockComponents
+   * Tests get inline block components.
    *
-   * @dataProvider providerSectionsWithInlineComponents
+   * @legacy-covers ::getInlineBlockComponents
    */
+  #[DataProvider('providerSectionsWithInlineComponents')]
   public function testGetInlineBlockComponents($sections, $expected_components): void {
     $test_class = new TestClass();
     $this->assertSame($expected_components, $test_class->getInlineBlockComponents($sections));
   }
 
   /**
-   * @covers ::getInlineBlockRevisionIdsInSections
+   * Tests get inline block revision ids in sections.
    *
-   * @dataProvider providerSectionsWithInlineComponents
+   * @legacy-covers ::getInlineBlockRevisionIdsInSections
    */
+  #[DataProvider('providerSectionsWithInlineComponents')]
   public function testGetInlineBlockRevisionIdsInSections($sections, $components, $expected_revision_ids): void {
     $test_class = new TestClass();
     $this->assertSame($expected_revision_ids, $test_class->getInlineBlockRevisionIdsInSections($sections));

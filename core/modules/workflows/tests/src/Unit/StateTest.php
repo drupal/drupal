@@ -8,19 +8,23 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\State;
 use Drupal\workflows\WorkflowTypeInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\workflows\State
- *
- * @group workflows
+ * Tests Drupal\workflows\State.
  */
+#[CoversClass(State::class)]
+#[Group('workflows')]
 class StateTest extends UnitTestCase {
 
   /**
-   * @covers ::__construct
-   * @covers ::id
-   * @covers ::label
-   * @covers ::weight
+   * Tests getters.
+   *
+   * @legacy-covers ::__construct
+   * @legacy-covers ::id
+   * @legacy-covers ::label
+   * @legacy-covers ::weight
    */
   public function testGetters(): void {
     $state = new State(
@@ -35,7 +39,9 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::canTransitionTo
+   * Tests can transition to.
+   *
+   * @legacy-covers ::canTransitionTo
    */
   public function testCanTransitionTo(): void {
     $workflow_type = new TestType([], '', []);
@@ -52,7 +58,9 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTransitionTo
+   * Tests get transition to.
+   *
+   * @legacy-covers ::getTransitionTo
    */
   public function testGetTransitionTo(): void {
     $workflow_type = new TestType([], '', []);
@@ -66,7 +74,9 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTransitionTo
+   * Tests get transition to exception.
+   *
+   * @legacy-covers ::getTransitionTo
    */
   public function testGetTransitionToException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -78,7 +88,9 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTransitions
+   * Tests get transitions.
+   *
+   * @legacy-covers ::getTransitions
    */
   public function testGetTransitions(): void {
     $workflow_type = new TestType([], '', []);
@@ -97,7 +109,9 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::labelCallback
+   * Tests label callback.
+   *
+   * @legacy-covers ::labelCallback
    */
   public function testLabelCallback(): void {
     $workflow_type = $this->prophesize(WorkflowTypeInterface::class)->reveal();

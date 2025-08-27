@@ -6,19 +6,23 @@ namespace Drupal\Tests\package_manager\Unit;
 
 use Drupal\package_manager\InstalledPackage;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\InstalledPackage
- *
- * @group package_manager
+ * Tests Drupal\package_manager\InstalledPackage.
  */
+#[CoversClass(InstalledPackage::class)]
+#[Group('package_manager')]
 class InstalledPackageTest extends UnitTestCase {
 
   /**
-   * @covers ::createFromArray
+   * Tests path resolution.
    *
-   * @depends testMetapackageWithAPath
+   * @legacy-covers ::createFromArray
    */
+  #[Depends('testMetapackageWithAPath')]
   public function testPathResolution(): void {
     // Metapackages must be created without a path.
     $package = InstalledPackage::createFromArray([
@@ -50,7 +54,9 @@ class InstalledPackageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromArray
+   * Tests metapackage with a path.
+   *
+   * @legacy-covers ::createFromArray
    */
   public function testMetapackageWithAPath(): void {
     $this->expectException(\AssertionError::class);

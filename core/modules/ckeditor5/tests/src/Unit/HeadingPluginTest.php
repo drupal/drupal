@@ -5,15 +5,21 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language;
 use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language
- * @group ckeditor5
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language.
+ *
  * @internal
  */
+#[CoversClass(Language::class)]
+#[Group('ckeditor5')]
 class HeadingPluginTest extends UnitTestCase {
 
   /**
@@ -102,9 +108,11 @@ class HeadingPluginTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDynamicPluginConfig
-   * @dataProvider providerGetDynamicPluginConfig
+   * Tests get dynamic plugin config.
+   *
+   * @legacy-covers ::getDynamicPluginConfig
    */
+  #[DataProvider('providerGetDynamicPluginConfig')]
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     // Read the CKEditor 5 plugin's static configuration from YAML.
     $ckeditor5_plugin_definitions = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');

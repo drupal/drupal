@@ -6,16 +6,17 @@ namespace Drupal\Tests\update\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\update\UpdateManagerInterface;
 use Drupal\update\Hook\UpdateHooks;
+use Drupal\update\UpdateManagerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests text of update email.
  *
- * @covers \Drupal\update\Hook\UpdateHooks::mail
- *
- * @group update
+ * @legacy-covers \Drupal\update\Hook\UpdateHooks::mail
  */
+#[Group('update')]
 class UpdateMailTest extends UnitTestCase {
 
   /**
@@ -74,9 +75,8 @@ class UpdateMailTest extends UnitTestCase {
 
   /**
    * Test the subject and body of update text.
-   *
-   * @dataProvider providerTestUpdateEmail
    */
+  #[DataProvider('providerTestUpdateEmail')]
   public function testUpdateEmail($notification_threshold, $params, $authorized, array $expected_body): void {
     $langcode = 'en';
     $available_updates_url = 'https://example.com/admin/reports/updates';

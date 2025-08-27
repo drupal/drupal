@@ -8,14 +8,17 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use Drupal\text\Plugin\migrate\field\d6\TextField;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 // cspell:ignore optionwidgets
-
 /**
- * @coversDefaultClass \Drupal\text\Plugin\migrate\field\d6\TextField
- * @group text
+ * Tests Drupal\text\Plugin\migrate\field\d6\TextField.
  */
+#[CoversClass(TextField::class)]
+#[Group('text')]
 class TextFieldTest extends UnitTestCase {
 
   /**
@@ -55,7 +58,9 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::defineValueProcessPipeline
+   * Tests filtered text value process pipeline.
+   *
+   * @legacy-covers ::defineValueProcessPipeline
    */
   public function testFilteredTextValueProcessPipeline(): void {
     $field_info = [
@@ -78,7 +83,9 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::defineValueProcessPipeline
+   * Tests boolean text implicit value process pipeline.
+   *
+   * @legacy-covers ::defineValueProcessPipeline
    */
   public function testBooleanTextImplicitValueProcessPipeline(): void {
     $info = [
@@ -103,7 +110,9 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::defineValueProcessPipeline
+   * Tests boolean text explicit value process pipeline.
+   *
+   * @legacy-covers ::defineValueProcessPipeline
    */
   public function testBooleanTextExplicitValueProcessPipeline(): void {
     $info = [
@@ -164,9 +173,11 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFieldType
-   * @dataProvider getFieldTypeProvider
+   * Tests get field type.
+   *
+   * @legacy-covers ::getFieldType
    */
+  #[DataProvider('getFieldTypeProvider')]
   public function testGetFieldType($expected_type, $widget_type, array $settings = []): void {
     $row = new Row();
     $row->setSourceProperty('widget_type', $widget_type);

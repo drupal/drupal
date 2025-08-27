@@ -7,6 +7,8 @@ namespace Drupal\Tests\help\Unit;
 use Drupal\Core\Cache\Cache;
 use Drupal\help\HelpTopicTwig;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
@@ -16,10 +18,9 @@ use Twig\TemplateWrapper;
  * Note that the toUrl() and toLink() methods are not covered, because they
  * have calls to new Url() and new Link() in them, so they cannot be unit
  * tested.
- *
- * @coversDefaultClass \Drupal\help\HelpTopicTwig
- * @group help
  */
+#[CoversClass(HelpTopicTwig::class)]
+#[Group('help')]
 class HelpTopicTwigTest extends UnitTestCase {
 
   /**
@@ -56,8 +57,10 @@ class HelpTopicTwigTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getBody
-   * @covers ::getLabel
+   * Tests text.
+   *
+   * @legacy-covers ::getBody
+   * @legacy-covers ::getLabel
    */
   public function testText(): void {
     $this->assertEquals($this->helpTopic->getBody(),
@@ -67,9 +70,11 @@ class HelpTopicTwigTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getProvider
-   * @covers ::isTopLevel
-   * @covers ::getRelated
+   * Tests definition.
+   *
+   * @legacy-covers ::getProvider
+   * @legacy-covers ::isTopLevel
+   * @legacy-covers ::getRelated
    */
   public function testDefinition(): void {
     $this->assertEquals($this->helpTopic->getProvider(),
@@ -81,9 +86,11 @@ class HelpTopicTwigTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCacheContexts
-   * @covers ::getCacheTags
-   * @covers ::getCacheMaxAge
+   * Tests cache info.
+   *
+   * @legacy-covers ::getCacheContexts
+   * @legacy-covers ::getCacheTags
+   * @legacy-covers ::getCacheMaxAge
    */
   public function testCacheInfo(): void {
     $this->assertEquals([], $this->helpTopic->getCacheContexts());

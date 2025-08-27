@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\EntityResolver;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\EntityResolver\ChainEntityResolver;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\serialization\EntityResolver\ChainEntityResolver
- * @group serialization
+ * Tests Drupal\serialization\EntityResolver\ChainEntityResolver.
  */
+#[CoversClass(ChainEntityResolver::class)]
+#[Group('serialization')]
 class ChainEntityResolverTest extends UnitTestCase {
 
   /**
@@ -47,8 +50,8 @@ class ChainEntityResolverTest extends UnitTestCase {
   /**
    * Tests the resolve method with no matching resolvers.
    *
-   * @covers ::__construct
-   * @covers ::resolve
+   * @legacy-covers ::__construct
+   * @legacy-covers ::resolve
    */
   public function testResolverWithNoneResolved(): void {
     $resolvers = [
@@ -64,8 +67,8 @@ class ChainEntityResolverTest extends UnitTestCase {
   /**
    * Tests the resolve method with no matching resolvers, using addResolver.
    *
-   * @covers ::addResolver
-   * @covers ::resolve
+   * @legacy-covers ::addResolver
+   * @legacy-covers ::resolve
    */
   public function testResolverWithNoneResolvedUsingAddResolver(): void {
     $resolver = new ChainEntityResolver();
@@ -78,8 +81,8 @@ class ChainEntityResolverTest extends UnitTestCase {
   /**
    * Tests the resolve method with a matching resolver first.
    *
-   * @covers ::__construct
-   * @covers ::resolve
+   * @legacy-covers ::__construct
+   * @legacy-covers ::resolve
    */
   public function testResolverWithFirstResolved(): void {
     $resolvers = [
@@ -95,8 +98,8 @@ class ChainEntityResolverTest extends UnitTestCase {
   /**
    * Tests the resolve method with a matching resolver last.
    *
-   * @covers ::__construct
-   * @covers ::resolve
+   * @legacy-covers ::__construct
+   * @legacy-covers ::resolve
    */
   public function testResolverWithLastResolved(): void {
     $resolvers = [
@@ -112,8 +115,8 @@ class ChainEntityResolverTest extends UnitTestCase {
   /**
    * Tests the resolve method where one resolver returns 0.
    *
-   * @covers ::__construct
-   * @covers ::resolve
+   * @legacy-covers ::__construct
+   * @legacy-covers ::resolve
    */
   public function testResolverWithResolvedToZero(): void {
     $resolvers = [

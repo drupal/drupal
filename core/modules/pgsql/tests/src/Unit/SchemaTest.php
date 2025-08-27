@@ -6,12 +6,16 @@ namespace Drupal\Tests\pgsql\Unit;
 
 use Drupal\pgsql\Driver\Database\pgsql\Schema;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\pgsql\Driver\Database\pgsql\Schema
- * @group Database
+ * Tests Drupal\pgsql\Driver\Database\pgsql\Schema.
  */
+#[CoversClass(Schema::class)]
+#[Group('Database')]
 class SchemaTest extends UnitTestCase {
 
   /**
@@ -24,9 +28,9 @@ class SchemaTest extends UnitTestCase {
    * @param string $expected
    *   The expected computed constraint name.
    *
-   * @covers ::constraintExists
-   * @dataProvider providerComputedConstraintName
+   * @legacy-covers ::constraintExists
    */
+  #[DataProvider('providerComputedConstraintName')]
   public function testComputedConstraintName($table_name, $name, $expected): void {
     $max_identifier_length = 63;
 

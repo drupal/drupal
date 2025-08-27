@@ -6,16 +6,20 @@ namespace Drupal\Tests\media\Unit;
 
 use Drupal\media\OEmbed\Endpoint;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\media\OEmbed\Endpoint
- *
- * @group media
+ * Tests Drupal\media\OEmbed\Endpoint.
  */
+#[CoversClass(Endpoint::class)]
+#[Group('media')]
 class EndpointTest extends UnitTestCase {
 
   /**
-   * @covers ::matchUrl
+   * Tests match url.
+   *
+   * @legacy-covers ::matchUrl
    */
   public function testMatchUrl(): void {
     $endpoint = new Endpoint(
@@ -27,7 +31,9 @@ class EndpointTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::matchUrl
+   * Tests case sensitive match.
+   *
+   * @legacy-covers ::matchUrl
    */
   public function testCaseSensitiveMatch(): void {
     $endpoint = new Endpoint(

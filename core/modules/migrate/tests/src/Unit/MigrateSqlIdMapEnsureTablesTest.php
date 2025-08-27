@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the SQL ID map plugin ensureTables() method.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
 
   /**

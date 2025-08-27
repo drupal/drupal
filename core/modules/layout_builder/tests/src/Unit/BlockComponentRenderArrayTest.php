@@ -22,12 +22,16 @@ use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray
- * @group layout_builder
+ * Tests Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray.
  */
+#[CoversClass(BlockComponentRenderArray::class)]
+#[Group('layout_builder')]
 class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
@@ -70,10 +74,11 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render.
    *
-   * @dataProvider providerBlockTypes
+   * @legacy-covers ::onBuildRender
    */
+  #[DataProvider('providerBlockTypes')]
   public function testOnBuildRender($refinable_dependent_access): void {
     $contexts = [];
     if ($refinable_dependent_access) {
@@ -144,10 +149,11 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render without preview fallback string.
    *
-   * @dataProvider providerBlockTypes
+   * @legacy-covers ::onBuildRender
    */
+  #[DataProvider('providerBlockTypes')]
   public function testOnBuildRenderWithoutPreviewFallbackString($refinable_dependent_access): void {
     $contexts = [];
     if ($refinable_dependent_access) {
@@ -217,10 +223,11 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render denied.
    *
-   * @dataProvider providerBlockTypes
+   * @legacy-covers ::onBuildRender
    */
+  #[DataProvider('providerBlockTypes')]
   public function testOnBuildRenderDenied($refinable_dependent_access): void {
     $contexts = [];
     if ($refinable_dependent_access) {
@@ -275,10 +282,11 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render in preview.
    *
-   * @dataProvider providerBlockTypes
+   * @legacy-covers ::onBuildRender
    */
+  #[DataProvider('providerBlockTypes')]
   public function testOnBuildRenderInPreview($refinable_dependent_access): void {
     $contexts = [];
     if ($refinable_dependent_access) {
@@ -348,7 +356,9 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render in preview empty build.
+   *
+   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderInPreviewEmptyBuild(): void {
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
@@ -410,7 +420,9 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render empty build.
+   *
+   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderEmptyBuild(): void {
     $block = $this->prophesize(BlockPluginInterface::class);
@@ -455,7 +467,9 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render empty build with cache tags.
+   *
+   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderEmptyBuildWithCacheTags(): void {
     $block = $this->prophesize(BlockPluginInterface::class);
@@ -500,7 +514,9 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render null build.
+   *
+   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderNullBuild(): void {
     $block = $this->prophesize(BlockPluginInterface::class);
@@ -523,7 +539,9 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
+   * Tests on build render no block.
+   *
+   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderNoBlock(): void {
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn(NULL);

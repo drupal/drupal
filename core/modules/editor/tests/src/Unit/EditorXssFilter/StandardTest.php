@@ -7,15 +7,18 @@ namespace Drupal\Tests\editor\Unit\EditorXssFilter;
 use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore ascript attributename bgsound bscript ckers cript datafld
 // cspell:ignore dataformatas datasrc dynsrc ession livescript msgbox nmouseover
 // cspell:ignore noxss pression ript scri scriptlet unicoded vbscript
-
 /**
- * @coversDefaultClass \Drupal\editor\EditorXssFilter\Standard
- * @group editor
+ * Tests Drupal\editor\EditorXssFilter\Standard.
  */
+#[CoversClass(Standard::class)]
+#[Group('editor')]
 class StandardTest extends UnitTestCase {
 
   /**
@@ -723,9 +726,8 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
    *   The input.
    * @param string $expected_output
    *   The expected output.
-   *
-   * @dataProvider providerTestFilterXss
    */
+  #[DataProvider('providerTestFilterXss')]
   public function testFilterXss($input, $expected_output): void {
     $output = Standard::filterXss($input, $this->format);
     $this->assertSame($expected_output, $output);
@@ -748,9 +750,8 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
    * @param array $disallowed_tags
    *   (optional) The disallowed HTML tags to be passed to
    *   \Drupal\Component\Utility\Xss::filter().
-   *
-   * @dataProvider providerTestDisallowMode
    */
+  #[DataProvider('providerTestDisallowMode')]
   public function testDisallowMode($value, $expected, $message, array $disallowed_tags): void {
     $value = Standard::filter($value, $disallowed_tags);
     $this->assertSame($expected, $value, $message);

@@ -8,23 +8,24 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\EntityPermissionsRouteProviderWithCheck;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the route provider deprecation.
- *
- * @coversDefaultClass \Drupal\user\Entity\EntityPermissionsRouteProviderWithCheck
- * @group user
- * @group legacy
  */
+#[CoversClass(EntityPermissionsRouteProviderWithCheck::class)]
+#[Group('user')]
+#[IgnoreDeprecations]
 class EntityPermissionsRouteProviderWithCheckTest extends UnitTestCase {
 
   /**
    * Tests the route provider deprecation.
    *
-   * @covers ::getEntityPermissionsRoute
-   *
-   * @group legacy
+   * @legacy-covers ::getEntityPermissionsRoute
    */
+  #[IgnoreDeprecations]
   public function testEntityPermissionsRouteProviderWithCheck(): void {
 
     // Mock the constructor parameters.

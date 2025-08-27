@@ -8,12 +8,15 @@ use Drupal\package_manager\ExecutableFinder;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\ExecutableFinder
- * @group package_manager
+ * Tests Executable Finder.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\ExecutableFinder
  */
+#[Group('package_manager')]
 class ExecutableFinderTest extends UnitTestCase {
 
   /**

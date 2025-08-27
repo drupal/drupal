@@ -7,13 +7,14 @@ namespace Drupal\Tests\system\Unit\FileTransfer;
 use Drupal\Tests\system\Functional\FileTransfer\MockTestConnection;
 use Drupal\Tests\system\Functional\FileTransfer\TestFileTransfer;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests for the file transfer system.
- *
- * @group FileTransfer
- * @group legacy
  */
+#[Group('FileTransfer')]
+#[IgnoreDeprecations]
 class FileTransferTest extends UnitTestCase {
 
   /**

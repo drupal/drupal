@@ -13,14 +13,16 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\MigrateFieldInterface;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Tests the ProcessField migrate process plugin.
- *
- * @coversDefaultClass \Drupal\field\Plugin\migrate\process\ProcessField
- * @group field
  */
+#[CoversClass(ProcessField::class)]
+#[Group('field')]
 class ProcessFieldTest extends MigrateTestCase {
 
   /**
@@ -88,9 +90,9 @@ class ProcessFieldTest extends MigrateTestCase {
    * @param bool $plugin_not_found
    *   Whether the field plugin is not found.
    *
-   * @covers ::transform
-   * @dataProvider providerTestTransform
+   * @legacy-covers ::transform
    */
+  #[DataProvider('providerTestTransform')]
   public function testTransform($method, $value, $expected_value, $migrate_exception = '', $plugin_not_found = FALSE): void {
     if ($method) {
       $this->fieldPlugin->$method($this->row->reveal())->willReturn($expected_value);

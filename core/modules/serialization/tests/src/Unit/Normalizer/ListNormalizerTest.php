@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\TypedDataManagerInterface;
-use Drupal\Tests\UnitTestCase;
-use Drupal\serialization\Normalizer\ListNormalizer;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
+use Drupal\serialization\Normalizer\ListNormalizer;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\ListNormalizer
- * @group serialization
+ * Tests Drupal\serialization\Normalizer\ListNormalizer.
  */
+#[CoversClass(ListNormalizer::class)]
+#[Group('serialization')]
 class ListNormalizerTest extends UnitTestCase {
 
   /**

@@ -8,12 +8,12 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for \Drupal\Core\Mail\MailFormatHelper::htmlToText().
- *
- * @group Mail
  */
+#[Group('Mail')]
 class HtmlToTextTest extends UnitTestCase {
 
   /**

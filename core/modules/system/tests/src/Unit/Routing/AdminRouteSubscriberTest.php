@@ -7,21 +7,26 @@ namespace Drupal\Tests\system\Unit\Routing;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\system\EventSubscriber\AdminRouteSubscriber;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\system\EventSubscriber\AdminRouteSubscriber
- * @group system
+ * Tests Drupal\system\EventSubscriber\AdminRouteSubscriber.
  */
+#[CoversClass(AdminRouteSubscriber::class)]
+#[Group('system')]
 class AdminRouteSubscriberTest extends UnitTestCase {
 
   /**
-   * @covers ::alterRoutes
-   * @covers ::isHtmlRoute
+   * Tests alter routes.
    *
-   * @dataProvider providerTestAlterRoutes
+   * @legacy-covers ::alterRoutes
+   * @legacy-covers ::isHtmlRoute
    */
+  #[DataProvider('providerTestAlterRoutes')]
   public function testAlterRoutes(Route $route, $is_admin): void {
     $collection = new RouteCollection();
     $collection->add('the_route', $route);

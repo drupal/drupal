@@ -6,23 +6,22 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\Substr;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore aptain Janeway
-
 /**
  * Tests the substr plugin.
- *
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\Substr
- *
- * @group migrate
  */
+#[CoversClass(Substr::class)]
+#[Group('migrate')]
 class SubstrTest extends MigrateProcessTestCase {
 
   /**
    * Tests Substr plugin based on providerTestSubstr() values.
-   *
-   * @dataProvider providerTestSubstr
    */
+  #[DataProvider('providerTestSubstr')]
   public function testSubstr($start = NULL, $length = NULL, $expected = NULL): void {
     $configuration['start'] = $start;
     $configuration['length'] = $length;

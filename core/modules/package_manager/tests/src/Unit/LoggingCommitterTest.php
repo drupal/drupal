@@ -11,11 +11,14 @@ use Drupal\package_manager\ProcessOutputCallback;
 use Drupal\Tests\UnitTestCase;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Path\Value\PathInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\LoggingCommitter
- * @group package_manager
+ * Tests Logging Committer.
+ *
+ * @legacy-covers \Drupal\package_manager\LoggingCommitter
  */
+#[Group('package_manager')]
 class LoggingCommitterTest extends UnitTestCase {
 
   /**

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Unit\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests block local tasks.
- *
- * @group block
  */
+#[Group('block')]
 class BlockLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
@@ -73,9 +74,8 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Tests the block admin display local tasks.
-   *
-   * @dataProvider providerTestBlockAdminDisplay
    */
+  #[DataProvider('providerTestBlockAdminDisplay')]
   public function testBlockAdminDisplay($route, $expected): void {
     $this->assertLocalTasks($route, $expected);
   }

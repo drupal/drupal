@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\breakpoint\Unit;
 
 use Drupal\breakpoint\Breakpoint;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\breakpoint\Breakpoint
- * @group Breakpoint
+ * Tests Drupal\breakpoint\Breakpoint.
  */
+#[CoversClass(Breakpoint::class)]
+#[Group('Breakpoint')]
 class BreakpointTest extends UnitTestCase {
 
   /**
@@ -62,7 +65,9 @@ class BreakpointTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getLabel
+   * Tests get label.
+   *
+   * @legacy-covers ::getLabel
    */
   public function testGetLabel(): void {
     $this->pluginDefinition['label'] = 'Test label';
@@ -71,7 +76,9 @@ class BreakpointTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getWeight
+   * Tests get weight.
+   *
+   * @legacy-covers ::getWeight
    */
   public function testGetWeight(): void {
     $this->pluginDefinition['weight'] = '4';
@@ -81,7 +88,9 @@ class BreakpointTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getMediaQuery
+   * Tests get media query.
+   *
+   * @legacy-covers ::getMediaQuery
    */
   public function testGetMediaQuery(): void {
     $this->pluginDefinition['mediaQuery'] = 'only screen and (min-width: 1220px)';
@@ -90,7 +99,9 @@ class BreakpointTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getMultipliers
+   * Tests get multipliers.
+   *
+   * @legacy-covers ::getMultipliers
    */
   public function testGetMultipliers(): void {
     $this->pluginDefinition['multipliers'] = ['1x', '2x'];
@@ -99,7 +110,9 @@ class BreakpointTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getProvider
+   * Tests get provider.
+   *
+   * @legacy-covers ::getProvider
    */
   public function testGetProvider(): void {
     $this->pluginDefinition['provider'] = 'Breakpoint';
@@ -108,7 +121,9 @@ class BreakpointTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getGroup
+   * Tests get group.
+   *
+   * @legacy-covers ::getGroup
    */
   public function testGetGroup(): void {
     $this->pluginDefinition['group'] = 'Breakpoint';

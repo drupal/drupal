@@ -17,13 +17,15 @@ use Drupal\node\NodeGrantDatabaseStorageInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeStorageInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node operations.
- *
- * @coversDefaultClass \Drupal\node\NodeAccessControlHandler
- * @group node
  */
+#[CoversClass(NodeAccessControlHandler::class)]
+#[Group('node')]
 class NodeOperationAccessTest extends UnitTestCase {
 
   /**
@@ -54,9 +56,8 @@ class NodeOperationAccessTest extends UnitTestCase {
    * @param bool|null $isDefaultRevision
    *   Whether the node should be default revision, or NULL if not to expect it
    *   to be called.
-   *
-   * @dataProvider providerTestRevisionOperations
    */
+  #[DataProvider('providerTestRevisionOperations')]
   public function testRevisionOperations($operation, array $hasPermissionMap, $assertAccess, $isDefaultRevision = NULL): void {
     $account = $this->createMock(AccountInterface::class);
     $account->method('hasPermission')

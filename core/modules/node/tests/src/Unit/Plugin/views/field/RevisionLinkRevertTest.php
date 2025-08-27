@@ -10,16 +10,20 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\node\Plugin\views\field\RevisionLinkDelete;
+use Drupal\node\Plugin\views\field\RevisionLinkRevert;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\views\Traits\ViewsLoggerTestTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\node\Plugin\views\field\RevisionLinkRevert
- * @group node
+ * Tests Drupal\node\Plugin\views\field\RevisionLinkRevert.
  */
+#[CoversClass(RevisionLinkRevert::class)]
+#[Group('node')]
 class RevisionLinkRevertTest extends UnitTestCase {
 
   use ViewsLoggerTestTrait;
@@ -38,7 +42,7 @@ class RevisionLinkRevertTest extends UnitTestCase {
   /**
    * Test the render method when getEntity returns NULL.
    *
-   * @covers ::render
+   * @legacy-covers ::render
    */
   public function testRenderNullEntity(): void {
     $row = new ResultRow();

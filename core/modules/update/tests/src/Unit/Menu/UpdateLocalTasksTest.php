@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\update\Unit\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests existence of update local tasks.
- *
- * @group update
  */
+#[Group('update')]
 class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
@@ -23,9 +24,8 @@ class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Checks update report tasks.
-   *
-   * @dataProvider getUpdateReportRoutes
    */
+  #[DataProvider('getUpdateReportRoutes')]
   public function testUpdateReportLocalTasks($route): void {
     $this->assertLocalTasks($route, [
       0 => ['update.status', 'update.settings'],

@@ -12,12 +12,15 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\serialization\Normalizer\EntityNormalizer;
 use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\EntityNormalizer
- * @group serialization
+ * Tests Drupal\serialization\Normalizer\EntityNormalizer.
  */
+#[CoversClass(EntityNormalizer::class)]
+#[Group('serialization')]
 class EntityNormalizerTest extends UnitTestCase {
 
   /**
@@ -75,7 +78,7 @@ class EntityNormalizerTest extends UnitTestCase {
   /**
    * Tests the normalize() method.
    *
-   * @covers ::normalize
+   * @legacy-covers ::normalize
    */
   public function testNormalize(): void {
     $list_item_1 = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
@@ -106,7 +109,7 @@ class EntityNormalizerTest extends UnitTestCase {
   /**
    * Tests the denormalize() method with no entity type provided in context.
    *
-   * @covers ::denormalize
+   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithNoEntityType(): void {
     $this->expectException(UnexpectedValueException::class);
@@ -116,7 +119,7 @@ class EntityNormalizerTest extends UnitTestCase {
   /**
    * Tests the denormalize method with a bundle property.
    *
-   * @covers ::denormalize
+   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithValidBundle(): void {
     $test_data = [
@@ -233,7 +236,7 @@ class EntityNormalizerTest extends UnitTestCase {
   /**
    * Tests the denormalize method with a bundle property.
    *
-   * @covers ::denormalize
+   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithInvalidBundle(): void {
     $test_data = [
@@ -315,7 +318,7 @@ class EntityNormalizerTest extends UnitTestCase {
   /**
    * Tests the denormalize method with no bundle defined.
    *
-   * @covers ::denormalize
+   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithNoBundle(): void {
     $test_data = [
@@ -383,7 +386,7 @@ class EntityNormalizerTest extends UnitTestCase {
   /**
    * Tests the denormalize method with no bundle defined.
    *
-   * @covers ::denormalize
+   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithNoFieldableEntityType(): void {
     $test_data = [

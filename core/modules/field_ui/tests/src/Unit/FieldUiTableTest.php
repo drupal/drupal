@@ -4,20 +4,25 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Unit;
 
+use Drupal\field_ui\Element\FieldUiTable;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\field_ui\Element\FieldUiTable
- *
- * @group field_ui
+ * Tests Drupal\field_ui\Element\FieldUiTable.
  */
+#[CoversClass(FieldUiTable::class)]
+#[Group('field_ui')]
 class FieldUiTableTest extends UnitTestCase {
 
   /**
-   * @covers ::reduceOrder
+   * Tests reduce order.
    *
-   * @dataProvider providerTestReduceOrder
+   * @legacy-covers ::reduceOrder
    */
+  #[DataProvider('providerTestReduceOrder')]
   public function testReduceOrder($array, $expected): void {
     $this->assertSame($expected, array_reduce($array, ['Drupal\field_ui\Element\FieldUiTable', 'reduceOrder']));
   }

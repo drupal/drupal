@@ -13,17 +13,22 @@ use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\SectionComponent
- * @group layout_builder
+ * Tests Drupal\layout_builder\SectionComponent.
  */
+#[CoversClass(SectionComponent::class)]
+#[Group('layout_builder')]
 class SectionComponentTest extends UnitTestCase {
 
   /**
-   * @covers ::toRenderArray
+   * Tests to render array.
+   *
+   * @legacy-covers ::toRenderArray
    */
   public function testToRenderArray(): void {
     $existing_block = $this->prophesize(BlockPluginInterface::class);

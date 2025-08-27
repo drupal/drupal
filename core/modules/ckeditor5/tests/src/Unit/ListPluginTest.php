@@ -7,13 +7,18 @@ namespace Drupal\Tests\ckeditor5\Unit;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
- * @group ckeditor5
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin.
+ *
  * @internal
  */
+#[CoversClass(ListPlugin::class)]
+#[Group('ckeditor5')]
 class ListPluginTest extends UnitTestCase {
 
   /**
@@ -131,10 +136,11 @@ class ListPluginTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDynamicPluginConfig
+   * Tests get dynamic plugin config.
    *
-   * @dataProvider providerGetDynamicPluginConfig
+   * @legacy-covers ::getDynamicPluginConfig
    */
+  #[DataProvider('providerGetDynamicPluginConfig')]
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     // Read the CKEditor 5 plugin's static configuration from YAML.
     $ckeditor5_plugin_definitions = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');

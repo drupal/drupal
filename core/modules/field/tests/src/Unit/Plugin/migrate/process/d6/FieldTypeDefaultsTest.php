@@ -7,13 +7,14 @@ namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d6;
 use Drupal\field\Plugin\migrate\process\d6\FieldTypeDefaults;
 use Drupal\migrate\MigrateException;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 fields defaults.
- *
- * @coversDefaultClass \Drupal\field\Plugin\migrate\process\d6\FieldTypeDefaults
- * @group field
  */
+#[CoversClass(FieldTypeDefaults::class)]
+#[Group('field')]
 class FieldTypeDefaultsTest extends MigrateProcessTestCase {
 
   /**
@@ -27,7 +28,7 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
   /**
    * Tests various default cases.
    *
-   * @covers ::transform
+   * @legacy-covers ::transform
    */
   public function testDefaults(): void {
     $this->row->expects($this->once())
@@ -46,7 +47,7 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
   /**
    * Tests an exception is thrown when the input is not a date field.
    *
-   * @covers ::transform
+   * @legacy-covers ::transform
    */
   public function testDefaultsException(): void {
     $this->expectException(MigrateException::class);

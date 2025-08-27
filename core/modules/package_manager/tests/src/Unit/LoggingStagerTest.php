@@ -11,11 +11,14 @@ use PhpTuf\ComposerStager\API\Core\StagerInterface;
 use PhpTuf\ComposerStager\API\Path\Value\PathInterface;
 use PhpTuf\ComposerStager\API\Process\Service\OutputCallbackInterface;
 use PhpTuf\ComposerStager\API\Process\Value\OutputTypeEnum;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\LoggingStager
- * @group package_manager
+ * Tests Logging Stager.
+ *
+ * @legacy-covers \Drupal\package_manager\LoggingStager
  */
+#[Group('package_manager')]
 class LoggingStagerTest extends UnitTestCase {
 
   /**

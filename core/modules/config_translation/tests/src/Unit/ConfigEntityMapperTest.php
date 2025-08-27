@@ -7,13 +7,13 @@ namespace Drupal\Tests\config_translation\Unit;
 use Drupal\config_translation\ConfigEntityMapper;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 
 /**
  * Tests the functionality provided by the configuration entity mapper.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigEntityMapperTest extends UnitTestCase {
 
   /**

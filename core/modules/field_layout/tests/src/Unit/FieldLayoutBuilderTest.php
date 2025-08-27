@@ -6,18 +6,21 @@ namespace Drupal\Tests\field_layout\Unit;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
-use Drupal\field_layout\FieldLayoutBuilder;
-use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Layout\LayoutDefinition;
+use Drupal\Core\Layout\LayoutPluginManagerInterface;
+use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
+use Drupal\field_layout\FieldLayoutBuilder;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\field_layout\FieldLayoutBuilder
- * @group field_layout
+ * Tests Drupal\field_layout\FieldLayoutBuilder.
  */
+#[CoversClass(FieldLayoutBuilder::class)]
+#[Group('field_layout')]
 class FieldLayoutBuilderTest extends UnitTestCase {
 
   /**
@@ -85,8 +88,10 @@ class FieldLayoutBuilderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::buildView
-   * @covers ::getFields
+   * Tests build view.
+   *
+   * @legacy-covers ::buildView
+   * @legacy-covers ::getFields
    */
   public function testBuildView(): void {
     $definitions = [];
@@ -174,8 +179,10 @@ class FieldLayoutBuilderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::buildForm
-   * @covers ::getFields
+   * Tests build form.
+   *
+   * @legacy-covers ::buildForm
+   * @legacy-covers ::getFields
    */
   public function testBuildForm(): void {
     $definitions = [];
@@ -275,7 +282,9 @@ class FieldLayoutBuilderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::buildForm
+   * Tests build form empty.
+   *
+   * @legacy-covers ::buildForm
    */
   public function testBuildFormEmpty(): void {
     $definitions = [];
@@ -316,7 +325,9 @@ class FieldLayoutBuilderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::buildForm
+   * Tests build form no layout.
+   *
+   * @legacy-covers ::buildForm
    */
   public function testBuildFormNoLayout(): void {
     $this->entityFieldManager->getFieldDefinitions(Argument::any(), Argument::any())->shouldNotBeCalled();

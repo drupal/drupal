@@ -6,16 +6,21 @@ namespace Drupal\Tests\package_manager\Unit;
 
 use Drupal\package_manager\SandboxManagerBase;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\SandboxManagerBase
- * @group package_manager
+ * Tests Drupal\package_manager\SandboxManagerBase.
+ *
  * @internal
  */
+#[CoversClass(SandboxManagerBase::class)]
+#[Group('package_manager')]
 class SandboxManagerBaseTest extends UnitTestCase {
 
   /**
-   * @covers ::validateRequirements
+   * Tests validate requirements.
    *
    * @param string|null $expected_exception
    *   The exception class that should be thrown, or NULL if there should not be
@@ -23,8 +28,9 @@ class SandboxManagerBaseTest extends UnitTestCase {
    * @param string $requirement
    *   The requirement (package name and optional constraint) to validate.
    *
-   * @dataProvider providerValidateRequirements
+   * @legacy-covers ::validateRequirements
    */
+  #[DataProvider('providerValidateRequirements')]
   public function testValidateRequirements(?string $expected_exception, string $requirement): void {
     $reflector = new \ReflectionClass(SandboxManagerBase::class);
     $method = $reflector->getMethod('validateRequirements');
@@ -120,7 +126,9 @@ class SandboxManagerBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getType
+   * Tests type must be explicitly overridden.
+   *
+   * @legacy-covers ::getType
    */
   public function testTypeMustBeExplicitlyOverridden(): void {
     $good_grandchild = new class () extends ChildSandboxManager {

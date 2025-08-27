@@ -10,11 +10,14 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\ResettableStackedRouteMatchInterface;
 use Drupal\node\Plugin\views\field\NodeBulkForm;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\node\Plugin\views\field\NodeBulkForm
- * @group node
+ * Tests Drupal\node\Plugin\views\field\NodeBulkForm.
  */
+#[CoversClass(NodeBulkForm::class)]
+#[Group('node')]
 class NodeBulkFormTest extends UnitTestCase {
 
   /**

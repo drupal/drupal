@@ -6,20 +6,21 @@ namespace Drupal\Tests\link\Unit;
 
 use Drupal\link\AttributeXss;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests AttributeXss.
  *
- * @group link
- * @covers \Drupal\link\AttributeXss
+ * @legacy-covers \Drupal\link\AttributeXss
  */
+#[Group('link')]
 final class AttributeXssTest extends UnitTestCase {
 
   /**
    * Covers ::sanitizeAttributes.
-   *
-   * @dataProvider providerSanitizeAttributes
    */
+  #[DataProvider('providerSanitizeAttributes')]
   public function testSanitizeAttributes(array $attributes, array $expected): void {
     self::assertSame($expected, AttributeXss::sanitizeAttributes($attributes));
   }

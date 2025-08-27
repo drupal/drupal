@@ -15,11 +15,14 @@ use Drupal\Tests\views\Traits\ViewsLoggerTestTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\comment\Plugin\views\field\LinkApprove
- * @group comment
+ * Tests Drupal\comment\Plugin\views\field\LinkApprove.
  */
+#[CoversClass(LinkApprove::class)]
+#[Group('comment')]
 class LinkApproveTest extends UnitTestCase {
 
   use ViewsLoggerTestTrait;
@@ -38,7 +41,7 @@ class LinkApproveTest extends UnitTestCase {
   /**
    * Test the render method when getEntity returns NULL.
    *
-   * @covers ::render
+   * @legacy-covers ::render
    */
   public function testRenderNullEntity(): void {
     $row = new ResultRow();

@@ -7,12 +7,12 @@ namespace Drupal\Tests\migrate\Unit\destination;
 use Drupal\migrate\Plugin\migrate\destination\PerComponentEntityFormDisplay;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the entity display destination plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class PerComponentEntityFormDisplayTest extends MigrateTestCase {
 
   /**

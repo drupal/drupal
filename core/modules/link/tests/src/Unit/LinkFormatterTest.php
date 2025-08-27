@@ -15,12 +15,12 @@ use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Field Formatter for the link field type.
- *
- * @group link
  */
+#[Group('link')]
 class LinkFormatterTest extends UnitTestCase {
 
   /**

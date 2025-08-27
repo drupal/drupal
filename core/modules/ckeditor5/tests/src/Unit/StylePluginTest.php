@@ -7,12 +7,17 @@ namespace Drupal\Tests\ckeditor5\Unit;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style;
 use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
- * @group ckeditor5
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style.
+ *
  * @internal
  */
+#[CoversClass(Style::class)]
+#[Group('ckeditor5')]
 class StylePluginTest extends UnitTestCase {
 
   /**
@@ -76,9 +81,11 @@ class StylePluginTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDynamicPluginConfig
-   * @dataProvider providerGetDynamicPluginConfig
+   * Tests get dynamic plugin config.
+   *
+   * @legacy-covers ::getDynamicPluginConfig
    */
+  #[DataProvider('providerGetDynamicPluginConfig')]
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     $plugin = new Style($configuration, 'ckeditor5_style', NULL);
     $dynamic_plugin_config = $plugin->getDynamicPluginConfig([], $this->prophesize(EditorInterface::class)->reveal());

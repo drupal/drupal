@@ -11,16 +11,19 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\Controller\ViewAjaxController;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\HttpFoundation\Request;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @coversDefaultClass \Drupal\views\Controller\ViewAjaxController
- * @group views
+ * Tests Drupal\views\Controller\ViewAjaxController.
  */
+#[CoversClass(ViewAjaxController::class)]
+#[Group('views')]
 class ViewAjaxControllerTest extends UnitTestCase {
 
   const USE_AJAX = TRUE;

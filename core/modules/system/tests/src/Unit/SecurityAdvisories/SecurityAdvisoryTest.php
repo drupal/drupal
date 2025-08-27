@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\SecurityAdvisories;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\system\SecurityAdvisories\SecurityAdvisory;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisory
- *
- * @group system
+ * Tests Drupal\system\SecurityAdvisories\SecurityAdvisory.
  */
+#[CoversClass(SecurityAdvisory::class)]
+#[Group('system')]
 class SecurityAdvisoryTest extends UnitTestCase {
 
   /**
@@ -22,12 +25,11 @@ class SecurityAdvisoryTest extends UnitTestCase {
    * @param mixed[] $expected
    *   The expected changes for the object methods.
    *
-   * @covers ::createFromArray
-   * @covers ::isCoreAdvisory
-   * @covers ::isPsa
-   *
-   * @dataProvider providerCreateFromArray
+   * @legacy-covers ::createFromArray
+   * @legacy-covers ::isCoreAdvisory
+   * @legacy-covers ::isPsa
    */
+  #[DataProvider('providerCreateFromArray')]
   public function testCreateFromArray(array $changes, array $expected = []): void {
     $data = $changes;
     $data += $this->getValidData();
@@ -93,10 +95,9 @@ class SecurityAdvisoryTest extends UnitTestCase {
    * @param string $missing_field
    *   The field to test.
    *
-   * @covers ::createFromArray
-   *
-   * @dataProvider providerCreateFromArrayMissingField
+   * @legacy-covers ::createFromArray
    */
+  #[DataProvider('providerCreateFromArrayMissingField')]
   public function testCreateFromArrayMissingField(string $missing_field): void {
     $data = $this->getValidData();
     unset($data[$missing_field]);
@@ -129,10 +130,9 @@ class SecurityAdvisoryTest extends UnitTestCase {
    * @param string $expected_type_message
    *   The expected message for the field.
    *
-   * @covers ::createFromArray
-   *
-   * @dataProvider providerCreateFromArrayInvalidField
+   * @legacy-covers ::createFromArray
    */
+  #[DataProvider('providerCreateFromArrayInvalidField')]
   public function testCreateFromArrayInvalidField(string $invalid_field, string $expected_type_message): void {
     $data = $this->getValidData();
     // Set the field a value that is not valid for any of the fields in the

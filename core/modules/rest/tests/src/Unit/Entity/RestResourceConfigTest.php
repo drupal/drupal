@@ -7,12 +7,14 @@ namespace Drupal\Tests\rest\Unit\Entity;
 use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\rest\Entity\RestResourceConfig
- *
- * @group rest
+ * Tests Drupal\rest\Entity\RestResourceConfig.
  */
+#[CoversClass(RestResourceConfig::class)]
+#[Group('rest')]
 class RestResourceConfigTest extends UnitTestCase {
 
   /**

@@ -10,11 +10,14 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\views\Traits\ViewsLoggerTestTrait;
 use Drupal\views\Plugin\views\field\EntityOperations;
 use Drupal\views\ResultRow;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\field\EntityOperations
- * @group Views
+ * Tests Drupal\views\Plugin\views\field\EntityOperations.
  */
+#[CoversClass(EntityOperations::class)]
+#[Group('Views')]
 class EntityOperationsUnitTest extends UnitTestCase {
 
   use ViewsLoggerTestTrait;
@@ -50,7 +53,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    *
-   * @covers ::__construct
+   * @legacy-covers ::__construct
    */
   protected function setUp(): void {
     parent::setUp();
@@ -83,14 +86,18 @@ class EntityOperationsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::usesGroupBy
+   * Tests uses group by.
+   *
+   * @legacy-covers ::usesGroupBy
    */
   public function testUsesGroupBy(): void {
     $this->assertFalse($this->plugin->usesGroupBy());
   }
 
   /**
-   * @covers ::defineOptions
+   * Tests define options.
+   *
+   * @legacy-covers ::defineOptions
    */
   public function testDefineOptions(): void {
     $options = $this->plugin->defineOptions();
@@ -99,7 +106,9 @@ class EntityOperationsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::render
+   * Tests render with destination.
+   *
+   * @legacy-covers ::render
    */
   public function testRenderWithDestination(): void {
     $entity_type_id = $this->randomMachineName();
@@ -144,7 +153,9 @@ class EntityOperationsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::render
+   * Tests render without destination.
+   *
+   * @legacy-covers ::render
    */
   public function testRenderWithoutDestination(): void {
     $entity_type_id = $this->randomMachineName();
@@ -188,7 +199,9 @@ class EntityOperationsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::render
+   * Tests render without entity.
+   *
+   * @legacy-covers ::render
    */
   public function testRenderWithoutEntity(): void {
     $this->setUpMockLoggerWithMissingEntity();

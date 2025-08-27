@@ -9,11 +9,14 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\Core\Entity\StubEntityBase;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\argument_validator\Entity;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\argument_validator\Entity
- * @group views
+ * Tests Drupal\views\Plugin\views\argument_validator\Entity.
  */
+#[CoversClass(Entity::class)]
+#[Group('views')]
 class EntityTest extends UnitTestCase {
 
   /**
@@ -195,7 +198,9 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::calculateDependencies
+   * Tests calculate dependencies.
+   *
+   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     // Create an entity type manager, storage, entity type, and entity to mock

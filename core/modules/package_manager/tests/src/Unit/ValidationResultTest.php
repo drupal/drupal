@@ -8,19 +8,26 @@ use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\package_manager\ValidationResult;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\ValidationResult
- * @group package_manager
+ * Tests Drupal\package_manager\ValidationResult.
+ *
  * @internal
  */
+#[CoversClass(ValidationResult::class)]
+#[Group('package_manager')]
 class ValidationResultTest extends UnitTestCase {
 
   /**
-   * @covers ::createWarning
+   * Tests create warning result.
    *
-   * @dataProvider providerValidConstructorArguments
+   * @legacy-covers ::createWarning
    */
+  #[DataProvider('providerValidConstructorArguments')]
   public function testCreateWarningResult(array $messages, ?string $summary): void {
     // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString, DrupalPractice.Objects.GlobalFunction
     $summary = $summary ? t($summary) : NULL;
@@ -29,7 +36,9 @@ class ValidationResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getOverallSeverity
+   * Tests overall severity.
+   *
+   * @legacy-covers ::getOverallSeverity
    */
   public function testOverallSeverity(): void {
     // An error and a warning should be counted as an error.
@@ -53,10 +62,11 @@ class ValidationResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createError
+   * Tests create error result.
    *
-   * @dataProvider providerValidConstructorArguments
+   * @legacy-covers ::createError
    */
+  #[DataProvider('providerValidConstructorArguments')]
   public function testCreateErrorResult(array $messages, ?string $summary): void {
     // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString, DrupalPractice.Objects.GlobalFunction
     $summary = $summary ? t($summary) : NULL;
@@ -65,15 +75,16 @@ class ValidationResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createWarning
+   * Tests create warning result exception.
    *
    * @param string[] $messages
    *   The warning messages of the validation result.
    * @param string $expected_exception_message
    *   The expected exception message.
    *
-   * @dataProvider providerCreateExceptions
+   * @legacy-covers ::createWarning
    */
+  #[DataProvider('providerCreateExceptions')]
   public function testCreateWarningResultException(array $messages, string $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
@@ -81,15 +92,16 @@ class ValidationResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createError
+   * Tests create error result exception.
    *
    * @param string[] $messages
    *   The error messages of the validation result.
    * @param string $expected_exception_message
    *   The expected exception message.
    *
-   * @dataProvider providerCreateExceptions
+   * @legacy-covers ::createError
    */
+  #[DataProvider('providerCreateExceptions')]
   public function testCreateErrorResultException(array $messages, string $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
@@ -98,10 +110,9 @@ class ValidationResultTest extends UnitTestCase {
 
   /**
    * Tests that the messages are asserted to be translatable.
-   *
-   * @testWith ["createError"]
-   *   ["createWarning"]
    */
+  #[TestWith(["createError"])]
+  #[TestWith(["createWarning"])]
   public function testMessagesMustBeTranslatable(string $method): void {
     // When creating an error from a throwable, the message does not need to be
     // translatable.

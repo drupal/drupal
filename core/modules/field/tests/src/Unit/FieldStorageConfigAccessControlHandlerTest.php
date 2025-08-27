@@ -15,14 +15,14 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigAccessControlHandler;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the field storage config access controller.
- *
- * @group field
- *
- * @coversDefaultClass \Drupal\field\FieldStorageConfigAccessControlHandler
  */
+#[CoversClass(FieldStorageConfigAccessControlHandler::class)]
+#[Group('field')]
 class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
 
   /**

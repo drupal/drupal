@@ -6,12 +6,13 @@ namespace Drupal\Tests\user\Unit\Menu;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user local tasks.
- *
- * @group user
  */
+#[Group('user')]
 class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
@@ -32,9 +33,8 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Tests local task existence.
-   *
-   * @dataProvider getUserAdminRoutes
    */
+  #[DataProvider('getUserAdminRoutes')]
   public function testUserAdminLocalTasks($route, $expected): void {
     $this->assertLocalTasks($route, $expected);
   }
@@ -83,9 +83,8 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Checks user listing local tasks.
-   *
-   * @dataProvider getUserLoginRoutes
    */
+  #[DataProvider('getUserLoginRoutes')]
   public function testUserLoginLocalTasks($route): void {
     $tasks = [
       0 => ['user.register', 'user.pass', 'user.login'],
@@ -106,9 +105,8 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Checks user listing local tasks.
-   *
-   * @dataProvider getUserPageRoutes
    */
+  #[DataProvider('getUserPageRoutes')]
   public function testUserPageLocalTasks($route, $subtask = []): void {
     $tasks = [
       0 => ['entity.user.canonical', 'entity.user.edit_form'],

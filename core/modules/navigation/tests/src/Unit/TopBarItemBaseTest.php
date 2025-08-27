@@ -5,20 +5,25 @@ declare(strict_types=1);
 namespace Drupal\Tests\navigation\Unit;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\navigation\TopBarItemBase;
 use Drupal\navigation\TopBarRegion;
 use Drupal\navigation_test\Plugin\TopBarItem\TopBarItemInstantiation;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\navigation\TopBarItemBase
- *
- * @group navigation
+ * Tests Drupal\navigation\TopBarItemBase.
  */
+#[CoversClass(TopBarItemBase::class)]
+#[Group('navigation')]
 class TopBarItemBaseTest extends UnitTestCase {
 
   /**
-   * @covers ::label
-   * @covers ::region
+   * Tests top bar item base.
+   *
+   * @legacy-covers ::label
+   * @legacy-covers ::region
    */
   public function testTopBarItemBase(): void {
     $definition = [

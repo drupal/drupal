@@ -6,13 +6,16 @@ namespace Drupal\Tests\views\Unit\Plugin\Derivative;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\Derivative\ViewsLocalTask
- * @group views
+ * Tests Drupal\views\Plugin\Derivative\ViewsLocalTask.
  */
+#[CoversClass(ViewsLocalTask::class)]
+#[Group('views')]
 class ViewsLocalTaskTest extends UnitTestCase {
 
   /**

@@ -7,18 +7,20 @@ namespace Drupal\Tests\layout_builder\Unit;
 use Drupal\Core\Database\Connection;
 use Drupal\layout_builder\InlineBlockUsage;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\InlineBlockUsage
- *
- * @group layout_builder
+ * Tests Drupal\layout_builder\InlineBlockUsage.
  */
+#[CoversClass(InlineBlockUsage::class)]
+#[Group('layout_builder')]
 class InlineBlockUsageTest extends UnitTestCase {
 
   /**
    * Tests calling deleteUsage() with empty array.
    *
-   * @covers ::deleteUsage
+   * @legacy-covers ::deleteUsage
    */
   public function testEmptyDeleteUsageCall(): void {
     $connection = $this->prophesize(Connection::class);

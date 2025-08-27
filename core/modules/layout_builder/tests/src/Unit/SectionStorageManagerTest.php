@@ -19,12 +19,15 @@ use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 use Drupal\layout_builder\SectionStorage\SectionStorageManager;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\SectionStorage\SectionStorageManager
- *
- * @group layout_builder
+ * Tests Drupal\layout_builder\SectionStorage\SectionStorageManager.
  */
+#[CoversClass(SectionStorageManager::class)]
+#[Group('layout_builder')]
 class SectionStorageManagerTest extends UnitTestCase {
 
   /**
@@ -85,7 +88,9 @@ class SectionStorageManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadEmpty
+   * Tests load empty.
+   *
+   * @legacy-covers ::loadEmpty
    */
   public function testLoadEmpty(): void {
     $result = $this->manager->loadEmpty('the_plugin_id');
@@ -94,7 +99,9 @@ class SectionStorageManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::load
+   * Tests load.
+   *
+   * @legacy-covers ::load
    */
   public function testLoad(): void {
     $contexts = [
@@ -108,7 +115,9 @@ class SectionStorageManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::load
+   * Tests load null.
+   *
+   * @legacy-covers ::load
    */
   public function testLoadNull(): void {
     $contexts = [
@@ -122,7 +131,9 @@ class SectionStorageManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::findDefinitions
+   * Tests find definitions.
+   *
+   * @legacy-covers ::findDefinitions
    */
   public function testFindDefinitions(): void {
     $this->discovery->getDefinitions()->willReturn([
@@ -143,13 +154,14 @@ class SectionStorageManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::findByContext
-   *
-   * @dataProvider providerTestFindByContext
+   * Tests find by context.
    *
    * @param bool $plugin_is_applicable
    *   The result for the plugin's isApplicable() method to return.
+   *
+   * @legacy-covers ::findByContext
    */
+  #[DataProvider('providerTestFindByContext')]
   public function testFindByContext($plugin_is_applicable): void {
     $cacheability = new CacheableMetadata();
     $contexts = [
@@ -202,7 +214,9 @@ class SectionStorageManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::findByContext
+   * Tests find by context cacheable section storage.
+   *
+   * @legacy-covers ::findByContext
    */
   public function testFindByContextCacheableSectionStorage(): void {
     $cacheability = new CacheableMetadata();

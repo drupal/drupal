@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Unit\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests existence of taxonomy local tasks.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
@@ -23,9 +24,8 @@ class TaxonomyLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Checks taxonomy edit local tasks.
-   *
-   * @dataProvider getTaxonomyPageRoutes
    */
+  #[DataProvider('getTaxonomyPageRoutes')]
   public function testTaxonomyPageLocalTasks($route, $subtask = []): void {
     $tasks = [
       0 => ['entity.taxonomy_term.canonical', 'entity.taxonomy_term.edit_form', 'entity.taxonomy_term.delete_form'],

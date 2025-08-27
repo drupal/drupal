@@ -13,21 +13,21 @@ use Drupal\navigation\Menu\NavigationMenuLinkTreeManipulators;
 use Drupal\system\Controller\SystemController;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 
 /**
  * Tests the navigation menu link tree manipulator.
- *
- * @group navigation
- *
- * @coversDefaultClass \Drupal\navigation\Menu\NavigationMenuLinkTreeManipulators
  */
+#[CoversClass(NavigationMenuLinkTreeManipulators::class)]
+#[Group('navigation')]
 class NavigationMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
   /**
    * Tests the addSecondLevelOverviewLinks() tree manipulator.
    *
-   * @covers ::addSecondLevelOverviewLinks
+   * @legacy-covers ::addSecondLevelOverviewLinks
    */
   public function testAddSecondLevelOverviewLinks(): void {
     $routeProvider = $this->createMock(RouteProviderInterface::class);

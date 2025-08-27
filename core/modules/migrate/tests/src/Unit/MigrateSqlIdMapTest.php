@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
-use Drupal\sqlite\Driver\Database\sqlite\Connection;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use Drupal\sqlite\Driver\Database\sqlite\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the SQL ID map plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateSqlIdMapTest extends MigrateTestCase {
 
   /**
@@ -414,9 +415,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   Number of source fields to test.
    * @param int $num_destination_fields
    *   Number of destination fields to test.
-   *
-   * @dataProvider lookupDestinationIdMappingDataProvider
    */
+  #[DataProvider('lookupDestinationIdMappingDataProvider')]
   public function testLookupDestinationIdMapping($num_source_fields, $num_destination_fields): void {
     // Adjust the migration configuration according to the number of source and
     // destination fields.
@@ -634,9 +634,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   Number of source fields to test.
    * @param int $num_destination_fields
    *   Number of destination fields to test.
-   *
-   * @dataProvider lookupSourceIdMappingDataProvider
    */
+  #[DataProvider('lookupSourceIdMappingDataProvider')]
   public function testLookupSourceIdMapping($num_source_fields, $num_destination_fields): void {
     $source_id_property_prefix = 'source_id_property_';
     $this->doTestLookupSourceIdMapping($num_source_fields, $num_destination_fields, $source_id_property_prefix);
@@ -653,9 +652,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   Number of source fields to test.
    * @param int $num_destination_fields
    *   Number of destination fields to test.
-   *
-   * @dataProvider lookupSourceIdMappingDataProvider
    */
+  #[DataProvider('lookupSourceIdMappingDataProvider')]
   public function testLookupSourceIdMappingNonSqlCharacters($num_source_fields, $num_destination_fields): void {
     $source_id_property_prefix = '$ource id property * ';
     $this->doTestLookupSourceIdMapping($num_source_fields, $num_destination_fields, $source_id_property_prefix);
@@ -670,9 +668,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   Number of destination fields to test.
    * @param string $source_id_property_prefix
    *   Prefix for the source ID properties.
-   *
-   * @dataProvider lookupSourceIdMappingDataProvider
    */
+  #[DataProvider('lookupSourceIdMappingDataProvider')]
   public function doTestLookupSourceIdMapping(int $num_source_fields, int $num_destination_fields, string $source_id_property_prefix): void {
     // Adjust the migration configuration according to the number of source and
     // destination fields.
@@ -824,9 +821,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @param int $num_update_rows
    *   The number of update rows to test.
-   *
-   * @dataProvider updateCountDataProvider
    */
+  #[DataProvider('updateCountDataProvider')]
   public function testUpdateCount($num_update_rows): void {
     for ($i = 0; $i < 5; $i++) {
       $row = $this->idMapDefaults();
@@ -872,9 +868,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @param int $num_error_rows
    *   Number of error rows to test.
-   *
-   * @dataProvider errorCountDataProvider
    */
+  #[DataProvider('errorCountDataProvider')]
   public function testErrorCount($num_error_rows): void {
     for ($i = 0; $i < 5; $i++) {
       $row = $this->idMapDefaults();
@@ -1108,9 +1103,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   Array of map table rows.
    * @param int $expected
    *   Expected highest id value.
-   *
-   * @dataProvider getHighestIdDataProvider
    */
+  #[DataProvider('getHighestIdDataProvider')]
   public function testGetHighestId(array $destination_ids, array $rows, $expected): void {
     $this->database = $this->getDatabase([]);
     $this->sourceIds = $destination_ids;
@@ -1189,9 +1183,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @param array $destination_ids
    *   Array of destination ids.
-   *
-   * @dataProvider getHighestIdInvalidDataProvider
    */
+  #[DataProvider('getHighestIdInvalidDataProvider')]
   public function testGetHighestIdInvalid(array $destination_ids): void {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('To determine the highest migrated ID the first ID must be an integer');

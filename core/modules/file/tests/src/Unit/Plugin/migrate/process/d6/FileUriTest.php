@@ -8,11 +8,14 @@ use Drupal\file\Plugin\migrate\process\d6\FileUri;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\file\Plugin\migrate\process\d6\FileUri
- * @group file
+ * Tests Drupal\file\Plugin\migrate\process\d6\FileUri.
  */
+#[CoversClass(FileUri::class)]
+#[Group('file')]
 class FileUriTest extends MigrateTestCase {
 
   /**

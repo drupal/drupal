@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Unit;
 
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\Event\EventWithPackageListTrait
- * @group package_manager
+ * Tests Event With Package List Trait.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Event\EventWithPackageListTrait
  */
+#[Group('package_manager')]
 class EventWithPackageListTraitTest extends UnitTestCase {
 
   /**
@@ -25,9 +29,8 @@ class EventWithPackageListTraitTest extends UnitTestCase {
    *   ::getRuntimePackages().
    * @param string[] $expected_dev_packages
    *   The keyed dev packages that should be returned by ::getDevPackages().
-   *
-   * @dataProvider providerGetPackages
    */
+  #[DataProvider('providerGetPackages')]
   public function testGetPackages(array $runtime_packages, array $dev_packages, array $expected_runtime_packages, array $expected_dev_packages): void {
     $stage = $this->createMock('\Drupal\package_manager\SandboxManagerBase');
 

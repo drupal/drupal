@@ -6,15 +6,19 @@ namespace Drupal\Tests\ban\Unit;
 
 use Drupal\ban\BanMiddleware;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\ban\BanMiddleware
- * @group ban
- * @group legacy
+ * Tests Drupal\ban\BanMiddleware.
  */
+#[CoversClass(BanMiddleware::class)]
+#[Group('ban')]
+#[IgnoreDeprecations]
 class BanMiddlewareTest extends UnitTestCase {
 
   /**

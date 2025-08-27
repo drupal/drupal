@@ -11,13 +11,14 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 
 /**
  * Tests the functionality provided by the configuration names mapper.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigNamesMapperTest extends UnitTestCase {
 
   /**
@@ -493,9 +494,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
    *   return for hasConfigSchema().
    * @param bool $expected
    *   The expected return value of ConfigNamesMapper::hasSchema().
-   *
-   * @dataProvider providerTestHasSchema
    */
+  #[DataProvider('providerTestHasSchema')]
   public function testHasSchema(array $mock_return_values, $expected): void {
     // As the configuration names are arbitrary, simply use integers.
     $config_names = range(1, count($mock_return_values));
@@ -540,9 +540,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
    *   return for hasTranslatable().
    * @param bool $expected
    *   The expected return value of ConfigNamesMapper::hasTranslatable().
-   *
-   * @dataProvider providerTestHasTranslatable
    */
+  #[DataProvider('providerTestHasTranslatable')]
   public function testHasTranslatable(array $mock_return_values, $expected): void {
     // As the configuration names are arbitrary, simply use integers.
     $config_names = range(1, count($mock_return_values));
@@ -589,9 +588,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
    *   return for hasTranslation().
    * @param bool $expected
    *   The expected return value of ConfigNamesMapper::hasTranslation().
-   *
-   * @dataProvider providerTestHasTranslation
    */
+  #[DataProvider('providerTestHasTranslation')]
   public function testHasTranslation(array $mock_return_values, $expected): void {
     $language = new Language();
 

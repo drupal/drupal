@@ -12,12 +12,17 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language
- * @group ckeditor5
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language.
+ *
  * @internal
  */
+#[CoversClass(Language::class)]
+#[Group('ckeditor5')]
 class LanguagePluginTest extends UnitTestCase {
 
   /**
@@ -119,9 +124,11 @@ class LanguagePluginTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDynamicPluginConfig
-   * @dataProvider providerGetDynamicPluginConfig
+   * Tests get dynamic plugin config.
+   *
+   * @legacy-covers ::getDynamicPluginConfig
    */
+  #[DataProvider('providerGetDynamicPluginConfig')]
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     $route_provider = $this->prophesize(RouteProviderInterface::class);
     $language_manager = $this->prophesize(LanguageManagerInterface::class);

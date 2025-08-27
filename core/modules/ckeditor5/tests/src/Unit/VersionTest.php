@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the CKEditor version.
  *
- * @group ckeditor5
  * @internal
  */
+#[Group('ckeditor5')]
 class VersionTest extends UnitTestCase {
 
   /**

@@ -7,19 +7,23 @@ namespace Drupal\Tests\views\Unit;
 use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\wizard\WizardPluginBase
- *
- * @group views
+ * Tests Drupal\views\Plugin\views\wizard\WizardPluginBase.
  */
+#[CoversClass(WizardPluginBase::class)]
+#[Group('views')]
 class WizardPluginBaseTest extends UnitTestCase {
 
   /**
-   * @covers ::getSelected
+   * Tests get selected.
    *
-   * @dataProvider providerTestGetSelected
+   * @legacy-covers ::getSelected
    */
+  #[DataProvider('providerTestGetSelected')]
   public function testGetSelected($expected, $element = [], $parents = [], $user_input = [], $not_rebuilding_expected = NULL): void {
     $not_rebuilding_expected = $not_rebuilding_expected ?: $expected;
     $form_state = new FormState();

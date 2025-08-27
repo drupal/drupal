@@ -8,11 +8,15 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\MigrationPluginManager
- * @group migrate
+ * Tests Drupal\migrate\Plugin\MigrationPluginManager.
  */
+#[CoversClass(MigrationPluginManager::class)]
+#[Group('migrate')]
 class MigrationPluginManagerTest extends UnitTestCase {
 
   /**
@@ -37,9 +41,8 @@ class MigrationPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests building dependencies for multiple migrations.
-   *
-   * @dataProvider dependencyProvider
    */
+  #[DataProvider('dependencyProvider')]
   public function testDependencyBuilding($migrations_data, $result_ids): void {
     $migrations = [];
     foreach ($migrations_data as $migration_id => $migration_data) {

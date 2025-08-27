@@ -6,12 +6,13 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\Flatten;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the flatten plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class FlattenTest extends MigrateProcessTestCase {
 
   /**
@@ -24,9 +25,8 @@ class FlattenTest extends MigrateProcessTestCase {
 
   /**
    * Tests that various array flatten operations work properly.
-   *
-   * @dataProvider providerTestFlatten
    */
+  #[DataProvider('providerTestFlatten')]
   public function testFlatten($value, $expected): void {
     $flattened = $this->plugin->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected, $flattened);
@@ -55,9 +55,8 @@ class FlattenTest extends MigrateProcessTestCase {
 
   /**
    * Tests that Flatten throws a MigrateException.
-   *
-   * @dataProvider providerTestFlattenInvalid
    */
+  #[DataProvider('providerTestFlattenInvalid')]
   public function testFlattenInvalid($value): void {
     $this->expectException(MigrateException::class);
     $type = gettype($value);

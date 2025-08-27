@@ -10,14 +10,17 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\Routing\ContentModerationRouteSubscriber
- *
- * @group content_moderation
+ * Tests Drupal\content_moderation\Routing\ContentModerationRouteSubscriber.
  */
+#[CoversClass(ContentModerationRouteSubscriber::class)]
+#[Group('content_moderation')]
 class ContentModerationRouteSubscriberTest extends UnitTestCase {
 
   /**
@@ -225,10 +228,9 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
    * @param array|bool $expected_parameters
    *   (optional) The expected route parameters. Defaults to FALSE.
    *
-   * @covers ::setLatestRevisionFlag
-   *
-   * @dataProvider setLatestRevisionFlagTestCases
+   * @legacy-covers ::setLatestRevisionFlag
    */
+  #[DataProvider('setLatestRevisionFlagTestCases')]
   public function testSetLatestRevisionFlag($defaults, $parameters, $expected_parameters = FALSE): void {
     $route = new Route('/foo/{entity_test}', $defaults, [], [
       'parameters' => $parameters,

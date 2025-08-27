@@ -17,15 +17,18 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\user\Form\EntityPermissionsForm;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\Routing\Route;
 
 /**
  * Tests the permissions administration form for a bundle.
- *
- * @coversDefaultClass \Drupal\user\Form\EntityPermissionsForm
- * @group user
- * @group legacy
  */
+#[CoversClass(EntityPermissionsForm::class)]
+#[Group('user')]
+#[IgnoreDeprecations]
 class EntityPermissionsFormTest extends UnitTestCase {
 
   /**
@@ -40,10 +43,10 @@ class EntityPermissionsFormTest extends UnitTestCase {
    * @param bool $found
    *   TRUE if there is a permission to be managed by the form.
    *
-   * @dataProvider providerTestPermissionsByProvider
-   * @covers \Drupal\user\Form\EntityPermissionsForm::access
-   * @covers \Drupal\user\Form\EntityPermissionsForm::permissionsByProvider
+   * @legacy-covers \Drupal\user\Form\EntityPermissionsForm::access
+   * @legacy-covers \Drupal\user\Form\EntityPermissionsForm::permissionsByProvider
    */
+  #[DataProvider('providerTestPermissionsByProvider')]
   public function testPermissionsByProvider(string $dependency_name, bool $found): void {
 
     // Mock the constructor parameters.

@@ -8,12 +8,12 @@ use Drupal\Component\Utility\Variable;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\process\StaticMap;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the static map process plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class StaticMapTest extends MigrateProcessTestCase {
 
   /**

@@ -11,12 +11,15 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\field\Entity\FieldStorageConfig
- *
- * @group field
+ * Tests Drupal\field\Entity\FieldStorageConfig.
  */
+#[CoversClass(FieldStorageConfig::class)]
+#[Group('field')]
 class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
@@ -65,7 +68,9 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::calculateDependencies
+   * Tests calculate dependencies.
+   *
+   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     // Create a mock entity type for FieldStorageConfig.
@@ -114,7 +119,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests stored cardinality.
    *
-   * @covers ::getCardinality
+   * @legacy-covers ::getCardinality
    */
   public function testStoredCardinality(): void {
     $this->fieldTypeManager->expects($this->any())
@@ -141,7 +146,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests enforced cardinality.
    *
-   * @covers ::getCardinality
+   * @legacy-covers ::getCardinality
    */
   public function testEnforcedCardinality(): void {
     $this->fieldTypeManager->expects($this->any())
@@ -172,9 +177,9 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * @param mixed $enforced_cardinality
    *   Enforced cardinality.
    *
-   * @covers ::getCardinality
-   * @dataProvider providerInvalidEnforcedCardinality
+   * @legacy-covers ::getCardinality
    */
+  #[DataProvider('providerInvalidEnforcedCardinality')]
   public function testInvalidEnforcedCardinality($enforced_cardinality): void {
     $this->fieldTypeManager->expects($this->any())
       ->method('getDefinition')

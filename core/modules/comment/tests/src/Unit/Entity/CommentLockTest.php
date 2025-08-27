@@ -6,14 +6,14 @@ namespace Drupal\Tests\comment\Unit\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests comment acquires and releases the right lock.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentLockTest extends UnitTestCase {
 
   /**

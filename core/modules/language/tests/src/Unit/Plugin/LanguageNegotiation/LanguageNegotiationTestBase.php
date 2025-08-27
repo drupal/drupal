@@ -6,12 +6,12 @@ namespace Drupal\Tests\language\Unit\Plugin\LanguageNegotiation;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Base class used for testing the various LanguageNegotiation plugins.
- *
- * @group language
  */
+#[Group('language')]
 abstract class LanguageNegotiationTestBase extends UnitTestCase {
 
   /**

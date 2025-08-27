@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
  * Tests the \Drupal\migrate\MigrateExecutable::memoryExceeded() method.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
 
   /**

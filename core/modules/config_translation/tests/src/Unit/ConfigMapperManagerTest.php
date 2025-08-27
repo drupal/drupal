@@ -8,16 +8,17 @@ use Drupal\config_translation\ConfigMapperManager;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\TypedData\DataDefinition;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophet;
 
 /**
  * Tests the functionality provided by configuration translation mapper manager.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigMapperManagerTest extends UnitTestCase {
 
   /**
@@ -69,9 +70,8 @@ class ConfigMapperManagerTest extends UnitTestCase {
    *   The schema element to test.
    * @param bool $expected
    *   The expected return value of ConfigMapperManager::hasTranslatable().
-   *
-   * @dataProvider providerTestHasTranslatable
    */
+  #[DataProvider('providerTestHasTranslatable')]
   public function testHasTranslatable(TypedDataInterface $element, $expected): void {
     $this->typedConfigManager
       ->expects($this->once())

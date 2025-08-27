@@ -13,12 +13,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\media\OEmbed\ProviderRepository
- *
- * @group media
+ * Tests Drupal\media\OEmbed\ProviderRepository.
  */
+#[CoversClass(ProviderRepository::class)]
+#[Group('media')]
 class ProviderRepositoryTest extends UnitTestCase {
 
   /**
@@ -133,9 +136,8 @@ END;
    * @param int $expiration_offset
    *   An offset to add to the current time to determine when the primed data,
    *   if any, expires.
-   *
-   * @dataProvider providerInvalidResponse
    */
+  #[DataProvider('providerInvalidResponse')]
   public function testInvalidResponse(int $expiration_offset): void {
     $provider = $this->prophesize('\Drupal\media\OEmbed\Provider')
       ->reveal();

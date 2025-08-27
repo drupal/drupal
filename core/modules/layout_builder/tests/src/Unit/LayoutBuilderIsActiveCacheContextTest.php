@@ -14,17 +14,22 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\layout_builder\Cache\LayoutBuilderIsActiveCacheContext;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Cache\LayoutBuilderIsActiveCacheContext
- *
- * @group layout_builder
+ * Tests Drupal\layout_builder\Cache\LayoutBuilderIsActiveCacheContext.
  */
+#[CoversClass(LayoutBuilderIsActiveCacheContext::class)]
+#[Group('layout_builder')]
 class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
 
   /**
-   * @covers ::getContext
+   * Tests get context missing entity type id.
+   *
+   * @legacy-covers ::getContext
    */
   public function testGetContextMissingEntityTypeId(): void {
     $route_match = $this->prophesize(RouteMatchInterface::class);
@@ -35,8 +40,10 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getContext
-   * @covers ::getDisplay
+   * Tests get context non fieldable entity.
+   *
+   * @legacy-covers ::getContext
+   * @legacy-covers ::getDisplay
    */
   public function testGetContextNonFieldableEntity(): void {
     $route_match = $this->prophesize(RouteMatchInterface::class);
@@ -49,11 +56,12 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getContext
-   * @covers ::getDisplay
+   * Tests get context.
    *
-   * @dataProvider providerTestGetContext
+   * @legacy-covers ::getContext
+   * @legacy-covers ::getDisplay
    */
+  #[DataProvider('providerTestGetContext')]
   public function testGetContext($is_overridden, $expected): void {
     $entity_display = $this->prophesize(LayoutEntityDisplayInterface::class);
     $entity_display->isOverridable()->willReturn($is_overridden);

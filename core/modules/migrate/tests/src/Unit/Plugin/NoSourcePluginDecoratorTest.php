@@ -9,17 +9,23 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\migrate\Plugin\MigrateSourcePluginManager;
 use Drupal\migrate\Plugin\NoSourcePluginDecorator;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\NoSourcePluginDecorator
- * @group migrate
+ * Tests Drupal\migrate\Plugin\NoSourcePluginDecorator.
  */
+#[CoversClass(NoSourcePluginDecorator::class)]
+#[Group('migrate')]
 class NoSourcePluginDecoratorTest extends UnitTestCase {
 
   /**
-   * @covers ::getDefinitions
-   * @dataProvider providerGetDefinitions
+   * Tests get definitions.
+   *
+   * @legacy-covers ::getDefinitions
    */
+  #[DataProvider('providerGetDefinitions')]
   public function testGetDefinitions(array $definition, bool $source_exists): void {
     $source_manager = $this->createMock(MigrateSourcePluginManager::class);
     $source_manager->expects($this->any())

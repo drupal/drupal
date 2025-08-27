@@ -6,11 +6,15 @@ namespace Drupal\Tests\media\Unit;
 
 use Drupal\media\OEmbed\Resource;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\media\OEmbed\Resource
- * @group media
+ * Tests Drupal\media\OEmbed\Resource.
  */
+#[CoversClass(Resource::class)]
+#[Group('media')]
 class ResourceTest extends UnitTestCase {
 
   /**
@@ -74,9 +78,11 @@ class ResourceTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setDimensions
-   * @dataProvider setDimensionsTestCases
+   * Tests set dimensions.
+   *
+   * @legacy-covers ::setDimensions
    */
+  #[DataProvider('setDimensionsTestCases')]
   public function testSetDimensions($factory, $width, $height, $exception = NULL, $expected_width = NULL, $expected_height = NULL): void {
     if ($exception) {
       $this->expectException(\InvalidArgumentException::class);

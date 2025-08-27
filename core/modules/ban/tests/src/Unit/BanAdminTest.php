@@ -9,24 +9,27 @@ use Drupal\ban\Form\BanAdmin;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests the BanAdmin form.
- *
- * @coversDefaultClass \Drupal\ban\Form\BanAdmin
- * @group ban
- * @group legacy
  */
+#[CoversClass(BanAdmin::class)]
+#[Group('ban')]
+#[IgnoreDeprecations]
 class BanAdminTest extends UnitTestCase {
 
   /**
    * Tests various user input to confirm correct validation.
    *
-   * @covers ::validateForm
-   * @dataProvider providerIpValidation
+   * @legacy-covers ::validateForm
    */
+  #[DataProvider('providerIpValidation')]
   public function testIpValidation(string $ip, bool $isBanned, ?string $error): void {
     $manager = $this->getIpManagerMock();
     $manager->expects($this->once())
@@ -89,7 +92,7 @@ class BanAdminTest extends UnitTestCase {
   /**
    * Test passing an IP address as a route parameter.
    *
-   * @covers ::buildForm
+   * @legacy-covers ::buildForm
    */
   public function testRouteParameter(): void {
     $ip = '1.2.3.4';

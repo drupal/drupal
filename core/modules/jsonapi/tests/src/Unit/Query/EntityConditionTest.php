@@ -8,15 +8,19 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\jsonapi\Query\EntityCondition;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Query\EntityCondition
- * @group jsonapi
+ * Tests Drupal\jsonapi\Query\EntityCondition.
  *
  * @internal
  */
+#[CoversClass(EntityCondition::class)]
+#[Group('jsonapi')]
 class EntityConditionTest extends UnitTestCase {
 
   /**
@@ -34,9 +38,11 @@ class EntityConditionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromQueryParameter
-   * @dataProvider queryParameterProvider
+   * Tests create from query parameter.
+   *
+   * @legacy-covers ::createFromQueryParameter
    */
+  #[DataProvider('queryParameterProvider')]
   public function testCreateFromQueryParameter($case): void {
     $condition = EntityCondition::createFromQueryParameter($case);
     $this->assertEquals($case['path'], $condition->field());
@@ -72,9 +78,11 @@ class EntityConditionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validate
-   * @dataProvider validationProvider
+   * Tests validation.
+   *
+   * @legacy-covers ::validate
    */
+  #[DataProvider('validationProvider')]
   public function testValidation($input, $exception): void {
     if ($exception) {
       $this->expectException(get_class($exception));

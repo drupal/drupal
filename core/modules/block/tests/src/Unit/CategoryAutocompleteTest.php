@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit;
 
-use Drupal\Component\Utility\Html;
 use Drupal\block\Controller\CategoryAutocompleteController;
+use Drupal\Component\Utility\Html;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\block\Controller\CategoryAutocompleteController
- * @group block
+ * Tests Drupal\block\Controller\CategoryAutocompleteController.
  */
+#[CoversClass(CategoryAutocompleteController::class)]
+#[Group('block')]
 class CategoryAutocompleteTest extends UnitTestCase {
 
   /**
@@ -45,9 +49,8 @@ class CategoryAutocompleteTest extends UnitTestCase {
    *   The array of expected suggestions.
    *
    * @see \Drupal\block\Controller\CategoryAutocompleteController::autocomplete()
-   *
-   * @dataProvider providerTestAutocompleteSuggestions
    */
+  #[DataProvider('providerTestAutocompleteSuggestions')]
   public function testAutocompleteSuggestions($string, $suggestions): void {
     $suggestions = array_map(function ($suggestion) {
       return ['value' => $suggestion, 'label' => Html::escape($suggestion)];

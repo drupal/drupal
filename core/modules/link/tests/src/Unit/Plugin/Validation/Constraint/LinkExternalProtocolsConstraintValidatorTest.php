@@ -9,19 +9,26 @@ use Drupal\Core\Url;
 use Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraint;
 use Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraintValidator;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @coversDefaultClass \Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraintValidator
- * @group Link
+ * Tests Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraintValidator.
  */
+#[CoversClass(LinkExternalProtocolsConstraintValidator::class)]
+#[Group('Link')]
 class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
 
   /**
-   * @covers ::validate
-   * @dataProvider providerValidate
-   * @runInSeparateProcess
+   * Tests validate.
+   *
+   * @legacy-covers ::validate
    */
+  #[DataProvider('providerValidate')]
+  #[RunInSeparateProcess]
   public function testValidate($url, $valid): void {
     $link = $this->createMock('Drupal\link\LinkItemInterface');
     $link->expects($this->any())
@@ -67,9 +74,10 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validate
+   * Tests validate with malformed uri.
    *
    * @see \Drupal\Core\Url::fromUri
+   * @legacy-covers ::validate
    */
   public function testValidateWithMalformedUri(): void {
     $link = $this->createMock('Drupal\link\LinkItemInterface');
@@ -89,7 +97,9 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validate
+   * Tests validate ignores internal urls.
+   *
+   * @legacy-covers ::validate
    */
   public function testValidateIgnoresInternalUrls(): void {
     $link = $this->createMock('Drupal\link\LinkItemInterface');

@@ -5,22 +5,23 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\Plugin\migrate\process\DefaultValue;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the default_value process plugin.
- *
- * @group migrate
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\DefaultValue
  */
+#[CoversClass(DefaultValue::class)]
+#[Group('migrate')]
 class DefaultValueTest extends MigrateProcessTestCase {
 
   /**
    * Tests the default_value process plugin.
    *
-   * @covers ::transform
-   *
-   * @dataProvider defaultValueDataProvider
+   * @legacy-covers ::transform
    */
+  #[DataProvider('defaultValueDataProvider')]
   public function testDefaultValue($configuration, $expected_value, $value): void {
     $process = new DefaultValue($configuration, 'default_value', []);
     $value = $process->transform($value, $this->migrateExecutable, $this->row, 'destination_property');

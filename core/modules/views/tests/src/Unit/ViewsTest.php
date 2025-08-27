@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Views;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutableFactory;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\views\Views
- * @group views
+ * Tests Drupal\views\Views.
  */
+#[CoversClass(Views::class)]
+#[Group('views')]
 class ViewsTest extends UnitTestCase {
 
   /**
@@ -52,7 +56,7 @@ class ViewsTest extends UnitTestCase {
   /**
    * Tests the getView() method.
    *
-   * @covers ::getView
+   * @legacy-covers ::getView
    */
   public function testGetView(): void {
     $view = new View(['id' => 'test_view'], 'view');
@@ -81,7 +85,7 @@ class ViewsTest extends UnitTestCase {
   /**
    * Tests the getView() method against a non-existent view.
    *
-   * @covers ::getView
+   * @legacy-covers ::getView
    */
   public function testGetNonExistentView(): void {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
@@ -94,10 +98,11 @@ class ViewsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getApplicableViews
+   * Tests get applicable views.
    *
-   * @dataProvider providerTestGetApplicableViews
+   * @legacy-covers ::getApplicableViews
    */
+  #[DataProvider('providerTestGetApplicableViews')]
   public function testGetApplicableViews($applicable_type, $expected): void {
     $view_1 = new View([
       'id' => 'test_view_1',

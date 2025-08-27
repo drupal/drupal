@@ -12,20 +12,25 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @coversDefaultClass \Drupal\big_pipe\Render\BigPipe
- * @group big_pipe
+ * Tests Drupal\big_pipe\Render\BigPipe.
  */
+#[CoversClass(BigPipe::class)]
+#[Group('big_pipe')]
 class ManyPlaceholderTest extends UnitTestCase {
 
   /**
-   * @covers \Drupal\big_pipe\Render\BigPipe::sendNoJsPlaceholders
+   * Tests many no js place holders.
+   *
+   * @legacy-covers \Drupal\big_pipe\Render\BigPipe::sendNoJsPlaceholders
    */
   public function testManyNoJsPlaceHolders(): void {
     $session = $this->prophesize(SessionInterface::class);

@@ -10,11 +10,14 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\block\BlockForm
- * @group block
+ * Tests Drupal\block\BlockForm.
  */
+#[CoversClass(BlockForm::class)]
+#[Group('block')]
 class BlockFormTest extends UnitTestCase {
 
   /**

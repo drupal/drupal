@@ -11,16 +11,17 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 use Drupal\user\Plugin\rest\resource\UserRegistrationResource;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Tests User Registration REST resource.
- *
- * @coversDefaultClass \Drupal\user\Plugin\rest\resource\UserRegistrationResource
- * @group user
  */
+#[CoversClass(UserRegistrationResource::class)]
+#[Group('user')]
 class UserRegistrationResourceTest extends UnitTestCase {
 
   const ERROR_MESSAGE = "Unprocessable Entity: validation failed.\nproperty_path: message\nproperty_path_2: message_2\n";

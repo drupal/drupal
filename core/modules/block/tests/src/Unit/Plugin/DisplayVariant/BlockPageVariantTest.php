@@ -8,11 +8,15 @@ use Drupal\block\Plugin\DisplayVariant\BlockPageVariant;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\block\Plugin\DisplayVariant\BlockPageVariant
- * @group block
+ * Tests Drupal\block\Plugin\DisplayVariant\BlockPageVariant.
  */
+#[CoversClass(BlockPageVariant::class)]
+#[Group('block')]
 class BlockPageVariantTest extends UnitTestCase {
 
   /**
@@ -200,10 +204,9 @@ class BlockPageVariantTest extends UnitTestCase {
   /**
    * Tests the building of a full page variant.
    *
-   * @covers ::build
-   *
-   * @dataProvider providerBuild
+   * @legacy-covers ::build
    */
+  #[DataProvider('providerBuild')]
   public function testBuild(array $blocks_config, $visible_block_count, array $expected_render_array): void {
     $display_variant = $this->setUpDisplayVariant();
     $display_variant->setMainContent(['#markup' => 'Hello kittens!']);
@@ -237,7 +240,7 @@ class BlockPageVariantTest extends UnitTestCase {
   /**
    * Tests the building of a full page variant with no main content set.
    *
-   * @covers ::build
+   * @legacy-covers ::build
    */
   public function testBuildWithoutMainContent(): void {
     $display_variant = $this->setUpDisplayVariant();

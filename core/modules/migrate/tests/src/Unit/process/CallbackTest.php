@@ -6,19 +6,19 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\Callback;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the callback process plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class CallbackTest extends MigrateProcessTestCase {
 
   /**
    * Tests callback with valid "callable".
-   *
-   * @dataProvider providerCallback
    */
+  #[DataProvider('providerCallback')]
   public function testCallback($callable): void {
     $configuration = ['callable' => $callable];
     $this->plugin = new Callback($configuration, 'map', []);
@@ -38,9 +38,8 @@ class CallbackTest extends MigrateProcessTestCase {
 
   /**
    * Test callback with valid "callable" and multiple arguments.
-   *
-   * @dataProvider providerCallbackArray
    */
+  #[DataProvider('providerCallbackArray')]
   public function testCallbackArray($callable, $args, $result): void {
     $configuration = ['callable' => $callable, 'unpack_source' => TRUE];
     $this->plugin = new Callback($configuration, 'map', []);
@@ -87,9 +86,8 @@ class CallbackTest extends MigrateProcessTestCase {
    *   (optional) The expected exception class.
    * @param mixed $args
    *   (optional) Arguments to pass to the transform() method.
-   *
-   * @dataProvider providerCallbackExceptions
    */
+  #[DataProvider('providerCallbackExceptions')]
   public function testCallbackExceptions($message, array $configuration, $class = 'InvalidArgumentException', $args = NULL): void {
     $this->expectException($class);
     $this->expectExceptionMessage($message);
