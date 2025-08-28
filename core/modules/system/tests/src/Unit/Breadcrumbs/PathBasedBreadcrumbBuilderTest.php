@@ -110,6 +110,11 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
     $this->accessManager = $this->createMock('\Drupal\Core\Access\AccessManagerInterface');
     $this->titleResolver = $this->createMock('\Drupal\Core\Controller\TitleResolverInterface');
+    $this->titleResolver->expects($this->any())
+      ->method('getTitle')
+      ->willReturnCallback(function (Request $request, Route $route) {
+        return $route->getDefault('_title');
+      });
     $this->currentUser = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->currentPath = $this->getMockBuilder('Drupal\Core\Path\CurrentPathStack')
       ->disableOriginalConstructor()
@@ -186,7 +191,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->willReturn('/example/baz');
     $this->setupStubPathProcessor();
 
-    $route_1 = new Route('/example');
+    $route_1 = new Route('/example', ['_title' => 'Example']);
 
     $this->requestMatcher->expects($this->exactly(1))
       ->method('matchRequest')
@@ -225,8 +230,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->willReturn('/example/bar/baz');
     $this->setupStubPathProcessor();
 
-    $route_1 = new Route('/example/bar');
-    $route_2 = new Route('/example');
+    $route_1 = new Route('/example/bar', ['_title' => 'Bar']);
+    $route_2 = new Route('/example', ['_title' => 'Example']);
 
     $this->requestMatcher->expects($this->exactly(2))
       ->method('matchRequest')
@@ -257,6 +262,61 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->assertEquals([
       new Link('Home', new Url('<front>')),
       new Link('Example', new Url('example')),
+      new Link('Bar', new Url('example_bar')),
+    ], $breadcrumb->getLinks());
+    $this->assertEqualsCanonicalizing([
+      'bar',
+      'url.path.is_front',
+      'url.path.parent',
+      'user.permissions',
+    ], $breadcrumb->getCacheContexts());
+    $this->assertEqualsCanonicalizing(['example'], $breadcrumb->getCacheTags());
+    $this->assertEquals(Cache::PERMANENT, $breadcrumb->getCacheMaxAge());
+  }
+
+  /**
+   * Tests the build method with a NULL title route.
+   *
+   * @legacy-covers ::build
+   * @legacy-covers ::getRequestForPath
+   */
+  public function testBuildWithNullTitle(): void {
+    $this->context->expects($this->once())
+      ->method('getPathInfo')
+      ->willReturn('/example/bar/baz');
+    $this->setupStubPathProcessor();
+
+    $route_1 = new Route('/example/bar', ['_title' => 'Bar']);
+    $route_2 = new Route('/example', ['_title' => NULL]);
+
+    $this->requestMatcher->expects($this->exactly(2))
+      ->method('matchRequest')
+      ->willReturnCallback(function (Request $request) use ($route_1, $route_2) {
+        if ($request->getPathInfo() == '/example/bar') {
+          return [
+            RouteObjectInterface::ROUTE_NAME => 'example_bar',
+            RouteObjectInterface::ROUTE_OBJECT => $route_1,
+            '_raw_variables' => new InputBag([]),
+          ];
+        }
+        elseif ($request->getPathInfo() == '/example') {
+          return [
+            RouteObjectInterface::ROUTE_NAME => 'example',
+            RouteObjectInterface::ROUTE_OBJECT => $route_2,
+            '_raw_variables' => new InputBag([]),
+          ];
+        }
+      });
+
+    $this->accessManager->expects($this->any())
+      ->method('check')
+      ->willReturnOnConsecutiveCalls(
+        AccessResult::allowed()->cachePerPermissions(),
+        AccessResult::allowed()->addCacheContexts(['bar'])->addCacheTags(['example'])
+      );
+    $breadcrumb = $this->builder->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
+    $this->assertEquals([
+      new Link('Home', new Url('<front>')),
       new Link('Bar', new Url('example_bar')),
     ], $breadcrumb->getLinks());
     $this->assertEqualsCanonicalizing([
@@ -382,7 +442,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->willReturn('/user/1/edit');
     $this->setupStubPathProcessor();
 
-    $route_1 = new Route('/user/1');
+    $route_1 = new Route('/user/1', ['_title' => 'Admin']);
 
     $this->requestMatcher->expects($this->exactly(1))
       ->method('matchRequest')
@@ -397,10 +457,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       });
 
     $this->setupAccessManagerToAllow();
-    $this->titleResolver->expects($this->once())
-      ->method('getTitle')
-      ->with($this->anything(), $route_1)
-      ->willReturn('Admin');
 
     $breadcrumb = $this->builder->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals([0 => new Link('Home', new Url('<front>')), 1 => new Link('Admin', new Url('user_page'))], $breadcrumb->getLinks());

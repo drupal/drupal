@@ -2,7 +2,6 @@
 
 namespace Drupal\system;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
@@ -180,13 +179,10 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         $breadcrumb = $breadcrumb->addCacheableDependency($access);
         if ($access->isAllowed()) {
           $title = $this->titleResolver->getTitle($route_request, $route_match->getRouteObject());
-          if (!isset($title)) {
-            // Fallback to using the raw path component as the title if the
-            // route is missing a _title or _title_callback attribute.
-            $title = str_replace(['-', '_'], ' ', Unicode::ucfirst(end($path_elements)));
+          if (isset($title)) {
+            $url = Url::fromRouteMatch($route_match);
+            $links[] = new Link($title, $url);
           }
-          $url = Url::fromRouteMatch($route_match);
-          $links[] = new Link($title, $url);
         }
       }
     }

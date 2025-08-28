@@ -70,6 +70,28 @@ class TitleResolverTest extends UnitTestCase {
   }
 
   /**
+   * Tests an empty string static title.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   */
+  public function testEmptyStringStaticTitle(): void {
+    $request = new Request();
+    $route = new Route('/test-route', ['_title' => '']);
+    $this->assertNull($this->titleResolver->getTitle($request, $route));
+  }
+
+  /**
+   * Tests an route with no title.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   */
+  public function testNoTitle(): void {
+    $request = new Request();
+    $route = new Route('/test-route');
+    $this->assertNull($this->titleResolver->getTitle($request, $route));
+  }
+
+  /**
    * Tests a static title of '0'.
    *
    * @see \Drupal\Core\Controller\TitleResolver::getTitle()
@@ -179,8 +201,10 @@ class TitleResolverTest extends UnitTestCase {
    * Tests a dynamic title.
    *
    * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   *
+   * @dataProvider providerTestDynamicTitle
    */
-  public function testDynamicTitle(): void {
+  public function testDynamicTitle(\Stringable|string|array|null $title, \Stringable|string|array|null $expected): void {
     $request = new Request();
     $route = new Route('/test-route', ['_title' => 'static title', '_title_callback' => 'Drupal\Tests\Core\Controller\TitleCallback::example']);
 
@@ -192,9 +216,24 @@ class TitleResolverTest extends UnitTestCase {
     $this->argumentResolver->expects($this->once())
       ->method('getArguments')
       ->with($request, $callable)
-      ->willReturn(['example']);
+      ->willReturn([$title]);
 
-    $this->assertEquals('test example', $this->titleResolver->getTitle($request, $route));
+    $this->assertEquals($expected, $this->titleResolver->getTitle($request, $route));
+  }
+
+  /**
+   * Data provider for testDynamicTitle.
+   */
+  public static function providerTestDynamicTitle(): array {
+    return [
+      ['test value', 'test value'],
+      ['', NULL],
+      [new TranslatableMarkup('static title'), new TranslatableMarkup('static title')],
+      // phpcs:disable Drupal.Semantics.FunctionT.EmptyString
+      [new TranslatableMarkup(''), NULL],
+      // phpcs:enable
+      [['#markup' => '<span>Title</span>'], ['#markup' => '<span>Title</span>']],
+    ];
   }
 
 }
@@ -205,16 +244,16 @@ class TitleResolverTest extends UnitTestCase {
 class TitleCallback {
 
   /**
-   * Gets the example string.
+   * Gets the example value.
    *
-   * @param string $value
+   * @param \Stringable|string|array|null $value
    *   The dynamic value.
    *
-   * @return string
-   *   Returns the example string.
+   * @return string|array|null
+   *   Returns the example value.
    */
-  public function example($value) {
-    return 'test ' . $value;
+  public function example(\Stringable|string|array|null $value) {
+    return $value;
   }
 
 }

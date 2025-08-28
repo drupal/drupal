@@ -28,6 +28,8 @@ interface TitleResolverInterface {
    *
    * @return array|string|\Stringable|null
    *   The title for the route.
+   *   The title for the route. NULL should be returned if the method can
+   *   determine that the title will evaluate to an empty string.
    */
   public function getTitle(Request $request, Route $route);
 
