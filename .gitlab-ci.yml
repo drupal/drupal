@@ -296,7 +296,7 @@ default:
     _TARGET_DB_DRIVER: "mysqli"
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
-'mysqli - PHP 8.4 MySQL 9.3':
+'mysqli - PHP 8.4 MySQL 9.4':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_DB: "mysql-9"
@@ -311,7 +311,7 @@ default:
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
-'PHP 8.4 MySQL 9.3':
+'PHP 8.4 MySQL 9.4':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_DB: "mysql-9"
