@@ -2,6 +2,7 @@
 
 namespace Drupal\config_translation\FormElement;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -87,7 +88,7 @@ abstract class FormElementBase implements ElementInterface {
    */
   protected function getSourceElement(LanguageInterface $source_language, $source_config) {
     if ($source_config) {
-      $value = '<span lang="' . $source_language->getId() . '">' . nl2br($source_config) . '</span>';
+      $value = '<span lang="' . $source_language->getId() . '">' . nl2br(Html::escape($source_config)) . '</span>';
     }
     else {
       $value = $this->t('(Empty)');
