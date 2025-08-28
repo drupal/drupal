@@ -276,7 +276,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
 
     // Checks the text of details summary element that surrounds the translation
     // options.
-    $this->assertSession()->responseContains(Html::escape(strip_tags($on_label)) . ' Boolean settings');
+    $this->assertSession()->responseContains(Html::escape($on_label) . ' Boolean settings');
 
     // Checks that the correct on and off labels appear on the form.
     $this->assertSession()->assertEscaped($on_label);
