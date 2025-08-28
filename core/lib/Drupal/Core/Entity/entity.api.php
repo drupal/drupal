@@ -2130,6 +2130,9 @@ function hook_entity_field_storage_info_alter(&$fields, \Drupal\Core\Entity\Enti
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity on which the linked operations will be performed.
+ * @param \Drupal\Core\Cache\CacheableMetadata $cacheability
+ *   The cacheable metadata to add to if your operations vary by or depend on
+ *   something.
  *
  * @return array
  *   An operations array as returned by
@@ -2137,7 +2140,7 @@ function hook_entity_field_storage_info_alter(&$fields, \Drupal\Core\Entity\Enti
  *
  * @see \Drupal\Core\Entity\EntityListBuilderInterface::getOperations()
  */
-function hook_entity_operation(\Drupal\Core\Entity\EntityInterface $entity): array {
+function hook_entity_operation(\Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Cache\CacheableMetadata $cacheability): array {
   $operations = [];
   $operations['translate'] = [
     'title' => t('Translate'),
@@ -2156,8 +2159,11 @@ function hook_entity_operation(\Drupal\Core\Entity\EntityInterface $entity): arr
  *   \Drupal\Core\Entity\EntityListBuilderInterface::getOperations().
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity on which the linked operations will be performed.
+ * @param \Drupal\Core\Cache\CacheableMetadata $cacheability
+ *   The cacheable metadata to add to if your operations vary by or depend on
+ *   something.
  */
-function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Cache\CacheableMetadata $cacheability) {
   // Alter the title and weight.
   $operations['translate']['title'] = t('Translate @entity_type', [
     '@entity_type' => $entity->getEntityTypeId(),

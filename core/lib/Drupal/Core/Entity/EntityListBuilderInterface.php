@@ -34,6 +34,14 @@ interface EntityListBuilderInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity the operations are for.
    *
+   * phpcs:disable Drupal.Commenting
+   * @todo Uncomment new method parameters before drupal:12.0.0.
+   * @see https://www.drupal.org/project/drupal/issues/3533078
+   * @param \Drupal\Core\Cache\CacheableMetadata|null $cacheability
+   *   The cacheable metadata to add to if your operations vary by or depend on
+   *   something.
+   * phpcs:enable
+   *
    * @return array
    *   An associative array of operation link data for this list, keyed by
    *   operation name, containing the following key-value pairs:
@@ -41,7 +49,7 @@ interface EntityListBuilderInterface {
    *   - url: An instance of \Drupal\Core\Url for the operation URL.
    *   - weight: The weight of this operation.
    */
-  public function getOperations(EntityInterface $entity);
+  public function getOperations(EntityInterface $entity /* , ?CacheableDependencyInterface $cacheability = NULL */);
 
   /**
    * Builds a listing of entities for the given entity type.

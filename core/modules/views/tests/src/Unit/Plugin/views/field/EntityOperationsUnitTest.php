@@ -146,6 +146,11 @@ class EntityOperationsUnitTest extends UnitTestCase {
       '#attached' => [
         'library' => ['core/drupal.dialog.ajax'],
       ],
+      '#cache' => [
+        'contexts' => [],
+        'tags' => [],
+        'max-age' => -1,
+      ],
     ];
     $expected_build['#links']['foo']['query'] = ['destination' => 'foobar'];
     $build = $this->plugin->render($result);
@@ -192,6 +197,11 @@ class EntityOperationsUnitTest extends UnitTestCase {
       '#links' => $operations,
       '#attached' => [
         'library' => ['core/drupal.dialog.ajax'],
+      ],
+      '#cache' => [
+        'contexts' => [],
+        'tags' => [],
+        'max-age' => -1,
       ],
     ];
     $build = $this->plugin->render($result);

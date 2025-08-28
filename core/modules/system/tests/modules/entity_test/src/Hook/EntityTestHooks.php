@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\entity_test\Hook;
 
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -387,10 +388,32 @@ class EntityTestHooks {
   }
 
   /**
+   * Implements hook_entity_operation().
+   */
+  #[Hook('entity_operation')]
+  public function entityOperation(EntityInterface $entity, CacheableMetadata $cacheability): array {
+    if (!$entity instanceof EntityTest) {
+      return [];
+    }
+    $cacheability->addCacheTags(['entity_test_operation_tag_test']);
+    $operations['entity_test_custom_operation'] = [
+      'title' => 'Custom Home',
+      'weight' => 20,
+      'url' => Url::fromRoute('<front>'),
+    ];
+    return $operations;
+  }
+
+  /**
    * Implements hook_entity_operation_alter().
    */
   #[Hook('entity_operation_alter')]
-  public function entityOperationAlter(array &$operations, EntityInterface $entity): void {
+  public function entityOperationAlter(array &$operations, EntityInterface $entity, CacheableMetadata $cacheability): void {
+    if ($entity instanceof EntityTest) {
+      $cacheability->addCacheTags(['entity_test_operation_alter_tag_test']);
+      return;
+    }
+
     $valid_entity_type_ids = ['user_role', 'block'];
     if (in_array($entity->getEntityTypeId(), $valid_entity_type_ids)) {
       if (\Drupal::service('router.route_provider')->getRouteByName("entity.{$entity->getEntityTypeId()}.test_operation")) {

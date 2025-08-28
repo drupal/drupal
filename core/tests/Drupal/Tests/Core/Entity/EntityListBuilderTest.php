@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -104,7 +105,7 @@ class EntityListBuilderTest extends UnitTestCase {
     ];
     $this->moduleHandler->expects($this->once())
       ->method('invokeAll')
-      ->with('entity_operation', [$this->role])
+      ->with('entity_operation', [$this->role, new CacheableMetadata()])
       ->willReturn($operations);
     $this->moduleHandler->expects($this->once())
       ->method('alter')

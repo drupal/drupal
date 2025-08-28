@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -135,7 +136,8 @@ class EntityOperations extends FieldPluginBase {
     }
 
     $entity = $this->getEntityTranslationByRelationship($entity, $values);
-    $operations = $this->entityTypeManager->getListBuilder($entity->getEntityTypeId())->getOperations($entity);
+    $cacheability = new CacheableMetadata();
+    $operations = $this->entityTypeManager->getListBuilder($entity->getEntityTypeId())->getOperations($entity, $cacheability);
     if ($this->options['destination']) {
       foreach ($operations as &$operation) {
         if (!isset($operation['query'])) {
@@ -152,7 +154,7 @@ class EntityOperations extends FieldPluginBase {
         'library' => ['core/drupal.dialog.ajax'],
       ],
     ];
-
+    $cacheability->applyTo($build);
     return $build;
   }
 

@@ -174,7 +174,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
+  public function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
     /** @var \Drupal\field\FieldConfigInterface $entity */
     $operations = parent::getDefaultOperations($entity);
 
