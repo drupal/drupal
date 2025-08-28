@@ -10,14 +10,20 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-$ignoreErrors = [];
-require __DIR__ . '/../../core/.phpstan-baseline.php';
+$args = $_SERVER['argv'];
 
-$outputFilePath = __DIR__ . "/../../";
-if ($artifactsDirectory = getenv('_ARTIFACTS_DIR')) {
-  $outputFilePath .= $artifactsDirectory . \DIRECTORY_SEPARATOR;
+if (!isset($args[1])) {
+  echo "PHPStan baseline file path not specified.\n";
+  exit(2);
 }
-$outputFilePath .= "phpstan-metrics.txt";
+$ignoreErrors = [];
+require $args[1];
+
+if (!isset($args[2])) {
+  echo "Report output file path not specified.\n";
+  exit(2);
+}
+$outputFilePath = $args[2];
 
 $stats = ['__total' => 0];
 foreach ($ignoreErrors as $ignore) {
