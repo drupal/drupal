@@ -1,5 +1,5 @@
 parameters:
-  system.skip_procedural_hook_scan: true
+  system.skip_procedural_hook_scan: false
 
 services:
   _defaults:
