@@ -7,14 +7,13 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore postupdate
-
 /**
  * Tests hook_post_update().
- *
- * @group Update
  */
+#[Group('Update')]
 class UpdatePostUpdateTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

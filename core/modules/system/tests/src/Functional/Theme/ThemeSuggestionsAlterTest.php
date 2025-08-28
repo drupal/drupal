@@ -6,12 +6,13 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests theme suggestion alter hooks.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class ThemeSuggestionsAlterTest extends BrowserTestBase {
 
   /**
@@ -51,9 +52,8 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
 
   /**
    * Testing deprecated suggestions.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedTemplateSuggestions(): void {
 
     $this->expectDeprecation('Theme suggestion theme_test_suggestion_provided__deprecated is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. This is a test.');

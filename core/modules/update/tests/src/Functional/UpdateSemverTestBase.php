@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Common setup and utility methods to test projects that use semver releases.
  *
  * For classes that extend this class, the XML fixtures they use will start with
  * ::$projectTitle.
- *
- * @group update
  */
+#[Group('update')]
 abstract class UpdateSemverTestBase extends UpdateTestBase {
 
   use CronRunTrait;

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Verifies that various taxonomy pages use the expected theme.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class ThemeTest extends TaxonomyTestBase {
 
   /**

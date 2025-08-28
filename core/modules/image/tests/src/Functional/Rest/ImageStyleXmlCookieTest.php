@@ -6,10 +6,12 @@ namespace Drupal\Tests\image\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Image Style Xml Cookie.
  */
+#[Group('rest')]
 class ImageStyleXmlCookieTest extends ImageStyleResourceTestBase {
 
   use CookieResourceTestTrait;

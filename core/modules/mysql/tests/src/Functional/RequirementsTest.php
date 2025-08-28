@@ -6,12 +6,12 @@ namespace Drupal\Tests\mysql\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests isolation level warning when the config is set in settings.php.
- *
- * @group mysql
  */
+#[Group('mysql')]
 class RequirementsTest extends BrowserTestBase {
 
   /**

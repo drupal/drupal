@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests media Install / Uninstall logic.
- *
- * @group media
  */
+#[Group('media')]
 class MediaInstallTest extends BrowserTestBase {
 
   /**

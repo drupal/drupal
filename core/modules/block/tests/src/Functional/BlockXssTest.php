@@ -10,12 +10,12 @@ use Drupal\Core\Url;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the block module properly escapes block descriptions.
- *
- * @group block
  */
+#[Group('block')]
 class BlockXssTest extends BrowserTestBase {
 
   /**

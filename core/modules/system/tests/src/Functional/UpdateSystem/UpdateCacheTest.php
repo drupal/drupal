@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests caches during updates.
- *
- * @group Update
  */
+#[Group('Update')]
 class UpdateCacheTest extends BrowserTestBase {
   use RequirementsPageTrait;
 

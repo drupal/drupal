@@ -6,12 +6,12 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests if the search form block is available.
- *
- * @group search
  */
+#[Group('search')]
 class SearchBlockTest extends BrowserTestBase {
 
   /**

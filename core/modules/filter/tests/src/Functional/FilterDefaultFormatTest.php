@@ -6,12 +6,12 @@ namespace Drupal\Tests\filter\Functional;
 
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the default text formats for different users.
- *
- * @group filter
  */
+#[Group('filter')]
 class FilterDefaultFormatTest extends BrowserTestBase {
 
   /**

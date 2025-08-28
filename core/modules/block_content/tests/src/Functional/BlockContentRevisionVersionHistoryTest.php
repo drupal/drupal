@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Functional;
 
+use Drupal\Core\Entity\Controller\VersionHistoryController;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Block content version history test.
- *
- * @group block_content
- * @coversDefaultClass \Drupal\Core\Entity\Controller\VersionHistoryController
  */
+#[CoversClass(VersionHistoryController::class)]
+#[Group('block_content')]
 class BlockContentRevisionVersionHistoryTest extends BlockContentTestBase {
 
   /**

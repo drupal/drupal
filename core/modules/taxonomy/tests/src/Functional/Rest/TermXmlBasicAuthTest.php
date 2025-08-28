@@ -6,10 +6,12 @@ namespace Drupal\Tests\taxonomy\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Term Xml Basic Auth.
  */
+#[Group('rest')]
 class TermXmlBasicAuthTest extends TermResourceTestBase {
 
   use BasicAuthResourceTestTrait;

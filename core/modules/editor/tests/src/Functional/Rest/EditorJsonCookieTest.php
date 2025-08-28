@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Editor Json Cookie.
  */
+#[Group('rest')]
 class EditorJsonCookieTest extends EditorResourceTestBase {
 
   use CookieResourceTestTrait;

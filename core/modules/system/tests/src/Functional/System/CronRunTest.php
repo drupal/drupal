@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\System;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\WaitTerminateTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests cron runs.
- *
- * @group system
  */
+#[Group('system')]
 class CronRunTest extends BrowserTestBase {
 
   use CronRunTrait;

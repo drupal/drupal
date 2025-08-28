@@ -6,11 +6,14 @@ namespace Drupal\Tests\views\Functional\Update;
 
 use Drupal\block\Entity\Block;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Update
- * @covers views_post_update_block_items_per_page
+ * Tests Block Items Per Page Update.
+ *
+ * @legacy-covers views_post_update_block_items_per_page
  */
+#[Group('Update')]
 final class BlockItemsPerPageUpdateTest extends UpdatePathTestBase {
 
   /**

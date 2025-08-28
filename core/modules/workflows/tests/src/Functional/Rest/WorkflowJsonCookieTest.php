@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\workflows\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Workflow Json Cookie.
  */
+#[Group('rest')]
 class WorkflowJsonCookieTest extends WorkflowResourceTestBase {
 
   use CookieResourceTestTrait;

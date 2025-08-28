@@ -6,12 +6,12 @@ namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests general functionality of the Update Status module.
- *
- * @group update
  */
+#[Group('update')]
 class UpdateMiscTest extends UpdateTestBase {
 
   use CronRunTrait;

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests comment links altering.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentLinksAlterTest extends CommentTestBase {
 
   /**

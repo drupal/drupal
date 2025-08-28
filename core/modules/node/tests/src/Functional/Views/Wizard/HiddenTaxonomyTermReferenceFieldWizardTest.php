@@ -8,13 +8,13 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node wizard and content type with hidden Taxonomy Term Reference field.
- *
- * @group Views
- * @group node
  */
+#[Group('Views')]
+#[Group('node')]
 class HiddenTaxonomyTermReferenceFieldWizardTest extends WizardTestBase {
 
   /**

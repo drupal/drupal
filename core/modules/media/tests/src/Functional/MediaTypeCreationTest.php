@@ -6,12 +6,13 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\MediaType;
 use Drupal\TestTools\Random;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that media UI works correctly without JavaScript.
- *
- * @group media
  */
+#[Group('media')]
 class MediaTypeCreationTest extends MediaFunctionalTestBase {
 
   /**
@@ -28,9 +29,8 @@ class MediaTypeCreationTest extends MediaFunctionalTestBase {
 
   /**
    * Tests the media type creation form with only the mandatory options.
-   *
-   * @dataProvider providerMediaTypeCreationForm
    */
+  #[DataProvider('providerMediaTypeCreationForm')]
   public function testMediaTypeCreationForm($button_label, $address, $machine_name): void {
     $this->drupalGet('/admin/structure/media/add');
     $this->assertSession()->statusCodeEquals(200);

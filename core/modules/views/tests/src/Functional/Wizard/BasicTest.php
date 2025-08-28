@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\Functional\Wizard;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests creating views with the wizard and viewing them on the listing page.
- *
- * @group views
  */
+#[Group('views')]
 class BasicTest extends WizardTestBase {
 
   /**

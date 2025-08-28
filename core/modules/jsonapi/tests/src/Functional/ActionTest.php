@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "Action" config entity type.
- *
- * @group Action
  */
+#[Group('Action')]
 class ActionTest extends ConfigEntityResourceTestBase {
 
   /**

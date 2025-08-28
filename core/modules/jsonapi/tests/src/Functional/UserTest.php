@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "User" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class UserTest extends ResourceTestBase {
 
   const BATCH_TEST_NODE_COUNT = 15;
@@ -691,9 +691,8 @@ class UserTest extends ResourceTestBase {
 
   /**
    * Tests if JSON:API respects user.settings.cancel_method: user_cancel_block_unpublish.
-   *
-   * @group jsonapi
    */
+  #[Group('jsonapi')]
   public function testDeleteRespectsUserCancelBlockUnpublishAndProcessesBatches(): void {
     $cancel_method = 'user_cancel_block_unpublish';
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);

@@ -6,10 +6,12 @@ namespace Drupal\Tests\block_content\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Block Content Type Xml Cookie.
  */
+#[Group('rest')]
 class BlockContentTypeXmlCookieTest extends BlockContentTypeResourceTestBase {
 
   use CookieResourceTestTrait;

@@ -7,12 +7,12 @@ namespace Drupal\Tests\language\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests alterations to language types/negotiation info.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageNegotiationInfoTest extends BrowserTestBase {
 
   /**

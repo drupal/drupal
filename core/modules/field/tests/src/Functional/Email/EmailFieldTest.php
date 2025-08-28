@@ -8,12 +8,12 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests email field functionality.
- *
- * @group field
  */
+#[Group('field')]
 class EmailFieldTest extends BrowserTestBase {
 
   /**

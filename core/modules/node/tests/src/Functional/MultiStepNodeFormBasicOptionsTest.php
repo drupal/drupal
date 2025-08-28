@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the persistence of basic options through multiple steps.
- *
- * @group node
  */
+#[Group('node')]
 class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
 
   /**

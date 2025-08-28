@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that a broken or out-of-date element info cache is not used.
- *
- * @group Update
  */
+#[Group('Update')]
 class BrokenCacheUpdateTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

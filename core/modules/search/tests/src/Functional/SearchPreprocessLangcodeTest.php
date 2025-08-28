@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the search preprocessing uses the correct language code.
- *
- * @group search
  */
+#[Group('search')]
 class SearchPreprocessLangcodeTest extends BrowserTestBase {
 
   /**

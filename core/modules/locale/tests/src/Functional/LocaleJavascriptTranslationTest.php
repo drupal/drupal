@@ -7,14 +7,13 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore descripcion mostrar
-
 /**
  * Tests parsing js files for translatable strings.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleJavascriptTranslationTest extends BrowserTestBase {
 
   /**
@@ -28,7 +27,9 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * @covers ::\_locale_parse_js_file
+   * Tests file parsing.
+   *
+   * @legacy-covers ::\_locale_parse_js_file
    */
   public function testFileParsing(): void {
 

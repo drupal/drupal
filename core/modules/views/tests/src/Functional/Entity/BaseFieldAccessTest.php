@@ -6,12 +6,12 @@ namespace Drupal\Tests\views\Functional\Entity;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests views base field access.
- *
- * @group views
  */
+#[Group('views')]
 class BaseFieldAccessTest extends ViewTestBase {
 
   /**

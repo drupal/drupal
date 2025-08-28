@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI aspects of section storage.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderSectionStorageTest extends BrowserTestBase {
 
   /**

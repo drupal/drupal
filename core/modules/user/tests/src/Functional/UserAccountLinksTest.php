@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user-account links.
- *
- * @group user
  */
+#[Group('user')]
 class UserAccountLinksTest extends BrowserTestBase {
 
   /**

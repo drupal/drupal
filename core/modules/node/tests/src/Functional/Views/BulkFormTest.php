@@ -6,13 +6,14 @@ namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests a node bulk form.
  *
- * @group node
  * @see \Drupal\node\Plugin\views\field\BulkForm
  */
+#[Group('node')]
 class BulkFormTest extends NodeTestBase {
 
   /**

@@ -10,13 +10,13 @@ use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\user\Entity\User;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "Workspace" content entity type.
- *
- * @group jsonapi
- * @group workspaces
  */
+#[Group('jsonapi')]
+#[Group('workspaces')]
 class WorkspaceTest extends ResourceTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the workflow type plugin in the content_moderation module.
- *
- * @group content_moderation
  */
+#[Group('content_moderation')]
 class ContentModerationWorkflowTypeTest extends BrowserTestBase {
 
   /**

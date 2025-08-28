@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\navigation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for \Drupal\navigation\WorkspacesLazyBuilder.
- *
- * @group navigation
  */
+#[Group('navigation')]
 class NavigationWorkspacesUiTest extends BrowserTestBase {
 
   /**

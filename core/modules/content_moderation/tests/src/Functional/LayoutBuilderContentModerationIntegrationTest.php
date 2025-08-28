@@ -8,13 +8,13 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Content Moderation's integration with Layout Builder.
- *
- * @group content_moderation
- * @group layout_builder
  */
+#[Group('content_moderation')]
+#[Group('layout_builder')]
 class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
 
   use BlockContentCreationTrait;

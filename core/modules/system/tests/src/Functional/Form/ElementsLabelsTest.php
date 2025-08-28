@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\form_test\Form\FormTestLabelForm;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests form element labels, required markers and associated output.
- *
- * @group Form
  */
+#[Group('Form')]
 class ElementsLabelsTest extends BrowserTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensure that files added to nodes appear correctly in RSS feeds.
- *
- * @group file
  */
+#[Group('file')]
 class FileFieldRSSContentTest extends FileFieldTestBase {
 
   /**

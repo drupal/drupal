@@ -6,13 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the node access grants cache context service.
- *
- * @group node
- * @group Cache
  */
+#[Group('node')]
+#[Group('Cache')]
 class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
   /**

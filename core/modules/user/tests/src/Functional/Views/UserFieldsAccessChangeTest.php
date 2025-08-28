@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional\Views;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Checks changing entity and field access.
- *
- * @group user
  */
+#[Group('user')]
 class UserFieldsAccessChangeTest extends UserTestBase {
 
   /**

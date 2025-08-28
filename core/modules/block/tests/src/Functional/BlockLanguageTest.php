@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Functional;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\block\Entity\Block;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests per-language block configuration.
- *
- * @group block
  */
+#[Group('block')]
 class BlockLanguageTest extends BrowserTestBase {
 
   /**

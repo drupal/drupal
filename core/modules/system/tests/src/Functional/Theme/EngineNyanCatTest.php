@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore nyan
-
 /**
  * Tests the multi theme engine support.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class EngineNyanCatTest extends BrowserTestBase {
 
   /**

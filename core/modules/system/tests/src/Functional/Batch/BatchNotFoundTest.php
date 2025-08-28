@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Batch;
 
 use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests if a page not found error is returned when a batch ID does not exist.
- *
- * @group Batch
  */
+#[Group('Batch')]
 class BatchNotFoundTest extends BrowserTestBase {
 
   /**

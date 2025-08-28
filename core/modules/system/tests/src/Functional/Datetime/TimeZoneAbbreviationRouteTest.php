@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Datetime;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore ABCDEFGHIJK
-
 /**
  * Tests converting JavaScript time zone abbreviations to time zone identifiers.
- *
- * @group Datetime
  */
+#[Group('Datetime')]
 class TimeZoneAbbreviationRouteTest extends BrowserTestBase {
 
   /**
@@ -48,9 +48,8 @@ class TimeZoneAbbreviationRouteTest extends BrowserTestBase {
    *   Expected response, or NULL if expecting error.
    * @param bool $expectInvalidRequest
    *   Whether to expect the request is invalid.
-   *
-   * @dataProvider providerAbbreviationConversion
    */
+  #[DataProvider('providerAbbreviationConversion')]
   public function testAbbreviationConversion($path, $expectedResponse = NULL, $expectInvalidRequest = FALSE): void {
     $response = $this->drupalGet('system/timezone/' . $path);
     if (isset($expectedResponse)) {

@@ -8,12 +8,12 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Comment Translation UI.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentTranslationUITest extends ContentTranslationUITestBase {
 
   use CommentTestTrait;

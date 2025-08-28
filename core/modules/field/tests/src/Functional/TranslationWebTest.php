@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Functional;
 
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_test\FieldTestHelper;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests multilingual fields logic that require a full environment.
- *
- * @group field
  */
+#[Group('field')]
 class TranslationWebTest extends FieldTestBase {
 
   /**

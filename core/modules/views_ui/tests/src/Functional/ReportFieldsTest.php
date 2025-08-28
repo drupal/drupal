@@ -6,12 +6,12 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Views fields report page.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class ReportFieldsTest extends UITestBase {
 
   /**

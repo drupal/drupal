@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Ensure that the term indentation works properly.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyTermIndentationTest extends TaxonomyTestBase {
 
   /**

@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the listing of content blocks.
  *
  * Tests the fallback block content list when Views is disabled.
  *
- * @group block_content
  * @see \Drupal\block\BlockContentListBuilder
  * @see \Drupal\block_content\Tests\BlockContentListViewsTest
  */
+#[Group('block_content')]
 class BlockContentListTest extends BlockContentTestBase {
 
   /**

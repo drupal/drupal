@@ -7,12 +7,12 @@ namespace Drupal\Tests\field_ui\Functional;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the functionality of the Field UI route subscriber.
- *
- * @group field_ui
  */
+#[Group('field_ui')]
 class FieldUIRouteTest extends BrowserTestBase {
 
   /**

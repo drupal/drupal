@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Uuid\Uuid;
-use Drupal\Core\Entity\EntityMalformedException;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
+use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests configuration entities.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigEntityTest extends BrowserTestBase {
 
   /**

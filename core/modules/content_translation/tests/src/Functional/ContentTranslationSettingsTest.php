@@ -12,14 +12,15 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the content translation settings UI.
  *
- * @covers \Drupal\language\Form\ContentLanguageSettingsForm
- * @covers ::_content_translation_form_language_content_settings_form_alter
- * @group content_translation
+ * @legacy-covers \Drupal\language\Form\ContentLanguageSettingsForm
+ * @legacy-covers ::_content_translation_form_language_content_settings_form_alter
  */
+#[Group('content_translation')]
 class ContentTranslationSettingsTest extends BrowserTestBase {
 
   use CommentTestTrait;

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the security coverage messages for Drupal core versions.
- *
- * @group update
  */
+#[Group('update')]
 class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
 
   /**

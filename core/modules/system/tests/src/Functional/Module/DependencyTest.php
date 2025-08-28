@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Unicode;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Enable module without dependency enabled.
- *
- * @group Module
  */
+#[Group('Module')]
 class DependencyTest extends ModuleTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\mysql\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Installer\InstallerTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the isolation_level setting with no database settings.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerIsolationLevelNoDatabaseSettingsTest extends InstallerTestBase {
 
   /**

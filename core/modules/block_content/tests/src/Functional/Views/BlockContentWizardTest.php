@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\block_content\Functional\Views;
 
 use Drupal\Tests\block_content\Functional\BlockContentTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests block_content wizard and generic entity integration.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockContentWizardTest extends BlockContentTestBase {
 
   /**

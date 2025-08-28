@@ -8,12 +8,12 @@ use Drupal\Core\File\FileExists;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that images have correct dimensions when styled.
- *
- * @group image
  */
+#[Group('image')]
 class ImageDimensionsTest extends BrowserTestBase {
 
   use TestFileCreationTrait {

@@ -13,12 +13,12 @@ use Drupal\search\Entity\SearchPage;
 use Drupal\search\SearchIndexInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Indexes content and tests ranking factors.
- *
- * @group search
  */
+#[Group('search')]
 class SearchRankingTest extends BrowserTestBase {
 
   use CommentTestTrait;

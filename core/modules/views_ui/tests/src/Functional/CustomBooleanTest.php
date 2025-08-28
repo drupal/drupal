@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI and functionality for the Custom boolean field handler options.
  *
- * @group views_ui
  * @see \Drupal\views\Plugin\views\field\Boolean
  */
+#[Group('views_ui')]
 class CustomBooleanTest extends UITestBase {
 
   /**

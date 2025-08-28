@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\module_autoload_test\SomeClass;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests class loading for modules.
- *
- * @group Module
  */
+#[Group('Module')]
 class ClassLoaderTest extends BrowserTestBase {
 
   /**

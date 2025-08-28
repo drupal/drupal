@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests configuration schema against new views.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class NewViewConfigSchemaTest extends UITestBase {
 
   /**

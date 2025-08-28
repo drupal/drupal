@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\path_alias\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the update path for the path_alias_revision table indices.
- *
- * @group path_alias
  */
+#[Group('path_alias')]
 class PathAliasRevisionIndexesUpdatePathTest extends UpdatePathTestBase {
 
   /**

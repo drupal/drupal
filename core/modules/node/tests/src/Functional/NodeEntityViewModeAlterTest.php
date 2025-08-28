@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\EntityViewTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests changing view modes for nodes.
- *
- * @group node
  */
+#[Group('node')]
 class NodeEntityViewModeAlterTest extends NodeTestBase {
 
   use EntityViewTrait;

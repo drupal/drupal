@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Entity\Controller\VersionHistoryController;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Taxonomy term version history test.
- *
- * @group taxonomy
- * @coversDefaultClass \Drupal\Core\Entity\Controller\VersionHistoryController
  */
+#[CoversClass(VersionHistoryController::class)]
+#[Group('taxonomy')]
 class TaxonomyRevisionVersionHistoryTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;

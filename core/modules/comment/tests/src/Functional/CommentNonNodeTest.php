@@ -10,20 +10,20 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests commenting on a test entity.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentNonNodeTest extends BrowserTestBase {
 
   use FieldUiTestTrait;

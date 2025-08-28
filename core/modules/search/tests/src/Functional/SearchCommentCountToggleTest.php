@@ -7,6 +7,7 @@ namespace Drupal\Tests\search\Functional;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that comment count display toggles properly on comment status of node.
@@ -17,9 +18,8 @@ use Drupal\Tests\BrowserTestBase;
  * - Nodes with comment status set to Closed should show comment counts
  *     only when there are comments
  * - Nodes with comment status set to Hidden should never show comment counts
- *
- * @group search
  */
+#[Group('search')]
 class SearchCommentCountToggleTest extends BrowserTestBase {
 
   use CommentTestTrait;

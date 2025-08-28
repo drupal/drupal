@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional\Views;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\comment\Entity\Comment;
+use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment field filters with translations.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentFieldFilterTest extends CommentTestBase {
 
   /**

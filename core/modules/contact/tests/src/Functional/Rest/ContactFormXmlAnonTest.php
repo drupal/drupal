@@ -6,10 +6,12 @@ namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Contact Form Xml Anon.
  */
+#[Group('rest')]
 class ContactFormXmlAnonTest extends ContactFormResourceTestBase {
 
   use AnonResourceTestTrait;

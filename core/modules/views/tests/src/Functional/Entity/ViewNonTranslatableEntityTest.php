@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\Functional\Entity;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language_test\Entity\NoLanguageEntityTest;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the view creation of non-translatable entities.
- *
- * @group views
  */
+#[Group('views')]
 class ViewNonTranslatableEntityTest extends BrowserTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests adding and removing permissions via the UI.
- *
- * @group user
  */
+#[Group('user')]
 class UserPermissionsAdminTest extends BrowserTestBase {
 
   /**

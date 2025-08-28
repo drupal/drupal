@@ -9,14 +9,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore postupdate
-
 /**
  * Tests hook_removed_post_updates().
- *
- * @group Update
  */
+#[Group('Update')]
 class UpdateRemovedPostUpdateTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

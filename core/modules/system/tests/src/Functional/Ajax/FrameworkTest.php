@@ -13,12 +13,12 @@ use Drupal\Core\Ajax\SettingsCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Performs tests on AJAX framework functions.
- *
- * @group Ajax
  */
+#[Group('Ajax')]
 class FrameworkTest extends BrowserTestBase {
 
   /**

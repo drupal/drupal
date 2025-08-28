@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the node_access system stores the proper fallback marker.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessLanguageFallbackTest extends NodeTestBase {
 
   /**

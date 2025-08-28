@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the upgrade path for the router table update.
- *
- * @group Update
  */
+#[Group('Update')]
 class RouteAliasUpdateTest extends UpdatePathTestBase {
 
   /**

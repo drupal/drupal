@@ -6,12 +6,12 @@ namespace Drupal\Tests\language\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the session language negotiation method.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageNegotiationSessionTest extends BrowserTestBase {
 
   /**

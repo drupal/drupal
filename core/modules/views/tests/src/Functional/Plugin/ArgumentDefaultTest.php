@@ -10,13 +10,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\argument_default\ArgumentDefaultTest as ArgumentDefaultTestPlugin;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests pluggable argument_default for views.
- *
- * @group views
  */
+#[Group('views')]
 class ArgumentDefaultTest extends ViewTestBase {
 
   /**

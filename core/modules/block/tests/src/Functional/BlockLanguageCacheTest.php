@@ -6,12 +6,12 @@ namespace Drupal\Tests\block\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests display of menu blocks with multiple languages.
- *
- * @group block
  */
+#[Group('block')]
 class BlockLanguageCacheTest extends BrowserTestBase {
 
   /**

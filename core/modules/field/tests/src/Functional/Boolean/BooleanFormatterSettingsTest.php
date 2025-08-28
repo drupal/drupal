@@ -7,12 +7,12 @@ namespace Drupal\Tests\field\Functional\Boolean;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Boolean field formatter settings.
- *
- * @group field
  */
+#[Group('field')]
 class BooleanFormatterSettingsTest extends BrowserTestBase {
 
   /**

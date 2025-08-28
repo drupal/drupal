@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "MenuLinkContent" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class MenuLinkContentTest extends ResourceTestBase {
 
   use CommonCollectionFilterAccessTestPatternsTrait;

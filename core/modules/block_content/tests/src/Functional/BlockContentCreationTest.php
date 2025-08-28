@@ -7,14 +7,13 @@ namespace Drupal\Tests\block_content\Functional;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Database\Database;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore testblock
-
 /**
  * Create a block and test saving it.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockContentCreationTest extends BlockContentTestBase {
 
   /**

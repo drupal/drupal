@@ -8,12 +8,12 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the basic display plugin.
- *
- * @group views
  */
+#[Group('views')]
 class DisplayTest extends ViewTestBase {
 
   /**

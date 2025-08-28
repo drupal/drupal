@@ -8,13 +8,13 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Tests the History endpoints.
- *
- * @group history
  */
+#[Group('history')]
 class HistoryTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

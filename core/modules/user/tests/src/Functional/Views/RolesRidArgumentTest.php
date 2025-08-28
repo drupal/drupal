@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional\Views;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the handler of the user: roles argument.
  *
- * @group user
  * @see \Drupal\user\Plugin\views\argument\RolesRid
  */
+#[Group('user')]
 class RolesRidArgumentTest extends UserTestBase {
 
   /**

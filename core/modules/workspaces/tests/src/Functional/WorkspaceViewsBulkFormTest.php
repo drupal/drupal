@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\views\Functional\BulkFormTest;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the views bulk form in a workspace.
- *
- * @group views
- * @group workspaces
  */
+#[Group('views')]
+#[Group('workspaces')]
 class WorkspaceViewsBulkFormTest extends BulkFormTest {
 
   use WorkspaceTestUtilities;

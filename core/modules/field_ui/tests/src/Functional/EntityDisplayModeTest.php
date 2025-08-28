@@ -8,12 +8,12 @@ use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the entity display modes UI.
- *
- * @group field_ui
  */
+#[Group('field_ui')]
 class EntityDisplayModeTest extends BrowserTestBase {
 
   /**

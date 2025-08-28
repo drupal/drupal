@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\help\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verify the order of the help page.
- *
- * @group help
  */
+#[Group('help')]
 class HelpPageOrderTest extends BrowserTestBase {
 
   /**

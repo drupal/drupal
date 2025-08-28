@@ -7,13 +7,13 @@ namespace Drupal\Tests\views_ui\Functional;
 use Drupal\Component\Utility\Unicode;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the display UI.
- *
- * @group views_ui
- * @group #slow
  */
+#[Group('views_ui')]
+#[Group('#slow')]
 class DisplayTest extends UITestBase {
 
   /**

@@ -11,12 +11,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
 use Drupal\Tests\EntityViewTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests setting up default images both to the field and field storage.
- *
- * @group image
  */
+#[Group('image')]
 class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
   use TestFileCreationTrait {

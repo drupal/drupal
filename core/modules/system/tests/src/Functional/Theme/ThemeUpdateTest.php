@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests low-level theme functions.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class ThemeUpdateTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

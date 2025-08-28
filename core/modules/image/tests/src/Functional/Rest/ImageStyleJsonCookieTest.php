@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\image\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Image Style Json Cookie.
  */
+#[Group('rest')]
 class ImageStyleJsonCookieTest extends ImageStyleResourceTestBase {
 
   use CookieResourceTestTrait;

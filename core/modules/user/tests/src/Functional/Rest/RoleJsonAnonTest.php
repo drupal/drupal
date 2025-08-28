@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Role Json Anon.
  */
+#[Group('rest')]
 class RoleJsonAnonTest extends RoleResourceTestBase {
 
   use AnonResourceTestTrait;

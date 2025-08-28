@@ -6,10 +6,12 @@ namespace Drupal\Tests\views\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests View Xml Cookie.
  */
+#[Group('rest')]
 class ViewXmlCookieTest extends ViewResourceTestBase {
 
   use CookieResourceTestTrait;

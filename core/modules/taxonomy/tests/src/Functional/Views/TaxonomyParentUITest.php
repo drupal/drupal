@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Tests\views_ui\Functional\UITestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests views taxonomy parent plugin UI.
  *
- * @group taxonomy
  * @see Drupal\taxonomy\Plugin\views\access\Role
  */
+#[Group('taxonomy')]
 class TaxonomyParentUITest extends UITestBase {
 
   /**

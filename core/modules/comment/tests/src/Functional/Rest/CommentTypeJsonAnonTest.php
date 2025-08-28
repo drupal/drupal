@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Comment Type Json Anon.
  */
+#[Group('rest')]
 class CommentTypeJsonAnonTest extends CommentTypeResourceTestBase {
 
   use AnonResourceTestTrait;

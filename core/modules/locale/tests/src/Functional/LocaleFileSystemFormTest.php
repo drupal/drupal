@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the locale functionality in the altered file settings form.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleFileSystemFormTest extends BrowserTestBase {
 
   /**

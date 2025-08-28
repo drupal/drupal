@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\workspaces\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test workspace entities for JSON requests with cookie authentication.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspaceJsonCookieTest extends WorkspaceResourceTestBase {
 
   use CookieResourceTestTrait;

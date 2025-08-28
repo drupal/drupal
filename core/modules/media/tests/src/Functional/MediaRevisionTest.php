@@ -10,12 +10,12 @@ use Drupal\media\Entity\Media;
 use Drupal\media\MediaInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the revisions of media entities.
- *
- * @group media
  */
+#[Group('media')]
 class MediaRevisionTest extends MediaFunctionalTestBase {
 
   /**

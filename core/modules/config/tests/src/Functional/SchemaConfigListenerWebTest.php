@@ -6,12 +6,12 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the functionality of ConfigSchemaChecker in BrowserTestBase tests.
- *
- * @group config
  */
+#[Group('config')]
 class SchemaConfigListenerWebTest extends BrowserTestBase {
 
   /**

@@ -8,13 +8,14 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\ViewExecutable;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests handler UI for views.
  *
- * @group views_ui
  * @see \Drupal\views\Plugin\views\HandlerBase
  */
+#[Group('views_ui')]
 class HandlerTest extends UITestBase {
 
   /**

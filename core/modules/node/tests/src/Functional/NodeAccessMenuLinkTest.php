@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the interaction of the node access system with menu links.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessMenuLinkTest extends NodeTestBase {
 
   /**

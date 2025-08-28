@@ -6,10 +6,12 @@ namespace Drupal\Tests\system\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Action
+ * Tests Action Xml Anon.
  */
+#[Group('Action')]
 class ActionXmlAnonTest extends ActionResourceTestBase {
 
   use AnonResourceTestTrait;

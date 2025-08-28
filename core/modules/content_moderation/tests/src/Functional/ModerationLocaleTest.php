@@ -6,13 +6,13 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\node\NodeInterface;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test content_moderation functionality with localization and translation.
- *
- * @group content_moderation
- * @group #slow
  */
+#[Group('content_moderation')]
+#[Group('#slow')]
 class ModerationLocaleTest extends ModerationStateTestBase {
 
   use ContentTranslationTestTrait;

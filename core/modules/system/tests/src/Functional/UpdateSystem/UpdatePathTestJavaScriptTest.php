@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the presence of JavaScript at update.php.
- *
- * @group Update
  */
+#[Group('Update')]
 class UpdatePathTestJavaScriptTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

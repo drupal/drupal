@@ -7,13 +7,13 @@ namespace Drupal\Tests\options\Functional;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Functional\FieldTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Options field UI functionality.
- *
- * @group options
- * @group #slow
  */
+#[Group('options')]
+#[Group('#slow')]
 class OptionsFieldUITest extends FieldTestBase {
 
   /**

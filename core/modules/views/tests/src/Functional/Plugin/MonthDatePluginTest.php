@@ -6,12 +6,12 @@ namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Core\Url;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Month Date Plugin.
- *
- * @group views
  */
+#[Group('views')]
 class MonthDatePluginTest extends ViewTestBase {
 
   /**

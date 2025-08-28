@@ -11,12 +11,12 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the functions for generating paths and URLs for image styles.
- *
- * @group image
  */
+#[Group('image')]
 class ImageStylesPathAndUrlTest extends BrowserTestBase {
 
   use TestFileCreationTrait {

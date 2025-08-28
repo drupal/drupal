@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "Term" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class TermTest extends ResourceTestBase {
 
   use CommonCollectionFilterAccessTestPatternsTrait;
@@ -457,9 +458,8 @@ class TermTest extends ResourceTestBase {
    * Tests GETting a term with a parent term other than the default <root> (0).
    *
    * @see ::getExpectedNormalizedEntity()
-   *
-   * @dataProvider providerTestGetIndividualTermWithParent
    */
+  #[DataProvider('providerTestGetIndividualTermWithParent')]
   public function testGetIndividualTermWithParent(array $parent_term_ids): void {
     // Create all possible parent terms.
     Term::create(['vid' => Vocabulary::load('camelids')->id()])

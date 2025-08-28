@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\filter\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Filter Format Json Basic Auth.
  */
+#[Group('rest')]
 class FilterFormatJsonBasicAuthTest extends FilterFormatResourceTestBase {
 
   use BasicAuthResourceTestTrait;

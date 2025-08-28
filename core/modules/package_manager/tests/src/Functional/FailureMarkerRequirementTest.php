@@ -9,13 +9,14 @@ use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\SandboxManagerBase;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that Package Manager's requirements check for the failure marker.
  *
- * @group package_manager
  * @internal
  */
+#[Group('package_manager')]
 class FailureMarkerRequirementTest extends PackageManagerTestBase {
   use StringTranslationTrait;
 

@@ -7,15 +7,15 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\Tests\node\Traits\NodeAccessTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests behavior of the node access subsystem if the base table is not node.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessBaseTableTest extends NodeTestBase {
 
   use EntityReferenceFieldCreationTrait;

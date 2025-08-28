@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Functional;
 
-use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\SchemaCheckTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures the language config schema is correct.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageConfigSchemaTest extends BrowserTestBase {
 
   use SchemaCheckTestTrait;

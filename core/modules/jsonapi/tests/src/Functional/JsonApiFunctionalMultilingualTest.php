@@ -12,14 +12,14 @@ use Drupal\node\Entity\Node;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests JSON:API multilingual support.
  *
- * @group jsonapi
- *
  * @internal
  */
+#[Group('jsonapi')]
 class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests uninstalling the Workspaces module.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspacesUninstallTest extends BrowserTestBase {
   use ContentTypeCreationTrait;
 

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node type initial language settings.
- *
- * @group node
  */
+#[Group('node')]
 class NodeTypeInitialLanguageTest extends NodeTestBase {
 
   /**

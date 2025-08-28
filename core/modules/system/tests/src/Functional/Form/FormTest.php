@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\form_test\Form\FormTestDisabledElementsForm;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
-use Drupal\filter\Entity\FilterFormat;
-use Behat\Mink\Element\NodeElement;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests various form element validation mechanisms.
- *
- * @group Form
  */
+#[Group('Form')]
 class FormTest extends BrowserTestBase {
 
   /**

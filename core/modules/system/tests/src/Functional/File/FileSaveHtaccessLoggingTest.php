@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\File;
 
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the log message added by the HtaccessWriter service.
- *
- * @group File
  */
+#[Group('File')]
 class FileSaveHtaccessLoggingTest extends BrowserTestBase {
 
   /**

@@ -6,13 +6,14 @@ namespace Drupal\Tests\node\Functional\Views\Wizard;
 
 use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the wizard with node_revision as base table.
  *
- * @group node
  * @see \Drupal\node\Plugin\views\wizard\NodeRevision
  */
+#[Group('node')]
 class NodeRevisionWizardTest extends WizardTestBase {
 
   /**

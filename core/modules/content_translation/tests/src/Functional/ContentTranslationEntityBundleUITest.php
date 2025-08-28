@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the content translation behaviors on entity bundle UI.
- *
- * @group content_translation
  */
+#[Group('content_translation')]
 class ContentTranslationEntityBundleUITest extends BrowserTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the moderation form, specifically on nodes.
- *
- * @group content_moderation
  */
+#[Group('content_moderation')]
 class ModerationFormTest extends ModerationStateTestBase {
 
   use ContentTranslationTestTrait;
@@ -501,8 +501,8 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * Tests that workflows and states can not be deleted if they are in use.
    *
-   * @covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowHasData
-   * @covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowStateHasData
+   * @legacy-covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowHasData
+   * @legacy-covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowStateHasData
    */
   public function testWorkflowInUse(): void {
     $user = $this->createUser([

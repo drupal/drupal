@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
-use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that a double slash is not in d7_file file not found migrate messages.
- *
- * @group migrate_drupal_ui
  */
+#[Group('migrate_drupal_ui')]
 class DoubleSlashTest extends MigrateUpgradeExecuteTestBase {
 
   /**

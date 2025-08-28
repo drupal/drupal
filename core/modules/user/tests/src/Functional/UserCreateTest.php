@@ -8,12 +8,12 @@ use Drupal\Core\Test\AssertMailTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the create user administration page.
- *
- * @group user
  */
+#[Group('user')]
 class UserCreateTest extends BrowserTestBase {
 
   use AssertMailTrait {

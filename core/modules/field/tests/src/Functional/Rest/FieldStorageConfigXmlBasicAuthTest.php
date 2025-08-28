@@ -6,10 +6,12 @@ namespace Drupal\Tests\field\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Field Storage Config Xml Basic Auth.
  */
+#[Group('rest')]
 class FieldStorageConfigXmlBasicAuthTest extends FieldStorageConfigResourceTestBase {
 
   use BasicAuthResourceTestTrait;

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test SimplePageVariant main content rendering fallback page display variant.
- *
- * @group system
  */
+#[Group('system')]
 class MainContentFallbackTest extends BrowserTestBase {
 
   /**

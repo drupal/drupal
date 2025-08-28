@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional\Views;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the comment row plugin.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentRowTest extends CommentTestBase {
 
   /**

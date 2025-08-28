@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Create a node and test edit permissions.
- *
- * @group node
  */
+#[Group('node')]
 class PageViewTest extends NodeTestBase {
 
   /**

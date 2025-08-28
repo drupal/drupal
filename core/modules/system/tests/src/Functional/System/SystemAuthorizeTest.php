@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the authorize.php script and related API.
- *
- * @group legacy
- * @group system
  */
+#[IgnoreDeprecations]
+#[Group('system')]
 class SystemAuthorizeTest extends BrowserTestBase {
 
   /**

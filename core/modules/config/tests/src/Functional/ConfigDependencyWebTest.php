@@ -6,12 +6,12 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests configuration entities.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigDependencyWebTest extends BrowserTestBase {
 
   /**

@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\Menu;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the route access checks on menu links.
- *
- * @group Menu
  */
+#[Group('Menu')]
 class MenuAccessTest extends BrowserTestBase {
 
   /**
@@ -76,8 +76,8 @@ class MenuAccessTest extends BrowserTestBase {
   /**
    * Test routes implementing _access_admin_menu_block_page.
    *
-   * @covers \Drupal\system\EventSubscriber\AccessRouteAlterSubscriber::accessAdminMenuBlockPage
-   * @covers \Drupal\system\Access\SystemAdminMenuBlockAccessCheck::access
+   * @legacy-covers \Drupal\system\EventSubscriber\AccessRouteAlterSubscriber::accessAdminMenuBlockPage
+   * @legacy-covers \Drupal\system\Access\SystemAdminMenuBlockAccessCheck::access
    */
   public function testSystemAdminMenuBlockAccessCheck(): void {
     // Create an admin user.

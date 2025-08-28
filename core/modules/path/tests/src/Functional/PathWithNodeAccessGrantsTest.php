@@ -6,12 +6,12 @@ namespace Drupal\Tests\path\Functional;
 
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Confirm that paths work with node access grants implementations.
- *
- * @group path
  */
+#[Group('path')]
 class PathWithNodeAccessGrantsTest extends PathTestBase {
 
   use ContentTranslationTestTrait;

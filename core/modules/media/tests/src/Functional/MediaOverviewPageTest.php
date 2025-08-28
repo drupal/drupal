@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional;
 
-use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\media\Entity\Media;
-use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\media\Entity\Media;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Media overview page.
- *
- * @group media
  */
+#[Group('media')]
 class MediaOverviewPageTest extends MediaFunctionalTestBase {
 
   use TestFileCreationTrait;

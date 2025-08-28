@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Gettext\PoItem;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\Entity\File;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the creation of numeric fields.
- *
- * @group field
  */
+#[Group('field')]
 class NumericFormatPluralTest extends ViewTestBase {
 
   /**

@@ -16,14 +16,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore amphibius Hippopotamidae
-
 /**
  * Tests the Comment entity's cache tags.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   use CommentTestTrait;

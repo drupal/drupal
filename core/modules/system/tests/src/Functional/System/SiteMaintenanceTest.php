@@ -8,12 +8,12 @@ use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests access to site while in maintenance mode.
- *
- * @group system
  */
+#[Group('system')]
 class SiteMaintenanceTest extends BrowserTestBase {
 
   use AssertMailTrait {

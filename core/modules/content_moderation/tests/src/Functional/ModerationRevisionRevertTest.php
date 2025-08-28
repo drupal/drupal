@@ -7,12 +7,12 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test revision revert.
- *
- * @group content_moderation
  */
+#[Group('content_moderation')]
 class ModerationRevisionRevertTest extends BrowserTestBase {
 
   use ContentTypeCreationTrait;

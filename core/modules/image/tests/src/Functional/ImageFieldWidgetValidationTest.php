@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\image\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the image field widget validation.
- *
- * @group image
  */
+#[Group('image')]
 class ImageFieldWidgetValidationTest extends ImageFieldTestBase {
 
   /**

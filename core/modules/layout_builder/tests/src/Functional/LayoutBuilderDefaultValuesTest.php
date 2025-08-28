@@ -14,14 +14,13 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore blocknodetest typefield
-
 /**
  * Tests rendering default field values in Layout Builder.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
 
   use ImageFieldCreationTrait;

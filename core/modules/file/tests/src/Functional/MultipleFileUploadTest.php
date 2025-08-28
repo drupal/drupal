@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests multiple file upload.
- *
- * @group file
  */
+#[Group('file')]
 class MultipleFileUploadTest extends BrowserTestBase {
 
   /**

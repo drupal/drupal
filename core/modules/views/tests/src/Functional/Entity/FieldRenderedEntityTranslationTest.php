@@ -6,13 +6,13 @@ namespace Drupal\Tests\views\Functional\Entity;
 
 use Drupal\Core\Language\Language;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests the rendering of the 'rendered_entity' field and translations.
- *
- * @group views
  */
+#[Group('views')]
 class FieldRenderedEntityTranslationTest extends ViewTestBase {
 
   /**

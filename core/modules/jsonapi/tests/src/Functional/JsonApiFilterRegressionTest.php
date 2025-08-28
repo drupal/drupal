@@ -13,16 +13,15 @@ use Drupal\node\Entity\Node;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\taxonomy\Entity\Term;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore llamalovers catcuddlers Cuddlers
-
 /**
  * JSON:API regression tests.
  *
- * @group jsonapi
- *
  * @internal
  */
+#[Group('jsonapi')]
 class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
 
   use CommentTestTrait;

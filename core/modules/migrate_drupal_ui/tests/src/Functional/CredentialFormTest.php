@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Core\Database\Database;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore drupalmysqldriverdatabasemysql
-
 /**
  * Test the credential form for both Drupal 6 and Drupal 7 sources.
  *
  * The credential form is tested with incorrect credentials, correct
  * credentials, and incorrect file paths.
- *
- * @group migrate_drupal_ui
- * @group #slow
  */
+#[Group('migrate_drupal_ui')]
+#[Group('#slow')]
 class CredentialFormTest extends MigrateUpgradeTestBase {
 
   /**
@@ -26,9 +26,8 @@ class CredentialFormTest extends MigrateUpgradeTestBase {
 
   /**
    * Test the credential form.
-   *
-   * @dataProvider providerCredentialForm
    */
+  #[DataProvider('providerCredentialForm')]
   public function testCredentialFrom($path_to_database): void {
     $this->loadFixture($this->getModulePath('migrate_drupal') . $path_to_database);
     $session = $this->assertSession();

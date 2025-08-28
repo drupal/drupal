@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the interaction of the node access system with fields.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessFieldTest extends NodeTestBase {
 
   /**

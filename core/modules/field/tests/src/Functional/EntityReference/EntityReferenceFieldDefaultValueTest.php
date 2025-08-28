@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Functional\EntityReference;
 
-use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\SchemaCheckTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests entity reference field default values storage in CMI.
- *
- * @group entity_reference
  */
+#[Group('entity_reference')]
 class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
 
   use SchemaCheckTestTrait;

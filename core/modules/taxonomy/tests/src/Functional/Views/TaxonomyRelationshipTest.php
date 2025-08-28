@@ -7,12 +7,12 @@ namespace Drupal\Tests\taxonomy\Functional\Views;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests taxonomy relationships with parent term and node.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyRelationshipTest extends TaxonomyTestBase {
 
   /**

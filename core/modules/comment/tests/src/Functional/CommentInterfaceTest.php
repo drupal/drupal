@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\CommentPreviewMode;
-use Drupal\Core\Url;
 use Drupal\comment\CommentManagerInterface;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\comment\CommentPreviewMode;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment user interfaces.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentInterfaceTest extends CommentTestBase {
 
   /**

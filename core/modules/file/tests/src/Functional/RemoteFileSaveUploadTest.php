@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the file uploading functions.
- *
- * @group file
  */
+#[Group('file')]
 class RemoteFileSaveUploadTest extends SaveUploadTest {
 
   /**

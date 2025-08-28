@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\language\Entity\ConfigurableLanguage;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "ConfigurableLanguage" config entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class ConfigurableLanguageTest extends ConfigEntityResourceTestBase {
 
   /**

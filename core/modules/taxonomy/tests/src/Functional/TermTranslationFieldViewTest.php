@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the translation of taxonomy terms field on nodes.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermTranslationFieldViewTest extends TaxonomyTestBase {
 
   use TaxonomyTranslationTestTrait;

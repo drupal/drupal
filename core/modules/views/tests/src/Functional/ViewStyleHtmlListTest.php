@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the View HTML List style.
- *
- * @group views
  */
+#[Group('views')]
 class ViewStyleHtmlListTest extends ViewTestBase {
 
   /**

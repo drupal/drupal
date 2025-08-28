@@ -8,15 +8,15 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\RoleInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Test the ckeditor5-stylesheets theme config property.
- *
- * @group ckeditor5
  */
+#[Group('ckeditor5')]
 class AddedStylesheetsTest extends BrowserTestBase {
 
   /**

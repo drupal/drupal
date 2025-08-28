@@ -12,12 +12,12 @@ use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Shortcut entity's cache tags.
- *
- * @group shortcut
  */
+#[Group('shortcut')]
 class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 

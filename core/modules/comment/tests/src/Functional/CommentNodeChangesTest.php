@@ -7,12 +7,12 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\comment\Entity\Comment;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that comments behave correctly when the node is changed.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentNodeChangesTest extends CommentTestBase {
 
   /**

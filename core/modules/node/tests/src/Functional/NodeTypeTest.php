@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
-use Drupal\Core\Url;
-use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that node type functions work correctly.
- *
- * @group node
  */
+#[Group('node')]
 class NodeTypeTest extends NodeTestBase {
 
   use AssertBreadcrumbTrait;

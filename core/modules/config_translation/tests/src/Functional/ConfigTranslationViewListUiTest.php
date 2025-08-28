@@ -7,14 +7,13 @@ namespace Drupal\Tests\config_translation\Functional;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\views_ui\Functional\UITestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore später
-
 /**
  * Visit view list and test if translate is available.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigTranslationViewListUiTest extends UITestBase {
 
   /**

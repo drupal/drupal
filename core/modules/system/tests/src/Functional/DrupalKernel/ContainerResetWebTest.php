@@ -6,14 +6,13 @@ namespace Drupal\Tests\system\Functional\DrupalKernel;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore contenedor fuera reiniciado Después
-
 /**
  * Ensures that the container rebuild works as expected.
- *
- * @group DrupalKernel
  */
+#[Group('DrupalKernel')]
 class ContainerResetWebTest extends BrowserTestBase {
 
   /**

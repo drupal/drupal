@@ -8,12 +8,12 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Tests\WaitTerminateTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests modifying path aliases from the UI.
- *
- * @group path
  */
+#[Group('path')]
 class PathAliasTest extends PathTestBase {
 
   use WaitTerminateTestTrait;

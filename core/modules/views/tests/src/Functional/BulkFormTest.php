@@ -7,13 +7,14 @@ namespace Drupal\Tests\views\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the views bulk form test.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\field\BulkForm
  */
+#[Group('views')]
 class BulkFormTest extends BrowserTestBase {
 
   use NodeCreationTrait;

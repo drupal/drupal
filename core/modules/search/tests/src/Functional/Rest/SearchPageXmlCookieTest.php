@@ -6,10 +6,12 @@ namespace Drupal\Tests\search\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Search Page Xml Cookie.
  */
+#[Group('rest')]
 class SearchPageXmlCookieTest extends SearchPageResourceTestBase {
 
   use CookieResourceTestTrait;

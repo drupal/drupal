@@ -6,10 +6,12 @@ namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Contact Form Xml Cookie.
  */
+#[Group('rest')]
 class ContactFormXmlCookieTest extends ContactFormResourceTestBase {
 
   use CookieResourceTestTrait;

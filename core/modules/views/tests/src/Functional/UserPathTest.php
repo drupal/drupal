@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests overriding user paths using wildcards.
- *
- * @group views
  */
+#[Group('views')]
 class UserPathTest extends ViewTestBase {
 
   /**

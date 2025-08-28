@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that a site on 10.4.0 is prevented from downgrading to 11.0.0.
  *
  * This tests the upgrade path when there is a pair of equivalent updates. The
  * earlier update is 10400 and the latter one is 11102.
- *
- * @group Update
  */
+#[Group('Update')]
 class PreventDowngradeTest extends UpdatePathTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that comments behave correctly when added as entity references.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentEntityReferenceTest extends CommentTestBase {
 
   use EntityReferenceFieldCreationTrait;

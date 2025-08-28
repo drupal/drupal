@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the node language extra field display.
- *
- * @group node
  */
+#[Group('node')]
 class NodeViewLanguageTest extends NodeTestBase {
 
   /**

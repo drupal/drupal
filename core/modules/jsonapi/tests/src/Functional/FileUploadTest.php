@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
@@ -15,17 +14,17 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Http\Message\ResponseInterface;
 
 // cspell:ignore èxample msword
-
 /**
  * Tests binary data file upload route.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class FileUploadTest extends ResourceTestBase {
 
   /**

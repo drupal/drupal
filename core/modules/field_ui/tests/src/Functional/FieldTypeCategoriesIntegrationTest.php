@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests field UI integration with field type categories for loading libraries.
- *
- * @group field_ui
  */
+#[Group('field_ui')]
 class FieldTypeCategoriesIntegrationTest extends BrowserTestBase {
 
   /**

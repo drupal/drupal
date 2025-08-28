@@ -6,13 +6,14 @@ namespace Drupal\Tests\package_manager\Functional;
 
 use Drupal\package_manager\ComposerInspector;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that Package Manager shows the Composer version on the status report.
  *
- * @group package_manager
  * @internal
  */
+#[Group('package_manager')]
 class ComposerRequirementTest extends PackageManagerTestBase {
 
   /**

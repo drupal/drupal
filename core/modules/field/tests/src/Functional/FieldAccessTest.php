@@ -6,12 +6,12 @@ namespace Drupal\Tests\field\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Field access.
- *
- * @group field
  */
+#[Group('field')]
 class FieldAccessTest extends FieldTestBase {
 
   /**

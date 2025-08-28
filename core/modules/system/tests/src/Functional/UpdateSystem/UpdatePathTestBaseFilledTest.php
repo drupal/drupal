@@ -8,14 +8,13 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\system\Entity\Action;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore hola testblock usuario
-
 /**
  * Runs UpdatePathTestBase with a dump filled with content.
- *
- * @group Update
  */
+#[Group('Update')]
 class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
 
   /**

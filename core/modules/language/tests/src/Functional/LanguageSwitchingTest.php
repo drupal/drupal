@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore publi publié
-
 /**
  * Functional tests for the language switching feature.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageSwitchingTest extends BrowserTestBase {
 
   /**

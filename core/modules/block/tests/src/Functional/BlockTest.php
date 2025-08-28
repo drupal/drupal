@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Functional;
 
-use Drupal\Component\Utility\Html;
 use Drupal\block\Entity\Block;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests basic block functionality.
- *
- * @group block
  */
+#[Group('block')]
 class BlockTest extends BlockTestBase {
 
   /**

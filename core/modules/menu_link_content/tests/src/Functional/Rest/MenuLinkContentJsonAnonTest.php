@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\menu_link_content\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Menu Link Content Json Anon.
  */
+#[Group('rest')]
 class MenuLinkContentJsonAnonTest extends MenuLinkContentResourceTestBase {
 
   use AnonResourceTestTrait;

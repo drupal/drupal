@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the views bulk form with batch action.
  *
- * @group action
  * @see \Drupal\action\Plugin\views\field\BulkForm
  */
+#[Group('action')]
 class UserBatchActionTest extends BrowserTestBase {
 
   /**

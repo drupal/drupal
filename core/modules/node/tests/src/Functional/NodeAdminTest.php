@@ -10,12 +10,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node administration page functionality.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAdminTest extends NodeTestBase {
 
   use NodeAccessTrait;

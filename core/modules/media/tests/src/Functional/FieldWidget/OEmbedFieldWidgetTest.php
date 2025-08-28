@@ -6,12 +6,14 @@ namespace Drupal\Tests\media\Functional\FieldWidget;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\media\Plugin\Field\FieldWidget\OEmbedWidget
+ * Tests OEmbed Field Widget.
  *
- * @group media
+ * @legacy-covers \Drupal\media\Plugin\Field\FieldWidget\OEmbedWidget
  */
+#[Group('media')]
 class OEmbedFieldWidgetTest extends MediaFunctionalTestBase {
 
   /**

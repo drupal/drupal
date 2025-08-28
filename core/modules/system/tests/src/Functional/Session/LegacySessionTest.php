@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Session;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Drupal legacy session handling tests.
- *
- * @group legacy
- * @group Session
  */
+#[IgnoreDeprecations]
+#[Group('Session')]
 class LegacySessionTest extends BrowserTestBase {
 
   /**

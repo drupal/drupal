@@ -8,12 +8,12 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that update hooks are properly run.
- *
- * @group Update
  */
+#[Group('Update')]
 class UpdateSchemaTest extends BrowserTestBase {
 
   use RequirementsPageTrait;

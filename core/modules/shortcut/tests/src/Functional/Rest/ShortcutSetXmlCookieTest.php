@@ -6,10 +6,12 @@ namespace Drupal\Tests\shortcut\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Shortcut Set Xml Cookie.
  */
+#[Group('rest')]
 class ShortcutSetXmlCookieTest extends ShortcutSetResourceTestBase {
 
   use CookieResourceTestTrait;

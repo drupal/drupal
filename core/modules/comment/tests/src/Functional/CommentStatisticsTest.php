@@ -8,12 +8,12 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentPreviewMode;
 use Drupal\comment\Entity\Comment;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment statistics on nodes.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentStatisticsTest extends CommentTestBase {
 
   /**

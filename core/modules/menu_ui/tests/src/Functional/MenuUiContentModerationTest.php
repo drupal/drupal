@@ -7,12 +7,12 @@ namespace Drupal\Tests\menu_ui\Functional;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Menu UI and Content Moderation integration.
- *
- * @group menu_ui
  */
+#[Group('menu_ui')]
 class MenuUiContentModerationTest extends BrowserTestBase {
 
   use ContentModerationTestTrait;

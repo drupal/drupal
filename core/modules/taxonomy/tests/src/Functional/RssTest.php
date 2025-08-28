@@ -6,12 +6,12 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the taxonomy RSS display.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class RssTest extends TaxonomyTestBase {
 
   /**

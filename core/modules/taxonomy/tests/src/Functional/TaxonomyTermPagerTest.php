@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Ensures that the term pager works properly.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyTermPagerTest extends TaxonomyTestBase {
 
   /**

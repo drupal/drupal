@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\syslog\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests syslog settings.
- *
- * @group syslog
  */
+#[Group('syslog')]
 class SyslogTest extends BrowserTestBase {
 
   /**

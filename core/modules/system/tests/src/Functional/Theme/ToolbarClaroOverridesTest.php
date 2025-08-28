@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\Theme;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the loading of Claro assets on a non-Claro default theme.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class ToolbarClaroOverridesTest extends BrowserTestBase {
 
   use WaitTerminateTestTrait;

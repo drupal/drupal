@@ -6,14 +6,13 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\node\Entity\Node;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore blocktest
-
 /**
  * Tests the Layout Builder UI with blocks.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
 
   /**

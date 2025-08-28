@@ -7,17 +7,18 @@ namespace Drupal\Tests\system\Functional\Routing;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\router_test\TestControllers;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\Routing\Alias;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Drupal\Core\Url;
 
 /**
  * Functional class for the full integrated routing system.
- *
- * @group Routing
  */
+#[Group('Routing')]
 class RouterTest extends BrowserTestBase {
 
   /**
@@ -371,9 +372,8 @@ class RouterTest extends BrowserTestBase {
 
   /**
    * Tests route aliasing with deprecation.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testRouteAliasWithDeprecation(): void {
     $request = \Drupal::request();
     $route_provider = \Drupal::service('router.route_provider');

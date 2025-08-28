@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests language picker compatibility with hook_entity_field_access.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageEntityFieldAccessHookTest extends BrowserTestBase {
 
   /**

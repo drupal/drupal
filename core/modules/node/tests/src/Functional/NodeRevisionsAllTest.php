@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\node\NodeInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests global node CRUD operation permissions.
- *
- * @group node
  */
+#[Group('node')]
 class NodeRevisionsAllTest extends NodeTestBase {
 
   /**

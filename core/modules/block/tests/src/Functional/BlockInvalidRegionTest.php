@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Functional;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\block\Entity\Block;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that blocks assigned to invalid regions are disabled with a warning.
- *
- * @group block
  */
+#[Group('block')]
 class BlockInvalidRegionTest extends BrowserTestBase {
 
   /**

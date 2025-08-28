@@ -8,12 +8,12 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests moderated content administration page functionality.
- *
- * @group content_moderation
  */
+#[Group('content_moderation')]
 class ModeratedContentViewTest extends BrowserTestBase {
 
   use ContentModerationTestTrait;

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that files are uploaded to proper locations.
- *
- * @group file
  */
+#[Group('file')]
 class FileFieldPathTest extends FileFieldTestBase {
 
   /**

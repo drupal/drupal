@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\field\Entity\FieldConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the file media source.
- *
- * @group media
  */
+#[Group('media')]
 class MediaSourceFileTest extends MediaFunctionalTestBase {
 
   /**

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verifies user access to log reports based on permissions.
  *
  * @see Drupal\dblog\Tests\DbLogTest
- *
- * @group dblog
  */
+#[Group('dblog')]
 class DbLogViewsTest extends DbLogTest {
 
   /**

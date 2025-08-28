@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the revision tab display.
@@ -12,9 +13,8 @@ use Drupal\node\Entity\NodeType;
  * This test is similar to NodeRevisionsUITest except that it uses a user with
  * the bypass node access permission to make sure that the revision access
  * check adds correct cacheability metadata.
- *
- * @group node
  */
+#[Group('node')]
 class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
   /**

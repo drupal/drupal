@@ -10,12 +10,12 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the features of the language configuration element field.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageConfigurationElementTest extends BrowserTestBase {
 
   /**

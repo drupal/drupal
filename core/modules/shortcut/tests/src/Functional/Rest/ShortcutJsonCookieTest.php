@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\shortcut\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Shortcut Json Cookie.
  */
+#[Group('rest')]
 class ShortcutJsonCookieTest extends ShortcutResourceTestBase {
 
   use CookieResourceTestTrait;

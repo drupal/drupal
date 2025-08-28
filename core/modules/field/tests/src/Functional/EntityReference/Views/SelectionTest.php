@@ -12,12 +12,12 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests entity reference selection handler.
- *
- * @group entity_reference
  */
+#[Group('entity_reference')]
 class SelectionTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

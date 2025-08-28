@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\menu_link_content\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Menu Link Content Json Cookie.
  */
+#[Group('rest')]
 class MenuLinkContentJsonCookieTest extends MenuLinkContentResourceTestBase {
 
   use CookieResourceTestTrait;

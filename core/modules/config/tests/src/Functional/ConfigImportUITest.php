@@ -7,12 +7,12 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the user interface for importing configuration.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigImportUITest extends BrowserTestBase {
 
   /**

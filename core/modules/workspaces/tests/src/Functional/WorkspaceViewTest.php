@@ -6,12 +6,12 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests permission controls on workspaces.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspaceViewTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;

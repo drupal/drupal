@@ -9,15 +9,15 @@ use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore português
-
 /**
  * Tests the feed display plugin with translated content.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\display\Feed
  */
+#[Group('views')]
 class DisplayFeedTranslationTest extends ViewTestBase {
 
   use ContentTranslationTestTrait;

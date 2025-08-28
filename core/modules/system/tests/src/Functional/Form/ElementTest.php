@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests building and processing of core form elements.
- *
- * @group Form
  */
+#[Group('Form')]
 class ElementTest extends BrowserTestBase {
 
   /**

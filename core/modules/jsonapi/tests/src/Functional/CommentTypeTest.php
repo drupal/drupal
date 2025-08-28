@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "CommentType" config entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class CommentTypeTest extends ConfigEntityResourceTestBase {
 
   /**

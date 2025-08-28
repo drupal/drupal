@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the block administration page for a non-default theme.
- *
- * @group block
  */
+#[Group('block')]
 class NonDefaultBlockAdminTest extends BrowserTestBase {
 
   /**

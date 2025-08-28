@@ -7,14 +7,13 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore Scarlett Johansson
-
 /**
  * Uploads files to translated nodes.
- *
- * @group file
  */
+#[Group('file')]
 class FileOnTranslatedEntityTest extends FileFieldTestBase {
 
   use ContentTranslationTestTrait;

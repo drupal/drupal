@@ -8,12 +8,12 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment administration and preview access.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentAccessTest extends BrowserTestBase {
 
   use CommentTestTrait;

@@ -7,12 +7,13 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests making node base fields' displays configurable.
- *
- * @group node
  */
+#[Group('node')]
 class NodeDisplayConfigurableTest extends NodeTestBase {
 
   /**
@@ -34,9 +35,8 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *   The region of the node html content where meta data is expected.
    * @param bool $field_classes
    *   If TRUE, check for field--name-XXX classes.
-   *
-   * @dataProvider provideThemes
    */
+  #[DataProvider('provideThemes')]
   public function testDisplayConfigurable(string $theme, string $metadata_region, bool $field_classes): void {
     \Drupal::service('theme_installer')->install([$theme]);
     $this->config('system.theme')->set('default', $theme)->save();

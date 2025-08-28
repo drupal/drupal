@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\path\Functional;
 
 use Drupal\taxonomy\Entity\Vocabulary;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests URL aliases for taxonomy terms.
- *
- * @group path
  */
+#[Group('path')]
 class PathTaxonomyTermTest extends PathTestBase {
 
   /**

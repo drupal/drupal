@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Generic module test for node.
- *
- * @group node
  */
+#[Group('node')]
 class GenericTest extends GenericModuleTestBase {
 
   /**

@@ -6,10 +6,12 @@ namespace Drupal\Tests\workflows\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Workflow Xml Basic Auth.
  */
+#[Group('rest')]
 class WorkflowXmlBasicAuthTest extends WorkflowResourceTestBase {
 
   use BasicAuthResourceTestTrait;

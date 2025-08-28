@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests for the MigrateController class.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateMessageControllerTest extends MigrateMessageTestBase {
 
   /**

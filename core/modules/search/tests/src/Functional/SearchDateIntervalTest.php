@@ -6,12 +6,12 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests searching with date filters that exclude some translations.
- *
- * @group search
  */
+#[Group('search')]
 class SearchDateIntervalTest extends BrowserTestBase {
 
   /**

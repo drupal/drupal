@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests form storage from cached pages.
- *
- * @group Form
  */
+#[Group('Form')]
 class FormStoragePageCacheTest extends BrowserTestBase {
 
   /**

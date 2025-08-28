@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Media Json Cookie.
  */
+#[Group('rest')]
 class MediaJsonCookieTest extends MediaResourceTestBase {
 
   use CookieResourceTestTrait;

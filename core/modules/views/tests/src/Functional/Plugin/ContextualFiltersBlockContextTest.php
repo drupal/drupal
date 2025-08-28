@@ -8,12 +8,12 @@ use Drupal\Core\Plugin\Context\ContextDefinitionInterface;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * A test for contextual filters exposed as block context.
- *
- * @group views
  */
+#[Group('views')]
 class ContextualFiltersBlockContextTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

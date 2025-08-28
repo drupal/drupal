@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Theme;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests overriding Twig engine settings via settings.php.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class TwigSettingsTest extends BrowserTestBase {
 
   /**

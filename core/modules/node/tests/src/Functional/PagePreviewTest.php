@@ -17,12 +17,12 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the node entity preview functionality.
- *
- * @group node
  */
+#[Group('node')]
 class PagePreviewTest extends NodeTestBase {
 
   use EntityReferenceFieldCreationTrait;

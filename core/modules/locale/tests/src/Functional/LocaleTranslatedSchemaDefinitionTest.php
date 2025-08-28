@@ -8,12 +8,12 @@ use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Adds and configures languages to check field schema definition.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
 
   use RequirementsPageTrait;

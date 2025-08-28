@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
  * Tests low-level theme functions.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class ThemeTest extends BrowserTestBase {
 
   /**

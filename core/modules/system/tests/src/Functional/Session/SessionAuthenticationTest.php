@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\Session;
 use Drupal\Core\Url;
 use Drupal\Tests\basic_auth\Traits\BasicAuthTestTrait;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests if sessions are correctly handled when a user authenticates.
- *
- * @group Session
  */
+#[Group('Session')]
 class SessionAuthenticationTest extends BrowserTestBase {
 
   use BasicAuthTestTrait;

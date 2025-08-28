@@ -7,13 +7,14 @@ namespace Drupal\Tests\node\Functional\Views;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the node.status_extra field handler.
  *
- * @group node
  * @see \Drupal\node\Plugin\views\filter\Status
  */
+#[Group('node')]
 class StatusExtraTest extends NodeTestBase {
 
   use NodeAccessTrait;

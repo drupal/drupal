@@ -8,12 +8,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the behavior of a field module after being disabled and re-enabled.
- *
- * @group field
  */
+#[Group('field')]
 class ReEnableModuleFieldTest extends BrowserTestBase {
 
   use CronRunTrait;

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the importing/exporting configuration based on the install profile.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigImportInstallProfileTest extends BrowserTestBase {
 
   /**

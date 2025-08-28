@@ -6,12 +6,12 @@ namespace Drupal\Tests\navigation\Functional;
 
 use Drupal\node\NodeInterface;
 use Drupal\Tests\content_moderation\Functional\ModerationStateTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the top bar behavior along with content moderation.
- *
- * @group navigation
  */
+#[Group('navigation')]
 class NavigationTopBarContentModerationTest extends ModerationStateTestBase {
 
   /**

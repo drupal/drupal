@@ -7,12 +7,12 @@ namespace Drupal\Tests\workflows\Functional;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\workflows\Entity\Workflow;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests workflow creation UI.
- *
- * @group workflows
  */
+#[Group('workflows')]
 class WorkflowUiTest extends BrowserTestBase {
 
   /**

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\Tests\TestFileCreationTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\taxonomy\VocabularyInterface;
+use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests image upload on taxonomy terms.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyImageTest extends TaxonomyTestBase {
 
   use TestFileCreationTrait {

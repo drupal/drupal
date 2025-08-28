@@ -12,12 +12,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\entity_test\Functional\Rest\EntityTestResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the 'daterange' field's normalization.
- *
- * @group datetime_range
  */
+#[Group('datetime_range')]
 class EntityTestDateRangeTest extends EntityTestResourceTestBase {
 
   use AnonResourceTestTrait;

@@ -6,12 +6,12 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the language functionality for the taxonomy terms.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermLanguageTest extends TaxonomyTestBase {
 
   /**

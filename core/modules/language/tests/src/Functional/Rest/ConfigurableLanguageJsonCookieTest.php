@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Configurable Language Json Cookie.
  */
+#[Group('rest')]
 class ConfigurableLanguageJsonCookieTest extends ConfigurableLanguageResourceTestBase {
 
   use CookieResourceTestTrait;

@@ -10,12 +10,12 @@ use Drupal\node\Entity\Node;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the taxonomy term view page and its translation.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyTermViewTest extends TaxonomyTestBase {
 
   /**

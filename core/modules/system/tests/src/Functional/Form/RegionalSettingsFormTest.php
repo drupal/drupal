@@ -6,13 +6,14 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the system_regional_settings form.
  *
- * @group system
- * @covers \Drupal\system\Form\RegionalForm
+ * @legacy-covers \Drupal\system\Form\RegionalForm
  */
+#[Group('system')]
 class RegionalSettingsFormTest extends BrowserTestBase {
 
   /**

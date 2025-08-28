@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that modules can define their last removed update function.
- *
- * @group system
  */
+#[Group('system')]
 class UpdatePathLastRemovedTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

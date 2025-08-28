@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\comment\CommentInterface;
 use Drupal\Core\Url;
-use Drupal\comment\Entity\Comment;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Tests the 'new' indicator posted on comments.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentNewIndicatorTest extends CommentTestBase {
 
   /**

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "EntityTest" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class EntityTestTest extends ResourceTestBase {
 
   /**

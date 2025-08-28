@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Taxonomy term entity's cache tags.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   /**

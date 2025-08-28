@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity_test\EntityTestHelper;
-use Drupal\node\Entity\Node;
-use Drupal\file\Entity\File;
 use Drupal\entity_test\Entity\EntityTestConstraints;
+use Drupal\entity_test\EntityTestHelper;
+use Drupal\file\Entity\File;
+use Drupal\node\Entity\Node;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests file listing page functionality.
- *
- * @group file
  */
+#[Group('file')]
 class FileListingTest extends FileFieldTestBase {
 
   /**

@@ -7,12 +7,12 @@ namespace Drupal\Tests\views_ui\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests some general functionality of editing views, like deleting a view.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class ViewEditTest extends UITestBase {
 
   /**

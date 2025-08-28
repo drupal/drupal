@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\system\Entity\Menu;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "Menu" config entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class MenuTest extends ConfigEntityResourceTestBase {
 
   /**

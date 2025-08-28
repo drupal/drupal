@@ -6,12 +6,12 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user logout.
- *
- * @group user
  */
+#[Group('user')]
 class UserLogoutTest extends BrowserTestBase {
 
   /**

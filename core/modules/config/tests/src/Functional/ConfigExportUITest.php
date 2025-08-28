@@ -8,12 +8,12 @@ use Drupal\Core\Archiver\Tar;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the user interface for exporting configuration.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigExportUITest extends BrowserTestBase {
 
   /**

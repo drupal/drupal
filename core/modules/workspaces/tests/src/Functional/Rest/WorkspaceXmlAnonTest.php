@@ -6,12 +6,12 @@ namespace Drupal\Tests\workspaces\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test workspace entities for unauthenticated XML requests.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspaceXmlAnonTest extends WorkspaceResourceTestBase {
 
   use AnonResourceTestTrait;

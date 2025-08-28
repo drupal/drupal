@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\workspaces\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the update path for string IDs in workspace_association.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspaceAssociationStringIdsUpdatePathTest extends UpdatePathTestBase {
 
   /**

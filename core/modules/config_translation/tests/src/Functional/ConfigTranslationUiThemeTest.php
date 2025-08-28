@@ -6,12 +6,12 @@ namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verifies theme configuration translation settings.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigTranslationUiThemeTest extends BrowserTestBase {
 
   /**

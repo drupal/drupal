@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests theme system initialization early in the page request.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class ThemeEarlyInitializationTest extends BrowserTestBase {
 
   /**

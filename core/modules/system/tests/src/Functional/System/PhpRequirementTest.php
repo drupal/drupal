@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\System;
 use Drupal\Core\Utility\PhpRequirements;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the output of PHP requirements on the status report.
- *
- * @group system
  */
+#[Group('system')]
 class PhpRequirementTest extends BrowserTestBase {
 
   use RequirementsPageTrait;

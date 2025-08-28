@@ -6,14 +6,14 @@ namespace Drupal\Tests\toolbar\Functional;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the cache contexts for toolbar.
- *
- * @group toolbar
  */
+#[Group('toolbar')]
 class ToolbarCacheContextsTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

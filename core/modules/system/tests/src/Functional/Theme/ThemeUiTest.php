@@ -6,13 +6,14 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\TestTools\Extension\InfoWriterTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the theme UI.
- *
- * @group Theme
- * @group #slow
  */
+#[Group('Theme')]
+#[Group('#slow')]
 class ThemeUiTest extends BrowserTestBase {
   use InfoWriterTrait;
 
@@ -85,9 +86,8 @@ class ThemeUiTest extends BrowserTestBase {
    *   The name of the theme $theme_name has set as a base theme.
    * @param string[] $base_theme_module_names
    *   Machine names of the modules required by $base_theme_to_uninstall.
-   *
-   * @dataProvider providerTestThemeInstallWithModuleDependencies
    */
+  #[DataProvider('providerTestThemeInstallWithModuleDependencies')]
   public function testThemeInstallWithModuleDependencies($theme_name, array $first_modules, array $second_modules, array $required_by_messages, $base_theme_to_uninstall, array $base_theme_module_names): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();

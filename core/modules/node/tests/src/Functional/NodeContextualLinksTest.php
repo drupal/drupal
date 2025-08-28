@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests views contextual links on nodes.
- *
- * @group node
  */
+#[Group('node')]
 class NodeContextualLinksTest extends NodeTestBase {
 
   /**

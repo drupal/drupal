@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\responsive_image\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Responsive Image Style Json Cookie.
  */
+#[Group('rest')]
 class ResponsiveImageStyleJsonCookieTest extends ResponsiveImageStyleResourceTestBase {
 
   use CookieResourceTestTrait;

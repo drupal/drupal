@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\Form;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests altering forms to be rebuilt so there are multiple steps.
- *
- * @group Form
  */
+#[Group('Form')]
 class ArbitraryRebuildTest extends BrowserTestBase {
 
   /**

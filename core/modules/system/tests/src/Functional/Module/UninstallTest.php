@@ -11,12 +11,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the uninstallation of modules.
- *
- * @group Module
  */
+#[Group('Module')]
 class UninstallTest extends BrowserTestBase {
 
   /**

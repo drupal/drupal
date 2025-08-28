@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the User Translation UI.
- *
- * @group user
  */
+#[Group('user')]
 class UserTranslationUITest extends ContentTranslationUITestBase {
 
   /**

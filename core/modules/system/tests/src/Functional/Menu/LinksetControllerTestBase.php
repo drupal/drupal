@@ -15,6 +15,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\UserInterface;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * A base class for implementing LinksetController tests.
@@ -26,10 +27,9 @@ use GuzzleHttp\RequestOptions;
  *
  * For a full list, refer to the methods of this class.
  *
- * @group decoupled_menus
- *
  * @see https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00
  */
+#[Group('decoupled_menus')]
 abstract class LinksetControllerTestBase extends BrowserTestBase {
 
   use ApiRequestTrait;

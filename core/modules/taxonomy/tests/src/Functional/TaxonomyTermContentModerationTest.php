@@ -7,13 +7,13 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\Core\Url;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\workflows\Entity\Workflow;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests taxonomy terms with Content Moderation.
- *
- * @group content_moderation
- * @group taxonomy
  */
+#[Group('content_moderation')]
+#[Group('taxonomy')]
 class TaxonomyTermContentModerationTest extends TaxonomyTestBase {
 
   use ContentModerationTestTrait;

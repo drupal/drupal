@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Hook;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Url;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests services in .module files.
- *
- * @group Hook
  */
+#[Group('Hook')]
 class HookCollectorPassTest extends BrowserTestBase {
 
   /**

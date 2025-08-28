@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\Functional\Handler;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\LinkBase handler.
- *
- * @group views
  */
+#[Group('views')]
 class FieldEntityLinkBaseTest extends ViewTestBase {
 
   /**

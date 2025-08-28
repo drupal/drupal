@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests replacement of Views tokens supplied by the Node module.
  *
- * @group node
  * @see \Drupal\node\Tests\NodeTokenReplaceTest
  */
+#[Group('node')]
 class NodeFieldTokensTest extends NodeTestBase {
 
   /**

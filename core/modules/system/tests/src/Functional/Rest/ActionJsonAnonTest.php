@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Action
+ * Tests Action Json Anon.
  */
+#[Group('Action')]
 class ActionJsonAnonTest extends ActionResourceTestBase {
 
   use AnonResourceTestTrait;

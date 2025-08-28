@@ -9,12 +9,12 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensure that login works as expected.
- *
- * @group user
  */
+#[Group('user')]
 class UserLoginTest extends BrowserTestBase {
 
   use AssertMailTrait {

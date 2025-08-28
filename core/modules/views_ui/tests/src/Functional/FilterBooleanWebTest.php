@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the boolean filter UI.
  *
- * @group views_ui
  * @see \Drupal\views\Plugin\views\filter\BooleanOperator
  */
+#[Group('views_ui')]
 class FilterBooleanWebTest extends UITestBase {
 
   /**

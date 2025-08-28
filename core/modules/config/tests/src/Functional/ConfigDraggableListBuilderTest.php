@@ -7,12 +7,12 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests draggable list builder.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigDraggableListBuilderTest extends BrowserTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ability to alter a layout builder element while preparing.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderPrepareLayoutTest extends BrowserTestBase {
 
   /**

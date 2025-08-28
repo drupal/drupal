@@ -12,12 +12,12 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the administrative UI.
- *
- * @group entity_reference
  */
+#[Group('entity_reference')]
 class EntityReferenceAdminTest extends BrowserTestBase {
 
   use FieldUiTestTrait;

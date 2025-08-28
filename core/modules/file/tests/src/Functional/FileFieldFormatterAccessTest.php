@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests file formatter access.
- *
- * @group file
  */
+#[Group('file')]
 class FileFieldFormatterAccessTest extends FileFieldTestBase {
 
   /**

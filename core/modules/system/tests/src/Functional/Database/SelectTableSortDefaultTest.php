@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Database;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the tablesort query extender.
- *
- * @group Database
  */
+#[Group('Database')]
 class SelectTableSortDefaultTest extends DatabaseTestBase {
 
   /**

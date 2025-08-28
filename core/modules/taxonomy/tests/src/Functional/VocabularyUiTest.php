@@ -7,12 +7,12 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the taxonomy vocabulary interface.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class VocabularyUiTest extends TaxonomyTestBase {
 
   /**

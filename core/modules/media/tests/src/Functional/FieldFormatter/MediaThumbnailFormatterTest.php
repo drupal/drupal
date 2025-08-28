@@ -10,12 +10,14 @@ use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter
+ * Tests Media Thumbnail Formatter.
  *
- * @group media
+ * @legacy-covers \Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter
  */
+#[Group('media')]
 class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
 
   use TestFileCreationTrait;

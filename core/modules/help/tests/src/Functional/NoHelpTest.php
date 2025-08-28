@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\help\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verify no help is displayed for modules not providing any help.
- *
- * @group help
  */
+#[Group('help')]
 class NoHelpTest extends BrowserTestBase {
 
   /**

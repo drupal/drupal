@@ -6,12 +6,12 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Layout Builder local tasks.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderLocalTaskTest extends BrowserTestBase {
 
   /**

@@ -10,12 +10,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests registration of user under different configurations.
- *
- * @group user
  */
+#[Group('user')]
 class UserRegistrationTest extends BrowserTestBase {
 
   /**

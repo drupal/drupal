@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Configurable Language Json Basic Auth.
  */
+#[Group('rest')]
 class ConfigurableLanguageJsonBasicAuthTest extends ConfigurableLanguageResourceTestBase {
 
   use BasicAuthResourceTestTrait;

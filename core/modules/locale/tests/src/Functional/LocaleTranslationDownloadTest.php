@@ -7,12 +7,12 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\language\Entity\ConfigurableLanguage;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests locale translation download.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleTranslationDownloadTest extends LocaleUpdateBase {
 
   /**

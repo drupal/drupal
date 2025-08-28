@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests entity deletions with workspaces.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspaceEntityDeleteTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;

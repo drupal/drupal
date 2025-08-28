@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests block_content local action links.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class LocalActionTest extends BlockContentTestBase {
 
   /**

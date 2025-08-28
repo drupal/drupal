@@ -8,12 +8,12 @@ use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user administration page functionality.
- *
- * @group user
  */
+#[Group('user')]
 class UserAdminTest extends BrowserTestBase {
 
   use AssertMailTrait {

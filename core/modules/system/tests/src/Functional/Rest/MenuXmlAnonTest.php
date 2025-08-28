@@ -6,10 +6,12 @@ namespace Drupal\Tests\system\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Menu Xml Anon.
  */
+#[Group('rest')]
 class MenuXmlAnonTest extends MenuResourceTestBase {
 
   use AnonResourceTestTrait;

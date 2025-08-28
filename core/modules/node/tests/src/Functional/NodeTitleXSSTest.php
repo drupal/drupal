@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Component\Utility\Html;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that dangerous tags in the node title are escaped.
- *
- * @group node
  */
+#[Group('node')]
 class NodeTitleXSSTest extends NodeTestBase {
 
   /**

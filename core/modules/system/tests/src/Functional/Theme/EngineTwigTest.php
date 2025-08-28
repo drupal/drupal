@@ -9,12 +9,12 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\twig_theme_test\TwigThemeTestUtils;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Twig-specific theme functionality.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class EngineTwigTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

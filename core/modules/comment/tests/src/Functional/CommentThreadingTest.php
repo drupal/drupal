@@ -6,12 +6,12 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentPreviewMode;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests to make sure the comment number increments properly.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentThreadingTest extends CommentTestBase {
 
   /**

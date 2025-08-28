@@ -9,12 +9,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests loading of text editors.
- *
- * @group editor
  */
+#[Group('editor')]
 class EditorLoadingTest extends BrowserTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Functional tests for HtmlResponseAttachmentsProcessor.
- *
- * @group Render
  */
+#[Group('Render')]
 class HtmlResponseAttachmentsTest extends BrowserTestBase {
 
   /**

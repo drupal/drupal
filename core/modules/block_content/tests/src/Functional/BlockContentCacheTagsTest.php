@@ -10,12 +10,12 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Content Block entity's cache tags.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
 
   use BlockContentCreationTrait;

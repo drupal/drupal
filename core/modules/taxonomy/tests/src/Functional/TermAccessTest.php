@@ -7,12 +7,12 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the taxonomy term access permissions.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermAccessTest extends TaxonomyTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

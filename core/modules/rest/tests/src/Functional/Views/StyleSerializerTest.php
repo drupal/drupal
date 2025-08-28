@@ -12,16 +12,17 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the serializer style plugin.
  *
- * @group rest
  * @see \Drupal\rest\Plugin\views\display\RestExport
  * @see \Drupal\rest\Plugin\views\style\Serializer
  * @see \Drupal\rest\Plugin\views\row\DataEntityRow
  * @see \Drupal\rest\Plugin\views\row\DataFieldRow
  */
+#[Group('rest')]
 class StyleSerializerTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

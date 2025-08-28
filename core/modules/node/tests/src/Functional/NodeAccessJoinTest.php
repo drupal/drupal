@@ -10,12 +10,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\UserInterface;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Node Access on join.
- *
- * @group views
  */
+#[Group('views')]
 class NodeAccessJoinTest extends NodeTestBase {
 
   use NodeAccessTrait;

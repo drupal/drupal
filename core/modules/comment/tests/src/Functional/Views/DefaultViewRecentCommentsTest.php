@@ -7,14 +7,14 @@ namespace Drupal\Tests\comment\Functional\Views;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\views\Views;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests results for the Recent Comments view shipped with the module.
- *
- * @group comment
  */
+#[Group('comment')]
 class DefaultViewRecentCommentsTest extends ViewTestBase {
 
   use CommentTestTrait;

@@ -10,12 +10,12 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the autocomplete implementation of the taxonomy class.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermAutocompleteTest extends TaxonomyTestBase {
 
   /**

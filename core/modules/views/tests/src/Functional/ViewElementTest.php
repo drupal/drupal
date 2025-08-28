@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the view render element.
- *
- * @group views
  */
+#[Group('views')]
 class ViewElementTest extends ViewTestBase {
 
   /**

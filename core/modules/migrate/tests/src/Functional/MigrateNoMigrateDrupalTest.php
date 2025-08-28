@@ -7,6 +7,7 @@ namespace Drupal\Tests\migrate\Functional;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Execute migration.
@@ -14,9 +15,8 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * This is intentionally a Functional test instead of a Kernel test because
  * Kernel tests have proven to not catch all edge cases that are encountered
  * via a Functional test.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateNoMigrateDrupalTest extends BrowserTestBase {
   use ContentTypeCreationTrait;
 

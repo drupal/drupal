@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\Media;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests media template suggestions.
- *
- * @group media
  */
+#[Group('media')]
 class MediaTemplateSuggestionsTest extends MediaFunctionalTestBase {
 
   /**

@@ -7,12 +7,12 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the taxonomy term moderation handler.
- *
- * @group content_moderation
  */
+#[Group('content_moderation')]
 class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
 
   /**
@@ -37,8 +37,8 @@ class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
   /**
    * Tests the taxonomy term moderation handler alters the forms as intended.
    *
-   * @covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsEntityFormAlter
-   * @covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsBundleFormAlter
+   * @legacy-covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsEntityFormAlter
+   * @legacy-covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsBundleFormAlter
    */
   public function testEnforceRevisionsEntityFormAlter(): void {
     $this->drupalLogin($this->adminUser);

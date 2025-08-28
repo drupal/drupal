@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests installing in a different language with a non-dev version string.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleNonInteractiveInstallTest extends BrowserTestBase {
 
   /**

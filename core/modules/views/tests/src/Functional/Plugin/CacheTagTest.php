@@ -8,13 +8,14 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests tag cache plugin.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\cache\Tag
  */
+#[Group('views')]
 class CacheTagTest extends ViewTestBase {
 
   /**

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests File Json Cookie.
  */
+#[Group('rest')]
 class FileJsonCookieTest extends FileResourceTestBase {
 
   use CookieResourceTestTrait;

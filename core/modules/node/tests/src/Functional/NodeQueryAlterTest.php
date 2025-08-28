@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that node access queries are properly altered by the node module.
- *
- * @group node
  */
+#[Group('node')]
 class NodeQueryAlterTest extends NodeTestBase {
 
   /**

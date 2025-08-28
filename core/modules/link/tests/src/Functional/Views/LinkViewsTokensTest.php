@@ -7,12 +7,12 @@ namespace Drupal\Tests\link\Functional\Views;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the views integration for link tokens.
- *
- * @group link
  */
+#[Group('link')]
 class LinkViewsTokensTest extends ViewTestBase {
 
   /**

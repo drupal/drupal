@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\comment\Entity\CommentType;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests fields on comments.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentFieldsTest extends CommentTestBase {
 
   /**

@@ -12,12 +12,12 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Render\FilteredMarkup;
 use Drupal\Tests\field\Functional\FunctionalString\StringFieldTest;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the creation of text fields.
- *
- * @group text
  */
+#[Group('text')]
 class TextFieldTest extends StringFieldTest {
 
   use TestFileCreationTrait {

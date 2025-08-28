@@ -6,13 +6,14 @@ namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the title area handler with a web test.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\area\Title
  */
+#[Group('views')]
 class AreaTitleWebTest extends ViewTestBase {
 
   /**

@@ -10,6 +10,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Resource test base for taxonomy term entity.
@@ -343,9 +344,8 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
    * Tests GETting a term with a parent term other than the default <root> (0).
    *
    * @see ::getExpectedNormalizedEntity()
-   *
-   * @dataProvider providerTestGetTermWithParent
    */
+  #[DataProvider('providerTestGetTermWithParent')]
   public function testGetTermWithParent(array $parent_term_ids): void {
     // Create all possible parent terms.
     Term::create(['vid' => Vocabulary::load('camelids')->id()])

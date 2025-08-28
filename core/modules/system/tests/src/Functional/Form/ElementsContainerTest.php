@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the container form element for expected behavior.
- *
- * @group Form
  */
+#[Group('Form')]
 class ElementsContainerTest extends BrowserTestBase {
 
   /**

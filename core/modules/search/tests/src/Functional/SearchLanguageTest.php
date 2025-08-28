@@ -8,12 +8,12 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests advanced search with different languages added.
- *
- * @group search
  */
+#[Group('search')]
 class SearchLanguageTest extends BrowserTestBase {
 
   /**

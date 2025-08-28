@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional;
 
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests render caching of blocks provided by views.
- *
- * @group views
  */
+#[Group('views')]
 class RenderCacheWebTest extends ViewTestBase {
 
   /**

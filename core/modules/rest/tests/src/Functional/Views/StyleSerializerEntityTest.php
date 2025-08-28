@@ -13,6 +13,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -20,12 +21,12 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 /**
  * Tests the serializer style plugin.
  *
- * @group rest
  * @see \Drupal\rest\Plugin\views\display\RestExport
  * @see \Drupal\rest\Plugin\views\style\Serializer
  * @see \Drupal\rest\Plugin\views\row\DataEntityRow
  * @see \Drupal\rest\Plugin\views\row\DataFieldRow
  */
+#[Group('rest')]
 class StyleSerializerEntityTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

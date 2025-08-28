@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional\Wizard;
 
 use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ability of the views wizard to put views in a menu.
- *
- * @group views
  */
+#[Group('views')]
 class MenuTest extends WizardTestBase {
 
   /**

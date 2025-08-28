@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests a page with multiple Views forms.
- *
- * @group views
  */
+#[Group('views')]
 class ViewsFormMultipleTest extends ViewTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the search help text and search page text.
- *
- * @group search
  */
+#[Group('search')]
 class SearchPageTextTest extends BrowserTestBase {
 
   /**

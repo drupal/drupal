@@ -8,12 +8,12 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the media items cache tags.
- *
- * @group media
  */
+#[Group('media')]
 class MediaCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   use MediaTypeCreationTrait;

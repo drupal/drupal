@@ -12,12 +12,12 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the display of image fields.
- *
- * @group image
  */
+#[Group('image')]
 class ImageFieldDisplayTest extends ImageFieldTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

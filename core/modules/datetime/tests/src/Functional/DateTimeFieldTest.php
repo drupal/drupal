@@ -6,18 +6,18 @@ namespace Drupal\Tests\datetime\Functional;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Form\FormState;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use Drupal\Core\Form\FormState;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Datetime field functionality.
- *
- * @group datetime
  */
+#[Group('datetime')]
 class DateTimeFieldTest extends DateTestBase {
 
   /**

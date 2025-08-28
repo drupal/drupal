@@ -11,12 +11,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Add, edit, and delete a node with menu link.
- *
- * @group menu_ui
  */
+#[Group('menu_ui')]
 class MenuUiNodeTest extends BrowserTestBase {
 
   use ContentTranslationTestTrait;

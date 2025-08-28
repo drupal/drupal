@@ -7,13 +7,13 @@ namespace Drupal\Tests\update\Functional;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the update_settings form.
- *
- * @group update
- * @group Form
  */
+#[Group('update')]
+#[Group('Form')]
 class UpdateSettingsFormTest extends BrowserTestBase {
 
   /**

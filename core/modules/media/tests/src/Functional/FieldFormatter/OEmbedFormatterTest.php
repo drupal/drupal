@@ -10,15 +10,17 @@ use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\media_test_oembed\UrlResolver;
 use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore Schipulcon
-
 /**
- * @covers \Drupal\media\Plugin\Field\FieldFormatter\OEmbedFormatter
+ * Tests OEmbed Formatter.
  *
- * @group media
- * @group #slow
+ * @legacy-covers \Drupal\media\Plugin\Field\FieldFormatter\OEmbedFormatter
  */
+#[Group('media')]
+#[Group('#slow')]
 class OEmbedFormatterTest extends MediaFunctionalTestBase {
 
   use OEmbedTestTrait;
@@ -190,9 +192,8 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
    *   name, that the element is expected to have.
    * @param bool $self_closing
    *   Indicator if the HTML element is self closing i.e. <p/> vs <p></p>.
-   *
-   * @dataProvider providerRender
    */
+  #[DataProvider('providerRender')]
   public function testRender($url, $resource_url, array $formatter_settings, array $selectors, bool $self_closing): void {
     $account = $this->drupalCreateUser(['view media']);
     $this->drupalLogin($account);

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\filter\Functional;
 
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Generic module test for filter.
- *
- * @group filter
  */
+#[Group('filter')]
 class GenericTest extends GenericModuleTestBase {
 
   /**

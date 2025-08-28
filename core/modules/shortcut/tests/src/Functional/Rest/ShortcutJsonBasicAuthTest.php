@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\shortcut\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Shortcut Json Basic Auth.
  */
+#[Group('rest')]
 class ShortcutJsonBasicAuthTest extends ShortcutResourceTestBase {
 
   use BasicAuthResourceTestTrait;

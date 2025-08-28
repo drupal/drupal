@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Page;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests default HTML metatags on a page.
- *
- * @group Page
  */
+#[Group('Page')]
 class DefaultMetatagsTest extends BrowserTestBase {
 
   /**

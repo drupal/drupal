@@ -9,21 +9,21 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\system\Entity\Menu;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\system\Entity\Menu;
 use Drupal\system\MenuStorage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the menu UI.
  *
  * This test adds a custom menu, adds menu links to the custom menu and the
  * Tools menu, checks their data, and deletes them using the UI.
- *
- * @group menu_ui
  */
+#[Group('menu_ui')]
 class MenuUiTest extends BrowserTestBase {
 
   use MenuUiTrait;

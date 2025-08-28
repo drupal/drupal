@@ -6,12 +6,12 @@ namespace Drupal\Tests\settings_tray\Functional;
 
 use Drupal\block\Entity\Block;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests opening and saving block forms in the off-canvas dialog.
- *
- * @group settings_tray
  */
+#[Group('settings_tray')]
 class SettingsTrayTest extends BrowserTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests permission access control around nodes.
- *
- * @group content_moderation
  */
+#[Group('content_moderation')]
 class NodeAccessTest extends ModerationStateTestBase {
 
   use NodeAccessTrait;

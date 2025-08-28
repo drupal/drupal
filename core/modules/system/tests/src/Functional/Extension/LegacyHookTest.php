@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Extension;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the LegacyHook attribute.
- *
- * @group Hook
  */
+#[Group('Hook')]
 class LegacyHookTest extends BrowserTestBase {
 
   /**

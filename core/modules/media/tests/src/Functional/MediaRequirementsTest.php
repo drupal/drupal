@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the Media module's requirements checks.
- *
- * @group media
  */
+#[Group('media')]
 class MediaRequirementsTest extends MediaFunctionalTestBase {
 
   /**

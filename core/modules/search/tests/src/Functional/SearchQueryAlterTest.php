@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the node search query can be altered via the query alter hook.
- *
- * @group search
  */
+#[Group('search')]
 class SearchQueryAlterTest extends BrowserTestBase {
 
   /**

@@ -8,13 +8,14 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI of generic display path plugin.
  *
- * @group views_ui
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  */
+#[Group('views_ui')]
 class DisplayPathTest extends UITestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

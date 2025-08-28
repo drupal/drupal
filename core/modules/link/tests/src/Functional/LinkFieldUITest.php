@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Functional;
 
-use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests link field UI functionality.
- *
- * @group link
- * @group #slow
  */
+#[Group('link')]
+#[Group('#slow')]
 class LinkFieldUITest extends BrowserTestBase {
 
   use FieldUiTestTrait;

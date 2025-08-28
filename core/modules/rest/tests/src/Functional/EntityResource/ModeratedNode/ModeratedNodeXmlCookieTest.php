@@ -6,10 +6,12 @@ namespace Drupal\Tests\rest\Functional\EntityResource\ModeratedNode;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Moderated Node Xml Cookie.
  */
+#[Group('rest')]
 class ModeratedNodeXmlCookieTest extends ModeratedNodeResourceTestBase {
 
   use CookieResourceTestTrait;

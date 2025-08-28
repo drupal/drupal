@@ -8,12 +8,12 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that block type functions work correctly.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockContentTypeTest extends BlockContentTestBase {
 
   use AssertBreadcrumbTrait;

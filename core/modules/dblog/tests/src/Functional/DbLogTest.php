@@ -6,18 +6,18 @@ namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Link;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verifies log entries and user access based on permissions.
- *
- * @group dblog
  */
+#[Group('dblog')]
 class DbLogTest extends BrowserTestBase {
   use FakeLogEntries;
   use AssertBreadcrumbTrait;

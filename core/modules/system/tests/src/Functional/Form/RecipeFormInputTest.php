@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\Core\Recipe\RecipeInputFormTrait
- * @group system
+ * Tests Recipe Form Input.
+ *
+ * @legacy-covers \Drupal\Core\Recipe\RecipeInputFormTrait
  */
+#[Group('system')]
 class RecipeFormInputTest extends BrowserTestBase {
 
   /**

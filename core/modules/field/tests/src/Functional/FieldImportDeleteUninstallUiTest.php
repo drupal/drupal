@@ -7,15 +7,16 @@ namespace Drupal\Tests\field\Functional;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests deleting field storage when a module in uninstalled through the UI.
  *
- * @group field
  * @see \Drupal\field\ConfigImporterFieldPurger
  * @see field_config_import_steps_alter()
  * @see field_form_config_admin_import_form_alter()
  */
+#[Group('field')]
 class FieldImportDeleteUninstallUiTest extends FieldTestBase {
 
   /**

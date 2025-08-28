@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests front page functionality and administration.
- *
- * @group system
  */
+#[Group('system')]
 class FrontPageTest extends BrowserTestBase {
 
   /**

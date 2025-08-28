@@ -10,14 +10,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore nodo nœud tercera
-
 /**
  * Tests node language fields, filters, and sorting.
- *
- * @group node
  */
+#[Group('node')]
 class NodeLanguageTest extends NodeTestBase {
 
   /**

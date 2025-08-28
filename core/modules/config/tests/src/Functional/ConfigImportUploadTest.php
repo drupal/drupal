@@ -7,12 +7,12 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests importing configuration from an uploaded file.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigImportUploadTest extends BrowserTestBase {
 
   use TestFileCreationTrait;

@@ -13,12 +13,12 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\AssertViewsCacheTagsTrait;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the default frontpage provided by views.
- *
- * @group node
  */
+#[Group('node')]
 class FrontPageTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

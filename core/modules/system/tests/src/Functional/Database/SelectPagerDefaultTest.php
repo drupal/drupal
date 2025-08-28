@@ -6,15 +6,15 @@ namespace Drupal\Tests\system\Functional\Database;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\PagerSelectExtender;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the pager query select extender.
- *
- * @group Database
  */
+#[Group('Database')]
 class SelectPagerDefaultTest extends DatabaseTestBase {
 
   /**

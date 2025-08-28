@@ -7,13 +7,14 @@ namespace Drupal\Tests\system\Functional\FileTransfer;
 use Drupal\Core\FileTransfer\FileTransferException;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests recursive file copy operations with the file transfer jail.
- *
- * @group FileTransfer
- * @group legacy
  */
+#[Group('FileTransfer')]
+#[IgnoreDeprecations]
 class FileTransferTest extends BrowserTestBase {
 
   /**

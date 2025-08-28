@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\comment\CommentInterface;
-use Drupal\comment\Entity\Comment;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comments with other entities.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentEntityTest extends CommentTestBase {
 
   use TaxonomyTestTrait;

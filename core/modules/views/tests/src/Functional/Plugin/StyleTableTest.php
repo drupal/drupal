@@ -8,12 +8,12 @@ use Drupal\Core\Database\Database;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the table style views plugin.
- *
- * @group views
  */
+#[Group('views')]
 class StyleTableTest extends ViewTestBase {
 
   /**

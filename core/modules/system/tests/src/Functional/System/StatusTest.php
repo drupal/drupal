@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Utility\Bytes;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 // cspell:ignore postupdate
-
 /**
  * Tests output on the status overview page.
- *
- * @group system
  */
+#[Group('system')]
 class StatusTest extends BrowserTestBase {
 
   /**
@@ -50,9 +50,8 @@ class StatusTest extends BrowserTestBase {
 
   /**
    * Tests that the status page returns.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testStatusPage(): void {
     // Verify if the 'Status report' is the first item link.
     $this->drupalGet('admin/reports');

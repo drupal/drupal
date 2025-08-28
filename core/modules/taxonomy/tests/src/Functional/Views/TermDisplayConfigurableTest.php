@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests making taxonomy term base fields' displays configurable.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermDisplayConfigurableTest extends TaxonomyTestBase {
 
   /**

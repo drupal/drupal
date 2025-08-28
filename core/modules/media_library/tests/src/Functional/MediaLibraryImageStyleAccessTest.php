@@ -6,12 +6,12 @@ namespace Drupal\Tests\media_library\Functional;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests access to the Media library image style.
- *
- * @group media_library
  */
+#[Group('media_library')]
 class MediaLibraryImageStyleAccessTest extends BrowserTestBase {
 
   /**

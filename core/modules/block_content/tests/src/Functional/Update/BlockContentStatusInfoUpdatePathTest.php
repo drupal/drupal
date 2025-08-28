@@ -6,14 +6,13 @@ namespace Drupal\Tests\block_content\Functional\Update;
 
 use Drupal\block\Entity\Block;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore anotherblock
-
 /**
  * Tests block_content_post_update_remove_block_content_status_info_keys.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockContentStatusInfoUpdatePathTest extends UpdatePathTestBase {
 
   /**

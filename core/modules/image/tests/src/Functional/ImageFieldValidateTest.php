@@ -6,12 +6,13 @@ namespace Drupal\Tests\image\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation functions such as min/max dimensions.
- *
- * @group image
  */
+#[Group('image')]
 class ImageFieldValidateTest extends ImageFieldTestBase {
 
   use TestFileCreationTrait {
@@ -218,9 +219,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    *
    * This is tested first with edit access to the image field allowed, and then
    * with it forbidden.
-   *
-   * @dataProvider providerTestEmpty
    */
+  #[DataProvider('providerTestEmpty')]
   public function testEmpty($field_name, $required, $cardinality, $form_element_name, $expected_page_text_when_edit_access_allowed, $expected_page_text_when_edit_access_forbidden): void {
     $this->createImageField($field_name, 'node', 'article', ['cardinality' => $cardinality], ['required' => $required]);
 

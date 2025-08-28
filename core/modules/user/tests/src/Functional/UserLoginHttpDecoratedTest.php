@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\user_auth_decorator_test\UserAuthDecorator;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests login and password reset via direct HTTP with a user.auth decorator.
  *
  * The decorator does not implement UserAuthenticationInterface.
- *
- * @group user
  */
+#[Group('user')]
 class UserLoginHttpDecoratedTest extends UserLoginHttpTest {
 
   /**

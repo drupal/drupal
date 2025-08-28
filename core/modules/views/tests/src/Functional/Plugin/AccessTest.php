@@ -7,14 +7,15 @@ namespace Drupal\Tests\views\Functional\Plugin;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests pluggable access for views.
  *
- * @group views
  * @todo It probably make sense to split the test up by one for role/perm/none
  *   and the two generic ones.
  */
+#[Group('views')]
 class AccessTest extends ViewTestBase {
 
   /**

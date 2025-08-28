@@ -6,12 +6,12 @@ namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the content translation behaviors on date formats.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
 
   /**

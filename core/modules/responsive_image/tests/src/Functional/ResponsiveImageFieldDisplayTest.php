@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\responsive_image\Functional;
 
+use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
-use Drupal\file\Entity\File;
-use Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\Tests\image\Functional\ImageFieldTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests responsive image display formatter.
- *
- * @group responsive_image
  */
+#[Group('responsive_image')]
 class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
   use TestFileCreationTrait;

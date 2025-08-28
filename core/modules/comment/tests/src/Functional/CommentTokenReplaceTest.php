@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\comment\Entity\Comment;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment token replacement.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentTokenReplaceTest extends CommentTestBase {
 
   /**

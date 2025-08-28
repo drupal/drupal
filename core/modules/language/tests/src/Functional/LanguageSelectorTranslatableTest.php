@@ -6,13 +6,14 @@ namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the content translation settings language selector options.
  *
- * @covers \Drupal\language\Form\ContentLanguageSettingsForm
- * @group language
+ * @legacy-covers \Drupal\language\Form\ContentLanguageSettingsForm
  */
+#[Group('language')]
 class LanguageSelectorTranslatableTest extends BrowserTestBase {
 
   use LanguageTestTrait;

@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Functional\Update;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests creating base field overrides for the promote field on node types.
- *
- * @group Update
  */
+#[Group('Update')]
 class ChangePromotedDefaultTest extends UpdatePathTestBase {
 
   /**
@@ -24,7 +24,9 @@ class ChangePromotedDefaultTest extends UpdatePathTestBase {
   }
 
   /**
-   * @covers node_post_update_create_promote_base_field_overrides
+   * Tests run updates.
+   *
+   * @legacy-covers node_post_update_create_promote_base_field_overrides
    */
   public function testRunUpdates(): void {
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */

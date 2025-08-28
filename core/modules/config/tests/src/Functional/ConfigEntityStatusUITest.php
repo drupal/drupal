@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests configuration entity status UI functionality.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigEntityStatusUITest extends BrowserTestBase {
 
   /**

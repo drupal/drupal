@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "EntityViewDisplay" config entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class EntityViewDisplayTest extends ConfigEntityResourceTestBase {
 
   /**

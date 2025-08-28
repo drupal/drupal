@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests creation, retrieval, updating, and deletion of displays in the Web UI.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class DisplayCRUDTest extends UITestBase {
 
   /**

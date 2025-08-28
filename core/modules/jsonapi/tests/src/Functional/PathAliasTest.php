@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\path_alias\Entity\PathAlias;
-use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "PathAlias" content entity type.
- *
- * @group jsonapi
- * @group path
  */
+#[Group('jsonapi')]
+#[Group('path')]
 class PathAliasTest extends ResourceTestBase {
 
   /**

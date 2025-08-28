@@ -9,14 +9,14 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API resource tests.
  *
- * @group jsonapi
- *
  * @internal
  */
+#[Group('jsonapi')]
 class JsonApiRelationshipTest extends JsonApiFunctionalTestBase {
 
   /**

@@ -7,12 +7,12 @@ namespace Drupal\Tests\field_ui\Functional;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Field UI "Manage fields" screen.
- *
- * @group field_ui
  */
+#[Group('field_ui')]
 class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
 
   /**

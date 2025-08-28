@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\field\Functional\Boolean;
 
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests boolean field functionality.
- *
- * @group field
  */
+#[Group('field')]
 class BooleanFieldTest extends BrowserTestBase {
 
   /**

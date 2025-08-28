@@ -6,12 +6,12 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Media Translation UI.
- *
- * @group media
  */
+#[Group('media')]
 class MediaTranslationUITest extends ContentTranslationUITestBase {
 
   use MediaTypeCreationTrait;

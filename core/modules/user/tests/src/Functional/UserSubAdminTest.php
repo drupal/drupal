@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test 'sub-admin' account with permission to edit some users but without 'administer users' permission.
- *
- * @group user
  */
+#[Group('user')]
 class UserSubAdminTest extends BrowserTestBase {
 
   /**

@@ -8,17 +8,18 @@ use Drupal\Component\Utility\Html;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
-use Drupal\views\ViewExecutable;
-use Drupal\views\Views;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests exposed forms functionality.
- *
- * @group views
- * @group #slow
  */
+#[Group('views')]
+#[Group('#slow')]
 class ExposedFormTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
@@ -247,9 +248,8 @@ class ExposedFormTest extends ViewTestBase {
 
   /**
    * Tests the exposed block functionality.
-   *
-   * @dataProvider providerTestExposedBlock
    */
+  #[DataProvider('providerTestExposedBlock')]
   public function testExposedBlock($display): void {
     $view = Views::getView('test_exposed_block');
     $view->setDisplay($display);

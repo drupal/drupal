@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Cache;
 
 use Drupal\Core\Cache\Cache;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests our clearing is done the proper way.
- *
- * @group Cache
  */
+#[Group('Cache')]
 class ClearTest extends CacheTestBase {
 
   /**

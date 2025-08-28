@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore arrr
-
 /**
  * Tests the user interface for importing/exporting transformed configuration.
- *
- * @group config
  */
+#[Group('config')]
 class TransformedConfigExportImportUITest extends BrowserTestBase {
 
   /**

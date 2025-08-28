@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Views forms functionality.
- *
- * @group views
  */
+#[Group('views')]
 class ViewsFormTest extends ViewTestBase {
 
   /**

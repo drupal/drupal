@@ -9,12 +9,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests entity translation form.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityTranslationFormTest extends BrowserTestBase {
 
   /**

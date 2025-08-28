@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node field filters with translations.
- *
- * @group node
  */
+#[Group('node')]
 class NodeFieldFilterTest extends NodeTestBase {
 
   /**

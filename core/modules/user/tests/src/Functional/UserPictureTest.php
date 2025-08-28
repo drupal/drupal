@@ -12,12 +12,12 @@ use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user picture functionality.
- *
- * @group user
  */
+#[Group('user')]
 class UserPictureTest extends BrowserTestBase {
 
   use TestFileCreationTrait {

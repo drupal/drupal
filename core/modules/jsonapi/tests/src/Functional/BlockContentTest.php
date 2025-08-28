@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "BlockContent" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class BlockContentTest extends ResourceTestBase {
 
   use BlockContentCreationTrait;

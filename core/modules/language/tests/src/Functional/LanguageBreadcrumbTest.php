@@ -7,12 +7,12 @@ namespace Drupal\Tests\language\Functional;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests breadcrumbs functionality.
- *
- * @group Menu
  */
+#[Group('Menu')]
 class LanguageBreadcrumbTest extends BrowserTestBase {
 
   use AssertBreadcrumbTrait;

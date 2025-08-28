@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests selecting a display variant.
- *
- * @group Render
  */
+#[Group('Render')]
 class DisplayVariantTest extends BrowserTestBase {
 
   /**

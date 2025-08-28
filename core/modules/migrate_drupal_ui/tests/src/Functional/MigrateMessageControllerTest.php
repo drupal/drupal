@@ -6,12 +6,12 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the MigrateController class.
- *
- * @group migrate_drupal_ui
  */
+#[Group('migrate_drupal_ui')]
 class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
 
   /**

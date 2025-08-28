@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Common;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the DateFormatterInterface::format() function.
- *
- * @group Common
  */
+#[Group('Common')]
 class FormatDateTest extends BrowserTestBase {
 
   /**

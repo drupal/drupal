@@ -6,14 +6,15 @@ namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test enabling content translation module.
  *
- * @covers \Drupal\language\Form\ContentLanguageSettingsForm
- * @covers ::_content_translation_form_language_content_settings_form_alter
- * @group content_translation
+ * @legacy-covers \Drupal\language\Form\ContentLanguageSettingsForm
+ * @legacy-covers ::_content_translation_form_language_content_settings_form_alter
  */
+#[Group('content_translation')]
 class ContentTranslationEnableTest extends BrowserTestBase {
 
   /**

@@ -9,12 +9,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the untranslatable fields behaviors.
- *
- * @group content_translation
  */
+#[Group('content_translation')]
 class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendingRevisionTestBase {
 
   use LanguageTestTrait;

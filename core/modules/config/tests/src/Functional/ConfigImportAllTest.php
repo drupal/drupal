@@ -10,16 +10,16 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\system\Functional\Module\ModuleTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the largest configuration import possible with all available modules.
  *
  * Note that the use of SchemaCheckTestTrait means that the schema conformance
  * of all default configuration is also tested.
- *
- * @group config
- * @group #slow
  */
+#[Group('config')]
+#[Group('#slow')]
 class ConfigImportAllTest extends ModuleTestBase {
 
   use SchemaCheckTestTrait;

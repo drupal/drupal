@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\Menu;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests local actions derived from router and added/altered via hooks.
- *
- * @group Menu
  */
+#[Group('Menu')]
 class LocalActionTest extends BrowserTestBase {
 
   /**

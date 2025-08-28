@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\field_layout\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests using field layout for entity displays.
- *
- * @group field_layout
  */
+#[Group('field_layout')]
 class FieldLayoutTest extends BrowserTestBase {
 
   /**

@@ -11,12 +11,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests per-content-type node CRUD operation permissions.
- *
- * @group node
  */
+#[Group('node')]
 class NodeRevisionsTest extends NodeTestBase {
 
   /**

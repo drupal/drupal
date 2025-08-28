@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Module;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Attempts enabling a module that fails hook_requirements('install').
- *
- * @group Module
  */
+#[Group('Module')]
 class HookRequirementsTest extends ModuleTestBase {
 
   /**

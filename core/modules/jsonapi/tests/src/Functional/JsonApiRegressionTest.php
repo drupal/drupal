@@ -22,14 +22,14 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API regression tests.
  *
- * @group jsonapi
- *
  * @internal
  */
+#[Group('jsonapi')]
 class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
 
   use CommentTestTrait;

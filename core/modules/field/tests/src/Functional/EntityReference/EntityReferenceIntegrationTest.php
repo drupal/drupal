@@ -9,12 +9,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\config\Traits\AssertConfigEntityImportTrait;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests various Entity reference UI components.
- *
- * @group entity_reference
  */
+#[Group('entity_reference')]
 class EntityReferenceIntegrationTest extends BrowserTestBase {
 
   use AssertConfigEntityImportTrait;

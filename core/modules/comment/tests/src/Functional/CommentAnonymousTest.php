@@ -6,12 +6,12 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentInterface;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests anonymous commenting.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentAnonymousTest extends CommentTestBase {
 
   /**

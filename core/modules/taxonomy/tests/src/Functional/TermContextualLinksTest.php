@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests views contextual links on terms.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermContextualLinksTest extends TaxonomyTestBase {
 
   /**

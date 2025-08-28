@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the requirements checks of the User module.
- *
- * @group user
  */
+#[Group('user')]
 class UserRequirementsTest extends BrowserTestBase {
 
   /**

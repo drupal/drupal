@@ -11,12 +11,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the content translation workflows for the test entity.
- *
- * @group content_translation
  */
+#[Group('content_translation')]
 class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

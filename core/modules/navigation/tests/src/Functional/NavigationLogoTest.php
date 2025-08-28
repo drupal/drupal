@@ -8,12 +8,12 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for \Drupal\navigation\Form\SettingsForm.
- *
- * @group navigation
  */
+#[Group('navigation')]
 class NavigationLogoTest extends BrowserTestBase {
 
   use StringTranslationTrait;

@@ -6,13 +6,14 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI of field handlers.
  *
- * @group views_ui
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
+#[Group('views_ui')]
 class FieldUITest extends UITestBase {
 
   /**

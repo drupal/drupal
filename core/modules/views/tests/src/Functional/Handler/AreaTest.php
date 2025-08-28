@@ -6,14 +6,15 @@ namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the plugin base of the area handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\area\AreaPluginBase
  * @see \Drupal\views_test\Plugin\views\area\TestExample
  */
+#[Group('views')]
 class AreaTest extends ViewTestBase {
 
   /**

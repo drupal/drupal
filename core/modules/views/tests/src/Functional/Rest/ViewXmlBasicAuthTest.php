@@ -6,10 +6,12 @@ namespace Drupal\Tests\views\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests View Xml Basic Auth.
  */
+#[Group('rest')]
 class ViewXmlBasicAuthTest extends ViewResourceTestBase {
 
   use BasicAuthResourceTestTrait;

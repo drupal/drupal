@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\filter\Entity\FilterFormat;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that data added to nodes by other modules appears in RSS feeds.
@@ -12,9 +13,8 @@ use Drupal\filter\Entity\FilterFormat;
  * Create a node, enable the node_test module to ensure that extra data is
  * added to the node's renderable array, then verify that the data appears on
  * the site-wide RSS feed at rss.xml.
- *
- * @group node
  */
+#[Group('node')]
 class NodeRSSContentTest extends NodeTestBase {
 
   /**

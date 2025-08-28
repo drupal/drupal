@@ -9,14 +9,14 @@ use Drupal\Core\Url;
 use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\WaitTerminateTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * General functional test class.
  *
- * @group jsonapi
- *
  * @internal
  */
+#[Group('jsonapi')]
 class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
 
   use WaitTerminateTestTrait;

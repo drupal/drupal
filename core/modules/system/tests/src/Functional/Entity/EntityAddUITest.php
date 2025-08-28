@@ -9,12 +9,12 @@ use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the /add and /add/{type} controllers.
- *
- * @group entity
  */
+#[Group('entity')]
 class EntityAddUITest extends BrowserTestBase {
 
   /**

@@ -7,17 +7,16 @@ namespace Drupal\Tests\views\Functional\Handler;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
-use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore wõrd
-
 /**
  * Tests abstract handler definitions.
- *
- * @group views
  */
+#[Group('views')]
 class HandlerTest extends ViewTestBase {
 
   use CommentTestTrait;

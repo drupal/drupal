@@ -7,15 +7,15 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the classic node migration runs.
  *
  * The classic node migration will run and not the complete node migration
  * when there is a pre-existing classic node migrate map table.
- *
- * @group migrate_drupal_ui
  */
+#[Group('migrate_drupal_ui')]
 class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
 
   use NodeMigrateTypeTestTrait;

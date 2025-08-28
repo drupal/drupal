@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config_translation\Functional;
 
-// cspell:ignore libellé
+use PHPUnit\Framework\Attributes\Group;
 
+// cspell:ignore libellé
 /**
  * Translate site information to various languages.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\field\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests help display for the Field module.
- *
- * @group field
  */
+#[Group('field')]
 class FieldHelpTest extends BrowserTestBase {
 
   /**

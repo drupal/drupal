@@ -8,13 +8,14 @@ use Drupal\Core\Url;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the feed display plugin.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\display\Feed
  */
+#[Group('views')]
 class DisplayFeedTest extends ViewTestBase {
 
   use PathAliasTestTrait;

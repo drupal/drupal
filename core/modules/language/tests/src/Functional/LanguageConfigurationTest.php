@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Functional;
 
-use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Adds and configures languages to check negotiation changes.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageConfigurationTest extends BrowserTestBase {
 
   /**

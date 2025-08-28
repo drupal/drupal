@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests edge cases of the Available Updates report UI.
  *
  * For example, manually checking for updates, recovering from problems
  * connecting to the release history server, clearing the disk cache, and more.
- *
- * @group update
  */
+#[Group('update')]
 class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
 
   /**

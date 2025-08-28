@@ -6,21 +6,21 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\system\Entity\Action;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Core\Config\FileStorage;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that configuration objects are correct after various operations.
  *
  * The installation and removal of configuration objects in install, disable
  * and uninstall functionality is tested.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigInstallProfileOverrideTest extends BrowserTestBase {
 
   /**

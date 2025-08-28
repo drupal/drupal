@@ -6,10 +6,12 @@ namespace Drupal\Tests\workflows\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Workflow Xml Cookie.
  */
+#[Group('rest')]
 class WorkflowXmlCookieTest extends WorkflowResourceTestBase {
 
   use CookieResourceTestTrait;

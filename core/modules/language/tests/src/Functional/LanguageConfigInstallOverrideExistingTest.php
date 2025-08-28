@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures the language config is installed but not altered on install.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageConfigInstallOverrideExistingTest extends BrowserTestBase {
 
   /**

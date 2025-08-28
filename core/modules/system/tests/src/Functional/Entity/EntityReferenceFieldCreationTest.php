@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\Entity;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests creating entity reference fields in the UI.
- *
- * @group entity
  */
+#[Group('entity')]
 class EntityReferenceFieldCreationTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

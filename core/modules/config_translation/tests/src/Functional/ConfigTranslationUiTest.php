@@ -6,15 +6,14 @@ namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore anonyme viewsviewfiles
-
 /**
  * Translate settings and entities to various languages.
- *
- * @group config_translation
- * @group #slow
  */
+#[Group('config_translation')]
+#[Group('#slow')]
 class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
 
   /**

@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Functional\Views;
 
-use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
-use Drupal\views\Tests\ViewTestData;
 use Drupal\Core\Language\Language;
+use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
 use Drupal\user\Entity\User;
+use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the content translation overview link field handler.
  *
- * @group content_translation
  * @see \Drupal\content_translation\Plugin\views\field\TranslationLink
  */
+#[Group('content_translation')]
 class TranslationLinkTest extends ContentTranslationTestBase {
 
   /**

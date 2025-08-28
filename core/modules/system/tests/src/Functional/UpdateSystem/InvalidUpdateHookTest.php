@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that hook_update_8000() is disallowed.
- *
- * @group Update
  */
+#[Group('Update')]
 class InvalidUpdateHookTest extends BrowserTestBase {
 
   use RequirementsPageTrait;

@@ -10,13 +10,13 @@ use Drupal\contact\Entity\Message;
 use Drupal\Core\Url;
 use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * JSON:API integration test for the "Message" content entity type.
- *
- * @group contact
  */
+#[Group('contact')]
 class MessageTest extends ResourceTestBase {
 
   /**

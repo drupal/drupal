@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Media Type Json Anon.
  */
+#[Group('rest')]
 class MediaTypeJsonAnonTest extends MediaTypeResourceTestBase {
 
   use AnonResourceTestTrait;

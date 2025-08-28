@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\taxonomy\Entity\Vocabulary;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the vocabulary argument.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyVocabularyArgumentTest extends TaxonomyTestBase {
 
   /**

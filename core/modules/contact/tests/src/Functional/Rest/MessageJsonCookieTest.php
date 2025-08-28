@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Message Json Cookie.
  */
+#[Group('rest')]
 class MessageJsonCookieTest extends MessageResourceTestBase {
 
   use CookieResourceTestTrait;

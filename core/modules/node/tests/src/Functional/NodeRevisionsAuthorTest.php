@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests reverting node revisions correctly sets authorship information.
- *
- * @group node
  */
+#[Group('node')]
 class NodeRevisionsAuthorTest extends NodeTestBase {
 
   /**

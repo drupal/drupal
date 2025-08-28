@@ -10,14 +10,13 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore testcontent tuvan
-
 /**
  * Translate settings and entities to various languages.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
 
   /**

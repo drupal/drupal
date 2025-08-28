@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTestMapField;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "EntityTestMapField" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class EntityTestMapFieldTest extends ResourceTestBase {
 
   /**

@@ -6,13 +6,14 @@ namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the http_status_code area handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\area\HTTPStatusCode
  */
+#[Group('views')]
 class AreaHTTPStatusCodeTest extends ViewTestBase {
 
   /**

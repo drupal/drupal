@@ -9,12 +9,12 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests access control for downloading image styles.
- *
- * @group image
  */
+#[Group('image')]
 class ImageStyleDownloadAccessControlTest extends BrowserTestBase {
 
   /**

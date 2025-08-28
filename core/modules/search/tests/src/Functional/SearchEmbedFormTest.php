@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verifies that a form embedded in search results works.
- *
- * @group search
  */
+#[Group('search')]
 class SearchEmbedFormTest extends BrowserTestBase {
 
   /**

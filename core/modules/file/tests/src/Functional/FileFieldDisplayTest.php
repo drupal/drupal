@@ -8,12 +8,12 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the display of file fields in node and views.
- *
- * @group file
  */
+#[Group('file')]
 class FileFieldDisplayTest extends FileFieldTestBase {
 
   use FieldUiTestTrait;

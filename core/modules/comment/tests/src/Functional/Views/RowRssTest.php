@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional\Views;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the comment rss row plugin.
  *
- * @group comment
  * @see \Drupal\comment\Plugin\views\row\Rss
  */
+#[Group('comment')]
 class RowRssTest extends CommentTestBase {
 
   /**

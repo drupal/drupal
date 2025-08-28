@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentPreviewMode;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that appropriate and accessible markup is created for comment titles.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentTitleTest extends CommentTestBase {
 
   /**

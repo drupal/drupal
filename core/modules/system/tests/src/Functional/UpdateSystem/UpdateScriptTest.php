@@ -11,13 +11,14 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use Drupal\TestTools\Extension\InfoWriterTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the update script access and functionality.
- *
- * @group Update
- * @group #slow
  */
+#[Group('Update')]
+#[Group('#slow')]
 class UpdateScriptTest extends BrowserTestBase {
   use InfoWriterTrait;
   use RequirementsPageTrait;
@@ -232,9 +233,8 @@ class UpdateScriptTest extends BrowserTestBase {
    *   The values to the info.yml that are not compatible with core.
    * @param string $expected_error
    *   The expected error.
-   *
-   * @dataProvider providerExtensionCompatibilityChange
    */
+  #[DataProvider('providerExtensionCompatibilityChange')]
   public function testExtensionCompatibilityChange(array $correct_info, array $breaking_info, string $expected_error): void {
     $extension_type = $correct_info['type'];
     $this->drupalLogin(
@@ -350,9 +350,8 @@ class UpdateScriptTest extends BrowserTestBase {
    * @param array $contrib
    *   An array keyed by 'module' and 'theme' where each sub array contains
    *   a list of extension machine names.
-   *
-   * @dataProvider providerMissingExtension
    */
+  #[DataProvider('providerMissingExtension')]
   public function testMissingExtension(array $core, array $contrib): void {
     $this->drupalLogin(
       $this->drupalCreateUser(

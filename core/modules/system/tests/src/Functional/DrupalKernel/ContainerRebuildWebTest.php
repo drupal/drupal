@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\DrupalKernel;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that the container rebuild works as expected.
- *
- * @group DrupalKernel
  */
+#[Group('DrupalKernel')]
 class ContainerRebuildWebTest extends BrowserTestBase {
 
   /**

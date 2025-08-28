@@ -8,12 +8,12 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\State\StateInterface;
 use Drupal\entity_test\Entity\EntityTestComputedField;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that entities with computed fields work correctly.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityComputedFieldTest extends BrowserTestBase {
 
   /**

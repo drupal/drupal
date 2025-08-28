@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\Functional;
 
-use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\Tests\RequirementsPageTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests install profile config overrides can not add unmet dependencies.
- *
- * @group Config
  */
+#[Group('Config')]
 class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
 
   use RequirementsPageTrait;

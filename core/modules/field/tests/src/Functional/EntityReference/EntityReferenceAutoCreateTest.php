@@ -6,17 +6,17 @@ namespace Drupal\Tests\field\Functional\EntityReference;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
-use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\node\Entity\Node;
-use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests creating new entity (e.g. taxonomy-term) from an autocomplete widget.
- *
- * @group entity_reference
  */
+#[Group('entity_reference')]
 class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

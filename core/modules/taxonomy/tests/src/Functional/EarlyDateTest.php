@@ -7,12 +7,12 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Posts an article with a taxonomy term and a date prior to 1970.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class EarlyDateTest extends TaxonomyTestBase {
 
   /**

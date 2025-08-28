@@ -8,12 +8,12 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Node entity's cache tags.
- *
- * @group node
  */
+#[Group('node')]
 class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   /**

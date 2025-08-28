@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\twig_extension_test\TwigExtension\TestExtension;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Twig extensions.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class TwigExtensionTest extends BrowserTestBase {
 
   /**

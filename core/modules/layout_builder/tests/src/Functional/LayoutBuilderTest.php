@@ -8,12 +8,12 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Section;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Layout Builder UI.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderTest extends LayoutBuilderTestBase {
 
   use EnableLayoutBuilderTrait;

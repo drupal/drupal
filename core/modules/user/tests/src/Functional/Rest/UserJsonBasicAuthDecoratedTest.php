@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional\Rest;
 
 use Drupal\user_auth_decorator_test\UserAuthDecorator;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Run UserJsonBasicAuthTest with a user.auth decorator.
- *
- * @group rest
  */
+#[Group('rest')]
 class UserJsonBasicAuthDecoratedTest extends UserJsonBasicAuthTest {
   /**
    * {@inheritdoc}

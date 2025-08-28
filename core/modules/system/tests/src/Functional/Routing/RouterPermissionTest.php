@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Routing;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Function Tests for the routing permission system.
- *
- * @group Routing
  */
+#[Group('Routing')]
 class RouterPermissionTest extends BrowserTestBase {
 
   /**

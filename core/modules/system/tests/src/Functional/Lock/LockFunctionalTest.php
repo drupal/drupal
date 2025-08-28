@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Lock;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Confirm locking works between two separate requests.
- *
- * @group Lock
  */
+#[Group('Lock')]
 class LockFunctionalTest extends BrowserTestBase {
 
   /**

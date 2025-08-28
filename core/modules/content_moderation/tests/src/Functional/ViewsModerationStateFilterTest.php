@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Functional;
 
+use Drupal\content_moderation\Plugin\views\filter\ModerationStateFilter;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewEntityInterface;
 use Drupal\workflows\Entity\Workflow;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the views 'moderation_state_filter' filter plugin.
- *
- * @coversDefaultClass \Drupal\content_moderation\Plugin\views\filter\ModerationStateFilter
- *
- * @group content_moderation
- * @group #slow
  */
+#[CoversClass(ModerationStateFilter::class)]
+#[Group('content_moderation')]
+#[Group('#slow')]
 class ViewsModerationStateFilterTest extends ViewTestBase {
 
   use ContentModerationTestTrait;
@@ -82,8 +84,8 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   /**
    * Tests the dependency handling of the moderation state filter.
    *
-   * @covers ::calculateDependencies
-   * @covers ::onDependencyRemoval
+   * @legacy-covers ::calculateDependencies
+   * @legacy-covers ::onDependencyRemoval
    */
   public function testModerationStateFilterDependencyHandling(): void {
     // First, check that the view doesn't have any config dependency when there
@@ -167,9 +169,8 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
 
   /**
    * Tests the moderation state filter when the configured workflow is changed.
-   *
-   * @dataProvider providerTestWorkflowChanges
    */
+  #[DataProvider('providerTestWorkflowChanges')]
   public function testWorkflowChanges($view_id): void {
     // First, apply the Editorial workflow to both of our content types.
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/type/node');

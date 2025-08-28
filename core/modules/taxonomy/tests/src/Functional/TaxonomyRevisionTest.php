@@ -6,12 +6,12 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the new_revision setting of taxonomy vocabularies.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyRevisionTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;

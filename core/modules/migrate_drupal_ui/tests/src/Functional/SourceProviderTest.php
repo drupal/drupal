@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests that a missing source provider error message is displayed.
- *
- * @group migrate_drupal_ui
- * @group #slow
  */
+#[Group('migrate_drupal_ui')]
+#[Group('#slow')]
 class SourceProviderTest extends MigrateUpgradeTestBase {
 
   /**
@@ -23,9 +25,8 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
 
   /**
    * Test missing source provider.
-   *
-   * @dataProvider providerSourceProvider
    */
+  #[DataProvider('providerSourceProvider')]
   public function testSourceProvider($path_to_database): void {
     $this->loadFixture($this->getModulePath('migrate_drupal') . $path_to_database);
 

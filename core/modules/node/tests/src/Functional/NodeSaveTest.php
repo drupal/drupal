@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests $node->save() for saving content.
- *
- * @group node
  */
+#[Group('node')]
 class NodeSaveTest extends NodeTestBase {
 
   /**
@@ -49,7 +49,7 @@ class NodeSaveTest extends NodeTestBase {
    * Workflow:
    *  - first create a piece of content
    *  - save the content
-   *  - check if node exists
+   *  - check if node exists.
    */
   public function testImport(): void {
     // Node ID must be a number that is not in the database.

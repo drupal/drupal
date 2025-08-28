@@ -9,12 +9,12 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for \Drupal\navigation\Plugin\Block\NavigationShortcutsBlock.
- *
- * @group navigation
  */
+#[Group('navigation')]
 class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests branding block display.
- *
- * @group block
  */
+#[Group('block')]
 class BlockSystemBrandingTest extends BlockTestBase {
 
   /**

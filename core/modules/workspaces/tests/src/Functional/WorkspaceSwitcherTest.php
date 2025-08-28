@@ -8,12 +8,12 @@ use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests workspace switching functionality.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspaceSwitcherTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

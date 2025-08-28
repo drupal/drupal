@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\Menu;
 use Drupal\Core\Url;
 use Drupal\menu_test\MenuTestHelper;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests menu router and default menu link functionality.
- *
- * @group Menu
  */
+#[Group('Menu')]
 class MenuRouterTest extends BrowserTestBase {
 
   /**

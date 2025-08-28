@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use Drupal\content_translation_test\Entity\EntityTestTranslatableNoUISkip;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\entity_test\Entity\EntityTestMul;
-use Drupal\content_translation_test\Entity\EntityTestTranslatableNoUISkip;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests whether canonical link tags are present for content entities.
- *
- * @group content_translation
  */
+#[Group('content_translation')]
 class ContentTranslationLinkTagTest extends BrowserTestBase {
 
   /**

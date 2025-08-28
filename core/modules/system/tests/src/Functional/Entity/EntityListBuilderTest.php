@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Functional\Entity;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests entity list builder functionality.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityListBuilderTest extends BrowserTestBase {
 
   /**

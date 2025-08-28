@@ -6,12 +6,12 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests how translations are handled when a project gets updated.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleTranslationChangeProjectVersionTest extends LocaleUpdateBase {
 
   /**

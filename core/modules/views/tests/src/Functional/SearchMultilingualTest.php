@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\Functional;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests search integration filters with multilingual nodes.
- *
- * @group views
  */
+#[Group('views')]
 class SearchMultilingualTest extends ViewTestBase {
 
   use CronRunTrait;

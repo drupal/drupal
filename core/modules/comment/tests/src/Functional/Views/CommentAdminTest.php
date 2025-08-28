@@ -9,18 +9,18 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\Tests\comment\Functional\CommentTestBase as CommentBrowserTestBase;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\comment\Functional\CommentTestBase as CommentBrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment approval functionality.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentAdminTest extends CommentBrowserTestBase {
 
   /**

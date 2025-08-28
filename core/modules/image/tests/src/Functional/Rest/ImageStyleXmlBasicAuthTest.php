@@ -6,10 +6,12 @@ namespace Drupal\Tests\image\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Image Style Xml Basic Auth.
  */
+#[Group('rest')]
 class ImageStyleXmlBasicAuthTest extends ImageStyleResourceTestBase {
 
   use BasicAuthResourceTestTrait;

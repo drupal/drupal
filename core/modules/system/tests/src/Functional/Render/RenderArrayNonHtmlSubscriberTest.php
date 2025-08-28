@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Functional test verifying that render array throws 406 for non-HTML requests.
- *
- * @group Render
  */
+#[Group('Render')]
 class RenderArrayNonHtmlSubscriberTest extends BrowserTestBase {
 
   /**

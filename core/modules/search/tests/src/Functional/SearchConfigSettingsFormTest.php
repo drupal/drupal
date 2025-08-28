@@ -8,12 +8,12 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\search\Entity\SearchPage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verify the search config settings form.
- *
- * @group search
  */
+#[Group('search')]
 class SearchConfigSettingsFormTest extends BrowserTestBase {
 
   /**

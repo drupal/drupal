@@ -7,12 +7,12 @@ namespace Drupal\Tests\search\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that numbers can be searched with more complex matching.
- *
- * @group search
  */
+#[Group('search')]
 class SearchNumberMatchingTest extends BrowserTestBase {
 
   use CronRunTrait;

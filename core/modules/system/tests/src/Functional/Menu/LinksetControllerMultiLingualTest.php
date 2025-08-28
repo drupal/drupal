@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the behavior of the linkset controller in multilingual setup.
  *
- * @group decoupled_menus
- *
  * @see https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00
  */
+#[Group('decoupled_menus')]
 final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase {
 
   /**

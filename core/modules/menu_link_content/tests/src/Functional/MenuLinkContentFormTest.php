@@ -6,12 +6,12 @@ namespace Drupal\Tests\menu_link_content\Functional;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the menu link content UI.
- *
- * @group Menu
  */
+#[Group('Menu')]
 class MenuLinkContentFormTest extends BrowserTestBase {
 
   /**

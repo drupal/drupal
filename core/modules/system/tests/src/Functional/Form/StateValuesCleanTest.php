@@ -6,14 +6,14 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the proper removal of submitted form values.
  *
  * @see \Drupal\Core\Form\FormState::cleanValues()
- *
- * @group Form
  */
+#[Group('Form')]
 class StateValuesCleanTest extends BrowserTestBase {
 
   /**

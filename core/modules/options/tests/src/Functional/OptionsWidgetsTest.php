@@ -8,12 +8,12 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Functional\FieldTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Options widgets.
- *
- * @group options
  */
+#[Group('options')]
 class OptionsWidgetsTest extends FieldTestBase {
 
   /**

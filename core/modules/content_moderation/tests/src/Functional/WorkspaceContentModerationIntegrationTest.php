@@ -6,13 +6,13 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Tests\workspaces\Functional\WorkspaceTestUtilities;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Workspaces together with Content Moderation.
- *
- * @group content_moderation
- * @group workspaces
  */
+#[Group('content_moderation')]
+#[Group('workspaces')]
 class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase {
 
   use WorkspaceTestUtilities;

@@ -7,12 +7,12 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentPreviewMode;
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests paging of comments and their settings.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentPagerTest extends CommentTestBase {
 
   /**

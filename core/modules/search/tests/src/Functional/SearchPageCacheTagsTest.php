@@ -8,12 +8,12 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the search_page entity cache tags on the search results pages.
- *
- * @group search
  */
+#[Group('search')]
 class SearchPageCacheTagsTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

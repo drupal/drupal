@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional\Views;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests comments on nodes.
- *
- * @group comment
  */
+#[Group('comment')]
 class NodeCommentsTest extends CommentTestBase {
 
   /**

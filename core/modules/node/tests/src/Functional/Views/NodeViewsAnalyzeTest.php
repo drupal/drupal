@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional\Views;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests node_views_analyze().
- *
- * @group node
  */
+#[Group('node')]
 class NodeViewsAnalyzeTest extends NodeTestBase {
 
   /**

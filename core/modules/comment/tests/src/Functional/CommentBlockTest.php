@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment block functionality.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentBlockTest extends CommentTestBase {
 
   /**

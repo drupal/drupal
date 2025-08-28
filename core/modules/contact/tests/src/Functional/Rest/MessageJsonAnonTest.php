@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Message Json Anon.
  */
+#[Group('rest')]
 class MessageJsonAnonTest extends MessageResourceTestBase {
 
   use AnonResourceTestTrait;

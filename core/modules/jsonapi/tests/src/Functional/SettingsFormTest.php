@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\jsonapi\Form\JsonApiSettingsForm
- * @group jsonapi
+ * Tests Settings Form.
+ *
+ * @legacy-covers \Drupal\jsonapi\Form\JsonApiSettingsForm
  */
+#[Group('jsonapi')]
 class SettingsFormTest extends BrowserTestBase {
 
   /**

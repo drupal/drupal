@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\shortcut\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Shortcut Set Json Anon.
  */
+#[Group('rest')]
 class ShortcutSetJsonAnonTest extends ShortcutSetResourceTestBase {
 
   use AnonResourceTestTrait;

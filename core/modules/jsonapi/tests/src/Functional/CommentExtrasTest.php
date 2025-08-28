@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\Core\Url;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Url;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "Comment" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class CommentExtrasTest extends CommentTest {
 
   /**

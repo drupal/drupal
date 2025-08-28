@@ -6,10 +6,12 @@ namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Contact Form Xml Basic Auth.
  */
+#[Group('rest')]
 class ContactFormXmlBasicAuthTest extends ContactFormResourceTestBase {
 
   use BasicAuthResourceTestTrait;

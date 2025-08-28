@@ -6,12 +6,12 @@ namespace Drupal\Tests\navigation\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the default block provider logic.
- *
- * @group navigation
  */
+#[Group('navigation')]
 class NavigationDefaultBlockDefinitionTest extends BrowserTestBase {
 
   /**

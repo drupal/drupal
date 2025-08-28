@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\search\Entity\SearchPage;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore hinode
-
 /**
  * JSON:API integration test for the "SearchPage" config entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class SearchPageTest extends ConfigEntityResourceTestBase {
 
   /**

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests hook_form_BASE_FORM_ID_alter for a ViewsForm.
- *
- * @group views
  */
+#[Group('views')]
 class ViewsFormAlterTest extends ViewTestBase {
 
   /**

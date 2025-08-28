@@ -6,12 +6,12 @@ namespace Drupal\Tests\path\Functional;
 
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Path Node form UI.
- *
- * @group path
  */
+#[Group('path')]
 class PathNodeFormTest extends PathTestBase {
 
   /**

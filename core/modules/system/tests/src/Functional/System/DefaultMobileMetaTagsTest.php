@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Confirm that the default mobile meta tags appear as expected.
- *
- * @group system
  */
+#[Group('system')]
 class DefaultMobileMetaTagsTest extends BrowserTestBase {
 
   /**

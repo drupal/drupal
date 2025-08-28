@@ -7,12 +7,12 @@ namespace Drupal\Tests\language\Functional;
 use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures the language config overrides can be synchronized.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageConfigOverrideImportTest extends BrowserTestBase {
 
   /**

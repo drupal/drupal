@@ -10,17 +10,17 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
-use Drupal\user\RoleInterface;
 use Drupal\file\Entity\File;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the file field widget with public and private files.
- *
- * @group file
  */
+#[Group('file')]
 class FileFieldWidgetTest extends FileFieldTestBase {
 
   use CommentTestTrait;

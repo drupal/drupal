@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Locale update functions.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocalesLocationAddIndexUpdateTest extends UpdatePathTestBase {
 
   /**

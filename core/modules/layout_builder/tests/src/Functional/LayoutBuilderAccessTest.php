@@ -6,12 +6,13 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests access to Layout Builder.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderAccessTest extends BrowserTestBase {
 
   /**
@@ -69,9 +70,8 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
    *   Whether access is expected for an editable override.
    * @param array $permission_dependencies
    *   An array of expected permission dependencies.
-   *
-   * @dataProvider providerTestAccessWithBundles
    */
+  #[DataProvider('providerTestAccessWithBundles')]
   public function testAccessWithBundles(array $permissions, $default_access, $non_editable_access, $editable_access, array $permission_dependencies): void {
     $permissions[] = 'edit own bundle_with_section_field content';
     $permissions[] = 'access content';
@@ -184,9 +184,8 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
 
   /**
    * Tests Layout Builder access for an entity type that does not have bundles.
-   *
-   * @dataProvider providerTestAccessWithoutBundles
    */
+  #[DataProvider('providerTestAccessWithoutBundles')]
   public function testAccessWithoutBundles(array $permissions, $default_access, $non_editable_access, $editable_access, array $permission_dependencies): void {
     $permissions[] = 'access user profiles';
     $user = $this->drupalCreateUser($permissions);

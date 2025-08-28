@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Indexes content and tests the advanced search form.
- *
- * @group search
  */
+#[Group('search')]
 class SearchAdvancedSearchFormTest extends BrowserTestBase {
 
   /**

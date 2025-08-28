@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\path_alias\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test path_alias entities for unauthenticated JSON requests.
- *
- * @group path_alias
  */
+#[Group('path_alias')]
 class PathAliasJsonAnonTest extends PathAliasResourceTestBase {
 
   use AnonResourceTestTrait;

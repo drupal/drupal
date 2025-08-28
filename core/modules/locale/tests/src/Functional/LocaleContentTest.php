@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests multilingual support for content types and individual nodes.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleContentTest extends BrowserTestBase {
 
   /**

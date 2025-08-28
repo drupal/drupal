@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the block demo page with admin themes.
- *
- * @group block
  */
+#[Group('block')]
 class BlockDemoTest extends BrowserTestBase {
 
   /**

@@ -8,12 +8,12 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the language selection form element.
- *
- * @group Form
  */
+#[Group('Form')]
 class LanguageSelectElementTest extends BrowserTestBase {
 
   /**

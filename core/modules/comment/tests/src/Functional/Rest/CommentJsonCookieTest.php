@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Comment Json Cookie.
  */
+#[Group('rest')]
 class CommentJsonCookieTest extends CommentResourceTestBase {
 
   use CookieResourceTestTrait;

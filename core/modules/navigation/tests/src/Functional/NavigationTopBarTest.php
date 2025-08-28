@@ -9,12 +9,12 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the top bar functionality.
- *
- * @group navigation
  */
+#[Group('navigation')]
 class NavigationTopBarTest extends PageCacheTagsTestBase {
 
   /**

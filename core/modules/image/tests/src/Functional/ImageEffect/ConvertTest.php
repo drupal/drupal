@@ -7,12 +7,12 @@ namespace Drupal\Tests\image\Functional\ImageEffect;
 use Drupal\Core\File\FileExists;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the Convert image effect.
- *
- * @group image
  */
+#[Group('image')]
 class ConvertTest extends BrowserTestBase {
 
   /**

@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Html;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\RoleInterface;
-use Drupal\comment\Entity\Comment;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment approval functionality.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentAdminTest extends CommentTestBase {
 
   /**

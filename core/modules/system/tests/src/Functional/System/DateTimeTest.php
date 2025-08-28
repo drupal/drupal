@@ -8,12 +8,12 @@ use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test date formatting and time zone handling, including daylight saving time.
- *
- * @group system
  */
+#[Group('system')]
 class DateTimeTest extends BrowserTestBase {
 
   use FieldUiTestTrait;

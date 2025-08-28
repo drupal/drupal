@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contact\Functional\Jsonapi;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "ContactForm" config entity type.
- *
- * @group contact
  */
+#[Group('contact')]
 class ContactFormTest extends ConfigEntityResourceTestBase {
 
   /**

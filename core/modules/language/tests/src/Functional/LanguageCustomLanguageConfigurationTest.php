@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Functional;
 
-use Drupal\Core\Url;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Adds and configures custom languages.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
 
   /**

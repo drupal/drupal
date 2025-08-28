@@ -8,14 +8,13 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore ragdoll
-
 /**
  * Tests local tasks derived from router and added/altered via hooks.
- *
- * @group Menu
  */
+#[Group('Menu')]
 class LocalTasksTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;

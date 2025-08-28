@@ -6,12 +6,12 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\file\Entity\File;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests creating and deleting revisions with files attached.
- *
- * @group file
  */
+#[Group('file')]
 class FileFieldRevisionTest extends FileFieldTestBase {
 
   /**

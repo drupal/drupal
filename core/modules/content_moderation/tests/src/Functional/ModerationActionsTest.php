@@ -8,12 +8,13 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the content moderation actions.
- *
- * @group content_moderation
  */
+#[Group('content_moderation')]
 class ModerationActionsTest extends BrowserTestBase {
 
   use ContentTypeCreationTrait;
@@ -58,9 +59,8 @@ class ModerationActionsTest extends BrowserTestBase {
 
   /**
    * Tests the node status actions report moderation status to users correctly.
-   *
-   * @dataProvider nodeStatusActionsTestCases
    */
+  #[DataProvider('nodeStatusActionsTestCases')]
   public function testNodeStatusActions($action, $bundle, $warning_appears, $starting_status, $final_status): void {
     // Create and run an action on a node.
     $node = Node::create([

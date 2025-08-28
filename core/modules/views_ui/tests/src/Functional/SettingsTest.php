@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Core\Database\Database;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests all ui related settings under admin/structure/views/settings.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class SettingsTest extends UITestBase {
 
   /**

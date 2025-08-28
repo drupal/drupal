@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\datetime_range\Functional;
 
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Generic module test for datetime_range.
- *
- * @group datetime_range
  */
+#[Group('datetime_range')]
 class GenericTest extends GenericModuleTestBase {}

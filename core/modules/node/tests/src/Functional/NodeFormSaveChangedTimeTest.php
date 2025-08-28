@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests updating the changed time after API and FORM entity save.
- *
- * @group node
  */
+#[Group('node')]
 class NodeFormSaveChangedTimeTest extends BrowserTestBase {
 
   /**

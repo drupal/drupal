@@ -11,18 +11,19 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\node\NodeInterface;
-use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Enables the page cache and tests its cache tags in various scenarios.
  *
- * @group Cache
  * @see \Drupal\Tests\page_cache\Functional\PageCacheTest
  */
+#[Group('Cache')]
 class PageCacheTagsIntegrationTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

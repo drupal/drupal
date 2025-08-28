@@ -8,6 +8,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Drupal 7 public and private file migrations.
@@ -16,9 +18,8 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
  * created in the temporary directory of the destination test site. Tests are
  * done with the source files at the top level temporary directory and sub paths
  * from that.
- *
- * @group migrate_drupal_ui
  */
+#[Group('migrate_drupal_ui')]
 class FilePathTest extends MigrateUpgradeTestBase {
 
   use ExtensionListTestTrait;
@@ -91,9 +92,8 @@ class FilePathTest extends MigrateUpgradeTestBase {
    *   The path to the source public files.
    * @param string $temporary
    *   The path to the source temporary files.
-   *
-   * @dataProvider providerTestFilePath
    */
+  #[DataProvider('providerTestFilePath')]
   public function testFilePath(string $file_private_path, string $file_public_path, string $file_temporary_path, string $private, string $public, string $temporary): void {
     $this->sourceFileScheme['private'] = $file_private_path;
     $this->sourceFileScheme['public'] = $file_public_path;

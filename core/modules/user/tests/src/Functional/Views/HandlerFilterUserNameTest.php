@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional\Views;
 
-use Drupal\views\Views;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the handler of the user: name filter.
  *
- * @group user
  * @see Views\user\Plugin\views\filter\Name
  */
+#[Group('user')]
 class HandlerFilterUserNameTest extends ViewTestBase {
 
   /**

@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional\Wizard;
 
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests that the views wizard can specify the number of items per page.
- *
- * @group views
  */
+#[Group('views')]
 class ItemsPerPageTest extends WizardTestBase {
 
   /**
@@ -43,9 +44,8 @@ class ItemsPerPageTest extends WizardTestBase {
    * This should be removed from the `legacy` group in
    * https://drupal.org/i/3521221; see
    * \Drupal\views\Hook\ViewsHooks::blockPresave().
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testItemsPerPage(): void {
     $this->drupalCreateContentType(['type' => 'article']);
 

@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the vertical_tabs form element for expected behavior.
- *
- * @group Form
  */
+#[Group('Form')]
 class ElementsVerticalTabsTest extends BrowserTestBase {
 
   /**

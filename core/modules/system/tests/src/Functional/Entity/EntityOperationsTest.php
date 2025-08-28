@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that operations can be injected from the hook.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityOperationsTest extends BrowserTestBase {
 
   /**

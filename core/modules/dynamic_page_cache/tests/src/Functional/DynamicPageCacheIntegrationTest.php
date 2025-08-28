@@ -8,6 +8,7 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Enables the Dynamic Page Cache and tests it in various scenarios.
@@ -18,10 +19,9 @@ use Drupal\Tests\BrowserTestBase;
  * all of that again. It is tested in
  * RendererBubblingTest::testConditionalCacheContextBubblingSelfHealing().
  *
- * @group dynamic_page_cache
- *
  * @see \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber
  */
+#[Group('dynamic_page_cache')]
 class DynamicPageCacheIntegrationTest extends BrowserTestBase {
 
   /**

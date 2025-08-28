@@ -9,13 +9,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\workspaces\Entity\Workspace;
 use Drupal\workspaces\WorkspaceCacheContext;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the workspace cache context.
- *
- * @group workspaces
- * @group Cache
  */
+#[Group('workspaces')]
+#[Group('Cache')]
 class WorkspaceCacheContextTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

@@ -11,12 +11,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests modifying an entity with revisions.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityRevisionsTest extends BrowserTestBase {
 
   /**
@@ -225,10 +225,10 @@ class EntityRevisionsTest extends BrowserTestBase {
   /**
    * Tests manual revert of the revision ID value.
    *
-   * @covers \Drupal\Core\Entity\ContentEntityBase::getRevisionId
-   * @covers \Drupal\Core\Entity\ContentEntityBase::getLoadedRevisionId
-   * @covers \Drupal\Core\Entity\ContentEntityBase::setNewRevision
-   * @covers \Drupal\Core\Entity\ContentEntityBase::isNewRevision
+   * @legacy-covers \Drupal\Core\Entity\ContentEntityBase::getRevisionId
+   * @legacy-covers \Drupal\Core\Entity\ContentEntityBase::getLoadedRevisionId
+   * @legacy-covers \Drupal\Core\Entity\ContentEntityBase::setNewRevision
+   * @legacy-covers \Drupal\Core\Entity\ContentEntityBase::isNewRevision
    */
   public function testNewRevisionRevert(): void {
     $entity = EntityTestMulRev::create(['name' => 'EntityLoadedRevisionTest']);

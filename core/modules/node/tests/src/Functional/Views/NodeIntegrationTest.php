@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional\Views;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the node integration into views.
- *
- * @group node
  */
+#[Group('node')]
 class NodeIntegrationTest extends NodeTestBase {
 
   /**

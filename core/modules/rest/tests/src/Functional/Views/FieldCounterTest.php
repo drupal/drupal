@@ -7,14 +7,15 @@ namespace Drupal\Tests\rest\Functional\Views;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the display of counter field.
  *
- * @group rest
  * @see \Drupal\rest\Plugin\views\display\RestExport
  * @see \Drupal\rest\Plugin\views\row\DataFieldRow
  */
+#[Group('rest')]
 class FieldCounterTest extends ViewTestBase {
 
   /**

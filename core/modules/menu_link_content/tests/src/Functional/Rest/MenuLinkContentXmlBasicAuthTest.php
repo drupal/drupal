@@ -6,10 +6,12 @@ namespace Drupal\Tests\menu_link_content\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests Menu Link Content Xml Basic Auth.
  */
+#[Group('rest')]
 class MenuLinkContentXmlBasicAuthTest extends MenuLinkContentResourceTestBase {
 
   use BasicAuthResourceTestTrait;

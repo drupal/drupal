@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\workflows\Functional;
 
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Generic module test for workflows.
- *
- * @group workflows
  */
+#[Group('workflows')]
 class GenericTest extends GenericModuleTestBase {}

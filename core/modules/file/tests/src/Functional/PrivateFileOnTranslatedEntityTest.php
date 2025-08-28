@@ -7,12 +7,12 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Uploads private files to translated node and checks access.
- *
- * @group file
  */
+#[Group('file')]
 class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
 
   use ContentTranslationTestTrait;

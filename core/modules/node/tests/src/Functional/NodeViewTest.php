@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the node/{node} page.
  *
- * @group node
  * @see \Drupal\node\Controller\NodeController
  */
+#[Group('node')]
 class NodeViewTest extends NodeTestBase {
 
   /**

@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "Shortcut" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class ShortcutTest extends ResourceTestBase {
 
   use CommonCollectionFilterAccessTestPatternsTrait;

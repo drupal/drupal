@@ -7,12 +7,12 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests managing taxonomy parents through the user interface.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermParentsTest extends BrowserTestBase {
 
   /**

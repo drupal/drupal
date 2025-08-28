@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\Tests\BrowserTestBase;
-use Drupal\locale\StringStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\locale\StringStorageInterface;
+use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests translation of configuration strings.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleConfigTranslationTest extends BrowserTestBase {
 
   /**

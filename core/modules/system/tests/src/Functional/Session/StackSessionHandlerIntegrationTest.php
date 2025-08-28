@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Functional\Session;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the stacked session handler functionality.
- *
- * @group Session
  */
+#[Group('Session')]
 class StackSessionHandlerIntegrationTest extends BrowserTestBase {
 
   /**

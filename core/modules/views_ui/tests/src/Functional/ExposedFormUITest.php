@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests exposed forms UI functionality.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class ExposedFormUITest extends UITestBase {
 
   /**

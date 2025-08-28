@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Confirm that paths are not changed on monolingual non-English sites.
- *
- * @group language
  */
+#[Group('language')]
 class LanguagePathMonolingualTest extends BrowserTestBase {
 
   /**

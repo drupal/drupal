@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Entity\Form\RevisionRevertForm;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Taxonomy term revision form test.
- *
- * @group taxonomy
- * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionRevertForm
  */
+#[CoversClass(RevisionRevertForm::class)]
+#[Group('taxonomy')]
 class TaxonomyRevisionRevertTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;

@@ -12,13 +12,14 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests fields from within a UI.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
+#[Group('views')]
 class FieldWebTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+
 /**
  * Tests legacy Update Manager functionality of the Update Status module.
- *
- * @group legacy
- * @group update
  */
+#[IgnoreDeprecations]
+#[Group('update')]
 class UpdateManagerTest extends UpdateTestBase {
 
   /**

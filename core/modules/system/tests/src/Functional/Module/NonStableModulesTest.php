@@ -6,13 +6,14 @@ namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the installation of deprecated and experimental modules.
- *
- * @group Module
- * @group #slow
  */
+#[Group('Module')]
+#[Group('#slow')]
 class NonStableModulesTest extends BrowserTestBase {
 
   /**
@@ -173,9 +174,8 @@ class NonStableModulesTest extends BrowserTestBase {
 
   /**
    * Tests installing deprecated modules and dependencies in the UI.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedConfirmForm(): void {
     // Test installing a deprecated module with no dependencies. There should be
     // a confirmation form with a deprecated warning, but no list of
@@ -351,9 +351,8 @@ class NonStableModulesTest extends BrowserTestBase {
 
   /**
    * Tests installing deprecated and experimental modules at the same time.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedAndExperimentalConfirmForm(): void {
     $edit = [];
     $edit["modules[deprecated_module][enable]"] = TRUE;

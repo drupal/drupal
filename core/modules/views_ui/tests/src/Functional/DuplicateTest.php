@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UI for view duplicate tool.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class DuplicateTest extends UITestBase {
 
   /**

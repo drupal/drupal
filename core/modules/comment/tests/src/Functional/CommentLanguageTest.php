@@ -9,12 +9,12 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for comment language.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentLanguageTest extends BrowserTestBase {
 
   use CommentTestTrait;

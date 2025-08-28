@@ -7,12 +7,12 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Core\Url;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user blocks.
- *
- * @group user
  */
+#[Group('user')]
 class UserBlocksTest extends BrowserTestBase {
 
   /**

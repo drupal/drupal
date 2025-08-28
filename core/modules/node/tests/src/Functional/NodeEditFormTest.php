@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Create a node and test node edit functionality.
- *
- * @group node
  */
+#[Group('node')]
 class NodeEditFormTest extends NodeTestBase {
 
   /**

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\node\Entity\Node;
@@ -18,12 +18,12 @@ use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use Drupal\Tests\WaitTerminateTestTrait;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "Node" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class NodeTest extends ResourceTestBase {
 
   use CommonCollectionFilterAccessTestPatternsTrait;

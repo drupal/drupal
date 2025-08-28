@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * JSON:API integration test for the "File" content entity type.
- *
- * @group jsonapi
  */
+#[Group('jsonapi')]
 class FileTest extends ResourceTestBase {
 
   use CommonCollectionFilterAccessTestPatternsTrait;

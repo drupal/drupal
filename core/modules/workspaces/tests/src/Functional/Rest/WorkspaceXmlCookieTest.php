@@ -6,12 +6,12 @@ namespace Drupal\Tests\workspaces\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test workspace entities for XML requests.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspaceXmlCookieTest extends WorkspaceResourceTestBase {
 
   use CookieResourceTestTrait;
