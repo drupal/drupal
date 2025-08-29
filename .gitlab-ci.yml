@@ -593,11 +593,13 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     _TARGET_PHP: "8.3-ubuntu"
+    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ Component unit tests on PHP 8.4':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ Component unit tests on PHP 8.5':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
@@ -605,6 +607,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     _TARGET_PHP: "8.5-ubuntu"
+    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '✅️ PHPStan rules tests':
   <<: [ *default-job-settings-lint ]

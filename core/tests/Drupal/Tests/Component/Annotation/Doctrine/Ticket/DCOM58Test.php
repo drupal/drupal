@@ -6,6 +6,8 @@ namespace Drupal\Tests\Component\Annotation\Doctrine\Ticket;
 
 use Drupal\Component\Annotation\Doctrine\DocParser;
 use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,10 +18,9 @@ use PHPUnit\Framework\TestCase;
  *
  * Run this test in a separate process as it includes code that might have side
  * effects.
- *
- * @group DCOM58
- * @runTestsInSeparateProcesses
  */
+#[Group('DCOM58')]
+#[RunTestsInSeparateProcesses]
 class DCOM58Test extends TestCase
 {
     protected function setUp(): void

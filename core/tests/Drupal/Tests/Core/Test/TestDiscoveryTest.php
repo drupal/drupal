@@ -10,13 +10,16 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Test\Exception\MissingGroupException;
+use Drupal\Core\Test\PhpUnitTestDiscovery;
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 /**
  * Unit tests for TestDiscovery.
@@ -30,9 +33,30 @@ class TestDiscoveryTest extends UnitTestCase {
    * @legacy-covers ::getTestInfo
    */
   #[DataProvider('infoParserProvider')]
+  #[RunInSeparateProcess]
   public function testTestInfoParser($expected, $classname, $doc_comment = NULL): void {
-    $info = TestDiscovery::getTestInfo($classname, $doc_comment);
-    $this->assertEquals($expected, $info);
+    try {
+      $info = TestDiscovery::getTestInfo($classname, $doc_comment);
+      $this->assertEquals($expected, $info);
+    }
+    catch (MissingGroupException) {
+      // In case the test class was converted to attributes already, we need to
+      // get the data from PHPUnit discovery instead.
+      $configurationFilePath = $this->root . \DIRECTORY_SEPARATOR . 'core';
+      // @todo once PHPUnit 10 is no longer used, remove the condition.
+      // @see https://www.drupal.org/project/drupal/issues/3497116
+      if (RunnerVersion::getMajor() < 11) {
+        $configurationFilePath .= \DIRECTORY_SEPARATOR . '.phpunit-10.xml';
+      }
+      $phpUnitTestDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath($configurationFilePath);
+      $classes = $phpUnitTestDiscovery->getTestClasses(NULL, [$expected['type']]);
+      $info = $classes[$expected['group']][$classname];
+      // The 'file' and 'tests_count' keys are additional in PHPUnit, and the
+      // computed 'description' key may differ, but that's irrelevant. Remove
+      // the keys before comparison.
+      unset($info['file'], $info['tests_count'], $info['description'], $expected['description']);
+      $this->assertEquals($expected, $info);
+    }
   }
 
   public static function infoParserProvider() {

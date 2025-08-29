@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\DependencyInjection\Dumper;
 
+use Drupal\Component\DependencyInjection\Dumper\PhpArrayDumper;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @coversDefaultClass \Drupal\Component\DependencyInjection\Dumper\PhpArrayDumper
- * @group DependencyInjection
+ * Tests Drupal\Component\DependencyInjection\Dumper\PhpArrayDumper.
  */
+#[CoversClass(PhpArrayDumper::class)]
+#[Group('DependencyInjection')]
 class PhpArrayDumperTest extends OptimizedPhpArrayDumperTest {
 
   /**
