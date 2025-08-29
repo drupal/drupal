@@ -7,20 +7,21 @@ namespace Drupal\Tests\Core\StringTranslation;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the TranslatableMarkup class.
- *
- * @coversDefaultClass \Drupal\Core\StringTranslation\PluralTranslatableMarkup
- * @group StringTranslation
  */
+#[CoversClass(PluralTranslatableMarkup::class)]
+#[Group('StringTranslation')]
 class PluralTranslatableMarkupTest extends UnitTestCase {
 
   /**
    * Tests serialization of PluralTranslatableMarkup().
-   *
-   * @dataProvider providerPluralTranslatableMarkupSerialization
    */
+  #[DataProvider('providerPluralTranslatableMarkupSerialization')]
   public function testPluralTranslatableMarkupSerialization($count, $expected_text): void {
     // Add a mock string translation service to the container.
     $container = new ContainerBuilder();

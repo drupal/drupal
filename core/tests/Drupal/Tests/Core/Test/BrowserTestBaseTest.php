@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Test;
 
-use Drupal\Tests\DrupalTestBrowser;
-use Drupal\Tests\UnitTestCase;
-use Drupal\Tests\BrowserTestBase;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Session;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\DrupalTestBrowser;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Tests\BrowserTestBase
- * @group Test
+ * Tests Drupal\Tests\BrowserTestBase.
  */
+#[CoversClass(BrowserTestBase::class)]
+#[Group('Test')]
 class BrowserTestBaseTest extends UnitTestCase {
 
   protected function mockBrowserTestBaseWithDriver($driver) {
@@ -37,7 +40,9 @@ class BrowserTestBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getHttpClient
+   * Tests get http client.
+   *
+   * @legacy-covers ::getHttpClient
    */
   public function testGetHttpClient(): void {
     // Our stand-in for the Guzzle client object.
@@ -60,7 +65,9 @@ class BrowserTestBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getHttpClient
+   * Tests get http client exception.
+   *
+   * @legacy-covers ::getHttpClient
    */
   public function testGetHttpClientException(): void {
     // A driver type that isn't BrowserKitDriver. This should cause a
@@ -77,7 +84,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   /**
    * Tests that tearDown doesn't call cleanupEnvironment if setUp is not called.
    *
-   * @covers ::tearDown
+   * @legacy-covers ::tearDown
    */
   public function testTearDownWithoutSetUp(): void {
     $method = 'cleanupEnvironment';

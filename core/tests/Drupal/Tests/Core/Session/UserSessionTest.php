@@ -8,11 +8,14 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Session\UserSession
- * @group Session
+ * Tests Drupal\Core\Session\UserSession.
  */
+#[CoversClass(UserSession::class)]
+#[Group('Session')]
 class UserSessionTest extends UnitTestCase {
 
   /**
@@ -54,8 +57,8 @@ class UserSessionTest extends UnitTestCase {
   /**
    * Tests the method getRoles exclude or include locked roles based in param.
    *
-   * @covers ::getRoles
    * @todo Move roles constants to a class/interface
+   * @legacy-covers ::getRoles
    */
   public function testUserGetRoles(): void {
     $user = $this->createUserSession(['role_two'], TRUE);
@@ -66,7 +69,7 @@ class UserSessionTest extends UnitTestCase {
   /**
    * Tests the hasRole method.
    *
-   * @covers ::hasRole
+   * @legacy-covers ::hasRole
    */
   public function testHasRole(): void {
     $user1 = $this->createUserSession(['role_one']);

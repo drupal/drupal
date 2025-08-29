@@ -10,14 +10,18 @@ use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Access\RoleAccessCheck;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\user\Access\RoleAccessCheck
- * @group Access
- * @group Route
+ * Tests Drupal\user\Access\RoleAccessCheck.
  */
+#[CoversClass(RoleAccessCheck::class)]
+#[Group('Access')]
+#[Group('Route')]
 class RoleAccessCheckTest extends UnitTestCase {
 
   /**
@@ -138,9 +142,8 @@ class RoleAccessCheckTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Route\RouterRoleTest::getTestRouteCollection
    * @see \Drupal\Tests\Core\Route\RouterRoleTest::roleAccessProvider
-   *
-   * @dataProvider roleAccessProvider
    */
+  #[DataProvider('roleAccessProvider')]
   public function testRoleAccess($path, $grant_accounts, $deny_accounts): void {
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);

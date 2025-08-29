@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Component;
 
-use Drupal\Core\Theme\Component\SchemaCompatibilityChecker;
 use Drupal\Core\Render\Component\Exception\IncompatibleComponentSchema;
+use Drupal\Core\Theme\Component\SchemaCompatibilityChecker;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Theme\Component\SchemaCompatibilityChecker
- * @group sdc
+ * Tests Drupal\Core\Theme\Component\SchemaCompatibilityChecker.
  */
+#[CoversClass(SchemaCompatibilityChecker::class)]
+#[Group('sdc')]
 class SchemaCompatibilityCheckerTest extends UnitTestCase {
 
   /**
@@ -28,9 +32,11 @@ class SchemaCompatibilityCheckerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isCompatible
-   * @dataProvider dataProviderIsCompatible
+   * Tests is compatible.
+   *
+   * @legacy-covers ::isCompatible
    */
+  #[DataProvider('dataProviderIsCompatible')]
   public function testIsCompatible(array $first_schema, array $second_schema, bool $expected): void {
     try {
       $this->checker->isCompatible($first_schema, $second_schema);

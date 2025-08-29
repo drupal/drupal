@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Menu\Form\MenuLinkDefaultForm;
 use Drupal\Core\Menu\MenuLinkDefault;
@@ -13,16 +13,22 @@ use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * @coversDefaultClass \Drupal\Core\Menu\Form\MenuLinkDefaultForm
- * @group Menu
- * @runTestsInSeparateProcesses
+ * Tests Drupal\Core\Menu\Form\MenuLinkDefaultForm.
  */
+#[CoversClass(MenuLinkDefaultForm::class)]
+#[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkDefaultFormTest extends UnitTestCase {
 
   /**
-   * @covers ::extractFormValues
+   * Tests extract form values.
+   *
+   * @legacy-covers ::extractFormValues
    */
   public function testExtractFormValues(): void {
     $menu_link_manager = $this->prophesize(MenuLinkManagerInterface::class);

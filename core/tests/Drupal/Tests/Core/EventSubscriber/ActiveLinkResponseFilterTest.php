@@ -13,6 +13,9 @@ use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Template\Attribute;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,12 +26,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 // cspell:ignore svenska
-
 /**
- * @coversDefaultClass \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
- * @group EventSubscriber
- * @group #slow
+ * Tests Drupal\Core\EventSubscriber\ActiveLinkResponseFilter.
  */
+#[CoversClass(ActiveLinkResponseFilter::class)]
+#[Group('EventSubscriber')]
+#[Group('#slow')]
 class ActiveLinkResponseFilterTest extends UnitTestCase {
 
   /**
@@ -399,9 +402,9 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
    * @param string $expected_html_markup
    *   The expected updated HTML markup.
    *
-   * @dataProvider providerTestSetLinkActiveClass
-   * @covers ::setLinkActiveClass
+   * @legacy-covers ::setLinkActiveClass
    */
+  #[DataProvider('providerTestSetLinkActiveClass')]
   public function testSetLinkActiveClass($html_markup, $current_path, $is_front, $url_language, array $query, $expected_html_markup): void {
     $this->assertSame($expected_html_markup, ActiveLinkResponseFilter::setLinkActiveClass($html_markup, $current_path, $is_front, $url_language, $query));
   }
@@ -409,7 +412,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
   /**
    * Tests ActiveLinkResponseFilter only affects HTML responses.
    *
-   * @covers ::onResponse
+   * @legacy-covers ::onResponse
    */
   public function testOnlyHtml(): void {
     $session = new AnonymousUserSession();
@@ -448,7 +451,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
   /**
    * Tests certain response types ignored by the ActiveLinkResponseFilter.
    *
-   * @covers ::onResponse
+   * @legacy-covers ::onResponse
    */
   public function testSkipCertainResponseTypes(): void {
     $session = new AnonymousUserSession();

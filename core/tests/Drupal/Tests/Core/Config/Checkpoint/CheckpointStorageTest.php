@@ -7,8 +7,8 @@ namespace Drupal\Tests\Core\Config\Checkpoint;
 use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
-use Drupal\Core\Config\Checkpoint\LinearHistory;
 use Drupal\Core\Config\Checkpoint\CheckpointStorage;
+use Drupal\Core\Config\Checkpoint\LinearHistory;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\MemoryStorage;
@@ -19,11 +19,15 @@ use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
 use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Config\Checkpoint\CheckpointStorage
- * @group Config
+ * Tests Drupal\Core\Config\Checkpoint\CheckpointStorage.
  */
+#[CoversClass(CheckpointStorage::class)]
+#[Group('Config')]
 class CheckpointStorageTest extends UnitTestCase {
 
   use StorageCopyTrait;
@@ -58,8 +62,10 @@ class CheckpointStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::checkpoint
-   * @covers \Drupal\Core\Config\Checkpoint\Checkpoint
+   * Tests checkpoint creation.
+   *
+   * @legacy-covers ::checkpoint
+   * @legacy-covers \Drupal\Core\Config\Checkpoint\Checkpoint
    */
   public function testCheckpointCreation(): void {
     $checkpoint = $this->storage->checkpoint('Test');
@@ -111,13 +117,14 @@ class CheckpointStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::exists
-   * @covers ::read
-   * @covers ::readMultiple
-   * @covers ::listAll
+   * Tests read operations.
    *
-   * @dataProvider readMethodsProvider
+   * @legacy-covers ::exists
+   * @legacy-covers ::read
+   * @legacy-covers ::readMultiple
+   * @legacy-covers ::listAll
    */
+  #[DataProvider('readMethodsProvider')]
   public function testReadOperations(string $method, array $arguments, array $fixture): void {
     // Create a checkpoint so the checkpoint storage can be read from.
     $this->storage->checkpoint('');
@@ -153,13 +160,14 @@ class CheckpointStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::write
-   * @covers ::delete
-   * @covers ::rename
-   * @covers ::deleteAll
+   * Tests write operations.
    *
-   * @dataProvider writeMethodsProvider
+   * @legacy-covers ::write
+   * @legacy-covers ::delete
+   * @legacy-covers ::rename
+   * @legacy-covers ::deleteAll
    */
+  #[DataProvider('writeMethodsProvider')]
   public function testWriteOperations(string $method, array $arguments, array $fixture): void {
     $this->setRandomFixtureConfig($fixture);
 
@@ -206,9 +214,11 @@ class CheckpointStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getAllCollectionNames
-   * @covers ::getCollectionName
-   * @covers ::createCollection
+   * Tests collections.
+   *
+   * @legacy-covers ::getAllCollectionNames
+   * @legacy-covers ::getCollectionName
+   * @legacy-covers ::createCollection
    */
   public function testCollections(): void {
     $ref_readFromCheckpoint = new \ReflectionProperty($this->storage, 'readFromCheckpoint');
@@ -257,8 +267,10 @@ class CheckpointStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::encode
-   * @covers ::decode
+   * Tests encode decode.
+   *
+   * @legacy-covers ::encode
+   * @legacy-covers ::decode
    */
   public function testEncodeDecode(): void {
     $array = (array) $this->getRandomGenerator()->object();

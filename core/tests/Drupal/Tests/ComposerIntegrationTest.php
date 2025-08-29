@@ -6,13 +6,14 @@ namespace Drupal\Tests;
 
 use Drupal\Composer\Plugin\VendorHardening\Config;
 use Drupal\Tests\Composer\ComposerIntegrationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Finder\Finder;
 
 /**
  * Tests Composer integration.
- *
- * @group Composer
  */
+#[Group('Composer')]
 class ComposerIntegrationTest extends UnitTestCase {
 
   use ComposerIntegrationTrait;
@@ -49,9 +50,8 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @param string $path
    *   Path to a composer.json to test.
-   *
-   * @dataProvider providerTestComposerJson
    */
+  #[DataProvider('providerTestComposerJson')]
   public function testComposerTilde(string $path): void {
     if (str_ends_with($path, 'composer/Metapackage/CoreRecommended/composer.json')) {
       $this->markTestSkipped("$path has tilde");
@@ -184,9 +184,8 @@ class ComposerIntegrationTest extends UnitTestCase {
    *   Path to scaffold file source location.
    * @param string $expectedDestination
    *   Named location to the destination path of the scaffold file.
-   *
-   * @dataProvider providerTestExpectedScaffoldFiles
    */
+  #[DataProvider('providerTestExpectedScaffoldFiles')]
   public function testExpectedScaffoldFiles($destRelPath, $sourceRelPath, $expectedDestination = '[web-root]'): void {
     // Grab the 'file-mapping' section of the core composer.json file.
     $json = json_decode(file_get_contents($this->root . '/core/composer.json'));

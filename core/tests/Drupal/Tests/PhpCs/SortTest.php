@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\PhpCs;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 /**
  * Tests that phpcs.xml.dist is properly sorted.
- *
- * @group phpcs
  */
+#[Group('phpcs')]
 class SortTest extends TestCase {
 
   /**

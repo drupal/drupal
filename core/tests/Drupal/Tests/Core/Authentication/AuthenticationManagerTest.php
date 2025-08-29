@@ -8,23 +8,28 @@ use Drupal\Core\Authentication\AuthenticationCollector;
 use Drupal\Core\Authentication\AuthenticationManager;
 use Drupal\Core\Authentication\AuthenticationProviderFilterInterface;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\Core\Authentication\AuthenticationManager
- * @group Authentication
+ * Tests Drupal\Core\Authentication\AuthenticationManager.
  */
+#[CoversClass(AuthenticationManager::class)]
+#[Group('Authentication')]
 class AuthenticationManagerTest extends UnitTestCase {
 
   /**
-   * @covers ::defaultFilter
-   * @covers ::applyFilter
+   * Tests default filter.
    *
-   * @dataProvider providerTestDefaultFilter
+   * @legacy-covers ::defaultFilter
+   * @legacy-covers ::applyFilter
    */
+  #[DataProvider('providerTestDefaultFilter')]
   public function testDefaultFilter($applies, $has_route, $auth_option, $provider_id, $global): void {
     $auth_provider = $this->createMock('Drupal\Core\Authentication\AuthenticationProviderInterface');
     $auth_collector = new AuthenticationCollector();
@@ -44,7 +49,9 @@ class AuthenticationManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::applyFilter
+   * Tests apply filter with filter provider.
+   *
+   * @legacy-covers ::applyFilter
    */
   public function testApplyFilterWithFilterProvider(): void {
     $auth_provider = $this->createMock('Drupal\Tests\Core\Authentication\TestAuthenticationProviderInterface');

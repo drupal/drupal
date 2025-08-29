@@ -7,14 +7,17 @@ namespace Drupal\Tests\Core\Mail\Plugin\Mail;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Mail\Plugin\Mail\PhpMail;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ServerBag;
 
 /**
- * @coversDefaultClass \Drupal\Core\Mail\Plugin\Mail\PhpMail
- * @group Mail
+ * Tests Drupal\Core\Mail\Plugin\Mail\PhpMail.
  */
+#[CoversClass(PhpMail::class)]
+#[Group('Mail')]
 class PhpMailTest extends UnitTestCase {
 
   /**
@@ -107,7 +110,7 @@ class PhpMailTest extends UnitTestCase {
   /**
    * Tests sending a mail using a From address with a comma in it.
    *
-   * @covers ::mail
+   * @legacy-covers ::mail
    */
   public function testMail(): void {
     // Setup a mail message.

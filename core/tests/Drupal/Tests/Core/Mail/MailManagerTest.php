@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Mail;
 
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Mail\MailManager;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Mail\MailManager;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\Core\Mail\MailManager
- * @group Mail
+ * Tests Drupal\Core\Mail\MailManager.
  */
+#[CoversClass(MailManager::class)]
+#[Group('Mail')]
 class MailManagerTest extends UnitTestCase {
 
   /**
@@ -152,7 +155,7 @@ class MailManagerTest extends UnitTestCase {
   /**
    * Tests the getInstance method.
    *
-   * @covers ::getInstance
+   * @legacy-covers ::getInstance
    */
   public function testGetInstance(): void {
     $interface = [
@@ -175,7 +178,7 @@ class MailManagerTest extends UnitTestCase {
   /**
    * Tests that mails are sent in a separate render context.
    *
-   * @covers ::mail
+   * @legacy-covers ::mail
    */
   public function testMailInRenderContext(): void {
     $interface = [

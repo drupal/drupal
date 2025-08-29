@@ -14,12 +14,15 @@ use Drupal\Core\Entity\EntityTypeRepository;
 use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
 use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityTypeRepository
- * @group Entity
+ * Tests Drupal\Core\Entity\EntityTypeRepository.
  */
+#[CoversClass(EntityTypeRepository::class)]
+#[Group('Entity')]
 class EntityTypeRepositoryTest extends UnitTestCase {
 
   /**
@@ -95,7 +98,7 @@ class EntityTypeRepositoryTest extends UnitTestCase {
   /**
    * Tests the getEntityTypeLabels() method.
    *
-   * @covers ::getEntityTypeLabels
+   * @legacy-covers ::getEntityTypeLabels
    */
   public function testGetEntityTypeLabels(): void {
     $apple = $this->prophesize(EntityTypeInterface::class);
@@ -119,7 +122,9 @@ class EntityTypeRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getEntityTypeFromClass
+   * Tests get entity type from class.
+   *
+   * @legacy-covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClass(): void {
     $apple = $this->prophesize(EntityTypeInterface::class);
@@ -145,7 +150,9 @@ class EntityTypeRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getEntityTypeFromClass
+   * Tests get entity type from class no match.
+   *
+   * @legacy-covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClassNoMatch(): void {
     $apple = $this->prophesize(EntityTypeInterface::class);
@@ -165,7 +172,9 @@ class EntityTypeRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getEntityTypeFromClass
+   * Tests get entity type from class ambiguous.
+   *
+   * @legacy-covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClassAmbiguous(): void {
     $jazz = $this->prophesize(EntityTypeInterface::class);
@@ -187,7 +196,9 @@ class EntityTypeRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getEntityTypeFromClass
+   * Tests get entity type from class ambiguous bundle class.
+   *
+   * @legacy-covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClassAmbiguousBundleClass(): void {
     $blackcurrant = $this->prophesize(EntityTypeInterface::class);

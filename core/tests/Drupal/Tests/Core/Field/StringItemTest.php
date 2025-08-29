@@ -8,13 +8,15 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldConstraint;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Defines a test for the StringItem field-type.
- *
- * @group Field
- * @coversDefaultClass \Drupal\Core\Field\Plugin\Field\FieldType\StringItem
  */
+#[CoversClass(StringItem::class)]
+#[Group('Field')]
 class StringItemTest extends UnitTestCase {
 
   /**
@@ -23,9 +25,9 @@ class StringItemTest extends UnitTestCase {
    * @param int $max_length
    *   Maximum field length.
    *
-   * @covers ::generateSampleValue
-   * @dataProvider providerMaxLength
+   * @legacy-covers ::generateSampleValue
    */
+  #[DataProvider('providerMaxLength')]
   public function testGenerateSampleValue(int $max_length): void {
     foreach ([TRUE, FALSE] as $unique) {
       $definition = $this->prophesize(FieldDefinitionInterface::class);

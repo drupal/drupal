@@ -7,21 +7,24 @@ namespace Drupal\Tests\Core\StackMiddleware;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StackMiddleware\AjaxPageState;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\StackMiddleware\AjaxPageState
- * @group StackMiddleware
+ * Tests Drupal\Core\StackMiddleware\AjaxPageState.
  */
+#[CoversClass(AjaxPageState::class)]
+#[Group('StackMiddleware')]
 class AjaxPageStateTest extends UnitTestCase {
 
   /**
    * Tests that the query and request libraries are merged.
-   *
-   * @dataProvider providerHandle
    */
+  #[DataProvider('providerHandle')]
   public function testHandle(?string $query_libraries, ?string $request_libraries, ?string $query_expected, ?string $request_expected): void {
     $request = new Request();
     if ($query_libraries) {

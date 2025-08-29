@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\EventSubscriber;
 
+use Drupal\Core\EventSubscriber\ModuleRouteSubscriber;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\EventSubscriber\ModuleRouteSubscriber;
-use Symfony\Component\Routing\RouteCollection;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\Core\EventSubscriber\ModuleRouteSubscriber
- * @group EventSubscriber
+ * Tests Drupal\Core\EventSubscriber\ModuleRouteSubscriber.
  */
+#[CoversClass(ModuleRouteSubscriber::class)]
+#[Group('EventSubscriber')]
 class ModuleRouteSubscriberTest extends UnitTestCase {
 
   /**
@@ -51,9 +55,9 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    * @param bool $removed
    *   Whether or not the route is expected to be removed from the collection.
    *
-   * @dataProvider providerTestRemoveRoute
-   * @covers ::onAlterRoutes
+   * @legacy-covers ::onAlterRoutes
    */
+  #[DataProvider('providerTestRemoveRoute')]
   public function testRemoveRoute($route_name, array $requirements, $removed): void {
     $collection = new RouteCollection();
     $route = new Route('', [], $requirements);

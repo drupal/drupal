@@ -22,14 +22,19 @@ use Drupal\Core\Http\Exception\CacheableUnauthorizedHttpException;
 use Drupal\Core\Http\Exception\CacheableUnprocessableEntityHttpException;
 use Drupal\Core\Http\Exception\CacheableUnsupportedMediaTypeHttpException;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Http
+ * Tests Cacheable Exception.
  */
+#[Group('Http')]
 class CacheableExceptionTest extends UnitTestCase {
 
   /**
-   * @covers \Drupal\Core\Http\Exception\CacheableHttpException
+   * Tests cacheable http exception.
+   *
+   * @legacy-covers \Drupal\Core\Http\Exception\CacheableHttpException
    */
   public function testCacheableHttpException(): void {
     $exception = new CacheableHttpException((new CacheableMetadata())->setCacheContexts(['route']), 500, 'test message', NULL, ['X-Drupal-Exception' => 'Test'], 123);
@@ -41,8 +46,9 @@ class CacheableExceptionTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider providerTestExceptions
-   */
+ * Tests exceptions.
+ */
+  #[DataProvider('providerTestExceptions')]
   public function testExceptions($status_code, $class, $argument = NULL, $expected_headers = []): void {
     $cacheable_metadata = (new CacheableMetadata())->setCacheContexts(['route']);
     $message = "$class test message";

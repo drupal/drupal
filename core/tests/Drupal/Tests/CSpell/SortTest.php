@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\CSpell;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests that the dictionary.txt file is properly sorted.
- *
- * @group cspell
  */
+#[Group('cspell')]
 class SortTest extends TestCase {
 
   /**

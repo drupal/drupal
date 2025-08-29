@@ -10,11 +10,14 @@ use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Cache\ChainedFastBackend;
 use Drupal\Core\Cache\ChainedFastBackendFactory;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\ChainedFastBackendFactory
- * @group Cache
+ * Tests Drupal\Core\Cache\ChainedFastBackendFactory.
  */
+#[CoversClass(ChainedFastBackendFactory::class)]
+#[Group('Cache')]
 class ChainedFastBackendFactoryTest extends UnitTestCase {
 
   /**

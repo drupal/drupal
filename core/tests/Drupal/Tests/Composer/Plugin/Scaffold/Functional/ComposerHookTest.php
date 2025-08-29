@@ -6,9 +6,10 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold\Functional;
 
 use Composer\Util\Filesystem;
 use Drupal\BuildTests\Framework\BuildTestBase;
-use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
 use Drupal\Tests\Composer\Plugin\ExecTrait;
+use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Composer Hooks that run scaffold operations.
@@ -21,10 +22,9 @@ use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
  * test. Other functional test files invoke Composer commands directly via the
  * Composer Application object, in order to get more accurate test coverage
  * information.
- *
- * @group Scaffold
- * @group #slow
  */
+#[Group('Scaffold')]
+#[Group('#slow')]
 class ComposerHookTest extends BuildTestBase {
 
   use ExecTrait;

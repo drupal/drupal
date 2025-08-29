@@ -8,11 +8,15 @@ use Drupal\Core\Asset\LibraryDiscoveryCollector;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @coversDefaultClass \Drupal\Core\Asset\LibraryDiscoveryCollector
- * @group Asset
+ * Tests Drupal\Core\Asset\LibraryDiscoveryCollector.
  */
+#[CoversClass(LibraryDiscoveryCollector::class)]
+#[Group('Asset')]
 class LibraryDiscoveryCollectorTest extends UnitTestCase {
 
   /**
@@ -109,7 +113,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
   /**
    * Tests the resolve cache miss function.
    *
-   * @covers ::resolveCacheMiss
+   * @legacy-covers ::resolveCacheMiss
    */
   public function testResolveCacheMiss(): void {
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
@@ -135,7 +139,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
   /**
    * Tests the destruct method.
    *
-   * @covers ::destruct
+   * @legacy-covers ::destruct
    */
   public function testDestruct(): void {
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
@@ -179,7 +183,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
   /**
    * Tests library with an extend.
    *
-   * @covers ::applyLibrariesExtend
+   * @legacy-covers ::applyLibrariesExtend
    */
   public function testLibrariesExtend(): void {
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
@@ -222,10 +226,9 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
   /**
    * Tests a deprecated library with an extend.
    *
-   * @covers ::applyLibrariesExtend
-   *
-   * @group legacy
+   * @legacy-covers ::applyLibrariesExtend
    */
+  #[IgnoreDeprecations]
   public function testLibrariesExtendDeprecated(): void {
     $this->expectDeprecation('Theme "test" is extending a deprecated library. The "test/test_4" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use the test_3 library instead. See https://www.example.com');
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)

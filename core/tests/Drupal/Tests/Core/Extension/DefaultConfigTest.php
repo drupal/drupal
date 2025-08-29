@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests default configuration of the Extension system.
- *
- * @group Extension
  */
+#[Group('Extension')]
 class DefaultConfigTest extends UnitTestCase {
 
   /**

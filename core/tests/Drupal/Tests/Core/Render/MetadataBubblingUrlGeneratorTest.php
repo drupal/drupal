@@ -7,14 +7,15 @@ namespace Drupal\Tests\Core\Render;
 use Drupal\Core\Render\MetadataBubblingUrlGenerator;
 use Drupal\Core\Url;
 use Drupal\Tests\Core\Routing\UrlGeneratorTest;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Confirm that the MetadataBubblingUrlGenerator is functioning properly.
- *
- * @coversDefaultClass \Drupal\Core\Render\MetadataBubblingUrlGenerator
- *
- * @group Render
  */
+#[CoversClass(MetadataBubblingUrlGenerator::class)]
+#[Group('Render')]
 class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
 
   /**
@@ -48,10 +49,9 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
    * @param array $options
    *   The URL options.
    *
-   * @covers ::bubble
-   *
-   * @dataProvider providerUrlBubbleableMetadataBubbling
+   * @legacy-covers ::bubble
    */
+  #[DataProvider('providerUrlBubbleableMetadataBubbling')]
   public function testUrlBubbleableMetadataBubbling($collect_bubbleable_metadata, $invocations, array $options): void {
     $this->renderer->expects($this->exactly($invocations))
       ->method('render')

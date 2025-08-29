@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cron;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Lock\NullLockBackend;
@@ -17,6 +17,9 @@ use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\State\State;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Prophecy\Argument\ArgumentsWildcard;
 use Psr\Log\LoggerInterface;
@@ -24,10 +27,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the Cron class.
- *
- * @group Cron
- * @coversDefaultClass \Drupal\Core\Cron
  */
+#[CoversClass(Cron::class)]
+#[Group('Cron')]
 class CronTest extends UnitTestCase {
 
   const REQUEUE_COUNT = 3;
@@ -189,9 +191,9 @@ class CronTest extends UnitTestCase {
   /**
    * Tests the ::processQueues() method.
    *
-   * @covers ::processQueues
-   * @dataProvider processQueuesTestData
+   * @legacy-covers ::processQueues
    */
+  #[DataProvider('processQueuesTestData')]
   public function testProcessQueues($item, $message_logged_assertion, $count_post_run): void {
     $this->resetTestingState();
     $this->queue->createItem($item);

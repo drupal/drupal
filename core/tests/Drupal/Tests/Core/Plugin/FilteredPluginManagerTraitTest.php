@@ -11,17 +11,23 @@ use Drupal\Core\Plugin\FilteredPluginManagerInterface;
 use Drupal\Core\Plugin\FilteredPluginManagerTrait;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Plugin\FilteredPluginManagerTrait
- * @group Plugin
+ * Tests Drupal\Core\Plugin\FilteredPluginManagerTrait.
  */
+#[CoversClass(FilteredPluginManagerTrait::class)]
+#[Group('Plugin')]
 class FilteredPluginManagerTraitTest extends UnitTestCase {
 
   /**
-   * @covers ::getFilteredDefinitions
-   * @dataProvider providerTestGetFilteredDefinitions
+   * Tests get filtered definitions.
+   *
+   * @legacy-covers ::getFilteredDefinitions
    */
+  #[DataProvider('providerTestGetFilteredDefinitions')]
   public function testGetFilteredDefinitions($contexts, $expected): void {
     // Start with two plugins.
     $definitions = [];

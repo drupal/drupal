@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Test;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @group Test
+ * Tests Suite Base.
  */
+#[Group('Test')]
 class TestSuiteBaseTest extends TestCase {
 
   /**

@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Render\Element;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Render\Element
- * @group Render
+ * Tests Drupal\Core\Render\Element.
  */
+#[CoversClass(Element::class)]
+#[Group('Render')]
 class ElementTest extends UnitTestCase {
 
   /**
@@ -130,9 +134,8 @@ class ElementTest extends UnitTestCase {
    *   The test element array.
    * @param array $expected_keys
    *   The expected keys to be returned from Element::getVisibleChildren().
-   *
-   * @dataProvider providerVisibleChildren
    */
+  #[DataProvider('providerVisibleChildren')]
   public function testVisibleChildren(array $element, array $expected_keys): void {
     $this->assertSame($expected_keys, Element::getVisibleChildren($element));
   }
@@ -159,9 +162,8 @@ class ElementTest extends UnitTestCase {
 
   /**
    * Tests the setAttributes() method.
-   *
-   * @dataProvider providerTestSetAttributes
    */
+  #[DataProvider('providerTestSetAttributes')]
   public function testSetAttributes($element, $map, $expected_element): void {
     Element::setAttributes($element, $map);
     $this->assertSame($expected_element, $element);
@@ -180,10 +182,11 @@ class ElementTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isEmpty
+   * Tests is empty.
    *
-   * @dataProvider providerTestIsEmpty
+   * @legacy-covers ::isEmpty
    */
+  #[DataProvider('providerTestIsEmpty')]
   public function testIsEmpty(array $element, $expected): void {
     $this->assertSame(Element::isEmpty($element), $expected);
   }
@@ -227,9 +230,11 @@ class ElementTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isRenderArray
-   * @dataProvider dataProviderIsRenderArray
+   * Tests is render array.
+   *
+   * @legacy-covers ::isRenderArray
    */
+  #[DataProvider('dataProviderIsRenderArray')]
   public function testIsRenderArray($build, $expected): void {
     $this->assertSame(
       $expected,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\Plugin\DataType\BooleanData;
 use Drupal\Core\TypedData\Plugin\DataType\FloatData;
@@ -13,21 +14,25 @@ use Drupal\Core\TypedData\Plugin\DataType\Uri;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraint;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraintValidator;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraintValidator
- * @group validation
+ * Tests Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraintValidator.
  */
+#[CoversClass(PrimitiveTypeConstraintValidator::class)]
+#[Group('validation')]
 class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
 
   /**
-   * @covers ::validate
+   * Tests validate.
    *
-   * @dataProvider provideTestValidate
+   * @legacy-covers ::validate
    */
+  #[DataProvider('provideTestValidate')]
   public function testValidate(PrimitiveInterface $typed_data, string|TranslatableMarkup|int|float|array|null $value, bool $valid): void {
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->any())

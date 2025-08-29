@@ -5,18 +5,21 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\CsrfAccessCheck;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-use Drupal\Core\Access\CsrfAccessCheck;
-use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Access\CsrfAccessCheck
- * @group Access
+ * Tests Drupal\Core\Access\CsrfAccessCheck.
  */
+#[CoversClass(CsrfAccessCheck::class)]
+#[Group('Access')]
 class CsrfAccessCheckTest extends UnitTestCase {
 
   /**
@@ -80,7 +83,9 @@ class CsrfAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::access
+   * Tests csrf token invalid.
+   *
+   * @legacy-covers ::access
    */
   public function testCsrfTokenInvalid(): void {
     $this->csrfToken->expects($this->once())
@@ -103,7 +108,9 @@ class CsrfAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::access
+   * Tests csrf token missing.
+   *
+   * @legacy-covers ::access
    */
   public function testCsrfTokenMissing(): void {
     $this->csrfToken->expects($this->once())

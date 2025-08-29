@@ -7,17 +7,23 @@ namespace Drupal\Tests\Core\Extension;
 use Drupal\Component\Version\Constraint;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Extension\Dependency
- * @group Extension
+ * Tests Drupal\Core\Extension\Dependency.
  */
+#[CoversClass(Dependency::class)]
+#[Group('Extension')]
 class DependencyTest extends UnitTestCase {
 
   /**
-   * @covers ::createFromString
-   * @dataProvider providerCreateFromString
+   * Tests create from string.
+   *
+   * @legacy-covers ::createFromString
    */
+  #[DataProvider('providerCreateFromString')]
   public function testCreateFromString($string, $expected_name, $expected_project, $expected_constraint): void {
     $dependency = Dependency::createFromString($string);
     $this->assertSame($expected_name, $dependency->getName());
@@ -38,7 +44,9 @@ class DependencyTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isCompatible
+   * Tests is compatible.
+   *
+   * @legacy-covers ::isCompatible
    */
   public function testIsCompatible(): void {
     $dependency = new Dependency('paragraphs_demo', 'paragraphs', '>8.x-1.1');
@@ -49,7 +57,7 @@ class DependencyTest extends UnitTestCase {
   /**
    * Ensures that constraint objects are not serialized.
    *
-   * @covers ::__sleep
+   * @legacy-covers ::__sleep
    */
   public function testSerialization(): void {
     $dependency = new Dependency('paragraphs_demo', 'paragraphs', '>8.x-1.1');

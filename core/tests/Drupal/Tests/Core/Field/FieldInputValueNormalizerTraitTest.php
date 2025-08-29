@@ -6,19 +6,25 @@ namespace Drupal\Tests\Core\Field;
 
 use Drupal\Core\Field\FieldInputValueNormalizerTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Field\FieldInputValueNormalizerTrait
- * @group Field
+ * Tests Drupal\Core\Field\FieldInputValueNormalizerTrait.
  */
+#[CoversClass(FieldInputValueNormalizerTrait::class)]
+#[Group('Field')]
 class FieldInputValueNormalizerTraitTest extends UnitTestCase {
 
   use FieldInputValueNormalizerTrait;
 
   /**
-   * @dataProvider keyValueByDeltaTestCases
-   * @covers ::normalizeValue
+   * Tests key value by delta.
+   *
+   * @legacy-covers ::normalizeValue
    */
+  #[DataProvider('keyValueByDeltaTestCases')]
   public function testKeyValueByDelta($input_value, $expected_value, $main_property_name = 'value'): void {
     $this->assertEquals($expected_value, $this->normalizeValue($input_value, $main_property_name));
   }
@@ -83,7 +89,9 @@ class FieldInputValueNormalizerTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::normalizeValue
+   * Tests scalar with no main property.
+   *
+   * @legacy-covers ::normalizeValue
    */
   public function testScalarWithNoMainProperty(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -93,7 +101,9 @@ class FieldInputValueNormalizerTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::normalizeValue
+   * Tests key value by delta undefined variables.
+   *
+   * @legacy-covers ::normalizeValue
    */
   public function testKeyValueByDeltaUndefinedVariables(): void {
     $this->assertEquals([], $this->normalizeValue($undefined_variable, 'value'));

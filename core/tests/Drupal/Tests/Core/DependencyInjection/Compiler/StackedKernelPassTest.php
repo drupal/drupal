@@ -10,14 +10,17 @@ use Drupal\Core\StackMiddleware\StackedHttpKernel;
 use Drupal\Tests\Core\DependencyInjection\Fixture\FinalTestHttpMiddlewareClass;
 use Drupal\Tests\Core\DependencyInjection\Fixture\FinalTestNonTerminableHttpMiddlewareClass;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\StackedKernelPass
- * @group DependencyInjection
+ * Tests Drupal\Core\DependencyInjection\Compiler\StackedKernelPass.
  */
+#[CoversClass(StackedKernelPass::class)]
+#[Group('DependencyInjection')]
 class StackedKernelPassTest extends UnitTestCase {
 
   /**
@@ -43,7 +46,9 @@ class StackedKernelPassTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::process
+   * Tests process with stacked kernel.
+   *
+   * @legacy-covers ::process
    */
   public function testProcessWithStackedKernel(): void {
     $stacked_kernel = new Definition(StackedHttpKernel::class);
@@ -85,7 +90,9 @@ class StackedKernelPassTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::process
+   * Tests process with http kernel.
+   *
+   * @legacy-covers ::process
    */
   public function testProcessWithHttpKernel(): void {
     $kernel = new Definition('Symfony\Component\HttpKernel\HttpKernelInterface');

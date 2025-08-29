@@ -7,6 +7,8 @@ namespace Drupal\Tests\Core\Test;
 use Drupal\Core\Test\JUnitConverter;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Drupal\Core\Test\JUnitConverter.
@@ -14,19 +16,17 @@ use org\bovigo\vfs\vfsStream;
  * This test class has significant overlap with
  * Drupal\Tests\simpletest\Kernel\PhpUnitErrorTest.
  *
- * @coversDefaultClass \Drupal\Core\Test\JUnitConverter
- *
- * @group Test
- * @group simpletest
- *
  * @see \Drupal\Tests\simpletest\Kernel\PhpUnitErrorTest
  */
+#[CoversClass(JUnitConverter::class)]
+#[Group('Test')]
+#[Group('simpletest')]
 class JUnitConverterTest extends UnitTestCase {
 
   /**
    * Tests errors reported.
    *
-   * @covers ::xmlToRows
+   * @legacy-covers ::xmlToRows
    */
   public function testXmlToRowsWithErrors(): void {
     $phpunit_error_xml = __DIR__ . '/../../../../fixtures/phpunit_error.xml';
@@ -65,7 +65,9 @@ class JUnitConverterTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::xmlToRows
+   * Tests xml to rows empty file.
+   *
+   * @legacy-covers ::xmlToRows
    */
   public function testXmlToRowsEmptyFile(): void {
     // File system with an empty XML file.
@@ -74,7 +76,9 @@ class JUnitConverterTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::xmlElementToRows
+   * Tests xml element to rows.
+   *
+   * @legacy-covers ::xmlElementToRows
    */
   public function testXmlElementToRows(): void {
     $junit = <<<EOD
@@ -103,7 +107,9 @@ EOD;
   }
 
   /**
-   * @covers ::convertTestCaseToSimpletestRow
+   * Tests convert test case to simpletest row.
+   *
+   * @legacy-covers ::convertTestCaseToSimpletestRow
    */
   public function testConvertTestCaseToSimpletestRow(): void {
     $junit = <<<EOD

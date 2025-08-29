@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Extension;
 
-use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Extension\Extension;
+use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Extension serialization.
- *
- * @coversDefaultClass \Drupal\Core\Extension\Extension
- * @group Extension
  */
+#[CoversClass(Extension::class)]
+#[Group('Extension')]
 class ExtensionSerializationTest extends UnitTestCase {
 
   /**
@@ -42,8 +43,8 @@ class ExtensionSerializationTest extends UnitTestCase {
    * container's app.root and not the DRUPAL_ROOT constant if the service
    * container app.root is available.
    *
-   * @covers ::__sleep
-   * @covers ::__wakeup
+   * @legacy-covers ::__sleep
+   * @legacy-covers ::__wakeup
    */
   public function testServiceAppRouteUsage(): void {
     $container = new ContainerBuilder();
@@ -67,8 +68,8 @@ class ExtensionSerializationTest extends UnitTestCase {
   /**
    * Tests dynamically assigned public properties kept when serialized.
    *
-   * @covers ::__sleep
-   * @covers ::__wakeup
+   * @legacy-covers ::__sleep
+   * @legacy-covers ::__wakeup
    */
   public function testPublicProperties(): void {
     $container = new ContainerBuilder();

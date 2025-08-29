@@ -8,17 +8,19 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Block\BlockManager;
 use Drupal\Core\Block\Plugin\Block\Broken;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\Core\Block\BlockManager
- *
- * @group block
+ * Tests Drupal\Core\Block\BlockManager.
  */
+#[CoversClass(BlockManager::class)]
+#[Group('block')]
 class BlockManagerTest extends UnitTestCase {
 
   /**
@@ -82,7 +84,9 @@ class BlockManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDefinitions
+   * Tests definitions.
+   *
+   * @legacy-covers ::getDefinitions
    */
   public function testDefinitions(): void {
     $definitions = $this->blockManager->getDefinitions();
@@ -90,7 +94,9 @@ class BlockManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getSortedDefinitions
+   * Tests sorted definitions.
+   *
+   * @legacy-covers ::getSortedDefinitions
    */
   public function testSortedDefinitions(): void {
     $definitions = $this->blockManager->getSortedDefinitions();
@@ -98,7 +104,9 @@ class BlockManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getGroupedDefinitions
+   * Tests grouped definitions.
+   *
+   * @legacy-covers ::getGroupedDefinitions
    */
   public function testGroupedDefinitions(): void {
     $definitions = $this->blockManager->getGroupedDefinitions();
@@ -108,7 +116,9 @@ class BlockManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::handlePluginNotFound
+   * Tests handle plugin not found.
+   *
+   * @legacy-covers ::handlePluginNotFound
    */
   public function testHandlePluginNotFound(): void {
     $this->logger->warning('The "%plugin_id" block plugin was not found', ['%plugin_id' => 'invalid'])->shouldBeCalled();

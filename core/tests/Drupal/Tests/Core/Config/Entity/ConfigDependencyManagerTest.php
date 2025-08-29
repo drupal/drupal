@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Config\Entity;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ConfigDependencyManager class.
- *
- * @group Config
  */
+#[Group('Config')]
 class ConfigDependencyManagerTest extends UnitTestCase {
 
   public function testNoConfiguration(): void {

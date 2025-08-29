@@ -8,21 +8,26 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @coversDefaultClass \Drupal\Core\DrupalKernel
- * @group DrupalKernel
+ * Tests Drupal\Core\DrupalKernel.
  */
+#[CoversClass(DrupalKernel::class)]
+#[Group('DrupalKernel')]
 class DrupalKernelTest extends UnitTestCase {
 
   /**
    * Tests hostname validation with settings.
    *
-   * @covers ::setupTrustedHosts
-   * @dataProvider providerTestTrustedHosts
+   * @legacy-covers ::setupTrustedHosts
    */
+  #[DataProvider('providerTestTrustedHosts')]
   public function testTrustedHosts($host, $server_name, $message, $expected = FALSE): void {
     $request = new Request();
 
@@ -111,9 +116,9 @@ class DrupalKernelTest extends UnitTestCase {
    * This test is run in a separate process since it defines DRUPAL_ROOT. This
    * stops any possible pollution of other tests.
    *
-   * @covers ::findSitePath
-   * @runInSeparateProcess
+   * @legacy-covers ::findSitePath
    */
+  #[RunInSeparateProcess]
   public function testFindSitePath(): void {
     $vfs_root = vfsStream::setup('drupal_root');
     $sites_php = <<<'EOD'
@@ -140,9 +145,11 @@ EOD;
   }
 
   /**
-   * @covers ::terminate
-   * @runInSeparateProcess
+   * Tests un booted terminate.
+   *
+   * @legacy-covers ::terminate
    */
+  #[RunInSeparateProcess]
   public function testUnBootedTerminate(): void {
     $kernel = new DrupalKernel('test', new ClassLoader());
     $kernel->terminate(new Request(), new Response());

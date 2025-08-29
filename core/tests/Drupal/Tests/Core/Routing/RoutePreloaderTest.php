@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Routing;
 
+use Drupal\Component\EventDispatcher\Event;
 use Drupal\Core\Routing\RoutePreloader;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Component\EventDispatcher\Event;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\Core\Routing\RoutePreloader
- * @group Routing
+ * Tests Drupal\Core\Routing\RoutePreloader.
  */
+#[CoversClass(RoutePreloader::class)]
+#[Group('Routing')]
 class RoutePreloaderTest extends UnitTestCase {
 
   /**

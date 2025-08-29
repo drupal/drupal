@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageBase;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityStorageBase
- * @group Entity
+ * Tests Drupal\Core\Entity\EntityStorageBase.
  */
+#[CoversClass(EntityStorageBase::class)]
+#[Group('Entity')]
 class EntityStorageBaseTest extends UnitTestCase {
 
   /**
@@ -43,10 +48,11 @@ class EntityStorageBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::load
+   * Tests load.
    *
-   * @dataProvider providerLoad
+   * @legacy-covers ::load
    */
+  #[DataProvider('providerLoad')]
   public function testLoad(string|null $expected, array $entity_fixture, string $query): void {
     if (!is_null($expected)) {
       $expected = $this->generateEntityInterface($expected);
@@ -96,10 +102,9 @@ class EntityStorageBaseTest extends UnitTestCase {
    *
    * Does not cover statically-cached results.
    *
-   * @covers ::loadMultiple
-   *
-   * @dataProvider providerLoadMultiple
+   * @legacy-covers ::loadMultiple
    */
+  #[DataProvider('providerLoadMultiple')]
   public function testLoadMultiple(array $expected, array $load_multiple, array|null $query): void {
     $expected = array_map([$this, 'generateEntityInterface'], $expected);
     $load_multiple = array_map([$this, 'generateEntityInterface'], $load_multiple);

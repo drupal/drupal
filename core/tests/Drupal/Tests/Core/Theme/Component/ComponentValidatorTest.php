@@ -6,33 +6,34 @@ namespace Drupal\Tests\Core\Theme\Component;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Plugin\Component;
+use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Component\ComponentValidator;
-use Drupal\Core\Render\Component\Exception\InvalidComponentException;
-use Drupal\Core\Plugin\Component;
 use Drupal\Tests\UnitTestCaseTest;
 use JsonSchema\ConstraintError;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\Constraints\FormatConstraint;
 use JsonSchema\Entity\JsonPointer;
 use JsonSchema\Validator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Unit tests for the component validation.
- *
- * @coversDefaultClass \Drupal\Core\Theme\Component\ComponentValidator
- * @group sdc
  */
+#[CoversClass(ComponentValidator::class)]
+#[Group('sdc')]
 class ComponentValidatorTest extends UnitTestCaseTest {
 
   /**
    * Tests that valid component definitions don't cause errors.
    *
-   * @dataProvider dataProviderValidateDefinitionValid
-   *
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentException
    */
+  #[DataProvider('dataProviderValidateDefinitionValid')]
   public function testValidateDefinitionValid(array $definition): void {
     $component_validator = new ComponentValidator();
     $component_validator->setValidator();
@@ -59,9 +60,8 @@ class ComponentValidatorTest extends UnitTestCaseTest {
 
   /**
    * Tests invalid component definitions.
-   *
-   * @dataProvider dataProviderValidateDefinitionInvalid
    */
+  #[DataProvider('dataProviderValidateDefinitionInvalid')]
   public function testValidateDefinitionInvalid(array $definition): void {
     $this->expectException(InvalidComponentException::class);
     $component_validator = new ComponentValidator();
@@ -187,10 +187,9 @@ class ComponentValidatorTest extends UnitTestCaseTest {
   /**
    * Tests that valid props are handled properly.
    *
-   * @dataProvider dataProviderValidatePropsValid
-   *
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentException
    */
+  #[DataProvider('dataProviderValidatePropsValid')]
   public function testValidatePropsValid(array $context, string $component_id, array $definition): void {
     $translation = $this->getStringTranslationStub();
     $container = new ContainerBuilder();
@@ -272,10 +271,9 @@ class ComponentValidatorTest extends UnitTestCaseTest {
   /**
    * Tests that invalid props are handled properly.
    *
-   * @dataProvider dataProviderValidatePropsInvalid
-   *
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentException
    */
+  #[DataProvider('dataProviderValidatePropsInvalid')]
   public function testValidatePropsInvalid(array $context, string $component_id, array $definition, string $expected_exception_message): void {
     $translation = $this->getStringTranslationStub();
     $container = new ContainerBuilder();

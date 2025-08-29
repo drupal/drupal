@@ -9,11 +9,14 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\ChainedFastBackend;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\ChainedFastBackend
- * @group Cache
+ * Tests Drupal\Core\Cache\ChainedFastBackend.
  */
+#[CoversClass(ChainedFastBackend::class)]
+#[Group('Cache')]
 class ChainedFastBackendTest extends UnitTestCase {
 
   /**

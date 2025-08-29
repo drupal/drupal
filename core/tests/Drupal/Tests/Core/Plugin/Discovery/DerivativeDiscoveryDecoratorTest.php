@@ -8,14 +8,14 @@ use Drupal\Component\Plugin\Definition\DerivablePluginDefinitionInterface;
 use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\Exception\InvalidDeriverException;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Unit tests for the derivative discovery decorator.
- *
- * @coversDefaultClass \Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator
- *
- * @group Plugin
  */
+#[CoversClass(DerivativeDiscoveryDecorator::class)]
+#[Group('Plugin')]
 class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
   /**
@@ -93,7 +93,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
   /**
    * Tests getDeriverClass with classed objects instead of arrays.
    *
-   * @covers ::getDeriverClass
+   * @legacy-covers ::getDeriverClass
    */
   public function testGetDeriverClassWithClassedDefinitions(): void {
     $definitions = [];
@@ -115,7 +115,9 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDeriverClass
+   * Tests get deriver class with invalid classed definitions.
+   *
+   * @legacy-covers ::getDeriverClass
    */
   public function testGetDeriverClassWithInvalidClassedDefinitions(): void {
     $definition = $this->prophesize(DerivablePluginDefinitionInterface::class);

@@ -6,15 +6,20 @@ namespace Drupal\Tests\Core\Field;
 
 use Drupal\Core\Field\PluginSettingsBase;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Field\PluginSettingsBase
- * @group Field
+ * Tests Drupal\Core\Field\PluginSettingsBase.
  */
+#[CoversClass(PluginSettingsBase::class)]
+#[Group('Field')]
 class PluginSettingsBaseTest extends UnitTestCase {
 
   /**
-   * @covers ::getThirdPartySettings
+   * Tests get third party settings.
+   *
+   * @legacy-covers ::getThirdPartySettings
    */
   public function testGetThirdPartySettings(): void {
     $plugin_settings = new TestPluginSettingsBase();

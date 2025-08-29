@@ -8,15 +8,19 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Theme\AjaxBasePageNegotiator;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\Core\Theme\AjaxBasePageNegotiator
- * @group Theme
+ * Tests Drupal\Core\Theme\AjaxBasePageNegotiator.
  */
+#[CoversClass(AjaxBasePageNegotiator::class)]
+#[Group('Theme')]
 class AjaxBasePageNegotiatorTest extends UnitTestCase {
 
   /**
@@ -53,9 +57,11 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::applies
-   * @dataProvider providerTestApplies
+   * Tests applies.
+   *
+   * @legacy-covers ::applies
    */
+  #[DataProvider('providerTestApplies')]
   public function testApplies($request_data, $expected): void {
     $request = new Request();
     foreach ($request_data as $key => $data) {
@@ -78,7 +84,9 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::determineActiveTheme
+   * Tests determine active theme valid token.
+   *
+   * @legacy-covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeValidToken(): void {
     $theme = 'claro';
@@ -96,7 +104,9 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::determineActiveTheme
+   * Tests determine active theme invalid token.
+   *
+   * @legacy-covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeInvalidToken(): void {
     $theme = 'claro';
@@ -114,7 +124,9 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::determineActiveTheme
+   * Tests determine active theme default theme.
+   *
+   * @legacy-covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeDefaultTheme(): void {
     $theme = 'stark';

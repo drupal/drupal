@@ -8,13 +8,14 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\Image;
 use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
  * Tests the image class.
- *
- * @requires extension gd
- * @group Image
  */
+#[Group('Image')]
+#[RequiresPhpExtension('gd')]
 class ImageTest extends UnitTestCase {
 
   /**

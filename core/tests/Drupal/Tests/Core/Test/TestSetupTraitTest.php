@@ -7,24 +7,27 @@ namespace Drupal\Tests\Core\Test;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the TestSetupTrait trait.
  *
  * Run in a separate process as this test involves Database statics and
  * environment variables.
- *
- * @coversDefaultClass \Drupal\Core\Test\TestSetupTrait
- * @group Testing
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
+#[CoversClass(TestSetupTrait::class)]
+#[Group('Testing')]
+#[PreserveGlobalState(FALSE)]
+#[RunTestsInSeparateProcesses]
 class TestSetupTraitTest extends UnitTestCase {
 
   /**
    * Tests the SIMPLETEST_DB environment variable is used.
    *
-   * @covers ::changeDatabasePrefix
+   * @legacy-covers ::changeDatabasePrefix
    */
   public function testChangeDatabasePrefix(): void {
     $root = dirname(__FILE__, 7);

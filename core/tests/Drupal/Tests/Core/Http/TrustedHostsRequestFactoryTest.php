@@ -6,13 +6,15 @@ namespace Drupal\Tests\Core\Http;
 
 use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the trusted hosts request factory.
- *
- * @coversDefaultClass \Drupal\Core\Http\TrustedHostsRequestFactory
- * @group Http
  */
+#[CoversClass(TrustedHostsRequestFactory::class)]
+#[Group('Http')]
 class TrustedHostsRequestFactoryTest extends UnitTestCase {
 
   /**
@@ -26,9 +28,9 @@ class TrustedHostsRequestFactoryTest extends UnitTestCase {
    * @param string $expected
    *   The expected host of the created request.
    *
-   * @covers ::createRequest
-   * @dataProvider providerTestCreateRequest
+   * @legacy-covers ::createRequest
    */
+  #[DataProvider('providerTestCreateRequest')]
   public function testCreateRequest($host, $server, $expected): void {
     $request_factory = new TrustedHostsRequestFactory($host);
     $request = $request_factory->createRequest([], [], [], [], [], $server, []);

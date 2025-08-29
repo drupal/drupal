@@ -7,15 +7,18 @@ namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass
- * @group DependencyInjection
+ * Tests Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass.
  */
+#[CoversClass(BackendCompilerPass::class)]
+#[Group('DependencyInjection')]
 class BackendCompilerPassTest extends UnitTestCase {
 
   /**
@@ -37,7 +40,7 @@ class BackendCompilerPassTest extends UnitTestCase {
   /**
    * Tests the process method.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcess(): void {
     // Add a container with no set default_backend.

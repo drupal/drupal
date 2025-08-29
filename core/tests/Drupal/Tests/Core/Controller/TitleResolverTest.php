@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Controller;
 
 use Drupal\Core\Controller\TitleResolver;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * @coversDefaultClass \Drupal\Core\Controller\TitleResolver
- * @group Controller
+ * Tests Drupal\Core\Controller\TitleResolver.
  */
+#[CoversClass(TitleResolver::class)]
+#[Group('Controller')]
 class TitleResolverTest extends UnitTestCase {
 
   /**

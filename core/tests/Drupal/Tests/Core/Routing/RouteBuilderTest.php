@@ -11,14 +11,17 @@ use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\Core\Routing\RouteBuilder
- * @group Routing
+ * Tests Drupal\Core\Routing\RouteBuilder.
  */
+#[CoversClass(RouteBuilder::class)]
+#[Group('Routing')]
 class RouteBuilderTest extends UnitTestCase {
 
   /**

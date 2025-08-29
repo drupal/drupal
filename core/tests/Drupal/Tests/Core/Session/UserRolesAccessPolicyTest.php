@@ -15,13 +15,17 @@ use Drupal\Core\Session\UserRolesAccessPolicy;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\RoleInterface;
 use Drupal\user\RoleStorageInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\Session\UserRolesAccessPolicy
- * @group Session
+ * Tests Drupal\Core\Session\UserRolesAccessPolicy.
  */
+#[CoversClass(UserRolesAccessPolicy::class)]
+#[Group('Session')]
 class UserRolesAccessPolicyTest extends UnitTestCase {
 
   /**
@@ -56,7 +60,9 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::applies
+   * Tests applies.
+   *
+   * @legacy-covers ::applies
    */
   public function testApplies(): void {
     $this->assertTrue($this->accessPolicy->applies(AccessPolicyInterface::SCOPE_DRUPAL));
@@ -72,9 +78,9 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
    * @param bool $expect_admin_rights
    *   Whether to expect admin rights to be granted.
    *
-   * @covers ::calculatePermissions
-   * @dataProvider calculatePermissionsProvider
+   * @legacy-covers ::calculatePermissions
    */
+  #[DataProvider('calculatePermissionsProvider')]
   public function testCalculatePermissions(array $roles, bool $expect_admin_rights): void {
     $account = $this->prophesize(AccountInterface::class);
     $account->getRoles()->willReturn(array_keys($roles));
@@ -161,7 +167,7 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
   /**
    * Tests the alterPermissions method.
    *
-   * @covers ::alterPermissions
+   * @legacy-covers ::alterPermissions
    */
   public function testAlterPermissions(): void {
     $account = $this->prophesize(AccountInterface::class);
@@ -180,7 +186,7 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
   /**
    * Tests the getPersistentCacheContexts method.
    *
-   * @covers ::getPersistentCacheContexts
+   * @legacy-covers ::getPersistentCacheContexts
    */
   public function testGetPersistentCacheContexts(): void {
     $this->assertSame(['user.roles'], $this->accessPolicy->getPersistentCacheContexts(AccessPolicyInterface::SCOPE_DRUPAL));

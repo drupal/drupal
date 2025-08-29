@@ -11,12 +11,15 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Form\SubformState
- *
- * @group Form
+ * Tests Drupal\Core\Form\SubformState.
  */
+#[CoversClass(SubformState::class)]
+#[Group('Form')]
 class SubformStateTest extends UnitTestCase {
 
   /**
@@ -58,16 +61,17 @@ class SubformStateTest extends UnitTestCase {
   ];
 
   /**
-   * @covers ::getValues
-   * @covers ::getParents
-   *
-   * @dataProvider providerGetValues
+   * Tests get values.
    *
    * @param string[] $parents
    *   The parents.
    * @param string $expected
    *   The expected state values.
+   *
+   * @legacy-covers ::getValues
+   * @legacy-covers ::getParents
    */
+  #[DataProvider('providerGetValues')]
   public function testGetValues(array $parents, $expected): void {
     $parent_form_state = new FormState();
     $parent_form_state->setValues(static::$formStateValues);
@@ -97,16 +101,17 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getValues
-   * @covers ::getParents
-   *
-   * @dataProvider providerGetValuesBroken
+   * Tests get values broken.
    *
    * @param string[] $parents
    *   The parents.
    * @param string $expected
    *   The expected state values.
+   *
+   * @legacy-covers ::getValues
+   * @legacy-covers ::getParents
    */
+  #[DataProvider('providerGetValuesBroken')]
   public function testGetValuesBroken(array $parents, $expected): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->testGetValues($parents, $expected);
@@ -130,10 +135,11 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getValue
+   * Tests get value.
    *
-   * @dataProvider providerTestGetValue
+   * @legacy-covers ::getValue
    */
+  #[DataProvider('providerTestGetValue')]
   public function testGetValue($parents, $key, $expected, $default = NULL): void {
     $parent_form_state = new FormState();
     $parent_form_state->setValues(static::$formStateValues);
@@ -164,10 +170,11 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getValue
+   * Tests get value broken.
    *
-   * @dataProvider providerTestGetValueBroken
+   * @legacy-covers ::getValue
    */
+  #[DataProvider('providerTestGetValueBroken')]
   public function testGetValueBroken(array $parents, $key, $expected, $default = NULL): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->testGetValue($parents, $key, $expected, $default);
@@ -188,10 +195,11 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setValues
+   * Tests set values.
    *
-   * @dataProvider providerTestSetValues
+   * @legacy-covers ::setValues
    */
+  #[DataProvider('providerTestSetValues')]
   public function testSetValues($parents, $new_values, $expected): void {
     $parent_form_state = new FormState();
     $parent_form_state->setValues(static::$formStateValues);
@@ -219,10 +227,11 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setValues
+   * Tests set values broken.
    *
-   * @dataProvider providerTestSetValuesBroken
+   * @legacy-covers ::setValues
    */
+  #[DataProvider('providerTestSetValuesBroken')]
   public function testSetValuesBroken($parents, $new_values, $expected): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->testSetValues($parents, $new_values, $expected);
@@ -245,7 +254,9 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCompleteFormState
+   * Tests get complete form state with parent complete form.
+   *
+   * @legacy-covers ::getCompleteFormState
    */
   public function testGetCompleteFormStateWithParentCompleteForm(): void {
     $parent_form_state = $this->prophesize(FormStateInterface::class);
@@ -254,7 +265,9 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCompleteFormState
+   * Tests get complete form state with parent subform.
+   *
+   * @legacy-covers ::getCompleteFormState
    */
   public function testGetCompleteFormStateWithParentSubform(): void {
     $complete_form_state = $this->prophesize(FormStateInterface::class);
@@ -267,7 +280,9 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setLimitValidationErrors
+   * Tests set limit validation errors.
+   *
+   * @legacy-covers ::setLimitValidationErrors
    */
   public function testSetLimitValidationErrors(): void {
     $parent_limit_validation_errors = ['dog', 'name'];
@@ -282,7 +297,9 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getLimitValidationErrors
+   * Tests get limit validation errors.
+   *
+   * @legacy-covers ::getLimitValidationErrors
    */
   public function testGetLimitValidationErrors(): void {
     $parent_limit_validation_errors = ['dog', 'name'];
@@ -298,7 +315,9 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setErrorByName
+   * Tests set error by name.
+   *
+   * @legacy-covers ::setErrorByName
    */
   public function testSetErrorByName(): void {
     $parent_form_error_name = 'dog][name';
@@ -315,7 +334,9 @@ class SubformStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFormObject
+   * Tests form object.
+   *
+   * @legacy-covers ::getFormObject
    */
   public function testFormObject(): void {
     $parent_form_state = $this->prophesize(FormStateInterface::class);

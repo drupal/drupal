@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\PageCache;
 
-use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ChainRequestPolicy;
+use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\Core\PageCache\ChainRequestPolicy
- * @group PageCache
+ * Tests Drupal\Core\PageCache\ChainRequestPolicy.
  */
+#[CoversClass(ChainRequestPolicy::class)]
+#[Group('PageCache')]
 class ChainRequestPolicyTest extends UnitTestCase {
 
   /**
@@ -42,7 +46,7 @@ class ChainRequestPolicyTest extends UnitTestCase {
   /**
    * Asserts that check() returns NULL if the chain is empty.
    *
-   * @covers ::check
+   * @legacy-covers ::check
    */
   public function testEmptyChain(): void {
     $result = $this->policy->check($this->request);
@@ -52,7 +56,7 @@ class ChainRequestPolicyTest extends UnitTestCase {
   /**
    * Asserts that check() returns NULL if a rule returns NULL.
    *
-   * @covers ::check
+   * @legacy-covers ::check
    */
   public function testNullRuleChain(): void {
     $rule = $this->createMock('Drupal\Core\PageCache\RequestPolicyInterface');
@@ -70,9 +74,9 @@ class ChainRequestPolicyTest extends UnitTestCase {
   /**
    * Asserts that check() throws an exception if a rule returns an invalid value.
    *
-   * @dataProvider providerChainExceptionOnInvalidReturnValue
-   * @covers ::check
+   * @legacy-covers ::check
    */
+  #[DataProvider('providerChainExceptionOnInvalidReturnValue')]
   public function testChainExceptionOnInvalidReturnValue($return_value): void {
     $rule = $this->createMock('Drupal\Core\PageCache\RequestPolicyInterface');
     $rule->expects($this->once())
@@ -106,9 +110,9 @@ class ChainRequestPolicyTest extends UnitTestCase {
   /**
    * Asserts that check() returns ALLOW if any of the rules returns ALLOW.
    *
-   * @dataProvider providerAllowIfAnyRuleReturnedAllow
-   * @covers ::check
+   * @legacy-covers ::check
    */
+  #[DataProvider('providerAllowIfAnyRuleReturnedAllow')]
   public function testAllowIfAnyRuleReturnedAllow($return_values): void {
     foreach ($return_values as $return_value) {
       $rule = $this->createMock('Drupal\Core\PageCache\RequestPolicyInterface');

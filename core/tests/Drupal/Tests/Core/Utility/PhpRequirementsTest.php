@@ -6,13 +6,15 @@ namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Core\Utility\PhpRequirements;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the \Drupal\Core\Utility\PhpRequirements class.
- *
- * @coversDefaultClass \Drupal\Core\Utility\PhpRequirements
- * @group Utility
  */
+#[CoversClass(PhpRequirements::class)]
+#[Group('Utility')]
 class PhpRequirementsTest extends UnitTestCase {
 
   /**
@@ -65,10 +67,9 @@ class PhpRequirementsTest extends UnitTestCase {
    * @param string $expected_php_version
    *   The PHP version the test should recommend.
    *
-   * @covers ::getMinimumSupportedPhp
-   *
-   * @dataProvider providerMinimumSupportedPhp
+   * @legacy-covers ::getMinimumSupportedPhp
    */
+  #[DataProvider('providerMinimumSupportedPhp')]
   public function testMinimumSupportedPhp(string $date_string, string $drupal_minimum_php, array $php_eol_dates, string $expected_php_version): void {
     $reflected = new \ReflectionClass(PhpRequirements::class);
     $reflected->setStaticPropertyValue('drupalMinimumPhp', $drupal_minimum_php);

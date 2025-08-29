@@ -6,12 +6,12 @@ namespace Drupal\Tests\Core\Common;
 
 use Drupal\Component\Utility\DiffArray;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the DiffArray helper class.
- *
- * @group Common
  */
+#[Group('Common')]
 class DiffArrayTest extends UnitTestCase {
 
   /**

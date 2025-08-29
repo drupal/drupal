@@ -13,11 +13,14 @@ use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\EntityTestListBuilder;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityListBuilder
- * @group Entity
+ * Tests Drupal\Core\Entity\EntityListBuilder.
  */
+#[CoversClass(EntityListBuilder::class)]
+#[Group('Entity')]
 class EntityListBuilderTest extends UnitTestCase {
 
   /**
@@ -94,7 +97,9 @@ class EntityListBuilderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getOperations
+   * Tests get operations.
+   *
+   * @legacy-covers ::getOperations
    */
   public function testGetOperations(): void {
     $operation_name = $this->randomMachineName();

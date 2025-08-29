@@ -11,12 +11,16 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\State\State;
 use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * @coversDefaultClass \Drupal\Core\State\State
- * @group State
+ * Tests Drupal\Core\State\State.
  */
+#[CoversClass(State::class)]
+#[Group('State')]
 class StateTest extends UnitTestCase {
 
   /**
@@ -55,8 +59,8 @@ class StateTest extends UnitTestCase {
    * Here testing a not existing variable and set and get the default value of
    * a key.
    *
-   * @covers ::get
-   * @covers ::getMultiple
+   * @legacy-covers ::get
+   * @legacy-covers ::getMultiple
    */
   public function testGetEmpty(): void {
     $values = ['key1' => 'value1', 'key2' => 'value2', 'not-existing-value'];
@@ -82,8 +86,8 @@ class StateTest extends UnitTestCase {
    * Here checking the key with it proper value. It is also a helper for
    * testGetStaticCache() function.
    *
-   * @covers ::get
-   * @covers ::getMultiple
+   * @legacy-covers ::get
+   * @legacy-covers ::getMultiple
    */
   public function testGet(): State {
     $values = ['existing' => 'the-value', 'default-value' => 'the-value-2'];
@@ -109,11 +113,10 @@ class StateTest extends UnitTestCase {
    *
    * Here with the help of testGet() function, testing the key value again.
    *
-   * @covers ::get
-   * @covers ::getMultiple
-   *
-   * @depends testGet
+   * @legacy-covers ::get
+   * @legacy-covers ::getMultiple
    */
+  #[Depends('testGet')]
   public function testGetStaticCache(State $state): void {
     $this->keyValueStorage->expects($this->never())
       ->method('getMultiple');
@@ -134,7 +137,7 @@ class StateTest extends UnitTestCase {
    * Here checking the multiple key and values. It is also a helper for
    * testGetMultipleStaticCache() function.
    *
-   * @covers ::getMultiple
+   * @legacy-covers ::getMultiple
    */
   public function testGetMultiple(): State {
     $keys = ['key1', 'key2', 'key3'];
@@ -154,7 +157,7 @@ class StateTest extends UnitTestCase {
    *
    * Here testing all the keys with value and without values.
    *
-   * @covers ::getMultiple
+   * @legacy-covers ::getMultiple
    */
   public function testGetMultipleWithMissingValues(): void {
     $keys = ['key1', 'key2', 'key3'];
@@ -177,10 +180,9 @@ class StateTest extends UnitTestCase {
    * @param \Drupal\Core\State\State $state
    *   The tested state.
    *
-   * @covers ::getMultiple
-   *
-   * @depends testGetMultiple
+   * @legacy-covers ::getMultiple
    */
+  #[Depends('testGetMultiple')]
   public function testGetMultipleStaticCache(State $state): void {
     $keys = ['key1', 'key2', 'key3'];
     $values = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
@@ -196,7 +198,7 @@ class StateTest extends UnitTestCase {
    * Here testing the multiple key value pare with Partially Filled Static
    * Cache.
    *
-   * @covers ::getMultiple
+   * @legacy-covers ::getMultiple
    */
   public function testGetMultiplePartiallyFilledStaticCache(): void {
     $keys = ['key1', 'key2', 'key3'];
@@ -221,7 +223,7 @@ class StateTest extends UnitTestCase {
    * Here we are setting the key value so those value can be used in
    * testResetCache() and testSetBeforeGet() functions.
    *
-   * @covers ::set
+   * @legacy-covers ::set
    */
   public function testSet(): State {
     $this->keyValueStorage->expects($this->once())
@@ -241,10 +243,9 @@ class StateTest extends UnitTestCase {
    * @param \Drupal\Core\State\State $state
    *   The tested state.
    *
-   * @covers ::get
-   *
-   * @depends testSet
+   * @legacy-covers ::get
    */
+  #[Depends('testSet')]
   public function testSetBeforeGet(State $state) {
     $this->assertEquals('value', $state->get('key'));
   }
@@ -255,7 +256,7 @@ class StateTest extends UnitTestCase {
    * Here we are saving multiple key value pare in one go. Those value will be
    * used in testResetCache() and testSetBeforeGet() functions.
    *
-   * @covers ::setMultiple
+   * @legacy-covers ::setMultiple
    */
   public function testSetMultiple(): State {
     $values = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
@@ -276,10 +277,9 @@ class StateTest extends UnitTestCase {
    * @param \Drupal\Core\State\State $state
    *   The tested state.
    *
-   * @covers ::getMultiple
-   *
-   * @depends testSetMultiple
+   * @legacy-covers ::getMultiple
    */
+  #[Depends('testSetMultiple')]
   public function testSetMultipleBeforeGetMultiple(State $state): void {
     $this->assertEquals([
       'key1' => 'value1',
@@ -295,11 +295,10 @@ class StateTest extends UnitTestCase {
    * @param \Drupal\Core\State\State $state
    *   The tested state.
    *
-   * @covers ::delete
-   * @covers ::deleteMultiple
-   *
-   * @depends testSetMultiple
+   * @legacy-covers ::delete
+   * @legacy-covers ::deleteMultiple
    */
+  #[Depends('testSetMultiple')]
   public function testDelete(State $state): void {
     $state->delete('key1');
 
@@ -322,8 +321,8 @@ class StateTest extends UnitTestCase {
    *
    * Ensure that deleting clears some static cache.
    *
-   * @covers ::get
-   * @covers ::delete
+   * @legacy-covers ::get
+   * @legacy-covers ::delete
    */
   public function testDeleteAfterGet(): void {
     $values = ['key' => 'value'];
@@ -344,7 +343,7 @@ class StateTest extends UnitTestCase {
    * Here testing the multiple key and value after deleting
    * the key's value in one go.
    *
-   * @covers ::deleteMultiple
+   * @legacy-covers ::deleteMultiple
    */
   public function testDeleteMultiple(): void {
     $values = ['key1' => 'value1', 'key2' => 'value2'];
@@ -368,12 +367,11 @@ class StateTest extends UnitTestCase {
    * @param \Drupal\Core\State\State $state
    *   The tested state.
    *
-   * @covers ::resetCache
-   * @covers ::get
-   * @covers ::getMultiple
-   *
-   * @depends testSet
+   * @legacy-covers ::resetCache
+   * @legacy-covers ::get
+   * @legacy-covers ::getMultiple
    */
+  #[Depends('testSet')]
   public function testResetCache(State $state): void {
     $this->assertEquals('value', $state->get('key'));
     $this->state->resetCache();

@@ -6,27 +6,31 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @coversDefaultClass \Drupal\FunctionalJavascriptTests\WebDriverTestBase
- * @group Test
- * @runTestsInSeparateProcesses
+ * Tests Drupal\FunctionalJavascriptTests\WebDriverTestBase.
  */
+#[CoversClass(WebDriverTestBase::class)]
+#[Group('Test')]
+#[RunTestsInSeparateProcesses]
 class WebDriverTestBaseTest extends UnitTestCase {
 
   /**
    * Tests W3C setting is added to goog:chromeOptions as expected.
    *
-   * @testWith [false, null]
-   *           [false, ""]
-   *           ["", "", ""]
-   *           ["[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":true,\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]", "[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":true,\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]"]
-   *           ["[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":false,\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]", "[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":false,\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]"]
-   *           ["[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"args\":[\"--headless\"],\"w3c\":false}},\"http:\\/\\/localhost:4444\"]", "[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]"]
-   *           ["[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":false}},\"http:\\/\\/localhost:4444\"]", "[\"chrome\",{\"browserName\":\"chrome\"},\"http:\\/\\/localhost:4444\"]"]
-   *
-   * @covers ::getMinkDriverArgs
+   * @legacy-covers ::getMinkDriverArgs
    */
+  #[TestWith([FALSE, NULL])]
+  #[TestWith([FALSE, ""])]
+  #[TestWith(["", "", ""])]
+  #[TestWith(["[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":true,\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]", "[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":true,\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]"])]
+  #[TestWith(["[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":false,\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]", "[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":false,\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]"])]
+  #[TestWith(["[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"args\":[\"--headless\"],\"w3c\":false}},\"http:\\/\\/localhost:4444\"]", "[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"args\":[\"--headless\"]}},\"http:\\/\\/localhost:4444\"]"])]
+  #[TestWith(["[\"chrome\",{\"browserName\":\"chrome\",\"goog:chromeOptions\":{\"w3c\":false}},\"http:\\/\\/localhost:4444\"]", "[\"chrome\",{\"browserName\":\"chrome\"},\"http:\\/\\/localhost:4444\"]"])]
   public function testCapabilities($expected, ?string $mink_driver_args_webdriver, ?string $mink_driver_args = NULL): void {
     $this->putEnv("MINK_DRIVER_ARGS_WEBDRIVER", $mink_driver_args_webdriver);
     $this->putEnv("MINK_DRIVER_ARGS", $mink_driver_args);

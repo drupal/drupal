@@ -7,13 +7,15 @@ namespace Drupal\Tests\Core\Config\Entity;
 use Drupal\Core\Entity\EntityDisplayBase;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityDisplayBase
- *
- * @group Config
+ * Tests Drupal\Core\Entity\EntityDisplayBase.
  */
+#[CoversClass(EntityDisplayBase::class)]
+#[Group('Config')]
 class EntityDisplayBaseTest extends UnitTestCase {
 
   /**
@@ -34,7 +36,9 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTargetEntityTypeId
+   * Tests get target entity type id.
+   *
+   * @legacy-covers ::getTargetEntityTypeId
    */
   public function testGetTargetEntityTypeId(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'targetEntityType');
@@ -43,7 +47,9 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getMode
+   * Tests get mode.
+   *
+   * @legacy-covers ::getMode
    */
   public function testGetMode(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'mode');
@@ -52,7 +58,9 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getOriginalMode
+   * Tests get original mode.
+   *
+   * @legacy-covers ::getOriginalMode
    */
   public function testGetOriginalMode(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'originalMode');
@@ -61,7 +69,9 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTargetBundle
+   * Tests get target bundle.
+   *
+   * @legacy-covers ::getTargetBundle
    */
   public function testGetTargetBundle(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'bundle');
@@ -70,7 +80,9 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setTargetBundle
+   * Tests set target bundle.
+   *
+   * @legacy-covers ::setTargetBundle
    */
   public function testSetTargetBundle(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'bundle');

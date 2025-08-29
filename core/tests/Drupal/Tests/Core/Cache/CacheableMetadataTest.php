@@ -8,12 +8,16 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Tests\Core\Render\TestCacheableDependency;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\CacheableMetadata
- * @group Cache
+ * Tests Drupal\Core\Cache\CacheableMetadata.
  */
+#[CoversClass(CacheableMetadata::class)]
+#[Group('Cache')]
 class CacheableMetadataTest extends UnitTestCase {
 
   /**
@@ -26,9 +30,9 @@ class CacheableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
    *
-   * @covers ::merge
-   * @dataProvider providerTestMerge
+   * @legacy-covers ::merge
    */
+  #[DataProvider('providerTestMerge')]
   public function testMerge(CacheableMetadata $a, CacheableMetadata $b, CacheableMetadata $expected): void {
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
@@ -52,9 +56,9 @@ class CacheableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
    *
-   * @covers ::addCacheableDependency
-   * @dataProvider providerTestMerge
+   * @legacy-covers ::addCacheableDependency
    */
+  #[DataProvider('providerTestMerge')]
   public function testAddCacheableDependency(CacheableMetadata $a, CacheableMetadata $b, CacheableMetadata $expected): void {
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
@@ -89,7 +93,7 @@ class CacheableMetadataTest extends UnitTestCase {
   /**
    * This delegates to Cache::mergeTags(), so just a basic test.
    *
-   * @covers ::addCacheTags
+   * @legacy-covers ::addCacheTags
    */
   public function testAddCacheTags(): void {
     $metadata = new CacheableMetadata();
@@ -112,9 +116,9 @@ class CacheableMetadataTest extends UnitTestCase {
   /**
    * Tests valid and invalid values as max age.
    *
-   * @covers ::setCacheMaxAge
-   * @dataProvider providerSetCacheMaxAge
+   * @legacy-covers ::setCacheMaxAge
    */
+  #[DataProvider('providerSetCacheMaxAge')]
   public function testSetCacheMaxAge($data, $expect_exception): void {
     $metadata = new CacheableMetadata();
     if ($expect_exception) {
@@ -140,9 +144,11 @@ class CacheableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromRenderArray
-   * @dataProvider providerTestCreateFromRenderArray
+   * Tests create from render array.
+   *
+   * @legacy-covers ::createFromRenderArray
    */
+  #[DataProvider('providerTestCreateFromRenderArray')]
   public function testCreateFromRenderArray(array $render_array, CacheableMetadata $expected): void {
     $this->assertEquals($expected, CacheableMetadata::createFromRenderArray($render_array));
   }
@@ -177,9 +183,11 @@ class CacheableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromObject
-   * @dataProvider providerTestCreateFromObject
+   * Tests create from object.
+   *
+   * @legacy-covers ::createFromObject
    */
+  #[DataProvider('providerTestCreateFromObject')]
   public function testCreateFromObject($object, CacheableMetadata $expected): void {
     $this->assertEquals($expected, CacheableMetadata::createFromObject($object));
   }

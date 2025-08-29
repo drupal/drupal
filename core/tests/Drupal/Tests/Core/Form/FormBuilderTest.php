@@ -19,6 +19,9 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +30,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
- * @coversDefaultClass \Drupal\Core\Form\FormBuilder
- * @group Form
+ * Tests Drupal\Core\Form\FormBuilder.
  */
+#[CoversClass(FormBuilder::class)]
+#[Group('Form')]
 class FormBuilderTest extends FormTestBase {
 
   /**
@@ -91,7 +95,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * Tests the getFormId() method with a string based form ID.
    *
-   * @covers ::getFormId
+   * @legacy-covers ::getFormId
    */
   public function testGetFormIdWithString(): void {
     $form_arg = 'foo';
@@ -102,7 +106,9 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * @covers ::getFormId
+   * Tests get form id with non form class.
+   *
+   * @legacy-covers ::getFormId
    */
   public function testGetFormIdWithNonFormClass(): void {
     $form_arg = \stdClass::class;
@@ -181,9 +187,8 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests the handling of FormStateInterface::$response.
-   *
-   * @dataProvider formStateResponseProvider
    */
+  #[DataProvider('formStateResponseProvider')]
   public function testHandleFormStateResponse($class, $form_state_key): void {
     $form_id = 'test_form_id';
     $expected_form = self::buildTestFormStructure();
@@ -349,10 +354,9 @@ class FormBuilderTest extends FormTestBase {
    * @param string $input_value
    *   The corresponding submitted input value.
    *
-   * @covers ::buildForm
-   *
-   * @dataProvider providerTestBuildFormWithTriggeringElement
+   * @legacy-covers ::buildForm
    */
+  #[DataProvider('providerTestBuildFormWithTriggeringElement')]
   public function testBuildFormWithTriggeringElement($element_value, $input_value): void {
     $form_id = 'test_form_id';
     $expected_form = self::buildTestFormStructure();
@@ -611,7 +615,9 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * @covers ::buildForm
+   * Tests exceeded file size.
+   *
+   * @legacy-covers ::buildForm
    */
   public function testExceededFileSize(): void {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
@@ -634,7 +640,9 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * @covers ::buildForm
+   * Tests post ajax request.
+   *
+   * @legacy-covers ::buildForm
    */
   public function testPostAjaxRequest(): void {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE], ['form_id' => 'different_form_id']);
@@ -658,7 +666,9 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * @covers ::buildForm
+   * Tests get ajax request.
+   *
+   * @legacy-covers ::buildForm
    */
   public function testGetAjaxRequest(): void {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
@@ -683,10 +693,11 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * @covers ::buildForm
+   * Tests child access inheritance.
    *
-   * @dataProvider providerTestChildAccessInheritance
+   * @legacy-covers ::buildForm
    */
+  #[DataProvider('providerTestChildAccessInheritance')]
   public function testChildAccessInheritance($element, $access_checks): void {
     $form_arg = new TestFormWithPredefinedForm();
     $form_arg->setForm($element);
@@ -848,10 +859,11 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * @covers ::valueCallableIsSafe
+   * Tests value callable is safe.
    *
-   * @dataProvider providerTestValueCallableIsSafe
+   * @legacy-covers ::valueCallableIsSafe
    */
+  #[DataProvider('providerTestValueCallableIsSafe')]
   public function testValueCallableIsSafe($callback, $expected): void {
     $method = new \ReflectionMethod(FormBuilder::class, 'valueCallableIsSafe');
     $is_safe = $method->invoke($this->formBuilder, $callback);
@@ -884,10 +896,11 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * @covers ::doBuildForm
+   * Tests invalid token.
    *
-   * @dataProvider providerTestInvalidToken
+   * @legacy-covers ::doBuildForm
    */
+  #[DataProvider('providerTestInvalidToken')]
   public function testInvalidToken($expected, $valid_token, $user_is_authenticated): void {
     $form_token = 'the_form_token';
     $form_id = 'test_form_id';
@@ -945,10 +958,11 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * @covers ::prepareForm
+   * Tests form token cacheability.
    *
-   * @dataProvider providerTestFormTokenCacheability
+   * @legacy-covers ::prepareForm
    */
+  #[DataProvider('providerTestFormTokenCacheability')]
   public function testFormTokenCacheability($token, $is_authenticated, $method, $opted_in_for_cache): void {
     $user = $this->prophesize(AccountProxyInterface::class);
     $user->isAuthenticated()

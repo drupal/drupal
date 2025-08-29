@@ -6,17 +6,21 @@ namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\StaticMenuLinkOverrides;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Menu\StaticMenuLinkOverrides
- * @group Menu
+ * Tests Drupal\Core\Menu\StaticMenuLinkOverrides.
  */
+#[CoversClass(StaticMenuLinkOverrides::class)]
+#[Group('Menu')]
 class StaticMenuLinkOverridesTest extends UnitTestCase {
 
   /**
    * Tests the reload method.
    *
-   * @covers ::reload
+   * @legacy-covers ::reload
    */
   public function testReload(): void {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
@@ -32,11 +36,10 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
   /**
    * Tests the loadOverride method.
    *
-   * @dataProvider providerTestLoadOverride
-   *
-   * @covers ::loadOverride
-   * @covers ::getConfig
+   * @legacy-covers ::loadOverride
+   * @legacy-covers ::getConfig
    */
+  #[DataProvider('providerTestLoadOverride')]
   public function testLoadOverride($overrides, $id, $expected): void {
     $config_factory = $this->getConfigFactoryStub(['core.menu.static_menu_link_overrides' => ['definitions' => $overrides]]);
     $static_override = new StaticMenuLinkOverrides($config_factory);
@@ -62,8 +65,8 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
   /**
    * Tests the loadMultipleOverrides method.
    *
-   * @covers ::loadMultipleOverrides
-   * @covers ::getConfig
+   * @legacy-covers ::loadMultipleOverrides
+   * @legacy-covers ::getConfig
    */
   public function testLoadMultipleOverrides(): void {
     $overrides = [];
@@ -80,9 +83,9 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
   /**
    * Tests the saveOverride method.
    *
-   * @covers ::saveOverride
-   * @covers ::loadOverride
-   * @covers ::getConfig
+   * @legacy-covers ::saveOverride
+   * @legacy-covers ::loadOverride
+   * @legacy-covers ::getConfig
    */
   public function testSaveOverride(): void {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
@@ -143,9 +146,8 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    *   The definitions before the deleting.
    * @param array $new_definitions
    *   The definitions after the deleting.
-   *
-   * @dataProvider providerTestDeleteOverrides
    */
+  #[DataProvider('providerTestDeleteOverrides')]
   public function testDeleteOverrides($ids, array $old_definitions, array $new_definitions): void {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()

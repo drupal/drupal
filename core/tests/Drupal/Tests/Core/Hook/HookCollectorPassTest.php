@@ -7,23 +7,28 @@ namespace Drupal\Tests\Core\Hook;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\HookCollectorPass;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\Core\GroupIncludesTestTrait;
+use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPass
- * @group Hook
+ * Tests Drupal\Core\Hook\HookCollectorPass.
  */
+#[CoversClass(HookCollectorPass::class)]
+#[Group('Hook')]
 class HookCollectorPassTest extends UnitTestCase {
 
   use GroupIncludesTestTrait;
 
   /**
-   * @covers ::collectAllHookImplementations
-   * @covers ::filterIterator
+   * Tests collect all hook implementations.
+   *
+   * @legacy-covers ::collectAllHookImplementations
+   * @legacy-covers ::filterIterator
    */
   public function testCollectAllHookImplementations(): void {
     vfsStream::setup('drupal_root');
@@ -71,8 +76,10 @@ __EOF__
   }
 
   /**
-   * @covers ::process
-   * @covers ::collectModuleHookImplementations
+   * Tests group includes.
+   *
+   * @legacy-covers ::process
+   * @legacy-covers ::collectModuleHookImplementations
    */
   public function testGroupIncludes(): void {
     $module_filenames = self::setupGroupIncludes();

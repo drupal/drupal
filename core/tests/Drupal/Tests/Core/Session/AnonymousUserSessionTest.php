@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Session;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Tests\UnitTestCase;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Session\AnonymousUserSession
- * @group Session
+ * Tests Drupal\Core\Session\AnonymousUserSession.
  */
+#[CoversClass(AnonymousUserSession::class)]
+#[Group('Session')]
 class AnonymousUserSessionTest extends UnitTestCase {
 
   /**
    * Tests the method getRoles exclude or include locked roles based in param.
    *
-   * @covers ::getRoles
    * @todo Move roles constants to a class/interface
+   * @legacy-covers ::getRoles
    */
   public function testUserGetRoles(): void {
     $anonymous_user = new AnonymousUserSession();

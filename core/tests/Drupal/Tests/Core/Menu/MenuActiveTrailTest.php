@@ -6,11 +6,14 @@ namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Menu\MenuActiveTrail;
+use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
-use Drupal\Core\Path\PathMatcherInterface;
-use Drupal\Core\Routing\RouteObjectInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\InputBag;
@@ -20,11 +23,9 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Tests the active menu trail service.
- *
- * @group Menu
- *
- * @coversDefaultClass \Drupal\Core\Menu\MenuActiveTrail
  */
+#[CoversClass(MenuActiveTrail::class)]
+#[Group('Menu')]
 class MenuActiveTrailTest extends UnitTestCase {
 
   /**
@@ -158,9 +159,9 @@ class MenuActiveTrailTest extends UnitTestCase {
   /**
    * Tests getActiveLink().
    *
-   * @covers ::getActiveLink
-   * @dataProvider provider
+   * @legacy-covers ::getActiveLink
    */
+  #[DataProvider('provider')]
   public function testGetActiveLink(Request $request, $links, $menu_name, $expected_link): void {
     $this->requestStack->push($request);
     if ($links !== FALSE) {
@@ -178,7 +179,7 @@ class MenuActiveTrailTest extends UnitTestCase {
   /**
    * Tests that getActiveLink() returns a <front> route link for a route that is the front page and has no other links.
    *
-   * @covers ::getActiveLink
+   * @legacy-covers ::getActiveLink
    */
   public function testGetActiveLinkReturnsFrontPageLinkAtTheFrontPage(): void {
 
@@ -214,9 +215,9 @@ class MenuActiveTrailTest extends UnitTestCase {
   /**
    * Tests getActiveTrailIds().
    *
-   * @covers ::getActiveTrailIds
-   * @dataProvider provider
+   * @legacy-covers ::getActiveTrailIds
    */
+  #[DataProvider('provider')]
   public function testGetActiveTrailIds(Request $request, $links, $menu_name, $expected_link, $expected_trail): void {
     $expected_trail_ids = array_combine($expected_trail, $expected_trail);
 
@@ -261,7 +262,7 @@ class MenuActiveTrailTest extends UnitTestCase {
   /**
    * Tests getCid()
    *
-   * @covers ::getCid
+   * @legacy-covers ::getCid
    */
   public function testGetCid(): void {
     $data = $this->provider()[1];

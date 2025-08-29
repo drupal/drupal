@@ -6,16 +6,20 @@ namespace Drupal\Tests\Core\Security;
 
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests RequestSanitizer class.
- *
- * @coversDefaultClass \Drupal\Core\Security\RequestSanitizer
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @group Security
  */
+#[CoversClass(RequestSanitizer::class)]
+#[Group('Security')]
+#[PreserveGlobalState(FALSE)]
+#[RunTestsInSeparateProcesses]
 class RequestSanitizerTest extends UnitTestCase {
 
   /**
@@ -57,9 +61,8 @@ class RequestSanitizerTest extends UnitTestCase {
    *   disabled.
    * @param array $allow_list
    *   An array of keys to allow and not sanitize.
-   *
-   * @dataProvider providerTestRequestSanitization
    */
+  #[DataProvider('providerTestRequestSanitization')]
   public function testRequestSanitization(Request $request, array $expected = [], ?array $expected_errors = NULL, array $allow_list = []): void {
     // Set up globals.
     $_GET = $request->query->all();
@@ -213,9 +216,8 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @param string $destination
    *   The destination string to test.
-   *
-   * @dataProvider providerTestAcceptableDestinations
    */
+  #[DataProvider('providerTestAcceptableDestinations')]
   public function testAcceptableDestinationGet($destination): void {
     // Set up a GET request.
     $request = $this->createRequestForTesting(['destination' => $destination]);
@@ -235,9 +237,8 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @param string $destination
    *   The destination string to test.
-   *
-   * @dataProvider providerTestSanitizedDestinations
    */
+  #[DataProvider('providerTestSanitizedDestinations')]
   public function testSanitizedDestinationGet($destination): void {
     // Set up a GET request.
     $request = $this->createRequestForTesting(['destination' => $destination]);
@@ -257,9 +258,8 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @param string $destination
    *   The destination string to test.
-   *
-   * @dataProvider providerTestAcceptableDestinations
    */
+  #[DataProvider('providerTestAcceptableDestinations')]
   public function testAcceptableDestinationPost($destination): void {
     // Set up a POST request.
     $request = $this->createRequestForTesting([], ['destination' => $destination]);
@@ -279,9 +279,8 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @param string $destination
    *   The destination string to test.
-   *
-   * @dataProvider providerTestSanitizedDestinations
    */
+  #[DataProvider('providerTestSanitizedDestinations')]
   public function testSanitizedDestinationPost($destination): void {
     // Set up a POST request.
     $request = $this->createRequestForTesting([], ['destination' => $destination]);

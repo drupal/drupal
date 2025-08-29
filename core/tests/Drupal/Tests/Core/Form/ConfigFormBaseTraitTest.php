@@ -6,15 +6,20 @@ namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Form\ConfigFormBaseTrait
- * @group Form
+ * Tests Drupal\Core\Form\ConfigFormBaseTrait.
  */
+#[CoversClass(ConfigFormBaseTrait::class)]
+#[Group('Form')]
 class ConfigFormBaseTraitTest extends UnitTestCase {
 
   /**
-   * @covers ::config
+   * Tests config.
+   *
+   * @legacy-covers ::config
    */
   public function testConfig(): void {
 
@@ -42,7 +47,9 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::config
+   * Tests config factory exception.
+   *
+   * @legacy-covers ::config
    */
   public function testConfigFactoryException(): void {
     $testObject = new ConfiguredTrait();
@@ -55,7 +62,9 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::config
+   * Tests config factory exception invalid property.
+   *
+   * @legacy-covers ::config
    */
   public function testConfigFactoryExceptionInvalidProperty(): void {
     $testObject = new ConfiguredTrait();

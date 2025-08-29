@@ -9,19 +9,22 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Config\Checkpoint\CheckpointExistsException;
-use Drupal\Core\Config\Checkpoint\UnknownCheckpointException;
 use Drupal\Core\Config\Checkpoint\LinearHistory;
+use Drupal\Core\Config\Checkpoint\UnknownCheckpointException;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
 use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\Core\Config\Checkpoint\LinearHistory
- * @group Config
+ * Tests Drupal\Core\Config\Checkpoint\LinearHistory.
  */
+#[CoversClass(LinearHistory::class)]
+#[Group('Config')]
 class LinearHistoryTest extends UnitTestCase {
 
   /**
@@ -32,10 +35,12 @@ class LinearHistoryTest extends UnitTestCase {
   private const CHECKPOINT_KEY = 'config.checkpoints';
 
   /**
-   * @covers ::add
-   * @covers ::count
-   * @covers ::getActiveCheckpoint
-   * @covers \Drupal\Core\Config\Checkpoint\Checkpoint
+   * Tests add.
+   *
+   * @legacy-covers ::add
+   * @legacy-covers ::count
+   * @legacy-covers ::getActiveCheckpoint
+   * @legacy-covers \Drupal\Core\Config\Checkpoint\Checkpoint
    */
   public function testAdd(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -78,7 +83,9 @@ class LinearHistoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::add
+   * Tests add exception.
+   *
+   * @legacy-covers ::add
    */
   public function testAddException(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -96,7 +103,9 @@ class LinearHistoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::delete
+   * Tests delete all.
+   *
+   * @legacy-covers ::delete
    */
   public function testDeleteAll(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -117,7 +126,9 @@ class LinearHistoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::delete
+   * Tests delete.
+   *
+   * @legacy-covers ::delete
    */
   public function testDelete(): void {
     // Create a real State object so that we can manipulate it.
@@ -150,7 +161,9 @@ class LinearHistoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::delete
+   * Tests delete exception.
+   *
+   * @legacy-covers ::delete
    */
   public function testDeleteException(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -165,7 +178,9 @@ class LinearHistoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getParents
+   * Tests get parents.
+   *
+   * @legacy-covers ::getParents
    */
   public function testGetParents(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -184,7 +199,9 @@ class LinearHistoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getParents
+   * Tests get parents exception.
+   *
+   * @legacy-covers ::getParents
    */
   public function testGetParentsException(): void {
     $state = $this->prophesize(StateInterface::class);

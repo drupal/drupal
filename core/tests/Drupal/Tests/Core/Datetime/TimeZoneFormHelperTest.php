@@ -7,11 +7,14 @@ namespace Drupal\Tests\Core\Datetime;
 use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Datetime\TimeZoneFormHelper
- * @group Datetime
+ * Tests Drupal\Core\Datetime\TimeZoneFormHelper.
  */
+#[CoversClass(TimeZoneFormHelper::class)]
+#[Group('Datetime')]
 class TimeZoneFormHelperTest extends UnitTestCase {
 
   /**
@@ -26,8 +29,10 @@ class TimeZoneFormHelperTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getOptionsList
-   * @covers ::getOptionsListByRegion
+   * Tests get list.
+   *
+   * @legacy-covers ::getOptionsList
+   * @legacy-covers ::getOptionsListByRegion
    */
   public function testGetList(): void {
     // Test the default parameters for getOptionsList().
@@ -48,7 +53,9 @@ class TimeZoneFormHelperTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getOptionsListByRegion
+   * Tests get grouped list.
+   *
+   * @legacy-covers ::getOptionsListByRegion
    */
   public function testGetGroupedList(): void {
     // Tests time zone grouping.

@@ -10,6 +10,8 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Access\RouteProcessorCsrf;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,9 +19,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
- * @covers \Drupal\Core\Access\RoutePathGenerationTrait
- * @group Access
+ * Tests Route Path Generation Trait.
+ *
+ * @legacy-covers \Drupal\Core\Access\RoutePathGenerationTrait
  */
+#[Group('Access')]
 class RoutePathGenerationTraitTest extends UnitTestCase {
 
   /**
@@ -71,9 +75,8 @@ class RoutePathGenerationTraitTest extends UnitTestCase {
    *
    * Multiple cases are provided for an optional parameter (non-empty, empty,
    * null, undefined).
-   *
-   * @dataProvider providerTestCsrfTokenCompleteLifeCycle
    */
+  #[DataProvider('providerTestCsrfTokenCompleteLifeCycle')]
   public function testCsrfTokenCompleteLifeCycle($params): void {
 
     // Mock a route.

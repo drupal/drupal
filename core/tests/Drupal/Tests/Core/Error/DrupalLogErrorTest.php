@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Error;
 
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Process\PhpProcess;
 
 /**
  * Tests logging of errors in core/error.inc.
- *
- * @group Error
  */
+#[Group('Error')]
 class DrupalLogErrorTest extends UnitTestCase {
 
   /**
    * Tests that fatal errors return a non-zero exit code.
-   *
-   * @dataProvider provideFatalExitCodeData
    */
+  #[DataProvider('provideFatalExitCodeData')]
   public function testFatalExitCode(string $script, string $output, string $errorOutput, bool $processIsSuccessful): void {
     // We need to override the current working directory for invocations from
     // run-tests.sh to work properly.

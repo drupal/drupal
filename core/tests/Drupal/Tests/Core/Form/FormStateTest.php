@@ -9,22 +9,25 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * @coversDefaultClass \Drupal\Core\Form\FormState
- *
- * @group Form
+ * Tests Drupal\Core\Form\FormState.
  */
+#[CoversClass(FormState::class)]
+#[Group('Form')]
 class FormStateTest extends UnitTestCase {
 
   /**
    * Tests the getRedirect() method.
    *
-   * @covers ::getRedirect
-   *
-   * @dataProvider providerTestGetRedirect
+   * @legacy-covers ::getRedirect
    */
+  #[DataProvider('providerTestGetRedirect')]
   public function testGetRedirect($form_state_additions, $expected): void {
     $form_state = (new FormState())->setFormState($form_state_additions);
     $redirect = $form_state->getRedirect();
@@ -56,7 +59,7 @@ class FormStateTest extends UnitTestCase {
   /**
    * Tests the setError() method.
    *
-   * @covers ::setError
+   * @legacy-covers ::setError
    */
   public function testSetError(): void {
     $form_state = new FormState();
@@ -68,10 +71,9 @@ class FormStateTest extends UnitTestCase {
   /**
    * Tests the getError() method.
    *
-   * @covers ::getError
-   *
-   * @dataProvider providerTestGetError
+   * @legacy-covers ::getError
    */
+  #[DataProvider('providerTestGetError')]
   public function testGetError($errors, $parents, $error = NULL): void {
     $element['#parents'] = $parents;
     $form_state = (new FormState())->setFormState([
@@ -96,10 +98,11 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setErrorByName
+   * Tests set error by name.
    *
-   * @dataProvider providerTestSetErrorByName
+   * @legacy-covers ::setErrorByName
    */
+  #[DataProvider('providerTestSetErrorByName')]
   public function testSetErrorByName($limit_validation_errors, $expected_errors): void {
     $form_state = new FormState();
     $form_state->setLimitValidationErrors($limit_validation_errors);
@@ -128,7 +131,7 @@ class FormStateTest extends UnitTestCase {
   /**
    * Tests that form errors during submission throw an exception.
    *
-   * @covers ::setErrorByName
+   * @legacy-covers ::setErrorByName
    */
   public function testFormErrorsDuringSubmission(): void {
     $form_state = new FormState();
@@ -139,7 +142,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::prepareCallback
+   * Tests prepare callback valid method.
+   *
+   * @legacy-covers ::prepareCallback
    */
   public function testPrepareCallbackValidMethod(): void {
     $form_state = new FormState();
@@ -149,7 +154,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::prepareCallback
+   * Tests prepare callback in valid method.
+   *
+   * @legacy-covers ::prepareCallback
    */
   public function testPrepareCallbackInValidMethod(): void {
     $form_state = new FormState();
@@ -160,7 +167,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::prepareCallback
+   * Tests prepare callback array.
+   *
+   * @legacy-covers ::prepareCallback
    */
   public function testPrepareCallbackArray(): void {
     $form_state = new FormState();
@@ -171,7 +180,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadInclude
+   * Tests load include.
+   *
+   * @legacy-covers ::loadInclude
    */
   public function testLoadInclude(): void {
     $type = 'some_type';
@@ -188,7 +199,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadInclude
+   * Tests load include no name.
+   *
+   * @legacy-covers ::loadInclude
    */
   public function testLoadIncludeNoName(): void {
     $type = 'some_type';
@@ -204,7 +217,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadInclude
+   * Tests load include not found.
+   *
+   * @legacy-covers ::loadInclude
    */
   public function testLoadIncludeNotFound(): void {
     $type = 'some_type';
@@ -220,7 +235,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadInclude
+   * Tests load include already loaded.
+   *
+   * @legacy-covers ::loadInclude
    */
   public function testLoadIncludeAlreadyLoaded(): void {
     $type = 'some_type';
@@ -244,10 +261,11 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isCached
+   * Tests is cached.
    *
-   * @dataProvider providerTestIsCached
+   * @legacy-covers ::isCached
    */
+  #[DataProvider('providerTestIsCached')]
   public function testIsCached($cache_key, $no_cache_key, $expected): void {
     $form_state = (new FormState())->setFormState([
       'cache' => $cache_key,
@@ -300,7 +318,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setCached
+   * Tests set cached post.
+   *
+   * @legacy-covers ::setCached
    */
   public function testSetCachedPost(): void {
     $form_state = new FormState();
@@ -310,7 +330,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setCached
+   * Tests set cached get.
+   *
+   * @legacy-covers ::setCached
    */
   public function testSetCachedGet(): void {
     $form_state = new FormState();
@@ -321,11 +343,12 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isMethodType
-   * @covers ::setMethod
+   * Tests is method type.
    *
-   * @dataProvider providerTestIsMethodType
+   * @legacy-covers ::isMethodType
+   * @legacy-covers ::setMethod
    */
+  #[DataProvider('providerTestIsMethodType')]
   public function testIsMethodType($set_method_type, $input, $expected): void {
     $form_state = (new FormState())
       ->setMethod($set_method_type);
@@ -361,9 +384,11 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTemporaryValue
-   * @covers ::hasTemporaryValue
-   * @covers ::setTemporaryValue
+   * Tests temporary value.
+   *
+   * @legacy-covers ::getTemporaryValue
+   * @legacy-covers ::hasTemporaryValue
+   * @legacy-covers ::setTemporaryValue
    */
   public function testTemporaryValue(): void {
     $form_state = new FormState();
@@ -377,7 +402,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCleanValueKeys
+   * Tests get clean value keys.
+   *
+   * @legacy-covers ::getCleanValueKeys
    */
   public function testGetCleanValueKeys(): void {
     $form_state = new FormState();
@@ -385,7 +412,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setCleanValueKeys
+   * Tests set clean value keys.
+   *
+   * @legacy-covers ::setCleanValueKeys
    */
   public function testSetCleanValueKeys(): void {
     $form_state = new FormState();
@@ -394,7 +423,9 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addCleanValueKey
+   * Tests add clean value key.
+   *
+   * @legacy-covers ::addCleanValueKey
    */
   public function testAddCleanValueKey() {
     $form_state = new FormState();
@@ -405,18 +436,21 @@ class FormStateTest extends UnitTestCase {
   }
 
   /**
-   * @depends testAddCleanValueKey
+   * Tests clean values.
    *
-   * @covers ::cleanValues
+   * @legacy-covers ::cleanValues
    */
+  #[Depends('testAddCleanValueKey')]
   public function testCleanValues($form_state): void {
     $form_state->setValue('value_to_keep', 'magic_ponies');
     $this->assertSame($form_state->cleanValues()->getValues(), ['value_to_keep' => 'magic_ponies']);
   }
 
   /**
-   * @covers ::setValues
-   * @covers ::getValues
+   * Tests get values.
+   *
+   * @legacy-covers ::setValues
+   * @legacy-covers ::getValues
    */
   public function testGetValues(): void {
     $values = [

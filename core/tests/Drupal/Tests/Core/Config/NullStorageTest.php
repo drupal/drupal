@@ -7,12 +7,12 @@ namespace Drupal\Tests\Core\Config;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the NullStorage.
- *
- * @group Config
  */
+#[Group('Config')]
 class NullStorageTest extends UnitTestCase {
 
   /**

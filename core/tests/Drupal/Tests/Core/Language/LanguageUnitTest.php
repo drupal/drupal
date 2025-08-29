@@ -7,15 +7,21 @@ namespace Drupal\Tests\Core\Language;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Language\Language
- * @group Language
+ * Tests Drupal\Core\Language\Language.
  */
+#[CoversClass(Language::class)]
+#[Group('Language')]
 class LanguageUnitTest extends UnitTestCase {
 
   /**
-   * @covers ::__construct
+   * Tests construct.
+   *
+   * @legacy-covers ::__construct
    */
   public function testConstruct(): void {
     $name = $this->randomMachineName();
@@ -29,7 +35,9 @@ class LanguageUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getName
+   * Tests get name.
+   *
+   * @legacy-covers ::getName
    */
   public function testGetName(): void {
     $name = $this->randomMachineName();
@@ -39,7 +47,9 @@ class LanguageUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getId
+   * Tests get langcode.
+   *
+   * @legacy-covers ::getId
    */
   public function testGetLangcode(): void {
     $language_code = $this->randomMachineName(2);
@@ -48,7 +58,9 @@ class LanguageUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDirection
+   * Tests get direction.
+   *
+   * @legacy-covers ::getDirection
    */
   public function testGetDirection(): void {
     $language_code = $this->randomMachineName(2);
@@ -57,7 +69,9 @@ class LanguageUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isDefault
+   * Tests is default.
+   *
+   * @legacy-covers ::isDefault
    */
   public function testIsDefault(): void {
     $language_default = $this->getMockBuilder('Drupal\Core\Language\LanguageDefault')->disableOriginalConstructor()->getMock();
@@ -90,10 +104,9 @@ class LanguageUnitTest extends UnitTestCase {
    * @param array $expected
    *   The expected array of keys.
    *
-   * @covers ::sort
-   *
-   * @dataProvider providerTestSortArrayOfLanguages
+   * @legacy-covers ::sort
    */
+  #[DataProvider('providerTestSortArrayOfLanguages')]
   public function testSortArrayOfLanguages(array $languages, array $expected): void {
     Language::sort($languages);
     $this->assertSame($expected, array_keys($languages));

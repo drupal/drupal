@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Component;
 
+use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Component\ComponentMetadata;
-use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Tests\UnitTestCaseTest;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Unit tests for the component metadata class.
- *
- * @coversDefaultClass \Drupal\Core\Theme\Component\ComponentMetadata
- * @group sdc
  */
+#[CoversClass(ComponentMetadata::class)]
+#[Group('sdc')]
 class ComponentMetadataTest extends UnitTestCaseTest {
 
   /**

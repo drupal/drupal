@@ -9,17 +9,23 @@ use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\StringTranslation\ByteSizeMarkup
- * @group StringTranslation
+ * Tests Drupal\Core\StringTranslation\ByteSizeMarkup.
  */
+#[CoversClass(ByteSizeMarkup::class)]
+#[Group('StringTranslation')]
 class ByteSizeMarkupTest extends UnitTestCase {
 
   /**
-   * @covers ::create
-   * @dataProvider providerTestCommonFormatSize
+   * Tests common format size.
+   *
+   * @legacy-covers ::create
    */
+  #[DataProvider('providerTestCommonFormatSize')]
   public function testCommonFormatSize($expected, $input): void {
     $size = ByteSizeMarkup::create($input, NULL, $this->getStringTranslationStub());
     $this->assertInstanceOf(TranslatableMarkup::class, $size);
@@ -65,7 +71,9 @@ class ByteSizeMarkupTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::create
+   * Tests translatable markup object.
+   *
+   * @legacy-covers ::create
    */
   public function testTranslatableMarkupObject(): void {
     $result = ByteSizeMarkup::create(1, NULL, $this->getStringTranslationStub());

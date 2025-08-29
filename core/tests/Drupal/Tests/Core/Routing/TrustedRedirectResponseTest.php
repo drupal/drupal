@@ -10,17 +10,23 @@ use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * @coversDefaultClass \Drupal\Core\Routing\TrustedRedirectResponse
- * @group Routing
+ * Tests Drupal\Core\Routing\TrustedRedirectResponse.
  */
+#[CoversClass(TrustedRedirectResponse::class)]
+#[Group('Routing')]
 class TrustedRedirectResponseTest extends UnitTestCase {
 
   /**
-   * @covers ::setTargetUrl
+   * Tests set target url with internal url.
+   *
+   * @legacy-covers ::setTargetUrl
    */
   public function testSetTargetUrlWithInternalUrl(): void {
     $redirect_response = new TrustedRedirectResponse('/example');
@@ -30,7 +36,9 @@ class TrustedRedirectResponseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setTargetUrl
+   * Tests set target url with untrusted url.
+   *
+   * @legacy-covers ::setTargetUrl
    */
   public function testSetTargetUrlWithUntrustedUrl(): void {
     $request_context = new RequestContext();
@@ -46,7 +54,9 @@ class TrustedRedirectResponseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setTargetUrl
+   * Tests set target url with trusted url.
+   *
+   * @legacy-covers ::setTargetUrl
    */
   public function testSetTargetUrlWithTrustedUrl(): void {
     $redirect_response = new TrustedRedirectResponse('/example');
@@ -56,9 +66,11 @@ class TrustedRedirectResponseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromRedirectResponse
-   * @dataProvider providerCreateFromRedirectResponse
+   * Tests create from redirect response.
+   *
+   * @legacy-covers ::createFromRedirectResponse
    */
+  #[DataProvider('providerCreateFromRedirectResponse')]
   public function testCreateFromRedirectResponse($redirect_response): void {
     $trusted_redirect_response = TrustedRedirectResponse::createFromRedirectResponse($redirect_response);
 

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Controller;
 
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the base controller class.
- *
- * @group Controller
  */
+#[Group('Controller')]
 class ControllerBaseTest extends UnitTestCase {
 
   /**

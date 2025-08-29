@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Theme\Icon;
 
 use Drupal\Core\Template\IconsTwigExtension;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Template\IconsTwigExtension
- *
- * @group icon
+ * Tests Drupal\Core\Template\IconsTwigExtension.
  */
+#[CoversClass(IconsTwigExtension::class)]
+#[Group('icon')]
 class IconsTwigExtensionTest extends TestCase {
 
   /**

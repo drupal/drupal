@@ -6,24 +6,24 @@ namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\FormElementHelper;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the form element helper.
- *
- * @group Drupal
- * @group Form
- *
- * @coversDefaultClass \Drupal\Core\Form\FormElementHelper
  */
+#[CoversClass(FormElementHelper::class)]
+#[Group('Drupal')]
+#[Group('Form')]
 class FormElementHelperTest extends UnitTestCase {
 
   /**
    * Tests the getElementByName() method.
    *
-   * @covers ::getElementByName
-   *
-   * @dataProvider getElementByNameProvider
+   * @legacy-covers ::getElementByName
    */
+  #[DataProvider('getElementByNameProvider')]
   public function testGetElementByName($name, $form, $expected): void {
     $this->assertSame($expected, FormElementHelper::getElementByName($name, $form));
   }
@@ -105,10 +105,9 @@ class FormElementHelperTest extends UnitTestCase {
   /**
    * Tests the getElementTitle() method.
    *
-   * @covers ::getElementTitle
-   *
-   * @dataProvider getElementTitleProvider
+   * @legacy-covers ::getElementTitle
    */
+  #[DataProvider('getElementTitleProvider')]
   public function testGetElementTitle($name, $form, $expected): void {
     $element = FormElementHelper::getElementByName($name, $form);
     $this->assertSame($expected, FormElementHelper::getElementTitle($element));

@@ -9,14 +9,18 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * @coversDefaultClass \Drupal\Core\DependencyInjection\YamlFileLoader
- * @group DependencyInjection
+ * Tests Drupal\Core\DependencyInjection\YamlFileLoader.
  */
+#[CoversClass(YamlFileLoader::class)]
+#[Group('DependencyInjection')]
 class YamlFileLoaderTest extends UnitTestCase {
 
   /**
@@ -87,8 +91,9 @@ YAML;
   }
 
   /**
-   * @dataProvider providerTestExceptions
-   */
+ * Tests exceptions.
+ */
+  #[DataProvider('providerTestExceptions')]
   public function testExceptions($yml, $message): void {
     vfsStream::setup('drupal', NULL, [
       'modules' => [

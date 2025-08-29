@@ -7,11 +7,15 @@ namespace Drupal\Tests\Core\Template;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Template\AttributeHelper
- * @group Template
+ * Tests Drupal\Core\Template\AttributeHelper.
  */
+#[CoversClass(AttributeHelper::class)]
+#[Group('Template')]
 class AttributeHelperTest extends UnitTestCase {
 
   /**
@@ -32,9 +36,11 @@ class AttributeHelperTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::attributeExists
-   * @dataProvider providerTestAttributeExists
+   * Tests attribute exists.
+   *
+   * @legacy-covers ::attributeExists
    */
+  #[DataProvider('providerTestAttributeExists')]
   public function testAttributeExists(array $test_data, $test_attribute, $expected): void {
     $this->assertSame($expected, AttributeHelper::attributeExists($test_attribute, $test_data));
     $attributes = new Attribute($test_data);
@@ -60,16 +66,20 @@ class AttributeHelperTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::mergeCollections
-   * @dataProvider providerTestMergeCollections
+   * Tests merge collections.
+   *
+   * @legacy-covers ::mergeCollections
    */
+  #[DataProvider('providerTestMergeCollections')]
   public function testMergeCollections($original, $merge, $expected): void {
     $this->assertEquals($expected, AttributeHelper::mergeCollections($original, $merge));
     $this->assertEquals(new Attribute($expected), AttributeHelper::mergeCollections(new Attribute($original), $merge));
   }
 
   /**
-   * @covers ::mergeCollections
+   * Tests merge collections argument exception.
+   *
+   * @legacy-covers ::mergeCollections
    */
   public function testMergeCollectionsArgumentException(): void {
     $attributes = new Attribute(['class' => ['example-class']]);

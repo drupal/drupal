@@ -8,14 +8,17 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CommandInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\Ajax\AjaxResponse
- * @group Ajax
+ * Tests Drupal\Core\Ajax\AjaxResponse.
  */
+#[CoversClass(AjaxResponse::class)]
+#[Group('Ajax')]
 class AjaxResponseTest extends UnitTestCase {
 
   /**

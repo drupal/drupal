@@ -10,18 +10,24 @@ use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Plugin\PluginWithFormsTrait
- * @group Plugin
+ * Tests Drupal\Core\Plugin\PluginWithFormsTrait.
  */
+#[CoversClass(PluginWithFormsTrait::class)]
+#[Group('Plugin')]
 class PluginWithFormsTraitTest extends UnitTestCase {
 
   /**
-   * @covers ::getFormClass
-   * @covers ::hasFormClass
-   * @dataProvider providerGetFormClass
+   * Tests get form class.
+   *
+   * @legacy-covers ::getFormClass
+   * @legacy-covers ::hasFormClass
    */
+  #[DataProvider('providerGetFormClass')]
   public function testGetFormClass(PluginWithFormsInterface $block_plugin, $operation, $expected_class): void {
     $this->assertSame($expected_class, $block_plugin->getFormClass($operation));
     $this->assertSame($expected_class !== NULL, $block_plugin->hasFormClass($operation));

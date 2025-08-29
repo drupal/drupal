@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon\Plugin;
 
-// cspell:ignore corge
 use Drupal\Core\Form\SubformStateInterface;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\IconFinder;
 use Drupal\icon_test\Plugin\IconExtractor\TestExtractor;
 use Drupal\icon_test\Plugin\IconExtractor\TestExtractorWithFinder;
+use Drupal\Tests\UnitTestCase;
+// cspell:ignore corge
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests icon extractor with base and finder base plugin.
- *
- * @group icon
  */
+#[Group('icon')]
 class ExtractorTest extends UnitTestCase {
 
   /**

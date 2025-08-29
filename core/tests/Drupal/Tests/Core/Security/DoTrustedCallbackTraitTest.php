@@ -5,22 +5,29 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Security;
 
 use Drupal\Core\Security\Attribute\TrustedCallback;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @coversDefaultClass \Drupal\Core\Security\DoTrustedCallbackTrait
- * @group Security
+ * Tests Drupal\Core\Security\DoTrustedCallbackTrait.
  */
+#[CoversClass(DoTrustedCallbackTrait::class)]
+#[Group('Security')]
 class DoTrustedCallbackTraitTest extends UnitTestCase {
   use DoTrustedCallbackTrait;
 
   /**
-   * @covers ::doTrustedCallback
-   * @dataProvider providerTestTrustedCallbacks
+   * Tests trusted callbacks.
+   *
+   * @legacy-covers ::doTrustedCallback
    */
+  #[DataProvider('providerTestTrustedCallbacks')]
   public function testTrustedCallbacks(callable $callback, $extra_trusted_interface = NULL): void {
     $return = $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::THROW_EXCEPTION, $extra_trusted_interface);
     $this->assertSame('test', $return);
@@ -47,9 +54,11 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::doTrustedCallback
-   * @dataProvider providerTestUntrustedCallbacks
+   * Tests untrusted callbacks.
+   *
+   * @legacy-covers ::doTrustedCallback
    */
+  #[DataProvider('providerTestUntrustedCallbacks')]
   public function testUntrustedCallbacks(callable $callback, $extra_trusted_interface = NULL): void {
     $this->expectException(UntrustedCallbackException::class);
     $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::THROW_EXCEPTION, $extra_trusted_interface);
@@ -70,8 +79,9 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider errorTypeProvider
-   */
+ * Tests exception.
+ */
+  #[DataProvider('errorTypeProvider')]
   public function testException($callback): void {
     $this->expectException(UntrustedCallbackException::class);
     $this->expectExceptionMessage('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
@@ -79,9 +89,10 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider errorTypeProvider
-   * @group legacy
-   */
+ * Tests silenced deprecation.
+ */
+  #[DataProvider('errorTypeProvider')]
+  #[IgnoreDeprecations]
   public function testSilencedDeprecation($callback): void {
     $this->expectDeprecation('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
     $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION);

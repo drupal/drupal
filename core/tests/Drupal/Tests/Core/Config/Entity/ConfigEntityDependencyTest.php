@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Config\Entity;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Entity\ConfigEntityDependency;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ConfigEntityDependency class.
- *
- * @group Config
  */
+#[Group('Config')]
 class ConfigEntityDependencyTest extends UnitTestCase {
 
   public function testEmptyDependencies(): void {

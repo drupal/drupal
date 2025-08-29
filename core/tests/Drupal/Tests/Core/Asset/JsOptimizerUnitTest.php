@@ -6,12 +6,13 @@ namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\JsOptimizer;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the JS asset optimizer.
- *
- * @group Asset
  */
+#[Group('Asset')]
 class JsOptimizerUnitTest extends UnitTestCase {
 
   /**
@@ -70,9 +71,8 @@ class JsOptimizerUnitTest extends UnitTestCase {
 
   /**
    * Tests cleaning of a JS asset group containing 'type' => 'file'.
-   *
-   * @dataProvider providerTestClean
    */
+  #[DataProvider('providerTestClean')]
   public function testClean($js_asset, $expected): void {
     $this->assertEquals($expected, $this->optimizer->clean($js_asset));
   }
@@ -136,9 +136,8 @@ class JsOptimizerUnitTest extends UnitTestCase {
 
   /**
    * Tests cleaning of a JS asset group containing 'type' => 'file'.
-   *
-   * @dataProvider providerTestOptimize
    */
+  #[DataProvider('providerTestOptimize')]
   public function testOptimize($js_asset, $expected): void {
     $this->assertEquals($expected, $this->optimizer->optimize($js_asset));
   }

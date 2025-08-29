@@ -12,6 +12,8 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -20,9 +22,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * @coversDefaultClass \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber
- * @group EventSubscriber
+ * Tests Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber.
  */
+#[CoversClass(CustomPageExceptionHtmlSubscriber::class)]
+#[Group('EventSubscriber')]
 class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
 
   /**

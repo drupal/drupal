@@ -12,16 +12,16 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Menu\DefaultMenuLinkTreeManipulators;
 use Drupal\Core\Menu\MenuLinkTreeElement;
-use Drupal\Tests\UnitTestCase;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the default menu link tree manipulators.
- *
- * @group Menu
- *
- * @coversDefaultClass \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators
  */
+#[CoversClass(DefaultMenuLinkTreeManipulators::class)]
+#[Group('Menu')]
 class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
   /**
@@ -148,7 +148,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   /**
    * Tests the generateIndexAndSort() tree manipulator.
    *
-   * @covers ::generateIndexAndSort
+   * @legacy-covers ::generateIndexAndSort
    */
   public function testGenerateIndexAndSort(): void {
     $this->mockTree();
@@ -171,8 +171,8 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   /**
    * Tests the checkAccess() tree manipulator.
    *
-   * @covers ::checkAccess
-   * @covers ::menuLinkCheckAccess
+   * @legacy-covers ::checkAccess
+   * @legacy-covers ::menuLinkCheckAccess
    */
   public function testCheckAccess(): void {
     // Those menu links that are non-external will have their access checks
@@ -251,8 +251,8 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   /**
    * Tests checkAccess() tree manipulator.
    *
-   * @covers ::checkAccess
-   * @covers ::menuLinkCheckAccess
+   * @legacy-covers ::checkAccess
+   * @legacy-covers ::menuLinkCheckAccess
    */
   public function testCheckAccessTreeManipulator(): void {
     $this->mockTree();
@@ -280,7 +280,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   /**
    * Tests the flatten() tree manipulator.
    *
-   * @covers ::flatten
+   * @legacy-covers ::flatten
    */
   public function testFlatten(): void {
     $this->mockTree();
@@ -292,9 +292,9 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   /**
    * Tests the optimized node access checking.
    *
-   * @covers ::checkNodeAccess
-   * @covers ::collectNodeLinks
-   * @covers ::checkAccess
+   * @legacy-covers ::checkNodeAccess
+   * @legacy-covers ::collectNodeLinks
+   * @legacy-covers ::checkAccess
    */
   public function testCheckNodeAccess(): void {
     $links = [

@@ -14,13 +14,13 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\path_alias\AliasManager;
 use Drupal\path_alias\PathProcessor\AliasPathProcessor;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests processing of the inbound path.
- *
- * @group PathProcessor
  */
+#[Group('PathProcessor')]
 class PathProcessorTest extends UnitTestCase {
 
   /**

@@ -8,23 +8,25 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\PathProcessor\PathProcessorFront;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Test front page path processing.
- *
- * @group PathProcessor
- * @coversDefaultClass \Drupal\Core\PathProcessor\PathProcessorFront
  */
+#[CoversClass(PathProcessorFront::class)]
+#[Group('PathProcessor')]
 class PathProcessorFrontTest extends UnitTestCase {
 
   /**
    * Tests basic inbound processing functionality.
    *
-   * @covers ::processInbound
-   * @dataProvider providerProcessInbound
+   * @legacy-covers ::processInbound
    */
+  #[DataProvider('providerProcessInbound')]
   public function testProcessInbound($frontpage_path, $path, $expected, array $expected_query = []): void {
     $config_factory = $this->prophesize(ConfigFactoryInterface::class);
     $config = $this->prophesize(ImmutableConfig::class);
@@ -56,7 +58,7 @@ class PathProcessorFrontTest extends UnitTestCase {
   /**
    * Tests inbound failure with broken config.
    *
-   * @covers ::processInbound
+   * @legacy-covers ::processInbound
    */
   public function testProcessInboundBadConfig(): void {
     $config_factory = $this->prophesize(ConfigFactoryInterface::class);

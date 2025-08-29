@@ -7,11 +7,15 @@ namespace Drupal\Tests\Core\Asset;
 use Drupal\Core\Asset\LibraryDependencyResolver;
 use Drupal\Core\Asset\LibraryDiscoveryCollector;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Asset\LibraryDependencyResolver
- * @group Asset
+ * Tests Drupal\Core\Asset\LibraryDependencyResolver.
  */
+#[CoversClass(LibraryDependencyResolver::class)]
+#[Group('Asset')]
 class LibraryDependencyResolverTest extends UnitTestCase {
 
 
@@ -120,10 +124,11 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getLibrariesWithDependencies
+   * Tests get libraries with dependencies.
    *
-   * @dataProvider providerTestGetLibrariesWithDependencies
+   * @legacy-covers ::getLibrariesWithDependencies
    */
+  #[DataProvider('providerTestGetLibrariesWithDependencies')]
   public function testGetLibrariesWithDependencies(array $libraries, array $expected): void {
     $this->assertEquals($expected, $this->libraryDependencyResolver->getLibrariesWithDependencies($libraries));
   }
@@ -174,16 +179,19 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getMinimalRepresentativeSubset
+   * Tests get minimal representative subset.
    *
-   * @dataProvider providerTestGetMinimalRepresentativeSubset
+   * @legacy-covers ::getMinimalRepresentativeSubset
    */
+  #[DataProvider('providerTestGetMinimalRepresentativeSubset')]
   public function testGetMinimalRepresentativeSubset(array $libraries, array $expected): void {
     $this->assertEquals($expected, $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries));
   }
 
   /**
-   * @covers ::getMinimalRepresentativeSubset
+   * Tests get minimal representative subset invalid input.
+   *
+   * @legacy-covers ::getMinimalRepresentativeSubset
    */
   public function testGetMinimalRepresentativeSubsetInvalidInput(): void {
     $this->expectException(\AssertionError::class);

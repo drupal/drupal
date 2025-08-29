@@ -12,20 +12,25 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\Definition\DependentPluginDefinitionInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophecy\ProphecyInterface;
 use Prophecy\Prophet;
 
 /**
- * @coversDefaultClass \Drupal\Core\Plugin\PluginDependencyTrait
- * @group Plugin
+ * Tests Drupal\Core\Plugin\PluginDependencyTrait.
  */
+#[CoversClass(PluginDependencyTrait::class)]
+#[Group('Plugin')]
 class PluginDependencyTraitTest extends UnitTestCase {
 
   /**
-   * @covers ::getPluginDependencies
+   * Tests get plugin dependencies.
    *
-   * @dataProvider providerTestPluginDependencies
+   * @legacy-covers ::getPluginDependencies
    */
+  #[DataProvider('providerTestPluginDependencies')]
   public function testGetPluginDependencies(ProphecyInterface $plugin, $definition, array $expected): void {
     $test_class = new TestPluginDependency();
 
@@ -47,9 +52,7 @@ class PluginDependencyTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::calculatePluginDependencies
-   *
-   * @dataProvider providerTestPluginDependencies
+   * Tests calculate plugin dependencies.
    *
    * @param \Prophecy\Prophecy\ProphecyInterface $plugin
    *   A prophecy of a plugin instance.
@@ -57,7 +60,10 @@ class PluginDependencyTraitTest extends UnitTestCase {
    *   A plugin definition.
    * @param array $expected
    *   The expected dependencies.
+   *
+   * @legacy-covers ::calculatePluginDependencies
    */
+  #[DataProvider('providerTestPluginDependencies')]
   public function testCalculatePluginDependencies(ProphecyInterface $plugin, $definition, array $expected): void {
     $test_class = new TestPluginDependency();
 

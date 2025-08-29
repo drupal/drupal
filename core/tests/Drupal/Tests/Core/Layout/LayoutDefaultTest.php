@@ -7,17 +7,23 @@ namespace Drupal\Tests\Core\Layout;
 use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Layout\LayoutDefault
- * @group Layout
+ * Tests Drupal\Core\Layout\LayoutDefault.
  */
+#[CoversClass(LayoutDefault::class)]
+#[Group('Layout')]
 class LayoutDefaultTest extends UnitTestCase {
 
   /**
-   * @covers ::build
-   * @dataProvider providerTestBuild
+   * Tests build.
+   *
+   * @legacy-covers ::build
    */
+  #[DataProvider('providerTestBuild')]
   public function testBuild($regions, $expected): void {
     $definition = new LayoutDefinition([
       'theme_hook' => 'layout',

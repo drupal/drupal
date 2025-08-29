@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\PageCache;
 
-use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicy\DenyNoCacheRoutes;
+use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\Core\PageCache\ResponsePolicy\DenyNoCacheRoutes
- * @group PageCache
- * @group Route
+ * Tests Drupal\Core\PageCache\ResponsePolicy\DenyNoCacheRoutes.
  */
+#[CoversClass(DenyNoCacheRoutes::class)]
+#[Group('PageCache')]
+#[Group('Route')]
 class DenyNoCacheRoutesTest extends UnitTestCase {
 
   /**
@@ -62,9 +66,9 @@ class DenyNoCacheRoutesTest extends UnitTestCase {
   /**
    * Asserts that caching is denied on the node preview route.
    *
-   * @dataProvider providerDenyNoCacheRoutesPolicy
-   * @covers ::check
+   * @legacy-covers ::check
    */
+  #[DataProvider('providerDenyNoCacheRoutesPolicy')]
   public function testDenyNoCacheRoutesPolicy($expected_result, ?Route $route): void {
     $this->routeMatch->expects($this->once())
       ->method('getRouteObject')

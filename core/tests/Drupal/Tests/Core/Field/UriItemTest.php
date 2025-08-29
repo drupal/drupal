@@ -7,13 +7,15 @@ namespace Drupal\Tests\Core\Field;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Defines a test for the UriItem field-type.
- *
- * @group Field
- * @coversDefaultClass \Drupal\Core\Field\Plugin\Field\FieldType\UriItem
  */
+#[CoversClass(UriItem::class)]
+#[Group('Field')]
 class UriItemTest extends UnitTestCase {
 
   /**
@@ -22,9 +24,9 @@ class UriItemTest extends UnitTestCase {
    * @param int $max_length
    *   Maximum field length.
    *
-   * @covers ::generateSampleValue
-   * @dataProvider providerMaxLength
+   * @legacy-covers ::generateSampleValue
    */
+  #[DataProvider('providerMaxLength')]
   public function testGenerateSampleValue(int $max_length): void {
     $definition = $this->prophesize(FieldDefinitionInterface::class);
     $definition->getSetting('max_length')->willReturn($max_length);

@@ -7,17 +7,21 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold\Integration;
 use Drupal\Composer\Plugin\Scaffold\Operations\AppendOp;
 use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Composer\Plugin\Scaffold\Operations\AppendOp
- *
- * @group Scaffold
+ * Tests Drupal\Composer\Plugin\Scaffold\Operations\AppendOp.
  */
+#[CoversClass(AppendOp::class)]
+#[Group('Scaffold')]
 class AppendOpTest extends TestCase {
 
   /**
-   * @covers ::process
+   * Tests process.
+   *
+   * @legacy-covers ::process
    */
   public function testProcess(): void {
     $fixtures = new Fixtures();

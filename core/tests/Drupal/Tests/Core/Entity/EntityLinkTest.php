@@ -5,16 +5,21 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Link;
 use Drupal\Tests\Core\Config\Entity\StubConfigEntity;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityBase
- * @group Entity
+ * Tests Drupal\Core\Entity\EntityBase.
  */
+#[CoversClass(EntityBase::class)]
+#[Group('Entity')]
 class EntityLinkTest extends UnitTestCase {
 
   /**
@@ -58,10 +63,9 @@ class EntityLinkTest extends UnitTestCase {
   /**
    * Tests for the EntityBase::toLink() method.
    *
-   * @covers ::toLink
-   *
-   * @dataProvider providerTestLink
+   * @legacy-covers ::toLink
    */
+  #[DataProvider('providerTestLink')]
   public function testToLink($entity_label, $link_text, $expected_text, $link_rel = 'canonical', array $link_options = []): void {
     $language = new Language(['id' => 'es']);
     $link_options += ['language' => $language];

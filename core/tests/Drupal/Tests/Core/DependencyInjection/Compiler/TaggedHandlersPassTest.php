@@ -6,15 +6,18 @@ namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 
 use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass
- * @group DependencyInjection
+ * Tests Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass.
  */
+#[CoversClass(TaggedHandlersPass::class)]
+#[Group('DependencyInjection')]
 class TaggedHandlersPassTest extends UnitTestCase {
 
   protected function buildContainer($environment = 'dev') {
@@ -26,7 +29,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests without any consumers.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessNoConsumers(): void {
     $container = $this->buildContainer();
@@ -43,7 +46,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests a required consumer with no handlers.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessRequiredHandlers(): void {
     $container = $this->buildContainer();
@@ -62,8 +65,8 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests a required consumer with no handlers.
    *
-   * @covers ::process
-   * @covers ::processServiceIdCollectorPass
+   * @legacy-covers ::process
+   * @legacy-covers ::processServiceIdCollectorPass
    */
   public function testIdCollectorProcessRequiredHandlers(): void {
     $this->expectException(LogicException::class);
@@ -82,7 +85,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests consumer with missing interface in non-production environment.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessMissingInterface(): void {
     $container = $this->buildContainer();
@@ -102,7 +105,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests one consumer and two handlers.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcess(): void {
     $container = $this->buildContainer();
@@ -127,7 +130,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests one consumer and two handlers with service ID collection.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testServiceIdProcess(): void {
     $container = $this->buildContainer();
@@ -153,7 +156,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests handler priority sorting.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessPriority(): void {
     $container = $this->buildContainer();
@@ -184,7 +187,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests handler priority sorting for service ID collection.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testServiceIdProcessPriority(): void {
     $container = $this->buildContainer();
@@ -217,7 +220,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests consumer method without priority parameter.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessNoPriorityParam(): void {
     $container = $this->buildContainer();
@@ -250,7 +253,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests consumer method with an ID parameter.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessWithIdParameter(): void {
     $container = $this->buildContainer();
@@ -285,7 +288,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests interface validation in non-production environment.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessInterfaceMismatch(): void {
     $container = $this->buildContainer();
@@ -310,7 +313,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests child handler with parent service.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessChildDefinition(): void {
     $container = $this->buildContainer();
@@ -335,7 +338,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests consumer method with extra parameters.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessWithExtraArguments(): void {
     $container = $this->buildContainer();
@@ -365,7 +368,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests consumer method with extra parameters and no priority.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessNoPriorityAndExtraArguments(): void {
     $container = $this->buildContainer();
@@ -394,7 +397,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests consumer method with priority, id and extra parameters.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessWithIdAndExtraArguments(): void {
     $container = $this->buildContainer();
@@ -426,7 +429,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests consumer method with varying order of priority and extra parameters.
    *
-   * @covers ::process
+   * @legacy-covers ::process
    */
   public function testProcessWithDifferentArgumentsOrderAndDefaultValue(): void {
     $container = $this->buildContainer();

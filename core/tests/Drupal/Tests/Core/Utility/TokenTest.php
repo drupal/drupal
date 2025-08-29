@@ -12,11 +12,15 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Utility\Token;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Utility\Token
- * @group Utility
+ * Tests Drupal\Core\Utility\Token.
  */
+#[CoversClass(Token::class)]
+#[Group('Utility')]
 class TokenTest extends UnitTestCase {
 
   /**
@@ -105,7 +109,9 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getInfo
+   * Tests get info.
+   *
+   * @legacy-covers ::getInfo
    */
   public function testGetInfo(): void {
     $token_info = [
@@ -151,7 +157,9 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::replace
+   * Tests replace with bubbleable metadata object.
+   *
+   * @legacy-covers ::replace
    */
   public function testReplaceWithBubbleableMetadataObject(): void {
     $this->moduleHandler->expects($this->any())
@@ -180,7 +188,9 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::replace
+   * Tests replace with hook tokens with bubbleable metadata.
+   *
+   * @legacy-covers ::replace
    */
   public function testReplaceWithHookTokensWithBubbleableMetadata(): void {
     $this->moduleHandler->expects($this->any())
@@ -215,8 +225,10 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::replace
-   * @covers ::replace
+   * Tests replace with hook tokens alter with bubbleable metadata.
+   *
+   * @legacy-covers ::replace
+   * @legacy-covers ::replace
    */
   public function testReplaceWithHookTokensAlterWithBubbleableMetadata(): void {
     $this->moduleHandler->expects($this->any())
@@ -253,7 +265,9 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::resetInfo
+   * Tests reset info.
+   *
+   * @legacy-covers ::resetInfo
    */
   public function testResetInfo(): void {
     $this->cacheTagsInvalidator->expects($this->once())
@@ -264,9 +278,11 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::replace
-   * @dataProvider providerTestReplaceEscaping
+   * Tests replace escaping.
+   *
+   * @legacy-covers ::replace
    */
+  #[DataProvider('providerTestReplaceEscaping')]
   public function testReplaceEscaping($string, array $tokens, $expected): void {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
@@ -299,7 +315,9 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::replacePlain
+   * Tests replace plain.
+   *
+   * @legacy-covers ::replacePlain
    */
   public function testReplacePlain(): void {
     $this->setupSiteTokens();

@@ -5,21 +5,22 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Template;
 
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Template\TwigSandboxPolicy;
 use Drupal\Core\Template\Loader\StringLoader;
+use Drupal\Core\Template\TwigSandboxPolicy;
 use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Twig\Environment;
 use Twig\Extension\SandboxExtension;
 use Twig\Sandbox\SecurityError;
 
 /**
  * Tests the twig sandbox policy.
- *
- * @group Template
- *
- * @coversDefaultClass \Drupal\Core\Template\TwigSandboxPolicy
  */
+#[CoversClass(TwigSandboxPolicy::class)]
+#[Group('Template')]
 class TwigSandboxTest extends UnitTestCase {
 
   /**
@@ -44,9 +45,8 @@ class TwigSandboxTest extends UnitTestCase {
 
   /**
    * Tests that dangerous methods cannot be called in entity objects.
-   *
-   * @dataProvider getTwigEntityDangerousMethods
    */
+  #[DataProvider('getTwigEntityDangerousMethods')]
   public function testEntityDangerousMethods($template): void {
     $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $this->expectException(SecurityError::class);

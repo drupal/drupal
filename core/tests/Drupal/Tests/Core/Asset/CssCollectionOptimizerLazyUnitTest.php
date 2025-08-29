@@ -7,23 +7,23 @@ namespace Drupal\Tests\Core\Asset;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Asset\AssetCollectionGrouperInterface;
 use Drupal\Core\Asset\AssetOptimizerInterface;
+use Drupal\Core\Asset\CssCollectionOptimizerLazy;
 use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Core\Asset\LibraryDependencyResolverInterface;
-use Drupal\Core\Asset\CssCollectionOptimizerLazy;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests the CSS asset optimizer.
- *
- * @group Asset
  */
+#[Group('Asset')]
 class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that classes are correctly loaded during PHPUnit initialization.
- *
- * @group Test
  */
+#[Group('Test')]
 class PhpUnitAutoloaderTest extends UnitTestCase {
 
   /**

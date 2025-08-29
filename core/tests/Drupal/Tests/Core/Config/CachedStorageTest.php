@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Config;
 
-use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Config\CachedStorage;
 use Drupal\Core\Cache\NullBackend;
+use Drupal\Core\Config\CachedStorage;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the interaction of cache and file storage in CachedStorage.
- *
- * @group Config
  */
+#[Group('Config')]
 class CachedStorageTest extends UnitTestCase {
 
   /**

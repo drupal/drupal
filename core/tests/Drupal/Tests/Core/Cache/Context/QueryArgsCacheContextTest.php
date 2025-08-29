@@ -6,20 +6,25 @@ namespace Drupal\Tests\Core\Cache\Context;
 
 use Drupal\Core\Cache\Context\QueryArgsCacheContext;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\Context\QueryArgsCacheContext
- * @group Cache
+ * Tests Drupal\Core\Cache\Context\QueryArgsCacheContext.
  */
+#[CoversClass(QueryArgsCacheContext::class)]
+#[Group('Cache')]
 class QueryArgsCacheContextTest extends UnitTestCase {
 
   /**
-   * @covers ::getContext
+   * Tests get context.
    *
-   * @dataProvider providerTestGetContext
+   * @legacy-covers ::getContext
    */
+  #[DataProvider('providerTestGetContext')]
   public function testGetContext(array $query_args, $cache_context_parameter, $context): void {
     $request_stack = new RequestStack();
     $request = Request::create('/', 'GET', $query_args);

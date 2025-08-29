@@ -6,20 +6,20 @@ namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the menu link tree element value object.
- *
- * @group Menu
- *
- * @coversDefaultClass \Drupal\Core\Menu\MenuLinkTreeElement
  */
+#[CoversClass(MenuLinkTreeElement::class)]
+#[Group('Menu')]
 class MenuLinkTreeElementTest extends UnitTestCase {
 
   /**
    * Tests construction.
    *
-   * @covers ::__construct
+   * @legacy-covers ::__construct
    */
   public function testConstruction(): void {
     $link = MenuLinkMock::create(['id' => 'test']);
@@ -34,7 +34,7 @@ class MenuLinkTreeElementTest extends UnitTestCase {
   /**
    * Tests count().
    *
-   * @covers ::count
+   * @legacy-covers ::count
    */
   public function testCount(): void {
     $link_1 = MenuLinkMock::create(['id' => 'test_1']);

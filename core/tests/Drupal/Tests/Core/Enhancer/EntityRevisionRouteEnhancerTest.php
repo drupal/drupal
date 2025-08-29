@@ -6,15 +6,18 @@ namespace Drupal\Tests\Core\Enhancer;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\Enhancer\EntityRevisionRouteEnhancer;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\Core\Routing\Enhancer\EntityRevisionRouteEnhancer
- * @group Entity
+ * Tests Drupal\Core\Routing\Enhancer\EntityRevisionRouteEnhancer.
  */
+#[CoversClass(EntityRevisionRouteEnhancer::class)]
+#[Group('Entity')]
 class EntityRevisionRouteEnhancerTest extends UnitTestCase {
 
   /**
@@ -32,7 +35,9 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::enhance
+   * Tests enhance without parameter.
+   *
+   * @legacy-covers ::enhance
    */
   public function testEnhanceWithoutParameter(): void {
     $route = new Route('/test-path/{entity_test}');
@@ -45,7 +50,9 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::enhance
+   * Tests enhance without entity revision.
+   *
+   * @legacy-covers ::enhance
    */
   public function testEnhanceWithoutEntityRevision(): void {
     $route = new Route('/test-path/{entity_test}', [], [], ['parameters' => ['entity_test' => ['type' => 'entity:entity_test']]]);
@@ -59,7 +66,9 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::enhance
+   * Tests enhance with entity revision.
+   *
+   * @legacy-covers ::enhance
    */
   public function testEnhanceWithEntityRevision(): void {
     $route = new Route('/test-path/{entity_test_revision}', [], [], ['parameters' => ['entity_test_revision' => ['type' => 'entity_revision:entity_test']]]);

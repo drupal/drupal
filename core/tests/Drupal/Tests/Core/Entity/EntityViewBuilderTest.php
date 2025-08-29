@@ -10,11 +10,14 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityViewBuilder
- * @group Entity
+ * Tests Drupal\Core\Entity\EntityViewBuilder.
  */
+#[CoversClass(EntityViewBuilder::class)]
+#[Group('Entity')]
 class EntityViewBuilderTest extends UnitTestCase {
 
   const string ENTITY_TYPE_ID = 'test_entity_type';

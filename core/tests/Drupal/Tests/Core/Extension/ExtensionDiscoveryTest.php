@@ -8,20 +8,21 @@ use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests discovery of extensions.
- *
- * @coversDefaultClass \Drupal\Core\Extension\ExtensionDiscovery
- * @group Extension
  */
+#[CoversClass(ExtensionDiscovery::class)]
+#[Group('Extension')]
 class ExtensionDiscoveryTest extends UnitTestCase {
 
   /**
    * Tests extension discovery in a virtual filesystem with vfsStream.
    *
-   * @covers ::scan
+   * @legacy-covers ::scan
    */
   public function testExtensionDiscoveryVfs(): void {
 
@@ -68,7 +69,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
   /**
    * Tests finding modules that have a trailing comment on the type property.
    *
-   * @covers ::scan
+   * @legacy-covers ::scan
    */
   public function testExtensionDiscoveryTypeComment(): void {
     $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], 'sites/default');

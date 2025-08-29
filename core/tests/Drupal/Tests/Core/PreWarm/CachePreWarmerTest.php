@@ -8,12 +8,15 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\PreWarm\CachePreWarmer;
 use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * @coversDefaultClass \Drupal\Core\PreWarm\CachePreWarmer
- * @group PreWarm
+ * Tests Drupal\Core\PreWarm\CachePreWarmer.
  */
+#[CoversClass(CachePreWarmer::class)]
+#[Group('PreWarm')]
 class CachePreWarmerTest extends UnitTestCase {
 
   /**
@@ -59,7 +62,9 @@ class CachePreWarmerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::preWarmOneCache
+   * Tests pre warm only one.
+   *
+   * @legacy-covers ::preWarmOneCache
    */
   public function testPreWarmOnlyOne(): void {
     $this->setupCacheServices();
@@ -76,7 +81,9 @@ class CachePreWarmerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::preWarmOneCache
+   * Tests pre warm by one.
+   *
+   * @legacy-covers ::preWarmOneCache
    */
   public function testPreWarmByOne(): void {
     $this->setupCacheServices();
@@ -93,7 +100,9 @@ class CachePreWarmerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::preWarmAllCaches
+   * Tests pre warm all.
+   *
+   * @legacy-covers ::preWarmAllCaches
    */
   public function testPreWarmAll(): void {
     $this->setupCacheServices();

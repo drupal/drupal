@@ -6,24 +6,28 @@ namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Access\AccessException;
+use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\CheckProvider;
+use Drupal\Core\Access\DefaultAccessCheck;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Routing\RouteMatch;
-use Drupal\Core\Access\AccessManager;
-use Drupal\Core\Access\DefaultAccessCheck;
-use Drupal\Tests\UnitTestCase;
-use Drupal\router_test\Access\DefinedTestAccessCheck;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\router_test\Access\DefinedTestAccessCheck;
+use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\Core\Access\AccessManager
- * @group Access
+ * Tests Drupal\Core\Access\AccessManager.
  */
+#[CoversClass(AccessManager::class)]
+#[Group('Access')]
 class AccessManagerTest extends UnitTestCase {
 
   /**
@@ -217,7 +221,7 @@ class AccessManagerTest extends UnitTestCase {
   /**
    * Tests \Drupal\Core\Access\AccessManager::check() with no account specified.
    *
-   * @covers ::check
+   * @legacy-covers ::check
    */
   public function testCheckWithNullAccount(): void {
     $this->setupAccessChecker();
@@ -290,9 +294,8 @@ class AccessManagerTest extends UnitTestCase {
 
   /**
    * Tests \Drupal\Core\Access\AccessManager::check() with conjunctions.
-   *
-   * @dataProvider providerTestCheckConjunctions
    */
+  #[DataProvider('providerTestCheckConjunctions')]
   public function testCheckConjunctions($name, $condition_one, $condition_two, $expected_access): void {
     $this->setupAccessChecker();
     $this->container->register('test_access_defined', DefinedTestAccessCheck::class);
@@ -390,7 +393,7 @@ class AccessManagerTest extends UnitTestCase {
   /**
    * Tests the checkNamedRoute with default values.
    *
-   * @covers ::checkNamedRoute
+   * @legacy-covers ::checkNamedRoute
    */
   public function testCheckNamedRouteWithDefaultValue(): void {
     $this->routeCollection = new RouteCollection();
@@ -451,9 +454,8 @@ class AccessManagerTest extends UnitTestCase {
 
   /**
    * Tests that an access checker throws an exception for not allowed values.
-   *
-   * @dataProvider providerCheckException
    */
+  #[DataProvider('providerCheckException')]
   public function testCheckException($return_value): void {
     $route_provider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
 

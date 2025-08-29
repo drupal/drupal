@@ -9,14 +9,17 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Entity\EntityCreateAccessCheck;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\InputBag;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityCreateAccessCheck
- *
- * @group Access
- * @group Entity
+ * Tests Drupal\Core\Entity\EntityCreateAccessCheck.
  */
+#[CoversClass(EntityCreateAccessCheck::class)]
+#[Group('Access')]
+#[Group('Entity')]
 class EntityCreateAccessCheckTest extends UnitTestCase {
 
   /**
@@ -68,9 +71,8 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests the method for checking access to routes.
-   *
-   * @dataProvider providerTestAccess
    */
+  #[DataProvider('providerTestAccess')]
   public function testAccess($entity_bundle, $requirement, $access, $expected, $expect_permission_context = TRUE): void {
 
     // Set up the access result objects for allowing or denying access.

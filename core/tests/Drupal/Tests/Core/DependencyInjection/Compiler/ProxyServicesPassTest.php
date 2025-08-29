@@ -8,12 +8,15 @@ use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 /**
- * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass
- * @group DependencyInjection
+ * Tests Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass.
  */
+#[CoversClass(ProxyServicesPass::class)]
+#[Group('DependencyInjection')]
 class ProxyServicesPassTest extends UnitTestCase {
 
   /**
@@ -33,7 +36,9 @@ class ProxyServicesPassTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::process
+   * Tests container without lazy services.
+   *
+   * @legacy-covers ::process
    */
   public function testContainerWithoutLazyServices(): void {
     $container = new ContainerBuilder();
@@ -46,7 +51,9 @@ class ProxyServicesPassTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::process
+   * Tests container with lazy services.
+   *
+   * @legacy-covers ::process
    */
   public function testContainerWithLazyServices(): void {
     $container = new ContainerBuilder();
@@ -66,7 +73,9 @@ class ProxyServicesPassTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::process
+   * Tests container with lazy services without proxy class.
+   *
+   * @legacy-covers ::process
    */
   public function testContainerWithLazyServicesWithoutProxyClass(): void {
     $container = new ContainerBuilder();

@@ -6,16 +6,22 @@ namespace Drupal\Tests\Composer\Plugin\VendorHardening;
 
 use Composer\Package\RootPackageInterface;
 use Drupal\Composer\Plugin\VendorHardening\Config;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Drupal\Composer\Plugin\VendorHardening\Config
- * @group VendorHardening
+ * Tests Drupal\Composer\Plugin\VendorHardening\Config.
  */
+#[CoversClass(Config::class)]
+#[Group('VendorHardening')]
 class ConfigTest extends TestCase {
 
   /**
-   * @covers ::getPathsForPackage
+   * Tests get paths for package mixed case.
+   *
+   * @legacy-covers ::getPathsForPackage
    */
   public function testGetPathsForPackageMixedCase(): void {
     $config = $this->getMockBuilder(Config::class)
@@ -31,7 +37,9 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * @covers ::getAllCleanupPaths
+   * Tests no root merge config.
+   *
+   * @legacy-covers ::getAllCleanupPaths
    */
   public function testNoRootMergeConfig(): void {
     // Root package has no extra field.
@@ -52,7 +60,9 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * @covers ::getAllCleanupPaths
+   * Tests root merge config.
+   *
+   * @legacy-covers ::getAllCleanupPaths
    */
   public function testRootMergeConfig(): void {
     // Root package has configuration in extra.
@@ -77,10 +87,11 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * @covers ::getAllCleanupPaths
+   * Tests mixed case config cleanup packages.
    *
-   * @runInSeparateProcess
+   * @legacy-covers ::getAllCleanupPaths
    */
+  #[RunInSeparateProcess]
   public function testMixedCaseConfigCleanupPackages(): void {
     // Root package has configuration in extra.
     $root = $this->createMock(RootPackageInterface::class);
@@ -111,7 +122,9 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * @covers ::getAllCleanupPaths
+   * Tests skip clean.
+   *
+   * @legacy-covers ::getAllCleanupPaths
    */
   public function testSkipClean(): void {
     $root = $this->createMock(RootPackageInterface::class);

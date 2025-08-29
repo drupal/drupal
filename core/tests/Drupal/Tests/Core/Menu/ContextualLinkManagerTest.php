@@ -13,13 +13,16 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\ContextualLinkDefault;
 use Drupal\Core\Menu\ContextualLinkManager;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\Core\Menu\ContextualLinkManager
- * @group Menu
+ * Tests Drupal\Core\Menu\ContextualLinkManager.
  */
+#[CoversClass(ContextualLinkManager::class)]
+#[Group('Menu')]
 class ContextualLinkManagerTest extends UnitTestCase {
 
   /**

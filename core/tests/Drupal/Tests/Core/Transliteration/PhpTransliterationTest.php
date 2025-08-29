@@ -7,14 +7,15 @@ namespace Drupal\Tests\Core\Transliteration;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Transliteration\PhpTransliteration;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Transliteration component functionality.
  *
- * @group Transliteration
- *
  * @coversClass \Drupal\Core\Transliteration\PhpTransliteration
  */
+#[Group('Transliteration')]
 class PhpTransliterationTest extends UnitTestCase {
 
   /**
@@ -29,9 +30,8 @@ class PhpTransliterationTest extends UnitTestCase {
    * @param string|null $printable
    *   (optional) An alternative version of the original string which is
    *   printable in the output.
-   *
-   * @dataProvider providerTestPhpTransliterationWithAlter
    */
+  #[DataProvider('providerTestPhpTransliterationWithAlter')]
   public function testPhpTransliterationWithAlter($langcode, $original, $expected, $printable = NULL): void {
     if ($printable === NULL) {
       $printable = $original;

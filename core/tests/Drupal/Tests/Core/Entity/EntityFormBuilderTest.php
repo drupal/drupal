@@ -6,11 +6,14 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityFormBuilder;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityFormBuilder
- * @group Entity
+ * Tests Drupal\Core\Entity\EntityFormBuilder.
  */
+#[CoversClass(EntityFormBuilder::class)]
+#[Group('Entity')]
 class EntityFormBuilderTest extends UnitTestCase {
 
   /**
@@ -48,7 +51,7 @@ class EntityFormBuilderTest extends UnitTestCase {
   /**
    * Tests the getForm() method.
    *
-   * @covers ::getForm
+   * @legacy-covers ::getForm
    */
   public function testGetForm(): void {
     $form_controller = $this->createMock('Drupal\Core\Entity\EntityFormInterface');

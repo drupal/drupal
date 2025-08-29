@@ -4,25 +4,29 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
-use Drupal\Core\Render\RenderContext;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\Renderer;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
 // cspell:ignore fooalert
-
 /**
- * @coversDefaultClass \Drupal\Core\Render\Renderer
- * @group Render
+ * Tests Drupal\Core\Render\Renderer.
  */
+#[CoversClass(Renderer::class)]
+#[Group('Render')]
 class RendererTest extends RendererTestBase {
 
   /**
@@ -44,11 +48,12 @@ class RendererTest extends RendererTestBase {
   ];
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render basic.
    *
-   * @dataProvider providerTestRenderBasic
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
+  #[DataProvider('providerTestRenderBasic')]
   public function testRenderBasic($build, $expected, ?callable $setup_code = NULL): void {
     if (isset($setup_code)) {
       $setup_code = $setup_code->bindTo($this);
@@ -493,8 +498,10 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render sorting.
+   *
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
   public function testRenderSorting(): void {
     $first = $this->randomMachineName();
@@ -528,8 +535,10 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render sorting with set hash sorted.
+   *
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
   public function testRenderSortingWithSetHashSorted(): void {
     $first = $this->randomMachineName();
@@ -555,8 +564,8 @@ class RendererTest extends RendererTestBase {
   /**
    * Tests that element defaults are added.
    *
-   * @covers ::render
-   * @covers ::doRender
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
   public function testElementDefaultsAdded(): void {
     $build = ['#type' => 'details'];
@@ -587,11 +596,12 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render with preset access.
    *
-   * @dataProvider providerAccessValues
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
+  #[DataProvider('providerAccessValues')]
   public function testRenderWithPresetAccess($access): void {
     $build = [
       '#access' => $access,
@@ -601,11 +611,12 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render with access callback callable.
    *
-   * @dataProvider providerAccessValues
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
+  #[DataProvider('providerAccessValues')]
   public function testRenderWithAccessCallbackCallable($access): void {
     $build = [
       '#access_callback' => function () use ($access) {
@@ -619,11 +630,10 @@ class RendererTest extends RendererTestBase {
   /**
    * Ensures that the #access property wins over the callable.
    *
-   * @covers ::render
-   * @covers ::doRender
-   *
-   * @dataProvider providerAccessValues
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
+  #[DataProvider('providerAccessValues')]
   public function testRenderWithAccessPropertyAndCallback($access): void {
     $build = [
       '#access' => $access,
@@ -636,11 +646,12 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render with access controller resolved.
    *
-   * @dataProvider providerAccessValues
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
+  #[DataProvider('providerAccessValues')]
   public function testRenderWithAccessControllerResolved($access): void {
 
     switch ($access) {
@@ -669,8 +680,10 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render access cacheability dependency inheritance.
+   *
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
   public function testRenderAccessCacheabilityDependencyInheritance(): void {
     $build = [
@@ -689,11 +702,10 @@ class RendererTest extends RendererTestBase {
    * because of the #printed property. Also tests that correct metadata has been
    * set for re-rendering.
    *
-   * @covers ::render
-   * @covers ::doRender
-   *
-   * @dataProvider providerRenderTwice
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
+  #[DataProvider('providerRenderTwice')]
   public function testRenderTwice($build): void {
     $this->assertEquals('kittens', $this->renderer->renderRoot($build));
     $this->assertEquals('kittens', $build['#markup']);
@@ -796,8 +808,10 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render without theme arguments.
+   *
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
   public function testRenderWithoutThemeArguments(): void {
     $element = [
@@ -814,8 +828,10 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
+   * Tests render with theme arguments.
+   *
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
    */
   public function testRenderWithThemeArguments(): void {
     $element = [
@@ -869,13 +885,14 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
-   * @covers \Drupal\Core\Render\RenderCache::get
-   * @covers \Drupal\Core\Render\RenderCache::set
+   * Tests render cache.
    *
-   * @dataProvider providerRenderCache
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
+   * @legacy-covers \Drupal\Core\Render\RenderCache::get
+   * @legacy-covers \Drupal\Core\Render\RenderCache::set
    */
+  #[DataProvider('providerRenderCache')]
   public function testRenderCache($child_access, $expected_tags): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
@@ -919,13 +936,14 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::doRender
-   * @covers \Drupal\Core\Render\RenderCache::get
-   * @covers \Drupal\Core\Render\RenderCache::set
+   * Tests render cache max age.
    *
-   * @dataProvider providerTestRenderCacheMaxAge
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
+   * @legacy-covers \Drupal\Core\Render\RenderCache::get
+   * @legacy-covers \Drupal\Core\Render\RenderCache::set
    */
+  #[DataProvider('providerTestRenderCacheMaxAge')]
   public function testRenderCacheMaxAge($max_age, $is_render_cached, $render_cache_item_expire): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
@@ -963,14 +981,13 @@ class RendererTest extends RendererTestBase {
    * @param array $expected_results
    *   An associative array of expected results keyed by property name.
    *
-   * @covers ::render
-   * @covers ::doRender
-   * @covers \Drupal\Core\Render\RenderCache::get
-   * @covers \Drupal\Core\Render\RenderCache::set
-   * @covers \Drupal\Core\Render\RenderCache::getCacheableRenderArray
-   *
-   * @dataProvider providerTestRenderCacheProperties
+   * @legacy-covers ::render
+   * @legacy-covers ::doRender
+   * @legacy-covers \Drupal\Core\Render\RenderCache::get
+   * @legacy-covers \Drupal\Core\Render\RenderCache::set
+   * @legacy-covers \Drupal\Core\Render\RenderCache::getCacheableRenderArray
    */
+  #[DataProvider('providerTestRenderCacheProperties')]
   public function testRenderCacheProperties(array $expected_results): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
@@ -1035,10 +1052,11 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::addCacheableDependency
+   * Tests add cacheable dependency.
    *
-   * @dataProvider providerTestAddCacheableDependency
+   * @legacy-covers ::addCacheableDependency
    */
+  #[DataProvider('providerTestAddCacheableDependency')]
   public function testAddCacheableDependency(array $build, $object, array $expected): void {
     $this->renderer->addCacheableDependency($build, $object);
     $this->assertEquals($build, $expected);
@@ -1110,7 +1128,9 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::hasRenderContext
+   * Tests has render context.
+   *
+   * @legacy-covers ::hasRenderContext
    */
   public function testHasRenderContext(): void {
     // Tests with no render context.
@@ -1127,7 +1147,9 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::executeInRenderContext
+   * Tests execute in render context.
+   *
+   * @legacy-covers ::executeInRenderContext
    */
   public function testExecuteInRenderContext(): void {
     $return = $this->renderer->executeInRenderContext(new RenderContext(), function () {

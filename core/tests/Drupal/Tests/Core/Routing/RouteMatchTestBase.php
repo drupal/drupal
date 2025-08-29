@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Routing;
 
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Route;
 
 /**
  * Base test class for testing classes implementing the route match interface.
- *
- * @coversDefaultClass \Drupal\Core\Routing\RouteMatch
  */
+#[CoversClass(RouteMatch::class)]
 abstract class RouteMatchTestBase extends UnitTestCase {
 
   /**
@@ -82,26 +84,32 @@ abstract class RouteMatchTestBase extends UnitTestCase {
   }
 
   /**
-   * @covers ::getRouteName
-   * @dataProvider routeMatchProvider
+   * Tests get route name.
+   *
+   * @legacy-covers ::getRouteName
    */
+  #[DataProvider('routeMatchProvider')]
   public function testGetRouteName(RouteMatchInterface $route_match): void {
     $this->assertSame('test_route', $route_match->getRouteName());
   }
 
   /**
-   * @covers ::getRouteObject
-   * @dataProvider routeMatchProvider
+   * Tests get route object.
+   *
+   * @legacy-covers ::getRouteObject
    */
+  #[DataProvider('routeMatchProvider')]
   public function testGetRouteObject(RouteMatchInterface $route_match, Route $route): void {
     $this->assertSame($route, $route_match->getRouteObject());
   }
 
   /**
-   * @covers ::getParameter
-   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
-   * @dataProvider routeMatchProvider
+   * Tests get parameter.
+   *
+   * @legacy-covers ::getParameter
+   * @legacy-covers \Drupal\Core\Routing\RouteMatch::getParameterNames
    */
+  #[DataProvider('routeMatchProvider')]
   public function testGetParameter(RouteMatchInterface $route_match, Route $route, array $parameters, array $expected_filtered_parameters): void {
     foreach ($expected_filtered_parameters as $name => $expected_value) {
       $this->assertSame($expected_value, $route_match->getParameter($name));
@@ -112,19 +120,23 @@ abstract class RouteMatchTestBase extends UnitTestCase {
   }
 
   /**
-   * @covers ::getParameters
-   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
-   * @dataProvider routeMatchProvider
+   * Tests get parameters.
+   *
+   * @legacy-covers ::getParameters
+   * @legacy-covers \Drupal\Core\Routing\RouteMatch::getParameterNames
    */
+  #[DataProvider('routeMatchProvider')]
   public function testGetParameters(RouteMatchInterface $route_match, Route $route, array $parameters, array $expected_filtered_parameters): void {
     $this->assertSame($expected_filtered_parameters, $route_match->getParameters()->all());
   }
 
   /**
-   * @covers ::getRawParameter
-   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
-   * @dataProvider routeMatchProvider
+   * Tests get raw parameter.
+   *
+   * @legacy-covers ::getRawParameter
+   * @legacy-covers \Drupal\Core\Routing\RouteMatch::getParameterNames
    */
+  #[DataProvider('routeMatchProvider')]
   public function testGetRawParameter(RouteMatchInterface $route_match, Route $route, array $parameters, array $expected_filtered_parameters): void {
     foreach ($expected_filtered_parameters as $name => $expected_value) {
       $this->assertSame($expected_value, $route_match->getRawParameter($name));
@@ -135,10 +147,12 @@ abstract class RouteMatchTestBase extends UnitTestCase {
   }
 
   /**
-   * @covers ::getRawParameters
-   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
-   * @dataProvider routeMatchProvider
+   * Tests get raw parameters.
+   *
+   * @legacy-covers ::getRawParameters
+   * @legacy-covers \Drupal\Core\Routing\RouteMatch::getParameterNames
    */
+  #[DataProvider('routeMatchProvider')]
   public function testGetRawParameters(RouteMatchInterface $route_match, Route $route, array $parameters, array $expected_filtered_parameters): void {
     $this->assertSame($expected_filtered_parameters, $route_match->getRawParameters()->all());
   }

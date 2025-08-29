@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Core\Plugin\ConfigurablePluginBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests ConfigurablePluginBase.
- *
- * @group Plugin
- *
- * @coversDefaultClass \Drupal\Core\Plugin\ConfigurablePluginBase
  */
+#[CoversClass(ConfigurablePluginBase::class)]
+#[Group('Plugin')]
 class ConfigurablePluginBaseTest extends TestCase {
 
   /**

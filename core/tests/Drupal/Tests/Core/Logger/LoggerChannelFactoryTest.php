@@ -7,18 +7,21 @@ namespace Drupal\Tests\Core\Logger;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\Core\Logger\LoggerChannelFactory
- * @group Logger
+ * Tests Drupal\Core\Logger\LoggerChannelFactory.
  */
+#[CoversClass(LoggerChannelFactory::class)]
+#[Group('Logger')]
 class LoggerChannelFactoryTest extends UnitTestCase {
 
   /**
    * Tests LoggerChannelFactory::get().
    *
-   * @covers ::get
+   * @legacy-covers ::get
    */
   public function testGet(): void {
     $factory = new LoggerChannelFactory(

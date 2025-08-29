@@ -32,13 +32,17 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\EntityFieldManager
- * @group Entity
+ * Tests Drupal\Core\Entity\EntityFieldManager.
  */
+#[CoversClass(EntityFieldManager::class)]
+#[Group('Entity')]
 class EntityFieldManagerTest extends UnitTestCase {
 
   /**
@@ -220,8 +224,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method.
    *
-   * @covers ::getBaseFieldDefinitions
-   * @covers ::buildBaseFieldDefinitions
+   * @legacy-covers ::getBaseFieldDefinitions
+   * @legacy-covers ::buildBaseFieldDefinitions
    */
   public function testGetBaseFieldDefinitions(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition();
@@ -233,8 +237,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldDefinitions() method.
    *
-   * @covers ::getFieldDefinitions
-   * @covers ::buildBundleFieldDefinitions
+   * @legacy-covers ::getFieldDefinitions
+   * @legacy-covers ::buildBundleFieldDefinitions
    */
   public function testGetFieldDefinitions(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition();
@@ -292,8 +296,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldStorageDefinitions() method.
    *
-   * @covers ::getFieldStorageDefinitions
-   * @covers ::buildFieldStorageDefinitions
+   * @legacy-covers ::getFieldStorageDefinitions
+   * @legacy-covers ::buildFieldStorageDefinitions
    */
   public function testGetFieldStorageDefinitions(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition(TRUE);
@@ -334,11 +338,10 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with a translatable entity type.
    *
-   * @covers ::getBaseFieldDefinitions
-   * @covers ::buildBaseFieldDefinitions
-   *
-   * @dataProvider providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode
+   * @legacy-covers ::getBaseFieldDefinitions
+   * @legacy-covers ::buildBaseFieldDefinitions
    */
+  #[DataProvider('providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode')]
   public function testGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode($default_langcode_key): void {
     $this->setUpEntityWithFieldDefinition(FALSE, 'id', ['langcode' => 'langcode', 'default_langcode' => $default_langcode_key]);
 
@@ -371,11 +374,10 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with a translatable entity type.
    *
-   * @covers ::getBaseFieldDefinitions
-   * @covers ::buildBaseFieldDefinitions
-   *
-   * @dataProvider providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode
+   * @legacy-covers ::getBaseFieldDefinitions
+   * @legacy-covers ::buildBaseFieldDefinitions
    */
+  #[DataProvider('providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode')]
   public function testGetBaseFieldDefinitionsTranslatableEntityTypeLangcode($provide_key, $provide_field, $translatable): void {
     $keys = $provide_key ? ['langcode' => 'langcode'] : [];
     $this->setUpEntityWithFieldDefinition(FALSE, 'id', $keys);
@@ -416,7 +418,7 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with caching.
    *
-   * @covers ::getBaseFieldDefinitions
+   * @legacy-covers ::getBaseFieldDefinitions
    */
   public function testGetBaseFieldDefinitionsWithCaching(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition();
@@ -444,7 +446,7 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldDefinitions() method with caching.
    *
-   * @covers ::getFieldDefinitions
+   * @legacy-covers ::getFieldDefinitions
    */
   public function testGetFieldDefinitionsWithCaching(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition(FALSE, 'id');
@@ -475,7 +477,7 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldStorageDefinitions() method with caching.
    *
-   * @covers ::getFieldStorageDefinitions
+   * @legacy-covers ::getFieldStorageDefinitions
    */
   public function testGetFieldStorageDefinitionsWithCaching(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition(TRUE, 'id');
@@ -523,8 +525,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with an invalid definition.
    *
-   * @covers ::getBaseFieldDefinitions
-   * @covers ::buildBaseFieldDefinitions
+   * @legacy-covers ::getBaseFieldDefinitions
+   * @legacy-covers ::buildBaseFieldDefinitions
    */
   public function testGetBaseFieldDefinitionsInvalidDefinition(): void {
     $this->setUpEntityWithFieldDefinition(FALSE, 'langcode', ['langcode' => 'langcode']);
@@ -539,8 +541,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests that getFieldDefinitions() method sets the 'provider' definition key.
    *
-   * @covers ::getFieldDefinitions
-   * @covers ::buildBundleFieldDefinitions
+   * @legacy-covers ::getFieldDefinitions
+   * @legacy-covers ::buildBundleFieldDefinitions
    */
   public function testGetFieldDefinitionsProvider(): void {
     $this->setUpEntityWithFieldDefinition(TRUE);
@@ -644,7 +646,7 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the clearCachedFieldDefinitions() method.
    *
-   * @covers ::clearCachedFieldDefinitions
+   * @legacy-covers ::clearCachedFieldDefinitions
    */
   public function testClearCachedFieldDefinitions(): void {
     $this->setUpEntityTypeDefinitions();
@@ -658,7 +660,9 @@ class EntityFieldManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getExtraFields
+   * Tests get extra fields.
+   *
+   * @legacy-covers ::getExtraFields
    */
   public function testGetExtraFields(): void {
     $this->setUpEntityTypeDefinitions();
@@ -699,7 +703,9 @@ class EntityFieldManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFieldMap
+   * Tests get field map.
+   *
+   * @legacy-covers ::getFieldMap
    */
   public function testGetFieldMap(): void {
     $this->entityTypeBundleInfo->getBundleInfo('test_entity_type')->willReturn([])->shouldBeCalled();
@@ -775,7 +781,9 @@ class EntityFieldManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFieldMap
+   * Tests get field map from cache.
+   *
+   * @legacy-covers ::getFieldMap
    */
   public function testGetFieldMapFromCache(): void {
     $expected = [
@@ -799,7 +807,9 @@ class EntityFieldManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFieldMapByFieldType
+   * Tests get field map by field type.
+   *
+   * @legacy-covers ::getFieldMapByFieldType
    */
   public function testGetFieldMapByFieldType(): void {
     // Set up a content entity type.

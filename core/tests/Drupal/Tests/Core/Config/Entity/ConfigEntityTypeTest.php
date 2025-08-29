@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Config\Entity;
 
+use Drupal\Core\Config\Entity\ConfigEntityType;
+use Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Config\Entity\ConfigEntityType;
-use Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityType
- * @group Config
+ * Tests Drupal\Core\Config\Entity\ConfigEntityType.
  */
+#[CoversClass(ConfigEntityType::class)]
+#[Group('Config')]
 class ConfigEntityTypeTest extends UnitTestCase {
 
   /**
@@ -59,7 +63,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * Tests that we get an exception when the length of the config prefix that is
    * returned by getConfigPrefix() exceeds the maximum defined prefix length.
    *
-   * @covers ::getConfigPrefix
+   * @legacy-covers ::getConfigPrefix
    */
   public function testConfigPrefixLengthExceeds(): void {
     // A provider length of 24 and config_prefix length of 59 (+1 for the .)
@@ -80,7 +84,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * Tests that a valid config prefix returned by getConfigPrefix()
    * does not throw an exception and is formatted as expected.
    *
-   * @covers ::getConfigPrefix
+   * @legacy-covers ::getConfigPrefix
    */
   public function testConfigPrefixLengthValid(): void {
     // A provider length of 24 and config_prefix length of 58 (+1 for the .)
@@ -95,7 +99,9 @@ class ConfigEntityTypeTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::__construct
+   * Tests construct.
+   *
+   * @legacy-covers ::__construct
    */
   public function testConstruct(): void {
     $config_entity = new ConfigEntityType([
@@ -105,7 +111,9 @@ class ConfigEntityTypeTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::__construct
+   * Tests construct bad storage.
+   *
+   * @legacy-covers ::__construct
    */
   public function testConstructBadStorage(): void {
     $this->expectException(ConfigEntityStorageClassException::class);
@@ -117,7 +125,9 @@ class ConfigEntityTypeTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setStorageClass
+   * Tests set storage class.
+   *
+   * @legacy-covers ::setStorageClass
    */
   public function testSetStorageClass(): void {
     $config_entity = $this->setUpConfigEntityType([]);
@@ -129,10 +139,9 @@ class ConfigEntityTypeTest extends UnitTestCase {
   /**
    * Tests the getConfigPrefix() method.
    *
-   * @dataProvider providerTestGetConfigPrefix
-   *
-   * @covers ::getConfigPrefix
+   * @legacy-covers ::getConfigPrefix
    */
+  #[DataProvider('providerTestGetConfigPrefix')]
   public function testGetConfigPrefix($definition, $expected): void {
     $entity_type = $this->setUpConfigEntityType($definition);
     $this->assertSame($expected, $entity_type->getConfigPrefix());
@@ -149,10 +158,11 @@ class ConfigEntityTypeTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getPropertiesToExport
+   * Tests get properties to export.
    *
-   * @dataProvider providerGetPropertiesToExport
+   * @legacy-covers ::getPropertiesToExport
    */
+  #[DataProvider('providerGetPropertiesToExport')]
   public function testGetPropertiesToExport($definition, $expected): void {
     $entity_type = $this->setUpConfigEntityType($definition);
     $properties_to_export = $entity_type->getPropertiesToExport();
@@ -201,7 +211,9 @@ class ConfigEntityTypeTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getPropertiesToExport
+   * Tests get properties to export no fallback.
+   *
+   * @legacy-covers ::getPropertiesToExport
    */
   public function testGetPropertiesToExportNoFallback(): void {
     $config_entity_type = new ConfigEntityType([

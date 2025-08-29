@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon;
 
-// cspell:ignore corge grault quux
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Exception\IconDefinitionInvalidDataException;
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Tests\UnitTestCase;
+// cspell:ignore corge grault quux
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Theme\Icon\IconDefinition
- *
- * @group icon
+ * Tests Drupal\Core\Theme\Icon\IconDefinition.
  */
+#[CoversClass(IconDefinition::class)]
+#[Group('icon')]
 class IconDefinitionTest extends UnitTestCase {
 
   /**
@@ -100,9 +103,8 @@ class IconDefinitionTest extends UnitTestCase {
    *
    * @param array $data
    *   The icon data.
-   *
-   * @dataProvider providerCreateIcon
    */
+  #[DataProvider('providerCreateIcon')]
   public function testCreateIcon(array $data): void {
     $icon_data = $data['data'] ?? NULL;
 
@@ -210,9 +212,8 @@ class IconDefinitionTest extends UnitTestCase {
    *   The icon id.
    * @param string $expected
    *   The expected label.
-   *
-   * @dataProvider providerCreateIconHumanize
    */
+  #[DataProvider('providerCreateIconHumanize')]
   public function testCreateIconHumanize(string $icon_id, string $expected): void {
     $icon = IconDefinition::create('bar', $icon_id, 'baz');
     $this->assertEquals($expected, $icon->getLabel());

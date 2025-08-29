@@ -6,12 +6,12 @@ namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\CssCollectionGrouper;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the CSS asset collection grouper.
- *
- * @group Asset
  */
+#[Group('Asset')]
 class CssCollectionGrouperUnitTest extends UnitTestCase {
 
   /**

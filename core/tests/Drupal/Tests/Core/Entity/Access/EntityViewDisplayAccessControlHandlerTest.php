@@ -7,11 +7,14 @@ namespace Drupal\Tests\Core\Entity\Access;
 use Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Session\AccountInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler
- * @group Entity
+ * Tests Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler.
  */
+#[CoversClass(EntityViewDisplayAccessControlHandler::class)]
+#[Group('Entity')]
 class EntityViewDisplayAccessControlHandlerTest extends EntityFormDisplayAccessControlHandlerTest {
 
   /**

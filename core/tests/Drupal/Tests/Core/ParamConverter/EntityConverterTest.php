@@ -8,22 +8,26 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\Core\ParamConverter\EntityConverter
- * @group ParamConverter
- * @group Entity
+ * Tests Drupal\Core\ParamConverter\EntityConverter.
  */
+#[CoversClass(EntityConverter::class)]
+#[Group('ParamConverter')]
+#[Group('Entity')]
 class EntityConverterTest extends UnitTestCase {
 
   /**
@@ -144,10 +148,9 @@ class EntityConverterTest extends UnitTestCase {
   /**
    * Tests the applies() method.
    *
-   * @dataProvider providerTestApplies
-   *
-   * @covers ::applies
+   * @legacy-covers ::applies
    */
+  #[DataProvider('providerTestApplies')]
   public function testApplies(array $definition, $name, Route $route, $applies): void {
     $this->entityTypeManager->expects($this->any())
       ->method('hasDefinition')
@@ -175,10 +178,9 @@ class EntityConverterTest extends UnitTestCase {
   /**
    * Tests the convert() method.
    *
-   * @dataProvider providerTestConvert
-   *
-   * @covers ::convert
+   * @legacy-covers ::convert
    */
+  #[DataProvider('providerTestConvert')]
   public function testConvert($value, array $definition, array $defaults, $expected_result): void {
     $this->setUpMocks();
 

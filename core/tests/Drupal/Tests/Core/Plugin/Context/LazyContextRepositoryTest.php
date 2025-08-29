@@ -8,12 +8,15 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\LazyContextRepository;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\Core\Plugin\Context\LazyContextRepository
- * @group context
+ * Tests Drupal\Core\Plugin\Context\LazyContextRepository.
  */
+#[CoversClass(LazyContextRepository::class)]
+#[Group('context')]
 class LazyContextRepositoryTest extends UnitTestCase {
 
   /**
@@ -33,7 +36,9 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getRuntimeContexts
+   * Tests get runtime contexts single.
+   *
+   * @legacy-covers ::getRuntimeContexts
    */
   public function testGetRuntimeContextsSingle(): void {
     $contexts = $this->setupContextAndProvider('test_provider', ['test_context']);
@@ -44,7 +49,9 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getRuntimeContexts
+   * Tests get runtime multiple contexts per service.
+   *
+   * @legacy-covers ::getRuntimeContexts
    */
   public function testGetRuntimeMultipleContextsPerService(): void {
     $contexts = $this->setupContextAndProvider('test_provider', ['test_context0', 'test_context1']);
@@ -55,7 +62,9 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getRuntimeContexts
+   * Tests get runtime multiple context providers.
+   *
+   * @legacy-covers ::getRuntimeContexts
    */
   public function testGetRuntimeMultipleContextProviders(): void {
     $contexts0 = $this->setupContextAndProvider('test_provider', ['test_context0', 'test_context1'], ['test_context0']);
@@ -67,7 +76,9 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getRuntimeContexts
+   * Tests invalid context id.
+   *
+   * @legacy-covers ::getRuntimeContexts
    */
   public function testInvalidContextId(): void {
     $lazy_context_repository = new LazyContextRepository($this->container, ['test_provider']);
@@ -77,7 +88,9 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getRuntimeContexts
+   * Tests get runtime static cache.
+   *
+   * @legacy-covers ::getRuntimeContexts
    */
   public function testGetRuntimeStaticCache(): void {
     $context0 = new Context(new ContextDefinition('example'));
@@ -96,7 +109,9 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getAvailableContexts
+   * Tests get available contexts.
+   *
+   * @legacy-covers ::getAvailableContexts
    */
   public function testGetAvailableContexts(): void {
     $contexts0 = $this->setupContextAndProvider('test_provider0', ['test0_context0', 'test0_context1']);

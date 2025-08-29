@@ -6,23 +6,25 @@ namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\Session\CalculatedPermissionsItem;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the CalculatedPermissionsItem value object.
- *
- * @coversDefaultClass \Drupal\Core\Session\CalculatedPermissionsItem
- * @group Session
  */
+#[CoversClass(CalculatedPermissionsItem::class)]
+#[Group('Session')]
 class CalculatedPermissionsItemTest extends UnitTestCase {
 
   /**
    * Tests that the object values were set in the constructor.
    *
-   * @covers ::__construct
-   * @covers ::getIdentifier
-   * @covers ::getScope
-   * @covers ::getPermissions
-   * @covers ::isAdmin
+   * @legacy-covers ::__construct
+   * @legacy-covers ::getIdentifier
+   * @legacy-covers ::getScope
+   * @legacy-covers ::getPermissions
+   * @legacy-covers ::isAdmin
    */
   public function testConstructor(): void {
     $scope = 'some_scope';
@@ -41,9 +43,9 @@ class CalculatedPermissionsItemTest extends UnitTestCase {
   /**
    * Tests the permission check when the admin flag is not set.
    *
-   * @covers ::hasPermission
-   * @depends testConstructor
+   * @legacy-covers ::hasPermission
    */
+  #[Depends('testConstructor')]
   public function testHasPermission(): void {
     $item = new CalculatedPermissionsItem(['bar'], FALSE, 'some_scope', 'foo');
     $this->assertFalse($item->hasPermission('baz'), 'Missing permission was not found.');
@@ -53,9 +55,9 @@ class CalculatedPermissionsItemTest extends UnitTestCase {
   /**
    * Tests the permission check when the admin flag is set.
    *
-   * @covers ::hasPermission
-   * @depends testConstructor
+   * @legacy-covers ::hasPermission
    */
+  #[Depends('testConstructor')]
   public function testHasPermissionWithAdminFlag(): void {
     $item = new CalculatedPermissionsItem(['bar'], TRUE, 'some_scope', 'foo');
     $this->assertTrue($item->hasPermission('baz'), 'Missing permission was found.');

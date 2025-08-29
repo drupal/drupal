@@ -7,12 +7,15 @@ namespace Drupal\Tests\Core\Menu;
 use Drupal\Core\Menu\ContextualLinkDefault;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @group Menu
- * @coversDefaultClass \Drupal\Core\Menu\ContextualLinkDefault
+ * Tests Drupal\Core\Menu\ContextualLinkDefault.
  */
+#[CoversClass(ContextualLinkDefault::class)]
+#[Group('Menu')]
 class ContextualLinkDefaultTest extends UnitTestCase {
 
   /**
@@ -66,7 +69,9 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTitle
+   * Tests get title.
+   *
+   * @legacy-covers ::getTitle
    */
   public function testGetTitle(): void {
     $title = 'Example';
@@ -82,7 +87,9 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTitle
+   * Tests get title with context.
+   *
+   * @legacy-covers ::getTitle
    */
   public function testGetTitleWithContext(): void {
     $title = 'Example';
@@ -98,7 +105,9 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTitle
+   * Tests get title with title arguments.
+   *
+   * @legacy-covers ::getTitle
    */
   public function testGetTitleWithTitleArguments(): void {
     $title = 'Example @test';
@@ -115,7 +124,9 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getRouteName
+   * Tests get route name.
+   *
+   * @legacy-covers ::getRouteName
    */
   public function testGetRouteName($route_name = 'test_route_name'): void {
     $this->pluginDefinition['route_name'] = $route_name;
@@ -125,7 +136,9 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getGroup
+   * Tests get group.
+   *
+   * @legacy-covers ::getGroup
    */
   public function testGetGroup($group_name = 'test_group'): void {
     $this->pluginDefinition['group'] = $group_name;
@@ -135,7 +148,9 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getOptions
+   * Tests get options.
+   *
+   * @legacy-covers ::getOptions
    */
   public function testGetOptions($options = ['key' => 'value']): void {
     $this->pluginDefinition['options'] = $options;
@@ -145,7 +160,9 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getWeight
+   * Tests get weight.
+   *
+   * @legacy-covers ::getWeight
    */
   public function testGetWeight($weight = 5): void {
     $this->pluginDefinition['weight'] = $weight;

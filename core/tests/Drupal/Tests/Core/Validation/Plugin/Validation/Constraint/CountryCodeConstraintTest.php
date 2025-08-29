@@ -8,12 +8,15 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\CountryCodeConstraint;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Constraints\Choice;
 
 /**
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\CountryCodeConstraint
- * @group validation
+ * Tests Country Code Constraint.
+ *
+ * @legacy-covers \Drupal\Core\Validation\Plugin\Validation\Constraint\CountryCodeConstraint
  */
+#[Group('validation')]
 class CountryCodeConstraintTest extends UnitTestCase {
 
   public function testConstraintLoadsChoicesFromCountryManager(): void {

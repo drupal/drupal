@@ -12,13 +12,16 @@ use Drupal\Tests\Core\Database\Stub\StubCondition;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\Core\Database\Query\Condition
- *
- * @group Database
+ * Tests Drupal\Core\Database\Query\Condition.
  */
+#[CoversClass(Condition::class)]
+#[Group('Database')]
 class ConditionTest extends UnitTestCase {
 
   /**
@@ -36,9 +39,11 @@ class ConditionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::compile
-   * @dataProvider providerSimpleCondition
+   * Tests simple condition.
+   *
+   * @legacy-covers ::compile
    */
+  #[DataProvider('providerSimpleCondition')]
   public function testSimpleCondition($expected, $field_name): void {
     $connection = $this->prophesize(Connection::class);
     $connection->escapeField($field_name)->will(function ($args) {
@@ -66,9 +71,7 @@ class ConditionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::compile
-   *
-   * @dataProvider dataProviderTestCompileWithKnownOperators
+   * Tests compile with known operators.
    *
    * @param string $expected
    *   The expected generated SQL condition.
@@ -80,7 +83,10 @@ class ConditionTest extends UnitTestCase {
    *   The operator to pass into the condition() method.
    * @param mixed $expected_arguments
    *   (optional) The expected set arguments.
+   *
+   * @legacy-covers ::compile
    */
+  #[DataProvider('dataProviderTestCompileWithKnownOperators')]
   public function testCompileWithKnownOperators($expected, $field, $value, $operator, $expected_arguments = NULL): void {
     $connection = $this->prophesize(Connection::class);
     $connection->escapeField(Argument::any())->will(function ($args) {
@@ -147,10 +153,11 @@ class ConditionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::compile
+   * Tests compile with sql injection for operator.
    *
-   * @dataProvider providerTestCompileWithSqlInjectionForOperator
+   * @legacy-covers ::compile
    */
+  #[DataProvider('providerTestCompileWithSqlInjectionForOperator')]
   public function testCompileWithSqlInjectionForOperator($operator): void {
     $connection = $this->prophesize(Connection::class);
     $connection->escapeField(Argument::any())->will(function ($args) {

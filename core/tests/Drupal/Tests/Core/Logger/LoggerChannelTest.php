@@ -7,16 +7,20 @@ namespace Drupal\Tests\Core\Logger;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerTrait;
 
 /**
- * @coversDefaultClass \Drupal\Core\Logger\LoggerChannel
- * @group Logger
+ * Tests Drupal\Core\Logger\LoggerChannel.
  */
+#[CoversClass(LoggerChannel::class)]
+#[Group('Logger')]
 class LoggerChannelTest extends UnitTestCase {
 
   /**
@@ -30,11 +34,11 @@ class LoggerChannelTest extends UnitTestCase {
    * @param bool $account
    *   Whether to pass an account to the channel under test.
    *
-   * @dataProvider providerTestLog
-   * @covers ::log
-   * @covers ::setCurrentUser
-   * @covers ::setRequestStack
+   * @legacy-covers ::log
+   * @legacy-covers ::setCurrentUser
+   * @legacy-covers ::setRequestStack
    */
+  #[DataProvider('providerTestLog')]
   public function testLog(callable $expected, bool $request = FALSE, bool $account = FALSE): void {
     $channel = new LoggerChannel('test');
     $message = $this->randomMachineName();
@@ -70,7 +74,7 @@ class LoggerChannelTest extends UnitTestCase {
   /**
    * Tests LoggerChannel::log() recursion protection.
    *
-   * @covers ::log
+   * @legacy-covers ::log
    */
   public function testLogRecursionProtection(): void {
     $channel = new LoggerChannel('test');
@@ -85,8 +89,8 @@ class LoggerChannelTest extends UnitTestCase {
   /**
    * Tests LoggerChannel::addLoggers().
    *
-   * @covers ::addLogger
-   * @covers ::sortLoggers
+   * @legacy-covers ::addLogger
+   * @legacy-covers ::sortLoggers
    */
   public function testSortLoggers(): void {
     $channel = new LoggerChannel($this->randomMachineName());

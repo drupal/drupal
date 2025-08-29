@@ -6,6 +6,8 @@ namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Core\EventSubscriber\FinalExceptionSubscriber;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -13,13 +15,16 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\EventSubscriber\FinalExceptionSubscriber
- * @group EventSubscriber
+ * Tests Drupal\Core\EventSubscriber\FinalExceptionSubscriber.
  */
+#[CoversClass(FinalExceptionSubscriber::class)]
+#[Group('EventSubscriber')]
 class FinalExceptionSubscriberTest extends UnitTestCase {
 
   /**
-   * @covers ::onException
+   * Tests on exception with unknown format.
+   *
+   * @legacy-covers ::onException
    */
   public function testOnExceptionWithUnknownFormat(): void {
     $config_factory = $this->getConfigFactoryStub();

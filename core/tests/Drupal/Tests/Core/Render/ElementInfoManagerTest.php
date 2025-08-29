@@ -8,11 +8,15 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Render\ElementInfoManager;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Render\ElementInfoManager
- * @group Render
+ * Tests Drupal\Core\Render\ElementInfoManager.
  */
+#[CoversClass(ElementInfoManager::class)]
+#[Group('Render')]
 class ElementInfoManagerTest extends UnitTestCase {
 
   /**
@@ -53,7 +57,7 @@ class ElementInfoManagerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    *
-   * @covers ::__construct
+   * @legacy-covers ::__construct
    */
   protected function setUp(): void {
     parent::setUp();
@@ -69,11 +73,10 @@ class ElementInfoManagerTest extends UnitTestCase {
   /**
    * Tests the getInfo() method when render element plugins are used.
    *
-   * @covers ::getInfo
-   * @covers ::buildInfo
-   *
-   * @dataProvider providerTestGetInfoElementPlugin
+   * @legacy-covers ::getInfo
+   * @legacy-covers ::buildInfo
    */
+  #[DataProvider('providerTestGetInfoElementPlugin')]
   public function testGetInfoElementPlugin($plugin_class, $expected_info): void {
     $this->moduleHandler->expects($this->once())
       ->method('alter')
@@ -140,7 +143,9 @@ class ElementInfoManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getInfoProperty
+   * Tests get info property.
+   *
+   * @legacy-covers ::getInfoProperty
    */
   public function testGetInfoProperty(): void {
     $this->themeManager

@@ -10,13 +10,13 @@ use Drupal\Core\Discovery\YamlDiscovery;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * YamlDiscovery component unit tests.
- *
- * @group Discovery
  */
+#[Group('Discovery')]
 class YamlDiscoveryTest extends TestCase {
 
   /**

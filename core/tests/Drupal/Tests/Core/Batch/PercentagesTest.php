@@ -6,21 +6,25 @@ namespace Drupal\Tests\Core\Batch;
 
 use Drupal\Core\Batch\Percentage;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Batch helper object.
  *
  * Make sure that the rounding works properly in all cases.
- *
- * @coversDefaultClass \Drupal\Core\Batch\Percentage
- * @group Batch
  */
+#[CoversClass(Percentage::class)]
+#[Group('Batch')]
 class PercentagesTest extends UnitTestCase {
 
   /**
-   * @dataProvider providerTestPercentages
-   * @covers ::format
+   * Tests percentages.
+   *
+   * @legacy-covers ::format
    */
+  #[DataProvider('providerTestPercentages')]
   public function testPercentages($total, $current, $expected_result): void {
     $actual_result = Percentage::format($total, $current);
     $this->assertEquals($actual_result, $expected_result, sprintf('The expected the batch api percentage at the state %s/%s is %s%% and got %s%%.', $current, $total, $expected_result, $actual_result));

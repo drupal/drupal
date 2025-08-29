@@ -9,11 +9,15 @@ use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Recipe\RecipeConfigStorageWrapper;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @coversDefaultClass \Drupal\Core\Recipe\RecipeConfigStorageWrapper
- * @group Recipe
+ * Tests Drupal\Core\Recipe\RecipeConfigStorageWrapper.
  */
+#[CoversClass(RecipeConfigStorageWrapper::class)]
+#[Group('Recipe')]
 class RecipeConfigStorageWrapperTest extends UnitTestCase {
 
   /**
@@ -186,12 +190,11 @@ class RecipeConfigStorageWrapperTest extends UnitTestCase {
    *   The method to call.
    * @param array $args
    *   The arguments to pass to the method.
-   *
-   * @testWith ["write", "name", []]
-   *           ["delete", "name"]
-   *           ["rename", "old_name", "new_name"]
-   *           ["deleteAll"]
    */
+  #[TestWith(["write", "name", []])]
+  #[TestWith(["delete", "name"])]
+  #[TestWith(["rename", "old_name", "new_name"])]
+  #[TestWith(["deleteAll"])]
   public function testUnsupportedMethods(string $method, ...$args): void {
     $this->expectException(\BadMethodCallException::class);
     $storage = new RecipeConfigStorageWrapper(new NullStorage(), new NullStorage());

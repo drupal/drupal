@@ -7,13 +7,16 @@ namespace Drupal\Tests\Core\EventSubscriber;
 use Drupal\Core\EventSubscriber\PathRootsSubscriber;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\Core\EventSubscriber\PathRootsSubscriber
- * @group EventSubscriber
+ * Tests Drupal\Core\EventSubscriber\PathRootsSubscriber.
  */
+#[CoversClass(PathRootsSubscriber::class)]
+#[Group('EventSubscriber')]
 class PathRootsSubscriberTest extends UnitTestCase {
 
   /**
@@ -43,8 +46,8 @@ class PathRootsSubscriberTest extends UnitTestCase {
   /**
    * Tests altering and finished event.
    *
-   * @covers ::onRouteAlter
-   * @covers ::onRouteFinished
+   * @legacy-covers ::onRouteAlter
+   * @legacy-covers ::onRouteFinished
    */
   public function testSubscribing(): void {
 

@@ -7,18 +7,23 @@ namespace Drupal\Tests\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Textarea;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Render\Element\Textarea
- * @group Render
+ * Tests Drupal\Core\Render\Element\Textarea.
  */
+#[CoversClass(Textarea::class)]
+#[Group('Render')]
 class TextareaTest extends UnitTestCase {
 
   /**
-   * @covers ::valueCallback
+   * Tests value callback.
    *
-   * @dataProvider providerTestValueCallback
+   * @legacy-covers ::valueCallback
    */
+  #[DataProvider('providerTestValueCallback')]
   public function testValueCallback($expected, $input): void {
     $element = [];
     $form_state = $this->prophesize(FormStateInterface::class)->reveal();

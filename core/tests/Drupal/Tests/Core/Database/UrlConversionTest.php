@@ -7,30 +7,32 @@ namespace Drupal\Tests\Core\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore dummydb
-
 /**
  * Tests for database URL to/from database connection array conversions.
  *
  * These tests run in isolation since we don't want the database static to
  * affect other tests.
- *
- * @coversDefaultClass \Drupal\Core\Database\Database
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- *
- * @group Database
  */
+#[CoversClass(Database::class)]
+#[Group('Database')]
+#[PreserveGlobalState(FALSE)]
+#[RunTestsInSeparateProcesses]
 class UrlConversionTest extends UnitTestCase {
 
   /**
-   * @covers ::convertDbUrlToConnectionInfo
+   * Tests db url to connection conversion.
    *
-   * @dataProvider providerConvertDbUrlToConnectionInfo
+   * @legacy-covers ::convertDbUrlToConnectionInfo
    */
+  #[DataProvider('providerConvertDbUrlToConnectionInfo')]
   public function testDbUrlToConnectionConversion($url, $database_array, $include_test_drivers): void {
     $result = Database::convertDbUrlToConnectionInfo($url, $include_test_drivers);
     $this->assertEquals($database_array, $result);
@@ -277,9 +279,8 @@ class UrlConversionTest extends UnitTestCase {
 
   /**
    * Tests ::convertDbUrlToConnectionInfo() exception for invalid arguments.
-   *
-   * @dataProvider providerInvalidArgumentsUrlConversion
    */
+  #[DataProvider('providerInvalidArgumentsUrlConversion')]
   public function testGetInvalidArgumentExceptionInUrlConversion($url, $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
@@ -326,10 +327,11 @@ class UrlConversionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getConnectionInfoAsUrl
+   * Tests get connection info as url.
    *
-   * @dataProvider providerGetConnectionInfoAsUrl
+   * @legacy-covers ::getConnectionInfoAsUrl
    */
+  #[DataProvider('providerGetConnectionInfoAsUrl')]
   public function testGetConnectionInfoAsUrl(array $info, $expected_url): void {
     Database::addConnectionInfo('default', 'default', $info);
     $url = Database::getConnectionInfoAsUrl();
@@ -477,10 +479,9 @@ class UrlConversionTest extends UnitTestCase {
    * @param string $expected_exception_message
    *   The expected exception message.
    *
-   * @covers ::getConnectionInfoAsUrl
-   *
-   * @dataProvider providerInvalidArgumentGetConnectionInfoAsUrl
+   * @legacy-covers ::getConnectionInfoAsUrl
    */
+  #[DataProvider('providerInvalidArgumentGetConnectionInfoAsUrl')]
   public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, $expected_exception_message): void {
     Database::addConnectionInfo('default', 'default', $connection_options);
     $this->expectException(\InvalidArgumentException::class);
@@ -511,7 +512,9 @@ class UrlConversionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::convertDbUrlToConnectionInfo
+   * Tests driver module does not exist.
+   *
+   * @legacy-covers ::convertDbUrlToConnectionInfo
    */
   public function testDriverModuleDoesNotExist(): void {
     $url = 'foo_bar_mysql://test_user:test_pass@test_host:3306/test_database?module=foo_bar';
@@ -521,7 +524,9 @@ class UrlConversionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::convertDbUrlToConnectionInfo
+   * Tests module driver does not exist.
+   *
+   * @legacy-covers ::convertDbUrlToConnectionInfo
    */
   public function testModuleDriverDoesNotExist(): void {
     $url = 'driver_test_mysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
@@ -531,7 +536,9 @@ class UrlConversionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::convertDbUrlToConnectionInfo
+   * Tests deprecation of root parameter.
+   *
+   * @legacy-covers ::convertDbUrlToConnectionInfo
    */
   #[IgnoreDeprecations]
   public function testDeprecationOfRootParameter(): void {

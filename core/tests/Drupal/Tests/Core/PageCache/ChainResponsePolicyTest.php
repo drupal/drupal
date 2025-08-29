@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\PageCache;
 
-use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\PageCache\ChainResponsePolicy;
+use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @coversDefaultClass \Drupal\Core\PageCache\ChainResponsePolicy
- * @group PageCache
+ * Tests Drupal\Core\PageCache\ChainResponsePolicy.
  */
+#[CoversClass(ChainResponsePolicy::class)]
+#[Group('PageCache')]
 class ChainResponsePolicyTest extends UnitTestCase {
 
   /**
@@ -51,7 +55,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
   /**
    * Asserts that check() returns NULL if the chain is empty.
    *
-   * @covers ::check
+   * @legacy-covers ::check
    */
   public function testEmptyChain(): void {
     $result = $this->policy->check($this->response, $this->request);
@@ -61,7 +65,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
   /**
    * Asserts that check() returns NULL if a rule returns NULL.
    *
-   * @covers ::check
+   * @legacy-covers ::check
    */
   public function testNullRuleChain(): void {
     $rule = $this->createMock('Drupal\Core\PageCache\ResponsePolicyInterface');
@@ -79,9 +83,9 @@ class ChainResponsePolicyTest extends UnitTestCase {
   /**
    * Asserts that check() throws an exception if a rule returns an invalid value.
    *
-   * @dataProvider providerChainExceptionOnInvalidReturnValue
-   * @covers ::check
+   * @legacy-covers ::check
    */
+  #[DataProvider('providerChainExceptionOnInvalidReturnValue')]
   public function testChainExceptionOnInvalidReturnValue($return_value): void {
     $rule = $this->createMock('Drupal\Core\PageCache\ResponsePolicyInterface');
     $rule->expects($this->once())

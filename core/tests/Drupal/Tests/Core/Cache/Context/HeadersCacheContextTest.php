@@ -6,20 +6,25 @@ namespace Drupal\Tests\Core\Cache\Context;
 
 use Drupal\Core\Cache\Context\HeadersCacheContext;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\Context\HeadersCacheContext
- * @group Cache
+ * Tests Drupal\Core\Cache\Context\HeadersCacheContext.
  */
+#[CoversClass(HeadersCacheContext::class)]
+#[Group('Cache')]
 class HeadersCacheContextTest extends UnitTestCase {
 
   /**
-   * @covers ::getContext
+   * Tests get context.
    *
-   * @dataProvider providerTestGetContext
+   * @legacy-covers ::getContext
    */
+  #[DataProvider('providerTestGetContext')]
   public function testGetContext($headers, $header_name, $context): void {
     $request_stack = new RequestStack();
     $request = Request::create('/', 'GET');

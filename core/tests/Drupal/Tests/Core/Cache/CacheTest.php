@@ -8,12 +8,16 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\Cache
- * @group Cache
+ * Tests Drupal\Core\Cache\Cache.
  */
+#[CoversClass(Cache::class)]
+#[Group('Cache')]
 class CacheTest extends UnitTestCase {
 
   /**
@@ -66,10 +70,11 @@ class CacheTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::mergeTags
+   * Tests merge tags.
    *
-   * @dataProvider mergeTagsProvider
+   * @legacy-covers ::mergeTags
    */
+  #[DataProvider('mergeTagsProvider')]
   public function testMergeTags(array $expected, ...$cache_tags): void {
     $this->assertEqualsCanonicalizing($expected, Cache::mergeTags(...$cache_tags));
   }
@@ -106,10 +111,11 @@ class CacheTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::mergeMaxAges
+   * Tests merge max ages.
    *
-   * @dataProvider mergeMaxAgesProvider
+   * @legacy-covers ::mergeMaxAges
    */
+  #[DataProvider('mergeMaxAgesProvider')]
   public function testMergeMaxAges($expected, ...$max_ages): void {
     $this->assertSame($expected, Cache::mergeMaxAges(...$max_ages));
   }
@@ -141,10 +147,11 @@ class CacheTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::mergeContexts
+   * Tests merge cache contexts.
    *
-   * @dataProvider mergeCacheContextsProvide
+   * @legacy-covers ::mergeContexts
    */
+  #[DataProvider('mergeCacheContextsProvide')]
   public function testMergeCacheContexts(array $expected, ...$contexts): void {
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens(Argument::any())->willReturn(TRUE);
@@ -183,10 +190,11 @@ class CacheTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::buildTags
+   * Tests build tags.
    *
-   * @dataProvider buildTagsProvider
+   * @legacy-covers ::buildTags
    */
+  #[DataProvider('buildTagsProvider')]
   public function testBuildTags($prefix, array $suffixes, array $expected, $glue = ':'): void {
     $this->assertEquals($expected, Cache::buildTags($prefix, $suffixes, $glue));
   }

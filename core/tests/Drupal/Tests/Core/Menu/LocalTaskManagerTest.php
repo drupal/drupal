@@ -14,15 +14,19 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Menu\LocalTaskInterface;
 use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\Core\Menu\LocalTaskManager
- * @group Menu
+ * Tests Drupal\Core\Menu\LocalTaskManager.
  */
+#[CoversClass(LocalTaskManager::class)]
+#[Group('Menu')]
 class LocalTaskManagerTest extends UnitTestCase {
 
   /**
@@ -395,7 +399,9 @@ class LocalTaskManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTasksBuild
+   * Tests get tasks build with cacheability metadata.
+   *
+   * @legacy-covers ::getTasksBuild
    */
   public function testGetTasksBuildWithCacheabilityMetadata(): void {
     $definitions = $this->getLocalTaskFixtures();
@@ -482,9 +488,8 @@ class LocalTaskManagerTest extends UnitTestCase {
 
   /**
    * Tests the getLocalTasksForRoute method.
-   *
-   * @dataProvider providerTestGetLocalTasks
    */
+  #[DataProvider('providerTestGetLocalTasks')]
   public function testGetLocalTasks($new_weights, $expected): void {
     $definitions = $this->getLocalTaskFixtures();
 

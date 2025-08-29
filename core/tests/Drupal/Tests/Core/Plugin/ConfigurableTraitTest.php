@@ -7,21 +7,22 @@ namespace Drupal\Tests\Core\Plugin;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ConfigurableTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for ConfigurableTrait.
- *
- * @group Plugin
- *
- * @coversDefaultClass \Drupal\Core\Plugin\ConfigurableTrait
  */
+#[CoversClass(ConfigurableTrait::class)]
+#[Group('Plugin')]
 class ConfigurableTraitTest extends TestCase {
 
   /**
    * Tests ConfigurableTrait::defaultConfiguration.
    *
-   * @covers ::defaultConfiguration
+   * @legacy-covers ::defaultConfiguration
    */
   public function testDefaultConfiguration(): void {
     /** @var \Drupal\Component\Plugin\ConfigurableInterface $configurable_plugin */
@@ -32,7 +33,7 @@ class ConfigurableTraitTest extends TestCase {
   /**
    * Tests ConfigurableTrait::getConfiguration.
    *
-   * @covers ::getConfiguration
+   * @legacy-covers ::getConfiguration
    */
   public function testGetConfiguration(): void {
     $test_configuration = [
@@ -58,10 +59,9 @@ class ConfigurableTraitTest extends TestCase {
    * @param array $final_configuration
    *   The expected final plugin configuration.
    *
-   * @covers ::setConfiguration
-   *
-   * @dataProvider setConfigurationDataProvider
+   * @legacy-covers ::setConfiguration
    */
+  #[DataProvider('setConfigurationDataProvider')]
   public function testSetConfiguration(array $default_configuration, array $test_configuration, array $final_configuration): void {
     $test_object = new ConfigurableTestClass();
     $test_object->setDefaultConfiguration($default_configuration);

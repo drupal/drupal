@@ -5,21 +5,25 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Condition;
 
 use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Core\Condition\ConditionAccessResolverTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Condition\ConditionAccessResolverTrait
- * @group Condition
+ * Tests Drupal\Core\Condition\ConditionAccessResolverTrait.
  */
+#[CoversClass(ConditionAccessResolverTrait::class)]
+#[Group('Condition')]
 class ConditionAccessResolverTraitTest extends UnitTestCase {
 
   /**
    * Tests the resolveConditions() method.
    *
-   * @covers ::resolveConditions
-   *
-   * @dataProvider providerTestResolveConditions
+   * @legacy-covers ::resolveConditions
    */
+  #[DataProvider('providerTestResolveConditions')]
   public function testResolveConditions($conditions, $logic, $expected): void {
     $mocks['true'] = $this->createMock('Drupal\Core\Condition\ConditionInterface');
     $mocks['true']->expects($this->any())
@@ -81,7 +85,7 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
  * Stub class for testing trait.
  */
 class TestConditionAccessResolverTrait {
-  use \Drupal\Core\Condition\ConditionAccessResolverTrait {
+  use ConditionAccessResolverTrait {
     resolveConditions as public;
   }
 

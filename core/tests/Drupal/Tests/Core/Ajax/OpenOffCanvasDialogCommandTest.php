@@ -6,18 +6,23 @@ namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\OpenOffCanvasDialogCommand;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Ajax\OpenOffCanvasDialogCommand
- * @group Ajax
+ * Tests Drupal\Core\Ajax\OpenOffCanvasDialogCommand.
  */
+#[CoversClass(OpenOffCanvasDialogCommand::class)]
+#[Group('Ajax')]
 class OpenOffCanvasDialogCommandTest extends UnitTestCase {
 
   /**
-   * @covers ::render
+   * Tests render.
    *
-   * @dataProvider dialogPosition
+   * @legacy-covers ::render
    */
+  #[DataProvider('dialogPosition')]
   public function testRender($position): void {
     $command = new OpenOffCanvasDialogCommand('Title', '<p>Text!</p>', ['url' => 'example'], NULL, $position);
 

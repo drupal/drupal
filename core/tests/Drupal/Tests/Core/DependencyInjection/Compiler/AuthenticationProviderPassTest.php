@@ -7,17 +7,22 @@ namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass
- * @group DependencyInjection
+ * Tests Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass.
  */
+#[CoversClass(AuthenticationProviderPass::class)]
+#[Group('DependencyInjection')]
 class AuthenticationProviderPassTest extends UnitTestCase {
 
   /**
-   * @covers ::process
+   * Tests encoders.
+   *
+   * @legacy-covers ::process
    */
   public function testEncoders(): void {
     $container = new ContainerBuilder();

@@ -9,14 +9,15 @@ use Drupal\Core\Template\Loader\ComponentLoader;
 use Drupal\Core\Theme\ComponentPluginManager;
 use Drupal\Tests\UnitTestCaseTest;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 
 /**
  * Unit tests for the component loader class.
- *
- * @coversDefaultClass \Drupal\Core\Template\Loader\ComponentLoader
- * @group sdc
  */
+#[CoversClass(ComponentLoader::class)]
+#[Group('sdc')]
 class ComponentLoaderTest extends UnitTestCaseTest {
 
   /**

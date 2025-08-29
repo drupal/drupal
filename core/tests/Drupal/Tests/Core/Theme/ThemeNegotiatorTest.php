@@ -9,12 +9,15 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Theme\ThemeNegotiator;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\Core\Theme\ThemeNegotiator
- * @group Theme
+ * Tests Drupal\Core\Theme\ThemeNegotiator.
  */
+#[CoversClass(ThemeNegotiator::class)]
+#[Group('Theme')]
 class ThemeNegotiatorTest extends UnitTestCase {
 
   /**

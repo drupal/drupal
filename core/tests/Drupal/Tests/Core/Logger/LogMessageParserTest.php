@@ -7,11 +7,15 @@ namespace Drupal\Tests\Core\Logger;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Logger\LogMessageParser;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Logger\LogMessageParser
- * @group Logger
+ * Tests Drupal\Core\Logger\LogMessageParser.
  */
+#[CoversClass(LogMessageParser::class)]
+#[Group('Logger')]
 class LogMessageParserTest extends UnitTestCase {
 
   /**
@@ -26,9 +30,9 @@ class LogMessageParserTest extends UnitTestCase {
    *    - message: The expected parsed message.
    *    - context: The expected values of the placeholders.
    *
-   * @dataProvider providerTestParseMessagePlaceholders
-   * @covers ::parseMessagePlaceholders
+   * @legacy-covers ::parseMessagePlaceholders
    */
+  #[DataProvider('providerTestParseMessagePlaceholders')]
   public function testParseMessagePlaceholders(array $value, array $expected): void {
     $parser = new LogMessageParser();
     $message_placeholders = $parser->parseMessagePlaceholders($value['message'], $value['context']);

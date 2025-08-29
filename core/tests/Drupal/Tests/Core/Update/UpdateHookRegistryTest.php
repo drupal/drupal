@@ -8,6 +8,8 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Simulates a hook_update_N function.
@@ -58,9 +60,10 @@ function under_test_update_1234_failed() {
 }
 
 /**
- * @coversDefaultClass \Drupal\Core\Update\UpdateHookRegistry
- * @group Update
+ * Tests Drupal\Core\Update\UpdateHookRegistry.
  */
+#[CoversClass(UpdateHookRegistry::class)]
+#[Group('Update')]
 class UpdateHookRegistryTest extends UnitTestCase {
 
   /**
@@ -96,7 +99,9 @@ class UpdateHookRegistryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getAvailableUpdates
+   * Tests get versions.
+   *
+   * @legacy-covers ::getAvailableUpdates
    */
   public function testGetVersions(): void {
     $module_name = 'drupal\tests\core\update\under_test';
@@ -111,10 +116,12 @@ class UpdateHookRegistryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getInstalledVersion
-   * @covers ::getAllInstalledVersions
-   * @covers ::setInstalledVersion
-   * @covers ::deleteInstalledVersion
+   * Tests get installed version.
+   *
+   * @legacy-covers ::getInstalledVersion
+   * @legacy-covers ::getAllInstalledVersions
+   * @legacy-covers ::setInstalledVersion
+   * @legacy-covers ::deleteInstalledVersion
    */
   public function testGetInstalledVersion(): void {
     $versions = [

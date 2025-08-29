@@ -12,18 +12,24 @@ use Drupal\Core\Cache\DatabaseBackendFactory;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\DatabaseBackendFactory
- * @group Cache
+ * Tests Drupal\Core\Cache\DatabaseBackendFactory.
  */
+#[CoversClass(DatabaseBackendFactory::class)]
+#[Group('Cache')]
 class DatabaseBackendFactoryTest extends UnitTestCase {
 
   /**
-   * @covers ::__construct
-   * @covers ::get
-   * @dataProvider getProvider
+   * Tests get.
+   *
+   * @legacy-covers ::__construct
+   * @legacy-covers ::get
    */
+  #[DataProvider('getProvider')]
   public function testGet(array $settings, $expected_max_rows_foo, $expected_max_rows_bar): void {
     $database_backend_factory = new DatabaseBackendFactory(
       $this->prophesize(Connection::class)->reveal(),

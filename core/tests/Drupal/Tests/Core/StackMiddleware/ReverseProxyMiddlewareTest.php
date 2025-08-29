@@ -7,15 +7,16 @@ namespace Drupal\Tests\Core\StackMiddleware;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Unit test the reverse proxy stack middleware.
- *
- * @group StackMiddleware
  */
+#[Group('StackMiddleware')]
 class ReverseProxyMiddlewareTest extends UnitTestCase {
 
   /**
@@ -56,9 +57,8 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
 
   /**
    * Tests that subscriber sets trusted headers when reverse proxy is set.
-   *
-   * @dataProvider reverseProxyEnabledProvider
    */
+  #[DataProvider('reverseProxyEnabledProvider')]
   public function testReverseProxyEnabled($provided_settings, $expected_trusted_header_set): void {
     // Enable reverse proxy and add test values.
     $settings = new Settings(['reverse_proxy' => 1] + $provided_settings);

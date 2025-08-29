@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon\Plugin;
 
-// cspell:ignore corge
-
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconDefinitionInterface;
@@ -13,12 +11,16 @@ use Drupal\Core\Theme\Icon\IconFinder;
 use Drupal\Core\Theme\Plugin\IconExtractor\SvgExtractor;
 use Drupal\Tests\Core\Theme\Icon\IconTestTrait;
 use Drupal\Tests\UnitTestCase;
+// cspell:ignore corge
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Theme\Plugin\IconExtractor\SvgExtractor
- *
- * @group icon
+ * Tests Drupal\Core\Theme\Plugin\IconExtractor\SvgExtractor.
  */
+#[CoversClass(SvgExtractor::class)]
+#[Group('icon')]
 class SvgExtractorTest extends UnitTestCase {
 
   use IconTestTrait;
@@ -115,9 +117,8 @@ class SvgExtractorTest extends UnitTestCase {
    *   The files to test from IconFinder::getFilesFromSources.
    * @param bool $expected_empty
    *   Has icon result, default FALSE.
-   *
-   * @dataProvider providerDiscoverIconsSvg
    */
+  #[DataProvider('providerDiscoverIconsSvg')]
   public function testDiscoverIconsSvg(array $files, bool $expected_empty = FALSE): void {
     $this->iconFinder->method('getFilesFromSources')->willReturn($files);
 
@@ -270,9 +271,8 @@ class SvgExtractorTest extends UnitTestCase {
    *   The icons expected content.
    * @param array<string, string> $expected_attributes
    *   The attributes expected.
-   *
-   * @dataProvider providerLoadIconSvg
    */
+  #[DataProvider('providerLoadIconSvg')]
   public function testLoadIconSvg(array $icons_extracted = [], array $file_content = [], array $expected_content = [], ?array $expected_attributes = NULL): void {
     foreach ($icons_extracted as $index => $icon) {
       $this->iconFinder->method('getFileContents')

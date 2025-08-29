@@ -8,27 +8,29 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Cache\VariationCacheInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\AccessPolicyBase;
 use Drupal\Core\Session\AccessPolicyProcessor;
 use Drupal\Core\Session\AccessPolicyScopeException;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\CalculatedPermissions;
 use Drupal\Core\Session\CalculatedPermissionsItem;
 use Drupal\Core\Session\RefinableCalculatedPermissions;
 use Drupal\Core\Session\RefinableCalculatedPermissionsInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the AccessPolicyProcessor service.
  *
- * @covers \Drupal\Core\Session\AccessPolicyBase
- * @covers \Drupal\Core\Session\AccessPolicyProcessor
- * @group Session
+ * @legacy-covers \Drupal\Core\Session\AccessPolicyBase
+ * @legacy-covers \Drupal\Core\Session\AccessPolicyProcessor
  */
+#[Group('Session')]
 class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
@@ -185,9 +187,8 @@ class AccessPolicyProcessorTest extends UnitTestCase {
    *   Whether the passed in account is the current user.
    * @param bool $should_call_switcher
    *   Whether the account switcher should be called.
-   *
-   * @dataProvider accountSwitcherProvider
    */
+  #[DataProvider('accountSwitcherProvider')]
   public function testAccountSwitcher(bool $has_user_context, bool $is_current_user, bool $should_call_switcher): void {
     $account = $this->prophesize(AccountInterface::class);
     $account->id()->willReturn(2);
@@ -250,9 +251,8 @@ class AccessPolicyProcessorTest extends UnitTestCase {
 
   /**
    * Tests if the caches are called correctly.
-   *
-   * @dataProvider cachingProvider
    */
+  #[DataProvider('cachingProvider')]
   public function testCaching(bool $db_cache_hit, bool $static_cache_hit): void {
     if ($static_cache_hit) {
       $this->assertFalse($db_cache_hit, 'DB cache should never be checked when there is a static hit.');

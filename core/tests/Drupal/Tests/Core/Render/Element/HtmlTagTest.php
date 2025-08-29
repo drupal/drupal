@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render\Element;
 
+use Drupal\Core\Render\Element\HtmlTag;
 use Drupal\Core\Render\Markup;
 use Drupal\Tests\Core\Render\RendererTestBase;
-use Drupal\Core\Render\Element\HtmlTag;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Render\Element\HtmlTag
- * @group Render
+ * Tests Drupal\Core\Render\Element\HtmlTag.
  */
+#[CoversClass(HtmlTag::class)]
+#[Group('Render')]
 class HtmlTagTest extends RendererTestBase {
 
   /**
-   * @covers ::getInfo
+   * Tests get info.
+   *
+   * @legacy-covers ::getInfo
    */
   public function testGetInfo(): void {
     $htmlTag = new HtmlTag([], 'test', 'test');
@@ -26,9 +32,11 @@ class HtmlTagTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::preRenderHtmlTag
-   * @dataProvider providerPreRenderHtmlTag
+   * Tests pre render html tag.
+   *
+   * @legacy-covers ::preRenderHtmlTag
    */
+  #[DataProvider('providerPreRenderHtmlTag')]
   public function testPreRenderHtmlTag($element, $expected): void {
     $result = HtmlTag::preRenderHtmlTag($element);
     foreach ($result as &$child) {

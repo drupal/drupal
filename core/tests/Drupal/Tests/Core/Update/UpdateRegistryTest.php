@@ -11,18 +11,21 @@ use Drupal\Core\Update\RemovedPostUpdateNameException;
 use Drupal\Core\Update\UpdateRegistry;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests UpdateRegistry.
  *
  * Note we load code, so isolate the tests.
- *
- * @coversDefaultClass \Drupal\Core\Update\UpdateRegistry
- * @group Update
- * @group #slow
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
+#[CoversClass(UpdateRegistry::class)]
+#[Group('Update')]
+#[Group('#slow')]
+#[PreserveGlobalState(FALSE)]
+#[RunTestsInSeparateProcesses]
 class UpdateRegistryTest extends UnitTestCase {
 
   /**
@@ -183,7 +186,9 @@ EOS;
   }
 
   /**
-   * @covers ::getPendingUpdateFunctions
+   * Tests get pending update functions no existing updates.
+   *
+   * @legacy-covers ::getPendingUpdateFunctions
    */
   public function testGetPendingUpdateFunctionsNoExistingUpdates(): void {
     $this->setupBasicExtensions();
@@ -227,7 +232,9 @@ EOS;
   }
 
   /**
-   * @covers ::getPendingUpdateFunctions
+   * Tests get pending update functions with loaded modules but not enabled.
+   *
+   * @legacy-covers ::getPendingUpdateFunctions
    */
   public function testGetPendingUpdateFunctionsWithLoadedModulesButNotEnabled(): void {
     $this->setupBasicExtensions();
@@ -262,7 +269,9 @@ EOS;
   }
 
   /**
-   * @covers ::getPendingUpdateFunctions
+   * Tests get pending update functions existing updates.
+   *
+   * @legacy-covers ::getPendingUpdateFunctions
    */
   public function testGetPendingUpdateFunctionsExistingUpdates(): void {
     $this->setupBasicExtensions();
@@ -309,7 +318,9 @@ EOS;
   }
 
   /**
-   * @covers ::getPendingUpdateInformation
+   * Tests get pending update information.
+   *
+   * @legacy-covers ::getPendingUpdateInformation
    */
   public function testGetPendingUpdateInformation(): void {
     $this->setupBasicExtensions();
@@ -357,7 +368,9 @@ EOS;
   }
 
   /**
-   * @covers ::getPendingUpdateInformation
+   * Tests get pending update information with existing updates.
+   *
+   * @legacy-covers ::getPendingUpdateInformation
    */
   public function testGetPendingUpdateInformationWithExistingUpdates(): void {
     $this->setupBasicExtensions();
@@ -407,7 +420,9 @@ EOS;
   }
 
   /**
-   * @covers ::getPendingUpdateInformation
+   * Tests get pending update information with removed updates.
+   *
+   * @legacy-covers ::getPendingUpdateInformation
    */
   public function testGetPendingUpdateInformationWithRemovedUpdates(): void {
     $this->setupBasicExtensions();
@@ -434,7 +449,9 @@ EOS;
   }
 
   /**
-   * @covers ::getUpdateFunctions
+   * Tests get update functions.
+   *
+   * @legacy-covers ::getUpdateFunctions
    */
   public function testGetUpdateFunctions(): void {
     $this->setupBasicExtensions();
@@ -470,7 +487,9 @@ EOS;
   }
 
   /**
-   * @covers ::registerInvokedUpdates
+   * Tests register invoked updates without existing updates.
+   *
+   * @legacy-covers ::registerInvokedUpdates
    */
   public function testRegisterInvokedUpdatesWithoutExistingUpdates(): void {
     $this->setupBasicExtensions();
@@ -510,7 +529,9 @@ EOS;
   }
 
   /**
-   * @covers ::registerInvokedUpdates
+   * Tests register invoked updates with multiple.
+   *
+   * @legacy-covers ::registerInvokedUpdates
    */
   public function testRegisterInvokedUpdatesWithMultiple(): void {
     $this->setupBasicExtensions();
@@ -550,7 +571,9 @@ EOS;
   }
 
   /**
-   * @covers ::registerInvokedUpdates
+   * Tests register invoked updates with existing updates.
+   *
+   * @legacy-covers ::registerInvokedUpdates
    */
   public function testRegisterInvokedUpdatesWithExistingUpdates(): void {
     $this->setupBasicExtensions();
@@ -585,7 +608,9 @@ EOS;
   }
 
   /**
-   * @covers ::filterOutInvokedUpdatesByExtension
+   * Tests filter out invoked updates by extension.
+   *
+   * @legacy-covers ::filterOutInvokedUpdatesByExtension
    */
   public function testFilterOutInvokedUpdatesByExtension(): void {
     $this->setupBasicExtensions();
@@ -625,7 +650,9 @@ EOS;
   }
 
   /**
-   * @covers ::getPendingUpdateFunctions
+   * Tests get pending custom update functions.
+   *
+   * @legacy-covers ::getPendingUpdateFunctions
    */
   public function testGetPendingCustomUpdateFunctions(): void {
     // Set up a simplified module structure with custom update hooks.

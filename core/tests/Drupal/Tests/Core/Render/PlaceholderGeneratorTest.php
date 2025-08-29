@@ -6,11 +6,16 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Render\PlaceholderGenerator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Render\PlaceholderGenerator
- * @group Render
+ * Tests Drupal\Core\Render\PlaceholderGenerator.
  */
+#[CoversClass(PlaceholderGenerator::class)]
+#[Group('Render')]
 class PlaceholderGeneratorTest extends RendererTestBase {
 
   /**
@@ -29,9 +34,9 @@ class PlaceholderGeneratorTest extends RendererTestBase {
    * #attached versus that in the HTML processed by DOMDocument would no longer
    * match.
    *
-   * @covers ::createPlaceholder
-   * @dataProvider providerCreatePlaceholderGeneratesValidHtmlMarkup
+   * @legacy-covers ::createPlaceholder
    */
+  #[DataProvider('providerCreatePlaceholderGeneratesValidHtmlMarkup')]
   public function testCreatePlaceholderGeneratesValidHtmlMarkup(array $element): void {
     $build = $this->placeholderGenerator->createPlaceholder($element);
 
@@ -47,7 +52,7 @@ class PlaceholderGeneratorTest extends RendererTestBase {
    * Between two renders neither the cache contexts nor tags sort should change.
    * A placeholder should generate the same hash, so it is not rendered twice.
    *
-   * @covers ::createPlaceholder
+   * @legacy-covers ::createPlaceholder
    */
   public function testRenderPlaceholdersDifferentSortedContextsTags(): void {
     $contexts_1 = ['user', 'foo'];

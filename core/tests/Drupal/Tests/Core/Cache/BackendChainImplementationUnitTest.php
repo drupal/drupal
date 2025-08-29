@@ -9,13 +9,14 @@ use Drupal\Core\Cache\BackendChain;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Unit test of backend chain implementation specifics.
- *
- * @group Cache
- * @coversDefaultClass \Drupal\Core\Cache\BackendChain
  */
+#[CoversClass(BackendChain::class)]
+#[Group('Cache')]
 class BackendChainImplementationUnitTest extends UnitTestCase {
 
   /**

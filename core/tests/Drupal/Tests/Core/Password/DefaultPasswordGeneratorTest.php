@@ -6,17 +6,20 @@ namespace Drupal\Tests\Core\Password;
 
 use Drupal\Core\Password\DefaultPasswordGenerator;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Unit tests for password generator.
- *
- * @coversDefaultClass \Drupal\Core\Password\DefaultPasswordGenerator
- * @group System
  */
+#[CoversClass(DefaultPasswordGenerator::class)]
+#[Group('System')]
 class DefaultPasswordGeneratorTest extends UnitTestCase {
 
   /**
-   * @covers ::generate
+   * Tests generate.
+   *
+   * @legacy-covers ::generate
    */
   public function testGenerate(): void {
     $generator = new DefaultPasswordGenerator();
