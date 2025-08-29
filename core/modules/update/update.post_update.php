@@ -35,5 +35,16 @@ function update_post_update_clear_disk_cache(): void {
       \Drupal::service('file_system')->deleteRecursive($directory);
     }
   }
+}
 
+/**
+ * Remove empty email addresses from update.settings configuration.
+ */
+function update_post_update_fix_update_emails(): void {
+  $config = \Drupal::configFactory()->getEditable('update.settings');
+  $emails = $config->get('notification.emails');
+  $filtered_emails = array_filter($emails);
+  if ($emails !== $filtered_emails) {
+    $config->set('notification.emails', $filtered_emails)->save();
+  }
 }

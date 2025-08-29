@@ -92,6 +92,15 @@ class UpdateSettingsFormTest extends BrowserTestBase {
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_ERROR);
     $this->assertFalse($this->assertSession()->fieldExists('update_notify_emails')->hasClass('error'));
     $this->assertSame(['sofie@example.com', 'dries@example.com'], $this->config('update.settings')->get('notification.emails'));
+
+    // Fill with an empty value to make sure it's saved as an empty array.
+    $this->assertSession()->fieldExists('update_notify_emails')->setValue("");
+    $this->submitForm([], 'Save configuration');
+    $this->assertSession()->statusMessageContains('The configuration options have been saved.', MessengerInterface::TYPE_STATUS);
+    $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_WARNING);
+    $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_ERROR);
+    $this->assertSame([], $this->config('update.settings')->get('notification.emails'));
+
   }
 
 }
