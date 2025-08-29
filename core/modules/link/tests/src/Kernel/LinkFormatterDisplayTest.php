@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Kernel;
 
+use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\Tests\link\Traits\LinkInputValuesTraits;
 use Drupal\entity_test\Entity\EntityTest;
@@ -47,7 +48,7 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
       'field_name' => 'field_test',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkTitleVisibility::Optional->value,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();

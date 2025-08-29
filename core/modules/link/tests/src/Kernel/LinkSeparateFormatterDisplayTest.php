@@ -8,6 +8,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\link\LinkItemInterface;
+use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\Tests\link\Traits\LinkInputValuesTraits;
 
@@ -47,7 +48,7 @@ class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
       'field_name' => 'field_test',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkTitleVisibility::Optional->value,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();

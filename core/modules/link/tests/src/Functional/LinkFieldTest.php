@@ -10,6 +10,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\link\LinkItemInterface;
+use Drupal\link\LinkTitleVisibility;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
@@ -92,7 +93,7 @@ class LinkFieldTest extends BrowserTestBase {
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_DISABLED,
+        'title' => LinkTitleVisibility::Disabled->value,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ]);
@@ -288,7 +289,7 @@ class LinkFieldTest extends BrowserTestBase {
       'bundle' => 'entity_test',
       'label' => 'Read more about this entity',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkTitleVisibility::Optional->value,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ]);
@@ -312,9 +313,9 @@ class LinkFieldTest extends BrowserTestBase {
       ->save();
 
     // Verify that the link text field works according to the field setting.
-    foreach ([DRUPAL_DISABLED, DRUPAL_REQUIRED, DRUPAL_OPTIONAL] as $title_setting) {
+    foreach (LinkTitleVisibility::cases() as $title_setting) {
       // Update the link title field setting.
-      $this->field->setSetting('title', $title_setting);
+      $this->field->setSetting('title', $title_setting->value);
       $this->field->save();
 
       // Display creation form.
@@ -324,7 +325,7 @@ class LinkFieldTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
       $this->assertSession()->responseContains('placeholder="http://example.com"');
 
-      if ($title_setting === DRUPAL_DISABLED) {
+      if ($title_setting === LinkTitleVisibility::Disabled) {
         $this->assertSession()->fieldNotExists("{$field_name}[0][title]");
         $this->assertSession()->responseNotContains('placeholder="Enter the text for this link"');
       }
@@ -332,7 +333,7 @@ class LinkFieldTest extends BrowserTestBase {
         $this->assertSession()->responseContains('placeholder="Enter the text for this link"');
 
         $this->assertSession()->fieldValueEquals("{$field_name}[0][title]", '');
-        if ($title_setting === DRUPAL_OPTIONAL) {
+        if ($title_setting === LinkTitleVisibility::Optional) {
           // Verify that the URL is required, if the link text is non-empty.
           $edit = [
             "{$field_name}[0][title]" => 'Example',
@@ -340,7 +341,7 @@ class LinkFieldTest extends BrowserTestBase {
           $this->submitForm($edit, 'Save');
           $this->assertSession()->statusMessageContains('The URL field is required when the Link text field is specified.', 'error');
         }
-        if ($title_setting === DRUPAL_REQUIRED) {
+        if ($title_setting === LinkTitleVisibility::Required) {
           // Verify that the link text is required, if the URL is non-empty.
           $edit = [
             "{$field_name}[0][uri]" => 'http://www.example.com',
@@ -367,7 +368,11 @@ class LinkFieldTest extends BrowserTestBase {
       }
     }
 
+    // Set link title back to optional.
+    $this->field->setSetting('title', LinkTitleVisibility::Optional->value)->save();
+
     // Verify that a link without link text is rendered using the URL as text.
+    $this->drupalGet('entity_test/add');
     $value = 'http://www.example.com/';
     $edit = [
       "{$field_name}[0][uri]" => $value,
@@ -417,7 +422,7 @@ class LinkFieldTest extends BrowserTestBase {
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkTitleVisibility::Optional->value,
       ],
     ])->save();
 
@@ -501,7 +506,7 @@ class LinkFieldTest extends BrowserTestBase {
       'label' => 'Link',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkTitleVisibility::Optional->value,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();

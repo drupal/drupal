@@ -2,6 +2,7 @@
 
 namespace Drupal\link\Plugin\migrate\field\d7;
 
+use Drupal\link\LinkTitleVisibility;
 use Drupal\link\Plugin\migrate\field\d6\LinkField as D6LinkField;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Attribute\MigrateField;
@@ -60,9 +61,9 @@ class LinkField extends D6LinkField {
       'source' => 'settings/title',
       'bypass' => TRUE,
       'map' => [
-        'disabled' => DRUPAL_DISABLED,
-        'optional' => DRUPAL_OPTIONAL,
-        'required' => DRUPAL_REQUIRED,
+        'disabled' => LinkTitleVisibility::Disabled->value,
+        'optional' => LinkTitleVisibility::Optional->value,
+        'required' => LinkTitleVisibility::Required->value,
       ],
     ];
     $migration->mergeProcessOfProperty('settings/title', $process);

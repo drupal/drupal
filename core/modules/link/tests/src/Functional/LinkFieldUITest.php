@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
+use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use PHPUnit\Framework\Attributes\Group;
@@ -91,8 +92,8 @@ class LinkFieldUITest extends BrowserTestBase {
     // text.
     $cardinalities = [1, 2];
     $title_settings = [
-      DRUPAL_DISABLED,
-      DRUPAL_OPTIONAL,
+      LinkTitleVisibility::Disabled->value,
+      LinkTitleVisibility::Optional->value,
     ];
     $link_types = [
       LinkItemInterface::LINK_EXTERNAL => 'https://example.com',
