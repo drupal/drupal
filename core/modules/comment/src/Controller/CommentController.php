@@ -203,7 +203,7 @@ class CommentController extends ControllerBase {
    *   (optional) Some comments are replies to other comments. In those cases,
    *   $pid is the parent comment's comment ID. Defaults to NULL.
    *
-   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+   * @return array
    *   An associative array containing:
    *   - An array for rendering the entity or parent comment.
    *     - comment_entity: If the comment is a reply to the entity.
