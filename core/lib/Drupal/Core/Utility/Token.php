@@ -152,8 +152,12 @@ class Token {
    *   replacement process. Supported options are:
    *   - langcode: A language code to be used when generating locale-sensitive
    *     tokens.
-   *   - callback: A callback function that will be used to post-process the
-   *     array of token replacements after they are generated.
+   *   - callback: A callable that will be used to post-process the array of
+   *     token replacements after they are generated. For example, a module
+   *     using tokens in a text-only email might provide a callback to strip
+   *     HTML entities from token values before they are inserted into the
+   *     final text. The callback receives the existing replacements by
+   *     reference, the data, and the options as parameters.
    *   - clear: A boolean flag indicating that tokens should be removed from the
    *     final text if no replacement value can be generated.
    * @param \Drupal\Core\Render\BubbleableMetadata|null $bubbleable_metadata
