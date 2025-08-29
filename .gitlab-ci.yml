@@ -338,10 +338,22 @@ default:
   variables:
     _TARGET_DB: "pgsql-17"
 
+'PHP 8.5 PostgreSQL 17':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.5-ubuntu"
+    _TARGET_DB: "pgsql-17"
+
 'PHP 8.3 SQLite 3.45':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "sqlite-3"
+
+'PHP 8.5 SQLite 3.45':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.5-ubuntu"
     _TARGET_DB: "sqlite-3"
 
 'PHP 8.4 MySQL 8.0':
