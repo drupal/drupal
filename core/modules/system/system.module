@@ -12,16 +12,31 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Disabled option on forms and settings.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0.
+ *   Instead, use the enums provided by the relevant modules.
+ *
+ * @see https://www.drupal.org/node/3448089
  */
 const DRUPAL_DISABLED = 0;
 
 /**
  * Optional option on forms and settings.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0.
+ *   Instead, use the enums provided by the relevant modules.
+ *
+ * @see https://www.drupal.org/node/3448089
  */
 const DRUPAL_OPTIONAL = 1;
 
 /**
  * Required option on forms and settings.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0.
+ *   Instead, use the enums provided by the relevant modules.
+ *
+ * @see https://www.drupal.org/node/3448089
  */
 const DRUPAL_REQUIRED = 2;
 
