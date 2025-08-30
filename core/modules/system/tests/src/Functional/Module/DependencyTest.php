@@ -266,7 +266,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(['dblog'], FALSE);
     // Note that dependencies are sorted alphabetically in the confirmation
     // message.
-    $this->assertSession()->pageTextContains('You must install the Configuration Manager, Help modules to install Database Logging.');
+    $this->assertSession()->pageTextContains('You must install the following modules to install Database Logging:Configuration ManagerHelp');
 
     $edit['modules[config][enable]'] = 'config';
     $edit['modules[help][enable]'] = 'help';
@@ -277,6 +277,34 @@ class DependencyTest extends ModuleTestBase {
     // Check the actual order which is saved by module_test_modules_enabled().
     $module_order = \Drupal::state()->get('module_test.install_order', []);
     $this->assertSame($expected_order, $module_order);
+  }
+
+  /**
+   * Tests that module dependencies install text is formatted correctly.
+   */
+  public function testModuleDependencyMessages(): void {
+    // Check the module install text with 1 module dependency.
+    $edit = [];
+    $edit['modules[file][enable]'] = 'file';
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->pageTextContains('You must install the following module to install File:Field');
+
+    // Check the module install text with 2 module dependencies.
+    \Drupal::service('module_installer')->install(['module_test'], FALSE);
+    \Drupal::state()->set('module_test.dependency', 'dependency');
+    $edit = [];
+    $edit['modules[dblog][enable]'] = 'dblog';
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->pageTextContains('You must install the following modules to install Database Logging:Configuration ManagerHelp');
+
+    // Check the module install text with more than 2 module dependencies.
+    $edit = [];
+    $edit['modules[navigation][enable]'] = 'navigation';
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->pageTextContains('You must install the following modules to install Navigation:BlockFileFieldLayout BuilderLayout DiscoveryContextual Links');
   }
 
 }

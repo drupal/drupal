@@ -113,12 +113,23 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
     $items = [];
     if (!empty($dependencies)) {
       // Display a list of required themes that have to be installed as well.
-      $items[] = $this->formatPlural(count($dependencies), 'You must install the @required theme to install @theme.', 'You must install the @required themes to install @theme.', [
-        '@theme' => $get_label($theme),
-        // It is safe to implode this because theme names are not translated
-        // markup and so will not be double-escaped.
-        '@required' => implode(', ', array_map($get_label, $dependencies)),
-      ]);
+      $items[] = [
+        [
+          '#markup' => $this->formatPlural(
+            count($dependencies),
+              'You must install the following theme to install @theme:',
+              'You must install the following themes to install @theme:',
+              [
+                '@theme' => $get_label($theme),
+              ]
+          ),
+        ],
+        [
+          '#theme' => 'item_list',
+          '#list_type' => 'ul',
+          '#items' => array_map($get_label, $dependencies),
+        ],
+      ];
     }
     // Add the list of experimental themes after any other messages.
     $items[] = $this->t('The following themes are experimental: @themes', ['@themes' => implode(', ', array_map($get_label, array_filter($themes, $is_experimental)))]);

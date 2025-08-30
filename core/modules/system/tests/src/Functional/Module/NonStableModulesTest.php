@@ -114,7 +114,7 @@ class NonStableModulesTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('The following module is experimental: Experimental Dependency Test');
 
     // There should be a message about enabling dependencies.
-    $this->assertSession()->pageTextContains('You must install the Experimental Test module to install Experimental Dependency Test');
+    $this->assertSession()->pageTextContains('You must install the following module to install Experimental Dependency Test:Experimental Test');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
@@ -236,7 +236,7 @@ class NonStableModulesTest extends BrowserTestBase {
     $assert->pageTextNotContains('The Deprecated module dependency module is deprecated');
 
     // There should be a message about enabling dependencies.
-    $assert->pageTextContains('You must install the Deprecated module module to install Deprecated module dependency');
+    $assert->pageTextContains('You must install the following module to install Deprecated module dependency:Deprecated module');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
@@ -275,7 +275,7 @@ class NonStableModulesTest extends BrowserTestBase {
     $assert->pageTextNotContains('The Drupal system listing compatible test module is deprecated');
 
     // There should be a message about enabling dependencies.
-    $assert->pageTextContains('You must install the Drupal system listing compatible test module to install Deprecated module with non deprecated dependency.');
+    $assert->pageTextContains('You must install the following module to install Deprecated module with non deprecated dependency:Drupal system listing compatible test');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
