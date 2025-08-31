@@ -4,8 +4,6 @@ namespace Drupal\Core\Session;
 
 /**
  * An implementation of the user account interface for the global user.
- *
- * @todo Change all properties to protected.
  */
 #[\AllowDynamicProperties]
 class UserSession implements AccountInterface {
@@ -38,7 +36,7 @@ class UserSession implements AccountInterface {
    *
    * @var string
    */
-  public $name = '';
+  protected $name = '';
 
   /**
    * The preferred language code of the account.
@@ -210,6 +208,55 @@ class UserSession implements AccountInterface {
    */
   protected function getRoleStorage() {
     return \Drupal::entityTypeManager()->getStorage('user_role');
+  }
+
+  /**
+   * Implements magic __get() method.
+   */
+  public function __get($name): mixed {
+    if ($name === 'name') {
+      @trigger_error("Getting the name property is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3513856", E_USER_DEPRECATED);
+      return $this->getAccountName();
+    }
+    $class = get_class($this);
+    $properties = get_class_vars($class);
+    if (\array_key_exists($name, $properties)) {
+      throw new \LogicException("Cannot access protected property $name in " . $class);
+    }
+    return $this->$name ?? NULL;
+  }
+
+  /**
+   * Implements magic __isset() method.
+   */
+  public function __isset($name): bool {
+    if ($name === 'name') {
+      @trigger_error("Checking for the name property is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3513856", E_USER_DEPRECATED);
+      return isset($this->name);
+    }
+    $class = get_class($this);
+    $properties = get_class_vars($class);
+    if (\array_key_exists($name, $properties)) {
+      throw new \LogicException("Cannot access protected property $name in " . $class);
+    }
+    return isset($this->$name);
+  }
+
+  /**
+   * Implements magic __set() method.
+   */
+  public function __set($name, $value): void {
+    if ($name === 'name') {
+      @trigger_error("Setting the name property is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Set the name via the constructor when creating the UserSession instance. See https://www.drupal.org/node/3513856", E_USER_DEPRECATED);
+      $this->name = $value;
+      return;
+    }
+    $class = get_class($this);
+    $properties = get_class_vars($class);
+    if (\array_key_exists($name, $properties)) {
+      throw new \LogicException("Cannot set protected property $name in " . $class);
+    }
+    $this->$name = $value;
   }
 
 }

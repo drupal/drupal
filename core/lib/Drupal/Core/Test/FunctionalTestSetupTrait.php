@@ -582,7 +582,7 @@ trait FunctionalTestSetupTrait {
           'site_name' => 'Drupal',
           'site_mail' => 'simpletest@example.com',
           'account' => [
-            'name' => $this->rootUser->name,
+            'name' => $this->rootUser->getAccountName(),
             'mail' => $this->rootUser->getEmail(),
             'pass' => [
               'pass1' => $this->rootUser->pass_raw ?? $this->rootUser->passRaw,
