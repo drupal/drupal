@@ -54,7 +54,7 @@ class Flatten extends ProcessPluginBase {
       $type = gettype($value);
       throw new MigrateException(sprintf("Input should be an array or an object, instead it was of type '%s'", $type));
     }
-    return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value)), FALSE);
+    return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator((array) $value)), FALSE);
   }
 
 }
