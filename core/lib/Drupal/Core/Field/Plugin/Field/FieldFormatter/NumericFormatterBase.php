@@ -20,7 +20,7 @@ abstract class NumericFormatterBase extends FormatterBase {
       '.' => $this->t('Decimal point'),
       ',' => $this->t('Comma'),
       ' ' => $this->t('Space'),
-      chr(8201) => $this->t('Thin space'),
+      mb_chr(8201, 'UTF-8') => $this->t('Thin space'),
       "'" => $this->t('Apostrophe'),
     ];
     $elements['thousand_separator'] = [
