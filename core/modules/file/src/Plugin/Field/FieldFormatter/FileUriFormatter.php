@@ -52,7 +52,7 @@ class FileUriFormatter extends BaseFieldFileFormatterBase {
   protected function viewValue(FieldItemInterface $item) {
     $value = $item->value;
     if ($this->getSetting('file_download_path')) {
-      $value = $this->fileUrlGenerator->generateString($value);
+      $value = $this->fileUrlGenerator->generateAbsoluteString($value);
     }
     return $value;
   }

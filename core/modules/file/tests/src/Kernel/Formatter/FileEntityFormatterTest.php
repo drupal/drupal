@@ -106,7 +106,7 @@ class FileEntityFormatterTest extends KernelTestBase {
 
     $entity_display->setComponent('uri', ['type' => 'file_uri', 'settings' => ['file_download_path' => TRUE]]);
     $build = $entity_display->buildMultiple($this->files)[0]['uri'][0];
-    $this->assertEquals($this->fileUrlGenerator->generateString('public://file.png'), $build['#markup']);
+    $this->assertEquals($this->fileUrlGenerator->generateAbsoluteString('public://file.png'), $build['#markup']);
 
     $entity_display->setComponent(
       'uri',
@@ -116,7 +116,7 @@ class FileEntityFormatterTest extends KernelTestBase {
       ]
     );
     $build = $entity_display->buildMultiple($this->files)[0]['uri'][0];
-    $this->assertEquals($this->fileUrlGenerator->generateString('public://file.png'), $build['#title']);
+    $this->assertEquals($this->fileUrlGenerator->generateAbsoluteString('public://file.png'), $build['#title']);
     $this->assertEquals($this->fileUrlGenerator->generate('public://file.png'), $build['#url']);
   }
 
