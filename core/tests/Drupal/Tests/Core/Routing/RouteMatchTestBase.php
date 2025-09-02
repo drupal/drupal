@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Routing;
 
-use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Route;
 
 /**
  * Base test class for testing classes implementing the route match interface.
  */
-#[CoversClass(RouteMatch::class)]
 abstract class RouteMatchTestBase extends UnitTestCase {
 
   /**
