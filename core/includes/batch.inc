@@ -131,7 +131,6 @@ function _batch_needs_update($new_value = NULL) {
 /**
  * Does one execution pass with JavaScript and returns progress to the browser.
  *
- * @see _batch_progress_page_js()
  * @see _batch_process()
  */
 function _batch_do() {
