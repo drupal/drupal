@@ -7,7 +7,6 @@ namespace Drupal\node\Hook;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\node\NodeBulkUpdate;
-use Drupal\node\NodeStorageInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -16,17 +15,12 @@ use Drupal\user\UserInterface;
 class NodeUserHooks {
 
   /**
-   * The Node Storage.
-   *
-   * @var \Drupal\node\NodeStorageInterface
+   * NodeHooks constructor.
    */
-  protected NodeStorageInterface $nodeStorage;
-
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
     protected NodeBulkUpdate $nodeBulkUpdate,
   ) {
-    $this->nodeStorage = $entityTypeManager->getStorage('node');
   }
 
   /**
@@ -37,7 +31,7 @@ class NodeUserHooks {
   #[Hook('user_cancel')]
   public function userCancelBlockUnpublish($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_block_unpublish') {
-      $nids = $this->nodeStorage->getQuery()
+      $nids = $this->entityTypeManager->getStorage('node')->getQuery()
         ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
@@ -53,7 +47,11 @@ class NodeUserHooks {
   #[Hook('user_cancel')]
   public function userCancelReassign($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_reassign') {
-      $vids = $this->nodeStorage->userRevisionIds($account);
+      $query = $this->entityTypeManager->getStorage('node')->getQuery()
+        ->allRevisions()
+        ->accessCheck(FALSE)
+        ->condition('uid', $account->id());
+      $vids = array_keys($query->execute());
       $this->nodeBulkUpdate->process($vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE);
     }
   }

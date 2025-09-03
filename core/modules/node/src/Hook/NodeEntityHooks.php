@@ -69,7 +69,11 @@ class NodeEntityHooks {
     $storage_controller = \Drupal::entityTypeManager()->getStorage('node');
     $nodes = $storage_controller->loadMultiple($nids);
     $storage_controller->delete($nodes);
-    $revisions = $storage_controller->userRevisionIds($account);
+    $query = $storage_controller->getQuery()
+      ->allRevisions()
+      ->accessCheck(FALSE)
+      ->condition('uid', $account->id());
+    $revisions = array_keys($query->execute());
     foreach ($revisions as $revision) {
       $storage_controller->deleteRevision($revision);
     }

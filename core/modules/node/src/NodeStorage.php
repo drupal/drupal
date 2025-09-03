@@ -18,6 +18,7 @@ class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterfac
    * {@inheritdoc}
    */
   public function revisionIds(NodeInterface $node) {
+    @trigger_error(__CLASS__ . "::" . __FUNCTION__ . " is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use an entity query instead. See https://www.drupal.org/node/3519185", E_USER_DEPRECATED);
     return $this->database->query(
       'SELECT [vid] FROM {' . $this->getRevisionTable() . '} WHERE [nid] = :nid ORDER BY [vid]',
       [':nid' => $node->id()]
@@ -28,6 +29,7 @@ class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterfac
    * {@inheritdoc}
    */
   public function userRevisionIds(AccountInterface $account) {
+    @trigger_error(__CLASS__ . "::" . __FUNCTION__ . " is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use an entity query instead. See https://www.drupal.org/node/3519185", E_USER_DEPRECATED);
     return $this->database->query(
       'SELECT [vid] FROM {' . $this->getRevisionDataTable() . '} WHERE [uid] = :uid ORDER BY [vid]',
       [':uid' => $account->id()]
@@ -38,6 +40,7 @@ class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterfac
    * {@inheritdoc}
    */
   public function countDefaultLanguageRevisions(NodeInterface $node) {
+    @trigger_error(__CLASS__ . "::" . __FUNCTION__ . " is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3519185", E_USER_DEPRECATED);
     return $this->database->query('SELECT COUNT(*) FROM {' . $this->getRevisionDataTable() . '} WHERE [nid] = :nid AND [default_langcode] = 1', [':nid' => $node->id()])->fetchField();
   }
 
