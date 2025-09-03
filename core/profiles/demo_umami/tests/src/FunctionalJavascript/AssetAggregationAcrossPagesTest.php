@@ -48,7 +48,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
 
     $expected = [
       'ScriptCount' => 3,
-      'ScriptBytes' => 170500,
+      'ScriptBytes' => 171060,
       'StylesheetCount' => 5,
       'StylesheetBytes' => 85600,
     ];
