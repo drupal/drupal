@@ -31,25 +31,6 @@ class NodeTypeTest extends NodeTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Ensures that node type functions (node_type_get_*) work correctly.
-   *
-   * Load available node types and validate the returned data.
-   */
-  public function testNodeTypeGetFunctions(): void {
-    $node_types = NodeType::loadMultiple();
-    $node_names = node_type_get_names();
-
-    $this->assertTrue(isset($node_types['article']), 'Node type article is available.');
-    $this->assertTrue(isset($node_types['page']), 'Node type basic page is available.');
-
-    $this->assertEquals($node_names['article'], $node_types['article']->label(), 'Correct node type base has been returned.');
-
-    $article = NodeType::load('article');
-    $this->assertEquals($node_types['article'], $article, 'Correct node type has been returned.');
-    $this->assertEquals($node_types['article']->label(), $article->label(), 'Correct node type name has been returned.');
-  }
-
-  /**
    * Tests creating a content type programmatically and via a form.
    */
   public function testNodeTypeCreation(): void {

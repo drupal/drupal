@@ -91,11 +91,13 @@ function node_mark($nid, $timestamp) {
  *
  * @return string[]
  *   An array of node type labels, keyed by the node type name.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service('entity_type.bundle.info')->getBundleLabels('node') instead.
+ * @see https://www.drupal.org/node/3534849
  */
 function node_type_get_names() {
-  return array_map(function ($bundle_info) {
-    return $bundle_info['label'];
-  }, \Drupal::service('entity_type.bundle.info')->getBundleInfo('node'));
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'entity_type.bundle.info\')->getBundleLabels(\'node\') instead. See https://www.drupal.org/node/3534849', E_USER_DEPRECATED);
+  return \Drupal::service('entity_type.bundle.info')->getBundleLabels('node');
 }
 
 /**

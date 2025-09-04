@@ -84,6 +84,13 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
   /**
    * {@inheritdoc}
    */
+  public function getBundleLabels(string $entity_type_id): array {
+    return array_map(static fn (array $bundle_info) => $bundle_info['label'], $this->getBundleInfo($entity_type_id));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getAllBundleInfo() {
     if (empty($this->bundleInfo)) {
       $langcode = $this->languageManager->getCurrentLanguage()->getId();

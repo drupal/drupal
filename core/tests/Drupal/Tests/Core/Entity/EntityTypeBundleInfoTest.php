@@ -317,4 +317,51 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
     $this->assertSame($expected, $bundle_info);
   }
 
+  /**
+   * Tests the getBundleLabels() method.
+   *
+   * @legacy-covers ::getBundleLabels
+   *
+   * @dataProvider providerTestGetBundleLabels
+   */
+  public function testGetBundleLabels(string $entity_type_id, array $expected): void {
+    $this->moduleHandler->invokeAll('entity_bundle_info')->willReturn([]);
+    $this->moduleHandler->alter('entity_bundle_info', Argument::type('array'))->willReturn(NULL);
+
+    $apple = $this->prophesize(EntityTypeInterface::class);
+    $apple->getLabel()->willReturn('Apple');
+    $apple->getBundleEntityType()->willReturn(NULL);
+
+    $banana = $this->prophesize(EntityTypeInterface::class);
+    $banana->getLabel()->willReturn('Banana');
+    $banana->getBundleEntityType()->willReturn(NULL);
+
+    $this->setUpEntityTypeDefinitions([
+      'apple' => $apple,
+      'banana' => $banana,
+    ]);
+
+    $this->assertSame($expected, $this->entityTypeBundleInfo->getBundleLabels($entity_type_id));
+  }
+
+  /**
+   * Provides test data for testGetBundleLabels().
+   *
+   * @return array
+   *   Test data.
+   */
+  public static function providerTestGetBundleLabels(): array {
+    return [
+      [
+        'apple',
+        ['apple' => 'Apple'],
+      ],
+      [
+        'banana',
+        ['banana' => 'Banana'],
+      ],
+      ['pear', []],
+    ];
+  }
+
 }
