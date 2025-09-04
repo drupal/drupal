@@ -419,6 +419,8 @@ restrictor
 restripe
 restriped
 restui
+reswap
+retarget
 revisionable
 revisioned
 revisionid
