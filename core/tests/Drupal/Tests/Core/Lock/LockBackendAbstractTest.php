@@ -6,12 +6,17 @@ namespace Drupal\Tests\Core\Lock;
 
 use Drupal\Core\Lock\LockBackendAbstract;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * @coversDefaultClass \Drupal\Tests\Core\Lock\LockBackendAbstractTest
- * @group Lock
+ * Tests Drupal\Core\Lock\LockBackendAbstract.
  */
+#[CoversClass(LockBackendAbstract::class)]
+#[Group('Lock')]
+#[Medium]
 class LockBackendAbstractTest extends UnitTestCase {
 
   /**
@@ -46,8 +51,6 @@ class LockBackendAbstractTest extends UnitTestCase {
    * Tests the wait() method when lockMayBeAvailable() returns FALSE.
    *
    * Waiting could take 1 second so we need to extend the possible runtime.
-   *
-   * @medium
    */
   public function testWaitTrue(): void {
     $this->lock->expects($this->any())

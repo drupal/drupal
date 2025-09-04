@@ -6,18 +6,23 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Test\TestDatabase
- *
- * @group Test
- * @group simpletest
- * @group Template
+ * Tests Drupal\Core\Test\TestDatabase.
  */
+#[CoversClass(TestDatabase::class)]
+#[Group('Test')]
+#[Group('simpletest')]
+#[Group('Template')]
 class TestDatabaseTest extends UnitTestCase {
 
   /**
-   * @covers ::__construct
+   * Tests constructor exception.
+   *
+   * @legacy-covers ::__construct
    */
   public function testConstructorException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -26,13 +31,14 @@ class TestDatabaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::__construct
-   * @covers ::getDatabasePrefix
-   * @covers ::getTestSitePath
-   * @covers ::getPhpErrorLogPath
+   * Tests constructor.
    *
-   * @dataProvider providerTestConstructor
+   * @legacy-covers ::__construct
+   * @legacy-covers ::getDatabasePrefix
+   * @legacy-covers ::getTestSitePath
+   * @legacy-covers ::getPhpErrorLogPath
    */
+  #[DataProvider('providerTestConstructor')]
   public function testConstructor($db_prefix, $expected_db_prefix, $expected_site_path): void {
     $test_db = new TestDatabase($db_prefix);
     $this->assertEquals($expected_db_prefix, $test_db->getDatabasePrefix());
@@ -53,10 +59,10 @@ class TestDatabaseTest extends UnitTestCase {
   /**
    * Verify that a test lock is generated if there is no provided prefix.
    *
-   * @covers ::__construct
-   * @covers ::getDatabasePrefix
-   * @covers ::getTestSitePath
-   * @covers ::getPhpErrorLogPath
+   * @legacy-covers ::__construct
+   * @legacy-covers ::getDatabasePrefix
+   * @legacy-covers ::getTestSitePath
+   * @legacy-covers ::getPhpErrorLogPath
    */
   public function testConstructorNullPrefix(): void {
     // We use a stub class here because we can't mock getTestLock() so that it's

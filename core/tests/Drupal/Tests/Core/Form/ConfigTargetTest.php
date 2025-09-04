@@ -9,21 +9,27 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\ConfigTarget;
-use Drupal\Core\Form\ToConfig;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
+use Drupal\Core\Form\ToConfig;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\Core\Form\ConfigTarget
- * @group Form
+ * Tests Drupal\Core\Form\ConfigTarget.
  */
+#[CoversClass(ConfigTarget::class)]
+#[Group('Form')]
 class ConfigTargetTest extends UnitTestCase {
 
   /**
-   * @covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
+   * Tests duplicate targets not allowed.
+   *
+   * @legacy-covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
    */
   public function testDuplicateTargetsNotAllowed(): void {
     $form = [
@@ -61,9 +67,11 @@ class ConfigTargetTest extends UnitTestCase {
   }
 
   /**
-   * @covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
-   * @dataProvider providerTestFormCacheable
+   * Tests form cacheable.
+   *
+   * @legacy-covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
    */
+  #[DataProvider('providerTestFormCacheable')]
   public function testFormCacheable(bool $expected, ?callable $fromConfig, ?callable $toConfig): void {
     $form = [
       'test' => [
@@ -111,8 +119,10 @@ class ConfigTargetTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::fromForm
-   * @covers ::fromString
+   * Tests from form string.
+   *
+   * @legacy-covers ::fromForm
+   * @legacy-covers ::fromString
    */
   public function testFromFormString(): void {
     $form = [
@@ -134,7 +144,9 @@ class ConfigTargetTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::fromForm
+   * Tests from form config target.
+   *
+   * @legacy-covers ::fromForm
    */
   public function testFromFormConfigTarget(): void {
     $form = [
@@ -155,9 +167,11 @@ class ConfigTargetTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::fromForm
-   * @dataProvider providerTestFromFormException
+   * Tests from form exception.
+   *
+   * @legacy-covers ::fromForm
    */
+  #[DataProvider('providerTestFromFormException')]
   public function testFromFormException(array $form, array $array_parents, string $exception_message): void {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage($exception_message);
@@ -207,8 +221,9 @@ class ConfigTargetTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider providerMultiTargetWithoutCallables
+   * Tests multi target without callables.
    */
+  #[DataProvider('providerMultiTargetWithoutCallables')]
   public function testMultiTargetWithoutCallables(...$arguments): void {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');

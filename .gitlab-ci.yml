@@ -583,6 +583,7 @@ default:
     KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
     _TARGET_PHP: "8.3-ubuntu"
+    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ PHPUnit Unit tests on PHP 8.4':
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
@@ -590,6 +591,7 @@ default:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
+    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ PHPUnit Unit tests on PHP 8.5':
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
@@ -599,6 +601,7 @@ default:
     KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
     _TARGET_PHP: "8.5-ubuntu"
+    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ Component unit tests on PHP 8.3':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]

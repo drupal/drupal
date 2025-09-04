@@ -321,9 +321,8 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
    * Tests the getBundleLabels() method.
    *
    * @legacy-covers ::getBundleLabels
-   *
-   * @dataProvider providerTestGetBundleLabels
    */
+  #[DataProvider('providerTestGetBundleLabels')]
   public function testGetBundleLabels(string $entity_type_id, array $expected): void {
     $this->moduleHandler->invokeAll('entity_bundle_info')->willReturn([]);
     $this->moduleHandler->alter('entity_bundle_info', Argument::type('array'))->willReturn(NULL);

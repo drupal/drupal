@@ -9,12 +9,16 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\Utility\CallableResolver
- * @group Utility
+ * Tests Drupal\Core\Utility\CallableResolver.
  */
+#[CoversClass(CallableResolver::class)]
+#[Group('Utility')]
 class CallableResolverTest extends UnitTestCase {
 
   /**
@@ -39,7 +43,9 @@ class CallableResolverTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCallableFromDefinition
+   * Tests callback resolver.
+   *
+   * @legacy-covers ::getCallableFromDefinition
    */
   public function testCallbackResolver(): void {
     $cases = [
@@ -48,7 +54,7 @@ class CallableResolverTest extends UnitTestCase {
           return __METHOD__ . '+' . $suffix;
         },
         PHP_VERSION_ID >= 80400 ?
-        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():47}' :
+        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():53}' :
         'Drupal\Tests\Core\Utility\{closure}',
       ],
       'First-class callable function' => [
@@ -62,7 +68,7 @@ class CallableResolverTest extends UnitTestCase {
       'Arrow function' => [
         fn($suffix) => __METHOD__ . '+' . $suffix,
         PHP_VERSION_ID >= 80400 ?
-        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():63}' :
+        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():69}' :
         'Drupal\Tests\Core\Utility\{closure}',
       ],
       'Static function' => [
@@ -110,9 +116,11 @@ class CallableResolverTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider callableResolverExceptionHandlingTestCases
-   * @covers ::getCallableFromDefinition
+   * Tests callback resolver exception handling.
+   *
+   * @legacy-covers ::getCallableFromDefinition
    */
+  #[DataProvider('callableResolverExceptionHandlingTestCases')]
   public function testCallbackResolverExceptionHandling($definition, $exception_class, $exception_message): void {
     $this->expectException($exception_class);
     $this->expectExceptionMessage($exception_message);

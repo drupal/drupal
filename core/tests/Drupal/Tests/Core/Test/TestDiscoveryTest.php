@@ -30,6 +30,8 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 class TestDiscoveryTest extends UnitTestCase {
 
   /**
+   * Tests test info parser.
+   *
    * @legacy-covers ::getTestInfo
    */
   #[DataProvider('infoParserProvider')]

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore throttleable
 
 /**
  * Tests the D6 SQL base class.
- *
- * @group migrate_drupal
  */
+#[Group('migrate_drupal')]
 class Drupal6SqlBaseTest extends MigrateTestCase {
 
   /**

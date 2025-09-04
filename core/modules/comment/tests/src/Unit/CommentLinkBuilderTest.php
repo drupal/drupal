@@ -10,11 +10,15 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\comment\CommentLinkBuilder
- * @group comment
+ * Tests Drupal\comment\CommentLinkBuilder.
  */
+#[CoversClass(CommentLinkBuilder::class)]
+#[Group('comment')]
 class CommentLinkBuilderTest extends UnitTestCase {
 
   use GeneratePermutationsTrait;
@@ -113,10 +117,9 @@ class CommentLinkBuilderTest extends UnitTestCase {
    *   Array of expected links keyed by link ID. Can be either string (link
    *   title) or array of link properties.
    *
-   * @dataProvider getLinkCombinations
-   *
-   * @covers ::buildCommentedEntityLinks
+   * @legacy-covers ::buildCommentedEntityLinks
    */
+  #[DataProvider('getLinkCombinations')]
   public function testCommentLinkBuilder(array $node_args, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected): void {
     $node = $this->getMockNode(...$node_args);
     $this->moduleHandler->expects($this->any())
