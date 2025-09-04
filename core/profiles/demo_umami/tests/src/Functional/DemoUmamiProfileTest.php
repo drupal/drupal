@@ -8,19 +8,19 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\SchemaCheckTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests demo_umami profile.
- *
- * @group demo_umami
- * @group #slow
  */
+#[Group('demo_umami')]
+#[Group('#slow')]
 class DemoUmamiProfileTest extends BrowserTestBase {
   use AssertConfigTrait;
   use SchemaCheckTestTrait;

@@ -6,15 +6,15 @@ namespace Drupal\BuildTests\Composer\Plugin\Unpack\Functional;
 
 use Composer\InstalledVersions;
 use Composer\Util\Filesystem;
-use Drupal\Tests\Composer\Plugin\Unpack\Fixtures;
 use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Tests\Composer\Plugin\ExecTrait;
+use Drupal\Tests\Composer\Plugin\Unpack\Fixtures;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests recipe unpacking.
- *
- * @group Unpack
  */
+#[Group('Unpack')]
 class UnpackRecipeTest extends BuildTestBase {
 
   use ExecTrait;

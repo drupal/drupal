@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests EntityTest Map Field Json Anon.
  */
+#[Group('rest')]
 class EntityTestMapFieldJsonAnonTest extends EntityTestMapFieldResourceTestBase {
 
   use AnonResourceTestTrait;

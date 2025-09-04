@@ -6,21 +6,21 @@ namespace Drupal\Tests\standard\FunctionalJavascript;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
-use Drupal\Tests\PerformanceData;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\PerformanceData;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 // cSpell:ignore mlid
-
 /**
  * Tests the performance of basic functionality in the standard profile.
  *
  * Stark is used as the default theme so that this test is not Olivero specific.
- *
- * @group Common
- * @group #slow
- * @requires extension apcu
  */
+#[Group('Common')]
+#[Group('#slow')]
+#[RequiresPhpExtension('apcu')]
 class StandardPerformanceTest extends PerformanceTestBase {
 
   /**

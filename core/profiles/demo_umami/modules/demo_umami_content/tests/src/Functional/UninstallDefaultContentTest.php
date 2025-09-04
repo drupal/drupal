@@ -6,13 +6,13 @@ namespace Drupal\Tests\demo_umami_content\Functional;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that uninstalling default content removes created content.
- *
- * @group demo_umami_content
- * @group #slow
  */
+#[Group('demo_umami_content')]
+#[Group('#slow')]
 class UninstallDefaultContentTest extends BrowserTestBase {
 
   /**

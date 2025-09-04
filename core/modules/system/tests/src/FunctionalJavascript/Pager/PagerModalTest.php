@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\FunctionalJavascript\Pager;
 
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests pager functionality in a modal.
- *
- * @group Pager
  */
+#[Group('Pager')]
 class PagerModalTest extends WebDriverTestBase {
 
   /**

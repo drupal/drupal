@@ -6,12 +6,12 @@ namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test normalization of computed field.
- *
- * @group rest
  */
+#[Group('rest')]
 class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
 
   use AnonResourceTestTrait;

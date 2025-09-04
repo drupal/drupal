@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests demo_umami profile performance.
- *
- * @group #slow
  */
+#[Group('#slow')]
 class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
 
   /**

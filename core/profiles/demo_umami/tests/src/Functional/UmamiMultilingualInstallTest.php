@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\demo_umami\Functional;
 
 use Drupal\FunctionalTests\Installer\InstallerTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the multilingual installer installing the Umami profile.
- *
- * @group Installer
- * @group #slow
  */
+#[Group('Installer')]
+#[Group('#slow')]
 class UmamiMultilingualInstallTest extends InstallerTestBase {
 
   /**

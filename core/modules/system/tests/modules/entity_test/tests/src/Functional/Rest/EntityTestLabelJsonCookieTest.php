@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group rest
+ * Tests EntityTest Label Json Cookie.
  */
+#[Group('rest')]
 class EntityTestLabelJsonCookieTest extends EntityTestLabelResourceTestBase {
 
   use CookieResourceTestTrait;

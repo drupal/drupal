@@ -5,31 +5,65 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing;
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore sourceediting
-
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
- * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
- * @group ckeditor5
+ * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing.
+ *
  * @internal
+ * @legacy-covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
  */
+#[CoversClass(SourceEditing::class)]
+#[Group('ckeditor5')]
 class SourceEditingEmptyElementTest extends SourceEditingTestBase {
 
   /**
    * Tests creating empty inline elements using Source Editing.
-   *
-   * @testWith ["<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>", "<p>Before and after.</p>", "<p>Before and after.</p>", null]
-   *           ["<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>", "<p>Before &nbsp;and after.</p>", null, "<i>"]
-   *           ["<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>", null, null, "<i class>"]
-   *           ["<p>Before <span class=\"icon my-icon\"></span> and after.</p>", "<p>Before and after.</p>", "<p>Before and after.</p>", null]
-   *           ["<p>Before <span class=\"icon my-icon\"></span> and after.</p>", "<p>Before &nbsp;and after.</p>", null, "<span>"]
-   *           ["<p>Before <span class=\"icon my-icon\"></span> and after.</p>", "<p>Before <span class=\"icon\"></span> and after.</p>", null, "<span class=\"icon\">"]
    */
+  #[TestWith([
+    "<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>",
+    "<p>Before and after.</p>",
+    "<p>Before and after.</p>",
+    NULL,
+  ])]
+  #[TestWith([
+    "<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>",
+    "<p>Before &nbsp;and after.</p>",
+    NULL,
+    "<i>",
+  ])]
+  #[TestWith([
+    "<p>Before <i class=\"fab fa-drupal\"></i> and after.</p>",
+    NULL,
+    NULL,
+    "<i class>",
+  ])]
+  #[TestWith([
+    "<p>Before <span class=\"icon my-icon\"></span> and after.</p>",
+    "<p>Before and after.</p>",
+    "<p>Before and after.</p>",
+    NULL,
+  ])]
+  #[TestWith([
+    "<p>Before <span class=\"icon my-icon\"></span> and after.</p>",
+    "<p>Before &nbsp;and after.</p>",
+    NULL,
+    "<span>",
+  ])]
+  #[TestWith([
+    "<p>Before <span class=\"icon my-icon\"></span> and after.</p>",
+    "<p>Before <span class=\"icon\"></span> and after.</p>",
+    NULL,
+    "<span class=\"icon\">",
+  ])]
   public function testEmptyInlineElement(string $input, ?string $expected_output_when_restricted, ?string $expected_output_when_unrestricted, ?string $allowed_elements_string): void {
     $this->host->body->value = $input;
     $this->host->save();
