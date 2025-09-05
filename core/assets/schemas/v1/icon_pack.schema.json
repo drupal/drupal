@@ -93,7 +93,7 @@
       "title": "Asset library",
       "description": "The ID of an asset library",
       "type": "string",
-      "pattern": "^\\w+/[A-Za-z]+\\w*$"
+      "pattern": "^\\w+/[A-Za-z]+[\\w-]*$"
     }
   }
 }
