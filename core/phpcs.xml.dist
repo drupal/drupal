@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- cspell:ignore Openercase -->
 <ruleset name="drupal_core">
   <arg name="extensions" value="engine,inc,install,module,php,profile,test,theme,yml"/>
   <description>Default PHP CodeSniffer configuration for Drupal core.</description>
@@ -243,6 +244,7 @@
        Drupal.Classes.PropertyDeclaration. -->
     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
   </rule>
+  <rule ref="PSR2.ControlStructures.SwitchDeclaration.WrongOpenercase"/>
   <rule ref="PSR2.Namespaces.NamespaceDeclaration"/>
   <rule ref="PSR2.Namespaces.UseDeclaration"/>
 

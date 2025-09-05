@@ -68,8 +68,8 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
       default:
         return $this->t('asc');
 
-      case 'DESC';
-      case 'desc';
+      case 'DESC':
+      case 'desc':
         return $this->t('desc');
     }
   }

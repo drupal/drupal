@@ -51,12 +51,12 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
       $redirect_url = NULL;
       if ($this->account->isAuthenticated()) {
         switch ($route_name) {
-          case 'user.login';
+          case 'user.login':
             // Redirect an authenticated user to the profile page.
             $redirect_url = Url::fromRoute('entity.user.canonical', ['user' => $this->account->id()], ['absolute' => TRUE]);
             break;
 
-          case 'user.register';
+          case 'user.register':
             // Redirect an authenticated user to the profile form.
             $redirect_url = Url::fromRoute('entity.user.edit_form', ['user' => $this->account->id()], ['absolute' => TRUE]);
             break;
