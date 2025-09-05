@@ -308,3 +308,9 @@ config_test.validation:
       type: string
       constraints:
         UriHost: ~
+
+config_test.with_plural_label:
+  type: config_object
+  mapping:
+    label:
+      type: plural_label
