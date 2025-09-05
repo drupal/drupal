@@ -32,7 +32,7 @@ class ContentTranslationEnabledSetting extends ProcessPluginBase {
     switch ($language_content_type) {
       // In the case of being 0, it will be skipped. We are not actually setting
       // a null value.
-      case 0;
+      case 0:
         $setting = NULL;
         break;
 
