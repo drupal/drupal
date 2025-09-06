@@ -41,6 +41,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $this->image->setFilename($file_system->basename($this->image->getFileUri()));
+    $this->image->setSize(@filesize($this->image->getFileUri()));
 
     $this->nonImage = File::create();
     $this->nonImage->setFileUri('core/assets/scaffold/README.txt');
@@ -121,6 +122,8 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
       // Verify that the image was scaled to the correct width and height.
       $this->assertLessThanOrEqual(10, $image->getWidth());
       $this->assertLessThanOrEqual(5, $image->getHeight());
+      // Verify that the file size has been updated after resizing.
+      $this->assertEquals($this->image->getSize(), $image->getFileSize());
 
       // Once again, now with negative width and height to force an error.
       copy('core/misc/druplicon.png', 'temporary://druplicon.png');
