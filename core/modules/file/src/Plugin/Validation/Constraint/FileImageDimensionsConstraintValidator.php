@@ -66,6 +66,7 @@ class FileImageDimensionsConstraintValidator extends BaseFileConstraintValidator
         if ($image->scale($width, $height)) {
           $scaling = TRUE;
           $image->save();
+          $file->setSize($image->getFileSize());
           if (!empty($width) && !empty($height)) {
             $this->messenger->addStatus($this->t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
               [
