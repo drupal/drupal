@@ -76,7 +76,8 @@ Ajax
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 
 Asset Library API
-- ?
+- Pierre Dureau 'pdureau' https://www.drupal.org/u/pdureau
+- Florent Torregrosa 'grimreaper' https://www.drupal.org/u/grimreaper
 
 Authentication and Authorization
 - ?
