@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation constraints for BundleConstraintValidator.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class BundleConstraintValidatorTest extends KernelTestBase {
 
   /**

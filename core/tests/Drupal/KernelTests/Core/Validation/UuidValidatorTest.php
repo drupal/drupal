@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Validation;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the UUID validator.
- *
- * @group Validation
  */
+#[Group('Validation')]
 class UuidValidatorTest extends KernelTestBase {
 
   /**

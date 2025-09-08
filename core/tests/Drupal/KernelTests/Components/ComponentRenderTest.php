@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ComponentPluginManager;
-use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the correct rendering of components.
- *
- * @group sdc
  */
+#[Group('sdc')]
 class ComponentRenderTest extends ComponentKernelTestBase {
 
   use StringTranslationTrait;

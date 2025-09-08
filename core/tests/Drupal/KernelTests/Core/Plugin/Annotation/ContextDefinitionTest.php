@@ -6,11 +6,14 @@ namespace Drupal\KernelTests\Core\Plugin\Annotation;
 
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Annotation\ContextDefinition
- * @group Plugin
+ * Tests Drupal\Core\Annotation\ContextDefinition.
  */
+#[CoversClass(\Drupal\Core\Annotation\ContextDefinition::class)]
+#[Group('Plugin')]
 class ContextDefinitionTest extends KernelTestBase {
 
   /**

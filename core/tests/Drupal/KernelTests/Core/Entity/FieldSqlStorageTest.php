@@ -9,17 +9,16 @@ use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore basefield
-
 /**
  * Tests Field SQL Storage .
  *
  * Field_sql_storage.module implements the default back-end storage plugin
  * for the Field Storage API.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class FieldSqlStorageTest extends EntityKernelTestBase {
 
   /**

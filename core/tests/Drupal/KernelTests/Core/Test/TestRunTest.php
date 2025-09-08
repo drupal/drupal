@@ -7,14 +7,17 @@ namespace Drupal\KernelTests\Core\Test;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\JUnitConverter;
 use Drupal\Core\Test\PhpUnitTestRunner;
-use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
+use Drupal\Core\Test\TestRun;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Test\TestRun
- * @group Test
+ * Tests Drupal\Core\Test\TestRun.
  */
+#[CoversClass(TestRun::class)]
+#[Group('Test')]
 class TestRunTest extends KernelTestBase {
 
   /**
@@ -45,13 +48,15 @@ class TestRunTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createNew
-   * @covers ::get
-   * @covers ::id
-   * @covers ::insertLogEntry
-   * @covers ::setDatabasePrefix
-   * @covers ::getDatabasePrefix
-   * @covers ::getTestClass
+   * Tests create and get.
+   *
+   * @legacy-covers ::createNew
+   * @legacy-covers ::get
+   * @legacy-covers ::id
+   * @legacy-covers ::insertLogEntry
+   * @legacy-covers ::setDatabasePrefix
+   * @legacy-covers ::getDatabasePrefix
+   * @legacy-covers ::getTestClass
    */
   public function testCreateAndGet(): void {
     // Test ::createNew.
@@ -81,10 +86,12 @@ class TestRunTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createNew
-   * @covers ::id
-   * @covers ::insertLogEntry
-   * @covers ::setDatabasePrefix
+   * Tests create and remove.
+   *
+   * @legacy-covers ::createNew
+   * @legacy-covers ::id
+   * @legacy-covers ::insertLogEntry
+   * @legacy-covers ::setDatabasePrefix
    */
   public function testCreateAndRemove(): void {
     $test_run_1 = TestRun::createNew($this->testRunResultsStorage);
@@ -107,12 +114,14 @@ class TestRunTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createNew
-   * @covers ::insertLogEntry
-   * @covers ::setDatabasePrefix
-   * @covers ::getLogEntriesByTestClass
-   * @covers ::getDatabasePrefix
-   * @covers ::getTestClass
+   * Tests get log entries by test class.
+   *
+   * @legacy-covers ::createNew
+   * @legacy-covers ::insertLogEntry
+   * @legacy-covers ::setDatabasePrefix
+   * @legacy-covers ::getLogEntriesByTestClass
+   * @legacy-covers ::getDatabasePrefix
+   * @legacy-covers ::getTestClass
    */
   public function testGetLogEntriesByTestClass(): void {
     $test_run = TestRun::createNew($this->testRunResultsStorage);
@@ -152,10 +161,12 @@ class TestRunTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createNew
-   * @covers ::setDatabasePrefix
-   * @covers ::processPhpErrorLogFile
-   * @covers ::getLogEntriesByTestClass
+   * Tests process php error log file.
+   *
+   * @legacy-covers ::createNew
+   * @legacy-covers ::setDatabasePrefix
+   * @legacy-covers ::processPhpErrorLogFile
+   * @legacy-covers ::getLogEntriesByTestClass
    */
   public function testProcessPhpErrorLogFile(): void {
     $test_run = TestRun::createNew($this->testRunResultsStorage);
@@ -283,7 +294,9 @@ class TestRunTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::insertLogEntry
+   * Tests process php unit results.
+   *
+   * @legacy-covers ::insertLogEntry
    */
   public function testProcessPhpUnitResults(): void {
     $phpunit_error_xml = __DIR__ . '/../../../../fixtures/phpunit_error.xml';

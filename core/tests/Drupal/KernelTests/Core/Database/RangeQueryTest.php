@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the Range query functionality.
- *
- * @group Database
  */
+#[Group('Database')]
 class RangeQueryTest extends DatabaseTestBase {
 
   /**

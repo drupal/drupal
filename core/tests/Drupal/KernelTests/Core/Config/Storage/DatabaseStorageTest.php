@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Config\Storage;
 use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests DatabaseStorage operations.
- *
- * @group config
  */
+#[Group('config')]
 class DatabaseStorageTest extends ConfigStorageTestBase {
 
   /**

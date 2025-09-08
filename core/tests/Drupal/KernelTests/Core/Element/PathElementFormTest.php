@@ -12,12 +12,12 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests PathElement validation and conversion functionality.
- *
- * @group Form
  */
+#[Group('Form')]
 class PathElementFormTest extends KernelTestBase implements FormInterface {
 
   /**

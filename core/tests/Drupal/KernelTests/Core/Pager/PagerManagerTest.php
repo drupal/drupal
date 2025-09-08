@@ -4,20 +4,26 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Pager;
 
+use Drupal\Core\Pager\PagerManager;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
- * @group Pager
- *
- * @coversDefaultClass \Drupal\Core\Pager\PagerManager
+ * Tests Drupal\Core\Pager\PagerManager.
  */
+#[CoversClass(PagerManager::class)]
+#[Group('Pager')]
 class PagerManagerTest extends KernelTestBase {
 
   /**
-   * @covers ::getUpdatedParameters
+   * Tests get updated parameters.
+   *
+   * @legacy-covers ::getUpdatedParameters
    */
   public function testGetUpdatedParameters(): void {
     $element = 2;
@@ -44,7 +50,9 @@ class PagerManagerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::findPage
+   * Tests find page.
+   *
+   * @legacy-covers ::findPage
    */
   public function testFindPage(): void {
     $request = Request::create('http://example.com', 'GET', ['page' => '0,10']);
@@ -60,10 +68,11 @@ class PagerManagerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getMaxPagerElementId
+   * Tests get max pager element id.
    *
-   * @dataProvider providerTestGetMaxPagerElementId
+   * @legacy-covers ::getMaxPagerElementId
    */
+  #[DataProvider('providerTestGetMaxPagerElementId')]
   public function testGetMaxPagerElementId(array $elements, int $expected_max_element_id): void {
     /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
     $pager_manager = $this->container->get('pager.manager');

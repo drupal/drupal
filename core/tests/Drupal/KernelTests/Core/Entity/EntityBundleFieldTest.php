@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\EntityTestHelper;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests adding a custom bundle field.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityBundleFieldTest extends EntityKernelTestBase {
 
   /**

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\ServiceProvider;
 
+use Drupal\Core\Cache\CacheFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
-use Drupal\Core\Cache\CacheFactory;
 
 /**
  * Tests service provider registration to the DIC.
- *
- * @group ServiceProvider
  */
+#[Group('ServiceProvider')]
 class ServiceProviderTest extends KernelTestBase {
 
   /**

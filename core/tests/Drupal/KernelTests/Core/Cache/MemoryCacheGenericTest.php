@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Unit test of the memory cache using the generic cache unit test base.
- *
- * @group Cache
  */
+#[Group('Cache')]
 class MemoryCacheGenericTest extends GenericCacheBackendUnitTestBase {
 
   /**

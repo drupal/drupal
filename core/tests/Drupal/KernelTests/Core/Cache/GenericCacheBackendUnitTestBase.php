@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Cache;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests any cache backend.
@@ -458,18 +459,20 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Cache\ApcuBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\BackendChain::deleteMultiple
-   * @covers \Drupal\Core\Cache\ChainedFastBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\DatabaseBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\MemoryBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\PhpBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\ApcuBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\BackendChain::deleteMultiple
-   * @covers \Drupal\Core\Cache\ChainedFastBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\DatabaseBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\MemoryBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\PhpBackend::deleteMultiple
+   * Tests delete multiple.
+   *
+   * @legacy-covers \Drupal\Core\Cache\ApcuBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\BackendChain::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\ChainedFastBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\DatabaseBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\MemoryBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\PhpBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\ApcuBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\BackendChain::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\ChainedFastBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\DatabaseBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\MemoryBackend::deleteMultiple
+   * @legacy-covers \Drupal\Core\Cache\PhpBackend::deleteMultiple
    */
   public function testDeleteMultiple(): void {
     $backend = $this->getCacheBackend();
@@ -535,18 +538,20 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Cache\ApcuBackend::getMultiple
-   * @covers \Drupal\Core\Cache\BackendChain::getMultiple
-   * @covers \Drupal\Core\Cache\ChainedFastBackend::getMultiple
-   * @covers \Drupal\Core\Cache\DatabaseBackend::getMultiple
-   * @covers \Drupal\Core\Cache\MemoryBackend::getMultiple
-   * @covers \Drupal\Core\Cache\PhpBackend::getMultiple
-   * @covers \Drupal\Core\Cache\ApcuBackend::invalidateMultiple
-   * @covers \Drupal\Core\Cache\BackendChain::invalidateMultiple
-   * @covers \Drupal\Core\Cache\ChainedFastBackend::invalidateMultiple
-   * @covers \Drupal\Core\Cache\DatabaseBackend::invalidateMultiple
-   * @covers \Drupal\Core\Cache\MemoryBackend::invalidateMultiple
-   * @covers \Drupal\Core\Cache\PhpBackend::invalidateMultiple
+   * Tests invalidate.
+   *
+   * @legacy-covers \Drupal\Core\Cache\ApcuBackend::getMultiple
+   * @legacy-covers \Drupal\Core\Cache\BackendChain::getMultiple
+   * @legacy-covers \Drupal\Core\Cache\ChainedFastBackend::getMultiple
+   * @legacy-covers \Drupal\Core\Cache\DatabaseBackend::getMultiple
+   * @legacy-covers \Drupal\Core\Cache\MemoryBackend::getMultiple
+   * @legacy-covers \Drupal\Core\Cache\PhpBackend::getMultiple
+   * @legacy-covers \Drupal\Core\Cache\ApcuBackend::invalidateMultiple
+   * @legacy-covers \Drupal\Core\Cache\BackendChain::invalidateMultiple
+   * @legacy-covers \Drupal\Core\Cache\ChainedFastBackend::invalidateMultiple
+   * @legacy-covers \Drupal\Core\Cache\DatabaseBackend::invalidateMultiple
+   * @legacy-covers \Drupal\Core\Cache\MemoryBackend::invalidateMultiple
+   * @legacy-covers \Drupal\Core\Cache\PhpBackend::invalidateMultiple
    */
   public function testInvalidate(): void {
     $backend = $this->getCacheBackend();
@@ -646,9 +651,8 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testInvalidateAll(): void {
     $backend_a = $this->getCacheBackend();
     $backend_b = $this->getCacheBackend('bootstrap');

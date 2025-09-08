@@ -6,13 +6,14 @@ namespace Drupal\KernelTests\Core\File\MimeType;
 
 use Drupal\Core\File\MimeType\MimeTypeMapInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests deprecated file features.
- *
- * @group legacy
- * @group File
  */
+#[IgnoreDeprecations]
+#[Group('File')]
 class LegacyMimeTypeTest extends KernelTestBase {
 
   /**
@@ -22,9 +23,8 @@ class LegacyMimeTypeTest extends KernelTestBase {
 
   /**
    * Tests deprecation of hook_file_mimetype_mapping_alter.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testHookFileMimetypeMappingAlter(): void {
     $this->expectDeprecation(
       'The deprecated alter hook hook_file_mimetype_mapping_alter() is implemented in these locations: Drupal\file_deprecated_test\Hook\FileDeprecatedTestThemeHooks::fileMimetypeMappingAlter. This hook is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Implement a \Drupal\Core\File\Event\MimeTypeMapLoadedEvent listener instead. See https://www.drupal.org/node/3494040'

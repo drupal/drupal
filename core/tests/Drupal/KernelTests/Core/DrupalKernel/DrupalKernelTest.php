@@ -9,17 +9,20 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore äöüßαβγδεζηθικλμνξοσὠ
-
 /**
  * Tests DIC compilation to disk.
- *
- * @group DrupalKernel
- * @coversDefaultClass \Drupal\Core\DrupalKernel
  */
+#[CoversClass(DrupalKernel::class)]
+#[Group('DrupalKernel')]
 class DrupalKernelTest extends KernelTestBase {
 
   /**
@@ -222,11 +225,11 @@ class DrupalKernelTest extends KernelTestBase {
    * @param bool $value
    *   The value to set class_loader_auto_detect to.
    *
-   * @runInSeparateProcess
-   * @preserveGlobalState disabled
-   * @covers ::boot
-   * @dataProvider providerClassLoaderAutoDetect
+   * @legacy-covers ::boot
    */
+  #[DataProvider('providerClassLoaderAutoDetect')]
+  #[PreserveGlobalState(FALSE)]
+  #[RunInSeparateProcess]
   public function testClassLoaderAutoDetect($value): void {
     // Create a virtual file system containing items that should be
     // excluded. Exception being modules directory.
@@ -263,7 +266,9 @@ class DrupalKernelTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::resetContainer
+   * Tests reset container.
+   *
+   * @legacy-covers ::resetContainer
    */
   public function testResetContainer(): void {
     $modules_enabled = [

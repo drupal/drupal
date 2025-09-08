@@ -14,11 +14,15 @@ use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @covers \Drupal\Core\Recipe\ConfigConfigurator
- * @group Recipe
+ * Tests Config Configurator.
+ *
+ * @legacy-covers \Drupal\Core\Recipe\ConfigConfigurator
  */
+#[Group('Recipe')]
 class ConfigConfiguratorTest extends KernelTestBase {
 
   use RecipeTestTrait;
@@ -56,9 +60,10 @@ class ConfigConfiguratorTest extends KernelTestBase {
   }
 
   /**
-   * @testWith [false]
-   *   [[]]
-   */
+ * Tests existing config is ignored in lenient mode.
+ */
+  #[TestWith([FALSE])]
+  #[TestWith([[]])]
   public function testExistingConfigIsIgnoredInLenientMode(array|false $strict_value): void {
     $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
     $this->assertNotEmpty($recipe->config->getConfigStorage()->listAll());

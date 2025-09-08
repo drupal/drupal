@@ -7,14 +7,14 @@ namespace Drupal\KernelTests\Core\Routing;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the exception handling for various cases.
- *
- * @group Routing
  */
+#[Group('Routing')]
 class ExceptionHandlingTest extends KernelTestBase {
 
   /**

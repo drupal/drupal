@@ -8,12 +8,12 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the URL object integration into the access system.
- *
- * @group Url
  */
+#[Group('Url')]
 class UrlIntegrationTest extends KernelTestBase {
 
   /**

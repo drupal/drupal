@@ -6,10 +6,12 @@ namespace Drupal\KernelTests\Core\Entity\Sql;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Entity
+ * Tests Sql Content Entity Storage Schema.
  */
+#[Group('Entity')]
 class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
 
   /**

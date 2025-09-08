@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Http;
 
 use Drupal\Core\Http\LinkRelationType;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests link relationships in Drupal.
- *
- * @group HTTP
  */
+#[Group('HTTP')]
 class LinkRelationsTest extends KernelTestBase {
 
   /**

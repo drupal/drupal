@@ -8,14 +8,13 @@ use Drupal\Core\Config\ExportStorageManager;
 use Drupal\Core\Config\StorageTransformerException;
 use Drupal\Core\Lock\NullLockBackend;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore arrr
-
 /**
  * Tests the export storage manager.
- *
- * @group config
  */
+#[Group('config')]
 class ExportStorageManagerTest extends KernelTestBase {
 
   /**

@@ -4,22 +4,25 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Extension;
 
+use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test whether unimplemented deprecated hook invocations trigger errors.
- *
- * @group Extension
- *
- * @coversDefaultClass Drupal\Core\Extension\ModuleHandler
  */
+#[CoversClass(ModuleHandler::class)]
+#[Group('Extension')]
 class ModuleHandlerDeprecatedHookUnimplementedTest extends KernelTestBase {
 
   /**
-   * @covers ::alterDeprecated
-   * @covers ::invokeAllDeprecated
-   * @covers ::invokeDeprecated
+   * Tests unimplemented hooks.
+   *
+   * @legacy-covers ::alterDeprecated
+   * @legacy-covers ::invokeAllDeprecated
+   * @legacy-covers ::invokeDeprecated
    */
   public function testUnimplementedHooks(): void {
     $unimplemented_hook_name = 'unimplemented_hook_name';

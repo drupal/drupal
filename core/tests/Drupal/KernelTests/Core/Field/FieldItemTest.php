@@ -9,12 +9,12 @@ use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test field item methods.
- *
- * @group Field
  */
+#[Group('Field')]
 class FieldItemTest extends EntityKernelTestBase {
 
   /**

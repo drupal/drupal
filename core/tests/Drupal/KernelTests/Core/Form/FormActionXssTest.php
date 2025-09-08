@@ -8,17 +8,16 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 // cspell:ignore attribute\'close
-
 /**
  * Ensures that a form's action attribute can't be exploited with XSS.
- *
- * @group system
  */
+#[Group('system')]
 class FormActionXssTest extends KernelTestBase implements FormInterface {
 
   /**

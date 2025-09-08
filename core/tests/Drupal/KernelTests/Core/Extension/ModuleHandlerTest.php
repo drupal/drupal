@@ -5,20 +5,24 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @coversDefaultClass \Drupal\Core\Extension\ModuleHandler
- *
- * @group Extension
+ * Tests Drupal\Core\Extension\ModuleHandler.
  */
+#[CoversClass(ModuleHandler::class)]
+#[Group('Extension')]
 class ModuleHandlerTest extends KernelTestBase {
 
   /**
    * Tests requesting the name of an invalid module.
    *
-   * @covers ::getName
+   * @legacy-covers ::getName
    */
   public function testInvalidGetName(): void {
     $this->expectException(UnknownExtensionException::class);
@@ -29,9 +33,8 @@ class ModuleHandlerTest extends KernelTestBase {
 
   /**
    * Tests deprecation of getName() function.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testGetNameDeprecation(): void {
     $this->expectDeprecation('Drupal\Core\Extension\ModuleHandler::getName() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017');
     $this->assertNotNull(\Drupal::service('module_handler')->getName('module_test'));
@@ -40,7 +43,7 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * Tests that resetImplementations() clears the hook memory cache.
    *
-   * @covers ::resetImplementations
+   * @legacy-covers ::resetImplementations
    */
   public function testResetImplementationsClearsHooks(): void {
     $oldModuleHandler = \Drupal::moduleHandler();

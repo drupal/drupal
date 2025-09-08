@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\TypedData;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests ComplexData validation with both valid and invalid values.
- *
- * @group Validation
  */
+#[Group('Validation')]
 class ComplexDataConstraintValidatorTest extends KernelTestBase {
 
   /**

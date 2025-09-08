@@ -6,12 +6,16 @@ namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element\Actions;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Render\Element\Actions
- * @group Render
+ * Tests Drupal\Core\Render\Element\Actions.
  */
+#[CoversClass(Actions::class)]
+#[Group('Render')]
 class ActionsTest extends KernelTestBase implements FormInterface {
 
   /**

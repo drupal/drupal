@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Entity\ContentEntityStorageBase;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\ContentEntityStorageBase
- *
- * @group Entity
+ * Tests Drupal\Core\Entity\ContentEntityStorageBase.
  */
+#[CoversClass(ContentEntityStorageBase::class)]
+#[Group('Entity')]
 class ContentEntityStorageBaseTest extends KernelTestBase {
 
   /**
@@ -29,10 +33,11 @@ class ContentEntityStorageBaseTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::create
+   * Tests create.
    *
-   * @dataProvider providerTestCreate
+   * @legacy-covers ::create
    */
+  #[DataProvider('providerTestCreate')]
   public function testCreate(string|array $bundle): void {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
 
@@ -50,7 +55,9 @@ class ContentEntityStorageBaseTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::create
+   * Tests re create.
+   *
+   * @legacy-covers ::create
    */
   public function testReCreate(): void {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');

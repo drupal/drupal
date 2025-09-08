@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Calculating the difference between two sets of configuration.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigDiffTest extends KernelTestBase {
 
   /**

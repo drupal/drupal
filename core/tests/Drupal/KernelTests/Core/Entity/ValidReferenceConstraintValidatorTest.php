@@ -14,12 +14,12 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation constraints for ValidReferenceConstraintValidator.
- *
- * @group Validation
  */
+#[Group('Validation')]
 class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

@@ -6,12 +6,13 @@ namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\config\StorageReplaceDataWrapper;
 use Drupal\Core\Config\StorageInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests StorageReplaceDataWrapper operations.
- *
- * @group config
  */
+#[Group('config')]
 class StorageReplaceDataWrapperTest extends ConfigStorageTestBase {
 
   /**
@@ -62,9 +63,8 @@ class StorageReplaceDataWrapperTest extends ConfigStorageTestBase {
    *
    * @param string $collection
    *   The collection name.
-   *
-   * @dataProvider providerCollections
    */
+  #[DataProvider('providerCollections')]
   public function testCreateCollection($collection): void {
     $initial_collection_name = $this->storage->getCollectionName();
 

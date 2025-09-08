@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
- * @covers \Drupal\KernelTests\Core\Entity\EntityKernelTestBase
+ * Tests Entity Kernel Test Base.
  *
- * @group Entity
+ * @legacy-covers \Drupal\KernelTests\Core\Entity\EntityKernelTestBase
  */
+#[Group('Entity')]
 class EntityKernelTestBaseTest extends EntityKernelTestBase {
 
   /**

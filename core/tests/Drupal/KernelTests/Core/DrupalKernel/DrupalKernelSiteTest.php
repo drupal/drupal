@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\DrupalKernel;
 
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests site-specific service overrides.
- *
- * @group DrupalKernel
  */
+#[Group('DrupalKernel')]
 class DrupalKernelSiteTest extends KernelTestBase {
 
   /**

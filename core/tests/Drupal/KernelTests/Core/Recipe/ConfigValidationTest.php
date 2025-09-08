@@ -9,10 +9,12 @@ use Drupal\Core\Recipe\InvalidConfigException;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Recipe
+ * Tests Config Validation.
  */
+#[Group('Recipe')]
 class ConfigValidationTest extends KernelTestBase {
 
   /**

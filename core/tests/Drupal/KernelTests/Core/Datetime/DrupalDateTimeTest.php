@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Datetime;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests DrupalDateTime functionality.
- *
- * @group Datetime
  */
+#[Group('Datetime')]
 class DrupalDateTimeTest extends KernelTestBase {
 
   use UserCreationTrait;

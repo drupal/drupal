@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Datetime;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests timestamp schema.
- *
- * @group Common
  */
+#[Group('Common')]
 class TimestampSchemaTest extends KernelTestBase {
 
   /**

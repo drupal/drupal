@@ -4,26 +4,28 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\entity_test\Entity\EntityTestDefaultAccess;
-use Drupal\entity_test\Entity\EntityTestNoUuid;
 use Drupal\entity_test\Entity\EntityTestLabel;
+use Drupal\entity_test\Entity\EntityTestNoUuid;
 use Drupal\entity_test\Entity\EntityTestRev;
+use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the entity access control handler.
- *
- * @coversDefaultClass \Drupal\Core\Entity\EntityAccessControlHandler
- * @group Entity
  */
+#[CoversClass(EntityAccessControlHandler::class)]
+#[Group('Entity')]
 class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
   /**
@@ -298,9 +300,9 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   /**
    * Tests the default access handling for the ID and UUID fields.
    *
-   * @covers ::fieldAccess
-   * @dataProvider providerTestFieldAccess
+   * @legacy-covers ::fieldAccess
    */
+  #[DataProvider('providerTestFieldAccess')]
   public function testFieldAccess($entity_class, array $entity_create_values, $expected_id_create_access): void {
     // Set up a non-admin user that is allowed to create and update test
     // entities.

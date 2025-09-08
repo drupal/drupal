@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\DrupalKernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests that services are correctly destructed.
- *
- * @group DrupalKernel
  */
+#[Group('DrupalKernel')]
 class ServiceDestructionTest extends KernelTestBase {
 
   /**
@@ -58,7 +58,9 @@ class ServiceDestructionTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass::process
+   * Tests destructable services order.
+   *
+   * @legacy-covers \Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass::process
    */
   public function testDestructableServicesOrder(): void {
     // Destructable services before the module is enabled.

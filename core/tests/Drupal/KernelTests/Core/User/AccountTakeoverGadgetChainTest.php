@@ -9,12 +9,12 @@ namespace Drupal\KernelTests\Core\User;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests protection against SA-CORE-2024-007 Gadget Chain.
- *
- * @group user
  */
+#[Group('user')]
 class AccountTakeoverGadgetChainTest extends KernelTestBase {
 
   use UserCreationTrait;

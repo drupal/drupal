@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests built-in message theme functions.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class MessageTest extends KernelTestBase {
 
   /**

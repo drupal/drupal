@@ -15,12 +15,12 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests auto-wiring services.
- *
- * @group DependencyInjection
  */
+#[Group('DependencyInjection')]
 class AutowireTest extends KernelTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

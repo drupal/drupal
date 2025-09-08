@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\Component\Exception\ComponentNotFoundException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the component plugin manager.
- *
- * @group sdc
  */
+#[Group('sdc')]
 class ComponentPluginManagerTest extends ComponentKernelTestBase {
 
   /**

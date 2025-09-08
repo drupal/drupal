@@ -8,13 +8,13 @@ use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of base_field_override entities.
- *
- * @group Entity
- * @group Validation
  */
+#[Group('Entity')]
+#[Group('Validation')]
 class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

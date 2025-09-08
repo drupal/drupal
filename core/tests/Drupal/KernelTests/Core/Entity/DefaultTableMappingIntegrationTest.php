@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the default table mapping class for content entities stored in SQL.
  *
  * @see \Drupal\Core\Entity\Sql\DefaultTableMapping
  * @see \Drupal\Core\Entity\Sql\TableMappingInterface
- *
- * @coversDefaultClass \Drupal\Core\Entity\Sql\DefaultTableMapping
- * @group Entity
  */
+#[CoversClass(DefaultTableMapping::class)]
+#[Group('Entity')]
 class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;
@@ -76,7 +78,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   /**
    * Tests DefaultTableMapping::getFieldTableName().
    *
-   * @covers ::getFieldTableName
+   * @legacy-covers ::getFieldTableName
    */
   public function testGetFieldTableName(): void {
     // Test the field table name for a single-valued base field, which is stored
@@ -96,7 +98,9 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   }
 
   /**
-   * @covers ::getAllFieldTableNames
+   * Tests get all field table names.
+   *
+   * @legacy-covers ::getAllFieldTableNames
    */
   public function testGetAllFieldTableNames(): void {
     // Check a field that is stored in all the shared tables.
@@ -135,7 +139,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   /**
    * Tests DefaultTableMapping::getTableNames().
    *
-   * @covers ::getTableNames
+   * @legacy-covers ::getTableNames
    */
   public function testGetTableNames(): void {
     $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_mulrev');

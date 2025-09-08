@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests queries that include reserved words.
- *
- * @group Database
  */
+#[Group('Database')]
 class ReservedWordTest extends DatabaseTestBase {
 
   /**

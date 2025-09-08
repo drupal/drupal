@@ -8,12 +8,12 @@ use Drupal\Core\Config\Checkpoint\CheckpointStorageInterface;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests CheckpointStorage operations.
- *
- * @group config
  */
+#[Group('config')]
 class CheckpointStorageTest extends KernelTestBase {
 
   /**

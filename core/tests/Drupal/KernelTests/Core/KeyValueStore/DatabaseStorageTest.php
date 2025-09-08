@@ -8,12 +8,12 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseFactory;
 use Drupal\Core\KeyValueStore\KeyValueFactory;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the key-value database storage.
- *
- * @group KeyValueStore
  */
+#[Group('KeyValueStore')]
 class DatabaseStorageTest extends StorageTestBase {
 
   /**

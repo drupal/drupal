@@ -10,14 +10,16 @@ use Drupal\Core\Action\ActionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\MenuInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Plugin
- * @group Validation
+ * Tests Plugin Exists Constraint Validator.
  *
- * @covers \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint
- * @covers \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraintValidator
+ * @legacy-covers \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint
+ * @legacy-covers \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraintValidator
  */
+#[Group('Plugin')]
+#[Group('Validation')]
 class PluginExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests handling of some invalid data.
- *
- * @group Database
  */
+#[Group('Database')]
 class InvalidDataTest extends DatabaseTestBase {
 
   /**

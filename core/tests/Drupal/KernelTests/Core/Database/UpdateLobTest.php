@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the Update query builder with LOB fields.
- *
- * @group Database
  */
+#[Group('Database')]
 class UpdateLobTest extends DatabaseTestBase {
 
   /**

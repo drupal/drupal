@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Query\SelectExtender;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Select query builder.
- *
- * @group Database
  */
+#[Group('Database')]
 class SelectTest extends DatabaseTestBase {
 
   /**
@@ -520,9 +521,8 @@ class SelectTest extends DatabaseTestBase {
 
   /**
    * Tests that filter by 'REGEXP' and 'NOT REGEXP' works as expected.
-   *
-   * @dataProvider providerRegularExpressionCondition
    */
+  #[DataProvider('providerRegularExpressionCondition')]
   public function testRegularExpressionCondition($expected, $column, $pattern, $operator): void {
     $database = $this->container->get('database');
     $database->insert('test')
@@ -616,9 +616,8 @@ class SelectTest extends DatabaseTestBase {
 
   /**
    * Tests thrown exception for non array operator conditions with array value.
-   *
-   * @dataProvider providerNonArrayOperatorWithArrayValueCondition
    */
+  #[DataProvider('providerNonArrayOperatorWithArrayValueCondition')]
   public function testNonArrayOperatorWithArrayValueCondition($operator, $operator_in_exception_message): void {
     $this->expectException(InvalidQueryException::class);
     $this->expectExceptionMessage("Query condition 'age " . $operator_in_exception_message . " 26, 27' must have an array compatible operator.");

@@ -7,14 +7,15 @@ namespace Drupal\KernelTests\Core\EventSubscriber;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests that HTTP exceptions are logged correctly.
- *
- * @group system
  */
+#[Group('system')]
 class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
   /**
@@ -31,9 +32,8 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
   /**
    * Tests \Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber::onException().
-   *
-   * @dataProvider exceptionDataProvider
    */
+  #[DataProvider('exceptionDataProvider')]
   public function testExceptionLogging(int $error_code, string $channel, int $log_level, string $exception = ''): void {
     $http_kernel = \Drupal::service('http_kernel');
 

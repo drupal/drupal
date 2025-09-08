@@ -14,12 +14,12 @@ use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests deriving metadata of core data types.
- *
- * @group TypedData
  */
+#[Group('TypedData')]
 class TypedDataDefinitionTest extends KernelTestBase {
 
   /**

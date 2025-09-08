@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\File\MimeType;
 
+use Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 // cspell:ignore garply tarz
-
 /**
  * Tests filename mimetype detection.
  *
  * Installing the 'file_deprecated_test' module allows the legacy hook
  * file_deprecated_test_file_mimetype_mapping_alter to execute and add some
  * mappings. We check here that they are.
- *
- * @group File
- * @group legacy
- * @coversDefaultClass \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
  */
+#[CoversClass(ExtensionMimeTypeGuesser::class)]
+#[Group('File')]
+#[IgnoreDeprecations]
 class ExtensionMimeTypeGuesserLegacyTest extends KernelTestBase {
 
   /**
@@ -29,7 +31,7 @@ class ExtensionMimeTypeGuesserLegacyTest extends KernelTestBase {
   /**
    * Tests mapping of mimetypes from filenames.
    *
-   * @covers ::guessMimeType
+   * @legacy-covers ::guessMimeType
    */
   public function testGuessMimeType(): void {
     $prefixes = ['public://', 'private://', 'temporary://', 'dummy-remote://'];
@@ -82,8 +84,8 @@ class ExtensionMimeTypeGuesserLegacyTest extends KernelTestBase {
   /**
    * Tests mapping of mimetypes from filenames.
    *
-   * @covers ::guessMimeType
-   * @covers ::setMapping
+   * @legacy-covers ::guessMimeType
+   * @legacy-covers ::setMapping
    */
   public function testFileMimeTypeDetectionCustomMapping(): void {
     /** @var \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser $extension_guesser */

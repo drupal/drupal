@@ -13,12 +13,12 @@ use Drupal\entity_test\EntityTestTypesFilter;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests entity translation functionality.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityTranslationTest extends EntityLanguageTestBase {
 
   /**

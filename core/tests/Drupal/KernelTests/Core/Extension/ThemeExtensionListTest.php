@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Extension;
 
+use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Extension\ThemeExtensionList
- * @group Extension
+ * Tests Drupal\Core\Extension\ThemeExtensionList.
  */
+#[CoversClass(ThemeExtensionList::class)]
+#[Group('Extension')]
 class ThemeExtensionListTest extends KernelTestBase {
 
   /**
-   * @covers ::getList
+   * Tests get list.
+   *
+   * @legacy-covers ::getList
    */
   public function testGetList(): void {
     \Drupal::configFactory()->getEditable('core.extension')

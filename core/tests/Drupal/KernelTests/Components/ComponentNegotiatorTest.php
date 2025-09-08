@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Components;
 
+use Drupal\Core\Theme\ComponentNegotiator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the component negotiator.
- *
- * @coversDefaultClass \Drupal\Core\Theme\ComponentNegotiator
- * @group sdc
  */
+#[CoversClass(ComponentNegotiator::class)]
+#[Group('sdc')]
 class ComponentNegotiatorTest extends ComponentKernelTestBase {
 
   /**
@@ -30,7 +33,9 @@ class ComponentNegotiatorTest extends ComponentKernelTestBase {
   ];
 
   /**
-   * @covers ::negotiate
+   * Tests negotiate.
+   *
+   * @legacy-covers ::negotiate
    */
   public function testNegotiate(): void {
     $data = [

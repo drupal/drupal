@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\File\FileExists;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the file_unmanaged_save_data() function.
- *
- * @group File
  */
+#[Group('File')]
 class FileSaveDataTest extends FileTestBase {
 
   /**

@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Log;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the query logging facility.
- *
- * @coversDefaultClass \Drupal\Core\Database\Log
- *
- * @group Database
  */
+#[CoversClass(Log::class)]
+#[Group('Database')]
 class LoggingTest extends DatabaseTestBase {
 
   /**

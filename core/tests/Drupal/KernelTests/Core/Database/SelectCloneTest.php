@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests cloning Select queries.
- *
- * @group Database
  */
+#[Group('Database')]
 class SelectCloneTest extends DatabaseTestBase {
 
   /**

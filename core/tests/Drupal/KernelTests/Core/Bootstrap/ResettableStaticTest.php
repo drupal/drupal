@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Bootstrap;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that drupal_static() and drupal_static_reset() work.
- *
- * @group Bootstrap
  */
+#[Group('Bootstrap')]
 class ResettableStaticTest extends KernelTestBase {
 
   /**

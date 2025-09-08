@@ -6,14 +6,14 @@ namespace Drupal\KernelTests\Core\KeyValueStore;
 
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\entity_test\Entity\EntityTestLabel;
+use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests KeyValueEntityStorage for content entities.
- *
- * @group KeyValueStore
  */
+#[Group('KeyValueStore')]
 class KeyValueContentEntityStorageTest extends KernelTestBase {
 
   /**
@@ -32,7 +32,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
   /**
    * Tests CRUD operations.
    *
-   * @covers \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage::hasData
+   * @legacy-covers \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage::hasData
    */
   public function testCRUD(): void {
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();

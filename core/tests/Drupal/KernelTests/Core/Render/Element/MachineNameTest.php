@@ -6,12 +6,16 @@ namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element\MachineName;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Render\Element\MachineName
- * @group Render
+ * Tests Drupal\Core\Render\Element\MachineName.
  */
+#[CoversClass(MachineName::class)]
+#[Group('Render')]
 class MachineNameTest extends KernelTestBase implements FormInterface {
 
   /**

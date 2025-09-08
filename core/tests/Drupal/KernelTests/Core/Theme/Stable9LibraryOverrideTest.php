@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Theme;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests Stable 9's library overrides.
- *
- * @group Theme
- * @group #slow
  */
+#[Group('Theme')]
+#[Group('#slow')]
 class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
 
   /**

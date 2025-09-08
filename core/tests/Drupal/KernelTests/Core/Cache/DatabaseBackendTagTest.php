@@ -9,13 +9,13 @@ use Drupal\Core\Cache\CacheTagsPurgeInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests DatabaseBackend cache tag implementation.
- *
- * @group Cache
  */
+#[Group('Cache')]
 class DatabaseBackendTagTest extends KernelTestBase {
 
   /**

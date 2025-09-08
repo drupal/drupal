@@ -6,13 +6,17 @@ namespace Drupal\KernelTests\Core\Hook;
 
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPass
- * @group Hook
+ * Tests Drupal\Core\Hook\HookCollectorPass.
  */
+#[CoversClass(HookCollectorPass::class)]
+#[Group('Hook')]
 class HookCollectorPassTest extends KernelTestBase {
 
   /**
@@ -52,9 +56,8 @@ class HookCollectorPassTest extends KernelTestBase {
 
   /**
    * Test that ordering works.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testOrdering(): void {
     $container = new ContainerBuilder();
     $module_filenames = [

@@ -18,6 +18,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -27,9 +29,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Confirm that the default route provider is working correctly.
- *
- * @group Routing
  */
+#[Group('Routing')]
 class RouteProviderTest extends KernelTestBase {
 
   use PathAliasTestTrait;
@@ -229,9 +230,8 @@ class RouteProviderTest extends KernelTestBase {
 
   /**
    * Confirms that we find routes using a case-insensitive path match.
-   *
-   * @dataProvider providerMixedCaseRoutePaths
    */
+  #[DataProvider('providerMixedCaseRoutePaths')]
   public function testMixedCasePaths($path, $expected_route_name, $method = 'GET'): void {
     $connection = Database::getConnection();
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
@@ -273,9 +273,8 @@ class RouteProviderTest extends KernelTestBase {
 
   /**
    * Confirms that we find all routes with the same path.
-   *
-   * @dataProvider providerDuplicateRoutePaths
    */
+  #[DataProvider('providerDuplicateRoutePaths')]
   public function testDuplicateRoutePaths($path, $number, $expected_route_name = NULL): void {
     $connection = Database::getConnection();
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
@@ -750,7 +749,9 @@ class RouteProviderTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Routing\RouteProvider::getRouteAliases
+   * Tests route aliases.
+   *
+   * @legacy-covers \Drupal\Core\Routing\RouteProvider::getRouteAliases
    */
   public function testRouteAliases(): void {
     $connection = Database::getConnection();

@@ -9,16 +9,21 @@ use Drupal\Core\Test\EnvironmentCleaner;
 use Drupal\Core\Test\TestRunResultsStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Console\Output\NullOutput;
 
 /**
- * @coversDefaultClass \Drupal\Core\Test\EnvironmentCleaner
- * @group Test
+ * Tests Drupal\Core\Test\EnvironmentCleaner.
  */
+#[CoversClass(EnvironmentCleaner::class)]
+#[Group('Test')]
 class EnvironmentCleanerTest extends KernelTestBase {
 
   /**
-   * @covers ::doCleanTemporaryDirectories
+   * Tests do clean temporary directories.
+   *
+   * @legacy-covers ::doCleanTemporaryDirectories
    */
   public function testDoCleanTemporaryDirectories(): void {
     vfsStream::setup('cleanup_test', NULL, [

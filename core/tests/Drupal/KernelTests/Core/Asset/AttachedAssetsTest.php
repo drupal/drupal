@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Asset;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests #attached assets: attached asset libraries and JavaScript settings.
@@ -17,10 +18,9 @@ use Drupal\KernelTests\KernelTestBase;
  * $build['#attached']['library'] = …
  * $build['#attached']['drupalSettings'] = …
  * @endcode
- *
- * @group Common
- * @group Asset
  */
+#[Group('Common')]
+#[Group('Asset')]
 class AttachedAssetsTest extends KernelTestBase {
 
   /**

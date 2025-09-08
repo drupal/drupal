@@ -10,12 +10,12 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests importing configuration from files into active configuration.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigImporterTest extends KernelTestBase {
 
   /**

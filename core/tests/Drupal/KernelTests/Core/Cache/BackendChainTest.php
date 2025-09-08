@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Cache;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\BackendChain;
 use Drupal\Core\Cache\MemoryBackend;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Unit test of the backend chain using the generic cache unit test base.
- *
- * @group Cache
  */
+#[Group('Cache')]
 class BackendChainTest extends GenericCacheBackendUnitTestBase {
 
   /**

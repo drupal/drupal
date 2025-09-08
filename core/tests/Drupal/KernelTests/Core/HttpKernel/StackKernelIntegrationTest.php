@@ -6,14 +6,14 @@ namespace Drupal\KernelTests\Core\HttpKernel;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the stacked kernel functionality.
- *
- * @group Routing
  */
+#[Group('Routing')]
 class StackKernelIntegrationTest extends KernelTestBase {
 
   /**

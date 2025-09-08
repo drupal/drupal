@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Components;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the correct rendering of components in form.
- *
- * @group sdc
  */
+#[Group('sdc')]
 class ComponentInFormTest extends ComponentKernelTestBase implements FormInterface {
 
   /**

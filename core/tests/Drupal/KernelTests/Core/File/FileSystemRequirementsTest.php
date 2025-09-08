@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group File
+ * Tests File System Requirements.
  */
+#[Group('File')]
 class FileSystemRequirementsTest extends KernelTestBase {
 
   /**

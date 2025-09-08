@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Menu;
 
+use Drupal\Core\Menu\LocalActionManager;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the local action manager.
- *
- * @coversDefaultClass \Drupal\Core\Menu\LocalActionManager
- * @group Menu
  */
+#[CoversClass(LocalActionManager::class)]
+#[Group('Menu')]
 class LocalActionManagerTest extends KernelTestBase {
 
   /**

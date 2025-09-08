@@ -6,13 +6,13 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of entity_view_mode entities.
- *
- * @group Entity
- * @group Validation
  */
+#[Group('Entity')]
+#[Group('Validation')]
 class EntityViewModeValidationTest extends ConfigEntityValidationTestBase {
 
   /**

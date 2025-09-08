@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Plugin\Discovery;
 
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests discovery of annotated plugins in a custom directory.
- *
- * @group Plugin
  */
+#[Group('Plugin')]
 class CustomDirectoryAnnotatedClassDiscoveryTest extends DiscoveryTestBase {
 
   /**

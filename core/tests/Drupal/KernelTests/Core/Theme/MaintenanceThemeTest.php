@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests themes and base themes are correctly loaded.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class MaintenanceThemeTest extends KernelTestBase {
 
   /**

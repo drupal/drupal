@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Cache;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the cache context optimization.
- *
- * @group Render
  */
+#[Group('Render')]
 class CacheContextOptimizationTest extends KernelTestBase {
 
   use UserCreationTrait;

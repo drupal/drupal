@@ -6,13 +6,13 @@ namespace Drupal\KernelTests\Core\Batch;
 
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the BatchNegotiator.
- *
- * @group Batch
  */
+#[Group('Batch')]
 class BatchNegotiatorTest extends KernelTestBase {
 
   /**

@@ -11,11 +11,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityClone
- * @group Recipe
+ * Tests Entity Clone Config Action.
+ *
+ * @legacy-covers \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityClone
  */
+#[Group('Recipe')]
 class EntityCloneConfigActionTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

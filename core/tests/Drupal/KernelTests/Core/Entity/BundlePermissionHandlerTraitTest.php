@@ -8,12 +8,14 @@ use Drupal\Core\Entity\BundlePermissionHandlerTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Entity\BundlePermissionHandlerTrait
- *
- * @group Entity
+ * Tests Drupal\Core\Entity\BundlePermissionHandlerTrait.
  */
+#[CoversClass(BundlePermissionHandlerTrait::class)]
+#[Group('Entity')]
 class BundlePermissionHandlerTraitTest extends KernelTestBase {
   use BundlePermissionHandlerTrait;
 
@@ -23,7 +25,9 @@ class BundlePermissionHandlerTraitTest extends KernelTestBase {
   protected static $modules = ['entity_test', 'user'];
 
   /**
-   * @covers ::generatePermissions
+   * Tests generate permissions.
+   *
+   * @legacy-covers ::generatePermissions
    */
   public function testGeneratePermissions(): void {
     EntityTestBundle::create([

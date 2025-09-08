@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\entity_test\EntityTestHelper;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests default values for entity fields.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityFieldDefaultValueTest extends EntityKernelTestBase {
 
   /**

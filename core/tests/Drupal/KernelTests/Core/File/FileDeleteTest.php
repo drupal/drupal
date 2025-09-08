@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\File\Exception\NotRegularFileException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the unmanaged file delete function.
- *
- * @group File
  */
+#[Group('File')]
 class FileDeleteTest extends FileTestBase {
 
   /**

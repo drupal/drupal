@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTestRev;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test entity duplication.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityDuplicateTest extends EntityKernelTestBase {
 
   /**

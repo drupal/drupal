@@ -10,11 +10,15 @@ use Drupal\Core\Recipe\RecipePreExistingConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @coversDefaultClass \Drupal\Core\Recipe\Recipe
- * @group Recipe
+ * Tests Drupal\Core\Recipe\Recipe.
  */
+#[CoversClass(Recipe::class)]
+#[Group('Recipe')]
 class RecipeTest extends KernelTestBase {
 
   use RecipeTestTrait;
@@ -25,9 +29,10 @@ class RecipeTest extends KernelTestBase {
   protected static $modules = ['system', 'user', 'field'];
 
   /**
-   * @testWith ["no_extensions", "No extensions" , "Testing", [], "A recipe description"]
-   *           ["install_two_modules", "Install two modules" , "Content type", ["filter", "text", "node"], ""]
-   */
+ * Tests create from directory 2.
+ */
+  #[TestWith(["no_extensions", "No extensions", "Testing", [], "A recipe description"])]
+  #[TestWith(["install_two_modules", "Install two modules", "Content type", ["filter", "text", "node"], ""])]
   public function testCreateFromDirectory2(string $recipe_name, string $expected_name, string $expected_type, array $expected_modules, string $expected_description): void {
     $recipe = Recipe::createFromDirectory('core/tests/fixtures/recipes/' . $recipe_name);
     $this->assertSame($expected_name, $recipe->name);
@@ -39,7 +44,7 @@ class RecipeTest extends KernelTestBase {
   /**
    * Tests creating a recipe from an empty directory.
    *
-   * @covers ::createFromDirectory
+   * @legacy-covers ::createFromDirectory
    */
   public function testCreateFromDirectoryNoRecipe(): void {
     $dir = uniqid('public://');
@@ -53,7 +58,7 @@ class RecipeTest extends KernelTestBase {
   /**
    * Tests creating a pre-existing configuration with a different configuration.
    *
-   * @covers ::createFromDirectory
+   * @legacy-covers ::createFromDirectory
    */
   public function testPreExistingDifferentConfiguration(): void {
     // Install the node module, its dependencies and configuration.
@@ -73,7 +78,7 @@ class RecipeTest extends KernelTestBase {
   /**
    * Tests creating an existing configuration with the same configuration.
    *
-   * @covers ::createFromDirectory
+   * @legacy-covers ::createFromDirectory
    */
   public function testPreExistingMatchingConfiguration(): void {
     // Install the node module, its dependencies and configuration.
@@ -122,7 +127,7 @@ class RecipeTest extends KernelTestBase {
   /**
    * Tests getting extra extension-specific info from a recipe.
    *
-   * @covers ::getExtra
+   * @legacy-covers ::getExtra
    */
   public function testExtra(): void {
     $recipe = $this->createRecipe([

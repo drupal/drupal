@@ -7,16 +7,18 @@ namespace Drupal\KernelTests\Core\Site;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Site\SettingsEditor;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the SettingsEditor::rewrite() function.
- *
- * @group system
  */
+#[Group('system')]
 class SettingsRewriteTest extends KernelTestBase {
 
   /**
-   * @covers \Drupal\Core\Site\SettingsEditor::rewrite
+   * Tests drupal rewrite settings.
+   *
+   * @legacy-covers \Drupal\Core\Site\SettingsEditor::rewrite
    */
   public function testDrupalRewriteSettings(): void {
     include_once $this->root . '/core/includes/install.inc';

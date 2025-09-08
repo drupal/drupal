@@ -6,13 +6,14 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Entity Query Aggregation API.
  *
- * @group Entity
  * @see \Drupal\entity_test\Entity\EntityTest
  */
+#[Group('Entity')]
 class EntityQueryAggregateTest extends EntityKernelTestBase {
 
   /**

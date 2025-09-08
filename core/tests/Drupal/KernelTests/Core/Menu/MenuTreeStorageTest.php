@@ -9,16 +9,15 @@ use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Menu\MenuTreeStorage;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore mlid
-
 /**
  * Tests the menu tree storage.
  *
- * @group Menu
- *
  * @see \Drupal\Core\Menu\MenuTreeStorage
  */
+#[Group('Menu')]
 class MenuTreeStorageTest extends KernelTestBase {
 
   /**

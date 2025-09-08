@@ -6,13 +6,17 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\TypedData\Validation\RecursiveContextualValidator;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\TypedData\Validation\RecursiveContextualValidator
- * @group Validation
+ * Tests Drupal\Core\TypedData\Validation\RecursiveContextualValidator.
  */
+#[CoversClass(RecursiveContextualValidator::class)]
+#[Group('Validation')]
 class RecursiveContextualValidatorTest extends KernelTestBase {
 
   /**

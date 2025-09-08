@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Plugin;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests that plugins implementing PluginInspectionInterface can be inspected.
- *
- * @group Plugin
  */
+#[Group('Plugin')]
 class InspectionTest extends PluginTestBase {
 
   /**

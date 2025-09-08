@@ -8,12 +8,12 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Queues and unqueues a set of items to check the basic queue functionality.
- *
- * @group Queue
  */
+#[Group('Queue')]
 class QueueTest extends KernelTestBase {
 
   /**

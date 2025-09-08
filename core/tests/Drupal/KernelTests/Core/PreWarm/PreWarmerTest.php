@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\PreWarm;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the cache prewarmer.
- *
- * @group PreWarm
  */
+#[Group('PreWarm')]
 class PreWarmerTest extends KernelTestBase {
 
   /**

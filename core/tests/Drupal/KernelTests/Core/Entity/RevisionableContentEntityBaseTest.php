@@ -8,19 +8,21 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the revision system.
  *
  * This test uses the entity_test_revlog module, which intentionally omits the
  * entity_metadata_keys fields. This causes deprecation errors.
- *
- * @coversDefaultClass \Drupal\Core\Entity\RevisionableContentEntityBase
- * @group Entity
  */
+#[CoversClass(RevisionableContentEntityBase::class)]
+#[Group('Entity')]
 class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
 
   /**
@@ -98,7 +100,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
   /**
    * Tests the behavior of the "revision_default" flag.
    *
-   * @covers \Drupal\Core\Entity\ContentEntityBase::wasDefaultRevision
+   * @legacy-covers \Drupal\Core\Entity\ContentEntityBase::wasDefaultRevision
    */
   public function testWasDefaultRevision(): void {
     $entity_type_id = 'entity_test_mul_revlog';

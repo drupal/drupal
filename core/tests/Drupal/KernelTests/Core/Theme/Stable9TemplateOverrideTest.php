@@ -7,13 +7,13 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Theme\Registry;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Stable 9's template overrides.
- *
- * @group Theme
- * @group #slow
  */
+#[Group('Theme')]
+#[Group('#slow')]
 class Stable9TemplateOverrideTest extends KernelTestBase {
 
   /**

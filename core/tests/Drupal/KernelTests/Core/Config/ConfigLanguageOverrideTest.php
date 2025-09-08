@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Confirm that language overrides work.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigLanguageOverrideTest extends KernelTestBase {
 
   /**

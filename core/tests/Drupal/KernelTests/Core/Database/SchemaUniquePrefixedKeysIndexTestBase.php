@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\DatabaseException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests adding UNIQUE keys to tables.
- *
- * @group Database
  */
+#[Group('Database')]
 abstract class SchemaUniquePrefixedKeysIndexTestBase extends DriverSpecificDatabaseTestBase {
 
   /**

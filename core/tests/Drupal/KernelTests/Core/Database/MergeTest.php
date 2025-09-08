@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\InvalidMergeQueryException;
+use Drupal\Core\Database\Query\Merge;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the MERGE query builder.
- *
- * @group Database
  */
+#[Group('Database')]
 class MergeTest extends DatabaseTestBase {
 
   /**
@@ -225,7 +225,9 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Database\Query\Merge::__toString
+   * Tests merge to string.
+   *
+   * @legacy-covers \Drupal\Core\Database\Query\Merge::__toString
    */
   public function testMergeToString(): void {
     $this->expectException(\BadMethodCallException::class);

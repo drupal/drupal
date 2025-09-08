@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Updater;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests hook_update_requirements() and hook_update_requirements_alter().
- *
- * @group Hooks
  */
+#[Group('Hooks')]
 class UpdateRequirementsTest extends KernelTestBase {
 
   use StringTranslationTrait;

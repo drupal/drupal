@@ -8,15 +8,16 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Entity Query relationship API.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityQueryRelationshipTest extends EntityKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -227,9 +228,8 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
 
   /**
    * Tests a non-existent field name in a complex query relationship.
-   *
-   * @dataProvider providerTestInvalidFieldName
    */
+  #[DataProvider('providerTestInvalidFieldName')]
   public function testInvalidFieldName(string $field_name): void {
     $this->expectException(QueryException::class);
     $this->expectExceptionMessage("'non_existent_field_name' not found");

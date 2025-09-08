@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\ClassLoader;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\ClassLoader\BackwardsCompatibilityClassLoader;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\module_autoload_test\Foo;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @coversDefaultClass Drupal\Core\ClassLoader\BackwardsCompatibilityClassLoader
- * @group ClassLoader
+ * Tests Drupal\Core\ClassLoader\BackwardsCompatibilityClassLoader.
  */
+#[CoversClass(BackwardsCompatibilityClassLoader::class)]
+#[Group('ClassLoader')]
 class BackwardsCompatibilityClassLoaderTest extends KernelTestBase {
 
   /**
@@ -32,9 +37,8 @@ class BackwardsCompatibilityClassLoaderTest extends KernelTestBase {
 
   /**
    * Tests that a moved class from a module works.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testModuleMovedClass():  void {
     // @phpstan-ignore class.notFound
     $this->expectDeprecation('Class ' . Foo::class . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0, use Drupal\Component\Utility\Random instead. See https://www.drupal.org/project/drupal/issues/3502882');

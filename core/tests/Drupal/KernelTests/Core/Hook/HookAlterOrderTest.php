@@ -10,11 +10,14 @@ use Drupal\bbb_hook_order_test\Hook\BAlterHooks;
 use Drupal\ccc_hook_order_test\Hook\CAlterHooks;
 use Drupal\ddd_hook_order_test\Hook\DAlterHooks;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @group Hook
- * @group legacy
+ * Tests Hook Alter Order.
  */
+#[Group('Hook')]
+#[IgnoreDeprecations]
 class HookAlterOrderTest extends KernelTestBase {
 
   use HookOrderTestTrait;

@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Plugin\Discovery;
 
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that plugins are correctly discovered using annotated classes.
- *
- * @group Plugin
  */
+#[Group('Plugin')]
 class AnnotatedClassDiscoveryTest extends DiscoveryTestBase {
 
   /**

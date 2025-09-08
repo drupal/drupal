@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests module overrides of configuration using event subscribers.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigModuleOverridesTest extends KernelTestBase {
 
   /**

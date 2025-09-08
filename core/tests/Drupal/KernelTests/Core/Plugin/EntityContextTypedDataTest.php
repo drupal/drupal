@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Plugin;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the interaction between entity context and typed data.
- *
- * @group Context
  */
+#[Group('Context')]
 class EntityContextTypedDataTest extends KernelTestBase {
 
   /**

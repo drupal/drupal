@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\TypedData\DataDefinition;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation constraints for EntityTypeConstraintValidator.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
 
   /**

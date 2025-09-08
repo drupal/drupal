@@ -8,16 +8,19 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\system\Plugin\ImageToolkit\GDToolkit;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 // cspell:ignore iccp, imagecreatefrom
-
 /**
  * Tests for the GD image toolkit.
- *
- * @coversDefaultClass \Drupal\system\Plugin\ImageToolkit\GDToolkit
- * @group Image
- * @requires extension gd
  */
+#[CoversClass(GDToolkit::class)]
+#[Group('Image')]
+#[RequiresPhpExtension('gd')]
 class ToolkitGdTest extends KernelTestBase {
 
   /**
@@ -288,9 +291,8 @@ class ToolkitGdTest extends KernelTestBase {
    * Since PHP can't visually check that our images have been manipulated
    * properly, build a list of expected color values for each of the corners and
    * the expected height and widths for the final images.
-   *
-   * @dataProvider providerTestImageFiles
    */
+  #[DataProvider('providerTestImageFiles')]
   public function testManipulations(string $file_name, string $test_case, string $operation, array $arguments, array $expected): void {
     // Load up a fresh image.
     $image = $this->imageFactory->get('core/tests/fixtures/files/' . $file_name);
@@ -363,8 +365,10 @@ class ToolkitGdTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getSupportedExtensions
-   * @covers ::extensionToImageType
+   * Tests supported extensions.
+   *
+   * @legacy-covers ::getSupportedExtensions
+   * @legacy-covers ::extensionToImageType
    */
   public function testSupportedExtensions(): void {
     // Test the list of supported extensions.
@@ -403,9 +407,8 @@ class ToolkitGdTest extends KernelTestBase {
 
   /**
    * Tests that GD functions for the image type are available.
-   *
-   * @dataProvider providerSupportedImageTypes
    */
+  #[DataProvider('providerSupportedImageTypes')]
   public function testGdFunctionsExist(int $type): void {
     $extension = image_type_to_extension($type, FALSE);
     $this->assertTrue(function_exists("imagecreatefrom$extension"), "imagecreatefrom$extension should exist.");
@@ -414,9 +417,8 @@ class ToolkitGdTest extends KernelTestBase {
 
   /**
    * Tests creation of image from scratch, and saving to storage.
-   *
-   * @dataProvider providerSupportedImageTypes
    */
+  #[DataProvider('providerSupportedImageTypes')]
   public function testCreateImageFromScratch(int $type): void {
     // Build an image from scratch.
     $image = $this->imageFactory->get();
@@ -523,7 +525,9 @@ class ToolkitGdTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getRequirements
+   * Tests get requirements.
+   *
+   * @legacy-covers ::getRequirements
    */
   public function testGetRequirements(): void {
     $this->assertEquals([
@@ -540,9 +544,8 @@ class ToolkitGdTest extends KernelTestBase {
    *
    * If image is saved with 'sRGB IEC61966-2.1' sRGB profile, GD will trigger
    * a warning about an incorrect sRGB profile'.
-   *
-   * @dataProvider pngImageProvider
    */
+  #[DataProvider('pngImageProvider')]
   public function testIncorrectIccpSrgbProfile(string $image_uri): void {
     $warning_detected = FALSE;
     // @see https://github.com/sebastianbergmann/phpunit/issues/5062

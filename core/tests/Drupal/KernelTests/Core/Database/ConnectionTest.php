@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests of the core database system.
- *
- * @group Database
  */
+#[Group('Database')]
 class ConnectionTest extends DatabaseTestBase {
 
   /**

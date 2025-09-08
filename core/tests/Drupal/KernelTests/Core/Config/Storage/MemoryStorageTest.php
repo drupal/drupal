@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Core\Config\MemoryStorage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests MemoryStorage operations.
- *
- * @group config
  */
+#[Group('config')]
 class MemoryStorageTest extends ConfigStorageTestBase {
 
   /**

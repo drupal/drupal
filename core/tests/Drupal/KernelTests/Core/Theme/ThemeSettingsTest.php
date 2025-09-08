@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests theme settings functionality.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class ThemeSettingsTest extends KernelTestBase {
 
   /**

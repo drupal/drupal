@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Core\File\FileSystem;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests \Drupal\Core\File\FileSystemInterface::scanDirectory().
- *
- * @coversDefaultClass \Drupal\Core\File\FileSystem
- * @group File
  */
+#[CoversClass(FileSystem::class)]
+#[Group('File')]
 class RemoteFileScanDirectoryTest extends ScanDirectoryTest {
 
   /**

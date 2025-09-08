@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\SelectExtender;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the tagging capabilities of the Select builder.
  *
  * Tags are a way to flag queries for alter hooks so they know
  * what type of query it is, such as "node_access".
- *
- * @group Database
  */
+#[Group('Database')]
 class TaggingTest extends DatabaseTestBase {
 
   /**

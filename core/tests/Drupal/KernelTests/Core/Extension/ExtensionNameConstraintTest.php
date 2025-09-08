@@ -6,14 +6,14 @@ namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ExtensionName constraint.
  *
- * @group Validation
- *
- * @covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionNameConstraint
+ * @legacy-covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionNameConstraint
  */
+#[Group('Validation')]
 class ExtensionNameConstraintTest extends KernelTestBase {
 
   /**

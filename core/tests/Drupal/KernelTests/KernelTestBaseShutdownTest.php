@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
- * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
- *
- * @group PHPUnit
- * @group Test
- * @group KernelTests
+ * Tests Drupal\KernelTests\KernelTestBase.
  */
+#[CoversClass(KernelTestBase::class)]
+#[Group('PHPUnit')]
+#[Group('Test')]
+#[Group('KernelTests')]
 class KernelTestBaseShutdownTest extends KernelTestBase {
 
   /**
@@ -37,7 +40,9 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::assertPostConditions
+   * Tests shutdown function.
+   *
+   * @legacy-covers ::assertPostConditions
    */
   public function testShutdownFunction(): void {
     $this->expectedShutdownCalled = ['shutdownFunction', 'shutdownFunction2'];
@@ -45,7 +50,9 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::assertPostConditions
+   * Tests no shutdown function.
+   *
+   * @legacy-covers ::assertPostConditions
    */
   public function testNoShutdownFunction(): void {
     $this->expectedShutdownCalled = [];

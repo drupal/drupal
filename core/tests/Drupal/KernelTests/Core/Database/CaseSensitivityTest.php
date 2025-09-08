@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests handling case sensitive collation.
- *
- * @group Database
  */
+#[Group('Database')]
 class CaseSensitivityTest extends DatabaseTestBase {
 
   /**

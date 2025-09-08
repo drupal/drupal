@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Entity;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests proper cloning of content entities.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class ContentEntityCloneTest extends EntityKernelTestBase {
 
   /**

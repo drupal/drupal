@@ -6,18 +6,19 @@ namespace Drupal\KernelTests\Core\Datetime\Element;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Element\Datetime;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\EntityViewTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests static callbacks returns and form submission with datetime elements.
- *
- * @coversDefaultClass \Drupal\Core\Datetime\Element\Datetime
- * @group Datetime
  */
+#[CoversClass(Datetime::class)]
+#[Group('Datetime')]
 class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterface {
 
   use EntityViewTrait;
@@ -89,7 +90,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   /**
    * Checks we have no errors on form submit.
    *
-   * @covers ::validateDatetime
+   * @legacy-covers ::validateDatetime
    */
   public function testNoErrorMetOnFormSubmit(): void {
     // No error expected when form elements have no value.
@@ -109,7 +110,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
    *
    * Test only applied to 'datetime-local' date element.
    *
-   * @covers ::valueCallback
+   * @legacy-covers ::valueCallback
    */
   public function testDatetimeLocalValueCallback(): void {
     $element = [
@@ -139,7 +140,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
    *
    * Test only applied to 'datetime-local' date element.
    *
-   * @covers ::processDatetime
+   * @legacy-covers ::processDatetime
    */
   public function testDatetimeLocalProcessDatetime(): void {
     $form = [

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Regression tests cases for the database layer.
- *
- * @group Database
  */
+#[Group('Database')]
 class RegressionTest extends DatabaseTestBase {
 
   /**

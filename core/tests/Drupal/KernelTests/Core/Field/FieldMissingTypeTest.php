@@ -9,12 +9,12 @@ use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the exception when missing a field type.
- *
- * @group Field
  */
+#[Group('Field')]
 class FieldMissingTypeTest extends EntityKernelTestBase {
 
   /**

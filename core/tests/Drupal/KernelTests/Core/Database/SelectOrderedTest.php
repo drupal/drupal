@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Statement\FetchAs;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Select query builder.
- *
- * @group Database
  */
+#[Group('Database')]
 class SelectOrderedTest extends DatabaseTestBase {
 
   /**

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config\Storage;
 
-use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\CachedStorage;
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\StreamWrapper\PublicStream;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests CachedStorage operations.
- *
- * @group config
  */
+#[Group('config')]
 class CachedStorageTest extends ConfigStorageTestBase {
 
   /**

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests exceptions thrown by queries.
- *
- * @group Database
  */
+#[Group('Database')]
 class DatabaseExceptionWrapperTest extends KernelTestBase {
 
   /**

@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Entity;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests general features of entity types.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityTypeTest extends KernelTestBase {
 
   /**

@@ -10,13 +10,14 @@ use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Tests the behavior of the ThemeRegistry class.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class RegistryTest extends KernelTestBase {
 
   /**
@@ -228,9 +229,8 @@ class RegistryTest extends KernelTestBase {
 
   /**
    * Tests page theme suggestions for 40x responses.
-   *
-   * @dataProvider provider40xThemeSuggestions
    */
+  #[DataProvider('provider40xThemeSuggestions')]
   public function test40xThemeSuggestions(int $httpCode, string $suggestion): void {
     $path_matcher = $this->prophesize(PathMatcherInterface::class);
     $path_matcher->isFrontPage()->willReturn(FALSE);

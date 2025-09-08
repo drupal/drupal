@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Core\File\FileSystem;
 use Drupal\file_test\FileTestHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests \Drupal\Core\File\FileSystem::scanDirectory.
- *
- * @coversDefaultClass \Drupal\Core\File\FileSystem
- * @group File
  */
+#[CoversClass(FileSystem::class)]
+#[Group('File')]
 class ScanDirectoryTest extends FileTestBase {
 
   /**
@@ -48,7 +50,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check the format of the returned values.
    *
-   * @covers ::scanDirectory
+   * @legacy-covers ::scanDirectory
    */
   public function testReturn(): void {
     // Grab a listing of all the JavaScript files and check that they're
@@ -75,7 +77,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check that the callback function is called correctly.
    *
-   * @covers ::scanDirectory
+   * @legacy-covers ::scanDirectory
    */
   public function testOptionCallback(): void {
 
@@ -98,7 +100,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check that the no-mask parameter is honored.
    *
-   * @covers ::scanDirectory
+   * @legacy-covers ::scanDirectory
    */
   public function testOptionNoMask(): void {
     // Grab a listing of all the JavaScript files.
@@ -113,7 +115,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check that key parameter sets the return value's key.
    *
-   * @covers ::scanDirectory
+   * @legacy-covers ::scanDirectory
    */
   public function testOptionKey(): void {
     // "filename", for the path starting with $dir.
@@ -144,7 +146,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check that the recurse option descends into subdirectories.
    *
-   * @covers ::scanDirectory
+   * @legacy-covers ::scanDirectory
    */
   public function testOptionRecurse(): void {
     $files = $this->fileSystem->scanDirectory($this->path . '/..', '/^javascript-/', ['recurse' => FALSE]);
@@ -157,7 +159,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Tests the min_depth option of scanDirectory().
    *
-   * @covers ::scanDirectory
+   * @legacy-covers ::scanDirectory
    */
   public function testOptionMinDepth(): void {
     $files = $this->fileSystem->scanDirectory($this->path, '/^javascript-/', ['min_depth' => 0]);
@@ -170,7 +172,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Tests ::scanDirectory obeys 'file_scan_ignore_directories' setting.
    *
-   * @covers ::scanDirectory
+   * @legacy-covers ::scanDirectory
    */
   public function testIgnoreDirectories(): void {
     $files = $this->fileSystem->scanDirectory('core/modules/system/tests/fixtures/IgnoreDirectories', '/\.txt$/');

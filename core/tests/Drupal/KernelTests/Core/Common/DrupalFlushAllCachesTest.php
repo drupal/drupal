@@ -6,11 +6,14 @@ namespace Drupal\KernelTests\Core\Common;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers ::drupal_flush_all_caches
- * @group Common
+ * Tests Drupal Flush All Caches.
+ *
+ * @legacy-covers ::drupal_flush_all_caches
  */
+#[Group('Common')]
 class DrupalFlushAllCachesTest extends KernelTestBase {
 
   /**

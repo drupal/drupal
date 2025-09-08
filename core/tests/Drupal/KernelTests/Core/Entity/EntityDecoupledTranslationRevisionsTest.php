@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\ContentEntityStorageBase;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test decoupled translation revisions.
- *
- * @group entity
- *
- * @coversDefaultClass \Drupal\Core\Entity\ContentEntityStorageBase
  */
+#[CoversClass(ContentEntityStorageBase::class)]
+#[Group('entity')]
 class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
 
   /**
@@ -199,10 +201,9 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *   An array with arrays of arguments for the ::doSaveNewRevision() method as
    *   values. Every child array corresponds to a method invocation.
    *
-   * @covers ::createRevision
-   *
-   * @dataProvider dataTestDecoupledPendingRevisions
+   * @legacy-covers ::createRevision
    */
+  #[DataProvider('dataTestDecoupledPendingRevisions')]
   public function testDecoupledPendingRevisions($sequence): void {
     $revision_id = $this->doTestEditSequence($sequence);
     $this->assertCount($revision_id, $sequence);
@@ -259,11 +260,10 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *   Whether untranslatable field changes affect all revisions or only the
    *   default revision.
    *
-   * @covers ::createRevision
-   * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
-   *
-   * @dataProvider dataTestUntranslatableFields
+   * @legacy-covers ::createRevision
+   * @legacy-covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
    */
+  #[DataProvider('dataTestUntranslatableFields')]
   public function testUntranslatableFields($sequence, $default_translation_affected): void {
     // Configure the untranslatable fields edit mode.
     $this->state->set('entity_test.untranslatable_fields.default_translation_affected', $default_translation_affected);
@@ -495,8 +495,8 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * Checks that changes to multiple translations are handled correctly.
    *
-   * @covers ::createRevision
-   * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
+   * @legacy-covers ::createRevision
+   * @legacy-covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
    */
   public function testMultipleTranslationChanges(): void {
     // Configure the untranslatable fields edit mode.
@@ -555,7 +555,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * Tests that deleted translations are not accidentally restored.
    *
-   * @covers ::createRevision
+   * @legacy-covers ::createRevision
    */
   public function testRemovedTranslations(): void {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -590,7 +590,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * Checks that the revision create hook works as expected.
    *
-   * @covers ::createRevision
+   * @legacy-covers ::createRevision
    */
   public function testCreateRevisionHook(): void {
     $entity = EntityTestMulRev::create();

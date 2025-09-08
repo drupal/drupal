@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the update query builder.
- *
- * @group Database
  */
+#[Group('Database')]
 class UpdateTest extends DatabaseTestBase {
 
   /**

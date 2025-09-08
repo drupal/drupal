@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\PreloadableRouteProviderInterface;
 use Drupal\Core\Routing\RouteProvider as RouteProviderBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RouteProvider implements PreloadableRouteProviderInterface {
 
-  use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
+  use DependencySerializationTrait;
 
   /**
    * The route provider service.

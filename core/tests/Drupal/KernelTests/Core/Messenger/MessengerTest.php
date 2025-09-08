@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Messenger;
 
+use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Messenger
- * @coversDefaultClass \Drupal\Core\Messenger\Messenger
+ * Tests Drupal\Core\Messenger\Messenger.
  */
+#[CoversClass(Messenger::class)]
+#[Group('Messenger')]
 class MessengerTest extends KernelTestBase {
 
   /**
@@ -31,9 +35,11 @@ class MessengerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::addStatus
-   * @covers ::deleteByType
-   * @covers ::messagesByType
+   * Tests remove single message.
+   *
+   * @legacy-covers ::addStatus
+   * @legacy-covers ::deleteByType
+   * @legacy-covers ::messagesByType
    */
   public function testRemoveSingleMessage(): void {
 
@@ -58,12 +64,12 @@ class MessengerTest extends KernelTestBase {
   /**
    * Tests we don't add duplicates.
    *
-   * @covers ::all
-   * @covers ::addStatus
-   * @covers ::addWarning
-   * @covers ::addError
-   * @covers ::deleteByType
-   * @covers ::deleteAll
+   * @legacy-covers ::all
+   * @legacy-covers ::addStatus
+   * @legacy-covers ::addWarning
+   * @legacy-covers ::addError
+   * @legacy-covers ::deleteByType
+   * @legacy-covers ::deleteAll
    */
   public function testAddNoDuplicates(): void {
 
@@ -101,10 +107,10 @@ class MessengerTest extends KernelTestBase {
   /**
    * Tests we do add duplicates with repeat flag.
    *
-   * @covers ::addStatus
-   * @covers ::addWarning
-   * @covers ::addError
-   * @covers ::deleteByType
+   * @legacy-covers ::addStatus
+   * @legacy-covers ::addWarning
+   * @legacy-covers ::addError
+   * @legacy-covers ::deleteByType
    */
   public function testAddWithDuplicates(): void {
 
@@ -128,9 +134,9 @@ class MessengerTest extends KernelTestBase {
   /**
    * Tests adding markup.
    *
-   * @covers ::addStatus
-   * @covers ::deleteByType
-   * @covers ::messagesByType
+   * @legacy-covers ::addStatus
+   * @legacy-covers ::deleteByType
+   * @legacy-covers ::messagesByType
    */
   public function testAddMarkup(): void {
 

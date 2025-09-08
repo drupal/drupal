@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\DefaultContent;
 
 use Drupal\Core\Access\AccessException;
+use Drupal\Core\DefaultContent\AdminAccountSwitcher;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\DefaultContent\AdminAccountSwitcher;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\Core\DefaultContent\AdminAccountSwitcher
- * @group DefaultContent
+ * Tests Admin Account Switcher.
+ *
+ * @legacy-covers \Drupal\Core\DefaultContent\AdminAccountSwitcher
  */
+#[Group('DefaultContent')]
 class AdminAccountSwitcherTest extends KernelTestBase {
 
   use UserCreationTrait;

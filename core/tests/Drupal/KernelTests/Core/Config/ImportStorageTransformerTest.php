@@ -10,14 +10,13 @@ use Drupal\Core\Config\MemoryStorage;
 use Drupal\Core\Config\StorageTransformerException;
 use Drupal\Core\Lock\NullLockBackend;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore arrr
-
 /**
  * Tests the import storage transformer.
- *
- * @group config
  */
+#[Group('config')]
 class ImportStorageTransformerTest extends KernelTestBase {
 
   /**

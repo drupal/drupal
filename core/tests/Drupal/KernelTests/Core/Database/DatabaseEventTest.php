@@ -9,12 +9,12 @@ use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\database_test\EventSubscriber\DatabaseEventSubscriber;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the database API events.
- *
- * @group Database
  */
+#[Group('Database')]
 class DatabaseEventTest extends DatabaseTestBase {
 
   /**

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -17,12 +17,13 @@ use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests deriving metadata of entity and field data types.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityTypedDataDefinitionTest extends KernelTestBase {
 
   /**
@@ -149,9 +150,8 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
 
   /**
    * Tests that an entity annotation can mark the data definition as internal.
-   *
-   * @dataProvider entityDefinitionIsInternalProvider
    */
+  #[DataProvider('entityDefinitionIsInternalProvider')]
   public function testEntityDefinitionIsInternal($internal, $expected): void {
     $entity_type_id = $this->randomMachineName();
 

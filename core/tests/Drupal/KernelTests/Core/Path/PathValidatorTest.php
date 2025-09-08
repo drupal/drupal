@@ -9,14 +9,14 @@ use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the path validator.
  *
- * @group Path
- *
  * @see \Drupal\Core\Path\PathValidator
  */
+#[Group('Path')]
 class PathValidatorTest extends KernelTestBase {
 
   use UserCreationTrait;

@@ -8,17 +8,21 @@ use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeConfigurator;
 use Drupal\Core\Recipe\UnknownRecipeException;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @coversDefaultClass \Drupal\Core\Recipe\RecipeConfigurator
- * @group Recipe
+ * Tests Drupal\Core\Recipe\RecipeConfigurator.
  */
+#[CoversClass(RecipeConfigurator::class)]
+#[Group('Recipe')]
 class RecipeConfiguratorTest extends KernelTestBase {
 
   /**
    * Tests the listing all the extensions installed by a recipe.
    *
-   * @covers ::listAllExtensions
+   * @legacy-covers ::listAllExtensions
    */
   public function testRecipeConfigurator(): void {
     $recipe_configurator = new RecipeConfigurator(
@@ -57,11 +61,10 @@ class RecipeConfiguratorTest extends KernelTestBase {
   /**
    * Tests that RecipeConfigurator can load recipes.
    *
-   * @testWith ["install_two_modules", "Install two modules"]
-   *           ["recipe_include", "Recipe include"]
-   *
-   * @covers ::getIncludedRecipe
+   * @legacy-covers ::getIncludedRecipe
    */
+  #[TestWith(["install_two_modules", "Install two modules"])]
+  #[TestWith(["recipe_include", "Recipe include"])]
   public function testIncludedRecipeLoader(string $recipe, string $name): void {
     $recipe = RecipeConfigurator::getIncludedRecipe('core/tests/fixtures/recipes', $recipe);
     $this->assertSame($name, $recipe->name);
@@ -70,11 +73,10 @@ class RecipeConfiguratorTest extends KernelTestBase {
   /**
    * Tests exception thrown when RecipeConfigurator cannot find a recipe.
    *
-   * @testWith ["no_recipe"]
-   *           ["does_not_exist"]
-   *
-   * @covers ::getIncludedRecipe
+   * @legacy-covers ::getIncludedRecipe
    */
+  #[TestWith(["no_recipe"])]
+  #[TestWith(["does_not_exist"])]
   public function testIncludedRecipeLoaderException(string $recipe): void {
     try {
       RecipeConfigurator::getIncludedRecipe('core/tests/fixtures/recipes', $recipe);

@@ -9,15 +9,15 @@ use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementPrefetchIterator;
 use Drupal\Tests\system\Functional\Database\FakeRecord;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the Database system's various fetch capabilities.
  *
  * We get timeout errors if we try to run too many tests at once.
- *
- * @group Database
  */
+#[Group('Database')]
 class FetchTest extends DatabaseTestBase {
 
   /**

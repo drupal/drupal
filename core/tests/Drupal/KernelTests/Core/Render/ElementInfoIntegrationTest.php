@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Render;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the element info.
- *
- * @group Render
  */
+#[Group('Render')]
 class ElementInfoIntegrationTest extends KernelTestBase {
 
   /**

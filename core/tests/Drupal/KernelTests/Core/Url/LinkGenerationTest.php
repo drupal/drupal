@@ -8,12 +8,12 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests link generation with hooks.
- *
- * @group Utility
  */
+#[Group('Utility')]
 class LinkGenerationTest extends KernelTestBase {
 
   /**

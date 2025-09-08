@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\File\MimeType;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore garply tarz
-
 /**
  * Tests filename mimetype detection.
  *
  * Installing the 'file_test' module allows DummyMimeTypeMapLoadedSubscriber
  * to execute and add some mappings. We check here that they are.
- *
- * @group File
  */
+#[Group('File')]
 class ExtensionMimeTypeGuesserTest extends KernelTestBase {
 
   /**

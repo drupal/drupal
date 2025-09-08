@@ -18,15 +18,17 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests config actions targeting multiple entities using wildcards.
  *
- * @covers \Drupal\Core\Config\Action\Plugin\ConfigAction\CreateForEachBundle
- * @group Recipe
+ * @legacy-covers \Drupal\Core\Config\Action\Plugin\ConfigAction\CreateForEachBundle
  */
+#[Group('Recipe')]
 class WildcardConfigActionsTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -89,15 +91,14 @@ class WildcardConfigActionsTest extends KernelTestBase {
    *   The expression the recipe will use to target multiple config entities.
    * @param string[] $expected_changed_entities
    *   The IDs of the config entities that we expect the recipe to change.
-   *
-   * @testWith ["field.field.node.one.*", ["node.one.body", "node.one.field_test"]]
-   *   ["field.field.node.*.body", ["node.one.body", "node.two.body"]]
-   *   ["field.field.*.one.field_test", ["entity_test_with_bundle.one.field_test", "node.one.field_test"]]
-   *   ["field.field.node.*.*", ["node.one.body", "node.one.field_test", "node.two.body", "node.two.field_test"]]
-   *   ["field.field.*.one.*", ["entity_test_with_bundle.one.field_test", "node.one.field_test", "node.one.body"]]
-   *   ["field.field.*.*.field_test", ["entity_test_with_bundle.one.field_test", "entity_test_with_bundle.two.field_test", "node.one.field_test", "node.two.field_test"]]
-   *   ["field.field.*.*.*", ["entity_test_with_bundle.one.field_test", "entity_test_with_bundle.two.field_test", "node.one.field_test", "node.two.field_test", "node.one.body", "node.two.body"]]
    */
+  #[TestWith(["field.field.node.one.*", ["node.one.body", "node.one.field_test"]])]
+  #[TestWith(["field.field.node.*.body", ["node.one.body", "node.two.body"]])]
+  #[TestWith(["field.field.*.one.field_test", ["entity_test_with_bundle.one.field_test", "node.one.field_test"]])]
+  #[TestWith(["field.field.node.*.*", ["node.one.body", "node.one.field_test", "node.two.body", "node.two.field_test"]])]
+  #[TestWith(["field.field.*.one.*", ["entity_test_with_bundle.one.field_test", "node.one.field_test", "node.one.body"]])]
+  #[TestWith(["field.field.*.*.field_test", ["entity_test_with_bundle.one.field_test", "entity_test_with_bundle.two.field_test", "node.one.field_test", "node.two.field_test"]])]
+  #[TestWith(["field.field.*.*.*", ["entity_test_with_bundle.one.field_test", "entity_test_with_bundle.two.field_test", "node.one.field_test", "node.two.field_test", "node.one.body", "node.two.body"]])]
   public function testTargetEntitiesByWildcards(string $expression, array $expected_changed_entities): void {
     $contents = <<<YAML
 name: 'Wildcards!'
@@ -122,10 +123,9 @@ YAML;
 
   /**
    * Tests that an invalid wildcard expression will raise an error.
-   *
-   * @testWith ["field.*.node.one.*", "No installed config entity type uses the prefix in the expression 'field.*.node.one.*'. Either there is a typo in the expression or this recipe should install an additional module or depend on another recipe."]
-   *   ["field.field.node.*.body/", " could not be parsed."]
    */
+  #[TestWith(["field.*.node.one.*", "No installed config entity type uses the prefix in the expression 'field.*.node.one.*'. Either there is a typo in the expression or this recipe should install an additional module or depend on another recipe."])]
+  #[TestWith(["field.field.node.*.body/", " could not be parsed."])]
   public function testInvalidExpression(string $expression, string $expected_exception_message): void {
     $contents = <<<YAML
 name: 'Wildcards gone wild...'

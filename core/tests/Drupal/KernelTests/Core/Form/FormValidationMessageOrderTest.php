@@ -8,12 +8,12 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests form validation messages are displayed in the same order as the fields.
- *
- * @group Form
  */
+#[Group('Form')]
 class FormValidationMessageOrderTest extends KernelTestBase implements FormInterface {
 
   /**

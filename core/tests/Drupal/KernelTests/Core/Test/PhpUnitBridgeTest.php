@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Test;
 
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass;
+use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Test how kernel tests interact with deprecation errors.
- *
- * @group Test
- * @group legacy
  */
+#[Group('Test')]
+#[IgnoreDeprecations]
 class PhpUnitBridgeTest extends KernelTestBase {
 
   /**

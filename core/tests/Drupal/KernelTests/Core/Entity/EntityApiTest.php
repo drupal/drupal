@@ -9,12 +9,12 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests basic CRUD functionality.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityApiTest extends EntityKernelTestBase {
 
   /**

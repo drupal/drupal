@@ -7,12 +7,13 @@ namespace Drupal\KernelTests\Core\Asset;
 use Drupal\Core\Asset\Exception\InvalidLibrariesExtendSpecificationException;
 use Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the library discovery and library discovery parser.
- *
- * @group Render
  */
+#[Group('Render')]
 class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
   /**
@@ -250,9 +251,8 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
   /**
    * Test library deprecation support.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedLibrary(): void {
     $this->expectDeprecation('Targeting theme_test/moved_from css/foo.css from test_theme_with_deprecated_libraries library_overrides is deprecated in drupal:X.0.0 and will be removed in drupal:Y.0.0. Target theme_test/moved_to css/base-remove.css instead. See https://example.com');
     $this->expectDeprecation('Targeting theme_test/moved_from js/bar.js from test_theme_with_deprecated_libraries library_overrides is deprecated in drupal:X.0.0 and will be removed in drupal:Y.0.0. Target theme_test/moved_to js/foo.js instead. See https://example.com');

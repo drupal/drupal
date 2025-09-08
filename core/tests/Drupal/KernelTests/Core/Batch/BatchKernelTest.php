@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Batch;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests batch functionality.
- *
- * @group Batch
  */
+#[Group('Batch')]
 class BatchKernelTest extends KernelTestBase {
 
   /**

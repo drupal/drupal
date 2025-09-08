@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Asset;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Checks the status and definition contents of deprecated libraries.
- *
- * @group Asset
- * @group legacy
  */
+#[Group('Asset')]
+#[IgnoreDeprecations]
 class DeprecatedAssetsTest extends KernelTestBase {
 
   /**
@@ -25,9 +27,8 @@ class DeprecatedAssetsTest extends KernelTestBase {
    *   The part of the deprecation message after the extension/name.
    * @param string $expected_hashed_library_definition
    *   The expected MD5 hash of the library.
-   *
-   * @dataProvider deprecatedLibrariesProvider
    */
+  #[DataProvider('deprecatedLibrariesProvider')]
   public function testDeprecatedLibraries(string $extension, string $name, string $deprecation_suffix, string $expected_hashed_library_definition): void {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = $this->container->get('library.discovery');
@@ -44,7 +45,7 @@ class DeprecatedAssetsTest extends KernelTestBase {
   /**
    * The data provider for testDeprecatedLibraries.
    *
-   * Returns an array in the form of
+   * Returns an array in the form of.
    * @code
    *  [
    *    (string) description => [

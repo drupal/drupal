@@ -12,12 +12,14 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests DatetimeElement functionality.
- *
- * @group Form
  */
+#[Group('Form')]
 class DatetimeElementFormTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
 
   /**
@@ -169,10 +171,9 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    * @param string|null $expected_exception
    *   The expected exception message if an exception should be thrown, or
    *   NULL if otherwise.
-   *
-   * @dataProvider providerUntrusted
-   * @group legacy
    */
+  #[DataProvider('providerUntrusted')]
+  #[IgnoreDeprecations]
   public function testDatetimeElementUntrustedCallbacks(string $date_callback = 'datetimeDateCallbackTrusted', string $time_callback = 'datetimeTimeCallbackTrusted', ?string $expected_exception = NULL) : void {
     if ($expected_exception) {
       $this->expectException(UntrustedCallbackException::class);

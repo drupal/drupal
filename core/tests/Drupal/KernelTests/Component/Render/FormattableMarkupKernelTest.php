@@ -7,12 +7,13 @@ namespace Drupal\KernelTests\Component\Render;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Provides a test covering integration of FormattableMarkup with other systems.
- *
- * @group Render
  */
+#[Group('Render')]
 class FormattableMarkupKernelTest extends KernelTestBase {
 
   /**
@@ -41,9 +42,8 @@ class FormattableMarkupKernelTest extends KernelTestBase {
 
   /**
    * Tests URL ":placeholders" in \Drupal\Component\Render\FormattableMarkup.
-   *
-   * @dataProvider providerTestFormattableMarkupUri
    */
+  #[DataProvider('providerTestFormattableMarkupUri')]
   public function testFormattableMarkupUri($string, $uri, $options, $expected): void {
     $args = self::getFormattableMarkupUriArgs($uri, $options);
     $this->assertSame($expected, (string) new FormattableMarkup($string, $args));
@@ -102,8 +102,9 @@ class FormattableMarkupKernelTest extends KernelTestBase {
   }
 
   /**
-   * @dataProvider providerTestFormattableMarkupUriWithException
-   */
+ * Tests formattable markup uri with exception uri.
+ */
+  #[DataProvider('providerTestFormattableMarkupUriWithException')]
   public function testFormattableMarkupUriWithExceptionUri($string, $uri): void {
     // Should throw an \InvalidArgumentException, due to Uri::toString().
     $this->expectException(\InvalidArgumentException::class);

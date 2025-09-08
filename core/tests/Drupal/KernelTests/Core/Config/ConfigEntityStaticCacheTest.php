@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\config_entity_static_cache_test\ConfigOverrider;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the entity static cache when used by config entities.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigEntityStaticCacheTest extends KernelTestBase {
 
   /**

@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
+use Drupal\Core\File\FileUrlGenerator;
 use Drupal\file_test\FileTestCdn;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
- * @coversDefaultClass \Drupal\Core\File\FileUrlGenerator
- *
- * @group File
+ * Tests Drupal\Core\File\FileUrlGenerator.
  */
+#[CoversClass(FileUrlGenerator::class)]
+#[Group('File')]
 class FileUrlGeneratorTest extends FileTestBase {
 
   /**
@@ -40,7 +44,7 @@ class FileUrlGeneratorTest extends FileTestBase {
   /**
    * Tests missing stream handler.
    *
-   * @covers ::generate
+   * @legacy-covers ::generate
    */
   public function testGenerateMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -50,7 +54,7 @@ class FileUrlGeneratorTest extends FileTestBase {
   /**
    * Tests missing stream handler.
    *
-   * @covers ::generateString
+   * @legacy-covers ::generateString
    */
   public function testGenerateStringMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -60,7 +64,7 @@ class FileUrlGeneratorTest extends FileTestBase {
   /**
    * Tests missing stream handler.
    *
-   * @covers ::generateAbsoluteString
+   * @legacy-covers ::generateAbsoluteString
    */
   public function testGenerateAbsoluteStringMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -70,7 +74,7 @@ class FileUrlGeneratorTest extends FileTestBase {
   /**
    * Tests the rewriting of shipped file URLs by hook_file_url_alter().
    *
-   * @covers ::generateAbsoluteString
+   * @legacy-covers ::generateAbsoluteString
    */
   public function testShippedFileURL(): void {
     // Test generating a URL to a shipped file (i.e. a file that is part of
@@ -119,7 +123,7 @@ class FileUrlGeneratorTest extends FileTestBase {
   /**
    * Tests the rewriting of public managed file URLs by hook_file_url_alter().
    *
-   * @covers ::generateAbsoluteString
+   * @legacy-covers ::generateAbsoluteString
    */
   public function testPublicManagedFileURL(): void {
     // Test generating a URL to a managed file.
@@ -151,7 +155,7 @@ class FileUrlGeneratorTest extends FileTestBase {
   /**
    * Tests generate absolute string with relative URL.
    *
-   * @covers ::generateAbsoluteString
+   * @legacy-covers ::generateAbsoluteString
    */
   public function testRelativeFileURL(): void {
     // Disable file_test.module's hook_file_url_alter() implementation.
@@ -179,10 +183,11 @@ class FileUrlGeneratorTest extends FileTestBase {
   }
 
   /**
-   * @covers ::generate
+   * Tests generate u r i.
    *
-   * @dataProvider providerGenerateURI
+   * @legacy-covers ::generate
    */
+  #[DataProvider('providerGenerateURI')]
   public function testGenerateURI($filepath, $expected): void {
     // Disable file_test.module's hook_file_url_alter() implementation.
     \Drupal::state()->set('file_test.hook_file_url_alter', NULL);
@@ -199,7 +204,9 @@ class FileUrlGeneratorTest extends FileTestBase {
   }
 
   /**
-   * @covers ::generate
+   * Tests generate u r i with schema.
+   *
+   * @legacy-covers ::generate
    */
   public function testGenerateURIWithSchema(): void {
     // Disable file_test.module's hook_file_url_alter() implementation.

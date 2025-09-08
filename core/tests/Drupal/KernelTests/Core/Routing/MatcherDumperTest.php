@@ -6,23 +6,23 @@ namespace Drupal\KernelTests\Core\Routing;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\Routing\MatcherDumper;
 use Drupal\Core\Routing\RouteCompiler;
-use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Confirm that the matcher dumper is functioning properly.
- *
- * @group Routing
  */
+#[Group('Routing')]
 class MatcherDumperTest extends KernelTestBase {
 
   /**

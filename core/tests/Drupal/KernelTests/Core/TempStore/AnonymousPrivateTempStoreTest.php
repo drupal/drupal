@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\TempStore;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the PrivateTempStore for anonymous users.
- *
- * @group TempStore
  */
+#[Group('TempStore')]
 class AnonymousPrivateTempStoreTest extends KernelTestBase {
 
   /**

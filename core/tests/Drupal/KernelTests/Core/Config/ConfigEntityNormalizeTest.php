@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the listing of configuration entities.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigEntityNormalizeTest extends KernelTestBase {
 
   /**

@@ -16,6 +16,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -23,9 +24,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
- * @group Recipe
- * @covers \Drupal\Core\Recipe\InputConfigurator
+ * Tests Input.
+ *
+ * @legacy-covers \Drupal\Core\Recipe\InputConfigurator
  */
+#[Group('Recipe')]
 class InputTest extends KernelTestBase {
 
   use RecipeTestTrait;
@@ -101,7 +104,9 @@ class InputTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
+   * Tests prompt arguments are forwarded.
+   *
+   * @legacy-covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
    */
   public function testPromptArgumentsAreForwarded(): void {
     $io = $this->createMock(StyleInterface::class);
@@ -136,7 +141,9 @@ YAML
   }
 
   /**
-   * @covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
+   * Tests missing arguments throws exception.
+   *
+   * @legacy-covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
    */
   public function testMissingArgumentsThrowsException(): void {
     $recipe = $this->createRecipe(<<<YAML
@@ -165,7 +172,7 @@ YAML
   /**
    * Tests getting the fallback default value from non-existing configuration.
    *
-   * @covers \Drupal\Core\Recipe\InputConfigurator::getDefaultValue
+   * @legacy-covers \Drupal\Core\Recipe\InputConfigurator::getDefaultValue
    */
   public function testDefaultValueFromNonExistentConfigWithFallback(): void {
     $recipe_data = [

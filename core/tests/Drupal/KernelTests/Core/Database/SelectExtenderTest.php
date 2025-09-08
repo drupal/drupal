@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Select query extender classes.
- *
- * @coversDefaultClass \Drupal\Core\Database\Query\Select
- * @group Database
  */
+#[CoversClass(Select::class)]
+#[Group('Database')]
 class SelectExtenderTest extends KernelTestBase {
 
   /**
@@ -113,10 +116,12 @@ class SelectExtenderTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::extend
-   * @covers \Drupal\Core\Database\Query\SelectExtender::extend
-   * @dataProvider providerExtend
+   * Tests extend.
+   *
+   * @legacy-covers ::extend
+   * @legacy-covers \Drupal\Core\Database\Query\SelectExtender::extend
    */
+  #[DataProvider('providerExtend')]
   public function testExtend(string $expected, string $namespace, string $extend): void {
     $additional_class_loader = new ClassLoader();
     $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\coreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFake");

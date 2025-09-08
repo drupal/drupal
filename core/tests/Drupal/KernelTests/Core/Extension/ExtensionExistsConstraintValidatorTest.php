@@ -6,15 +6,15 @@ namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ExtensionExists constraint validator.
  *
- * @group Validation
- *
- * @covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint
- * @covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraintValidator
+ * @legacy-covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint
+ * @legacy-covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraintValidator
  */
+#[Group('Validation')]
 class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

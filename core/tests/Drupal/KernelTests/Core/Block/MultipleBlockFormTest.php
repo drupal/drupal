@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Block;
 
 use Drupal\block_test\PluginForm\EmptyBlockForm;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that blocks can have multiple forms.
- *
- * @group block
  */
+#[Group('block')]
 class MultipleBlockFormTest extends KernelTestBase {
 
   /**

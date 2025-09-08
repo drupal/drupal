@@ -15,12 +15,12 @@ use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\image\ImageEffectInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests schema for configuration objects.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigSchemaTest extends KernelTestBase {
 
   /**

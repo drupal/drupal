@@ -6,13 +6,13 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
  * Tests AllowedValues validation constraint with both valid and invalid values.
- *
- * @group Validation
  */
+#[Group('Validation')]
 class AllowedValuesConstraintValidatorTest extends KernelTestBase {
 
   /**

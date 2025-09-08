@@ -8,10 +8,12 @@ use Drupal\Core\Form\FormState;
 use Drupal\element_info_test\Element\DeprecatedExtendsFormElement;
 use Drupal\element_info_test\Element\DeprecatedExtendsRenderElement;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Render
+ * Tests Deprecated Element.
  */
+#[Group('Render')]
 class DeprecatedElementTest extends KernelTestBase {
 
   /**

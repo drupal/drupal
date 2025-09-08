@@ -6,13 +6,13 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of mailer dsn config.
- *
- * @group config
- * @group Validation
  */
+#[Group('config')]
+#[Group('Validation')]
 class MailerDsnConfigValidationTest extends KernelTestBase {
 
   /**

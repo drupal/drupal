@@ -4,23 +4,29 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Extension;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 include_once \DRUPAL_ROOT . '/core/includes/install.inc';
 
 /**
  * Tests the legacy requirements severity deprecations.
- *
- * @coversDefaultClass \Drupal\Core\Extension\Requirement\RequirementSeverity
- * @group extension
- * @group legacy
  */
+#[CoversClass(RequirementSeverity::class)]
+#[Group('extension')]
+#[IgnoreDeprecations]
 class LegacyRequirementSeverityTest extends KernelTestBase {
 
   /**
-   * @covers \drupal_requirements_severity
-   * @dataProvider requirementProvider
+   * Tests get max severity.
+   *
+   * @legacy-covers \drupal_requirements_severity
    */
+  #[DataProvider('requirementProvider')]
   public function testGetMaxSeverity(array $requirements, int $expectedSeverity): void {
     $this->expectDeprecation(
       'drupal_requirements_severity() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use Drupal\Core\Extension\Requirement\RequirementSeverity::maxSeverityFromRequirements() instead. See https://www.drupal.org/node/3410939'

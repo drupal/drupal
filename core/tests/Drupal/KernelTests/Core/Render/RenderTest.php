@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Render;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Performs functional tests on \Drupal::service('renderer')->render().
- *
- * @group Common
  */
+#[Group('Common')]
 class RenderTest extends KernelTestBase {
 
   /**
@@ -74,9 +75,8 @@ class RenderTest extends KernelTestBase {
 
   /**
    * Tests the deprecation of \Drupal\Core\Render\Renderer::renderPlain()
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDeprecateRenderPlain(): void {
     $message = ['#markup' => 'Test'];
     \Drupal::service('renderer')->renderPlain($message);

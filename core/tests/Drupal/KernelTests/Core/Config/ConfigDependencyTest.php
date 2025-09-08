@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
+use Drupal\Core\Config\ConfigManager;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for configuration dependencies.
- *
- * @coversDefaultClass \Drupal\Core\Config\ConfigManager
- *
- * @group config
  */
+#[CoversClass(ConfigManager::class)]
+#[Group('config')]
 class ConfigDependencyTest extends EntityKernelTestBase {
 
   /**
@@ -248,9 +250,8 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    *
    * @param array $entity_id_suffixes
    *   The suffixes to add to the 4 entities created by the test.
-   *
-   * @dataProvider providerConfigEntityUninstallComplex
    */
+  #[DataProvider('providerConfigEntityUninstallComplex')]
   public function testConfigEntityUninstallComplex(array $entity_id_suffixes): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
@@ -373,8 +374,10 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   }
 
   /**
-   * @covers ::uninstall
-   * @covers ::getConfigEntitiesToChangeOnDependencyRemoval
+   * Tests config entity uninstall third party.
+   *
+   * @legacy-covers ::uninstall
+   * @legacy-covers ::getConfigEntitiesToChangeOnDependencyRemoval
    */
   public function testConfigEntityUninstallThirdParty(): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */

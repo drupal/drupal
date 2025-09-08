@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\StatementInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Statement classes.
- *
- * @group Database
  */
+#[Group('Database')]
 class StatementTest extends DatabaseTestBase {
 
   /**

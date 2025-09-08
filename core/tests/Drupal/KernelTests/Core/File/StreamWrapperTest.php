@@ -9,13 +9,13 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests stream wrapper functions.
- *
- * @group File
  */
+#[Group('File')]
 class StreamWrapperTest extends FileTestBase {
 
   /**

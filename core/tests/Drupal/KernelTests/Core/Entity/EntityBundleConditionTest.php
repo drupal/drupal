@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that entity bundle conditions works properly.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class EntityBundleConditionTest extends EntityKernelTestBase {
 
   /**

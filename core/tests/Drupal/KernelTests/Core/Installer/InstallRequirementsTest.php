@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Installer;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for install requirements.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallRequirementsTest extends KernelTestBase {
 
   /**

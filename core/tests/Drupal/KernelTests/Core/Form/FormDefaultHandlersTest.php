@@ -8,12 +8,12 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests automatically added form handlers.
- *
- * @group Form
  */
+#[Group('Form')]
 class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
 
   /**

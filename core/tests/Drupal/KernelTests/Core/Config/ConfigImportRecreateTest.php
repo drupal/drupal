@@ -9,12 +9,12 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests importing recreated configuration entities.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigImportRecreateTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

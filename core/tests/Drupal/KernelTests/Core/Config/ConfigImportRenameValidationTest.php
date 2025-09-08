@@ -8,14 +8,14 @@ use Drupal\Component\Uuid\Php;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
-use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validating renamed configuration in a configuration import.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigImportRenameValidationTest extends KernelTestBase {
 
   /**

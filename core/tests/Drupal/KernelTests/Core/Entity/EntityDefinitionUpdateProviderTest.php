@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Entity\EntityDefinitionUpdateManager;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests EntityDefinitionUpdateManager functionality.
- *
- * @coversDefaultClass \Drupal\Core\Entity\EntityDefinitionUpdateManager
- *
- * @group Entity
- * @group #slow
  */
+#[CoversClass(EntityDefinitionUpdateManager::class)]
+#[Group('Entity')]
+#[Group('#slow')]
 class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;
@@ -65,9 +67,8 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
 
   /**
    * Tests deleting a base field when it has existing data.
-   *
-   * @dataProvider baseFieldDeleteWithExistingDataTestCases
    */
+  #[DataProvider('baseFieldDeleteWithExistingDataTestCases')]
   public function testBaseFieldDeleteWithExistingData($entity_type_id, $create_entity_revision, $base_field_revisionable, $create_entity_translation): void {
     // Enable an additional language.
     ConfigurableLanguage::createFromLangcode('ro')->save();
@@ -287,9 +288,8 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
 
   /**
    * Tests adding a base field with initial values inherited from another field.
-   *
-   * @dataProvider initialValueFromFieldTestCases
    */
+  #[DataProvider('initialValueFromFieldTestCases')]
   public function testInitialValueFromField($default_initial_value, $expected_value): void {
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
     $db_schema = $this->database->schema();

@@ -6,11 +6,15 @@ namespace Drupal\KernelTests\Core\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\StreamWrapper\StreamWrapperManager
- * @group File
+ * Tests Drupal\Core\StreamWrapper\StreamWrapperManager.
  */
+#[CoversClass(StreamWrapperManager::class)]
+#[Group('File')]
 class StreamWrapperManagerTest extends KernelTestBase {
 
   /**
@@ -34,10 +38,11 @@ class StreamWrapperManagerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getScheme
+   * Tests uri scheme.
    *
-   * @dataProvider providerTestUriScheme
+   * @legacy-covers ::getScheme
    */
+  #[DataProvider('providerTestUriScheme')]
   public function testUriScheme($uri, $expected): void {
     $this->assertSame($expected, StreamWrapperManager::getScheme($uri));
   }

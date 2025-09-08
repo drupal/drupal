@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Datetime;
 
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore marzo
-
 /**
  * Tests date formatting.
- *
- * @group Common
- * @coversDefaultClass \Drupal\Core\Datetime\DateFormatter
  */
+#[CoversClass(DateFormatter::class)]
+#[Group('Common')]
 class DateFormatterTest extends KernelTestBase {
 
   /**
@@ -53,7 +54,7 @@ class DateFormatterTest extends KernelTestBase {
   /**
    * Tests DateFormatter::format().
    *
-   * @covers ::format
+   * @legacy-covers ::format
    */
   public function testFormat(): void {
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $formatter */
@@ -119,7 +120,7 @@ class DateFormatterTest extends KernelTestBase {
    *
    * @see http://www.faqs.org/rfcs/rfc2822.html
    *
-   * @covers ::format
+   * @legacy-covers ::format
    */
   public function testRfc2822DateFormat(): void {
     $days_of_week_abbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

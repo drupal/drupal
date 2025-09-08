@@ -9,12 +9,12 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Hook\SystemHooks;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests garbage collection for the expirable key-value database storage.
- *
- * @group KeyValueStore
  */
+#[Group('KeyValueStore')]
 class GarbageCollectionTest extends KernelTestBase {
 
   /**

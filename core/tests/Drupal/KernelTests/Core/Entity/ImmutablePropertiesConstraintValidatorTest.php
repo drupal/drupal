@@ -9,16 +9,18 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Exception\LogicException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 /**
- * @group Entity
- * @group Validation
+ * Tests Immutable Properties Constraint Validator.
  *
- * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraint
- * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator
+ * @legacy-covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraint
+ * @legacy-covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator
  */
+#[Group('Entity')]
+#[Group('Validation')]
 class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
 
   /**

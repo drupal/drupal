@@ -8,13 +8,14 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\plugin_test\Plugin\Annotation\PluginExample as AnnotationPluginExample;
 use Drupal\plugin_test\Plugin\Attribute\PluginExample as AttributePluginExample;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the default plugin manager.
- *
- * @group Plugin
- * @group legacy
  */
+#[Group('Plugin')]
+#[IgnoreDeprecations]
 class DefaultPluginManagerTest extends KernelTestBase {
 
   /**

@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests URL transform to relative.
- *
- * @group Utility
  */
+#[Group('Utility')]
 class UrlTransformRelativeTest extends KernelTestBase {
 
   /**
@@ -23,9 +24,8 @@ class UrlTransformRelativeTest extends KernelTestBase {
 
   /**
    * Tests transformRelative() function.
-   *
-   * @dataProvider providerFileUrlTransformRelative
    */
+  #[DataProvider('providerFileUrlTransformRelative')]
   public function testFileUrlTransformRelative($host, $port, $https, $base_path, $root_relative, $url, $expected): void {
 
     $_SERVER['REMOTE_ADDR'] = '127.0.0.1';

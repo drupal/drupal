@@ -8,15 +8,18 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * @group Entity
- * @group Validation
+ * Tests Entity Bundle Exists Constraint Validator.
  *
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraint
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraintValidator
+ * @legacy-covers \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraint
+ * @legacy-covers \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraintValidator
  */
+#[Group('Entity')]
+#[Group('Validation')]
 class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
 
   /**
@@ -74,10 +77,9 @@ class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
    * @param string $resolved_entity_type_id
    *   The actual entity type ID which should be checked for the existence of
    *   a bundle.
-   *
-   * @testWith ["%parent.entity_type_id", "entity_test_with_bundle"]
-   *   ["%key", "bundle"]
    */
+  #[TestWith(["%parent.entity_type_id", "entity_test_with_bundle"])]
+  #[TestWith(["%key", "bundle"])]
   public function testDynamicEntityType(string $constraint_value, string $resolved_entity_type_id): void {
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager */
     $typed_data_manager = $this->container->get('typed_data_manager');

@@ -7,8 +7,9 @@ namespace Drupal\KernelTests\Core\RouteProcessor;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -18,8 +19,8 @@ use Symfony\Component\Routing\Route;
  * Tests the <current> route processor.
  *
  * @see \Drupal\Core\RouteProcessor\RouteProcessorCurrent
- * @group route_processor
  */
+#[Group('route_processor')]
 class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
 
   /**

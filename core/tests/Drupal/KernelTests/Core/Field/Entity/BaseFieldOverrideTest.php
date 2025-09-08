@@ -9,11 +9,15 @@ use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\Core\Field\Entity\BaseFieldOverride
- * @group Field
+ * Tests Drupal\Core\Field\Entity\BaseFieldOverride.
  */
+#[CoversClass(BaseFieldOverride::class)]
+#[Group('Field')]
 class BaseFieldOverrideTest extends KernelTestBase {
 
   /**
@@ -34,10 +38,11 @@ class BaseFieldOverrideTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getClass
+   * Tests get class.
    *
-   * @dataProvider getClassTestCases
+   * @legacy-covers ::getClass
    */
+  #[DataProvider('getClassTestCases')]
   public function testGetClass($field_type, $base_field_class, $expected_override_class): void {
     $base_field = BaseFieldDefinition::create($field_type)
       ->setName('Test Field')
@@ -85,10 +90,10 @@ class BaseFieldOverrideTest extends KernelTestBase {
   /**
    * Tests that some properties are inherited from the BaseFieldDefinition.
    *
-   * @covers ::isReadOnly
-   * @covers ::isComputed
-   * @covers ::isInternal
-   * @covers ::getUniqueIdentifier
+   * @legacy-covers ::isReadOnly
+   * @legacy-covers ::isComputed
+   * @legacy-covers ::isInternal
+   * @legacy-covers ::getUniqueIdentifier
    */
   public function testInheritedProperties(): void {
     $base_field = BaseFieldDefinition::create('string')

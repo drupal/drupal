@@ -7,12 +7,12 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Core\Extension\InfoParserException;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the behavior of a theme when base_theme info key is missing.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class BaseThemeMissingTest extends KernelTestBase {
 
   /**

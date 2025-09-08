@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the read-only stream wrapper write functions.
- *
- * @group File
  */
+#[Group('File')]
 class ReadOnlyStreamWrapperTest extends FileTestBase {
 
   /**

@@ -22,14 +22,13 @@ use Drupal\Core\TypedData\Type\UriInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore eins
-
 /**
  * Tests the functionality of all core data types.
- *
- * @group TypedData
  */
+#[Group('TypedData')]
 class TypedDataTest extends KernelTestBase {
 
   use StringTranslationTrait;

@@ -15,13 +15,13 @@ use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 
 /**
  * Tests importing configuration which has missing content dependencies.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigImporterMissingContentTest extends KernelTestBase implements LoggerInterface {
   use BlockCreationTrait;
   use RfcLoggerTrait;

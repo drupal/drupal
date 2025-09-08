@@ -7,13 +7,14 @@ namespace Drupal\KernelTests\Core\Extension;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the configure route for core modules.
- *
- * @group Module
- * @group #slow
  */
+#[Group('Module')]
+#[Group('#slow')]
 class ModuleConfigureRouteTest extends KernelTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;
@@ -75,9 +76,8 @@ class ModuleConfigureRouteTest extends KernelTestBase {
    *
    * Note: This test is part of group legacy, to make sure installing the
    * deprecated module doesn't trigger a deprecation notice.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedModuleConfigureRoutes(): void {
     foreach (static::coreModuleListDataProvider() as $module_name => $info) {
       $this->doTestDeprecatedModuleConfigureRoutes($module_name);

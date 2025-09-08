@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests non-revisionable fields on revisionable (and translatable) entities.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;

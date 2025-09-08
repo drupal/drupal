@@ -6,12 +6,12 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests ContentEntityBase::hasTranslationChanges().
- *
- * @group Entity
  */
+#[Group('Entity')]
 class ContentEntityHasChangesTest extends KernelTestBase {
 
   /**

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group Render
+ * Tests Plugin Alter.
  */
+#[Group('Render')]
 class PluginAlterTest extends KernelTestBase {
 
   /**

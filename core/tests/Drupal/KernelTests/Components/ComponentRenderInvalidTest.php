@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests invalid render options for components.
- *
- * @group sdc
  */
+#[Group('sdc')]
 class ComponentRenderInvalidTest extends ComponentKernelTestBase {
 
   /**

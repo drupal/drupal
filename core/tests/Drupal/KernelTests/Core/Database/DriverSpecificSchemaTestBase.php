@@ -6,16 +6,17 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Schema;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Database\Schema;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests table creation and modification via the schema API.
- *
- * @coversDefaultClass \Drupal\Core\Database\Schema
  */
+#[CoversClass(Schema::class)]
 abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase {
 
   use SchemaIntrospectionTestTrait;
@@ -581,13 +582,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    * @param array $renamed_primary_key
    *   The primary key of the test table after renaming the test field.
    *
-   * @dataProvider providerTestSchemaCreateTablePrimaryKey
-   *
-   * @covers ::addField
-   * @covers ::changeField
-   * @covers ::dropField
-   * @covers ::findPrimaryKeyColumns
+   * @legacy-covers ::addField
+   * @legacy-covers ::changeField
+   * @legacy-covers ::dropField
+   * @legacy-covers ::findPrimaryKeyColumns
    */
+  #[DataProvider('providerTestSchemaCreateTablePrimaryKey')]
   public function testSchemaChangePrimaryKey(array $initial_primary_key, array $renamed_primary_key): void {
     $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
 
@@ -898,7 +898,9 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
   }
 
   /**
-   * @covers ::findPrimaryKeyColumns
+   * Tests find primary key columns.
+   *
+   * @legacy-covers ::findPrimaryKeyColumns
    */
   public function testFindPrimaryKeyColumns(): void {
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');

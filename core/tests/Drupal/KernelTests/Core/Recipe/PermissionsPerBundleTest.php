@@ -16,13 +16,16 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @covers \Drupal\Core\Config\Action\Plugin\ConfigAction\PermissionsPerBundle
- * @covers \Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\PermissionsPerBundleDeriver
+ * Tests Permissions Per Bundle.
  *
- * @group Recipe
+ * @legacy-covers \Drupal\Core\Config\Action\Plugin\ConfigAction\PermissionsPerBundle
+ * @legacy-covers \Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\PermissionsPerBundleDeriver
  */
+#[Group('Recipe')]
 class PermissionsPerBundleTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -201,11 +204,10 @@ YAML;
    *
    * @param mixed $value
    *   The permission template which should raise an error.
-   *
-   * @testWith [["a %Bundle permission"]]
-   *   [""]
-   *   [[]]
    */
+  #[TestWith([["a %Bundle permission"]])]
+  #[TestWith([""])]
+  #[TestWith([[]])]
   public function testInvalidValue(mixed $value): void {
     $value = Json::encode($value);
 
