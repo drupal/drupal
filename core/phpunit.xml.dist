@@ -13,6 +13,7 @@
          beStrictAboutChangesToGlobalState="true"
          failOnRisky="true"
          failOnWarning="true"
+         failOnPhpunitWarning="true"
          displayDetailsOnTestsThatTriggerErrors="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
