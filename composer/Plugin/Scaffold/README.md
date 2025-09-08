@@ -7,6 +7,8 @@ This takes care of:
   - Placing scaffold files (like `index.php`, `update.php`, …) from the
     `drupal/core` project into their desired location inside the web root. Only
     individual files may be scaffolded with this plugin.
+  - Writing a DrupalInstalled.php file, which holds a PHP class that defines
+    values about the current installation as class constants.
   - Writing an autoload.php file to the web root, which includes the Composer
     autoload.php file.
 

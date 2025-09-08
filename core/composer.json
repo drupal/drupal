@@ -40,6 +40,7 @@
         "twig/twig": "^3.21.0",
         "doctrine/annotations": "^2.0",
         "doctrine/lexer": "^2 || ^3",
+        "drupal/core-composer-scaffold": "self.version",
         "guzzlehttp/guzzle": "^7.10",
         "guzzlehttp/psr7": "^2.8.0",
         "egulias/email-validator": "^3.2.1|^4.0",

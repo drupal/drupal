@@ -65,6 +65,7 @@
         "allow-plugins": {
             "composer/installers": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/core-composer-scaffold": false,
             "drupal/core-project-message": true,
             "drupal/core-recipe-unpack": true,
             "drupal/core-vendor-hardening": true,
@@ -121,7 +122,7 @@
     "scripts": {
         "pre-install-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",
         "pre-update-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",
-        "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump",
+        "pre-autoload-dump": "Drupal\\Composer\\Plugin\\Scaffold\\Plugin::preAutoloadDump",
         "drupal-phpunit-upgrade-check": "Drupal\\Core\\Composer\\Composer::upgradePHPUnit",
         "drupal-phpunit-upgrade": [
             "@composer update phpunit/phpunit --with-dependencies --no-progress"
@@ -148,6 +149,11 @@
             "type": "path",
             "canonical": false,
             "url": "composer/Plugin/ProjectMessage"
+        },
+        {
+            "type": "path",
+            "canonical": false,
+            "url": "composer/Plugin/Scaffold"
         },
         {
             "type": "path",

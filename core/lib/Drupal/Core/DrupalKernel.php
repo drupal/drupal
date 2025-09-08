@@ -26,6 +26,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\DrupalInstalled;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -834,7 +835,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * The 'environment' consists of:
    * - The kernel environment string.
-   * - The Drupal version constant.
+   * - A hash based on all the installed package versions.
    * - The deployment identifier from settings.php. This allows custom
    *   deployments to force a container rebuild.
    * - The operating system running PHP. This allows compiler passes to optimize
@@ -848,7 +849,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $parts = [
       'service_container',
       $this->environment,
-      \Drupal::VERSION,
+      class_exists(DrupalInstalled::class) ? DrupalInstalled::VERSIONS_HASH : \Drupal::VERSION,
       Settings::get('deployment_identifier'),
       PHP_OS,
       serialize(Settings::get('container_yamls')),
