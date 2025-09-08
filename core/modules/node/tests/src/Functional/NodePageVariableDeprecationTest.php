@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests page variable deprecation.
  */
 #[Group('node')]
-#[Group('legacy')]
+#[IgnoreDeprecations]
 class NodePageVariableDeprecationTest extends NodeTestBase {
 
   /**
