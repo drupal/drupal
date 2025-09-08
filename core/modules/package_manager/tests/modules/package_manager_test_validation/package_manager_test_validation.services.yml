@@ -10,3 +10,9 @@ services:
     autowire: true
     tags:
       - { name: event_subscriber }
+  Drupal\package_manager_test_validation\TestExecutableFinder:
+    public: false
+    arguments:
+      - '@.inner'
+      - '@state'
+    decorates: 'PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface'

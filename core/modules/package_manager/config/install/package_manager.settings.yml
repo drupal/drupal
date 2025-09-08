@@ -1,5 +1,2 @@
-executables:
-  composer: ~
-  rsync: ~
 additional_trusted_composer_plugins: []
 include_unknown_files_in_project_root: false
