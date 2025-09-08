@@ -247,9 +247,7 @@ class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubsc
     // and the path to rsync isn't valid.
     $path = $this->container->get(PathFactoryInterface::class)
       ->create('/the/absolute/apex');
-    $this->config('package_manager.settings')
-      ->set('executables.rsync', "C:\Not Rsync.exe")
-      ->save();
+    $this->setSetting('package_manager_rsync_path', "C:\Not Rsync.exe");
 
     /** @var \PhpTuf\ComposerStager\API\Precondition\Service\PreconditionInterface $precondition */
     $precondition = $this->container->get($service_class);

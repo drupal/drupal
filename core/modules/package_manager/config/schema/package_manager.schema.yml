@@ -10,12 +10,6 @@ package_manager.settings:
   type: config_object
   label: 'Package Manager settings'
   mapping:
-    executables:
-      type: sequence
-      label: 'Absolute paths to required executables, or NULL to rely on PATH'
-      sequence:
-        type: string
-        label: 'Absolute path to executable, or NULL'
     additional_trusted_composer_plugins:
       type: sequence
       label: 'Additional trusted composer plugins'

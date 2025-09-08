@@ -13,6 +13,8 @@ services:
   # provide additional functionality.
   Drupal\package_manager\ExecutableFinder:
     public: false
+    calls:
+      - [setLogger, ['@logger.channel.package_manager']]
     decorates: 'PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface'
   Drupal\package_manager\TranslatableStringFactory:
     public: false

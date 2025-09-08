@@ -2,6 +2,7 @@
 
 namespace Drupal\package_manager\Hook;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -22,6 +23,7 @@ class PackageManagerRequirementsHooks {
   public function __construct(
     protected readonly ComposerInspector $composerInspector,
     protected ExecutableFinderInterface $executableFinder,
+    private readonly ConfigFactoryInterface $configFactory,
   ) {}
 
   /**
@@ -57,6 +59,30 @@ class PackageManagerRequirementsHooks {
           '@message' => $message,
         ]),
         'severity' => RequirementSeverity::Error,
+      ];
+    }
+
+    $legacy_executables = $this->configFactory->get('package_manager.settings')
+      ->get('executables');
+    if (isset($legacy_executables['composer'])) {
+      $requirements['package_manager_configured_executable_composer'] = [
+        'title' => $this->t('Path to Composer is configured'),
+        'description' => $this->t("The path to Composer is set in configuration, which is no longer supported. To fix this, add <code>composer/composer</code> to your project's dependencies by running <code>composer require 'composer/composer:@version'</code>, <em>or</em> add the following line to <code>settings.php</code>: <code>\$settings['package_manager_composer_path'] = '@composer_path';</code>. See <a href=\":url\">this change record</a> for more information.", [
+          '@composer_path' => $legacy_executables['composer'],
+          '@version' => ComposerInspector::SUPPORTED_VERSION,
+          ':url' => 'https://www.drupal.org/node/3540264',
+        ]),
+        'severity' => RequirementSeverity::Warning,
+      ];
+    }
+    if (isset($legacy_executables['rsync'])) {
+      $requirements['package_manager_configured_executable_rsync'] = [
+        'title' => $this->t('Path to <code>rsync</code> is configured'),
+        'description' => $this->t("The path to <code>rsync</code> is set in configuration, which is no longer supported. To fix this, add the following line to <code>settings.php</code>: <code>\$settings['package_manager_rsync_path'] = '@rsync_path';</code>. See <a href=\":url\">this change record</a> for more information.", [
+          '@rsync_path' => $legacy_executables['rsync'],
+          ':url' => 'https://www.drupal.org/node/3540264',
+        ]),
+        'severity' => RequirementSeverity::Warning,
       ];
     }
 

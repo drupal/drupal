@@ -54,15 +54,15 @@ class PackageManagerHooks {
         $output .= '    <p>' . $this->t('Ask your system administrator to remove <code>proc_open()</code> from the <a href=":url">disable_functions</a> setting in <code>php.ini</code>.', [':url' => 'https://www.php.net/manual/en/ini.core.php#ini.disable-functions']) . '</p>';
         $output .= '  </li>';
         $output .= '  <li>' . $this->t('What if it says the <code>composer</code> executable cannot be found?');
-        $output .= '    <p>' . $this->t("If the <code>composer</code> executable's path cannot be automatically determined, it can be explicitly set by adding the following line to <code>settings.php</code>:") . '</p>';
-        $output .= "    <pre><code>\$config['package_manager.settings']['executables']['composer'] = '/full/path/to/composer.phar';</code></pre>";
+        $output .= '    <p>' . $this->t("If the <code>composer</code> executable's path cannot be automatically determined, you will need to add Composer to your project by running the following command: <code>composer require \"composer/composer:@version\"</code>:", [
+          '@version' => ComposerInspector::SUPPORTED_VERSION,
+        ]) . '</p>';
         $output .= '  </li>';
         $output .= '  <li>' . $this->t('What if it says the detected version of Composer is not supported?');
-        $output .= '    <p>' . $this->t('The version of the <code>composer</code> executable must satisfy <code>@version</code>. See the <a href=":url">the Composer documentation</a> for more information, or use this command to update Composer:', [
+        $output .= '    <p>' . $this->t('The version of the <code>composer</code> executable must satisfy <code>@version</code>. See the <a href=":url">the Composer documentation</a> for more information, or use this command to add Composer to your project: <code>composer require "composer/composer:@version"</code>', [
           '@version' => ComposerInspector::SUPPORTED_VERSION,
           ':url' => 'https://getcomposer.org/doc/03-cli.md#self-update-selfupdate',
         ]) . '</p>';
-        $output .= '    <pre><code>composer self-update</code></pre>';
         $output .= '  </li>';
         $output .= '  <li>' . $this->t('What if it says the <code>composer validate</code> command failed?');
         $output .= '    <p>' . $this->t('Composer detected problems with your <code>composer.json</code> and/or <code>composer.lock</code> files, and the project is not in a completely valid state. See <a href=":url">the Composer documentation</a> for more information.', [':url' => 'https://getcomposer.org/doc/04-schema.md']) . '</p>';
