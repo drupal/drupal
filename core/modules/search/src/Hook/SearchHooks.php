@@ -75,22 +75,6 @@ class SearchHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'search_result' => [
-        'variables' => [
-          'result' => NULL,
-          'plugin_id' => NULL,
-        ],
-        'file' => 'search.pages.inc',
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_cron().
    *
    * Fires updateIndex() in the plugins for all indexable active search pages,

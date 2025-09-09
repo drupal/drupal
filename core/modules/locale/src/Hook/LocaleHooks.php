@@ -91,28 +91,6 @@ class LocaleHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'locale_translation_last_check' => [
-        'variables' => [
-          'last' => NULL,
-        ],
-        'file' => 'locale.pages.inc',
-      ],
-      'locale_translation_update_info' => [
-        'variables' => [
-          'updates' => [],
-          'not_found' => [],
-        ],
-        'file' => 'locale.pages.inc',
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_ENTITY_TYPE_insert() for 'configurable_language'.
    */
   #[Hook('configurable_language_insert')]

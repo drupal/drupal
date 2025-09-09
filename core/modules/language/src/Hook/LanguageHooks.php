@@ -140,23 +140,6 @@ class LanguageHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'language_negotiation_configure_form' => [
-        'render element' => 'form',
-        'file' => 'language.admin.inc',
-      ],
-      'language_content_settings_table' => [
-        'render element' => 'element',
-        'file' => 'language.admin.inc',
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_element_info_alter().
    *
    * @see \Drupal\Core\Render\Element\LanguageSelect

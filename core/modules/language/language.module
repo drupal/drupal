@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\language\Hook\LanguageThemeHooks;
 
 /**
  * Processes a language select list form element.
@@ -139,4 +140,43 @@ function language_get_browser_drupal_langcode_mappings() {
     return [];
   }
   return $config->get('map');
+}
+
+/**
+ * Prepares variables for language negotiation configuration form.
+ *
+ * Default template: language-content-configuration-form.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_language_negotiation_configure_form(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(LanguageThemeHooks::class)->preprocessLanguageNegotiationConfigureForm($variables);
+}
+
+/**
+ * Prepares variables for language content settings table templates.
+ *
+ * Default template: language-content-settings-table.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #bundle_label, #title.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_language_content_settings_table(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(LanguageThemeHooks::class)->preprocessLanguageContentSettingsTable($variables);
 }

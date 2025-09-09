@@ -15,6 +15,7 @@ use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\locale\Hook\LocaleThemeHooks;
 use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
 
@@ -1039,4 +1040,50 @@ function locale_translation_language_table($form_element) {
     }
   }
   return $form_element;
+}
+
+/**
+ * Prepares variables for translation status information templates.
+ *
+ * Translation status information is displayed per language.
+ *
+ * Default template: locale-translate-edit-form-strings.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - updates: The projects which have updates.
+ *   - not_found: The projects which updates are not found.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_locale_translation_update_info(array &$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(LocaleThemeHooks::class)->preprocessLocaleTranslationUpdateInfo($variables);
+}
+
+/**
+ * Prepares variables for most recent translation update templates.
+ *
+ * Displays the last time we checked for locale update data. In addition to
+ * properly formatting the given timestamp, this function also provides a "Check
+ * manually" link that refreshes the available update and redirects back to the
+ * same page.
+ *
+ * Default template: locale-translation-last-check.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - last: The timestamp when the site last checked for available updates.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_locale_translation_last_check(array &$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(LocaleThemeHooks::class)->preprocessLocaleTranslationLastCheck($variables);
 }

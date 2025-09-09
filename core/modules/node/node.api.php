@@ -296,7 +296,7 @@ function hook_node_grants_alter(&$grants, AccountInterface $account, $operation)
  *   the post information (last updated, author) in the default search result
  *   theming.
  *
- * @see template_preprocess_search_result()
+ * @see \Drupal\search\Hook\SearchThemeHooks::preprocessSearchResult()
  * @see search-result.html.twig
  *
  * @ingroup entity_crud

@@ -6,6 +6,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\search\Hook\SearchThemeHooks;
 use Drupal\search\SearchTextProcessorInterface;
 
 /**
@@ -328,4 +329,30 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
   // mb_substr() function, because the indices in $words came from preg_split(),
   // so they are Unicode-safe byte positions, not character positions.
   return trim(substr($text, $words[$start_index][1], $words[$end_index][1] - $words[$start_index][1]));
+}
+
+/**
+ * Prepares variables for individual search result templates.
+ *
+ * Default template: search-result.html.twig
+ *
+ * @param array $variables
+ *   An array with the following elements:
+ *   - result: Individual search result.
+ *   - plugin_id: Plugin the search results came from.
+ *   - title_prefix: Additional output populated by modules, intended to be
+ *     displayed in front of the main title tag that appears in the template.
+ *   - title_suffix: Additional output populated by modules, intended to be
+ *     displayed after the main title tag that appears in the template.
+ *   - title_attributes: HTML attributes for the title.
+ *   - content_attributes: HTML attributes for the content.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_search_result(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SearchThemeHooks::class)->preprocessSearchResult($variables);
 }
