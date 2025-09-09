@@ -43,6 +43,8 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     // a non-deterministic test since they happen in parallel and therefore post
     // response tasks run in different orders each time.
     $this->drupalGet('node/1');
+    // Allow time for image style and aggregate requests to finish.
+    sleep(1);
     $this->drupalGet('node/1');
     $this->clearCaches();
     $performance_data = $this->collectPerformanceData(function () {
