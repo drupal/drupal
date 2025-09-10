@@ -23,6 +23,11 @@ interface FormBuilderInterface {
   const AJAX_FORM_REQUEST = 'ajax_form';
 
   /**
+   * Header name for HTMX requests.
+   */
+  const HTMX_REQUEST = 'HX-Request';
+
+  /**
    * Determines the ID of a form.
    *
    * @param \Drupal\Core\Form\FormInterface|string $form_arg

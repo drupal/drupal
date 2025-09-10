@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\test_htmx\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Htmx\Htmx;
 use Drupal\Core\Url;
 
 /**
@@ -87,20 +88,17 @@ final class HtmxTestAttachmentsController extends ControllerBase {
       '#attributes' => [
         'type' => 'button',
         'name' => 'replace',
-        'data-hx-get' => $url->toString(),
-        'data-hx-select' => 'div.ajax-content',
-        'data-hx-target' => '[data-drupal-htmx-target]',
       ],
       '#value' => 'Click this',
-      '#attached' => [
-        'library' => [
-          'core/drupal.htmx',
-        ],
-      ],
     ];
+    $replace_htmx = (new Htmx())
+      ->get($url)
+      ->select('div.ajax-content')
+      ->target('[data-drupal-htmx-target]');
     if ($swap !== '') {
-      $build['replace']['#attributes']['data-hx-swap'] = $swap;
+      $replace_htmx->swap($swap);
     }
+    $replace_htmx->applyTo($build['replace']);
 
     $build['content'] = [
       '#type' => 'container',

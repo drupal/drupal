@@ -49,6 +49,10 @@
       detail.parameters['ajax_page_state[theme]'] = pageState.theme;
       detail.parameters['ajax_page_state[theme_token]'] = pageState.theme_token;
       detail.parameters['ajax_page_state[libraries]'] = pageState.libraries;
+      if (detail.headers['HX-Trigger-Name']) {
+        detail.parameters._triggering_element_name =
+          detail.headers['HX-Trigger-Name'];
+      }
     }
   });
 

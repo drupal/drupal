@@ -1267,7 +1267,9 @@ class Htmx {
    */
   public function applyTo(array &$element, string $attributeKey = '#attributes'): void {
     // Attach HTMX and Drupal integration javascript.
-    $element['#attached']['library'][] = 'core/drupal.htmx';
+    if (!in_array('core/drupal.htmx', $element['#attached']['library'] ?? [])) {
+      $element['#attached']['library'][] = 'core/drupal.htmx';
+    }
 
     // Consolidate headers.
     if ($this->headers->count() !== 0) {

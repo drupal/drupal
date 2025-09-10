@@ -13,6 +13,7 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
+use Drupal\Core\Htmx\Htmx;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
@@ -302,8 +303,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
     }
 
-    // If this form is an AJAX request, disable all form redirects.
-    if ($ajax_form_request = $request->query->has(static::AJAX_FORM_REQUEST)) {
+    // If this form is an AJAX request or an HTMX request,
+    // disable all form redirects.
+    $ajax_form_request = $request->query->has(static::AJAX_FORM_REQUEST);
+    if ($ajax_form_request || $request->headers->has(static::HTMX_REQUEST)) {
       $form_state->disableRedirect();
     }
 
@@ -735,6 +738,34 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // autocomplete off prevents the input from being retained.
       '#attributes' => ['autocomplete' => 'off'],
     ];
+
+    $current_request_headers = $this->requestStack->getCurrentRequest()->headers;
+    // Figure out if we need to update the form_build_id value, this is
+    // specific to HTMX requests. The corresponding code path in the Ajax
+    // framework is in `FormAjaxResponseBuilder::buildResponse`.
+    // Make sure that we're looking at the right form if there are several on
+    // the page.
+    $input = $form_state->getUserInput();
+    $old_build_id = $input['form_build_id'] ?? NULL;
+    $returned_form_id = $input['form_id'] ?? NULL;
+    if ($current_request_headers->has(self::HTMX_REQUEST) && $form_id === $returned_form_id && $old_build_id) {
+      // Update the build_id by using an oob swap only
+      // in the following situation:
+      // - Headers `HX-Target` and `HX-Trigger` on the request show this is an
+      //   HTMX request.
+      // - The target to replace is not a whole form, the build_id will not be
+      //   part of the main swap.
+      // - The target is a different form from the one that triggered the
+      //   call, update the build id of the calling form.
+      $hx_target = $current_request_headers->get('hx-target');
+      $hx_trigger = $current_request_headers->get('hx-trigger');
+      $target_is_form = str_ends_with($hx_target ?? '', '-form');
+      if (!$target_is_form || ($target_is_form && $hx_target !== $hx_trigger)) {
+        (new Htmx())
+          ->swapOob('outerHTML:input[name="form_build_id"][value="' . $old_build_id . '"]')
+          ->applyTo($form['form_build_id']);
+      }
+    }
 
     // Add a token, based on either #token or form_id, to any form displayed to
     // authenticated users. This ensures that any submitted form was actually
@@ -1299,7 +1330,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // \Drupal\Core\Form\FormState::cleanValues(). Enforce the same input
     // processing restrictions as above.
     if ($process_input) {
-      // Detect if the element triggered the submission via Ajax.
+      // Detect if the element triggered the submission via Ajax or HTMX.
       if ($this->elementTriggeredScriptedSubmission($element, $form_state)) {
         $form_state->setTriggeringElement($element);
       }
