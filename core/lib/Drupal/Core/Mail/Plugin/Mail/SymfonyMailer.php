@@ -166,7 +166,7 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
       // mails into the code path (i.e., event subscribers) of the new API.
       // Therefore, this plugin deliberately refrains from injecting the event
       // dispatcher.
-      $factories = Transport::getDefaultFactories(logger: $this->logger);
+      $factories = Transport::getDefaultFactories();
       $transportFactory = new Transport($factories);
       $transport = $transportFactory->fromDsnObject($dsnObject);
       $this->mailer = new Mailer($transport);
