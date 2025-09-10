@@ -17,13 +17,6 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
   use EnableLayoutBuilderTrait;
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'layout_builder_add_new_fields_to_layout',
-  ];
-
-  /**
    * Tests that a non-default view mode works as expected.
    */
   public function testNonDefaultViewMode(): void {

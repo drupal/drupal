@@ -45,6 +45,3 @@
 
 # Symfony 7.3.
 %Since symfony/validator 7.3: Passing an array of options to configure the "[^"]+" constraint is deprecated, use named arguments instead.%
-
-# Feature flag deprecated module.
-%The module 'layout_builder_add_new_fields_to_layout' is deprecated%

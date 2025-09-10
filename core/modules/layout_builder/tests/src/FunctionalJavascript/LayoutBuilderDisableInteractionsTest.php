@@ -35,7 +35,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     'filter',
     'filter_test',
     'layout_builder',
-    'layout_builder_add_new_fields_to_layout',
     'node',
     'search',
     'contextual',

@@ -30,7 +30,6 @@ class LayoutBuilderTest extends WebDriverTestBase {
     'block_content',
     'field_ui',
     'layout_builder',
-    'layout_builder_add_new_fields_to_layout',
     'layout_test',
     'node',
     'off_canvas_test',

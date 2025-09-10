@@ -38,7 +38,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
 
     // Create one content type before installing Layout Builder and one after.
     $this->createContentType(['type' => 'before']);
-    $this->container->get('module_installer')->install(['layout_builder', 'layout_builder_add_new_fields_to_layout']);
+    $this->container->get('module_installer')->install(['layout_builder']);
     $this->rebuildAll();
     $this->createContentType(['type' => 'after']);
 

@@ -155,14 +155,4 @@ trait LayoutEntityHelperTrait {
     return $this->sectionStorageManager ?: \Drupal::service('plugin.manager.layout_builder.section_storage');
   }
 
-  /**
-   * Checks if new fields should be added to the layout.
-   *
-   * @return bool
-   *   TRUE if the new fields should be added to the layout.
-   */
-  protected function shouldAddNewFieldsToLayout(): bool {
-    return \Drupal::moduleHandler()->moduleExists('layout_builder_add_new_fields_to_layout');
-  }
-
 }

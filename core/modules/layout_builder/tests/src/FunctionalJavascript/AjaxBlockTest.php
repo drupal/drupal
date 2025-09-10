@@ -25,7 +25,6 @@ class AjaxBlockTest extends WebDriverTestBase {
     'node',
     'datetime',
     'layout_builder',
-    'layout_builder_add_new_fields_to_layout',
     'user',
     'layout_builder_test',
     'off_canvas_test',

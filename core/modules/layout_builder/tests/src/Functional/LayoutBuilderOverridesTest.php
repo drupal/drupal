@@ -15,13 +15,6 @@ use PHPUnit\Framework\Attributes\Group;
 class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'layout_builder_add_new_fields_to_layout',
-  ];
-
-  /**
    * Tests deleting a field in-use by an overridden layout.
    */
   public function testDeleteField(): void {

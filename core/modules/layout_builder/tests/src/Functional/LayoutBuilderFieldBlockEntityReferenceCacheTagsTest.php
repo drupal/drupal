@@ -27,7 +27,6 @@ class LayoutBuilderFieldBlockEntityReferenceCacheTagsTest extends BrowserTestBas
   protected static $modules = [
     'node',
     'layout_builder',
-    'layout_builder_add_new_fields_to_layout',
   ];
 
   /**

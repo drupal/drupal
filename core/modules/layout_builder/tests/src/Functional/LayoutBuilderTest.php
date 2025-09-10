@@ -19,13 +19,6 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
   use EnableLayoutBuilderTrait;
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'layout_builder_add_new_fields_to_layout',
-  ];
-
-  /**
    * Tests the Layout Builder UI for an entity type without a bundle.
    */
   public function testNonBundleEntityType(): void {
