@@ -20,7 +20,6 @@ Product managers
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
 - Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
-- Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 
 User Experience (UX) managers
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
