@@ -23,14 +23,14 @@ class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
    *
    * @var \Drupal\Core\TypedData\TypedDataManager
    */
-  protected $typedData;
+  protected $typedDataManager;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->typedData = $this->container->get('typed_data_manager');
+    $this->typedDataManager = $this->container->get('typed_data_manager');
   }
 
   /**
@@ -54,7 +54,7 @@ class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
     ]);
 
     // Test the validation.
-    $typed_data = $this->typedData->create($definition, $value);
+    $typed_data = $this->typedDataManager->create($definition, $value);
     $violations = $typed_data->validate();
 
     $violationMessages = [];

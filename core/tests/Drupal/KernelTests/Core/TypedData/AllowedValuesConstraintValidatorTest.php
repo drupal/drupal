@@ -20,14 +20,14 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
    *
    * @var \Drupal\Core\TypedData\TypedDataManager
    */
-  protected $typedData;
+  protected $typedDataManager;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->typedData = $this->container->get('typed_data_manager');
+    $this->typedDataManager = $this->container->get('typed_data_manager');
   }
 
   /**
@@ -41,12 +41,12 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
       ->addConstraint('AllowedValues', [1, 2, 3]);
 
     // Test the validation.
-    $typed_data = $this->typedData->create($definition, 1);
+    $typed_data = $this->typedDataManager->create($definition, 1);
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Validation passed for correct value.');
 
     // Test the validation when an invalid value is passed.
-    $typed_data = $this->typedData->create($definition, 4);
+    $typed_data = $this->typedDataManager->create($definition, 4);
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
 
@@ -57,7 +57,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
     $this->assertEquals(4, $violation->getInvalidValue(), 'The invalid value is set correctly in the violation.');
 
     // Test the validation when a value of an incorrect type is passed.
-    $typed_data = $this->typedData->create($definition, '1');
+    $typed_data = $this->typedDataManager->create($definition, '1');
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Value is coerced to the correct type and is valid.');
   }
@@ -71,23 +71,23 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
     // values and can be used to coerce the value to the correct type.
     $definition = DataDefinition::create('string')
       ->addConstraint('AllowedValues', ['choices' => [1, 2, 3], 'callback' => [static::class, 'allowedValueCallback']]);
-    $typed_data = $this->typedData->create($definition, 'a');
+    $typed_data = $this->typedDataManager->create($definition, 'a');
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Validation passed for correct value.');
 
-    $typed_data = $this->typedData->create($definition, 1);
+    $typed_data = $this->typedDataManager->create($definition, 1);
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Validation passed for value that will be cast to the correct type.');
 
-    $typed_data = $this->typedData->create($definition, 2);
+    $typed_data = $this->typedDataManager->create($definition, 2);
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
 
-    $typed_data = $this->typedData->create($definition, 'd');
+    $typed_data = $this->typedDataManager->create($definition, 'd');
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
 
-    $typed_data = $this->typedData->create($definition, 0);
+    $typed_data = $this->typedDataManager->create($definition, 0);
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
   }
@@ -111,7 +111,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
     // values and can be used to coerce the value to the correct type.
     $definition = DataDefinition::create('string')
       ->addConstraint('AllowedValues', ['choices' => [1, 2, 3], 'callback' => [static::class, 'doesNotExist']]);
-    $typed_data = $this->typedData->create($definition, 1);
+    $typed_data = $this->typedDataManager->create($definition, 1);
 
     $this->expectException(ConstraintDefinitionException::class);
     $this->expectExceptionMessage('The AllowedValuesConstraint constraint expects a valid callback');
