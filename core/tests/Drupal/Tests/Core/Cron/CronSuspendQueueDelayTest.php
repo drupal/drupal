@@ -26,11 +26,10 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Test Cron handling of suspended queues with a delay.
- *
- * @legacy-covers \Drupal\Core\Queue\SuspendQueueException
  */
 #[CoversClass(Cron::class)]
 #[Group('Cron')]
+#[CoversClass(SuspendQueueException::class)]
 final class CronSuspendQueueDelayTest extends UnitTestCase {
 
   /**

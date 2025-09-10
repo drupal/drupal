@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Unit;
 
+use Drupal\package_manager\Event\EventWithPackageListTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -12,9 +14,9 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests Event With Package List Trait.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\Event\EventWithPackageListTrait
  */
 #[Group('package_manager')]
+#[CoversTrait(EventWithPackageListTrait::class)]
 class EventWithPackageListTraitTest extends UnitTestCase {
 
   /**

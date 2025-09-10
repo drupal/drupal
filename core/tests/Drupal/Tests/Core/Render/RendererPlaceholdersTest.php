@@ -10,6 +10,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\PlaceholderingRenderCache;
+use Drupal\Core\Render\RenderCache;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Security\TrustedCallbackInterface;
@@ -19,12 +20,11 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Drupal\Core\Render\Renderer.
- *
- * @legacy-covers \Drupal\Core\Render\RenderCache
- * @legacy-covers \Drupal\Core\Render\PlaceholderingRenderCache
  */
-#[CoversClass(Renderer::class)]
 #[Group('Render')]
+#[CoversClass(Renderer::class)]
+#[CoversClass(RenderCache::class)]
+#[CoversClass(PlaceholderingRenderCache::class)]
 class RendererPlaceholdersTest extends RendererTestBase {
 
   /**

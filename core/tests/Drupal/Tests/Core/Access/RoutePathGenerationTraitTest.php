@@ -7,9 +7,11 @@ namespace Drupal\Tests\Core\Access;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Access\CsrfAccessCheck;
 use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Access\RoutePathGenerationTrait;
 use Drupal\Core\Access\RouteProcessorCsrf;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -20,10 +22,9 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Tests Route Path Generation Trait.
- *
- * @legacy-covers \Drupal\Core\Access\RoutePathGenerationTrait
  */
 #[Group('Access')]
+#[CoversTrait(RoutePathGenerationTrait::class)]
 class RoutePathGenerationTraitTest extends UnitTestCase {
 
   /**

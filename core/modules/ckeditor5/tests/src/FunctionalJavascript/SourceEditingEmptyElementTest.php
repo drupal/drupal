@@ -6,23 +6,26 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginManager;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore sourceediting
+
 /**
  * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing.
  *
  * @internal
- * @legacy-covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
  */
-#[CoversClass(SourceEditing::class)]
 #[Group('ckeditor5')]
+#[CoversClass(SourceEditing::class)]
+#[CoversMethod(CKEditor5PluginManager::class, 'getCKEditor5PluginConfig')]
 class SourceEditingEmptyElementTest extends SourceEditingTestBase {
 
   /**

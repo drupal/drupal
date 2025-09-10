@@ -7,14 +7,14 @@ namespace Drupal\Tests\Core\DefaultContent;
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\DefaultContent\ImportException;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Finder.
- *
- * @legacy-covers \Drupal\Core\DefaultContent\Finder
  */
 #[Group('DefaultContent')]
+#[CoversClass(Finder::class)]
 class FinderTest extends UnitTestCase {
 
   /**

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use Drupal\Core\Recipe\RecipeInputFormTrait;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Recipe Form Input.
- *
- * @legacy-covers \Drupal\Core\Recipe\RecipeInputFormTrait
  */
 #[Group('system')]
+#[CoversTrait(RecipeInputFormTrait::class)]
 class RecipeFormInputTest extends BrowserTestBase {
 
   /**

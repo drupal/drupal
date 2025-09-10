@@ -6,15 +6,15 @@ namespace Drupal\Tests\link\Unit;
 
 use Drupal\link\AttributeXss;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests AttributeXss.
- *
- * @legacy-covers \Drupal\link\AttributeXss
  */
 #[Group('link')]
+#[CoversClass(AttributeXss::class)]
 final class AttributeXssTest extends UnitTestCase {
 
   /**

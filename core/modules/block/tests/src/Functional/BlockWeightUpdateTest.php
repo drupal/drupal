@@ -6,14 +6,14 @@ namespace Drupal\Tests\block\Functional;
 
 use Drupal\block\Entity\Block;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Block Weight Update.
- *
- * @legacy-covers block_post_update_make_weight_integer
  */
 #[Group('block')]
+#[CoversFunction('block_post_update_make_weight_integer')]
 class BlockWeightUpdateTest extends UpdatePathTestBase {
 
   /**

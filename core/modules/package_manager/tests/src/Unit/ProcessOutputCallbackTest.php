@@ -8,14 +8,14 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\package_manager\ProcessOutputCallback;
 use Drupal\Tests\UnitTestCase;
 use PhpTuf\ComposerStager\API\Process\Value\OutputTypeEnum;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Process Output Callback.
- *
- * @legacy-covers \Drupal\package_manager\ProcessOutputCallback
  */
 #[Group('package_manager')]
+#[CoversClass(ProcessOutputCallback::class)]
 class ProcessOutputCallbackTest extends UnitTestCase {
 
   /**

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\language\Form\ContentLanguageSettingsForm;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
@@ -12,10 +14,9 @@ use PHPUnit\Framework\Attributes\Group;
  *
  * This is to ensure that an entity type without language support can not
  * enable the language select from the content language settings page.
- *
- * @legacy-covers \Drupal\language\Form\ContentLanguageSettingsForm
  */
 #[Group('language')]
+#[CoversClass(ContentLanguageSettingsForm::class)]
 class EntityTypeWithoutLanguageFormTest extends BrowserTestBase {
 
   /**

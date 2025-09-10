@@ -8,15 +8,15 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\update\Hook\UpdateHooks;
 use Drupal\update\UpdateManagerInterface;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests text of update email.
- *
- * @legacy-covers \Drupal\update\Hook\UpdateHooks::mail
  */
 #[Group('update')]
+#[CoversMethod(UpdateHooks::class, 'mail')]
 class UpdateMailTest extends UnitTestCase {
 
   /**

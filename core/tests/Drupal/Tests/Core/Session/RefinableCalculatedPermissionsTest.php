@@ -6,8 +6,11 @@ namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Session\CalculatedPermissionsItem;
+use Drupal\Core\Session\CalculatedPermissionsTrait;
 use Drupal\Core\Session\RefinableCalculatedPermissions;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
@@ -15,11 +18,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the RefinableCalculatedPermissions class.
- *
- * @legacy-covers \Drupal\Core\Session\CalculatedPermissionsTrait
- * @legacy-covers \Drupal\Core\Session\RefinableCalculatedPermissions
  */
 #[Group('Session')]
+#[CoversClass(RefinableCalculatedPermissions::class)]
+#[CoversTrait(CalculatedPermissionsTrait::class)]
 class RefinableCalculatedPermissionsTest extends UnitTestCase {
 
   /**

@@ -7,16 +7,18 @@ namespace Drupal\Tests\Core\Session;
 use Drupal\Core\Session\CalculatedPermissions;
 use Drupal\Core\Session\CalculatedPermissionsInterface;
 use Drupal\Core\Session\CalculatedPermissionsItem;
+use Drupal\Core\Session\CalculatedPermissionsTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the CalculatedPermissions value object.
- *
- * @legacy-covers \Drupal\Core\Session\CalculatedPermissions
- * @legacy-covers \Drupal\Core\Session\CalculatedPermissionsTrait
  */
 #[Group('Session')]
+#[CoversClass(CalculatedPermissions::class)]
+#[CoversTrait(CalculatedPermissionsTrait::class)]
 class CalculatedPermissionsTest extends UnitTestCase {
 
   /**

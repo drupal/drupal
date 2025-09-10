@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Media Embed Filter Configuration Ui Add.
- *
- * @legacy-covers ::media_filter_format_edit_form_validate
  */
 #[Group('media')]
 #[Group('#slow')]
+#[CoversFunction('media_filter_format_edit_form_validate')]
 class MediaEmbedFilterConfigurationUiAddTest extends MediaEmbedFilterTestBase {
 
   /**

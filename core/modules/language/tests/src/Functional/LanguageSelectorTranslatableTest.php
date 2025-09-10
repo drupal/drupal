@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\language\Form\ContentLanguageSettingsForm;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the content translation settings language selector options.
- *
- * @legacy-covers \Drupal\language\Form\ContentLanguageSettingsForm
  */
 #[Group('language')]
+#[CoversClass(ContentLanguageSettingsForm::class)]
 class LanguageSelectorTranslatableTest extends BrowserTestBase {
 
   use LanguageTestTrait;
