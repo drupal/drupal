@@ -19,6 +19,7 @@ class LayoutBuilderThemeSuggestionsTest extends BrowserTestBase {
    */
   protected static $modules = [
     'layout_builder',
+    'layout_builder_add_new_fields_to_layout',
     'node',
     'layout_builder_theme_suggestions_test',
   ];

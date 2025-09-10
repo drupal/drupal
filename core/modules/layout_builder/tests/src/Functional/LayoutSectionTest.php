@@ -24,6 +24,7 @@ class LayoutSectionTest extends BrowserTestBase {
   protected static $modules = [
     'field_ui',
     'layout_builder',
+    'layout_builder_add_new_fields_to_layout',
     'node',
     'block_test',
   ];

@@ -17,6 +17,13 @@ use Drupal\layout_builder\Section;
 class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'layout_builder_add_new_fields_to_layout',
+  ];
+
+  /**
    * Tests the compatibility of Layout Builder with existing entity displays.
    */
   public function testCompatibility(): void {

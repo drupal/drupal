@@ -19,6 +19,7 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
    */
   protected static $modules = [
     'field_layout',
+    'layout_builder_add_new_fields_to_layout',
   ];
 
   /**

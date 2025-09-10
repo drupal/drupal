@@ -32,3 +32,10 @@ function layout_builder_removed_post_updates(): array {
     'layout_builder_post_update_enable_expose_field_block_feature_flag' => '11.0.0',
   ];
 }
+
+/**
+ * Enable the layout_builder_add_new_fields_to_layout module.
+ */
+function layout_builder_post_update_enable_add_fields_feature_flag(): void {
+  \Drupal::service('module_installer')->install(['layout_builder_add_new_fields_to_layout']);
+}

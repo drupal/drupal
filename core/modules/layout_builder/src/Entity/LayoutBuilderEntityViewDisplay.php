@@ -435,6 +435,15 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       return $this;
     }
 
+    // Always add a new section if one doesn't exist so when enabling layout
+    // builder the layout has at least 1 section to add blocks to.
+    $section = $this->getDefaultSection();
+
+    // Only continue if new fields should be added to the layout.
+    if (!$this->shouldAddNewFieldsToLayout()) {
+      return $this;
+    }
+
     // Retrieve the updated options after the parent:: call.
     $options = $this->content[$name];
     // Provide backwards compatibility by converting to a section component.
@@ -455,7 +464,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         $configuration['id'] = 'extra_field_block:' . $this->getTargetEntityTypeId() . ':' . $this->getTargetBundle() . ':' . $name;
       }
 
-      $section = $this->getDefaultSection();
       $region = $options['region'] ?? $section->getDefaultRegion();
       $new_component = (new SectionComponent(\Drupal::service('uuid')->generate(), $region, $configuration));
       $section->appendComponent($new_component);

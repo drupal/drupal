@@ -25,6 +25,7 @@ class ContextualLinksTest extends WebDriverTestBase {
     'views',
     'views_ui',
     'layout_builder',
+    'layout_builder_add_new_fields_to_layout',
     'layout_builder_views_test',
     'layout_test',
     'block',

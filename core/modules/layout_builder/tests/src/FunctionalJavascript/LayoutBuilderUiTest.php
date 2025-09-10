@@ -31,6 +31,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'layout_builder',
+    'layout_builder_add_new_fields_to_layout',
     'block',
     'field_ui',
     'node',
