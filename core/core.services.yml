@@ -78,6 +78,8 @@ services:
     autowire: true
   Drupal\Core\DefaultContent\Exporter:
     autowire: true
+    calls:
+      - [setLogger, ['@logger.channel.default_content']]
   Drupal\Core\DefaultContent\AdminAccountSwitcher:
     arguments:
       $isSuperUserAccessEnabled: '%security.enable_super_user%'
@@ -543,6 +545,9 @@ services:
   logger.channel.default:
     parent: logger.channel_base
     arguments: ['system']
+  logger.channel.default_content:
+    parent: logger.channel_base
+    arguments: ['default_content']
   logger.channel.php:
     parent: logger.channel_base
     arguments: ['php']

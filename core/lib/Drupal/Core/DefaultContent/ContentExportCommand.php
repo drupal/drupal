@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Core\DefaultContent;
 
 use Drupal\Core\Command\BootableCommandTrait;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -23,6 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class ContentExportCommand extends Command {
 
   use BootableCommandTrait;
+  use StringTranslationTrait;
 
   public function __construct(object $class_loader) {
     parent::__construct('content:export');
@@ -36,7 +40,9 @@ final class ContentExportCommand extends Command {
     $this
       ->setDescription('Exports a single content entity in YAML format.')
       ->addArgument('entity_type_id', InputArgument::REQUIRED, 'The type of entity to export (e.g., node, taxonomy_term).')
-      ->addArgument('entity_id', InputArgument::REQUIRED, 'The ID of the entity to export. Will usually be a number.');
+      ->addArgument('entity_id', InputArgument::REQUIRED, 'The ID of the entity to export. Will usually be a number.')
+      ->addOption('with-dependencies', 'W', InputOption::VALUE_NONE, "Recursively export all of the entities referenced by this entity into a directory structure.")
+      ->addOption('dir', 'd', InputOption::VALUE_REQUIRED, 'The path where content should be exported.');
   }
 
   /**
@@ -68,8 +74,36 @@ final class ContentExportCommand extends Command {
       return 1;
     }
 
-    $data = $container->get(Exporter::class)->export($entity);
-    $io->write(Yaml::encode($data));
+    $exporter = $container->get(Exporter::class);
+
+    $dir = $input->getOption('dir');
+    $with_dependencies = $input->getOption('with-dependencies');
+    if ($with_dependencies && empty($dir)) {
+      throw new RuntimeException('The --dir option is required when exporting with dependencies.');
+    }
+    $file_system = $container->get(FileSystemInterface::class);
+
+    if ($with_dependencies) {
+      $count = $exporter->exportWithDependencies($entity, $dir);
+
+      $message = (string) $this->formatPlural($count, 'One item was exported to @dir.', '@count items were exported to @dir.', [
+        '@dir' => $file_system->realpath($dir),
+      ]);
+      $io->success($message);
+    }
+    elseif ($dir) {
+      $exporter->exportToFile($entity, $dir);
+
+      $message = (string) $this->t('The @type "@label" was exported to @dir.', [
+        '@type' => $entity->getEntityType()->getSingularLabel(),
+        '@label' => $entity->label(),
+        '@dir' => $file_system->realpath($dir),
+      ]);
+      $io->success($message);
+    }
+    else {
+      $io->write((string) $exporter->export($entity));
+    }
     return 0;
   }
 

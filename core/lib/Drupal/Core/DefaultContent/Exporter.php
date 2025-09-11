@@ -4,12 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Core\DefaultContent;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem;
+use Drupal\Core\File\Exception\DirectoryNotReadyException;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\Exception\FileWriteException;
+use Drupal\Core\File\FileExists;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\PrimitiveInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -18,23 +28,31 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * @internal
  *   This API is experimental.
  */
-final readonly class Exporter {
+final class Exporter implements LoggerAwareInterface {
+
+  use LoggerAwareTrait;
 
   public function __construct(
-    private EventDispatcherInterface $eventDispatcher,
+    private readonly EventDispatcherInterface $eventDispatcher,
+    private readonly FileSystemInterface $fileSystem,
+    private readonly EntityRepositoryInterface $entityRepository,
+    private readonly EntityTypeManagerInterface $entityTypeManager,
   ) {}
 
   /**
-   * Exports a single content entity to a file.
+   * Exports a single content entity as an array.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity to export.
    *
-   * @return array{'_meta': array, 'default': array<array>, 'translations': array<string, array<array>>}
-   *   The exported entity data.
+   * @return \Drupal\Core\DefaultContent\ExportResult
+   *   A read-only value object with the exported entity data, and any metadata
+   *   that was collected while exporting the entity, including dependencies and
+   *   attachments.
    */
-  public function export(ContentEntityInterface $entity): array {
-    $event = new PreExportEvent($entity);
+  public function export(ContentEntityInterface $entity): ExportResult {
+    $metadata = new ExportMetadata($entity);
+    $event = new PreExportEvent($entity, $metadata);
 
     $field_definitions = $entity->getFieldDefinitions();
     // Ignore serial (integer) entity IDs by default, along with a number of
@@ -73,8 +91,6 @@ final readonly class Exporter {
     $this->eventDispatcher->dispatch($event);
 
     $data = [];
-    $metadata = new ExportMetadata($entity);
-
     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
       $translation = $entity->getTranslation($langcode);
       $values = $this->exportTranslation($translation, $metadata, $event->getCallbacks(), $event->getAllowList());
@@ -86,11 +102,83 @@ final readonly class Exporter {
         $data['translations'][$langcode] = $values;
       }
     }
-    // Add the metadata we've collected (e.g., dependencies) while exporting
-    // this entity and its translations.
-    $data['_meta'] = $metadata->get();
+    return new ExportResult($data, $metadata);
+  }
 
-    return $data;
+  /**
+   * Exports an entity to a YAML file in a directory.
+   *
+   * Any attachments to the entity (e.g., physical files) will be copied into
+   * the destination directory, alongside the exported entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity to export.
+   * @param string $destination
+   *   A destination path or URI; will be created if it does not exist. A
+   *   subdirectory will be created for the entity type that is being exported.
+   *
+   * @return \Drupal\Core\DefaultContent\ExportResult
+   *   The exported entity data and its metadata.
+   */
+  public function exportToFile(ContentEntityInterface $entity, string $destination): ExportResult {
+    $destination .= '/' . $entity->getEntityTypeId();
+
+    // Ensure the destination directory exists and is writable.
+    $this->fileSystem->prepareDirectory(
+      $destination,
+      FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS,
+    ) || throw new DirectoryNotReadyException("Could not create destination directory '$destination'");
+
+    $destination = $this->fileSystem->realpath($destination);
+    if (empty($destination)) {
+      throw new FileException("Could not resolve the destination directory '$destination'");
+    }
+
+    $path = $destination . '/' . $entity->uuid() . '.' . Yaml::getFileExtension();
+    $result = $this->export($entity);
+    file_put_contents($path, (string) $result) || throw new FileWriteException("Could not write file '$path'");
+
+    foreach ($result->metadata->getAttachments() as $from => $to) {
+      $this->fileSystem->copy($from, $destination . '/' . $to, FileExists::Replace);
+    }
+    return $result;
+  }
+
+  /**
+   * Exports an entity and all of its dependencies to a directory.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity to export.
+   * @param string $destination
+   *   A destination path or URI; will be created if it does not exist.
+   *   Subdirectories will be created for each entity type that is exported.
+   *
+   * @return int
+   *   The number of entities that were exported.
+   */
+  public function exportWithDependencies(ContentEntityInterface $entity, string $destination): int {
+    $queue = [$entity];
+    $done = [];
+
+    while ($queue) {
+      $entity = array_shift($queue);
+      $uuid = $entity->uuid();
+      // Don't export the same entity twice, both for performance and to prevent
+      // an infinite loop caused by circular dependencies.
+      if (isset($done[$uuid])) {
+        continue;
+      }
+
+      $dependencies = $this->exportToFile($entity, $destination)->metadata->getDependencies();
+      foreach ($dependencies as $dependency) {
+        $dependency = $this->entityRepository->loadEntityByUuid(...$dependency);
+        if ($dependency instanceof ContentEntityInterface) {
+          $queue[] = $dependency;
+        }
+      }
+      $done[$uuid] = TRUE;
+    }
+    return count($done);
   }
 
   /**
@@ -191,6 +279,15 @@ final readonly class Exporter {
     $entity = $item->get('entity')->getValue();
     // No entity is referenced, so there's nothing else we can do here.
     if ($entity === NULL) {
+      $referencer = $item->getEntity();
+      $field_definition = $item->getFieldDefinition();
+      $this->logger?->warning('Failed to export reference to @target_type %missing_id referenced by %field on @entity_type %label because the referenced @target_type does not exist.', [
+        '@target_type' => (string) $this->entityTypeManager->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'))->getSingularLabel(),
+        '%missing_id' => $item->get('target_id')->getValue(),
+        '%field' => $field_definition->getLabel(),
+        '@entity_type' => (string) $referencer->getEntityType()->getSingularLabel(),
+        '%label' => $referencer->label(),
+      ]);
       return NULL;
     }
     $values = $this->exportFieldItem($item);

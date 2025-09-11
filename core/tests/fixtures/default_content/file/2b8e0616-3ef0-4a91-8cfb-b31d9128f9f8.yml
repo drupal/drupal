@@ -1,3 +1,5 @@
+# A file entity whose associated physical file does not exist, to test that
+# the importer and exporter can handle this situation gracefully.
 _meta:
   version: '1.0'
   entity_type: file

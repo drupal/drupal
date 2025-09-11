@@ -87,11 +87,14 @@ trait RecipeTestTrait {
    *
    * @param string[] $arguments
    *   The arguments and options to pass to the script.
+   * @param int $timeout
+   *   (optional) How long the command should run before timing out, in seconds.
+   *   Defaults to 500.
    *
    * @return \Symfony\Component\Process\Process
    *   The started process.
    */
-  protected function runDrupalCommand(array $arguments): Process {
+  protected function runDrupalCommand(array $arguments, int $timeout = 500): Process {
     assert($this instanceof BrowserTestBase);
 
     array_unshift($arguments, (new PhpExecutableFinder())->find(), 'core/scripts/drupal');
@@ -105,7 +108,7 @@ trait RecipeTestTrait {
         // @see drupal_valid_test_ua()
         'HTTP_USER_AGENT' => drupal_generate_test_ua($this->databasePrefix),
       ])
-      ->setTimeout(500);
+      ->setTimeout($timeout);
 
     $process->run();
     return $process;

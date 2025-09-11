@@ -40,7 +40,10 @@ final class PreExportEvent extends Event {
    */
   private array $allowList = [];
 
-  public function __construct(public readonly ContentEntityInterface $entity) {}
+  public function __construct(
+    public readonly ContentEntityInterface $entity,
+    public readonly ExportMetadata $metadata,
+  ) {}
 
   /**
    * Toggles whether a specific entity key should be exported.
