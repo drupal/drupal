@@ -47,6 +47,24 @@ module.exports = {
       .assert.elementPresent(cssSelector);
   },
 
+  'Asset Load with wrapper format': (browser) => {
+    // Now load the page with the htmx enhanced button configured
+    // to add the wrapper query parameter and verify the absence
+    // of the markup to be inserted. Click the button
+    // and check for inserted javascript and markup.
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/wrapper')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+
   'Swap Before': (browser) => {
     // Load the route htmx will use for the request on click and confirm the
     // markup we will be looking for is present in the source markup.

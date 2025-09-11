@@ -1277,6 +1277,11 @@ services:
     arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@module_handler', '@renderer', '@render_cache', '%renderer.config%', '@theme.manager']
     tags:
       - { name: render.main_content_renderer, format: html }
+  main_content_renderer.htmx:
+    class: Drupal\Core\Render\MainContent\HtmxRenderer
+    arguments: ['@title_resolver', '@renderer', '@render_cache', '%renderer.config%']
+    tags:
+      - { name: render.main_content_renderer, format: drupal_htmx }
   main_content_renderer.ajax:
     class: Drupal\Core\Render\MainContent\AjaxRenderer
     arguments: ['@element_info', '@renderer']

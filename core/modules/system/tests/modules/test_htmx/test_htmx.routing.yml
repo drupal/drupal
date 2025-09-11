@@ -22,6 +22,14 @@ test_htmx.attachments.after:
   requirements:
     _permission: 'access content'
 
+test_htmx.attachments.wrapper:
+  path: '/htmx-test-attachments/wrapper'
+  defaults:
+    _title: 'Minimal Response'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::withWrapperFormat'
+  requirements:
+    _permission: 'access content'
+
 test_htmx.attachments.replace:
   path: '/htmx-test-attachments/replace'
   defaults:
