@@ -166,7 +166,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       $this->pluginDefinitionAnnotationName = $plugin_definition_attribute_name ?? 'Drupal\Component\Annotation\Plugin';
       $this->additionalAnnotationNamespaces = $plugin_definition_annotation_name ?? [];
       if ($plugin_definition_attribute_name) {
-        @trigger_error('Not supporting attribute discovery in ' . __CLASS__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Provide an Attribute class and an Annotation class for BC. See https://www.drupal.org/node/3395582', E_USER_DEPRECATED);
+        @trigger_error('Not supporting attribute discovery in ' . static::class . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Provide an Attribute class and an Annotation class for BC. See https://www.drupal.org/node/3395582', E_USER_DEPRECATED);
       }
     }
   }
