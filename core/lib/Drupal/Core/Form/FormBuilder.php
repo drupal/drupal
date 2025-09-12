@@ -187,6 +187,30 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   }
 
   /**
+   * Determines if the element is accessible based on the #access property.
+   *
+   * @param array $element
+   *   A renderable array element.
+   *
+   * @return bool
+   *   TRUE if the element should be considered accessible.
+   */
+  protected function isElementAccessible(array $element): bool {
+    // Elements are accessible by default.
+    if (!isset($element['#access'])) {
+      return TRUE;
+    }
+
+    // Check for #access as an AccessResultInterface object.
+    if ($element['#access'] instanceof AccessResultInterface) {
+      return $element['#access']->isAllowed();
+    }
+
+    // Otherwise, #access must be a boolean.
+    return $element['#access'] === TRUE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId($form_arg, FormStateInterface &$form_state) {
@@ -1259,7 +1283,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       !in_array($element['#type'], ['item', 'value'], TRUE) &&
       (
         ($form_state->isProgrammed() && $form_state->isBypassingProgrammedAccessChecks()) ||
-        ($form_state->isProcessingInput() && (!isset($element['#access']) || (($element['#access'] instanceof AccessResultInterface && $element['#access']->isAllowed()) || ($element['#access'] === TRUE))))
+        ($form_state->isProcessingInput() && $this->isElementAccessible($element))
       );
 
     // Set the element's #value property.
