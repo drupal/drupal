@@ -34,3 +34,7 @@ services:
   block_content.bc_subscriber:
     class: Drupal\block_content\Routing\RouteSubscriber
     arguments: ['@entity_type.manager', '@module_handler']
+  access_check.block_content_reusable:
+    class: Drupal\block_content\Access\BlockContentIsReusableAccessCheck
+    tags:
+      - { name: access_check, applies_to: _block_content_reusable, needs_incoming_request: TRUE }

@@ -27,6 +27,7 @@ entity.block_content.canonical:
     _admin_route: TRUE
   requirements:
     _entity_access: 'block_content.update'
+    _block_content_reusable: 'TRUE'
     block_content: \d+
 
 entity.block_content.edit_form:
@@ -37,6 +38,7 @@ entity.block_content.edit_form:
     _admin_route: TRUE
   requirements:
     _entity_access: 'block_content.update'
+    _block_content_reusable: 'TRUE'
     block_content: \d+
 
 entity.block_content.delete_form:
@@ -48,6 +50,7 @@ entity.block_content.delete_form:
     _admin_route: TRUE
   requirements:
     _entity_access: 'block_content.delete'
+    _block_content_reusable: 'TRUE'
     block_content: \d+
 
 block_content.type_add:

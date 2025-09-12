@@ -509,22 +509,12 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->assertSaveLayout();
     $node_1_block_id = $this->getLatestBlockEntityId();
 
-    $this->drupalGet("admin/content/block/$node_1_block_id");
-    $assert_session->pageTextNotContains('You are not authorized to access this page');
-
-    $this->drupalLogout();
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer nodes',
-    ]));
-
-    $this->drupalGet("admin/content/block/$node_1_block_id");
+    // Inline blocks cannot be edited via normal block_content routes.
+    $blockContent = $this->blockStorage->load($node_1_block_id);
+    $this->drupalGet($blockContent->toUrl());
     $assert_session->pageTextContains('You are not authorized to access this page');
-
-    $this->drupalLogin($this->drupalCreateUser([
-      'create and edit custom blocks',
-    ]));
-    $this->drupalGet("admin/content/block/$node_1_block_id");
-    $assert_session->pageTextNotContains('You are not authorized to access this page');
+    // The block should still be editable (e.g via layout builder).
+    $this->assertTrue($blockContent->access('update'));
   }
 
   /**
