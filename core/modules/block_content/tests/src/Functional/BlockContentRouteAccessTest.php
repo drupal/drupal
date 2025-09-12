@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests access to block_content routes.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockContentRouteAccessTest extends BlockContentTestBase {
 
   /**
