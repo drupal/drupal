@@ -80,7 +80,7 @@ use function Symfony\Component\String\u;
  * array by the `::applyTo` method.
  *
  * A static method `Htmx::createFromRenderArray` is provided which
- * takes a render array as input and builds an new instance of Htmx with all
+ * takes a render array as input and builds a new instance of Htmx with all
  * the HTMX specific attributes and headers loaded from the array.
  *
  * @see https://htmx.org/reference/
