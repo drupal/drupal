@@ -73,7 +73,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $urlGenerator->expects($this->any())
       ->method('generateFromRoute')
       ->with('example.not_existing_route', [], [])
-      ->willReturn(new RouteNotFoundException());
+      ->willThrowException(new RouteNotFoundException());
     $url->setUrlGenerator($urlGenerator);
 
     $link = $this->createMock(LinkItemInterface::class);
@@ -82,7 +82,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
       ->willReturn($url);
 
     $context = $this->createMock(ExecutionContextInterface::class);
-    $context->expects($this->never())
+    $context->expects($this->once())
       ->method('addViolation');
 
     $this->validate($link, $context);
