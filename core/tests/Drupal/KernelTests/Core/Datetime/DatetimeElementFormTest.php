@@ -99,6 +99,17 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
       '#date_time_element' => 'HTML Time',
     ];
 
+    // Element with a year range.
+    $form['range_datetime_element'] = [
+      '#title' => 'range_datetime_element',
+      '#type' => 'datetime',
+      '#date_date_format' => 'Y-m-d',
+      '#date_time_format' => 'H:i:s',
+      '#date_date_element' => 'HTML Date',
+      '#date_time_element' => 'HTML Time',
+      '#date_year_range' => '1850:3000',
+    ];
+
     // Element with #required_error.
     $form['datetime_required_error'] = [
       '#type' => 'datetime',
@@ -221,6 +232,51 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
     $form = \Drupal::formBuilder()->getForm($this);
     $this->render($form);
     $this->assertEquals('UTC', $form['datetime_element']['#date_timezone']);
+  }
+
+  /**
+   * Tests that year range is validated.
+   */
+  public function testRangeValidate(): void {
+    // Tests with a date after maximum.
+    $formState = new FormState();
+    $formState->setValue(['range_datetime_element', 'date'], '4000-01-01');
+    $formState->setValue(['range_datetime_element', 'time'], '10:10');
+    $form = \Drupal::formBuilder()->getForm($this);
+    \Drupal::formBuilder()->submitForm($this, $formState);
+    $this->assertEquals(
+      'The range_datetime_element date is invalid. Date should be in the 1850-3000 year range.',
+      $formState->getError($form['range_datetime_element'])
+    );
+
+    // Tests with a date before minimum.
+    $formState = new FormState();
+    $formState->setValue(['range_datetime_element', 'date'], '1000-01-01');
+    $formState->setValue(['range_datetime_element', 'time'], '10:10');
+    $form = \Drupal::formBuilder()->getForm($this);
+    \Drupal::formBuilder()->submitForm($this, $formState);
+    $this->assertEquals(
+      'The range_datetime_element date is invalid. Date should be in the 1850-3000 year range.',
+      $formState->getError($form['range_datetime_element'])
+    );
+
+    // Tests with a date barely outside range.
+    $formState = new FormState();
+    $formState->setValue(['range_datetime_element', 'date'], '3001-01-01');
+    $formState->setValue(['range_datetime_element', 'time'], '00:00');
+    $form = \Drupal::formBuilder()->getForm($this);
+    \Drupal::formBuilder()->submitForm($this, $formState);
+    $this->assertEquals(
+      'The range_datetime_element date is invalid. Date should be in the 1850-3000 year range.',
+      $formState->getError($form['range_datetime_element'])
+    );
+
+    // Tests with a date inside range.
+    $formState = new FormState();
+    $formState->setValue(['range_datetime_element', 'date'], '2000-01-01');
+    $formState->setValue(['range_datetime_element', 'time'], '10:10');
+    \Drupal::formBuilder()->submitForm($this, $formState);
+    $this->assertEmpty($formState->getError($form['range_datetime_element']));
   }
 
   /**
