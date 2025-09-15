@@ -47266,12 +47266,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/FileSystem/RegexDirectoryIteratorTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Abstract test class Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\MTimeProtectedFileStorageBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\Medium\\.$#',
-	'identifier' => 'abstractTestClass.metadataForbidden',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/PhpStorage/MTimeProtectedFileStorageBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\PhpStorageTestBase\\:\\:additionalAssertCRUD\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
