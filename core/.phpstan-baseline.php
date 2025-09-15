@@ -20954,6 +20954,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\SectionListTestBase must not add annotation @coversDefaultClass\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/SectionListTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\SectionListTestBase\\:\\:assertSections\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -26581,6 +26587,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/tests/src/Kernel/Migrate/d6/MigrateUrlAliasTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\Tests\\\\path\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateUrlAliasTestBase must not add annotation @group\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/path/tests/src/Kernel/Migrate/d7/MigrateUrlAliasTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateUrlAliasTestBase\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
@@ -34117,6 +34129,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverCoreTestBase.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateSemverTestBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\Group\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateSemverTestBase\\:\\:cronRun\\(\\) has no return type specified\\.$#',
@@ -42705,6 +42723,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/CacheTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\CastedIntFieldJoinTestBase must not add annotation @group\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/CastedIntFieldJoinTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\CastedIntFieldJoinTestBase\\:\\:setUpFixtures\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -44841,6 +44865,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/scripts/run-tests.sh',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\BuildTests\\\\Composer\\\\ComposerBuildTestBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\CoversNothing\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/ComposerBuildTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\BuildTests\\\\Composer\\\\ComposerValidateTest\\:\\:provideComposerJson\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45729,6 +45759,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigDependencyTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\KernelTests\\\\Core\\\\Config\\\\ConfigEntityValidationTestBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\Group\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 2,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigEntityValidationTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Config\\\\Storage\\\\CachedStorageTest\\:\\:read\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45801,6 +45837,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\KernelTests\\\\Core\\\\Database\\\\DriverSpecificSchemaTestBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\CoversClass\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\DriverSpecificSchemaTestBase\\:\\:assertIndexOnColumns\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45843,6 +45885,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificTransactionTestBase.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\KernelTests\\\\Core\\\\Database\\\\SchemaUniquePrefixedKeysIndexTestBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\Group\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/SchemaUniquePrefixedKeysIndexTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\SelectLeastTest\\:\\:selectLeastProvider\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45853,6 +45901,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/SelectTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\KernelTests\\\\Core\\\\Database\\\\TemporaryQueryTestBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\Group\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/TemporaryQueryTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\TemporaryQueryTestBase\\:\\:countTableRows\\(\\) has no return type specified\\.$#',
@@ -46351,6 +46405,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Test/AssertMailTraitTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\KernelTests\\\\Core\\\\Theme\\\\StableLibraryOverrideTestBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\Group\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Theme/StableLibraryOverrideTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Theme\\\\ThemeInstallerTest\\:\\:providerTestInstallThemeWithUnmetModuleDependencies\\(\\) has no return type specified\\.$#',
@@ -47204,6 +47264,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/FileSystem/RegexDirectoryIteratorTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Abstract test class Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\MTimeProtectedFileStorageBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\Medium\\.$#',
+	'identifier' => 'abstractTestClass.metadataForbidden',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/PhpStorage/MTimeProtectedFileStorageBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\PhpStorageTestBase\\:\\:additionalAssertCRUD\\(\\) has no return type specified\\.$#',

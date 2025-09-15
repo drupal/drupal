@@ -16,5 +16,10 @@
             "Drupal\\Tests\\": "../Drupal/Tests/"
         }
     },
+    "autoload-dev": {
+        "files": [
+            "fixtures/abstract-test-classes.php"
+        ]
+    },
     "require": {}
 }
