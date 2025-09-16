@@ -30,27 +30,9 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   protected static $themes = ['sdc_theme_test'];
 
   /**
-   * Test that components render correctly.
-   */
-  public function testRender(): void {
-    $this->checkIncludeDefaultContent();
-    $this->checkIncludeDataMapping();
-    $this->checkEmbedWithNested();
-    $this->checkPropValidation();
-    $this->checkArrayObjectTypeCast();
-    $this->checkNonExistingComponent();
-    $this->checkLibraryOverrides();
-    $this->checkAttributeMerging();
-    $this->checkRenderElementAlters();
-    $this->checkSlots();
-    $this->checkInvalidSlot();
-    $this->checkEmptyProps();
-  }
-
-  /**
    * Check using a component with an include and default context.
    */
-  protected function checkIncludeDefaultContent(): void {
+  public function testRenderIncludeDefaultContent(): void {
     $build = [
       '#type' => 'inline_template',
       '#template' => "{% embed('sdc_theme_test_base:my-card-no-schema') %}{% block card_body %}Foo bar{% endblock %}{% endembed %}",
@@ -65,7 +47,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
    * This covers passing a render array to a 'string' prop, and mapping the
    * prop to a context variable.
    */
-  protected function checkIncludeDataMapping(): void {
+  public function testRenderIncludeDataMapping(): void {
     $content = [
       'label' => [
         '#type' => 'html_tag',
@@ -85,7 +67,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Render a card with slots that include a CTA component.
    */
-  protected function checkEmbedWithNested(): void {
+  public function testRenderEmbedWithNested(): void {
     $content = [
       'heading' => [
         '#type' => 'html_tag',
@@ -130,7 +112,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Check using the libraryOverrides.
    */
-  protected function checkLibraryOverrides(): void {
+  public function testRenderLibraryOverrides(): void {
     $build = [
       '#type' => 'inline_template',
       '#template' => "{{ include('sdc_theme_test:lib-overrides') }}",
@@ -143,7 +125,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensures the schema violations are reported properly.
    */
-  protected function checkPropValidation(): void {
+  public function testRenderPropValidation(): void {
     // 1. Violates the minLength for the text property.
     $content = ['label' => '1'];
     $build = [
@@ -177,7 +159,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure fuzzy coercing of arrays and objects works properly.
    */
-  protected function checkArrayObjectTypeCast(): void {
+  public function testRenderArrayObjectTypeCast(): void {
     $content = ['test' => []];
     $build = [
       '#type' => 'inline_template',
@@ -196,7 +178,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensures that including an invalid component creates an error.
    */
-  protected function checkNonExistingComponent(): void {
+  public function testRenderNonExistingComponent(): void {
     $build = [
       '#type' => 'inline_template',
       '#context' => [],
@@ -214,7 +196,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensures the attributes are merged properly.
    */
-  protected function checkAttributeMerging(): void {
+  public function testRenderAttributeMerging(): void {
     $content = ['label' => 'I am a labels'];
     // 1. Check that if it exists Attribute object in the 'attributes' prop, you
     // get them merged.
@@ -256,7 +238,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensures the alter callbacks work properly.
    */
-  public function checkRenderElementAlters(): void {
+  public function testRenderElementAlters(): void {
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:my-banner',
@@ -288,7 +270,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure that the slots allow a render array or a scalar when using the render element.
    */
-  public function checkSlots(): void {
+  public function testRenderSlots(): void {
     $slots = [
       'This is the contents of the banner body.',
       [
@@ -317,7 +299,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure that the slots throw an error for invalid slots.
    */
-  public function checkInvalidSlot(): void {
+  public function testRenderInvalidSlot(): void {
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:my-banner',
@@ -339,7 +321,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure that components can have 0 props.
    */
-  public function checkEmptyProps(): void {
+  public function testRenderEmptyProps(): void {
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:no-props',
