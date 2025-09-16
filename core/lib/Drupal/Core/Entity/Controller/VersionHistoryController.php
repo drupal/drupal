@@ -162,12 +162,10 @@ class VersionHistoryController extends ControllerBase {
       ['type' => $dateFormatType, 'format' => $dateFormatFormat] = $this->getRevisionDescriptionDateFormat($revision);
       $linkText = $this->dateFormatter->format($revision->getRevisionCreationTime(), $dateFormatType, $dateFormatFormat);
 
-      // @todo Simplify this when https://www.drupal.org/node/2334319 lands.
-      $username = [
+      $context['username'] = [
         '#theme' => 'username',
         '#account' => $revision->getRevisionUser(),
       ];
-      $context['username'] = $this->renderer->render($username);
     }
     else {
       $linkText = $revision->access('view label') ? $revision->label() : $this->t('- Restricted access -');

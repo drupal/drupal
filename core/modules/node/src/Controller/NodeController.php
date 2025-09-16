@@ -177,7 +177,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
             '#template' => '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
             '#context' => [
               'date' => $link,
-              'username' => $this->renderer->renderInIsolation($username),
+              'username' => $username,
               'message' => ['#markup' => $revision->revision_log->value, '#allowed_tags' => Xss::getHtmlTagList()],
             ],
             // @todo Fix this properly in https://www.drupal.org/project/drupal/issues/3227637.

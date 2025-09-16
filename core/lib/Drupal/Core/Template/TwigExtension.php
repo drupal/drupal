@@ -569,6 +569,9 @@ class TwigExtension extends AbstractExtension {
       if ($arg instanceof RenderableInterface) {
         $arg = $arg->toRenderable();
       }
+      elseif ($arg instanceof MarkupInterface) {
+        return $arg;
+      }
       elseif (method_exists($arg, '__toString')) {
         return (string) $arg;
       }
