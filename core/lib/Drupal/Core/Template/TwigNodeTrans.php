@@ -82,7 +82,7 @@ class TwigNodeTrans extends Node {
     // leave as an empty array.
     $compiler->raw(', [');
     foreach ($tokens as $token) {
-      $compiler->string($token->getAttribute('placeholder'))->raw(' => ')->subcompile($token)->raw(', ');
+      $compiler->string($token->getAttribute('placeholder'))->raw(' => $this->env->getExtension(\Drupal\Core\Template\TwigExtension::class)->renderVar(')->subcompile($token)->raw('), ');
     }
     $compiler->raw(']');
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Theme;
 
+use Drupal\Core\Render\Markup;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\twig_extension_test\TwigExtension\TestExtension;
 
@@ -79,8 +80,8 @@ class TwigExtensionTest extends BrowserTestBase {
     $extension = \Drupal::service('twig.extension');
     /** @var \Drupal\Core\Template\TwigEnvironment $twig */
     $twig = \Drupal::service('twig');
-    $this->assertSame(0, $extension->escapeFilter($twig, 0), 'TwigExtension::escapeFilter() returns zero correctly when provided as an integer.');
-    $this->assertSame(0, $extension->escapeFilter($twig, 0.0), 'TwigExtension::escapeFilter() returns zero correctly when provided as a double.');
+    $this->assertSame(0, $extension->escapeFilter($twig, 0));
+    $this->assertSame(0, $extension->escapeFilter($twig, 0.0));
   }
 
   /**
@@ -91,8 +92,8 @@ class TwigExtensionTest extends BrowserTestBase {
   public function testsRenderZeroValue(): void {
     /** @var \Drupal\Core\Template\TwigExtension $extension */
     $extension = \Drupal::service('twig.extension');
-    $this->assertSame(0, $extension->renderVar(0), 'TwigExtension::renderVar() renders zero correctly when provided as an integer.');
-    $this->assertSame(0, $extension->renderVar(0.0), 'TwigExtension::renderVar() renders zero correctly when provided as a double.');
+    $this->assertSame(0, $extension->renderVar(0));
+    $this->assertSame(0, $extension->renderVar(0.0));
   }
 
   /**
@@ -135,8 +136,18 @@ class TwigExtensionTest extends BrowserTestBase {
     /** @var \Drupal\Core\Template\TwigEnvironment $twig */
     $twig = \Drupal::service('twig');
 
-    $this->assertSame('test&amp;', $extension->escapeFilter($twig, 'test&'), 'TwigExtension::escapeFilter() renders escaped & when strategy is html (default).');
-    $this->assertSame('test\u0026', $extension->escapeFilter($twig, 'test&', 'js'), 'TwigExtension::escapeFilter() renders escaped & when strategy is js.');
+    $this->assertSame('test&amp;', $extension->escapeFilter($twig, 'test&'));
+    $this->assertSame('test\u0026', $extension->escapeFilter($twig, 'test&', 'js'));
+  }
+
+  /**
+   * Tests output of MarkupInterface of TwigExtension->renderVar().
+   */
+  public function testRenderMarkup(): void {
+    /** @var \Drupal\Core\Template\TwigExtension $extension */
+    $extension = \Drupal::service('twig.extension');
+    $markup = Markup::create('<span>This is a MarkupInterface</span>');
+    $this->assertSame($markup, $extension->renderVar($markup));
   }
 
 }

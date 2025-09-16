@@ -125,6 +125,27 @@ class TwigTransTest extends BrowserTestBase {
   }
 
   /**
+   * Testing trans with render array value.
+   */
+  public function testTransRenderArray(): void {
+    $elements = [
+      '#type' => 'inline_template',
+      '#template' => '{% trans %}This is a {{ var }}.{% endtrans %}',
+      '#context' => [
+        'var' => [
+          '#prefix' => '<strong>',
+          '#markup' => 'trans render array',
+          '#suffix' => '</strong>',
+        ],
+      ],
+    ];
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+    $text = (string) $renderer->renderInIsolation($elements);
+    $this->assertSame('This is a <strong>trans render array</strong>.', $text);
+  }
+
+  /**
    * Asserts Twig trans tags.
    *
    * @internal
