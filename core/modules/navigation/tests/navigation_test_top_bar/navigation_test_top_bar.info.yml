@@ -1,0 +1,7 @@
+name: Navigation test top bar
+description: 'Provides test functionality for top bar in navigation module'
+package: Testing
+version: VERSION
+type: module
+dependencies:
+  - drupal:navigation

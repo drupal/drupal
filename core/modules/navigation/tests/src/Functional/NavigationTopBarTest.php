@@ -22,6 +22,7 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
    */
   protected static $modules = [
     'navigation',
+    'navigation_test_top_bar',
     'node',
     'layout_builder',
     'test_page_test',
@@ -91,6 +92,10 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
     $this->assertSession()->elementExists('xpath', "(//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button)[1]");
     $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/a[contains(@class, 'toolbar-button--icon--pencil')]", "Edit");
     $this->assertSession()->elementAttributeContains('xpath', "(//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button)[1]", 'class', 'toolbar-button--icon--dots');
+
+    // Verify that the action link contains an extra attribute.
+    $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/a[contains(@class, 'toolbar-button--icon--database')]", "Test link");
+    $this->assertSession()->elementAttributeContains('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/a[contains(@class, 'toolbar-button--icon--database')]", 'data-dialog-type', 'modal');
 
     // Find all the dropdown links and check if the top bar is there as well.
     $toolbar_links = $this->mink->getSession()->getPage()->find('xpath', '//*[@id="top-bar-page-actions"]/ul');

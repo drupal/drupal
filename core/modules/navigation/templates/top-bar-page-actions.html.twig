@@ -15,7 +15,7 @@
   {% include 'navigation:toolbar-button' with {
     text: link['#title'],
     html_tag: 'a',
-    attributes: create_attribute().setAttribute('href', link['#url']|render|default(null)),
+    attributes: create_attribute(link['#attributes']|default([])).setAttribute('href', link['#url']|render|default(null)),
     modifiers: ['primary'],
     icon: featured_page_action.icon,
   } only %}
