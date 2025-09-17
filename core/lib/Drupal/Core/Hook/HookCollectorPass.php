@@ -573,13 +573,15 @@ class HookCollectorPass implements CompilerPassInterface {
     $staticDenyHooks = [
       'hook_info',
       'install',
+      'install_tasks',
+      'install_tasks_alter',
       'module_implements_alter',
+      'removed_post_updates',
       'requirements',
       'schema',
       'uninstall',
+      'update_dependencies',
       'update_last_removed',
-      'install_tasks',
-      'install_tasks_alter',
     ];
 
     if (in_array($hookAttribute->hook, $staticDenyHooks) || preg_match('/^(post_update_|update_\d+$)/', $hookAttribute->hook)) {

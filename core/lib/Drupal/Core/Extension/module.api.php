@@ -922,6 +922,8 @@ function hook_post_update_NAME(&$sandbox) {
 /**
  * Return an array of removed hook_post_update_NAME() function names.
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * This should be used to indicate post-update functions that have existed in
  * some previous version of the module, but are no longer available.
  *
@@ -945,6 +947,8 @@ function hook_removed_post_updates(): array {
 
 /**
  * Return an array of information about module update dependencies.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * This can be used to indicate update functions from other modules that your
  * module's update functions depend on, or vice versa. It is used by the update
