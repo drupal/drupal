@@ -1297,7 +1297,6 @@ function hook_theme($existing, $type, $theme, $path): array {
     ],
     'status_report' => [
       'render element' => 'requirements',
-      'file' => 'system.admin.inc',
     ],
   ];
 }

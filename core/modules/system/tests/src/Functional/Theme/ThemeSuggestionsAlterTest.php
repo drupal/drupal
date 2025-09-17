@@ -40,8 +40,8 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
     $this->drupalGet('theme-test/suggestion-provided');
     $this->assertSession()->pageTextContains('Template for testing suggestions provided by the module declaring the theme hook.');
 
-    // Install test_theme, it contains a template suggested by theme_test.module
-    // in theme_test_theme_suggestions_theme_test_suggestion_provided().
+    // Install test_theme, it contains a template suggested by
+    // \Drupal\theme_test\Hook\ThemeTestHooks::themeSuggestionsThemeTestSuggestionProvided().
     $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();

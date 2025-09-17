@@ -111,9 +111,6 @@ class ModulesUninstallForm extends FormBase {
        return empty($module->info['required']) && $module->status;
     });
 
-    // Include system.admin.inc so we can use the sort callbacks.
-    $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');
-
     $form['filters'] = [
       '#type' => 'container',
       '#attributes' => [

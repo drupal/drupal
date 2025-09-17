@@ -146,9 +146,6 @@ class ModulesListForm extends FormBase {
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     $distribution = drupal_install_profile_distribution_name();
 
-    // Include system.admin.inc so we can use the sort callbacks.
-    $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');
-
     $form['filters'] = [
       '#type' => 'container',
       '#attributes' => [

@@ -47,7 +47,7 @@ class ThemeTest extends BrowserTestBase {
     \Drupal::service('theme.registry')->reset();
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('theme-test/suggestion');
-      $this->assertSession()->pageTextContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test');
+      $this->assertSession()->pageTextContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=preprocessThemeTest');
     }
   }
 
@@ -58,7 +58,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('theme-test/priority');
 
     // Ensure that the custom theme negotiator was not able to set the theme.
-    $this->assertSession()->pageTextNotContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test');
+    $this->assertSession()->pageTextNotContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=preprocessThemeTest');
   }
 
   /**

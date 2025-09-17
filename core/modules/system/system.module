@@ -8,6 +8,8 @@ use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\system\Theme\SystemAdminThemePreprocess;
+use Drupal\system\Hook\SystemThemeHooks;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -84,13 +86,15 @@ function system_hook_info(): array {
  *   - bundles: An array of bundles with the label, description, add_link keys.
  *   - add_bundle_message: The message shown when there are no bundles. Only
  *     available if the entity type uses bundle entities.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_entity_add_list(&$variables): void {
-  foreach ($variables['bundles'] as $bundle_name => $bundle_info) {
-    $variables['bundles'][$bundle_name]['description'] = [
-      '#markup' => $bundle_info['description'],
-    ];
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SystemThemeHooks::class)->preprocessEntityAddList($variables);
 }
 
 /**
@@ -388,4 +392,166 @@ function _system_is_claro_admin_and_not_active() {
   $admin_theme = \Drupal::configFactory()->get('system.theme')->get('admin');
   $active_theme = \Drupal::theme()->getActiveTheme()->getName();
   return $active_theme !== 'claro' && $admin_theme === 'claro';
+}
+
+/**
+ * Prepares variables for administrative content block templates.
+ *
+ * Default template: admin-block-content.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - content: List of administrative menu items. Each menu item contains:
+ *     - url: Path to the admin section.
+ *     - title: Short name of the section.
+ *     - description: Description of the administrative menu item.
+ *     - options: URL options. See \Drupal\Core\Url::fromUri() for details.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_admin_block_content(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SystemAdminThemePreprocess::class)->preprocessAdminBlockContent($variables);
+}
+
+/**
+ * Prepares variables for administrative index page templates.
+ *
+ * Default template: admin-page.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - blocks: An array of blocks to display. Each array should include a
+ *     'title', a 'description', a formatted 'content' and a 'position' which
+ *     will control which container it will be in. This is usually 'left' or
+ *     'right'.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_admin_page(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SystemAdminThemePreprocess::class)->preprocessAdminPage($variables);
+}
+
+/**
+ * Prepares variables for admin index templates.
+ *
+ * Default template: system-admin-index.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - menu_items: An array of modules to be displayed.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_system_admin_index(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SystemAdminThemePreprocess::class)->preprocessAdminIndex($variables);
+}
+
+/**
+ * Prepares variables for the module details templates.
+ *
+ * Default template: system-modules-details.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form. The main form element
+ *     represents a package, and child elements of the form are individual
+ *     projects. Each project (or module) is an associative array containing the
+ *     following elements:
+ *     - name: The name of the module.
+ *     - enable: A checkbox for enabling the module.
+ *     - description: A description of the module.
+ *     - version: The version of the module.
+ *     - links: Administration links provided by the module.
+ *     - #requires: A list of modules that the project requires.
+ *     - #required_by: A list of modules and themes that require the project.
+ *     - #attributes: A list of attributes for the module wrapper.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ * @see \Drupal\system\Form\ModulesListForm
+ */
+function template_preprocess_system_modules_details(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SystemAdminThemePreprocess::class)->preprocessSystemModulesDetails($variables);
+}
+
+/**
+ * Prepares variables for module uninstall templates.
+ *
+ * Default template: system-modules-uninstall.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form. Child elements of the form
+ *     are individual modules. Each module is an associative array containing
+ *     the following elements:
+ *     - #module_name: The name of the module as a string.
+ *     - name: The name of the module in a renderable array.
+ *     - description: A description of the module.
+ *     - #required_by: (optional) A list of modules that require the module.
+ *     - #validation_reasons: (optional) Additional reasons why the module
+ *       cannot be uninstalled.
+ *     - #attributes: A list of attributes for the module wrapper.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ * @ingroup themeable
+ */
+function template_preprocess_system_modules_uninstall(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SystemAdminThemePreprocess::class)->preprocessSystemModulesUninstall($variables);
+}
+
+/**
+ * Prepares variables for appearance page templates.
+ *
+ * Default template: system-themes-page.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - theme_groups: An associative array containing groups of themes.
+ *   - theme_group_titles: An associative array containing titles of themes.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_system_themes_page(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SystemAdminThemePreprocess::class)->preprocessSystemThemesPage($variables);
+}
+
+/**
+ * Prepares variables for security advisories fetch error message templates.
+ *
+ * Default template: system-security-advisories-fetch-error-message.html.twig.
+ *
+ * @param array $variables
+ *   An associative array of template variables.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_system_security_advisories_fetch_error_message(array &$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(SystemAdminThemePreprocess::class)->preprocessSystemSecurityAdvisoriesFetchErrorMessage($variables);
 }

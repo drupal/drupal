@@ -267,7 +267,7 @@ class RegistryTest extends KernelTestBase {
     $registry_theme->setThemeManager(\Drupal::theme());
 
     $expected = [
-      'template_preprocess_theme_test_registered_by_module',
+      'theme_test_preprocess_theme_test_registered_by_module',
     ];
     $registry = $registry_theme->get();
     $this->assertEquals('Drupal\Core\Theme\ThemePreprocess:preprocessContainer', $registry['theme_test_registered_by_module']['initial preprocess']);

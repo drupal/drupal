@@ -154,8 +154,7 @@ class RegistryTest extends UnitTestCase {
       ->method('getActiveTheme')
       ->willReturnOnConsecutiveCalls($test_theme, $test_stable);
 
-    // Include the module and theme files so that hook_theme can be called.
-    include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
+    // Include the theme file so that hook_theme can be called.
     include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
     $themeTestTheme = new ThemeTestHooks();
     $this->moduleHandler->expects($this->exactly(2))
@@ -190,7 +189,7 @@ class RegistryTest extends UnitTestCase {
     $this->assertArrayHasKey('theme_test_foo', $registry);
     $this->assertArrayHasKey('theme_test_render_element', $registry);
 
-    $this->assertNotContains('test_stable_preprocess_theme_test_render_element', $registry['theme_test_render_element']['preprocess functions']);
+    $this->assertEquals('Drupal\theme_test\Hook\ThemeTestHooks:preprocessThemeTestRenderElement', $registry['theme_test_render_element']['initial preprocess']);
 
     // The second call will initialize with the second theme. Ensure that this
     // returns a different object and the discovery for the second theme's

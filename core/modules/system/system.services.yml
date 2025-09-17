@@ -47,6 +47,9 @@ services:
     arguments: ['@config.factory', '@theme_handler']
     tags:
       - { name: theme_negotiator, priority: 100 }
+  Drupal\system\Theme\SystemAdminThemePreprocess:
+    class: Drupal\system\Theme\SystemAdminThemePreprocess
+    autowire: true
   system.config_subscriber:
     class: Drupal\system\SystemConfigSubscriber
     arguments: ['@router.builder']

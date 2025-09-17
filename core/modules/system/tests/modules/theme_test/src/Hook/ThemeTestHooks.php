@@ -18,7 +18,10 @@ class ThemeTestHooks {
    */
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {
-    $items['theme_test'] = ['file' => 'theme_test.inc', 'variables' => ['foo' => '']];
+    $items['theme_test'] = [
+      'variables' => ['foo' => ''],
+      'initial preprocess' => static::class . ':preprocessThemeTest',
+    ];
     $items['theme_test_template_test'] = ['template' => 'theme_test.template_test'];
     $items['theme_test_template_test_2'] = ['template' => 'theme_test.template_test'];
     $items['theme_test_suggestion_provided'] = ['variables' => []];
@@ -31,7 +34,10 @@ class ThemeTestHooks {
       ],
     ];
     $items['theme_test_foo'] = ['variables' => ['foo' => NULL]];
-    $items['theme_test_render_element'] = ['render element' => 'elements'];
+    $items['theme_test_render_element'] = [
+      'render element' => 'elements',
+      'initial preprocess' => static::class . ':preprocessThemeTestRenderElement',
+    ];
     $items['theme_test_render_element_children'] = ['render element' => 'element'];
     $items['theme_test_preprocess_suggestions'] = ['variables' => ['foo' => '', 'bar' => '']];
     $items['theme_test_preprocess_callback'] = ['variables' => ['foo' => '']];
@@ -46,6 +52,7 @@ class ThemeTestHooks {
         'for_var' => '',
         'contents' => [],
       ],
+      'initial preprocess' => static::class . ':preprocessThemeTestDeprecationsPreprocess',
     ];
     $items['theme_test_deprecations_child'] = ['variables' => ['foo' => '', 'bar' => '', 'gaz' => '']];
     $items['theme_test_deprecations_hook_theme'] = [
@@ -59,6 +66,101 @@ class ThemeTestHooks {
       ],
     ];
     return $items;
+  }
+
+  /**
+   * Preprocesses variables for theme_theme_test().
+   */
+  public function preprocessThemeTest(array &$variables): void {
+    $variables['foo'] = 'preprocessThemeTest';
+  }
+
+  /**
+   * Prepares variables for test render element templates.
+   *
+   * Default template: theme-test-render-element.html.twig.
+   *
+   * @param array $variables
+   *   An associative array containing:
+   *   - elements: An associative array containing the properties of the element.
+   */
+  public function preprocessThemeTestRenderElement(array &$variables): void {
+    $variables['attributes']['data-variables-are-preprocessed'] = TRUE;
+  }
+
+  /**
+   * Prepares variables for theme_test_deprecations_preprocess.
+   *
+   * Default template: theme-test-deprecations-preprocess.html.twig.
+   *
+   * @param array $variables
+   *   An associative array of variables.
+   */
+  public function preprocessThemeTestDeprecationsPreprocess(array &$variables): void {
+    $variables = array_merge($variables, \Drupal::state()->get('theme_test.theme_test_deprecations_preprocess'));
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK().
+   */
+  #[Hook('preprocess_theme_test_preprocess_suggestions__monkey')]
+  public function preprocessTestSuggestions(array &$variables): void {
+    $variables['foo'] = 'Monkey';
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for HTML document templates.
+   */
+  #[Hook('preprocess_html')]
+  public function preprocessHtml(array &$variables): void {
+    $variables['html_attributes']['theme_test_html_attribute'] = 'theme test html attribute value';
+    $variables['attributes']['theme_test_body_attribute'] = 'theme test body attribute value';
+    $variables['attributes']['theme_test_page_variable'] = 'Page variable is an array.';
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK().
+   */
+  #[Hook('preprocess_theme_test_preprocess_suggestions')]
+  public function preprocessThemeTestPreprocessSuggestions(array &$variables): void {
+    $variables['foo'] = 'Theme hook implementor=theme_theme_test_preprocess_suggestions().';
+  }
+
+  /**
+   * Implements hook_theme_suggestions_HOOK().
+   */
+  #[Hook('theme_suggestions_theme_test_preprocess_suggestions')]
+  public function themeSuggestionsThemeTestPreprocessSuggestions(array $variables): array {
+    return [
+      'theme_test_preprocess_suggestions__' . $variables['foo'],
+    ];
+  }
+
+  /**
+   * Implements hook_theme_suggestions_HOOK().
+   */
+  #[Hook('theme_suggestions_theme_test_suggestion_provided')]
+  public function themeSuggestionsThemeTestSuggestionProvided(array $variables): array {
+    return [
+      'theme_test_suggestion_provided__foo',
+    ];
+  }
+
+  /**
+   * Implements hook_theme_suggestions_HOOK().
+   */
+  #[Hook('theme_suggestions_node')]
+  public function themeSuggestionsNode(array $variables): array {
+    $xss = '<script type="text/javascript">alert(\'yo\');</script>';
+    $suggestions[] = 'node__' . $xss;
+    return $suggestions;
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK().
+   */
+  #[Hook('preprocess_theme_test_registered_by_module')]
+  public function preprocessThemeTestRegisteredByModule(array &$variables): void {
   }
 
   /**
