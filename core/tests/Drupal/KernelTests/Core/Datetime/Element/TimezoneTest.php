@@ -24,11 +24,6 @@ use PHPUnit\Framework\Attributes\Group;
 class TimezoneTest extends EntityKernelTestBase implements FormInterface {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * The date used in tests.
    *
    * @var \Drupal\Core\Datetime\DrupalDateTime

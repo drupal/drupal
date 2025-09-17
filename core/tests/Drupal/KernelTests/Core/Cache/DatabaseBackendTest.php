@@ -22,11 +22,6 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
   protected static $maxRows = 100;
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Creates a new instance of DatabaseBackend.
    *
    * @return \Drupal\Core\Cache\DatabaseBackend

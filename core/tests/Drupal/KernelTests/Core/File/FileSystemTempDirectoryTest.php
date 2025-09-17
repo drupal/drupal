@@ -18,11 +18,6 @@ use PHPUnit\Framework\Attributes\Group;
 class FileSystemTempDirectoryTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * The file system under test.
    *
    * @var \Drupal\Core\File\FileSystemInterface

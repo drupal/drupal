@@ -17,11 +17,6 @@ use PHPUnit\Framework\Attributes\Group;
 class ExtensionNameConstraintTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Tests the ExtensionName constraint.
    */
   public function testValidation(): void {

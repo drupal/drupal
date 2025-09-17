@@ -20,11 +20,6 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
   use StringTranslationTrait;
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Views used by this test.
    *
    * @var array

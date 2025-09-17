@@ -16,11 +16,6 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 class ModuleImplementsAlterTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Tests hook_module_implements_alter() adding an implementation.
    *
    * @see \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo()

@@ -17,11 +17,6 @@ use Drupal\views\Views;
 class FieldUrlTest extends ViewsKernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Views used by this test.
    *
    * @var array

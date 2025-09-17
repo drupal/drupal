@@ -15,11 +15,6 @@ use Drupal\views\ViewExecutable;
 class StyleMappingTest extends StyleTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Views used by this test.
    *
    * @var array

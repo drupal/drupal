@@ -18,11 +18,6 @@ use PHPUnit\Framework\Attributes\Group;
 class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Tests the ExtensionExists constraint validator.
    */
   public function testValidation(): void {

@@ -21,11 +21,6 @@ class DatabaseBackendTagTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
-
-  /**
-   * {@inheritdoc}
-   */
   public function register(ContainerBuilder $container): void {
     parent::register($container);
     // Change container to database cache backends.

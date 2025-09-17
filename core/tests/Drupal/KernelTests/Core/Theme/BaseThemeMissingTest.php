@@ -16,11 +16,6 @@ use PHPUnit\Framework\Attributes\Group;
 class BaseThemeMissingTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * The theme installer.
    *
    * @var \Drupal\Core\Extension\ThemeInstallerInterface

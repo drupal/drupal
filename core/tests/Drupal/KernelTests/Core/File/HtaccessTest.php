@@ -34,11 +34,6 @@ class HtaccessTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
     $this->public = Settings::get('file_public_path') . '/test/public';

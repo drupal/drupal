@@ -29,11 +29,6 @@ class ConfigCRUDTest extends KernelTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Tests CRUD operations.
    */
   public function testCRUD(): void {

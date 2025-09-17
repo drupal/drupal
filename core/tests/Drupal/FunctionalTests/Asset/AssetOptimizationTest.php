@@ -28,11 +28,6 @@ class AssetOptimizationTest extends BrowserTestBase {
   protected $fileAssetsPath;
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Tests that asset aggregates are rendered and created on disk.
    */
   public function testAssetAggregation(): void {

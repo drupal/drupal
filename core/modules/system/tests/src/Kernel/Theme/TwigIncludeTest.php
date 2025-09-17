@@ -14,12 +14,6 @@ use Twig\Error\LoaderError;
  * @group Theme
  */
 class TwigIncludeTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
   /**
    * The Twig configuration to set the container parameter to during rebuilds.
    *

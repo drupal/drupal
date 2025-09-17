@@ -18,11 +18,6 @@ use PHPUnit\Framework\Attributes\Group;
 class GarbageCollectionTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Tests garbage collection.
    */
   public function testGarbageCollection(): void {

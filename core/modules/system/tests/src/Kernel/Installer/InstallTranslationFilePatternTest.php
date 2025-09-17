@@ -15,11 +15,6 @@ use Drupal\KernelTests\KernelTestBase;
 class InstallTranslationFilePatternTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * @var \Drupal\Core\StringTranslation\Translator\FileTranslation
    */
   protected $fileTranslation;

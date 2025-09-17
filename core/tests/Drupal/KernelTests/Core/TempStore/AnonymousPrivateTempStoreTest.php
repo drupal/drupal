@@ -14,11 +14,6 @@ use PHPUnit\Framework\Attributes\Group;
 class AnonymousPrivateTempStoreTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * The private temp store.
    *
    * @var \Drupal\Core\TempStore\PrivateTempStore

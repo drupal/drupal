@@ -19,11 +19,6 @@ use PHPUnit\Framework\Attributes\Group;
 class SqlContentEntityStorageTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Tests that only one SQL DELETE is executed on dedicated data tables.
    */
   public function testDeleteFromDedicatedTablesExecutesOneDelete(): void {
