@@ -14,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation
  *
  * @group content_translation
+ * @coversDefaultClass \Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation
  */
 class BlockCustomTranslationTest extends MigrateSqlSourceTestBase {
 

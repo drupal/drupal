@@ -9,6 +9,7 @@ namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
  *
  * @covers \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  * @group taxonomy
+ * @coversDefaultClass \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  */
 class TermSourceWithVocabularyFilterTest extends TermTest {
 

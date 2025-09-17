@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers Drupal\system\Plugin\migrate\source\Menu
  *
  * @group system
+ * @coversDefaultClass Drupal\system\Plugin\migrate\source\Menu
  */
 class MenuTest extends MigrateSqlSourceTestBase {
 

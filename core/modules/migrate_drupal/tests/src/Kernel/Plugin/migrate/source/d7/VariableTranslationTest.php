@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\migrate_drupal\Plugin\migrate\source\d7\VariableTranslation
  *
  * @group migrate_drupal
+ * @coversDefaultClass \Drupal\migrate_drupal\Plugin\migrate\source\d7\VariableTranslation
  */
 class VariableTranslationTest extends MigrateSqlSourceTestBase {
 

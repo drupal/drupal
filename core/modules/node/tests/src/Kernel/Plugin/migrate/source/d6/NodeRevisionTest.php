@@ -14,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\node\Plugin\migrate\source\d6\NodeRevision
  *
  * @group node
+ * @coversDefaultClass \Drupal\node\Plugin\migrate\source\d6\NodeRevision
  */
 class NodeRevisionTest extends MigrateSqlSourceTestBase {
 

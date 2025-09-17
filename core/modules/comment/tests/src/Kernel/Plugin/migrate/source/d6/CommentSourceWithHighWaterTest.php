@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\comment\Plugin\migrate\source\d6\Comment
  *
  * @group comment
+ * @coversDefaultClass \Drupal\comment\Plugin\migrate\source\d6\Comment
  */
 class CommentSourceWithHighWaterTest extends MigrateSqlSourceTestBase {
 

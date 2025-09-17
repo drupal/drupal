@@ -14,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\migrate\Plugin\migrate\source\SourcePluginBase::count
  *
  * @group migrate
+ * @coversDefaultClass \Drupal\migrate_sql_count_cache_test\Plugin\migrate\source\SqlCountCache
  */
 class MigrateSqlSourceCountCacheTest extends MigrateSqlSourceTestBase {
 

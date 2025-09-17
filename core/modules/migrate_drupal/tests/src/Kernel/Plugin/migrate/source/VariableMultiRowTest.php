@@ -14,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow
  *
  * @group migrate_drupal
+ * @coversDefaultClass \Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow
  */
 class VariableMultiRowTest extends MigrateSqlSourceTestBase {
 

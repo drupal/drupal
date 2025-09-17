@@ -13,6 +13,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\field\Plugin\migrate\source\d6\FieldLabelDescriptionTranslation
  * @group migrate_drupal
+ * @coversDefaultClass \Drupal\field\Plugin\migrate\source\d6\FieldLabelDescriptionTranslation
  */
 class FieldInstanceLabelDescriptionTranslationTest extends MigrateSqlSourceTestBase {
 

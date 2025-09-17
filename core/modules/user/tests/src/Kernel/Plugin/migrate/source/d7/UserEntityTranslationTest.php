@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\user\Plugin\migrate\source\d7\UserEntityTranslation
  *
  * @group user
+ * @coversDefaultClass \Drupal\user\Plugin\migrate\source\d7\UserEntityTranslation
  */
 class UserEntityTranslationTest extends MigrateSqlSourceTestBase {
 

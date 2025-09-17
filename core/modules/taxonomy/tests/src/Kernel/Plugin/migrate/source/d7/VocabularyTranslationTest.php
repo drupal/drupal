@@ -13,6 +13,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\taxonomy\Plugin\migrate\source\d7\VocabularyTranslation
  * @group taxonomy
+ * @coversDefaultClass \Drupal\taxonomy\Plugin\migrate\source\d7\VocabularyTranslation
  */
 class VocabularyTranslationTest extends MigrateSqlSourceTestBase {
 

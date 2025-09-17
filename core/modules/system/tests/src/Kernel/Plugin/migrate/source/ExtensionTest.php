@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\system\Plugin\migrate\source\Extension
  * @group migrate_drupal
+ * @coversDefaultClass \Drupal\system\Plugin\migrate\source\Extension
  */
 class ExtensionTest extends MigrateSqlSourceTestBase {
 

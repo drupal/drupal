@@ -13,6 +13,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\menu_link_content\Plugin\migrate\source\d6\MenuLinkTranslation
  * @group menu_link_content
+ * @coversDefaultClass \Drupal\menu_link_content\Plugin\migrate\source\d6\MenuLinkTranslation
  */
 class MenuLinkTranslationTest extends MigrateSqlSourceTestBase {
 

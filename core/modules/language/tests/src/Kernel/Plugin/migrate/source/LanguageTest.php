@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\language\Plugin\migrate\source\Language
  * @group language
+ * @coversDefaultClass \Drupal\language\Plugin\migrate\source\Language
  */
 class LanguageTest extends MigrateSqlSourceTestBase {
 

@@ -85,13 +85,17 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *   The fully qualified class name of the plugin to be tested.
    */
   protected function getPluginClass() {
+    $coversClass = $this->valueObjectForEvents()->metadata()->isCoversClass()->isClassLevel()->asArray();
+    if (isset($coversClass[0])) {
+      return $coversClass[0]->className();
+    }
+
     $covers = $this->valueObjectForEvents()->metadata()->isCovers()->isClassLevel()->asArray();
     if (isset($covers[0])) {
       return $covers[0]->target();
     }
-    else {
-      $this->fail('No plugin class was specified');
-    }
+
+    $this->fail('No plugin class was specified');
   }
 
   /**

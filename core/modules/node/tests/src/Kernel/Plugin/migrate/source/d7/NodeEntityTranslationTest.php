@@ -14,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\node\Plugin\migrate\source\d7\NodeEntityTranslation
  *
  * @group node
+ * @coversDefaultClass \Drupal\node\Plugin\migrate\source\d7\NodeEntityTranslation
  */
 class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
 

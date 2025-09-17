@@ -12,6 +12,7 @@ use Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7\VocabularyTest;
  * @covers \Drupal\language\Plugin\migrate\source\d7\LanguageContentSettingsTaxonomyVocabulary
  *
  * @group language
+ * @coversDefaultClass \Drupal\language\Plugin\migrate\source\d7\LanguageContentSettingsTaxonomyVocabulary
  */
 class LanguageContentTaxonomyVocabularySettingsTest extends VocabularyTest {
 

@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\language\Plugin\migrate\source\d6\LanguageContentSettingsTaxonomyVocabulary
  *
  * @group language
+ * @coversDefaultClass \Drupal\language\Plugin\migrate\source\d6\LanguageContentSettingsTaxonomyVocabulary
  */
 class LanguageContentTaxonomyVocabularySettingsTest extends MigrateSqlSourceTestBase {
 

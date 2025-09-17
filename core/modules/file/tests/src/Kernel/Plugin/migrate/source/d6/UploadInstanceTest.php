@@ -14,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\file\Plugin\migrate\source\d6\UploadInstance
  *
  * @group file
+ * @coversDefaultClass \Drupal\file\Plugin\migrate\source\d6\UploadInstance
  */
 class UploadInstanceTest extends MigrateSqlSourceTestBase {
 

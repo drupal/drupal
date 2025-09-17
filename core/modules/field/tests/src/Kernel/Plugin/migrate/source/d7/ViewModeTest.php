@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\field\Plugin\migrate\source\d7\ViewMode
  * @group field
+ * @coversDefaultClass \Drupal\field\Plugin\migrate\source\d7\ViewMode
  */
 class ViewModeTest extends MigrateSqlSourceTestBase {
 

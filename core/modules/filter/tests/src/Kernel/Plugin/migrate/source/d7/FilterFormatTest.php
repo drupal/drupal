@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\filter\Plugin\migrate\source\d7\FilterFormat
  *
  * @group filter
+ * @coversDefaultClass \Drupal\filter\Plugin\migrate\source\d7\FilterFormat
  */
 class FilterFormatTest extends MigrateSqlSourceTestBase {
 

@@ -13,6 +13,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\config_translation\Plugin\migrate\source\d6\ProfileFieldTranslation
  * @group migrate_drupal
+ * @coversDefaultClass \Drupal\config_translation\Plugin\migrate\source\d6\ProfileFieldTranslation
  */
 class ProfileFieldTranslationTest extends MigrateSqlSourceTestBase {
 

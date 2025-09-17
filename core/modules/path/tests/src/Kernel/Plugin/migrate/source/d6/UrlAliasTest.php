@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\path\Plugin\migrate\source\d6\UrlAlias
  * @group path
+ * @coversDefaultClass \Drupal\path\Plugin\migrate\source\d6\UrlAlias
  */
 class UrlAliasTest extends MigrateSqlSourceTestBase {
 

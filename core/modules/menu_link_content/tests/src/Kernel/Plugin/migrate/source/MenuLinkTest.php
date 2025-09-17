@@ -16,6 +16,7 @@ use Drupal\TestTools\Random;
  * @covers \Drupal\menu_link_content\Plugin\migrate\source\MenuLink
  *
  * @group menu_link_content
+ * @coversDefaultClass \Drupal\menu_link_content\Plugin\migrate\source\MenuLink
  */
 class MenuLinkTest extends MigrateSqlSourceTestBase {
 

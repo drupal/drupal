@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\comment\Plugin\migrate\source\CommentType
  *
  * @group comment
+ * @coversDefaultClass \Drupal\comment\Plugin\migrate\source\CommentType
  */
 class CommentTypeTest extends MigrateSqlSourceTestBase {
 

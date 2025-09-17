@@ -14,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\image\Plugin\migrate\source\d7\ImageStyles
  *
  * @group image
+ * @coversDefaultClass \Drupal\image\Plugin\migrate\source\d7\ImageStyles
  */
 class ImageStylesTest extends MigrateSqlSourceTestBase {
 

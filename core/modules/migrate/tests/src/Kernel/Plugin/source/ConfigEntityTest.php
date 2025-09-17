@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\migrate\Plugin\migrate\source\ConfigEntity
  * @group migrate
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\source\ConfigEntity
  */
 class ConfigEntityTest extends MigrateSqlSourceTestBase {
 

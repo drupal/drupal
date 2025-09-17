@@ -9,6 +9,7 @@ namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d6;
  *
  * @covers \Drupal\field\Plugin\migrate\source\d6\FieldInstanceOptionTranslation
  * @group migrate_drupal
+ * @coversDefaultClass \Drupal\field\Plugin\migrate\source\d6\FieldInstanceOptionTranslation
  */
 class FieldInstanceOptionTranslationTest extends FieldOptionTranslationTest {
 

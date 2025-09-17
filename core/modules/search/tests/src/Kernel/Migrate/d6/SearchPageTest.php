@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\search\Plugin\migrate\source\d6\SearchPage
  * @group search
+ * @coversDefaultClass \Drupal\search\Plugin\migrate\source\d6\SearchPage
  */
 class SearchPageTest extends MigrateSqlSourceTestBase {
 

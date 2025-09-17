@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  * @group taxonomy
+ * @coversDefaultClass \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  */
 class TermTest extends MigrateSqlSourceTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\file\Plugin\migrate\source\d6\File
  *
  * @group file
+ * @coversDefaultClass \Drupal\file\Plugin\migrate\source\d6\File
  */
 class FileTest extends MigrateSqlSourceTestBase {
 

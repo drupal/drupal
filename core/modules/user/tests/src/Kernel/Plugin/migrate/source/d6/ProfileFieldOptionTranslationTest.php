@@ -13,6 +13,7 @@ use Drupal\Tests\user\Kernel\Plugin\migrate\source\ProfileFieldTest;
  *
  * @covers \Drupal\user\Plugin\migrate\source\d6\ProfileFieldOptionTranslation
  * @group migrate_drupal
+ * @coversDefaultClass \Drupal\user\Plugin\migrate\source\d6\ProfileFieldOptionTranslation
  */
 class ProfileFieldOptionTranslationTest extends ProfileFieldTest {
 

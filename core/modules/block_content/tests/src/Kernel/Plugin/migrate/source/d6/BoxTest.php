@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\block_content\Plugin\migrate\source\d6\Box
  * @group block_content
+ * @coversDefaultClass \Drupal\block_content\Plugin\migrate\source\d6\Box
  */
 class BoxTest extends MigrateSqlSourceTestBase {
 

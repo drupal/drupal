@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers Drupal\shortcut\Plugin\migrate\source\d7\ShortcutSetUsers
  *
  * @group shortcut
+ * @coversDefaultClass Drupal\shortcut\Plugin\migrate\source\d7\ShortcutSetUsers
  */
 class ShortcutSetUsersTest extends MigrateSqlSourceTestBase {
 

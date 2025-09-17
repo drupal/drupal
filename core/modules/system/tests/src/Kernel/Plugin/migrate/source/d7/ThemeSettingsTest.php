@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers Drupal\system\Plugin\migrate\source\d7\ThemeSettings
  *
  * @group system
+ * @coversDefaultClass Drupal\system\Plugin\migrate\source\d7\ThemeSettings
  */
 class ThemeSettingsTest extends MigrateSqlSourceTestBase {
 

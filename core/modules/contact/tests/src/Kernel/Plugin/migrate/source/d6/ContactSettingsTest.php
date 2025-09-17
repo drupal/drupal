@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\contact\Plugin\migrate\source\ContactSettings
  * @group contact
+ * @coversDefaultClass \Drupal\contact\Plugin\migrate\source\ContactSettings
  */
 class ContactSettingsTest extends MigrateSqlSourceTestBase {
 

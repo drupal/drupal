@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\user\Plugin\migrate\source\d6\UserPictureFile
  * @group user
+ * @coversDefaultClass \Drupal\user\Plugin\migrate\source\d6\UserPictureFile
  */
 class UserPictureFileTest extends MigrateSqlSourceTestBase {
 

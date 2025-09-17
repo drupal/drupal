@@ -12,6 +12,7 @@ use Drupal\Tests\block\Kernel\Plugin\migrate\source\BlockTest;
  * @covers \Drupal\block\Plugin\migrate\source\d6\BlockTranslation
  *
  * @group content_translation
+ * @coversDefaultClass \Drupal\block\Plugin\migrate\source\d6\BlockTranslation
  */
 class BlockTranslationTest extends BlockTest {
 

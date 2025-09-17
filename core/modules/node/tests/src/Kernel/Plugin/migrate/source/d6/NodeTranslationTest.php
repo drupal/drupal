@@ -12,6 +12,7 @@ namespace Drupal\Tests\node\Kernel\Plugin\migrate\source\d6;
  * @covers \Drupal\node\Plugin\migrate\source\d6\Node
  *
  * @group node
+ * @coversDefaultClass \Drupal\node\Plugin\migrate\source\d6\Node
  */
 class NodeTranslationTest extends NodeTest {
 

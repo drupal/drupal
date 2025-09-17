@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\field\Plugin\migrate\source\d6\FieldInstance
  * @group field
+ * @coversDefaultClass \Drupal\field\Plugin\migrate\source\d6\FieldInstance
  */
 class FieldInstanceTest extends MigrateSqlSourceTestBase {
 

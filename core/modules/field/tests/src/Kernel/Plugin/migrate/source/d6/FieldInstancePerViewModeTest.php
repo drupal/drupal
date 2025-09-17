@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\field\Plugin\migrate\source\d6\FieldInstancePerViewMode
  * @group field
+ * @coversDefaultClass \Drupal\field\Plugin\migrate\source\d6\FieldInstancePerViewMode
  */
 class FieldInstancePerViewModeTest extends MigrateSqlSourceTestBase {
 

@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\block_content\Plugin\migrate\source\d7\BlockCustom
  * @group block_content
+ * @coversDefaultClass \Drupal\block_content\Plugin\migrate\source\d7\BlockCustom
  */
 class BlockCustomTest extends MigrateSqlSourceTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\node\Plugin\migrate\source\d6\NodeType
  *
  * @group node
+ * @coversDefaultClass \Drupal\node\Plugin\migrate\source\d6\NodeType
  */
 class NodeTypeTest extends MigrateSqlSourceTestBase {
 

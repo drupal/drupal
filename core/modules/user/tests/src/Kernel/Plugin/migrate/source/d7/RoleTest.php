@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\user\Plugin\migrate\source\d7\Role
  * @group user
+ * @coversDefaultClass \Drupal\user\Plugin\migrate\source\d7\Role
  */
 class RoleTest extends MigrateSqlSourceTestBase {
 

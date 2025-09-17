@@ -13,6 +13,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\field\Plugin\migrate\source\d6\FieldInstancePerFormDisplay
  * @group field
+ * @coversDefaultClass \Drupal\field\Plugin\migrate\source\d6\FieldInstancePerFormDisplay
  */
 class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestBase {
 

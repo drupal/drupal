@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\user\Plugin\migrate\source\ProfileField
  * @group user
+ * @coversDefaultClass \Drupal\user\Plugin\migrate\source\ProfileField
  */
 class ProfileFieldTest extends MigrateSqlSourceTestBase {
 
