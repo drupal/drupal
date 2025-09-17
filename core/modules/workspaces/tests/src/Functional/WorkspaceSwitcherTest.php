@@ -62,9 +62,24 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
    * Tests switching workspace via the switcher block and admin page.
    */
   public function testSwitchingWorkspaces(): void {
+    /** @var \Drupal\Core\Cache\CacheBackendInterface $entity_cache */
+    $entity_cache = \Drupal::service('cache.entity');
+
+    $node_type = $this->drupalCreateContentType();
+    $node = $this->drupalCreateNode(['type' => $node_type->id()]);
+    $this->assertFalse($entity_cache->get("values:node:{$node->id()}"));
+
+    // Access the node page to prime its persistent cache.
+    $this->drupalGet($node->toUrl());
+    $this->assertNotFalse($entity_cache->get("values:node:{$node->id()}"));
+
     $vultures = Workspace::load('vultures');
     $gravity = Workspace::load('gravity');
     $this->switchToWorkspace($vultures);
+
+    // Check that switching into a workspace doesn't invalidate the persistent
+    // cache.
+    $this->assertNotFalse($entity_cache->get("values:node:{$node->id()}"));
 
     // Confirm the block shows on the front page.
     $this->drupalGet('<front>');
