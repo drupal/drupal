@@ -7,7 +7,6 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\Exception\FileWriteException;
@@ -15,15 +14,12 @@ use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\StringTranslation\ByteSizeMarkup;
-use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\file\Hook\FileFormHooks;
-use Drupal\file\IconMimeTypes;
+use Drupal\file\Hook\FileThemeHooks;
 use Drupal\file\Plugin\Field\FieldFormatter\FileVideoFormatter;
 use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\file\Upload\FormUploadedFile;
@@ -404,17 +400,15 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
  * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the file.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ * template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_file_managed_file(&$variables): void {
-  $element = $variables['element'];
-
-  $variables['attributes'] = [];
-  if (isset($element['#id'])) {
-    $variables['attributes']['id'] = $element['#id'];
-  }
-  if (!empty($element['#attributes']['class'])) {
-    $variables['attributes']['class'] = (array) $element['#attributes']['class'];
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(FileThemeHooks::class)->preprocessManagedFile($variables);
 }
 
 /**
@@ -429,42 +423,15 @@ function template_preprocess_file_managed_file(&$variables): void {
  *     files. Defaults to the value of the "icon.directory" variable.
  *   - description: A description to be displayed instead of the filename.
  *   - attributes: An associative array of attributes to be placed in the a tag.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_file_link(&$variables): void {
-  $file = $variables['file'];
-  $options = [];
-
-  /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
-  $file_url_generator = \Drupal::service('file_url_generator');
-  $url = $file_url_generator->generate($file->getFileUri());
-
-  $mime_type = $file->getMimeType();
-  $options['attributes']['type'] = $mime_type;
-
-  // Use the description as the link text if available.
-  if (empty($variables['description'])) {
-    $link_text = $file->getFilename();
-  }
-  else {
-    $link_text = $variables['description'];
-    $options['attributes']['title'] = $file->getFilename();
-  }
-
-  // Classes to add to the file field for icons.
-  $classes = [
-    'file',
-    // Add a specific class for each and every mime type.
-    'file--mime-' . strtr($mime_type, ['/' => '-', '.' => '-']),
-    // Add a more general class for groups of well known MIME types.
-    'file--' . IconMimeTypes::getIconClass($mime_type),
-  ];
-
-  // Set file classes to the options array.
-  $variables['attributes'] = new Attribute($variables['attributes']);
-  $variables['attributes']->addClass($classes);
-  $variables['file_size'] = $file->getSize() !== NULL ? ByteSizeMarkup::create($file->getSize()) : '';
-
-  $variables['link'] = Link::fromTextAndUrl($link_text, $url->mergeOptions($options))->toRenderable();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(FileThemeHooks::class)->preprocessFileLink($variables);
 }
 
 /**
@@ -475,114 +442,15 @@ function template_preprocess_file_link(&$variables): void {
  * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the widgets.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ * template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_file_widget_multiple(&$variables): void {
-  $element = $variables['element'];
-  // Special ID and classes for draggable tables.
-  $weight_class = $element['#id'] . '-weight';
-  $table_id = $element['#id'] . '-table';
-
-  // Build up a table of applicable fields.
-  $headers = [];
-  $headers[] = t('File information');
-  if ($element['#display_field']) {
-    $headers[] = [
-      'data' => t('Display'),
-      'class' => ['checkbox'],
-    ];
-  }
-  $headers[] = t('Weight');
-  $headers[] = t('Operations');
-
-  // Get our list of widgets in order (needed when the form comes back after
-  // preview or failed validation).
-  $widgets = [];
-  foreach (Element::children($element) as $key) {
-    $widgets[] = &$element[$key];
-  }
-  usort($widgets, function ($a, $b) {
-    // Sorts using ['_weight']['#value'].
-    $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
-    $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
-    return $a_weight - $b_weight;
-  });
-
-  $rows = [];
-  foreach ($widgets as &$widget) {
-    // Save the uploading row for last.
-    if (empty($widget['#files'])) {
-      $widget['#title'] = $element['#file_upload_title'];
-      $widget['#description'] = \Drupal::service('renderer')->renderInIsolation($element['#file_upload_description']);
-      continue;
-    }
-
-    // Delay rendering of the buttons, so that they can be rendered later in the
-    // "operations" column.
-    $operations_elements = [];
-    foreach (Element::children($widget) as $key) {
-      if (isset($widget[$key]['#type']) && $widget[$key]['#type'] == 'submit') {
-        hide($widget[$key]);
-        $operations_elements[] = &$widget[$key];
-      }
-    }
-
-    // Delay rendering of the "Display" option and the weight selector, so that
-    // each can be rendered later in its own column.
-    if ($element['#display_field']) {
-      hide($widget['display']);
-    }
-    hide($widget['_weight']);
-    $widget['_weight']['#attributes']['class'] = [$weight_class];
-
-    // Render everything else together in a column, without the normal wrappers.
-    $row = [];
-    $widget['#theme_wrappers'] = [];
-    $row[] = \Drupal::service('renderer')->render($widget);
-
-    // Arrange the row with the rest of the rendered columns.
-    if ($element['#display_field']) {
-      unset($widget['display']['#title']);
-      $row[] = [
-        'data' => $widget['display'],
-        'class' => ['checkbox'],
-      ];
-    }
-    $row[] = [
-      'data' => $widget['_weight'],
-    ];
-
-    // Show the buttons that had previously been marked as hidden in this
-    // preprocess function. We use show() to undo the earlier hide().
-    foreach (Element::children($operations_elements) as $key) {
-      show($operations_elements[$key]);
-    }
-    $row[] = [
-      'data' => $operations_elements,
-    ];
-    $rows[] = [
-      'data' => $row,
-      'class' => isset($widget['#attributes']['class']) ? array_merge($widget['#attributes']['class'], ['draggable']) : ['draggable'],
-    ];
-  }
-
-  $variables['table'] = [
-    '#type' => 'table',
-    '#header' => $headers,
-    '#rows' => $rows,
-    '#attributes' => [
-      'id' => $table_id,
-    ],
-    '#tabledrag' => [
-      [
-        'action' => 'order',
-        'relationship' => 'sibling',
-        'group' => $weight_class,
-      ],
-    ],
-    '#access' => !empty($rows),
-  ];
-
-  $variables['element'] = $element;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(FileThemeHooks::class)->preprocessFileWidgetMultiple($variables);
 }
 
 /**
@@ -596,55 +464,15 @@ function template_preprocess_file_widget_multiple(&$variables): void {
  *     user.
  *   - upload_validators: An array of upload validators as used in
  *     $element['#upload_validators'].
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_file_upload_help(&$variables): void {
-  $description = $variables['description'];
-  $upload_validators = $variables['upload_validators'];
-  $cardinality = $variables['cardinality'];
-
-  $descriptions = [];
-
-  if (!empty($description)) {
-    $descriptions[] = FieldFilteredMarkup::create($description);
-  }
-  if (isset($cardinality)) {
-    if ($cardinality == -1) {
-      $descriptions[] = t('Unlimited number of files can be uploaded to this field.');
-    }
-    else {
-      $descriptions[] = \Drupal::translation()->formatPlural($cardinality, 'One file only.', 'Maximum @count files.');
-    }
-  }
-
-  if (isset($upload_validators['FileSizeLimit'])) {
-    $descriptions[] = t('@size limit.', ['@size' => ByteSizeMarkup::create($upload_validators['FileSizeLimit']['fileLimit'])]);
-  }
-
-  if (isset($upload_validators['FileExtension'])) {
-    $descriptions[] = t('Allowed types: @extensions.', ['@extensions' => $upload_validators['FileExtension']['extensions']]);
-  }
-
-  if (isset($upload_validators['FileImageDimensions'])) {
-    $max = $upload_validators['FileImageDimensions']['maxDimensions'];
-    $min = $upload_validators['FileImageDimensions']['minDimensions'];
-    if ($min && $max && $min == $max) {
-      $descriptions[] = t('Images must be exactly <strong>@size</strong> pixels.', ['@size' => $max]);
-    }
-    elseif ($min && $max) {
-      $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels. Images larger than <strong>@max</strong> pixels will be resized.', [
-        '@min' => $min,
-        '@max' => $max,
-      ]);
-    }
-    elseif ($min) {
-      $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels.', ['@min' => $min]);
-    }
-    elseif ($max) {
-      $descriptions[] = t('Images larger than <strong>@max</strong> pixels will be resized.', ['@max' => $max]);
-    }
-  }
-
-  $variables['descriptions'] = $descriptions;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(FileThemeHooks::class)->preprocessFileUploadHelp($variables);
 }
 
 /**

@@ -73,48 +73,6 @@ class FileHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme(): array {
-    return [
-      // From file.module.
-      'file_link' => [
-        'variables' => [
-          'file' => NULL,
-          'description' => NULL,
-          'attributes' => [],
-        ],
-      ],
-      'file_managed_file' => [
-        'render element' => 'element',
-      ],
-      'file_audio' => [
-        'variables' => [
-          'files' => [],
-          'attributes' => NULL,
-        ],
-      ],
-      'file_video' => [
-        'variables' => [
-          'files' => [],
-          'attributes' => NULL,
-        ],
-      ],
-      'file_widget_multiple' => [
-        'render element' => 'element',
-      ],
-      'file_upload_help' => [
-        'variables' => [
-          'description' => NULL,
-          'upload_validators' => NULL,
-          'cardinality' => NULL,
-        ],
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_ENTITY_TYPE_predelete() for file entities.
    */
   #[Hook('file_predelete')]
