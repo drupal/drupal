@@ -167,6 +167,7 @@ default:
   # job from the target branch. Allow the job to proceed and pass if the file
   # doesn't exist.
   - mkdir core/phpstan-tmp
+  - echo "PHPStan cache URL - https://git.drupalcode.org/api/v4/projects/$CORE_GITLAB_PROJECT_ID/jobs/artifacts/$CACHE_TARGET/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming"
   - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
 
 .cspell-cache: &cspell-cache
@@ -742,6 +743,7 @@ default:
     - mv -f /build/core/.eslintcache $CI_PROJECT_DIR/core
     - mv -f /build/core/.stylelintcache $CI_PROJECT_DIR/core
   artifacts:
+    when: always
     paths:
       - core/phpstan-tmp/resultCache.php
       - core/.cspellcache
