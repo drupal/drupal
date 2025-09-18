@@ -39,7 +39,7 @@ trait WorkspaceTestTrait {
     $this->workspaceManager = \Drupal::service('workspaces.manager');
 
     $this->installEntitySchema('workspace');
-    $this->installSchema('workspaces', ['workspace_association']);
+    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
 
     // Install the entity schema for supported entity types to ensure that the
     // 'workspace' revision metadata field gets created.

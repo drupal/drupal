@@ -73,7 +73,7 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
     $this->installConfig(['filter', 'node', 'system', 'language', 'content_translation']);
 
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('workspaces', ['workspace_association']);
+    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
 
     $language = ConfigurableLanguage::createFromLangcode('ro');
     $language->save();

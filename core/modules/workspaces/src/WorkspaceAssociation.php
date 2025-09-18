@@ -7,7 +7,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
-use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Utility\Error;
 use Drupal\workspaces\Event\WorkspacePostPublishEvent;
 use Drupal\workspaces\Event\WorkspacePublishEvent;
@@ -23,6 +22,11 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * The table for the workspace association storage.
    */
   const TABLE = 'workspace_association';
+
+  /**
+   * The table for the workspace association revision storage.
+   */
+  const string REVISION_TABLE = 'workspace_association_revision';
 
   /**
    * A multidimensional array of entity IDs that are associated to a workspace.
@@ -102,6 +106,18 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
         }
         $insert_query->execute();
       }
+
+      // Individual revisions are tracked in a separate table only for the
+      // workspace in which they were created or updated.
+      $this->database->insert(static::REVISION_TABLE)
+        ->fields([
+          'workspace' => $workspace->id(),
+          'target_entity_type_id' => $entity->getEntityTypeId(),
+          $id_field => $entity->id(),
+          'target_entity_revision_id' => $entity->getRevisionId(),
+          'initial_revision' => (int) $entity->isDefaultRevision(),
+        ])
+        ->execute();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
@@ -196,113 +212,82 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * {@inheritdoc}
    */
   public function getAssociatedRevisions($workspace_id, $entity_type_id, $entity_ids = NULL) {
-    if (isset($this->associatedRevisions[$workspace_id][$entity_type_id])) {
-      if ($entity_ids) {
-        return array_intersect($this->associatedRevisions[$workspace_id][$entity_type_id], $entity_ids);
-      }
-      else {
-        return $this->associatedRevisions[$workspace_id][$entity_type_id];
-      }
-    }
+    $this->loadAssociatedRevisions($workspace_id);
 
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
-    $storage = $this->entityTypeManager->getStorage($entity_type_id);
-
-    // If the entity type is not using core's default entity storage, we can't
-    // assume the table mapping layout so we have to return only the latest
-    // tracked revisions.
-    if (!$storage instanceof SqlContentEntityStorage) {
-      return $this->getTrackedEntities($workspace_id, $entity_type_id, $entity_ids)[$entity_type_id];
-    }
-
-    $entity_type = $storage->getEntityType();
-    $table_mapping = $storage->getTableMapping();
-    $workspace_field = $table_mapping->getColumnNames($entity_type->get('revision_metadata_keys')['workspace'])['target_id'];
-    $id_field = $table_mapping->getColumnNames($entity_type->getKey('id'))['value'];
-    $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
-
-    $workspace_tree = $this->workspaceRepository->loadTree();
-    if (isset($workspace_tree[$workspace_id])) {
-      $workspace_candidates = array_merge([$workspace_id], $workspace_tree[$workspace_id]['ancestors']);
+    if ($entity_ids) {
+      return array_intersect($this->associatedRevisions[$workspace_id][$entity_type_id] ?? [], $entity_ids);
     }
     else {
-      $workspace_candidates = [$workspace_id];
+      return $this->associatedRevisions[$workspace_id][$entity_type_id] ?? [];
     }
-
-    $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
-    $query->leftJoin($entity_type->getBaseTable(), 'base', "[revision].[$id_field] = [base].[$id_field]");
-
-    $query
-      ->fields('revision', [$revision_id_field, $id_field])
-      ->condition("revision.$workspace_field", $workspace_candidates, 'IN')
-      ->where("[revision].[$revision_id_field] >= [base].[$revision_id_field]")
-      ->orderBy("revision.$revision_id_field", 'ASC');
-
-    // Restrict the result to a set of entity ID's if provided.
-    if ($entity_ids) {
-      $query->condition("revision.$id_field", $entity_ids, 'IN');
-    }
-
-    $result = $query->execute()->fetchAllKeyed();
-
-    // Cache the list of associated entity IDs if the full list was requested.
-    if (!$entity_ids) {
-      $this->associatedRevisions[$workspace_id][$entity_type_id] = $result;
-    }
-
-    return $result;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = []) {
-    if (isset($this->associatedInitialRevisions[$workspace_id][$entity_type_id])) {
-      if ($entity_ids) {
-        return array_intersect($this->associatedInitialRevisions[$workspace_id][$entity_type_id], $entity_ids);
+    $this->loadAssociatedRevisions($workspace_id);
+
+    if ($entity_ids) {
+      return array_intersect($this->associatedInitialRevisions[$workspace_id][$entity_type_id] ?? [], $entity_ids);
+    }
+    else {
+      return $this->associatedInitialRevisions[$workspace_id][$entity_type_id] ?? [];
+    }
+  }
+
+  /**
+   * Loads associated revision IDs and populates their static caches.
+   *
+   * @param string $workspace_id
+   *   The workspace ID to load associations for.
+   */
+  protected function loadAssociatedRevisions(string $workspace_id): void {
+    // Only load if the associated revisions cache has not been populated for
+    // this workspace. We don't need to check the associated initial revisions
+    // cache because they're always populated together.
+    if (!isset($this->associatedRevisions[$workspace_id])) {
+      // Initialize both caches for this workspace.
+      $this->associatedRevisions[$workspace_id] = [];
+      $this->associatedInitialRevisions[$workspace_id] = [];
+
+      // Get workspace candidates for regular (non-initial) revisions.
+      $workspace_tree = $this->workspaceRepository->loadTree();
+      if (isset($workspace_tree[$workspace_id])) {
+        $workspace_candidates = array_merge([$workspace_id], $workspace_tree[$workspace_id]['ancestors']);
       }
       else {
-        return $this->associatedInitialRevisions[$workspace_id][$entity_type_id];
+        $workspace_candidates = [$workspace_id];
+      }
+
+      // Query all the associated revisions.
+      $query = $this->database->select(static::REVISION_TABLE);
+      $query->fields(static::REVISION_TABLE, [
+        'workspace',
+        'target_entity_type_id',
+        'target_entity_id',
+        'target_entity_id_string',
+        'target_entity_revision_id',
+        'initial_revision',
+      ]);
+      $query
+        ->orderBy('target_entity_type_id')
+        ->orderBy('target_entity_revision_id')
+        ->condition('workspace', $workspace_candidates, 'IN');
+
+      foreach ($query->execute() as $record) {
+        $target_id = $record->{static::getIdField($record->target_entity_type_id)};
+
+        // Always add to associatedRevisions for all workspace candidates.
+        $this->associatedRevisions[$workspace_id][$record->target_entity_type_id][$record->target_entity_revision_id] = $target_id;
+
+        // Only add to associatedInitialRevisions if it's an initial revision
+        // for the specific workspace.
+        if ($record->workspace === $workspace_id && $record->initial_revision) {
+          $this->associatedInitialRevisions[$workspace_id][$record->target_entity_type_id][$record->target_entity_revision_id] = $target_id;
+        }
       }
     }
-
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
-    $storage = $this->entityTypeManager->getStorage($entity_type_id);
-
-    // If the entity type is not using core's default entity storage, we can't
-    // assume the table mapping layout so we have to return only the latest
-    // tracked revisions.
-    if (!$storage instanceof SqlContentEntityStorage) {
-      return $this->getTrackedEntities($workspace_id, $entity_type_id, $entity_ids)[$entity_type_id];
-    }
-
-    $entity_type = $storage->getEntityType();
-    $table_mapping = $storage->getTableMapping();
-    $workspace_field = $table_mapping->getColumnNames($entity_type->get('revision_metadata_keys')['workspace'])['target_id'];
-    $id_field = $table_mapping->getColumnNames($entity_type->getKey('id'))['value'];
-    $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
-
-    $query = $this->database->select($entity_type->getBaseTable(), 'base');
-    $query->leftJoin($entity_type->getRevisionTable(), 'revision', "[base].[$revision_id_field] = [revision].[$revision_id_field]");
-
-    $query
-      ->fields('base', [$revision_id_field, $id_field])
-      ->condition("revision.$workspace_field", $workspace_id, '=')
-      ->orderBy("base.$revision_id_field", 'ASC');
-
-    // Restrict the result to a set of entity ID's if provided.
-    if ($entity_ids) {
-      $query->condition("base.$id_field", $entity_ids, 'IN');
-    }
-
-    $result = $query->execute()->fetchAllKeyed();
-
-    // Cache the list of associated entity IDs if the full list was requested.
-    if (!$entity_ids) {
-      $this->associatedInitialRevisions[$workspace_id][$entity_type_id] = $result;
-    }
-
-    return $result;
   }
 
   /**
@@ -346,7 +331,41 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       throw new \InvalidArgumentException('A workspace ID or an entity type ID must be provided.');
     }
 
-    $query = $this->database->delete(static::TABLE);
+    try {
+      $transaction = $this->database->startTransaction();
+      $this->doDeleteAssociations(static::TABLE, $workspace_id, $entity_type_id, $entity_ids, $revision_ids);
+      $this->doDeleteAssociations(static::REVISION_TABLE, $workspace_id, $entity_type_id, $entity_ids, $revision_ids);
+    }
+    catch (\Exception $e) {
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
+      Error::logException($this->logger, $e);
+      throw $e;
+    }
+
+    $this->associatedRevisions = $this->associatedInitialRevisions = [];
+  }
+
+  /**
+   * Executes a delete query for workspace associations.
+   *
+   * @param string $table
+   *   The database table to delete from.
+   * @param string|null $workspace_id
+   *   The workspace ID to filter by, or NULL to not filter by workspace.
+   * @param string|null $entity_type_id
+   *   The entity type ID to filter by, or NULL to not filter by entity type.
+   * @param array|null $entity_ids
+   *   The entity IDs to filter by, or NULL to not filter by entity IDs.
+   * @param array|null $revision_ids
+   *   The revision IDs to filter by, or NULL to not filter by revision IDs.
+   *
+   * @throws \InvalidArgumentException
+   *   When required parameters are missing.
+   */
+  protected function doDeleteAssociations(string $table, ?string $workspace_id = NULL, ?string $entity_type_id = NULL, ?array $entity_ids = NULL, ?array $revision_ids = NULL): void {
+    $query = $this->database->delete($table);
 
     if ($workspace_id) {
       $query->condition('workspace', $workspace_id);
@@ -380,8 +399,6 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     }
 
     $query->execute();
-
-    $this->associatedRevisions = $this->associatedInitialRevisions = [];
   }
 
   /**

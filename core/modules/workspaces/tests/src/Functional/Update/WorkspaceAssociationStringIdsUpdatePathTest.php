@@ -16,15 +16,10 @@ class WorkspaceAssociationStringIdsUpdatePathTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $checkEntityFieldDefinitionUpdates = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.bare.standard.php.gz',
-      __DIR__ . '/../../../fixtures/update/workspaces.php',
+      __DIR__ . '/../../../fixtures/update/workspaces-10.3.0.php',
     ];
   }
 

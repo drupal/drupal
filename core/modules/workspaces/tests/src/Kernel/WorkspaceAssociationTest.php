@@ -53,7 +53,7 @@ class WorkspaceAssociationTest extends KernelTestBase {
 
     $this->installConfig(['system']);
 
-    $this->installSchema('workspaces', ['workspace_association']);
+    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
 
     $permissions = array_intersect([
       'administer nodes',

@@ -59,7 +59,7 @@ class WorkspacePublisherTest extends KernelTestBase {
     $this->installEntitySchema('workspace');
 
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('workspaces', ['workspace_association']);
+    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
   }
 
   /**

@@ -43,6 +43,9 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
         $revisions_on_source = $this->entityTypeManager->getStorage($entity_type_id)
           ->loadMultipleRevisions(array_keys($revision_difference));
 
+        // Clear the associations of the source workspace.
+        $this->workspaceAssociation->deleteAssociations($this->sourceWorkspace->id(), $entity_type_id, $revision_difference, array_keys($revision_difference));
+
         /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
         foreach ($revisions_on_source as $revision) {
           // Track all the different revisions from the source workspace in the

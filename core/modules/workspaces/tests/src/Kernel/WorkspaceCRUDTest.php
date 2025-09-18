@@ -68,7 +68,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $this->installSchema('node', ['node_access']);
 
     $this->installEntitySchema('workspace');
-    $this->installSchema('workspaces', ['workspace_association']);
+    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
     $this->installEntitySchema('node');
 
     $this->installConfig(['filter', 'node', 'system']);

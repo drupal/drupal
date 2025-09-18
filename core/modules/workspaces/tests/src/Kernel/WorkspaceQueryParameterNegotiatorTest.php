@@ -36,7 +36,7 @@ class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('workspace');
-    $this->installSchema('workspaces', ['workspace_association']);
+    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
 
     // Create a new workspace for testing.
     Workspace::create(['id' => 'stage', 'label' => 'Stage'])->save();

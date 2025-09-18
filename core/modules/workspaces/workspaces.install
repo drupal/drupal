@@ -5,14 +5,17 @@
  * Contains install, update and uninstall functions for the Workspaces module.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\workspaces\WorkspaceAssociation;
 
 /**
  * Implements hook_schema().
  */
 function workspaces_schema(): array {
   $schema['workspace_association'] = [
-    'description' => 'Stores the association between entity revisions and their workspace.',
+    'description' => 'Stores the latest entity revisions tracked by a workspace.',
     'fields' => [
       'workspace' => [
         'type' => 'varchar_ascii',
@@ -53,6 +56,29 @@ function workspaces_schema(): array {
     'indexes' => [
       'target_entity_revision_id' => ['target_entity_revision_id'],
     ],
+  ];
+
+  $schema['workspace_association_revision'] = NestedArray::mergeDeep($schema['workspace_association'], [
+    'description' => 'Stores all entity revisions tracked by a workspace.',
+    'fields' => [
+      'initial_revision' => [
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Whether this entity was created in the workspace.',
+      ],
+    ],
+  ]);
+  $schema['workspace_association_revision']['primary key'] = [
+    'workspace',
+    'target_entity_type_id',
+    'target_entity_id',
+    'target_entity_id_string',
+    'target_entity_revision_id',
+  ];
+  $schema['workspace_association_revision']['indexes'] = [
+    'initial_revision' => ['initial_revision'],
   ];
 
   return $schema;
@@ -97,4 +123,173 @@ function workspaces_update_11101(): void {
  */
 function workspaces_update_11102(): void {
   \Drupal::service('module_installer')->install(['workspaces_ui']);
+}
+
+/**
+ * Create the 'workspace_association_revision' table.
+ */
+function workspaces_update_11301(): void {
+  $schema = \Drupal::database()->schema();
+
+  // Create the new workspace_association_revision table.
+  if (!$schema->tableExists('workspace_association_revision')) {
+    $workspace_association_revision_schema = [
+      'description' => 'Stores all entity revisions tracked by a workspace.',
+      'fields' => [
+        'workspace' => [
+          'type' => 'varchar_ascii',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'The workspace ID.',
+        ],
+        'target_entity_type_id' => [
+          'type' => 'varchar_ascii',
+          'length' => EntityTypeInterface::ID_MAX_LENGTH,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'The ID of the associated entity type.',
+        ],
+        'target_entity_id' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'The ID of the associated entity.',
+        ],
+        'target_entity_id_string' => [
+          'type' => 'varchar_ascii',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'The string ID of the associated entity.',
+        ],
+        'target_entity_revision_id' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'description' => 'The revision ID of the associated entity.',
+        ],
+        'initial_revision' => [
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Whether this entity was created in the workspace.',
+        ],
+      ],
+      'primary key' => [
+        'workspace',
+        'target_entity_type_id',
+        'target_entity_id',
+        'target_entity_id_string',
+        'target_entity_revision_id',
+      ],
+      'indexes' => [
+        'initial_revision' => ['initial_revision'],
+      ],
+    ];
+    $schema->createTable('workspace_association_revision', $workspace_association_revision_schema);
+  }
+}
+
+/**
+ * Populate the 'workspace_association_revision' table.
+ */
+function workspaces_update_11302(): void {
+  $database = \Drupal::database();
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Get all workspaces and their associations.
+  $workspace_associations = $database->select('workspace_association', 'wa')
+    ->fields('wa')
+    ->execute()
+    ->fetchAll();
+
+  // Group associations by workspace and entity type.
+  $grouped_associations = [];
+  foreach ($workspace_associations as $association) {
+    $grouped_associations[$association->workspace][$association->target_entity_type_id][] = $association;
+  }
+
+  // Process each workspace and entity type combination.
+  $transaction = $database->startTransaction();
+  try {
+    foreach ($grouped_associations as $workspace_id => $entity_types) {
+      foreach ($entity_types as $entity_type_id => $associations) {
+        $storage = $entity_type_manager->getStorage($entity_type_id);
+
+        // Skip if the entity type doesn't use SQL storage.
+        if (!$storage instanceof SqlContentEntityStorage) {
+          // For non-SQL entities, we can only track the latest revision.
+          foreach ($associations as $association) {
+            $database->insert('workspace_association_revision')
+              ->fields([
+                'workspace' => $association->workspace,
+                'target_entity_type_id' => $association->target_entity_type_id,
+                'target_entity_id' => $association->target_entity_id,
+                'target_entity_id_string' => $association->target_entity_id_string,
+                'target_entity_revision_id' => $association->target_entity_revision_id,
+                'initial_revision' => 0,
+              ])
+              ->execute();
+          }
+          continue;
+        }
+
+        $entity_type = $storage->getEntityType();
+        $table_mapping = $storage->getTableMapping();
+
+        // Get field names from the table mapping.
+        $workspace_field = $table_mapping->getColumnNames($entity_type->get('revision_metadata_keys')['workspace'])['target_id'];
+        $id_field = $table_mapping->getColumnNames($entity_type->getKey('id'))['value'];
+        $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
+
+        // Determine which ID field to use based on entity type.
+        $uses_numeric_id = (WorkspaceAssociation::getIdField($entity_type_id) === 'target_entity_id');
+
+        // Collect entity IDs for querying revisions.
+        $id_field_name = $uses_numeric_id ? 'target_entity_id' : 'target_entity_id_string';
+        $entity_ids = array_filter(array_column($associations, $id_field_name));
+
+        // Query for all revisions created in this specific workspace.
+        if ($entity_ids) {
+          $revision_query = $database->select($entity_type->getRevisionTable(), 'revision');
+          $revision_query->leftJoin($entity_type->getBaseTable(), 'base', "[revision].[$id_field] = [base].[$id_field]");
+
+          $revision_query
+            ->fields('revision', [$revision_id_field, $id_field]);
+          $base_revision_id_field = $revision_query
+            ->addField('base', $revision_id_field, 'base_revision_id_field');
+          $revision_query
+            ->condition("revision.$workspace_field", $workspace_id)
+            ->condition("revision.$id_field", $entity_ids, 'IN')
+            ->where("[revision].[$revision_id_field] >= [base].[$revision_id_field]")
+            ->orderBy("[revision].$revision_id_field");
+
+          $revisions = $revision_query->execute()->fetchAll();
+
+          // Insert each revision into the workspace_association_revision table.
+          foreach ($revisions as $revision) {
+            $database->insert('workspace_association_revision')
+              ->fields([
+                'workspace' => $workspace_id,
+                'target_entity_type_id' => $entity_type_id,
+                'target_entity_id' => $uses_numeric_id ? $revision->{$id_field} : 0,
+                'target_entity_id_string' => $uses_numeric_id ? '' : $revision->{$id_field},
+                'target_entity_revision_id' => $revision->{$revision_id_field},
+                // Check if this is an initial revision (the base revision was
+                // created in this workspace).
+                'initial_revision' => ($revision->{$revision_id_field} == $revision->{$base_revision_id_field}) ? 1 : 0,
+              ])
+              ->execute();
+          }
+        }
+      }
+    }
+  }
+  catch (\Exception $e) {
+    $transaction->rollBack();
+    throw $e;
+  }
 }

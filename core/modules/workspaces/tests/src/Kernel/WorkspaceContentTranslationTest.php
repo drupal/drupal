@@ -52,7 +52,7 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
 
     $this->installConfig(['language', 'content_translation']);
 
-    $this->installSchema('workspaces', ['workspace_association']);
+    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
 
     $language = ConfigurableLanguage::createFromLangcode('ro');
     $language->save();

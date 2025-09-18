@@ -55,7 +55,7 @@ class WorkspaceEntityRepositoryTest extends KernelTestBase {
     $this->installEntitySchema('entity_test_mulrevpub');
     $this->installEntitySchema('workspace');
 
-    $this->installSchema('workspaces', ['workspace_association']);
+    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
 
     $this->installConfig(['system', 'language']);
     ConfigurableLanguage::createFromLangcode('ro')
