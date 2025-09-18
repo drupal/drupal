@@ -31,8 +31,8 @@ class AlterTest extends KernelTestBase {
   public function testDrupalAlter(): void {
     // This test depends on Olivero, so make sure that it is always the current
     // active theme.
-    \Drupal::service('theme_installer')->install(['olivero']);
-    \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('olivero'));
+    \Drupal::service('theme_installer')->install(['test_theme_alter']);
+    \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('test_theme_alter'));
 
     $array = ['foo' => 'bar'];
     $entity = new \stdClass();

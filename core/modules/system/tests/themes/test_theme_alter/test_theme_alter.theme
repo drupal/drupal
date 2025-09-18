@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Helper module for the Common tests.
+ * Theme to help test alters.
  */
 
 declare(strict_types=1);
@@ -14,7 +14,7 @@ declare(strict_types=1);
  * can also alter and come last. This file gets included by
  * CommonTestHooks::includeThemeFunction().
  */
-function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
+function test_theme_alter_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
   // Alter first argument.
   if (is_array($data)) {
     $data['foo'] .= ' theme';

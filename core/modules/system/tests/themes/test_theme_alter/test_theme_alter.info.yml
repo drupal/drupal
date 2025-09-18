@@ -1,0 +1,5 @@
+name: 'Test Theme Alters'
+type: theme
+description: 'Theme for testing the theme system'
+version: VERSION
+base theme: false
