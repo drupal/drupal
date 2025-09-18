@@ -471,7 +471,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $definition_columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
           foreach ($field_columns as $property_name => $column_name) {
             if (property_exists($record, $column_name)) {
-              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = !empty($definition_columns[$property_name]['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
+              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = !empty($definition_columns[$property_name]['serialize']) ? $this->handleNullableFieldUnserialize($record->{$column_name}) : $record->{$column_name};
               unset($record->{$column_name});
             }
           }
@@ -482,7 +482,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if (property_exists($record, $column_name)) {
             $columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
             $column = reset($columns);
-            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
+            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? $this->handleNullableFieldUnserialize($record->{$column_name}) : $record->{$column_name};
             unset($record->{$column_name});
           }
         }
@@ -596,12 +596,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if (count($columns) == 1) {
             $column_name = reset($columns);
             $column_attributes = $definition_columns[key($columns)];
-            $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+            $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? $this->handleNullableFieldUnserialize($row[$column_name]) : $row[$column_name];
           }
           else {
             foreach ($columns as $property_name => $column_name) {
               $column_attributes = $definition_columns[$property_name];
-              $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+              $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? $this->handleNullableFieldUnserialize($row[$column_name]) : $row[$column_name];
             }
           }
         }
@@ -1261,7 +1261,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             foreach ($storage_definition->getColumns() as $column => $attributes) {
               $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
               // Unserialize the value if specified in the column schema.
-              $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name) : $row->$column_name;
+              $item[$column] = (!empty($attributes['serialize'])) ? $this->handleNullableFieldUnserialize($row->$column_name) : $row->$column_name;
             }
 
             // Add the item to the field values for the entity.
@@ -1784,6 +1784,24 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $count = $query->execute()->fetchField();
     }
     return $as_bool ? (bool) $count : (int) $count;
+  }
+
+  /**
+   * Handles NULL values before passing data to unserialize().
+   *
+   * @param mixed|null $value
+   *   The serialized value.
+   *
+   * @return mixed|null
+   *   The unserialized data, or NULL if the original value is NULL.
+   */
+  protected function handleNullableFieldUnserialize(mixed $value): mixed {
+    // Ensure NULL values aren't passed to unserialize().
+    if ($value === NULL) {
+      return NULL;
+    }
+
+    return unserialize($value);
   }
 
 }
