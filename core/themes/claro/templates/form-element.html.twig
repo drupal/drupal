@@ -34,13 +34,13 @@
   {% if label_display in ['before', 'invisible'] %}
     {{ label }}
   {% endif %}
-  {% if prefix is not empty %}
-    <span class="form-item__prefix{{ disabled == 'disabled' ? ' is-disabled' }}">{{ prefix }}</span>
-  {% endif %}
   {% if description_display == 'before' and description.content %}
     <div{{ description.attributes.addClass(description_classes) }}>
       {{ description.content }}
     </div>
+  {% endif %}
+  {% if prefix is not empty %}
+    <span class="form-item__prefix{{ disabled == 'disabled' ? ' is-disabled' }}">{{ prefix }}</span>
   {% endif %}
   {{ children }}
   {% if suffix is not empty %}
