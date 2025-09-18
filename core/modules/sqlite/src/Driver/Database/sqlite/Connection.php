@@ -3,12 +3,14 @@
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
 use Drupal\Component\Utility\FilterArray;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
+use Pdo\Sqlite;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.
@@ -76,6 +78,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * Constructs a \Drupal\sqlite\Driver\Database\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
+    // @phpstan-ignore class.notFound
+    assert(\PHP_VERSION_ID >= 80400 ? $connection instanceof Sqlite : TRUE);
     parent::__construct($connection, $connection_options);
 
     // Empty prefix means query the main database -- no need to attach anything.
@@ -106,7 +110,13 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     ];
 
     try {
-      $pdo = new PDOConnection('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+      if (\PHP_VERSION_ID >= 80400) {
+        // @phpstan-ignore class.notFound
+        $sqlite = new Sqlite('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+      }
+      else {
+        $sqlite = new PDOConnection('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+      }
     }
     catch (\PDOException $e) {
       if ($e->getCode() == static::DATABASE_NOT_FOUND) {
@@ -118,28 +128,56 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
 
     // Create functions needed by SQLite.
-    $pdo->sqliteCreateFunction('if', [__CLASS__, 'sqlFunctionIf']);
-    $pdo->sqliteCreateFunction('greatest', [__CLASS__, 'sqlFunctionGreatest']);
-    $pdo->sqliteCreateFunction('least', [__CLASS__, 'sqlFunctionLeast']);
-    $pdo->sqliteCreateFunction('pow', 'pow', 2);
-    $pdo->sqliteCreateFunction('exp', 'exp', 1);
-    $pdo->sqliteCreateFunction('length', 'strlen', 1);
-    $pdo->sqliteCreateFunction('md5', 'md5', 1);
-    $pdo->sqliteCreateFunction('concat', [__CLASS__, 'sqlFunctionConcat']);
-    $pdo->sqliteCreateFunction('concat_ws', [__CLASS__, 'sqlFunctionConcatWs']);
-    $pdo->sqliteCreateFunction('substring', [__CLASS__, 'sqlFunctionSubstring'], 3);
-    $pdo->sqliteCreateFunction('substring_index', [__CLASS__, 'sqlFunctionSubstringIndex'], 3);
-    $pdo->sqliteCreateFunction('rand', [__CLASS__, 'sqlFunctionRand']);
-    $pdo->sqliteCreateFunction('regexp', [__CLASS__, 'sqlFunctionRegexp']);
+    if (\PHP_VERSION_ID >= 80400) {
+      // Use PHP 8.4+ createFunction with fast callable syntax.
+      $sqlite->createFunction('if', self::sqlFunctionIf(...));
+      $sqlite->createFunction('greatest', self::sqlFunctionGreatest(...));
+      $sqlite->createFunction('least', self::sqlFunctionLeast(...));
+      $sqlite->createFunction('pow', pow(...), 2);
+      $sqlite->createFunction('exp', exp(...), 1);
+      $sqlite->createFunction('length', strlen(...), 1);
+      $sqlite->createFunction('md5', md5(...), 1);
+      $sqlite->createFunction('concat', self::sqlFunctionConcat(...));
+      $sqlite->createFunction('concat_ws', self::sqlFunctionConcatWs(...));
+      $sqlite->createFunction('substring', self::sqlFunctionSubstring(...), 3);
+      $sqlite->createFunction('substring_index', self::sqlFunctionSubstringIndex(...), 3);
+      $sqlite->createFunction('rand', self::sqlFunctionRand(...));
+      $sqlite->createFunction('regexp', self::sqlFunctionRegexp(...));
 
-    // SQLite does not support the LIKE BINARY operator, so we overload the
-    // non-standard GLOB operator for case-sensitive matching. Another option
-    // would have been to override another non-standard operator, MATCH, but
-    // that does not support the NOT keyword prefix.
-    $pdo->sqliteCreateFunction('glob', [__CLASS__, 'sqlFunctionLikeBinary']);
+      // SQLite does not support the LIKE BINARY operator, so we overload the
+      // non-standard GLOB operator for case-sensitive matching. Another option
+      // would have been to override another non-standard operator, MATCH, but
+      // that does not support the NOT keyword prefix.
+      $sqlite->createFunction('glob', self::sqlFunctionLikeBinary(...));
 
-    // Create a user-space case-insensitive collation with UTF-8 support.
-    $pdo->sqliteCreateCollation('NOCASE_UTF8', ['Drupal\Component\Utility\Unicode', 'strcasecmp']);
+      // Create a user-space case-insensitive collation with UTF-8 support.
+      $sqlite->createCollation('NOCASE_UTF8', Unicode::strcasecmp(...));
+    }
+    else {
+      // Fallback for PHP < 8.4
+      $sqlite->sqliteCreateFunction('if', [__CLASS__, 'sqlFunctionIf']);
+      $sqlite->sqliteCreateFunction('greatest', [__CLASS__, 'sqlFunctionGreatest']);
+      $sqlite->sqliteCreateFunction('least', [__CLASS__, 'sqlFunctionLeast']);
+      $sqlite->sqliteCreateFunction('pow', 'pow', 2);
+      $sqlite->sqliteCreateFunction('exp', 'exp', 1);
+      $sqlite->sqliteCreateFunction('length', 'strlen', 1);
+      $sqlite->sqliteCreateFunction('md5', 'md5', 1);
+      $sqlite->sqliteCreateFunction('concat', [__CLASS__, 'sqlFunctionConcat']);
+      $sqlite->sqliteCreateFunction('concat_ws', [__CLASS__, 'sqlFunctionConcatWs']);
+      $sqlite->sqliteCreateFunction('substring', [__CLASS__, 'sqlFunctionSubstring'], 3);
+      $sqlite->sqliteCreateFunction('substring_index', [__CLASS__, 'sqlFunctionSubstringIndex'], 3);
+      $sqlite->sqliteCreateFunction('rand', [__CLASS__, 'sqlFunctionRand']);
+      $sqlite->sqliteCreateFunction('regexp', [__CLASS__, 'sqlFunctionRegexp']);
+
+      // SQLite does not support the LIKE BINARY operator, so we overload the
+      // non-standard GLOB operator for case-sensitive matching. Another option
+      // would have been to override another non-standard operator, MATCH, but
+      // that does not support the NOT keyword prefix.
+      $sqlite->sqliteCreateFunction('glob', [__CLASS__, 'sqlFunctionLikeBinary']);
+
+      // Create a user-space case-insensitive collation with UTF-8 support.
+      $sqlite->sqliteCreateCollation('NOCASE_UTF8', ['Drupal\Component\Utility\Unicode', 'strcasecmp']);
+    }
 
     // Set SQLite init_commands if not already defined. Enable the Write-Ahead
     // Logging (WAL) for SQLite. See https://www.drupal.org/node/2348137 and
@@ -153,10 +191,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
     // Execute sqlite init_commands.
     if (isset($connection_options['init_commands'])) {
-      $pdo->exec(implode('; ', $connection_options['init_commands']));
+      $sqlite->exec(implode('; ', $connection_options['init_commands']));
     }
 
-    return $pdo;
+    return $sqlite;
   }
 
   /**

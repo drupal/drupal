@@ -304,6 +304,14 @@ default:
     _TARGET_DB_DRIVER: "mysqli"
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
+'mysqli - PHP 8.5 MySQL 9.4':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.5-ubuntu"
+    _TARGET_DB: "mysql-9"
+    _TARGET_DB_DRIVER: "mysqli"
+    _TARGET_DB_DRIVER_MODULE: "mysqli"
+
 'PHP 8.3 MySQL 8.0':
   <<: [ *default-stage, *run-on-mr ]
   variables:
@@ -349,6 +357,11 @@ default:
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "sqlite-3"
+
+'PHP 8.4 SQLite 3.45':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
     _TARGET_DB: "sqlite-3"
 
 'PHP 8.5 SQLite 3.45':
