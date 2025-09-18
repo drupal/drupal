@@ -68,7 +68,6 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
     'field',
     'jsonapi',
     'serialization',
-    'system',
     'user',
   ];
 

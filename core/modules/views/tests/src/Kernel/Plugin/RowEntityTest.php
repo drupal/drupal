@@ -24,7 +24,6 @@ class RowEntityTest extends ViewsKernelTestBase {
   protected static $modules = [
     'entity_test',
     'field',
-    'system',
     'user',
   ];
 

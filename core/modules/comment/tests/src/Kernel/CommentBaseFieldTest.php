@@ -22,7 +22,6 @@ class CommentBaseFieldTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'comment',
     'comment_base_field_test',

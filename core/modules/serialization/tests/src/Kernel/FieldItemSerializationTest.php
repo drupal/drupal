@@ -21,7 +21,6 @@ class FieldItemSerializationTest extends NormalizerTestBase {
    */
   protected static $modules = [
     'serialization',
-    'system',
     'field',
     'entity_test',
     'text',

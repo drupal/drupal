@@ -22,7 +22,6 @@ class ContentEntityConstructorTest extends KernelTestBase {
   protected static $modules = [
     'migrate',
     'node',
-    'system',
     'user',
   ];
 

@@ -25,7 +25,6 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
     'node',
     'jsonapi',
     'serialization',
-    'system',
     'user',
     'field',
     'dblog',

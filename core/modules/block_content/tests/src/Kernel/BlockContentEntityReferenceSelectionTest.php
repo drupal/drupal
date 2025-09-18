@@ -25,7 +25,6 @@ class BlockContentEntityReferenceSelectionTest extends KernelTestBase {
     'block',
     'block_content',
     'block_content_test',
-    'system',
     'user',
   ];
 

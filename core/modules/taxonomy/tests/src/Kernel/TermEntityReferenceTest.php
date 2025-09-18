@@ -24,7 +24,6 @@ class TermEntityReferenceTest extends KernelTestBase {
   protected static $modules = [
     'entity_test',
     'field',
-    'system',
     'taxonomy',
     'text',
     'user',

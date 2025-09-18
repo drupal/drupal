@@ -27,7 +27,6 @@ class LatestTranslationAffectedRevisionTest extends ViewsKernelTestBase {
    */
   protected static $modules = [
     'node',
-    'system',
     'language',
     'content_translation',
   ];

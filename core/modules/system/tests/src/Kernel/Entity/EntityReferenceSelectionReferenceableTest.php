@@ -47,7 +47,6 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'field',
     'node',

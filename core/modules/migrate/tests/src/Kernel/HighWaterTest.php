@@ -17,7 +17,6 @@ class HighWaterTest extends MigrateTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'node',
     'migrate',

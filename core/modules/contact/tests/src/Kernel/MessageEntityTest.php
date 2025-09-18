@@ -18,7 +18,6 @@ class MessageEntityTest extends EntityKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'contact',
     'field',
     'user',

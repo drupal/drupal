@@ -32,7 +32,6 @@ class FieldDropbuttonTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'node',
     'field',

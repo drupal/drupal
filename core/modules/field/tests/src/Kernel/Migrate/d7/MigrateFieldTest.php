@@ -27,7 +27,6 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     'image',
     'link',
     'node',
-    'system',
     'taxonomy',
     'telephone',
     'text',

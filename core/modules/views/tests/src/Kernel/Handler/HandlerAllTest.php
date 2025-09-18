@@ -42,7 +42,6 @@ class HandlerAllTest extends ViewsKernelTestBase {
     'media',
     'node',
     'search',
-    'system',
     'options',
     'taxonomy',
     'text',

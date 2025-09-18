@@ -33,7 +33,6 @@ class ImageEffectsTest extends KernelTestBase {
     'image',
     'image_module_test',
     'image_test',
-    'system',
   ];
 
   /**

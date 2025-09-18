@@ -23,7 +23,6 @@ class FilterBooleanOperatorGroupTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'field',
     'text',
     'node',

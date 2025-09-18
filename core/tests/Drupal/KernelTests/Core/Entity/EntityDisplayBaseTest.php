@@ -29,7 +29,6 @@ class EntityDisplayBaseTest extends KernelTestBase {
     'entity_test_third_party',
     'field',
     'field_test',
-    'system',
     'comment',
     'user',
   ];

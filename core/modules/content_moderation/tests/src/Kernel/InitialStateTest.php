@@ -26,7 +26,6 @@ class InitialStateTest extends KernelTestBase {
     'entity_test',
     'node',
     'user',
-    'system',
   ];
 
   /**

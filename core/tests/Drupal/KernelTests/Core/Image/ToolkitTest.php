@@ -24,7 +24,6 @@ class ToolkitTest extends KernelTestBase {
    */
   protected static $modules = [
     'image_test',
-    'system',
   ];
 
   /**

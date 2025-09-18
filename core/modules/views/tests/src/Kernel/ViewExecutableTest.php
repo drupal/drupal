@@ -40,7 +40,6 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'node',
     'comment',
     'user',

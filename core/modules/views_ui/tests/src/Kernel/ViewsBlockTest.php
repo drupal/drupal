@@ -24,7 +24,6 @@ class ViewsBlockTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'block',
     'block_test_views',
     'views_ui',

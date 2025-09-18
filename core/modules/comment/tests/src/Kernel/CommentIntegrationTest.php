@@ -31,7 +31,6 @@ class CommentIntegrationTest extends KernelTestBase {
     'field',
     'entity_test',
     'user',
-    'system',
     'dblog',
   ];
 

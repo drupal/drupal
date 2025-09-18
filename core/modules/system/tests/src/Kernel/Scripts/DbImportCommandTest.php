@@ -20,7 +20,6 @@ class DbImportCommandTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'config',
     'dblog',
     'menu_link_content',

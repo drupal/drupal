@@ -28,7 +28,6 @@ class FileItemValidationTest extends KernelTestBase {
     'entity_test',
     'field',
     'user',
-    'system',
   ];
 
   /**

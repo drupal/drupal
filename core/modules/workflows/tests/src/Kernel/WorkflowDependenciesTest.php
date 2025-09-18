@@ -20,7 +20,6 @@ class WorkflowDependenciesTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'workflows',
     'workflow_type_test',
     'workflow_third_party_settings_test',

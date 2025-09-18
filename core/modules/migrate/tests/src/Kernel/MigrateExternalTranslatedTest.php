@@ -22,7 +22,6 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'language',
     'node',

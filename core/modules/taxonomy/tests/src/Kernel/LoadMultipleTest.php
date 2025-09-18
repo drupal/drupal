@@ -21,7 +21,6 @@ class LoadMultipleTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'taxonomy',
     'user',
     'text',

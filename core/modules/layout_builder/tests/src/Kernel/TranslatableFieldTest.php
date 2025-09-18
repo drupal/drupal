@@ -29,7 +29,6 @@ class TranslatableFieldTest extends KernelTestBase {
     'layout_builder',
     'entity_test',
     'field',
-    'system',
     'user',
     'language',
   ];

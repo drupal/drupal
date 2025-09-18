@@ -24,7 +24,6 @@ class EntityDefaultLanguageTest extends KernelTestBase {
     'field',
     'text',
     'user',
-    'system',
   ];
 
   /**

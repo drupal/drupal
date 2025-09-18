@@ -28,7 +28,6 @@ class MigrateFieldInstanceOptionTranslationTest extends MigrateDrupal7TestBase {
     'locale',
     'menu_ui',
     'node',
-    'system',
     'taxonomy',
     'telephone',
     'text',

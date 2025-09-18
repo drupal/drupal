@@ -31,7 +31,6 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
   protected static $modules = [
     'entity_test',
     'file',
-    'system',
     'serialization',
     'text',
     'jsonapi',

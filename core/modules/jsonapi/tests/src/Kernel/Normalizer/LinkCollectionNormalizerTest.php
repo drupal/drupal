@@ -54,7 +54,6 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     'file',
     'jsonapi',
     'serialization',
-    'system',
     'user',
   ];
 

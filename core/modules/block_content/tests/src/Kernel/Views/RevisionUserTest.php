@@ -28,7 +28,6 @@ class RevisionUserTest extends ViewsKernelTestBase {
   protected static $modules = [
     'block_content',
     'block_content_test_views',
-    'system',
     'user',
     'views',
   ];

@@ -28,7 +28,6 @@ class UpdateDeleteFileIfStaleTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'update',
   ];
 

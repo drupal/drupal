@@ -18,7 +18,6 @@ class UserSaveTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
   ];
 

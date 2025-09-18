@@ -26,7 +26,6 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'migrate_events_test',
     'migrate',
   ];

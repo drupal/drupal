@@ -15,7 +15,6 @@ class TrackChangesTest extends MigrateTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'taxonomy',
     'migrate',

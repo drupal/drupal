@@ -21,7 +21,6 @@ class ContentTranslationEntityBundleInfoTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'node',
     'user',
     'language',

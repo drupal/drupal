@@ -33,7 +33,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   protected static $modules = [
     'layout_builder',
     'entity_test',
-    'system',
     'user',
   ];
 

@@ -24,7 +24,6 @@ class StageOwnershipTest extends PackageManagerKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'package_manager_test_validation',
   ];

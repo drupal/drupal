@@ -25,7 +25,6 @@ class VocabularyCrudTest extends KernelTestBase {
   protected static $modules = [
     'field',
     'filter',
-    'system',
     'taxonomy',
     'taxonomy_crud',
     'text',

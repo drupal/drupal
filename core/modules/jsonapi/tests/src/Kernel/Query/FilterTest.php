@@ -36,7 +36,6 @@ class FilterTest extends JsonapiKernelTestBase {
     'jsonapi',
     'node',
     'serialization',
-    'system',
     'text',
     'user',
   ];

@@ -27,7 +27,6 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
     'node',
     'content_moderation',
     'user',
-    'system',
     'text',
     'workflows',
     'entity_test',

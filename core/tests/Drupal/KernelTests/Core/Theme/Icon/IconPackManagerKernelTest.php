@@ -34,7 +34,6 @@ class IconPackManagerKernelTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'icon_test',
   ];
 

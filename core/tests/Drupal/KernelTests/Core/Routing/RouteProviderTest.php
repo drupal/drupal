@@ -40,7 +40,6 @@ class RouteProviderTest extends KernelTestBase {
    */
   protected static $modules = [
     'url_alter_test',
-    'system',
     'language',
     'path_alias',
   ];

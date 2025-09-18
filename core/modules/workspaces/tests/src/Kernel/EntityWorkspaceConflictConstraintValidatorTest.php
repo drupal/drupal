@@ -25,7 +25,6 @@ class EntityWorkspaceConflictConstraintValidatorTest extends KernelTestBase {
    */
   protected static $modules = [
     'entity_test',
-    'system',
     'user',
     'workspaces',
   ];

@@ -19,7 +19,6 @@ class ComponentInFormTest extends ComponentKernelTestBase implements FormInterfa
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'sdc_test',
   ];
 

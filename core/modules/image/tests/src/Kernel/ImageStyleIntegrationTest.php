@@ -26,7 +26,6 @@ class ImageStyleIntegrationTest extends KernelTestBase {
     'image',
     'file',
     'field',
-    'system',
     'user',
     'node',
   ];

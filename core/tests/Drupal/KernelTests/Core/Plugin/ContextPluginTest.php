@@ -23,7 +23,6 @@ class ContextPluginTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'node',
     'field',

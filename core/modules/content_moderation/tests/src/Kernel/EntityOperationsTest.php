@@ -25,7 +25,6 @@ class EntityOperationsTest extends KernelTestBase {
     'content_moderation',
     'node',
     'user',
-    'system',
     'workflows',
   ];
 

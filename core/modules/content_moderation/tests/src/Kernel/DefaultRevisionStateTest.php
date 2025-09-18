@@ -28,7 +28,6 @@ class DefaultRevisionStateTest extends KernelTestBase {
     'block_content',
     'content_moderation',
     'user',
-    'system',
     'language',
     'content_translation',
     'text',

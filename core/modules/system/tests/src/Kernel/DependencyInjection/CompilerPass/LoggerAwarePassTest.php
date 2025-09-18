@@ -21,7 +21,6 @@ class LoggerAwarePassTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'logger_aware_test',
   ];
 

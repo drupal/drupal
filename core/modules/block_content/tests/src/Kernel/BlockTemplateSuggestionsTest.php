@@ -24,7 +24,6 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
     'user',
     'block',
     'block_content',
-    'system',
   ];
 
   /**

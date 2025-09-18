@@ -32,7 +32,6 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal7TestBase im
     'locale',
     'menu_ui',
     'node',
-    'system',
     'taxonomy',
     'telephone',
     'text',

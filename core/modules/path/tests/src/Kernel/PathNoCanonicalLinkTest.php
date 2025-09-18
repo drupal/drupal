@@ -24,7 +24,6 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
     'language',
     'entity_test',
     'user',
-    'system',
   ];
 
   /**

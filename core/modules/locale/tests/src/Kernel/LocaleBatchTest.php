@@ -18,7 +18,6 @@ class LocaleBatchTest extends KernelTestBase {
    */
   protected static $modules = [
     'locale',
-    'system',
     'language',
   ];
 

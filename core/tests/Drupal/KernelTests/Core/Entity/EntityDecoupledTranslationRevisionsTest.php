@@ -25,7 +25,6 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'entity_test',
     'language',
   ];

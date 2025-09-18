@@ -21,7 +21,6 @@ class BlockContentRevisionsTest extends KernelTestBase {
   protected static $modules = [
     'block',
     'block_content',
-    'system',
     'user',
   ];
 

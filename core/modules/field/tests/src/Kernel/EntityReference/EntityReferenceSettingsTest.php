@@ -33,7 +33,6 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     'user',
     'text',
     'entity_test',
-    'system',
   ];
 
   /**

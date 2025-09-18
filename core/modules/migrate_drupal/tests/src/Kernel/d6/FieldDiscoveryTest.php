@@ -32,7 +32,6 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
     'image',
     'link',
     'node',
-    'system',
     'taxonomy',
     'telephone',
     'text',

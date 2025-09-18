@@ -41,7 +41,6 @@ class TwigAllowListTest extends KernelTestBase {
     'node',
     'taxonomy',
     'user',
-    'system',
     'text',
     'field',
   ];

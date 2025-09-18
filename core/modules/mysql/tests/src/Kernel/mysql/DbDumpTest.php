@@ -28,9 +28,6 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    // @todo system can be removed from this test once
-    //   https://www.drupal.org/project/drupal/issues/2851705 is committed.
-    'system',
     'config',
     'dblog',
     'menu_link_content',

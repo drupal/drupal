@@ -24,7 +24,6 @@ class BaseFieldOverrideTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'user',
     'entity_test',
   ];

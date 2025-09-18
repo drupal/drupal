@@ -17,7 +17,6 @@ class BreakpointDiscoveryTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'breakpoint',
     'breakpoint_module_test',
   ];

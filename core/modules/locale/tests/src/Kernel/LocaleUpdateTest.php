@@ -19,7 +19,6 @@ class LocaleUpdateTest extends KernelTestBase {
   protected static $modules = [
     'locale',
     'locale_test',
-    'system',
   ];
 
   /**

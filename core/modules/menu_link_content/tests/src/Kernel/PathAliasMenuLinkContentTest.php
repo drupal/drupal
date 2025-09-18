@@ -24,7 +24,6 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
    */
   protected static $modules = [
     'menu_link_content',
-    'system',
     'link',
     'path_alias',
     'test_page_test',

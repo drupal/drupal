@@ -26,7 +26,6 @@ class EntitySerializationTest extends NormalizerTestBase {
    */
   protected static $modules = [
     'serialization',
-    'system',
     'field',
     'entity_test',
     'text',

@@ -24,7 +24,6 @@ class FieldAccessTest extends KernelTestBase {
   protected static $modules = [
     'entity_test',
     'field',
-    'system',
     'text',
     'filter',
     'user',

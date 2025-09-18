@@ -24,7 +24,6 @@ class ContentEntityConstructorTest extends KernelTestBase {
     'migrate',
     'migrate_drupal',
     'node',
-    'system',
     'user',
   ];
 
