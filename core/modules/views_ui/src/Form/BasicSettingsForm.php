@@ -37,6 +37,12 @@ class BasicSettingsForm extends ConfigFormBase {
       '#config_target' => 'views.settings:ui.show.default_display',
     ];
 
+    $form['basic']['ui_show_advanced_column'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Always show advanced display settings'),
+      '#config_target' => 'views.settings:ui.show.advanced_column',
+    ];
+
     $form['basic']['ui_show_display_embed'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow embedded displays'),

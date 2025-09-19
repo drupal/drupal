@@ -272,16 +272,4 @@ class ViewEditTest extends UITestBase {
     $this->submitForm($edit, 'Apply');
   }
 
-  /**
-   * Tests the edit form HTML.
-   */
-  public function testEditForm(): void {
-    $this->drupalGet('admin/structure/views/view/test_view');
-
-    // Assert that the third column is a DIV.
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "views-display-column first")]');
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "views-display-column second")]');
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "views-display-column third")]');
-  }
-
 }

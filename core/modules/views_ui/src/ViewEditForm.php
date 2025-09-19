@@ -576,8 +576,11 @@ class ViewEditForm extends ViewFormBase {
     $build['columns']['second']['empty'] = [];
     $build['columns']['second']['pager'] = [];
 
+    // The third column buckets are wrapped in details.
     $build['columns']['third'] = [
-      '#theme_wrappers' => ['container'],
+      '#type' => 'details',
+      '#title' => $this->t('Advanced'),
+      '#theme_wrappers' => ['details'],
       '#attributes' => [
         'class' => [
           'views-display-column',
@@ -585,6 +588,8 @@ class ViewEditForm extends ViewFormBase {
         ],
       ],
     ];
+    // Collapse the details by default.
+    $build['columns']['third']['#open'] = \Drupal::config('views.settings')->get('ui.show.advanced_column');
 
     // Each option (e.g. title, access, display as grid/table/list) fits into
     // one of several "buckets," or boxes (Format, Fields, Sort, and so on).
