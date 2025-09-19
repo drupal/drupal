@@ -24,9 +24,6 @@ views.settings:
             additional_queries:
               type: boolean
               label: 'Show other queries run during render during live preview'
-            advanced_column:
-              type: boolean
-              label: 'Always show advanced display settings'
             default_display:
               type: boolean
               label: 'Always show the default display'
