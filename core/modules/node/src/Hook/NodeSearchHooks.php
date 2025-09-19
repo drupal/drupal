@@ -46,9 +46,9 @@ class NodeSearchHooks {
   }
 
   /**
-   * Implements hook_ranking().
+   * Implements hook_node_search_ranking().
    */
-  #[Hook('ranking')]
+  #[Hook('node_search_ranking')]
   public function ranking(): array {
     // Create the ranking array and add the basic ranking options.
     $ranking = [
