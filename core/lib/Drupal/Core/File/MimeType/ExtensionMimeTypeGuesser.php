@@ -900,9 +900,11 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    * @var string[]
    *
    * @see https://www.drupal.org/node/3494040
+   * @see https://www.drupal.org/node/3534083
    */
-  protected $deprecatedProperties = [
+  protected array $deprecatedProperties = [
     'moduleHandler' => 'module_handler',
+    'fileSystem' => FileSystemInterface::class,
   ];
 
   /**
@@ -911,21 +913,13 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
   protected MimeTypeMapInterface $map;
 
   /**
-   * The file system.
-   */
-  protected FileSystemInterface $fileSystem;
-
-  /**
    * Constructs a new ExtensionMimeTypeGuesser.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\File\MimeType\MimeTypeMapInterface $map
    *   The MIME type map.
-   * @param \Drupal\Core\File\FileSystemInterface|null $fileSystem
-   *   The file system.
    */
   public function __construct(
     MimeTypeMapInterface|ModuleHandlerInterface $map,
-    ?FileSystemInterface $fileSystem = NULL,
   ) {
     if ($map instanceof ModuleHandlerInterface) {
       @trigger_error(
@@ -935,14 +929,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       $map = \Drupal::service(MimeTypeMapInterface::class);
     }
     $this->map = $map;
-    if (!$fileSystem) {
-      @trigger_error(
-        'Calling ' . __METHOD__ . '() without the $fileSystem argument is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3494040',
-        E_USER_DEPRECATED
-      );
-      $fileSystem = \Drupal::service(FileSystemInterface::class);
-    }
-    $this->fileSystem = $fileSystem;
   }
 
   /**
@@ -950,7 +936,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    */
   public function guessMimeType($path): ?string {
     $extension = '';
-    $file_parts = explode('.', $this->fileSystem->basename($path));
+    $file_parts = explode('.', basename($path));
 
     // Remove the first part: a full filename should not match an extension,
     // then iterate over the file parts, trying to find a match.

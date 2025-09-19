@@ -185,6 +185,9 @@ interface FileSystemInterface {
    * @see basename()
    *
    * @ingroup php_wrappers
+   *
+   * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use PHP native basename() instead.
+   * @see https://www.drupal.org/node/3530869
    */
   public function basename($uri, $suffix = NULL);
 

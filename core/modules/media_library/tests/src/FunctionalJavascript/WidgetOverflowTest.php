@@ -74,7 +74,7 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
       $this->assertNotEmpty($path);
       $this->assertFileExists($path);
 
-      $filenames[] = $file_system->basename($path);
+      $filenames[] = basename($path);
       $remote_paths[] = $this->getSession()
         ->getDriver()
         ->uploadFileAndGetRemoteFilePath($path);

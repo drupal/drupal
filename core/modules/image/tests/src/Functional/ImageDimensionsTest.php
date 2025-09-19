@@ -52,7 +52,7 @@ class ImageDimensionsTest extends BrowserTestBase {
     /** @var \Drupal\image\ImageStyleInterface $style */
     $style = ImageStyle::create(['name' => 'test', 'label' => 'Test']);
     $style->save();
-    $generated_uri = 'public://styles/test/public/' . $file_system->basename($original_uri);
+    $generated_uri = 'public://styles/test/public/' . basename($original_uri);
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
     $file_url_generator = \Drupal::service('file_url_generator');
     $url = $file_url_generator->transformRelative($style->buildUrl($original_uri));
@@ -272,7 +272,7 @@ class ImageDimensionsTest extends BrowserTestBase {
       '#height' => 20,
     ];
     // PNG original image. Should be resized to 100x100.
-    $generated_uri = 'public://styles/test_uri/public/' . $file_system->basename($original_uri);
+    $generated_uri = 'public://styles/test_uri/public/' . basename($original_uri);
     $url = \Drupal::service('file_url_generator')->transformRelative($style->buildUrl($original_uri));
     $this->assertEquals('<img src="' . $url . '" width="100" height="100" alt="" loading="lazy" />', $this->getImageTag($variables));
     $this->assertFileDoesNotExist($generated_uri);
@@ -285,7 +285,7 @@ class ImageDimensionsTest extends BrowserTestBase {
     // GIF original image. Should be resized to 50x50.
     $file = $files[1];
     $original_uri = $file_system->copy($file->uri, 'public://', FileExists::Rename);
-    $generated_uri = 'public://styles/test_uri/public/' . $file_system->basename($original_uri);
+    $generated_uri = 'public://styles/test_uri/public/' . basename($original_uri);
     $url = $file_url_generator->transformRelative($style->buildUrl($original_uri));
     $variables['#uri'] = $original_uri;
     $this->assertEquals('<img src="' . $url . '" width="50" height="50" alt="" loading="lazy" />', $this->getImageTag($variables));

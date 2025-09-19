@@ -1438,7 +1438,7 @@ function install_retrieve_file($uri, $destination) {
   $file_system = \Drupal::service('file_system');
   if (is_dir($file_system->realpath($destination))) {
     // Prevent URIs with triple slashes when gluing parts together.
-    $path = str_replace('///', '//', "$destination/") . $file_system->basename($parsed_url['path']);
+    $path = str_replace('///', '//', "$destination/") . basename($parsed_url['path']);
   }
   else {
     $path = $destination;

@@ -433,7 +433,7 @@ function locale_translate_batch_finished($success, array $results): void {
  */
 function locale_translate_file_create($filepath) {
   $file = new stdClass();
-  $file->filename = \Drupal::service('file_system')->basename($filepath);
+  $file->filename = basename($filepath);
   $file->uri = $filepath;
   $file->timestamp = filemtime($file->uri);
   return $file;

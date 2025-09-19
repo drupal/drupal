@@ -206,7 +206,7 @@ class FileUploadHandler implements FileUploadHandlerInterface {
 
       // Update the filename with any changes as a result of security or
       // renaming due to an existing file.
-      $file->setFilename($this->fileSystem->basename($file->getFileUri()));
+      $file->setFilename(basename($file->getFileUri()));
 
       if ($fileExists === FileExists::Replace) {
         $existingFile = $this->fileRepository->loadByUri($file->getFileUri());

@@ -260,12 +260,12 @@ class UpdateHooks {
       }
     }
     if (empty($files)) {
-      $errors[] = $this->t('%archive_file does not contain any .info.yml files.', ['%archive_file' => $file_system->basename($archive_file)]);
+      $errors[] = $this->t('%archive_file does not contain any .info.yml files.', ['%archive_file' => basename($archive_file)]);
     }
     elseif (!$compatible_project) {
       $errors[] = \Drupal::translation()->formatPlural(count($incompatible), '%archive_file contains a version of %names that is not compatible with Drupal @version.', '%archive_file contains versions of modules or themes that are not compatible with Drupal @version: %names', [
         '@version' => \Drupal::VERSION,
-        '%archive_file' => $file_system->basename($archive_file),
+        '%archive_file' => basename($archive_file),
         '%names' => implode(', ', $incompatible),
       ]);
     }

@@ -136,7 +136,7 @@ abstract class Updater {
       return FALSE;
     }
     foreach ($info_files as $info_file) {
-      if (mb_substr($info_file->filename, 0, -9) == $file_system->basename($directory)) {
+      if (mb_substr($info_file->filename, 0, -9) == basename($directory)) {
         // Info file Has the same name as the directory, return it.
         return $info_file->uri;
       }
@@ -181,7 +181,7 @@ abstract class Updater {
    *   The name of the project.
    */
   public static function getProjectName($directory) {
-    return \Drupal::service('file_system')->basename($directory);
+    return basename($directory);
   }
 
   /**

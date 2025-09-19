@@ -172,7 +172,7 @@ function update_manager_file_get($url) {
   // Check the cache and download the file if needed.
   // @phpstan-ignore function.deprecated
   $cache_directory = _update_manager_cache_directory();
-  $local = $cache_directory . '/' . \Drupal::service('file_system')->basename($parsed_url['path']);
+  $local = $cache_directory . '/' . basename($parsed_url['path']);
 
   // @phpstan-ignore function.deprecated
   if (!file_exists($local) || update_delete_file_if_stale($local)) {

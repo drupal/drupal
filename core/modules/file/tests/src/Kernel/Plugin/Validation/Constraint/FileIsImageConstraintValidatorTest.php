@@ -38,13 +38,11 @@ class FileIsImageConstraintValidatorTest extends FileValidatorTestBase {
 
     $this->image = File::create();
     $this->image->setFileUri('core/misc/druplicon.png');
-    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = \Drupal::service('file_system');
-    $this->image->setFilename($file_system->basename($this->image->getFileUri()));
+    $this->image->setFilename(basename($this->image->getFileUri()));
 
     $this->nonImage = File::create();
     $this->nonImage->setFileUri('core/assets/vendor/jquery/jquery.min.js');
-    $this->nonImage->setFilename($file_system->basename($this->nonImage->getFileUri()));
+    $this->nonImage->setFilename(basename($this->nonImage->getFileUri()));
   }
 
   /**

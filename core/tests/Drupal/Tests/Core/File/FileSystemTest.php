@@ -13,6 +13,7 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\Core\File\FileSystem.
@@ -117,8 +118,10 @@ class FileSystemTest extends UnitTestCase {
    *
    * @legacy-covers ::basename
    */
+  #[IgnoreDeprecations]
   #[DataProvider('providerTestBasename')]
   public function testBasename($uri, $expected, $suffix = NULL): void {
+    $this->expectDeprecation("Calling FileSystem::basename() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use PHP native basename() instead. See https://www.drupal.org/node/3530869");
     $this->assertSame($expected, $this->fileSystem->basename($uri, $suffix));
   }
 

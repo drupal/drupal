@@ -386,7 +386,7 @@ class ImageItem extends FileItem {
         $image->setOwnerId(\Drupal::currentUser()->id());
         $guesser = \Drupal::service('file.mime_type.guesser');
         $image->setMimeType($guesser->guessMimeType($path));
-        $image->setFileName($file_system->basename($path));
+        $image->setFileName(basename($path));
         $destination_dir = static::doGetUploadLocation($settings);
         $file_system->prepareDirectory($destination_dir, FileSystemInterface::CREATE_DIRECTORY);
         // Ensure directory ends with a slash.
