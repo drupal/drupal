@@ -44,9 +44,6 @@ class ContextualFilterTest extends WebDriverTestBase {
 
     ViewTestData::createTestViews(static::class, ['views_test_config']);
 
-    // Always show advanced column.
-    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.advanced_column', TRUE)->save();
-
     // Disable automatic live preview to make the sequence of calls clearer. And
     // prevent errors on saving the view with the preview ajax load that are
     // cancelled.
