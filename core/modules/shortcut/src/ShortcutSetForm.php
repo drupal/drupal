@@ -28,6 +28,7 @@ class ShortcutSetForm extends BundleEntityFormBase {
     ];
     $form['id'] = [
       '#type' => 'machine_name',
+      '#description' => $this->t('A unique machine-readable name. Can only contain lowercase letters, numbers, and hyphens.'),
       '#machine_name' => [
         'exists' => '\Drupal\shortcut\Entity\ShortcutSet::load',
         'source' => ['label'],
