@@ -36,6 +36,8 @@ class ShortcutSetsTest extends ShortcutTestBase {
    * Tests creating a shortcut set.
    */
   public function testShortcutSetAdd(): void {
+    $set_storage = $this->container->get('entity_type.manager')->getStorage('shortcut_set');
+
     $this->drupalGet('admin/config/user-interface/shortcut');
     $this->clickLink('Add shortcut set');
     $edit = [
@@ -43,12 +45,38 @@ class ShortcutSetsTest extends ShortcutTestBase {
       'id' => $this->randomMachineName(),
     ];
     $this->submitForm($edit, 'Save');
-    $new_set = $this->container->get('entity_type.manager')->getStorage('shortcut_set')->load($edit['id']);
+    $new_set = $set_storage->load($edit['id']);
     $this->assertSame($edit['id'], $new_set->id(), 'Successfully created a shortcut set.');
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
     // Verify that generated shortcut set was listed as a choice on the user
     // account page.
     $this->assertSession()->pageTextContains($new_set->label());
+
+    // Verify that hyphens are allowed characters in machine names and that the
+    // machine name element description reflects this unique naming scheme.
+    $this->drupalGet('admin/config/user-interface/shortcut/add-set');
+    $this->assertSession()->pageTextContains('A unique machine-readable name. Can only contain lowercase letters, numbers, and hyphens.');
+    $expected_id2 = 'id-with-hyphens';
+    $edit2 = [
+      'label' => 'Hyphenated machine name',
+      'id' => $expected_id2,
+    ];
+    $this->submitForm($edit2, 'Save');
+    $new_set2 = $set_storage->load($expected_id2);
+    $this->assertEquals($expected_id2, $new_set2->id());
+
+    // Verify that underscores are disallowed characters in machine names.
+    $this->drupalGet('admin/config/user-interface/shortcut/add-set');
+    $expected_id3 = 'id_with_underscores';
+    $edit3 = [
+      'label' => 'Underscored machine name',
+      'id' => $expected_id3,
+    ];
+    $this->submitForm($edit3, 'Save');
+    $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and hyphens.');
+
+    // Verify that no data was saved, since validation failed.
+    $this->assertNull($set_storage->load($expected_id3));
   }
 
   /**

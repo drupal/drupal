@@ -39,7 +39,8 @@ use Drupal\Core\Render\Attribute\FormElement;
  *     name').
  *   - replace_pattern: (optional) A regular expression (without delimiters)
  *     matching disallowed characters in the machine name. Defaults to
- *     '[^a-z0-9_]+'.
+ *     '[^a-z0-9_]+'. If a different replace_pattern is used, the machine
+ *      name element's '#description' should be updated accordingly.
  *   - replace: (optional) A character to replace disallowed characters in the
  *     machine name via JavaScript. Defaults to '_' (underscore). When using a
  *     different character, 'replace_pattern' needs to be set accordingly.
