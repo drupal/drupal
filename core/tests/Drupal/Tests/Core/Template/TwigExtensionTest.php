@@ -25,7 +25,6 @@ use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Node\Expression\FilterExpression;
-use Twig\Markup as TwigMarkup;
 use Twig\Source;
 
 /**
@@ -240,9 +239,8 @@ class TwigExtensionTest extends UnitTestCase {
     // to a string, but without any sanitization.
     $html = '<div>Some text</div>';
     $markup_object = Markup::create($html);
-    $twig_markup = new TwigMarkup($markup_object, $twig->getCharset());
 
-    $this->assertSame(serialize($twig_markup), serialize($this->systemUnderTest->escapeFilter($twig, $markup_object, 'html', 'UTF-8', TRUE)));
+    $this->assertSame($html, $this->systemUnderTest->escapeFilter($twig, $markup_object, 'html', 'UTF-8', TRUE));
 
     // Ensure objects that do not implement MarkupInterface are escaped.
     $string_object = new TwigExtensionTestString("<script>alert('here');</script>");

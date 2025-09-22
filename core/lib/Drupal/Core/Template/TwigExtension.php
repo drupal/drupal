@@ -443,7 +443,7 @@ class TwigExtension extends AbstractExtension {
     // that when Twig renders via yield, later manipulations to the object will
     // not affect rendering.
     if ($autoescape && ($arg instanceof MarkupInterface)) {
-      return new TwigMarkup($arg, $env->getCharset());
+      return (string) $arg;
     }
 
     // Keep \Twig\Markup objects intact to support autoescaping.
@@ -477,10 +477,10 @@ class TwigExtension extends AbstractExtension {
     // We have a string or an object converted to a string: Autoescape it!
     if (isset($return)) {
       if ($autoescape && $return instanceof MarkupInterface) {
-        // Convert MarkupInterface objects to TwigMarkup objects to ensure
-        // that when Twig renders via yield, later manipulations to the object
-        // will not affect rendering.
-        return new TwigMarkup($return, $env->getCharset());
+        // Immediately cast and return MarkupInterface objects to a string to
+        // ensure that when Twig renders via yield, later manipulations to the
+        // object will not affect rendering.
+        return (string) $return;
       }
       // Drupal only supports the HTML escaping strategy, so provide a
       // fallback for other strategies.
