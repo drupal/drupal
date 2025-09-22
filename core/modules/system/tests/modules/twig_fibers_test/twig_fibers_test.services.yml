@@ -1,0 +1,5 @@
+services:
+  twig_fibers_test.twig_extension:
+    class: Drupal\twig_fibers_test\TwigExtension\FibersTestExtension
+    tags:
+      - { name: twig.extension }

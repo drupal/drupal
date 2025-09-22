@@ -24,6 +24,7 @@ parameters:
     debug: false
     auto_reload: null
     cache: true
+    use_yield: true
     allowed_file_extensions:
       - css
       - html

@@ -75,6 +75,7 @@ class TwigEnvironment extends Environment {
       'cache' => TRUE,
       'debug' => FALSE,
       'auto_reload' => NULL,
+      'use_yield' => TRUE,
     ];
     // Ensure autoescaping is always on.
     $options['autoescape'] = 'html';
