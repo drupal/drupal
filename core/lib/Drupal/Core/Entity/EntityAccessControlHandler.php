@@ -373,6 +373,9 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
   /**
    * Default field access as determined by this access control handler.
    *
+   * Most fields return AccessResultAllowed by default. It is recommended to use
+   * it in conjunction with entity access conditions for robust access control.
+   *
    * @param string $operation
    *   The operation access should be checked for.
    *   Usually one of "view" or "edit".
