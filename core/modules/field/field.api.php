@@ -441,6 +441,10 @@ function hook_field_purge_field(FieldConfig $field) {
 }
 
 /**
+ * @} End of "addtogroup field_purge".
+ */
+
+/**
  * Allows modules to alter the field type category information.
  *
  * This hook provides a way for modules to modify or add to the existing
@@ -464,10 +468,6 @@ function hook_field_type_category_info_alter(array &$categories) {
   // Modify the properties of an existing category.
   $categories['text']['description'] = 'Modified Text';
 }
-
-/**
- * @} End of "addtogroup field_purge".
- */
 
 /**
  * @} End of "addtogroup hooks".
