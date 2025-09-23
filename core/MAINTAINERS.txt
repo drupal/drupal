@@ -91,7 +91,7 @@ Base system
 - See "Framework managers" above.
 
 Basic Auth
-- ?
+- 'codebymikey' https://www.drupal.org/u/codebymikey
 
 Batch API
 - John Cook 'John Cook' https://www.drupal.org/u/john-cook
