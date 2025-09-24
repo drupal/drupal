@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API resource tests.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class JsonApiRelationshipTest extends JsonApiFunctionalTestBase {
 
   /**

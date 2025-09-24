@@ -7,6 +7,7 @@ namespace Drupal\Tests\navigation\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests performance with the navigation toolbar enabled.
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 #[Group('Common')]
 #[Group('#slow')]
 #[RequiresPhpExtension('apcu')]
+#[RunTestsInSeparateProcesses]
 class PerformanceTest extends PerformanceTestBase {
 
   /**

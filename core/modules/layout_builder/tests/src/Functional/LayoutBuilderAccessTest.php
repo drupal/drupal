@@ -8,11 +8,13 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests access to Layout Builder.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderAccessTest extends BrowserTestBase {
 
   /**

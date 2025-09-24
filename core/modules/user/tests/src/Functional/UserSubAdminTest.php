@@ -6,11 +6,13 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test 'sub-admin' account with permission to edit some users but without 'administer users' permission.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserSubAdminTest extends BrowserTestBase {
 
   /**

@@ -14,6 +14,7 @@ use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -21,6 +22,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  */
 #[Group('demo_umami')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class DemoUmamiProfileTest extends BrowserTestBase {
   use AssertConfigTrait;
   use SchemaCheckTestTrait;

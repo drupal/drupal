@@ -9,12 +9,14 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\standard\Functional\StandardTest;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Standard recipe installation expectations.
  */
 #[Group('#slow')]
 #[Group('Recipe')]
+#[RunTestsInSeparateProcesses]
 class StandardRecipeTest extends StandardTest {
 
   use RecipeTestTrait;

@@ -6,12 +6,14 @@ namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore ȅchȏ foobarbaz meΦω
 /**
  * Tests incoming path case insensitivity.
  */
 #[Group('routing')]
+#[RunTestsInSeparateProcesses]
 class CaseInsensitivePathTest extends BrowserTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file media source.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaSourceFileTest extends MediaFunctionalTestBase {
 
   /**

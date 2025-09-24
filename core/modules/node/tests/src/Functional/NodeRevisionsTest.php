@@ -12,11 +12,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests per-content-type node CRUD operation permissions.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeRevisionsTest extends NodeTestBase {
 
   /**

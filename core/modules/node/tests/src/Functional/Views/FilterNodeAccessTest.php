@@ -7,6 +7,7 @@ namespace Drupal\Tests\node\Functional\Views;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node_access filter handler.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\node\Plugin\views\filter\Access
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class FilterNodeAccessTest extends NodeTestBase {
 
   use NodeAccessTrait;

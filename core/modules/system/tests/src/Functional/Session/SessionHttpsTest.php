@@ -9,6 +9,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\BrowserTestBase;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Ensure that when running under HTTPS two session cookies are generated.
  */
 #[Group('Session')]
+#[RunTestsInSeparateProcesses]
 class SessionHttpsTest extends BrowserTestBase {
 
   /**

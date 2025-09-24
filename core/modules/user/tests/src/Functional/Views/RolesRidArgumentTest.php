@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional\Views;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the handler of the user: roles argument.
@@ -12,6 +13,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\user\Plugin\views\argument\RolesRid
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class RolesRidArgumentTest extends UserTestBase {
 
   /**

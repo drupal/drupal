@@ -6,11 +6,13 @@ namespace Drupal\Tests\menu_ui\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Reorder menu items.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkReorderTest extends BrowserTestBase {
 
   /**

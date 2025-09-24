@@ -7,12 +7,14 @@ namespace Drupal\Tests\views\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Views configuration updates.
  */
 #[Group('Update')]
 #[CoversFunction('views_update_11201')]
+#[RunTestsInSeparateProcesses]
 class ConfigUpdateTest extends UpdatePathTestBase {
 
   /**

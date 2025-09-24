@@ -6,11 +6,13 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests concurrent edits in different workspaces.
  */
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceConcurrentEditingTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;

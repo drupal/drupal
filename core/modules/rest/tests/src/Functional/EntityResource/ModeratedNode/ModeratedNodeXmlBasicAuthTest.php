@@ -7,11 +7,13 @@ namespace Drupal\Tests\rest\Functional\EntityResource\ModeratedNode;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Moderated Node Xml Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ModeratedNodeXmlBasicAuthTest extends ModeratedNodeResourceTestBase {
 
   use BasicAuthResourceTestTrait;

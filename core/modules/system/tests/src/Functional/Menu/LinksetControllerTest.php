@@ -11,6 +11,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the behavior of the linkset controller.
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00
  */
 #[Group('decoupled_menus')]
+#[RunTestsInSeparateProcesses]
 final class LinksetControllerTest extends LinksetControllerTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Logger\RfcLogLevel;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies that installing from existing configuration works.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerExistingConfigMultilingualTest extends InstallerConfigDirectoryTestBase {
 
   /**

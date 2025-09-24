@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests users' ability to change their own administration language.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserAdminLanguageTest extends BrowserTestBase {
 
   /**

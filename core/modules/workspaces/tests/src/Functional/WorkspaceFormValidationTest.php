@@ -6,11 +6,13 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Workspaces form validation.
  */
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceFormValidationTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;

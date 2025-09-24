@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\FunctionalJavascript;
 
 use Drupal\Core\Url;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the widget visibility settings for the Claro theme.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see _claro_preprocess_file_and_image_widget()
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileFieldWidgetClaroThemeTest extends FileFieldWidgetTest {
 
   /**

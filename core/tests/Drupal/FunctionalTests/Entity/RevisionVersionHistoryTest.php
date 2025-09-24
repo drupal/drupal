@@ -10,6 +10,7 @@ use Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests version history page.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(VersionHistoryController::class)]
 #[Group('Entity')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**

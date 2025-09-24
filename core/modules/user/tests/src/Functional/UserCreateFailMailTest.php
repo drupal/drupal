@@ -6,11 +6,13 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the create user administration page.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserCreateFailMailTest extends BrowserTestBase {
 
   /**

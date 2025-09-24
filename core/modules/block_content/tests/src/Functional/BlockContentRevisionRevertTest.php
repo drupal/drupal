@@ -7,12 +7,14 @@ namespace Drupal\Tests\block_content\Functional;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Block content revision form test.
  */
 #[CoversClass(RevisionRevertForm::class)]
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentRevisionRevertTest extends BlockContentTestBase {
 
   /**

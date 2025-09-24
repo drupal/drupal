@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file uploading functions.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class RemoteFileSaveUploadTest extends SaveUploadTest {
 
   /**

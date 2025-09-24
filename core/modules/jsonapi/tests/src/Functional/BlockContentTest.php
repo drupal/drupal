@@ -12,11 +12,13 @@ use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "BlockContent" content entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class BlockContentTest extends ResourceTestBase {
 
   use BlockContentCreationTrait;

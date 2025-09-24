@@ -8,12 +8,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests path aliases with Content Moderation.
  */
 #[Group('content_moderation')]
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class PathContentModerationTest extends BrowserTestBase {
 
   use ContentModerationTestTrait;

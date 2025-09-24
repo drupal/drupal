@@ -7,11 +7,13 @@ namespace Drupal\Tests\block\Functional;
 use Drupal\block\Entity\Block;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that blocks assigned to invalid regions are disabled with a warning.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockInvalidRegionTest extends BrowserTestBase {
 
   /**

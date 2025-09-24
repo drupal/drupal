@@ -6,11 +6,13 @@ namespace Drupal\Tests\path\Functional;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests URL aliases for taxonomy terms.
  */
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class PathTaxonomyTermTest extends PathTestBase {
 
   /**

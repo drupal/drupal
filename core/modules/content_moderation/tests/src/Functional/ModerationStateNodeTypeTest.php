@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_moderation\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests moderation state node type integration.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ModerationStateNodeTypeTest extends ModerationStateTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation functions such as min/max dimensions.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageFieldValidateTest extends ImageFieldTestBase {
 
   use TestFileCreationTrait {

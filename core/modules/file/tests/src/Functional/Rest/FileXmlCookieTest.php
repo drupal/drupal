@@ -7,11 +7,13 @@ namespace Drupal\Tests\file\Functional\Rest;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests File Xml Cookie.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class FileXmlCookieTest extends FileResourceTestBase {
 
   use CookieResourceTestTrait;

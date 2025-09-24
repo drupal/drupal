@@ -10,12 +10,14 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Tests the 'new' indicator posted on comments.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentNewIndicatorTest extends CommentTestBase {
 
   /**

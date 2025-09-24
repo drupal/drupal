@@ -9,11 +9,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests uploading a file that exceeds the maximum file size.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
 
   use FileFieldCreationTrait;

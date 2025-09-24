@@ -6,11 +6,13 @@ namespace Drupal\Tests\workflows\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Workflow Json Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class WorkflowJsonAnonTest extends WorkflowResourceTestBase {
 
   use AnonResourceTestTrait;

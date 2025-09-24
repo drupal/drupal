@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Theme;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests low-level theme functions.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ThemeUpdateTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

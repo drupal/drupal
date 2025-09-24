@@ -11,12 +11,14 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\field\Entity\FieldConfig;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Field UI "Manage fields" screen.
  */
 #[Group('field_ui')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
 
   /**

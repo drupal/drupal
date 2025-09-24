@@ -7,6 +7,7 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\file\Entity\File;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the 'managed_file' element type.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  *   that aren't related to fields into it.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileManagedFileElementTest extends FileFieldTestBase {
 
   /**

@@ -10,11 +10,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the replacement of user tokens.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserTokenReplaceTest extends BrowserTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests functionality of \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class RebuildTest extends BrowserTestBase {
 
   /**

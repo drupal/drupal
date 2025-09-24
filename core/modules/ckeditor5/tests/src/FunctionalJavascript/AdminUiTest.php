@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore sourceediting xmlhttprequest
 /**
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class AdminUiTest extends CKEditor5TestBase {
 
   /**

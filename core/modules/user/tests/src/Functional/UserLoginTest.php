@@ -10,11 +10,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensure that login works as expected.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserLoginTest extends BrowserTestBase {
 
   use AssertMailTrait {

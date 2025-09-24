@@ -7,6 +7,7 @@ namespace Drupal\Tests\search\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verify the search without keywords set and extra conditions.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * available to plugins during search execution.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchKeywordsConditionsTest extends BrowserTestBase {
 
   /**

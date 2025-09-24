@@ -6,11 +6,13 @@ namespace Drupal\Tests\path\Functional;
 
 use Drupal\media\Entity\MediaType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the path media form UI.
  */
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class PathMediaFormTest extends PathTestBase {
 
   /**

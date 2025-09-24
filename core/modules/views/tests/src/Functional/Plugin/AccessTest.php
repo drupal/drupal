@@ -8,6 +8,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests pluggable access for views.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  *   and the two generic ones.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class AccessTest extends ViewTestBase {
 
   /**

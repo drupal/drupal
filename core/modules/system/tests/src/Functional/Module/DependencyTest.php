@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Module;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Unicode;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Enable module without dependency enabled.
  */
 #[Group('Module')]
+#[RunTestsInSeparateProcesses]
 class DependencyTest extends ModuleTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Entity View Display Json Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class EntityViewDisplayJsonBasicAuthTest extends EntityViewDisplayResourceTestBase {
 
   use BasicAuthResourceTestTrait;

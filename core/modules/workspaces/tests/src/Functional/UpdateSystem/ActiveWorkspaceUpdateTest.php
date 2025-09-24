@@ -9,12 +9,14 @@ use Drupal\Tests\UpdatePathTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that there is no active workspace during database updates.
  */
 #[Group('workspaces')]
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class ActiveWorkspaceUpdateTest extends BrowserTestBase {
 
   use UpdatePathTestTrait;

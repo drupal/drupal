@@ -9,11 +9,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\EntityOperations handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FieldEntityOperationsTest extends ViewTestBase {
 
   /**

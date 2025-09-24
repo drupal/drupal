@@ -9,12 +9,14 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore destid
 /**
  * Tests the 'download' process plugin.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class DownloadFunctionalTest extends BrowserTestBase {
 
   /**

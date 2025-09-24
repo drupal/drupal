@@ -8,12 +8,14 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the inline block feature works correctly.
  */
 #[Group('layout_builder')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class InlineBlockTest extends InlineBlockTestBase {
 
   /**

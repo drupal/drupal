@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Hook;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests services in .module files.
  */
 #[Group('Hook')]
+#[RunTestsInSeparateProcesses]
 class HookCollectorPassTest extends BrowserTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\filter\Plugin\FilterInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests HTML filtering with missing or skipped filters or text formats.
  */
 #[Group('filter')]
+#[RunTestsInSeparateProcesses]
 class FilterSecurityTest extends BrowserTestBase {
 
   /**

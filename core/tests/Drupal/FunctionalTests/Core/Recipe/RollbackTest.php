@@ -9,12 +9,14 @@ use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests Rollback.
  */
 #[Group('Recipe')]
+#[RunTestsInSeparateProcesses]
 class RollbackTest extends BrowserTestBase {
 
   use RecipeTestTrait;

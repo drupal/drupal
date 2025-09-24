@@ -8,12 +8,14 @@ use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Database\Database;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore testblock
 /**
  * Create a block and test saving it.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentCreationTest extends BlockContentTestBase {
 
   /**

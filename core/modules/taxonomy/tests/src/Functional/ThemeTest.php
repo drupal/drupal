@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies that various taxonomy pages use the expected theme.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class ThemeTest extends TaxonomyTestBase {
 
   /**

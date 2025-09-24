@@ -6,11 +6,13 @@ namespace Drupal\Tests\big_pipe\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests placeholder preview functionality.
  */
 #[Group('big_pipe')]
+#[RunTestsInSeparateProcesses]
 class BigPipePreviewTest extends WebDriverTestBase {
 
   /**

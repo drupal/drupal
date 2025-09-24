@@ -13,12 +13,14 @@ use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Media Thumbnail Formatter.
  */
 #[Group('media')]
 #[CoversClass(MediaThumbnailFormatter::class)]
+#[RunTestsInSeparateProcesses]
 class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
 
   use TestFileCreationTrait;

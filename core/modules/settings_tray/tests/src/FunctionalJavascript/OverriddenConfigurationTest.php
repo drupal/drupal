@@ -8,11 +8,13 @@ use Drupal\block\Entity\Block;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handling of configuration overrides.
  */
 #[Group('settings_tray')]
+#[RunTestsInSeparateProcesses]
 class OverriddenConfigurationTest extends SettingsTrayTestBase {
 
   /**

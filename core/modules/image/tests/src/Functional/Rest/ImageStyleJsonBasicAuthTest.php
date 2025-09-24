@@ -6,11 +6,13 @@ namespace Drupal\Tests\image\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Image Style Json Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ImageStyleJsonBasicAuthTest extends ImageStyleResourceTestBase {
 
   use BasicAuthResourceTestTrait;

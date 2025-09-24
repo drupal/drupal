@@ -8,6 +8,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests general filter plugin functionality.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\filter\FilterPluginBase
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FilterTest extends ViewTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\block\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JS functionality in the block add form.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockAddTest extends WebDriverTestBase {
 
   /**

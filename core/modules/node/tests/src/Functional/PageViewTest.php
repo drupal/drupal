@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Create a node and test edit permissions.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class PageViewTest extends NodeTestBase {
 
   /**

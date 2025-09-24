@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Functional;
 
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests render caching of blocks provided by views.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class RenderCacheWebTest extends ViewTestBase {
 
   /**

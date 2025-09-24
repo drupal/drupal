@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the form API checkbox element.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Various combinations of #default_value and #return_value are used.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class CheckboxTest extends BrowserTestBase {
 
   /**

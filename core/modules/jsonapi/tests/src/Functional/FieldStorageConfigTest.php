@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\jsonapi\JsonApiSpec;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "FieldStorageConfig" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class FieldStorageConfigTest extends ConfigEntityResourceTestBase {
 
   /**

@@ -13,6 +13,7 @@ use Drupal\filter\Entity\FilterFormat;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore gramma sourceediting
@@ -25,6 +26,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 #[Group('ckeditor5')]
 #[CoversClass(SourceEditing::class)]
 #[CoversMethod(CKEditor5PluginManager::class, 'getCKEditor5PluginConfig')]
+#[RunTestsInSeparateProcesses]
 class SourceEditingTest extends SourceEditingTestBase {
 
   /**

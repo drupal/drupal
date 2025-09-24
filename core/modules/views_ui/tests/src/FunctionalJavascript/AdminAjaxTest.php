@@ -6,11 +6,13 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the admin UI AJAX interactions.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class AdminAjaxTest extends WebDriverTestBase {
 
   /**

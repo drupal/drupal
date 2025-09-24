@@ -12,11 +12,13 @@ use Drupal\entity_test\EntityTestTypesFilter;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity form.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityFormTest extends BrowserTestBase {
 
   /**

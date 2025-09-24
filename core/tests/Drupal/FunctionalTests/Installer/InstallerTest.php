@@ -9,12 +9,14 @@ use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Test\PerformanceTestRecorder;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore drupalmysqldriverdatabasemysql drupalpgsqldriverdatabasepgsql
 /**
  * Tests the interactive installer.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerTest extends InstallerTestBase {
 
   /**

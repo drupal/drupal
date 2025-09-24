@@ -16,6 +16,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests BigPipe's no-JS detection & response delivery (with and without JS).
@@ -27,6 +28,7 @@ use PHPUnit\Framework\Attributes\Group;
  * - \Drupal\big_pipe\Render\BigPipe.
  */
 #[Group('big_pipe')]
+#[RunTestsInSeparateProcesses]
 class BigPipeTest extends BrowserTestBase {
 
   /**

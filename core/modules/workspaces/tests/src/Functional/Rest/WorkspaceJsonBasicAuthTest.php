@@ -6,11 +6,13 @@ namespace Drupal\Tests\workspaces\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test workspace entities for JSON requests via basic auth.
  */
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceJsonBasicAuthTest extends WorkspaceResourceTestBase {
 
   use BasicAuthResourceTestTrait;

@@ -9,11 +9,13 @@ use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the table style views plugin.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class StyleTableTest extends ViewTestBase {
 
   /**

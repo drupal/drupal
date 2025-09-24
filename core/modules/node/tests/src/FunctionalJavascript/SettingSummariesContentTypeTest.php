@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JavaScript updating of summaries on content type form.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class SettingSummariesContentTypeTest extends WebDriverTestBase {
 
   /**

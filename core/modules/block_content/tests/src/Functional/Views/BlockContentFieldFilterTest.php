@@ -7,11 +7,13 @@ namespace Drupal\Tests\block_content\Functional\Views;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests block_content field filters with translations.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentFieldFilterTest extends BlockContentTestBase {
 
   /**

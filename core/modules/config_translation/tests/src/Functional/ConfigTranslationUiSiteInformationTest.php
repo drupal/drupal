@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\config_translation\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore libellé
 /**
  * Translate site information to various languages.
  */
 #[Group('config_translation')]
+#[RunTestsInSeparateProcesses]
 class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase {
 
   /**

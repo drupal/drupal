@@ -8,11 +8,13 @@ use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests draggable table.
  */
 #[Group('javascript')]
+#[RunTestsInSeparateProcesses]
 class TableDragTest extends WebDriverTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Menu and Menu Link entities' cache tags.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuCacheTagsTest extends PageCacheTagsTestBase {
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentPreviewMode;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests to make sure the comment number increments properly.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentThreadingTest extends CommentTestBase {
 
   /**

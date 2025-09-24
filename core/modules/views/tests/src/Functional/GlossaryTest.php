@@ -10,11 +10,13 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Tests\AssertViewsCacheTagsTrait;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests glossary functionality of views.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class GlossaryTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

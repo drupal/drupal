@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Components;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the correct rendering of components.
  */
 #[Group('sdc')]
+#[RunTestsInSeparateProcesses]
 class ComponentRenderTest extends BrowserTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\FunctionalJavascriptTests\Core\Htmx;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that dynamic forms powered by HTMX work as expected.
  */
 #[Group('Htmx')]
+#[RunTestsInSeparateProcesses]
 class HtmxDynamicFormTest extends WebDriverTestBase {
 
   /**

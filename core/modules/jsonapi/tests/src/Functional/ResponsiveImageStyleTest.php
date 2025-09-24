@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "ResponsiveImageStyle" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class ResponsiveImageStyleTest extends ConfigEntityResourceTestBase {
 
   /**

@@ -6,12 +6,14 @@ namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JavaScript functionality of the module filter.
  */
 #[Group('system')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ModuleFilterTest extends WebDriverTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\block\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Block Json Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class BlockJsonBasicAuthTest extends BlockResourceTestBase {
 
   use BasicAuthResourceTestTrait;

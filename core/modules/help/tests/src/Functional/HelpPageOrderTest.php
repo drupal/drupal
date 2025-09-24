@@ -6,11 +6,13 @@ namespace Drupal\Tests\help\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verify the order of the help page.
  */
 #[Group('help')]
+#[RunTestsInSeparateProcesses]
 class HelpPageOrderTest extends BrowserTestBase {
 
   /**

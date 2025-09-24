@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests site-wide contact form functionality.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Tests\contact\Functional\ContactStorageTest
  */
 #[Group('contact')]
+#[RunTestsInSeparateProcesses]
 class ContactSitewideTest extends BrowserTestBase {
 
   use FieldUiTestTrait;

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests making taxonomy term base fields' displays configurable.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermDisplayConfigurableTest extends TaxonomyTestBase {
 
   /**

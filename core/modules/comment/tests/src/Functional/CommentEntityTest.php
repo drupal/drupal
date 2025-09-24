@@ -11,11 +11,13 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comments with other entities.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentEntityTest extends CommentTestBase {
 
   use TaxonomyTestTrait;

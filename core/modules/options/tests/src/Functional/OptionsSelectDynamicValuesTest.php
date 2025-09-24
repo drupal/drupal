@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\options\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests an options select with a dynamic allowed values function.
  */
 #[Group('options')]
+#[RunTestsInSeparateProcesses]
 class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTestBase {
 
   /**

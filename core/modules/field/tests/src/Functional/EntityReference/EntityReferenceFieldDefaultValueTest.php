@@ -10,11 +10,13 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity reference field default values storage in CMI.
  */
 #[Group('entity_reference')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
 
   use SchemaCheckTestTrait;

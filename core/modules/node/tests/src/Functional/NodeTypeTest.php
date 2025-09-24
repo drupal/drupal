@@ -10,11 +10,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that node type functions work correctly.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeTypeTest extends NodeTestBase {
 
   use AssertBreadcrumbTrait;

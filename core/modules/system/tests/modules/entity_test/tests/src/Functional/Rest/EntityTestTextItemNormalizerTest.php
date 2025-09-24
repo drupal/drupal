@@ -10,6 +10,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore cádiz
 
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('rest')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
 
   use AnonResourceTestTrait;

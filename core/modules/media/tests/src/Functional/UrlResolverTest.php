@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore dailymotion
 /**
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(UrlResolver::class)]
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class UrlResolverTest extends MediaFunctionalTestBase {
 
   use OEmbedTestTrait;

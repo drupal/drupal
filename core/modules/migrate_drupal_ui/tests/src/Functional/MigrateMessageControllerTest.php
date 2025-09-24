@@ -7,11 +7,13 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the MigrateController class.
  */
 #[Group('migrate_drupal_ui')]
+#[RunTestsInSeparateProcesses]
 class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
 
   /**

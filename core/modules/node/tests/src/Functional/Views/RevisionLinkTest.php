@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional\Views;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the different revision link handlers.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\node\Plugin\views\field\RevisionLinkRevert
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class RevisionLinkTest extends NodeTestBase {
 
   /**

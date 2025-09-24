@@ -7,11 +7,13 @@ namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
 use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the access announcement permissions to get access announcement icon.
  */
 #[Group('announcements_feed')]
+#[RunTestsInSeparateProcesses]
 class AccessAnnouncementTest extends OffCanvasTestBase {
 
   /**

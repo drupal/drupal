@@ -6,9 +6,11 @@ namespace Drupal\FunctionalTests\Recipe\Core\basic_block_type;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Generic.
  */
 #[Group('core_basic_block_type_recipe')]
+#[RunTestsInSeparateProcesses]
 class GenericTest extends GenericRecipeTestBase {}

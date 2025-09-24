@@ -12,11 +12,13 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\jsonapi\JsonApiSpec;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "Editor" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class EditorTest extends ConfigEntityResourceTestBase {
 
   /**

@@ -6,12 +6,14 @@ namespace Drupal\Tests\toolbar\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests that the active trail is maintained in the toolbar.
  */
 #[Group('toolbar')]
+#[RunTestsInSeparateProcesses]
 class ToolbarActiveTrailTest extends WebDriverTestBase {
 
   /**

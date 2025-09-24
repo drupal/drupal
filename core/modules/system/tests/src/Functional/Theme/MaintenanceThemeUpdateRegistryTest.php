@@ -8,11 +8,13 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures theme update functions are registered for maintenance themes.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
   use RequirementsPageTrait;
 

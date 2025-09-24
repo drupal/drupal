@@ -7,11 +7,13 @@ namespace Drupal\Tests\block\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests blocks are being rendered in order by weight.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockRenderOrderTest extends BrowserTestBase {
 
   /**

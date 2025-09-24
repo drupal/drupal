@@ -8,11 +8,13 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Url;
 use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the Layout Builder works with translated content.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
 
   /**

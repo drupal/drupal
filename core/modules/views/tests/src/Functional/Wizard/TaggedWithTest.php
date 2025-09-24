@@ -10,11 +10,13 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class TaggedWithTest extends WizardTestBase {
 
   use EntityReferenceFieldCreationTrait;

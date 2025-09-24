@@ -7,6 +7,7 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that uploads in the 'media_library_widget' works as expected.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  *   https://www.drupal.org/node/3066447 is addressed.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class WidgetUploadTest extends MediaLibraryTestBase {
 
   use TestFileCreationTrait;

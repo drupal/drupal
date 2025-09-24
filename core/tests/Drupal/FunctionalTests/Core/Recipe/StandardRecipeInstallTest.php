@@ -9,6 +9,7 @@ use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\standard\Traits\StandardTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
@@ -17,6 +18,7 @@ use Symfony\Component\Yaml\Yaml as SymfonyYaml;
  */
 #[Group('#slow')]
 #[Group('Recipe')]
+#[RunTestsInSeparateProcesses]
 class StandardRecipeInstallTest extends InstallerTestBase {
   use StandardTestTrait {
     testStandard as doTestStandard;

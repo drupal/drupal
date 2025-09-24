@@ -8,12 +8,14 @@ use Drupal\Core\Url;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests taxonomy terms with Content Moderation.
  */
 #[Group('content_moderation')]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyTermContentModerationTest extends TaxonomyTestBase {
 
   use ContentModerationTestTrait;

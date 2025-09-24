@@ -8,12 +8,14 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the machine name transliteration functionality.
  */
 #[Group('javascript')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class MachineNameTransliterationTest extends WebDriverTestBase {
 
   /**

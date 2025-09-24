@@ -13,6 +13,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the serializer style plugin.
@@ -23,6 +24,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\rest\Plugin\views\row\DataFieldRow
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class StyleSerializerTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

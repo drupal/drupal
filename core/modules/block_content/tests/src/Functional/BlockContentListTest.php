@@ -6,6 +6,7 @@ namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the listing of content blocks.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\block_content\Tests\BlockContentListViewsTest
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentListTest extends BlockContentTestBase {
 
   /**

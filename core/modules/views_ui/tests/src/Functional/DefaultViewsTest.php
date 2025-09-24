@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests enabling, disabling, and reverting default views via the listing page.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class DefaultViewsTest extends UITestBase {
 
   /**

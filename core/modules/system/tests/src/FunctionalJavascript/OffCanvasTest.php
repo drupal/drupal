@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\FunctionalJavascript;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the off-canvas dialog functionality.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class OffCanvasTest extends OffCanvasTestBase {
 
   /**

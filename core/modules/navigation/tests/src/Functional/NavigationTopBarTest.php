@@ -10,11 +10,13 @@ use Drupal\Core\Url;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the top bar functionality.
  */
 #[Group('navigation')]
+#[RunTestsInSeparateProcesses]
 class NavigationTopBarTest extends PageCacheTagsTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests breadcrumbs functionality.
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class LanguageBreadcrumbTest extends BrowserTestBase {
 
   use AssertBreadcrumbTrait;

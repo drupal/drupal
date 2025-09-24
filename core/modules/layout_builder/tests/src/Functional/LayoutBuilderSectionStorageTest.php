@@ -6,11 +6,13 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI aspects of section storage.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderSectionStorageTest extends BrowserTestBase {
 
   /**

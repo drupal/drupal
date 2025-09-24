@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Controller\UserAuthenticationController;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -21,6 +22,7 @@ use Symfony\Component\Serializer\Serializer;
  * Tests login and password reset via direct HTTP.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserLoginHttpTest extends BrowserTestBase {
 
   use AssertMailTrait {

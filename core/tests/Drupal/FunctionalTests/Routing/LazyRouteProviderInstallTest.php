@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Lazy Route Provider Install.
  */
 #[Group('routing')]
+#[RunTestsInSeparateProcesses]
 class LazyRouteProviderInstallTest extends BrowserTestBase {
 
   /**

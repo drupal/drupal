@@ -7,12 +7,14 @@ namespace Drupal\Tests\update\Functional;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\update\UpdateManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests how Update Status handles contributed modules and themes.
  */
 #[Group('update')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class UpdateContribTest extends UpdateTestBase {
   use UpdateTestTrait;
 

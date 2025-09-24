@@ -12,11 +12,13 @@ use Drupal\Tests\layout_builder\FunctionalJavascript\LayoutBuilderSortTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the navigation block UI exists and stores data correctly.
  */
 #[Group('navigation')]
+#[RunTestsInSeparateProcesses]
 class NavigationBlockUiTest extends WebDriverTestBase {
 
   use BlockCreationTrait;

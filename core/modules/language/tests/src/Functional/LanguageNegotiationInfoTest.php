@@ -8,11 +8,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests alterations to language types/negotiation info.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageNegotiationInfoTest extends BrowserTestBase {
 
   /**

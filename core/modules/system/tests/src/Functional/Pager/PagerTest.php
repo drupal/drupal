@@ -8,11 +8,13 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests pager functionality.
  */
 #[Group('Pager')]
+#[RunTestsInSeparateProcesses]
 class PagerTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

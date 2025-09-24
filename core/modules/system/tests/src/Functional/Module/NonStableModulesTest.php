@@ -8,12 +8,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the installation of deprecated and experimental modules.
  */
 #[Group('Module')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class NonStableModulesTest extends BrowserTestBase {
 
   /**

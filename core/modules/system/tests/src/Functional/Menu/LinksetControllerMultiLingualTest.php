@@ -12,6 +12,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the behavior of the linkset controller in multilingual setup.
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00
  */
 #[Group('decoupled_menus')]
+#[RunTestsInSeparateProcesses]
 final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase {
 
   /**

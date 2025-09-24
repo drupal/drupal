@@ -10,6 +10,7 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore português
 /**
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\display\Feed
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class DisplayFeedTranslationTest extends ViewTestBase {
 
   use ContentTranslationTestTrait;

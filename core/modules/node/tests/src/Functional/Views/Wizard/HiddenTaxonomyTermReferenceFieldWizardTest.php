@@ -9,12 +9,14 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node wizard and content type with hidden Taxonomy Term Reference field.
  */
 #[Group('Views')]
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class HiddenTaxonomyTermReferenceFieldWizardTest extends WizardTestBase {
 
   /**

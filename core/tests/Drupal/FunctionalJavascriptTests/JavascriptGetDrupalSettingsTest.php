@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal settings retrieval in WebDriverTestBase tests.
  */
 #[Group('javascript')]
+#[RunTestsInSeparateProcesses]
 class JavascriptGetDrupalSettingsTest extends WebDriverTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests adding, editing and deleting user roles and changing role weights.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserRoleAdminTest extends BrowserTestBase {
 
   /**

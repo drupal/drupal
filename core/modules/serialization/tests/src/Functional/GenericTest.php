@@ -6,9 +6,11 @@ namespace Drupal\Tests\serialization\Functional;
 
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Generic module test for serialization.
  */
 #[Group('serialization')]
+#[RunTestsInSeparateProcesses]
 class GenericTest extends GenericModuleTestBase {}

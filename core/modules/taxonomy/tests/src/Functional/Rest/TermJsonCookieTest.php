@@ -6,12 +6,14 @@ namespace Drupal\Tests\taxonomy\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Term Json Cookie.
  */
 #[Group('rest')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class TermJsonCookieTest extends TermResourceTestBase {
 
   use CookieResourceTestTrait;

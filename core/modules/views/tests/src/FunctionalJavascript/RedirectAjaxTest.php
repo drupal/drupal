@@ -8,11 +8,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the redirects work with Ajax enabled views.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class RedirectAjaxTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;

@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Menu Json Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class MenuJsonBasicAuthTest extends MenuResourceTestBase {
 
   use BasicAuthResourceTestTrait;

@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests forms using #config_target.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class ConfigTargetTest extends BrowserTestBase {
 
   /**

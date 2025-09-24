@@ -6,11 +6,13 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the search preprocessing uses the correct language code.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchPreprocessLangcodeTest extends BrowserTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block system with admin themes.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockAdminThemeTest extends BrowserTestBase {
 
   /**

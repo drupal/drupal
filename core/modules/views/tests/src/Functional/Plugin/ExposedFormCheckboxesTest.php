@@ -12,11 +12,13 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests exposed forms functionality.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ExposedFormCheckboxesTest extends ViewTestBase {
 
   use EntityReferenceFieldCreationTrait;

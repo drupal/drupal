@@ -10,11 +10,13 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests basic block functionality.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockTest extends BlockTestBase {
 
   /**

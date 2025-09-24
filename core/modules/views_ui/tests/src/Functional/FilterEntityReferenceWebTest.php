@@ -7,6 +7,7 @@ namespace Drupal\Tests\views_ui\Functional;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\views_ui\Traits\FilterEntityReferenceTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity reference filter UI.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\filter\EntityReference
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class FilterEntityReferenceWebTest extends UITestBase {
 
   use FilterEntityReferenceTrait;

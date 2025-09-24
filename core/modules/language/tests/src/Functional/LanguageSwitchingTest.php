@@ -11,12 +11,14 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore publi publié
 /**
  * Functional tests for the language switching feature.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageSwitchingTest extends BrowserTestBase {
 
   /**

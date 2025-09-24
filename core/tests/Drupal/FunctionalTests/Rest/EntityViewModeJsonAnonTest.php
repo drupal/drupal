@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Entity View Mode Json Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class EntityViewModeJsonAnonTest extends EntityViewModeResourceTestBase {
 
   use AnonResourceTestTrait;

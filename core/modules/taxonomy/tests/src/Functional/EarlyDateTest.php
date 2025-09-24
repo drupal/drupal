@@ -8,11 +8,13 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Posts an article with a taxonomy term and a date prior to 1970.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class EarlyDateTest extends TaxonomyTestBase {
 
   /**

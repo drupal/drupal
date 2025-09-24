@@ -6,11 +6,13 @@ namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the language settings on block config appears correctly.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
 
   /**

@@ -8,12 +8,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests path aliases with workspaces.
  */
 #[Group('path')]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class PathWorkspacesTest extends BrowserTestBase {
 
   use ContentTranslationTestTrait;

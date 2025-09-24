@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the language functionality for vocabularies.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class VocabularyLanguageTest extends TaxonomyTestBase {
 
   /**

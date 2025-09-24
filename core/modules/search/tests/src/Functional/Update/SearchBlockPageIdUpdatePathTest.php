@@ -7,11 +7,13 @@ namespace Drupal\Tests\search\Functional\Update;
 use Drupal\block\Entity\Block;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests update path for the search block's `page_id` setting from '' to NULL.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchBlockPageIdUpdatePathTest extends UpdatePathTestBase {
 
   /**

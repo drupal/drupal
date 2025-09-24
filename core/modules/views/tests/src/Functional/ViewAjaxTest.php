@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Functional;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ajax view functionality.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewAjaxTest extends ViewTestBase {
 
   /**

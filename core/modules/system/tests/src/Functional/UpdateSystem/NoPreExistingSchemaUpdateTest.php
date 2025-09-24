@@ -9,11 +9,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tries to update a module which has no pre-existing schema.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class NoPreExistingSchemaUpdateTest extends BrowserTestBase {
   use RequirementsPageTrait;
 

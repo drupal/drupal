@@ -10,6 +10,7 @@ use Drupal\Core\Recipe\RecipeCommand;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests recipe command.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(RecipeCommand::class)]
 #[Group('Recipe')]
+#[RunTestsInSeparateProcesses]
 class RecipeCommandTest extends BrowserTestBase {
 
   use RecipeTestTrait;

@@ -10,11 +10,13 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests cache tags on entity reference field blocks in Layout Builder.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderFieldBlockEntityReferenceCacheTagsTest extends BrowserTestBase {
 
   use ContentTypeCreationTrait;

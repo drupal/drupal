@@ -6,12 +6,14 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore nyan
 /**
  * Tests the multi theme engine support.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class EngineNyanCatTest extends BrowserTestBase {
 
   /**

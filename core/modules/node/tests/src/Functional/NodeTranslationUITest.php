@@ -18,11 +18,13 @@ use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Node Translation UI.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeTranslationUITest extends ContentTranslationUITestBase {
 
   use LanguageTestTrait;

@@ -9,6 +9,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore displaymessage scriptalertxsssubjectscript
 // cspell:ignore testcontextawareblock
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests that the block configuration UI exists and stores data correctly.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockUiTest extends BrowserTestBase {
 
   /**

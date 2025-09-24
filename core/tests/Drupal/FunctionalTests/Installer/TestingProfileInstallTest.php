@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installing the Testing profile with update notifications on.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class TestingProfileInstallTest extends BrowserTestBase {
 
   /**

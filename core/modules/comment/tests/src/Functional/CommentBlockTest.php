@@ -6,11 +6,13 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment block functionality.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentBlockTest extends CommentTestBase {
 
   /**

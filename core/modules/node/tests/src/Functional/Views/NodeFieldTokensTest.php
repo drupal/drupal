@@ -6,6 +6,7 @@ namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests replacement of Views tokens supplied by the Node module.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\node\Tests\NodeTokenReplaceTest
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeFieldTokensTest extends NodeTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests multilingual support for content types and individual nodes.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleContentTest extends BrowserTestBase {
 
   /**

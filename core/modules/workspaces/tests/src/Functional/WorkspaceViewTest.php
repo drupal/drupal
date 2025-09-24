@@ -7,11 +7,13 @@ namespace Drupal\Tests\workspaces\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\workspaces\Entity\Workspace;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests permission controls on workspaces.
  */
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceViewTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;

@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Menu;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that menu links don't cause XSS issues.
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkSecurityTest extends BrowserTestBase {
 
   /**

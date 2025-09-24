@@ -6,12 +6,14 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore arrr
 /**
  * Tests the user interface for importing/exporting transformed configuration.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class TransformedConfigExportImportUITest extends BrowserTestBase {
 
   /**

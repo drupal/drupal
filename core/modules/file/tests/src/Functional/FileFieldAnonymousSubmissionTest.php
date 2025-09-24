@@ -8,11 +8,13 @@ use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Confirm that file field submissions work correctly for anonymous visitors.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
 
   /**

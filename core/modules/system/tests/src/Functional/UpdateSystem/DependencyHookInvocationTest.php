@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the hook invocation for determining update dependencies.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class DependencyHookInvocationTest extends BrowserTestBase {
 
   /**

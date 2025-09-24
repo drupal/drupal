@@ -13,11 +13,13 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Shortcut entity's cache tags.
  */
 #[Group('shortcut')]
+#[RunTestsInSeparateProcesses]
 class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 

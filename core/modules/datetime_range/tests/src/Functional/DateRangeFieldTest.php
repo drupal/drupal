@@ -15,11 +15,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\datetime\Functional\DateTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Daterange field functionality.
  */
 #[Group('datetime')]
+#[RunTestsInSeparateProcesses]
 class DateRangeFieldTest extends DateTestBase {
 
   /**

@@ -7,6 +7,7 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore คำพูดบล็อก sourceediting
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class LanguageTest extends CKEditor5TestBase {
 
   /**

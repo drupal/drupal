@@ -6,11 +6,13 @@ namespace Drupal\Tests\config_test\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ConfigTest Json Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ConfigTestJsonAnonTest extends ConfigTestResourceTestBase {
 
   use AnonResourceTestTrait;

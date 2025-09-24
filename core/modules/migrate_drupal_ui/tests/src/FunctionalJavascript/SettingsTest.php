@@ -7,12 +7,14 @@ namespace Drupal\Tests\migrate_drupal_ui\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore drupalmysqldriverdatabasemysql
 /**
  * Tests migrate upgrade credential form with settings in settings.php.
  */
 #[Group('migrate_drupal_ui')]
+#[RunTestsInSeparateProcesses]
 class SettingsTest extends WebDriverTestBase {
 
   /**

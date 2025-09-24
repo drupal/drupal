@@ -11,11 +11,13 @@ use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests whether canonical link tags are present for content entities.
  */
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationLinkTagTest extends BrowserTestBase {
 
   /**

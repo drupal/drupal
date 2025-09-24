@@ -13,11 +13,13 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the structure of a REST resource.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ResourceTest extends BrowserTestBase {
 
   /**

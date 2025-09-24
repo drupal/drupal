@@ -9,11 +9,13 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Url;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "Comment" content entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class CommentExtrasTest extends CommentTest {
 
   /**

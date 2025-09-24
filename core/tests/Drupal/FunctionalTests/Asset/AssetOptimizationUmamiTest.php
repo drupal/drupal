@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Asset;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests asset aggregation with the Umami install profile.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('asset')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class AssetOptimizationUmamiTest extends AssetOptimizationTest {
 
   /**

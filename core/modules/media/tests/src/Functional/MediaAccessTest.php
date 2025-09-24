@@ -11,11 +11,13 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Basic access tests for Media.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaAccessTest extends MediaFunctionalTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

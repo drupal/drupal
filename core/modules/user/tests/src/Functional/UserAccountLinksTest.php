@@ -6,11 +6,13 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests user-account links.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserAccountLinksTest extends BrowserTestBase {
 
   /**

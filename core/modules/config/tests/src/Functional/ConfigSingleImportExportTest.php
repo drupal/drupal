@@ -7,11 +7,13 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the user interface for importing/exporting a single configuration.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigSingleImportExportTest extends BrowserTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the User Translation UI.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserTranslationUITest extends ContentTranslationUITestBase {
 
   /**

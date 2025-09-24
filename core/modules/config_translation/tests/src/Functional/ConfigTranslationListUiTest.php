@@ -14,6 +14,7 @@ use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Visit all lists.
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\config_translation\Tests\ConfigTranslationViewListUiTest
  */
 #[Group('config_translation')]
+#[RunTestsInSeparateProcesses]
 class ConfigTranslationListUiTest extends BrowserTestBase {
 
   /**

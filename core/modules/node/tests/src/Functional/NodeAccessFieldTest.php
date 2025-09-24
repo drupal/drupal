@@ -7,11 +7,13 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the interaction of the node access system with fields.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessFieldTest extends NodeTestBase {
 
   /**

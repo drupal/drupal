@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the addition of the default table style `class` setting.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  */
 #[Group('Update')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class ViewsAddDefaultTableCssClassUpdateTest extends UpdatePathTestBase {
 
   /**

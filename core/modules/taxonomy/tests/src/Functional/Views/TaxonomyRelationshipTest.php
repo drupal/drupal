@@ -8,11 +8,13 @@ use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests taxonomy relationships with parent term and node.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyRelationshipTest extends TaxonomyTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Node Json Cookie.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class NodeJsonCookieTest extends NodeResourceTestBase {
 
   use CookieResourceTestTrait;

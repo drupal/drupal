@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Installs Drupal in German and checks resulting site.
@@ -12,6 +13,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\FunctionalTests\Installer\InstallerTranslationTest
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerTranslationQueryTest extends InstallerTestBase {
 
   /**

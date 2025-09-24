@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Media Library's integration with Views UI.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class ViewsUiIntegrationTest extends MediaLibraryTestBase {
 
   /**

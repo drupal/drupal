@@ -10,11 +10,13 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests results for the Recent Comments view shipped with the module.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class DefaultViewRecentCommentsTest extends ViewTestBase {
 
   use CommentTestTrait;

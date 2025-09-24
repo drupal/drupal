@@ -7,6 +7,7 @@ namespace Drupal\Tests\user\Functional\Views;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the handler of the user: name filter.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see Views\user\Plugin\views\filter\Name
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class HandlerFilterUserNameTest extends ViewTestBase {
 
   /**

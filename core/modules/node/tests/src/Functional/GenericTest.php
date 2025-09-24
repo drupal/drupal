@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Generic module test for node.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class GenericTest extends GenericModuleTestBase {
 
   /**

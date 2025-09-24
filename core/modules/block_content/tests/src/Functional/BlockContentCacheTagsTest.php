@@ -11,11 +11,13 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Content Block entity's cache tags.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
 
   use BlockContentCreationTrait;

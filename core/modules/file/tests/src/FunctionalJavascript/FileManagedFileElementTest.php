@@ -6,11 +6,13 @@ namespace Drupal\Tests\file\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the 'managed_file' element type.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileManagedFileElementTest extends WebDriverTestBase {
 
   /**

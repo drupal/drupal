@@ -8,11 +8,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests cron runs.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class CronRunTest extends BrowserTestBase {
 
   use CronRunTrait;

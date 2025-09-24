@@ -7,11 +7,13 @@ namespace Drupal\Tests\content_moderation\Functional\Update;
 use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the upgrade path for adding an index to moderation state column.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ContentModerationStateIndexUpdatePathTest extends UpdatePathTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Test\PerformanceTestRecorder;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the interactive installer.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerPerformanceTest extends BrowserTestBase {
 
   /**

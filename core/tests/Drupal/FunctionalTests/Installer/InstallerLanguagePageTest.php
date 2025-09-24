@@ -6,12 +6,14 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Language\LanguageManager;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore xoxo
 /**
  * Verifies that the installer language list uses local and remote languages.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerLanguagePageTest extends InstallerTestBase {
 
   /**

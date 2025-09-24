@@ -13,6 +13,7 @@ use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore dailymotion Schipulcon
@@ -20,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Tests the oembed:video media source.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
 
   /**

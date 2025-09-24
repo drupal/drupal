@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the handling of requests containing 'index.php'.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class IndexPhpTest extends BrowserTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the locked functionality of date formats.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class DateFormatsLockedTest extends BrowserTestBase {
 
   /**

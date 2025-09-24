@@ -11,11 +11,13 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the taxonomy term view page and its translation.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyTermViewTest extends TaxonomyTestBase {
 
   /**

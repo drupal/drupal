@@ -9,11 +9,13 @@ use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\node\Functional\NodeTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the content translation language that is set.
  */
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationLanguageChangeTest extends NodeTestBase {
 
   use ContentTranslationTestTrait;

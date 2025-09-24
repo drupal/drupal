@@ -7,6 +7,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that RSS render cache doesn't interfere with other caches.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * the RSS teaser render doesn't contain tags from the default theme.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeRssCacheTest extends NodeTestBase {
 
   /**

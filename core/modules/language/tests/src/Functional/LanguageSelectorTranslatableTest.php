@@ -9,12 +9,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the content translation settings language selector options.
  */
 #[Group('language')]
 #[CoversClass(ContentLanguageSettingsForm::class)]
+#[RunTestsInSeparateProcesses]
 class LanguageSelectorTranslatableTest extends BrowserTestBase {
 
   use LanguageTestTrait;

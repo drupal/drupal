@@ -11,11 +11,13 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\Date handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FilterDateTest extends ViewTestBase {
   use SchemaCheckTestTrait;
 

@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests reverting a revision with revision revert form.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(RevisionRevertForm::class)]
 #[Group('Entity')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class RevisionRevertFormTest extends BrowserTestBase {
 
   /**

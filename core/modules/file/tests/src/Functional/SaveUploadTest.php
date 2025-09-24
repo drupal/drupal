@@ -11,12 +11,14 @@ use Drupal\file\Entity\File;
 use Drupal\file_test\FileTestHelper;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cSpell:ignore TÉXT Pácê
 /**
  * Tests the file_save_upload() function.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class SaveUploadTest extends FileManagedTestBase {
 
   use TestFileCreationTrait {

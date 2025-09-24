@@ -10,6 +10,7 @@ use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\SandboxManagerBase;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that Package Manager's requirements check for the failure marker.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('package_manager')]
+#[RunTestsInSeparateProcesses]
 class FailureMarkerRequirementTest extends PackageManagerTestBase {
   use StringTranslationTrait;
 

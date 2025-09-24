@@ -12,11 +12,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests modifying an entity with revisions.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityRevisionsTest extends BrowserTestBase {
 
   /**

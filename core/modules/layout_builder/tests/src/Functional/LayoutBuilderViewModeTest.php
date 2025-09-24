@@ -7,11 +7,13 @@ namespace Drupal\Tests\layout_builder\Functional;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Layout Builder UI with view modes.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
 
   use EnableLayoutBuilderTrait;

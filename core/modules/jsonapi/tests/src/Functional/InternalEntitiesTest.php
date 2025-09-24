@@ -12,6 +12,7 @@ use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Makes assertions about the JSON:API behavior for internal entities.
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class InternalEntitiesTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

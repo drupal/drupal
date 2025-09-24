@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\jsonapi\JsonApiSpec;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "ImageStyle" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class ImageStyleTest extends ConfigEntityResourceTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Functional;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the view render element.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewElementTest extends ViewTestBase {
 
   /**

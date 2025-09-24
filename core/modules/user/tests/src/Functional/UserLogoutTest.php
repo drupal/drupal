@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests user logout.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserLogoutTest extends BrowserTestBase {
 
   /**

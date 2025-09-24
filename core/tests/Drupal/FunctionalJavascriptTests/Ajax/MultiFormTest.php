@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests AJAX-enabled forms when multiple instances of the form are on a page.
  */
 #[Group('Ajax')]
+#[RunTestsInSeparateProcesses]
 class MultiFormTest extends WebDriverTestBase {
 
   /**

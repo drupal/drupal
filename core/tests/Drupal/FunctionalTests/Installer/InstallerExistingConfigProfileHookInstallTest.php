@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies that profiles with hook_install() can't be installed from config.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerExistingConfigProfileHookInstallTest extends InstallerConfigDirectoryTestBase {
 
   /**

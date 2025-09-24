@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the representative node relationship for terms.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the grouped exposed filter admin UI.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class GroupedExposedFilterTest extends WebDriverTestBase {
 
   /**

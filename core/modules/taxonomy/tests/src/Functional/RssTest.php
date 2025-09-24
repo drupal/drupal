@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the taxonomy RSS display.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class RssTest extends TaxonomyTestBase {
 
   /**

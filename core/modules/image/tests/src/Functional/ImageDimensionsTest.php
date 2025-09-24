@@ -9,11 +9,13 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that images have correct dimensions when styled.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageDimensionsTest extends BrowserTestBase {
 
   use TestFileCreationTrait {

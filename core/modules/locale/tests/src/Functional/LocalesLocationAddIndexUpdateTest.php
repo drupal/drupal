@@ -6,11 +6,13 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Locale update functions.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocalesLocationAddIndexUpdateTest extends UpdatePathTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests setting focus via AJAX command.
  */
 #[Group('Ajax')]
+#[RunTestsInSeparateProcesses]
 class FocusFirstCommandTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}

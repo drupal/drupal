@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installing a profile with non-English language and no locale module.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerNonEnglishProfileWithoutLocaleModuleTest extends InstallerTestBase {
 
   /**

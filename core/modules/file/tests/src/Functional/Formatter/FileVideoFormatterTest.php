@@ -10,12 +10,14 @@ use Drupal\file\Plugin\Field\FieldFormatter\FileVideoFormatter;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\file\Plugin\Field\FieldFormatter\FileVideoFormatter.
  */
 #[CoversClass(FileVideoFormatter::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileVideoFormatterTest extends FileMediaFormatterTestBase {
 
   /**

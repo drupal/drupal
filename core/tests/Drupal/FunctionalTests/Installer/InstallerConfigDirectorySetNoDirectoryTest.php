@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Utility\Crypt;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the installer when a custom config directory set up but does not exist.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerConfigDirectorySetNoDirectoryTest extends InstallerTestBase {
 
   /**

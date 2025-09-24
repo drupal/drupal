@@ -8,6 +8,7 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests code block configured languages are respected.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class CKEditor5CodeSyntaxTest extends CKEditor5TestBase {
 
   use CKEditor5TestTrait;

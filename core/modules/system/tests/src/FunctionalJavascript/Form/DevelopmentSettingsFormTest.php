@@ -9,12 +9,14 @@ use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests development settings form items for expected behavior.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class DevelopmentSettingsFormTest extends WebDriverTestBase {
 
   /**

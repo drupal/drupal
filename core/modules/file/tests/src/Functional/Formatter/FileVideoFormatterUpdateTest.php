@@ -7,6 +7,7 @@ namespace Drupal\Tests\file\Functional\Formatter;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the upgrade path for video formatters.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  */
 #[Group('Update')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class FileVideoFormatterUpdateTest extends UpdatePathTestBase {
 
   /**

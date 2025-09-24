@@ -9,11 +9,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the route cache when the language is not in the path.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class RouteCachingNonPathLanguageNegotiationTest extends BrowserTestBase {
 
   use PathAliasTestTrait;

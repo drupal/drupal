@@ -8,11 +8,13 @@ use Drupal\media\Entity\MediaType;
 use Drupal\TestTools\Random;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that media UI works correctly without JavaScript.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaTypeCreationTest extends MediaFunctionalTestBase {
 
   /**

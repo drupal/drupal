@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Installs Drupal in German and checks resulting site.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerTranslationTest extends InstallerTestBase {
 
   /**

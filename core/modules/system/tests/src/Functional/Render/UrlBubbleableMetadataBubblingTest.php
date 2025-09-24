@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that URL bubbleable metadata is correctly bubbled.
  */
 #[Group('Render')]
+#[RunTestsInSeparateProcesses]
 class UrlBubbleableMetadataBubblingTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

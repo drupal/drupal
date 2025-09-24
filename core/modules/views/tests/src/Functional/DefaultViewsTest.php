@@ -16,11 +16,13 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default views provided by views.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class DefaultViewsTest extends ViewTestBase {
 
   use CommentTestTrait;

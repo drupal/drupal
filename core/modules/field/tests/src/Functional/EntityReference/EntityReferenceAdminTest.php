@@ -13,11 +13,13 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the administrative UI.
  */
 #[Group('entity_reference')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceAdminTest extends BrowserTestBase {
 
   use FieldUiTestTrait;

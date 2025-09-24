@@ -14,6 +14,7 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\TestTools\Extension\Dump\DebugDump;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\ExpectationFailedException;
 
 // cspell:ignore htkey
@@ -21,6 +22,7 @@ use PHPUnit\Framework\ExpectationFailedException;
  * Tests BrowserTestBase functionality.
  */
 #[Group('browsertestbase')]
+#[RunTestsInSeparateProcesses]
 class BrowserTestBaseTest extends BrowserTestBase {
   use PathAliasTestTrait;
   use CronRunTrait;

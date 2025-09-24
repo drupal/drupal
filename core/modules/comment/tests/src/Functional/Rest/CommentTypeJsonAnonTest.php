@@ -6,11 +6,13 @@ namespace Drupal\Tests\comment\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Comment Type Json Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class CommentTypeJsonAnonTest extends CommentTypeResourceTestBase {
 
   use AnonResourceTestTrait;

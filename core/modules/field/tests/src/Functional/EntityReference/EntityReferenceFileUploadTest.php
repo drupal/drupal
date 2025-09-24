@@ -10,11 +10,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests an autocomplete widget with file upload.
  */
 #[Group('entity_reference')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceFileUploadTest extends BrowserTestBase {
 
   use TestFileCreationTrait;

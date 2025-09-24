@@ -12,11 +12,13 @@ use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Create, view, edit, delete, and change shortcut links.
  */
 #[Group('shortcut')]
+#[RunTestsInSeparateProcesses]
 class ShortcutLinksTest extends ShortcutTestBase {
 
   use AssertBlockAppearsTrait;

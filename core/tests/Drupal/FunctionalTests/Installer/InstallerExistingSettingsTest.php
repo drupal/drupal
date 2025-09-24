@@ -7,12 +7,14 @@ namespace Drupal\FunctionalTests\Installer;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the installer with an existing settings file.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerExistingSettingsTest extends InstallerTestBase {
 
   /**

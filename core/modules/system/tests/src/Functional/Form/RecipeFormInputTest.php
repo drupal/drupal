@@ -8,12 +8,14 @@ use Drupal\Core\Recipe\RecipeInputFormTrait;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Recipe Form Input.
  */
 #[Group('system')]
 #[CoversTrait(RecipeInputFormTrait::class)]
+#[RunTestsInSeparateProcesses]
 class RecipeFormInputTest extends BrowserTestBase {
 
   /**

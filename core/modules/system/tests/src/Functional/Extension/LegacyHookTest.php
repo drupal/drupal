@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Extension;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the LegacyHook attribute.
  */
 #[Group('Hook')]
+#[RunTestsInSeparateProcesses]
 class LegacyHookTest extends BrowserTestBase {
 
   /**

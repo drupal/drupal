@@ -8,11 +8,13 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests theme suggestion alter hooks.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ThemeSuggestionsAlterTest extends BrowserTestBase {
 
   /**

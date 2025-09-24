@@ -10,11 +10,13 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests making comment base fields' displays configurable.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentDisplayConfigurableTest extends CommentTestBase {
 
   /**

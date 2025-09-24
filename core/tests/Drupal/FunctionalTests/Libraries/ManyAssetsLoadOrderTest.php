@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Libraries;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the loading of many weighted assets.
  */
 #[Group('libraries')]
+#[RunTestsInSeparateProcesses]
 class ManyAssetsLoadOrderTest extends BrowserTestBase {
 
   /**

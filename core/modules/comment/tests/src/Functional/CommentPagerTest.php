@@ -8,11 +8,13 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentPreviewMode;
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests paging of comments and their settings.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentPagerTest extends CommentTestBase {
 
   /**

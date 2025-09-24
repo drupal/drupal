@@ -7,11 +7,13 @@ namespace Drupal\Tests\workflows\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test custom provided workflow access for state/transition operations.
  */
 #[Group('workflows')]
+#[RunTestsInSeparateProcesses]
 class WorkflowCustomStateTransitionAccessTest extends BrowserTestBase {
 
   /**

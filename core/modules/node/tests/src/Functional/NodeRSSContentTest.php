@@ -6,6 +6,7 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\filter\Entity\FilterFormat;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that data added to nodes by other modules appears in RSS feeds.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * the site-wide RSS feed at rss.xml.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeRSSContentTest extends NodeTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests altering the inbound path and the outbound path.
  */
 #[Group('path_alias')]
+#[RunTestsInSeparateProcesses]
 class UrlAlterFunctionalTest extends BrowserTestBase {
 
   use PathAliasTestTrait;

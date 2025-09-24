@@ -7,6 +7,7 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentPreviewMode;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comments with node access.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * comments (a comment and a reply), if a node access module is in use.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentNodeAccessTest extends CommentTestBase {
 
   /**

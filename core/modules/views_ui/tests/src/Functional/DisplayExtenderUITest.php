@@ -6,11 +6,13 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the display extender UI.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class DisplayExtenderUITest extends UITestBase {
 
   /**

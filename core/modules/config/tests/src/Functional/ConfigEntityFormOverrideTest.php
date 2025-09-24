@@ -6,11 +6,13 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that config overrides do not bleed through in entity forms and lists.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigEntityFormOverrideTest extends BrowserTestBase {
 
   /**

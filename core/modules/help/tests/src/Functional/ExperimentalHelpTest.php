@@ -6,11 +6,13 @@ namespace Drupal\Tests\help\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies help for experimental modules.
  */
 #[Group('help')]
+#[RunTestsInSeparateProcesses]
 class ExperimentalHelpTest extends BrowserTestBase {
 
   /**

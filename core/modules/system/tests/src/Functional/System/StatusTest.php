@@ -10,12 +10,14 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore postupdate
 /**
  * Tests output on the status overview page.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class StatusTest extends BrowserTestBase {
 
   /**

@@ -13,11 +13,13 @@ use Drupal\filter\Render\FilteredMarkup;
 use Drupal\Tests\field\Functional\FunctionalString\StringFieldTest;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the creation of text fields.
  */
 #[Group('text')]
+#[RunTestsInSeparateProcesses]
 class TextFieldTest extends StringFieldTest {
 
   use TestFileCreationTrait {

@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\media\Entity\MediaType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "MediaType" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class MediaTypeTest extends ConfigEntityResourceTestBase {
 
   /**

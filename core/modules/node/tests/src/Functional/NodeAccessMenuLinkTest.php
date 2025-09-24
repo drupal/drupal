@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the interaction of the node access system with menu links.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessMenuLinkTest extends NodeTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the User entity's cache tags.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   /**

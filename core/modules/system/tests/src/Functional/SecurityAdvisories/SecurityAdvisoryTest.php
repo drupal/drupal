@@ -10,11 +10,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests of security advisories functionality.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class SecurityAdvisoryTest extends BrowserTestBase {
 
   use CronRunTrait;

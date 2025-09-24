@@ -7,11 +7,13 @@ namespace Drupal\FunctionalJavascriptTests;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\PostCondition;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that Drupal.throwError will cause a test failure.
  */
 #[Group('javascript')]
+#[RunTestsInSeparateProcesses]
 class JavascriptErrorsTest extends WebDriverTestBase {
 
   /**

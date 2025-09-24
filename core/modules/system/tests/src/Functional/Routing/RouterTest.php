@@ -12,6 +12,7 @@ use Drupal\router_test\TestControllers;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Routing\Alias;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -19,6 +20,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * Functional class for the full integrated routing system.
  */
 #[Group('Routing')]
+#[RunTestsInSeparateProcesses]
 class RouterTest extends BrowserTestBase {
 
   /**

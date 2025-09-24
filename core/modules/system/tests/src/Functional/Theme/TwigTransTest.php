@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Functional\Theme;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Twig\Error\SyntaxError;
 
 // cspell:ignore contaynz errrf herro kontex muun playsholdr starrrrr starzzzz
@@ -15,6 +16,7 @@ use Twig\Error\SyntaxError;
  * Tests Twig "trans" tags.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigTransTest extends BrowserTestBase {
 
   /**

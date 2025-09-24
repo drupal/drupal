@@ -6,11 +6,13 @@ namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Performs tests on AJAX framework commands.
  */
 #[Group('Ajax')]
+#[RunTestsInSeparateProcesses]
 class CommandsTest extends WebDriverTestBase {
 
   /**

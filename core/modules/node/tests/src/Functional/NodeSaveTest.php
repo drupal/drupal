@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests $node->save() for saving content.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeSaveTest extends NodeTestBase {
 
   /**

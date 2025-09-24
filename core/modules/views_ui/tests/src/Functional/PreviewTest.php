@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI preview functionality.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class PreviewTest extends UITestBase {
 
   /**

@@ -18,6 +18,7 @@ use Drupal\jsonapi\JsonApiSpec;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Message\ResponseInterface;
 
 // cspell:ignore èxample msword
@@ -25,6 +26,7 @@ use Psr\Http\Message\ResponseInterface;
  * Tests binary data file upload route.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class FileUploadTest extends ResourceTestBase {
 
   /**

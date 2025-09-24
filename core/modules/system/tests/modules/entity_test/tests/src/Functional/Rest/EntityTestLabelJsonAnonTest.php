@@ -6,11 +6,13 @@ namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests EntityTest Label Json Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class EntityTestLabelJsonAnonTest extends EntityTestLabelResourceTestBase {
 
   use AnonResourceTestTrait;

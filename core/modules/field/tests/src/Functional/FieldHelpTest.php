@@ -6,11 +6,13 @@ namespace Drupal\Tests\field\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests help display for the Field module.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldHelpTest extends BrowserTestBase {
 
   /**

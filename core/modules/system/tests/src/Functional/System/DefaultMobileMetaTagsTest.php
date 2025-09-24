@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Confirm that the default mobile meta tags appear as expected.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class DefaultMobileMetaTagsTest extends BrowserTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "NodeType" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class NodeTypeTest extends ConfigEntityResourceTestBase {
 
   /**

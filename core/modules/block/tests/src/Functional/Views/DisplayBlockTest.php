@@ -15,6 +15,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block display plugin.
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\display\Block
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class DisplayBlockTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

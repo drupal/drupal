@@ -18,6 +18,7 @@ use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore alternatif drupalelementstyle hurlant layercake tatou texte
@@ -30,6 +31,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 #[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::class)]
 #[Group('ckeditor5')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class MediaTest extends MediaTestBase {
 
   /**

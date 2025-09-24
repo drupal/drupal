@@ -12,12 +12,14 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that media UI works correctly.
  */
 #[Group('media')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class MediaUiReferenceWidgetTest extends MediaFunctionalTestBase {
 
   use FieldUiTestTrait;

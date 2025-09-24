@@ -7,11 +7,13 @@ namespace Drupal\Tests\navigation\Functional;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default block provider logic.
  */
 #[Group('navigation')]
+#[RunTestsInSeparateProcesses]
 class NavigationDefaultBlockDefinitionTest extends BrowserTestBase {
 
   /**

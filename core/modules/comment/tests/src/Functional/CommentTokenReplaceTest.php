@@ -14,11 +14,13 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment token replacement.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentTokenReplaceTest extends CommentTestBase {
 
   /**

@@ -9,6 +9,7 @@ use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the content translation overview link field handler.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\content_translation\Plugin\views\field\TranslationLink
  */
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class TranslationLinkTest extends ContentTranslationTestBase {
 
   /**

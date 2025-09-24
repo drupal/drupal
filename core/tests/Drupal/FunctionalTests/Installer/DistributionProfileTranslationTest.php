@@ -6,6 +6,7 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests distribution profile support.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\FunctionalTests\Installer\DistributionProfileTest
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class DistributionProfileTranslationTest extends InstallerTestBase {
 
   /**

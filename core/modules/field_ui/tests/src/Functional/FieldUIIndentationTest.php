@@ -6,11 +6,13 @@ namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests indentation on Field UI.
  */
 #[Group('field_ui')]
+#[RunTestsInSeparateProcesses]
 class FieldUIIndentationTest extends BrowserTestBase {
 
   /**

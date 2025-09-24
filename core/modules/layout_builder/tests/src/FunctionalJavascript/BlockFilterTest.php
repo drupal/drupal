@@ -9,12 +9,14 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JavaScript functionality of the block add filter.
  */
 #[Group('layout_builder')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class BlockFilterTest extends WebDriverTestBase {
 
   /**

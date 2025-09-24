@@ -6,12 +6,14 @@ namespace Drupal\FunctionalJavascriptTests;
 
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that unnecessary or untracked XHRs will cause a test failure.
  */
 #[Group('javascript')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class AjaxWaitTest extends WebDriverTestBase {
 
   /**

@@ -6,6 +6,7 @@ namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests BrowserTestBase's treatment of hook_install() during setup.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Image module is used for test.
  */
 #[Group('browsertestbase')]
+#[RunTestsInSeparateProcesses]
 class FolderTest extends BrowserTestBase {
 
   /**

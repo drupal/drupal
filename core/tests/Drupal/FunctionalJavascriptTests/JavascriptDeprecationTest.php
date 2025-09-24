@@ -6,12 +6,14 @@ namespace Drupal\FunctionalJavascriptTests;
 
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Javascript deprecation notices.
  */
 #[Group('javascript')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class JavascriptDeprecationTest extends WebDriverTestBase {
 
   /**

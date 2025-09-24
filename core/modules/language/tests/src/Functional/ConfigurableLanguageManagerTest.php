@@ -15,6 +15,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore funciona
 /**
@@ -23,6 +24,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Uses different negotiators for content and interface.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class ConfigurableLanguageManagerTest extends BrowserTestBase {
 
   use WaitTerminateTestTrait;

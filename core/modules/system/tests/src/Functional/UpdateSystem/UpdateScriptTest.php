@@ -13,12 +13,14 @@ use Drupal\Tests\RequirementsPageTrait;
 use Drupal\TestTools\Extension\InfoWriterTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the update script access and functionality.
  */
 #[Group('Update')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class UpdateScriptTest extends BrowserTestBase {
   use InfoWriterTrait;
   use RequirementsPageTrait;

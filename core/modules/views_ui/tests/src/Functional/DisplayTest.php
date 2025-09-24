@@ -8,12 +8,14 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the display UI.
  */
 #[Group('views_ui')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class DisplayTest extends UITestBase {
 
   /**

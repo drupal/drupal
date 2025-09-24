@@ -6,11 +6,13 @@ namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests demo_umami profile performance.
  */
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
 
   /**

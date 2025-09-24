@@ -10,11 +10,13 @@ use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the content moderation actions.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ModerationActionsTest extends BrowserTestBase {
 
   use ContentTypeCreationTrait;

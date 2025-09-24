@@ -8,11 +8,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Functional\FieldTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests option fields can be updated and created by config synchronization.
  */
 #[Group('options')]
+#[RunTestsInSeparateProcesses]
 class OptionsFloatFieldImportTest extends FieldTestBase {
 
   /**

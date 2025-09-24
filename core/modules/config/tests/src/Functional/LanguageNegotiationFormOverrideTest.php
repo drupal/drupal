@@ -6,6 +6,7 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore loquesea
 /**
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\Form\ConfigFormBase
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
 
   /**

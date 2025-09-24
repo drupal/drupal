@@ -6,11 +6,13 @@ namespace Drupal\Tests\toolbar\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the toolbar icon class remains for translated menu items.
  */
 #[Group('toolbar')]
+#[RunTestsInSeparateProcesses]
 class ToolbarMenuTranslationTest extends BrowserTestBase {
 
   /**

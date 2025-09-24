@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Confirm that the fingerprinting meta tag appears as expected.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class AdminMetaTagTest extends BrowserTestBase {
 
   /**

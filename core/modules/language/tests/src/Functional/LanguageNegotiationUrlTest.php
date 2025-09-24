@@ -8,12 +8,14 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl.
  */
 #[CoversClass(LanguageNegotiationUrl::class)]
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageNegotiationUrlTest extends BrowserTestBase {
 
   /**

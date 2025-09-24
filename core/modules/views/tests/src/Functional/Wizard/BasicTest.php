@@ -8,11 +8,13 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests creating views with the wizard and viewing them on the listing page.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class BasicTest extends WizardTestBase {
 
   /**

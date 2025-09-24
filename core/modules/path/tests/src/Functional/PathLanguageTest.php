@@ -10,11 +10,13 @@ use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\user\Entity\User;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Confirm that paths work with translated nodes.
  */
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class PathLanguageTest extends PathTestBase {
 
   use ContentTranslationTestTrait;

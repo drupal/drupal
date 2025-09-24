@@ -15,6 +15,7 @@ use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore esque māori sourceediting splitbutton upcasted
@@ -24,6 +25,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class CKEditor5Test extends CKEditor5TestBase {
 
   use TestFileCreationTrait;

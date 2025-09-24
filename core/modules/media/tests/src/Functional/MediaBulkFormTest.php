@@ -7,11 +7,13 @@ namespace Drupal\Tests\media\Functional;
 use Drupal\media\Entity\Media;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests a media bulk form.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaBulkFormTest extends MediaFunctionalTestBase {
 
   /**

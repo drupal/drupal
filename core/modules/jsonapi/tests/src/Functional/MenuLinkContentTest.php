@@ -12,11 +12,13 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "MenuLinkContent" content entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkContentTest extends ResourceTestBase {
 
   use CommonCollectionFilterAccessTestPatternsTrait;

@@ -7,10 +7,12 @@ namespace Drupal\Tests\layout_builder_expose_all_field_blocks\Functional;
 use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Generic module test for layout_builder_expose_all_field_blocks.
  */
 #[Group('layout_builder_expose_all_field_blocks')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class GenericTest extends GenericModuleTestBase {}

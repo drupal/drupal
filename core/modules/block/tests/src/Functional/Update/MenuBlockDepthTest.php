@@ -7,11 +7,13 @@ namespace Drupal\Tests\block\Functional\Update;
 use Drupal\block\Entity\Block;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests update path for the `depth` setting of menu blocks.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 final class MenuBlockDepthTest extends UpdatePathTestBase {
 
   /**

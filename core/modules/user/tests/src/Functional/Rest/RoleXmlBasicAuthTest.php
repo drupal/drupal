@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Functional\Rest;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Role Xml Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class RoleXmlBasicAuthTest extends RoleResourceTestBase {
 
   use BasicAuthResourceTestTrait;

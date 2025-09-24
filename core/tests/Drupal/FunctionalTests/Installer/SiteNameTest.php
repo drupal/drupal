@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the site name can be set during a non-interactive installation.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class SiteNameTest extends BrowserTestBase {
 
   /**

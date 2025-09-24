@@ -7,6 +7,7 @@ namespace Drupal\Tests\help\Functional;
 use Drupal\help\Plugin\Search\HelpSearch;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore asdrsad barmm foomm hilfetestmodul sdeeeee sqruct testen
 // cspell:ignore wcsrefsdf übersetzung
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Verifies help topic search.
  */
 #[Group('help')]
+#[RunTestsInSeparateProcesses]
 class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
 
   use CronRunTrait;

@@ -9,11 +9,13 @@ use Drupal\Core\Database\Database;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI preview functionality.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class PreviewTest extends WebDriverTestBase {
 
   /**

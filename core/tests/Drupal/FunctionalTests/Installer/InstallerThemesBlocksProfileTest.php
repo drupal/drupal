@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\block\Entity\Block;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies that the installer does not generate theme blocks.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerThemesBlocksProfileTest extends InstallerTestBase {
 
   /**

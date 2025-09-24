@@ -10,11 +10,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests LocaleLookup.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleLocaleLookupTest extends BrowserTestBase {
 
   use WaitTerminateTestTrait;

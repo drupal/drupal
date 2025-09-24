@@ -12,11 +12,13 @@ use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests creation, deletion, and editing of image styles and effects.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageAdminStylesTest extends ImageFieldTestBase {
 
   use TestFileCreationTrait {

@@ -9,6 +9,7 @@ use Drupal\file\Entity\File;
 use Drupal\file_test\FileTestHelper;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the _file_save_upload_from_form() function.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see _file_save_upload_from_form()
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class SaveUploadFormTest extends FileManagedTestBase {
 
   use TestFileCreationTrait {

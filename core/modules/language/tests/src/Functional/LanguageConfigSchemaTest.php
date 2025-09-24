@@ -7,11 +7,13 @@ namespace Drupal\Tests\language\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures the language config schema is correct.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageConfigSchemaTest extends BrowserTestBase {
 
   use SchemaCheckTestTrait;

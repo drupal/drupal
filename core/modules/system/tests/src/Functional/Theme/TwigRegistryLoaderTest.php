@@ -6,12 +6,14 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Twig\TemplateWrapper;
 
 /**
  * Tests Twig registry loader.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigRegistryLoaderTest extends BrowserTestBase {
 
   /**

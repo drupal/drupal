@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Action Json Basic Auth.
  */
 #[Group('Action')]
+#[RunTestsInSeparateProcesses]
 class ActionJsonBasicAuthTest extends ActionResourceTestBase {
 
   use BasicAuthResourceTestTrait;

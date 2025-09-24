@@ -6,12 +6,14 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\NodeInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests cacheability on unpublished nodes inherited from node access.
  */
 #[Group('node')]
 #[Group('Cache')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessUnpublishedCacheabilityTest extends NodeTestBase {
 
   /**

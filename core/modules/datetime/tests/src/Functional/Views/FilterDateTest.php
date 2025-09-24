@@ -12,11 +12,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Views filters for datetime fields.
  */
 #[Group('datetime')]
+#[RunTestsInSeparateProcesses]
 class FilterDateTest extends ViewTestBase {
 
   /**

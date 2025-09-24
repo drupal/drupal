@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Theme;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests overriding Twig engine settings via settings.php.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigSettingsTest extends BrowserTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Messenger service.
  */
 #[Group('Bootstrap')]
+#[RunTestsInSeparateProcesses]
 class DrupalMessengerServiceTest extends BrowserTestBase {
 
   /**

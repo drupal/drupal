@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests access control for form elements.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class ElementsAccessTest extends BrowserTestBase {
 
   /**

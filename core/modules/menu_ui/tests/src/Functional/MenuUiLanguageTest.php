@@ -9,6 +9,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for menu_ui language settings.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * settings.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuUiLanguageTest extends BrowserTestBase {
 
   use MenuUiTrait;

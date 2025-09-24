@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the node_access system stores the proper fallback marker.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessLanguageFallbackTest extends NodeTestBase {
 
   /**

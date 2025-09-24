@@ -8,11 +8,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JavaScript functionality of the text_textarea_with_summary widget.
  */
 #[Group('text')]
+#[RunTestsInSeparateProcesses]
 class TextareaWithSummaryTest extends WebDriverTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\comment\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Comment Json Cookie.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class CommentJsonCookieTest extends CommentResourceTestBase {
 
   use CookieResourceTestTrait;

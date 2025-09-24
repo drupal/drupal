@@ -10,11 +10,13 @@ use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that bundle tags are invalidated when entities change.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityBundleListCacheTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

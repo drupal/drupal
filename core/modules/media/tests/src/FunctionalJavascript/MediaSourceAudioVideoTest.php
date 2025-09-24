@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Audio and Video media sources.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaSourceAudioVideoTest extends MediaSourceTestBase {
 
   /**

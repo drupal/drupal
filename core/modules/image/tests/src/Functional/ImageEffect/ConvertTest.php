@@ -8,11 +8,13 @@ use Drupal\Core\File\FileExists;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the Convert image effect.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ConvertTest extends BrowserTestBase {
 
   /**

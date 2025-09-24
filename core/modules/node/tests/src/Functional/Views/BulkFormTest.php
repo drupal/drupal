@@ -7,6 +7,7 @@ namespace Drupal\Tests\node\Functional\Views;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests a node bulk form.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\node\Plugin\views\field\BulkForm
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class BulkFormTest extends NodeTestBase {
 
   /**

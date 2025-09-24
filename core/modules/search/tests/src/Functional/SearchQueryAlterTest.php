@@ -6,11 +6,13 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the node search query can be altered via the query alter hook.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchQueryAlterTest extends BrowserTestBase {
 
   /**

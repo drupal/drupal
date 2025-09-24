@@ -8,12 +8,14 @@ use Drupal\Core\Url;
 use Drupal\locale\StringStorageInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore espagnol
 /**
  * Adds a new language with translations and tests language list order.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageLocaleListTest extends BrowserTestBase {
 
   /**

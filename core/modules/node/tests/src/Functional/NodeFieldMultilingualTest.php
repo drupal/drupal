@@ -10,11 +10,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests multilingual support for fields.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeFieldMultilingualTest extends BrowserTestBase {
 
   /**

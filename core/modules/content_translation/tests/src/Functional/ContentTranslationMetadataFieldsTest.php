@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_translation\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Content Translation metadata fields handling.
  */
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
 
   /**

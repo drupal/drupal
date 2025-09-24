@@ -11,11 +11,13 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Translate settings and entities to various languages.
  */
 #[Group('config_translation')]
+#[RunTestsInSeparateProcesses]
 class ConfigTranslationCacheTest extends BrowserTestBase {
 
   /**

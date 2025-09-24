@@ -6,11 +6,13 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal 6 Id Conflict page.
  */
 #[Group('migrate_drupal_ui')]
+#[RunTestsInSeparateProcesses]
 class IdConflictTest extends MigrateUpgradeExecuteTestBase {
 
   /**

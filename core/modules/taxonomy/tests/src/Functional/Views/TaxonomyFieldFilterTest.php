@@ -14,11 +14,13 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests taxonomy field filters with translations.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyFieldFilterTest extends ViewTestBase {
 
   /**

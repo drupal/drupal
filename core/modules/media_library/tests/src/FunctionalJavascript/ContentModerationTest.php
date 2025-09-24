@@ -13,12 +13,14 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore hoglet
 /**
  * Tests media library integration with content moderation.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class ContentModerationTest extends WebDriverTestBase {
 
   use ContentModerationTestTrait;

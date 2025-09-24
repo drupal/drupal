@@ -10,11 +10,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\twig_theme_test\TwigThemeTestUtils;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Twig-specific theme functionality.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class EngineTwigTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

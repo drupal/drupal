@@ -7,11 +7,13 @@ namespace Drupal\Tests\navigation\Functional;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Navigation Icon behavior.
  */
 #[Group('navigation')]
+#[RunTestsInSeparateProcesses]
 class NavigationIconTest extends BrowserTestBase {
 
   /**

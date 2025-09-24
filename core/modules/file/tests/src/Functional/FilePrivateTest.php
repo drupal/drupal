@@ -9,11 +9,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Uploads a test to a private node and checks access.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FilePrivateTest extends FileFieldTestBase {
 
   use NodeAccessTrait;

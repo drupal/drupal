@@ -7,11 +7,13 @@ namespace Drupal\Tests\announcements_feed\Functional;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Defines a class for testing pages are still cacheable with dynamic page cache.
  */
 #[Group('announcements_feed')]
+#[RunTestsInSeparateProcesses]
 final class AnnouncementsCacheTest extends BrowserTestBase {
 
   /**

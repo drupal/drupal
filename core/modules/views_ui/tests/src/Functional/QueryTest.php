@@ -7,11 +7,13 @@ namespace Drupal\Tests\views_ui\Functional;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests query plugins.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class QueryTest extends UITestBase {
 
   /**

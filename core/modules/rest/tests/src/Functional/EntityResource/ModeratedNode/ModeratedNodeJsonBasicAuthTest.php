@@ -6,11 +6,13 @@ namespace Drupal\Tests\rest\Functional\EntityResource\ModeratedNode;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Moderated Node Json Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ModeratedNodeJsonBasicAuthTest extends ModeratedNodeResourceTestBase {
 
   use BasicAuthResourceTestTrait;

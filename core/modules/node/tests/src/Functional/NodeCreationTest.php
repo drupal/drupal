@@ -9,11 +9,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Create a node and test saving it.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeCreationTest extends NodeTestBase {
 
   use ContentTypeCreationTrait;

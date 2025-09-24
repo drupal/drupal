@@ -9,11 +9,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests access to site while in maintenance mode.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class SiteMaintenanceTest extends BrowserTestBase {
 
   use AssertMailTrait {

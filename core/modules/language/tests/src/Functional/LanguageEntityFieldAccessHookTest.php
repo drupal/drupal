@@ -6,11 +6,13 @@ namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests language picker compatibility with hook_entity_field_access.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageEntityFieldAccessHookTest extends BrowserTestBase {
 
   /**

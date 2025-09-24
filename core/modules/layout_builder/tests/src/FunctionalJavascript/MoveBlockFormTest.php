@@ -9,12 +9,14 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore blocknodebundle fieldbody fieldlinks
 /**
  * Tests moving blocks via the form.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class MoveBlockFormTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

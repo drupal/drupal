@@ -8,11 +8,13 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the menu link content delete UI.
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkContentDeleteFormTest extends BrowserTestBase {
 
   /**

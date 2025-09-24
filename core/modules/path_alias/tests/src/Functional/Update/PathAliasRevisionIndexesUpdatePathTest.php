@@ -6,11 +6,13 @@ namespace Drupal\Tests\path_alias\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the update path for the path_alias_revision table indices.
  */
 #[Group('path_alias')]
+#[RunTestsInSeparateProcesses]
 class PathAliasRevisionIndexesUpdatePathTest extends UpdatePathTestBase {
 
   /**

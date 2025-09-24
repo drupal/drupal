@@ -6,11 +6,13 @@ namespace Drupal\FunctionalJavascriptTests\Core;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the machine name field.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class MachineNameTest extends WebDriverTestBase {
 
   /**

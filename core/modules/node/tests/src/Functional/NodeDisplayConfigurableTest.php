@@ -9,11 +9,13 @@ use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests making node base fields' displays configurable.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeDisplayConfigurableTest extends NodeTestBase {
 
   /**

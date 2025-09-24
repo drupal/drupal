@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Utility\Crypt;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installation when a config_sync_directory is set up but does not exist.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase {
 
   /**

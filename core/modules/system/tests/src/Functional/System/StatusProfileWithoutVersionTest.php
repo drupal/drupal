@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\System;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Status Report page if the installation profile has no version.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class StatusProfileWithoutVersionTest extends BrowserTestBase {
 
   /**

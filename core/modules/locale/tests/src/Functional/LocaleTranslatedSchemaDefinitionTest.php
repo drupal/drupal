@@ -9,11 +9,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Adds and configures languages to check field schema definition.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
 
   use RequirementsPageTrait;

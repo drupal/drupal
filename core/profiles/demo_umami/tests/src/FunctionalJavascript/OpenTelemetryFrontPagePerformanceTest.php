@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests demo_umami profile performance.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 #[Group('OpenTelemetry')]
 #[Group('#slow')]
 #[RequiresPhpExtension('apcu')]
+#[RunTestsInSeparateProcesses]
 class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
 
   /**

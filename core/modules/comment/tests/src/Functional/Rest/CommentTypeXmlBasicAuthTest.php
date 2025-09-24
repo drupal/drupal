@@ -7,11 +7,13 @@ namespace Drupal\Tests\comment\Functional\Rest;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Comment Type Xml Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class CommentTypeXmlBasicAuthTest extends CommentTypeResourceTestBase {
 
   use BasicAuthResourceTestTrait;

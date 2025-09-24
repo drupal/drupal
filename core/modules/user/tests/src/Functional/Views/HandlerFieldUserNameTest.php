@@ -7,6 +7,7 @@ namespace Drupal\Tests\user\Functional\Views;
 use Drupal\Core\Render\RenderContext;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the handler of the user: name field.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see views_handler_field_user_name
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class HandlerFieldUserNameTest extends UserTestBase {
 
   /**

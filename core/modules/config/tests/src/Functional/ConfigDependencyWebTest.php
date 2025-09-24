@@ -7,11 +7,13 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests configuration entities.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigDependencyWebTest extends BrowserTestBase {
 
   /**

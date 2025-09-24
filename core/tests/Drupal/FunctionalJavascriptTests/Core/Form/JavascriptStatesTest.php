@@ -7,6 +7,7 @@ namespace Drupal\FunctionalJavascriptTests\Core\Form;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the state of elements based on another elements.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see Drupal\form_test\Form\JavascriptStatesForm
  */
 #[Group('javascript')]
+#[RunTestsInSeparateProcesses]
 class JavascriptStatesTest extends WebDriverTestBase {
 
   /**

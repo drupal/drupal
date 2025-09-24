@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Session;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the stacked session handler functionality.
  */
 #[Group('Session')]
+#[RunTestsInSeparateProcesses]
 class StackSessionHandlerIntegrationTest extends BrowserTestBase {
 
   /**

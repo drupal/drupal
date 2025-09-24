@@ -6,12 +6,14 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\views\Functional\BulkFormTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the views bulk form in a workspace.
  */
 #[Group('views')]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceViewsBulkFormTest extends BulkFormTest {
 
   use WorkspaceTestUtilities;

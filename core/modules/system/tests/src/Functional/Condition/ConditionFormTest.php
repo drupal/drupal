@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Functional\Condition;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that condition plugins basic form handling is working.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * validate correctly.
  */
 #[Group('Condition')]
+#[RunTestsInSeparateProcesses]
 class ConditionFormTest extends BrowserTestBase {
 
   /**

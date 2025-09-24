@@ -12,11 +12,13 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests configuration entities.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigEntityTest extends BrowserTestBase {
 
   /**

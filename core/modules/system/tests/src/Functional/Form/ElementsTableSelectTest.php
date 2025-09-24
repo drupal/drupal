@@ -8,11 +8,13 @@ use Drupal\Core\Form\FormState;
 use Drupal\form_test\Callbacks;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the tableselect form element for expected behavior.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class ElementsTableSelectTest extends BrowserTestBase {
 
   /**

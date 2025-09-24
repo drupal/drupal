@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that media UI works correctly.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaUiFunctionalTest extends MediaFunctionalTestBase {
 
   use FieldUiTestTrait;

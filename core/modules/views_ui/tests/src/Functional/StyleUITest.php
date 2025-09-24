@@ -6,6 +6,7 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI of style plugins.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views_test_data\Plugin\views\style\StyleTest.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class StyleUITest extends UITestBase {
 
   /**

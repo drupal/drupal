@@ -8,11 +8,13 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the route access checks on menu links.
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuAccessTest extends BrowserTestBase {
 
   /**

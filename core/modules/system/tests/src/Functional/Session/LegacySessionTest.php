@@ -7,12 +7,14 @@ namespace Drupal\Tests\system\Functional\Session;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Drupal legacy session handling tests.
  */
 #[IgnoreDeprecations]
 #[Group('Session')]
+#[RunTestsInSeparateProcesses]
 class LegacySessionTest extends BrowserTestBase {
 
   /**

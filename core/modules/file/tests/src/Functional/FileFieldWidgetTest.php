@@ -16,11 +16,13 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file field widget with public and private files.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileFieldWidgetTest extends FileFieldTestBase {
 
   use CommentTestTrait;

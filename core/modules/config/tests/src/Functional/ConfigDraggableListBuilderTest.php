@@ -8,11 +8,13 @@ use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests draggable list builder.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigDraggableListBuilderTest extends BrowserTestBase {
 
   /**

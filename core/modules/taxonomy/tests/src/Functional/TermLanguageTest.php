@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the language functionality for the taxonomy terms.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermLanguageTest extends TaxonomyTestBase {
 
   /**

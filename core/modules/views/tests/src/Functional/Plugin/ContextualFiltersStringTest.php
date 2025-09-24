@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test contextual filters with 'allow multiple values' setting for user roles.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ContextualFiltersStringTest extends ViewTestBase {
 
   /**

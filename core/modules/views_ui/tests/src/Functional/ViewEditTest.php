@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests some general functionality of editing views, like deleting a view.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class ViewEditTest extends UITestBase {
 
   /**

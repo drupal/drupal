@@ -23,6 +23,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API regression tests.
@@ -30,6 +31,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
 
   use CommentTestTrait;

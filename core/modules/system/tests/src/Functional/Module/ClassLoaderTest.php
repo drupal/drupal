@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Module;
 use Drupal\module_autoload_test\SomeClass;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests class loading for modules.
  */
 #[Group('Module')]
+#[RunTestsInSeparateProcesses]
 class ClassLoaderTest extends BrowserTestBase {
 
   /**

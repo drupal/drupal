@@ -7,11 +7,13 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\Core\Url;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the moderation form, specifically on nodes.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ModerationFormTest extends ModerationStateTestBase {
 
   use ContentTranslationTestTrait;

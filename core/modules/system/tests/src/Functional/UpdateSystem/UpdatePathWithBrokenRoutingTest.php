@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the update path with a broken router.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class UpdatePathWithBrokenRoutingTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

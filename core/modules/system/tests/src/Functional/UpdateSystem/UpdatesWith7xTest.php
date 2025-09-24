@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the minimum schema version when only 7.x update hooks are retained.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class UpdatesWith7xTest extends BrowserTestBase {
 
   use RequirementsPageTrait;

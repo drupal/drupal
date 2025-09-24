@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests branding block display.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockSystemBrandingTest extends BlockTestBase {
 
   /**

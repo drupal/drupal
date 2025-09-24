@@ -8,12 +8,14 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests URL generation and routing for route paths with encoded characters.
  */
 #[Group('path')]
 #[Group('routing')]
+#[RunTestsInSeparateProcesses]
 class PathEncodedTest extends BrowserTestBase {
 
   use PathAliasTestTrait;

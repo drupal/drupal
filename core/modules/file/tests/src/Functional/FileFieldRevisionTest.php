@@ -7,11 +7,13 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\file\Entity\File;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests creating and deleting revisions with files attached.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileFieldRevisionTest extends FileFieldTestBase {
 
   /**

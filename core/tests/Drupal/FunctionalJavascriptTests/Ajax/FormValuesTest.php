@@ -7,11 +7,13 @@ namespace Drupal\FunctionalJavascriptTests\Ajax;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that form values are properly delivered to AJAX callbacks.
  */
 #[Group('Ajax')]
+#[RunTestsInSeparateProcesses]
 class FormValuesTest extends WebDriverTestBase {
 
   /**

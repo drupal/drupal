@@ -6,6 +6,7 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI and functionality for the Custom boolean field handler options.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\field\Boolean
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class CustomBooleanTest extends UITestBase {
 
   /**

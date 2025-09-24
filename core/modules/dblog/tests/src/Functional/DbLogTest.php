@@ -13,11 +13,13 @@ use Drupal\dblog\Controller\DbLogController;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies log entries and user access based on permissions.
  */
 #[Group('dblog')]
+#[RunTestsInSeparateProcesses]
 class DbLogTest extends BrowserTestBase {
   use FakeLogEntries;
   use AssertBreadcrumbTrait;

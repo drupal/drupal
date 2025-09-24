@@ -7,11 +7,13 @@ namespace Drupal\Tests\workspaces\Functional\Rest;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test workspace entities for XML requests with cookie authentication.
  */
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceXmlBasicAuthTest extends WorkspaceResourceTestBase {
 
   use BasicAuthResourceTestTrait;

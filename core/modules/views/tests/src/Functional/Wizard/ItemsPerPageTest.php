@@ -7,11 +7,13 @@ namespace Drupal\Tests\views\Functional\Wizard;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the views wizard can specify the number of items per page.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ItemsPerPageTest extends WizardTestBase {
 
   /**

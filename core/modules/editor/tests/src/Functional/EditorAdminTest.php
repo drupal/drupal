@@ -9,11 +9,13 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests administration of text editors.
  */
 #[Group('editor')]
+#[RunTestsInSeparateProcesses]
 class EditorAdminTest extends BrowserTestBase {
 
   /**

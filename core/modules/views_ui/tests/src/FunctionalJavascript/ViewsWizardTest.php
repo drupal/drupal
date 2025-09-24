@@ -6,6 +6,7 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests views creation wizard.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see core/modules/views_ui/js/views-admin.js
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class ViewsWizardTest extends WebDriverTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\Media;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests media template suggestions.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaTemplateSuggestionsTest extends MediaFunctionalTestBase {
 
   /**

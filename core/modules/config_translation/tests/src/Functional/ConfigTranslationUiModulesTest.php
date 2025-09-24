@@ -11,12 +11,14 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore testcontent tuvan
 /**
  * Translate settings and entities to various languages.
  */
 #[Group('config_translation')]
+#[RunTestsInSeparateProcesses]
 class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
 
   /**

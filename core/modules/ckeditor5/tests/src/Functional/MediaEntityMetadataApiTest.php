@@ -20,6 +20,7 @@ use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -28,6 +29,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class MediaEntityMetadataApiTest extends BrowserTestBase {
 
   use TestFileCreationTrait;

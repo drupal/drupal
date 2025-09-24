@@ -8,6 +8,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests file field validation functions.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * and whether the field is required.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileFieldValidateTest extends WebDriverTestBase {
 
   use FileFieldCreationTrait;

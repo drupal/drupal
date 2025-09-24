@@ -6,11 +6,13 @@ namespace Drupal\Tests\image\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Image Style Json Cookie.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ImageStyleJsonCookieTest extends ImageStyleResourceTestBase {
 
   use CookieResourceTestTrait;

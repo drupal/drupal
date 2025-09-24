@@ -6,11 +6,13 @@ namespace Drupal\Tests\language\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Configurable Language Json Cookie.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ConfigurableLanguageJsonCookieTest extends ConfigurableLanguageResourceTestBase {
 
   use CookieResourceTestTrait;

@@ -8,12 +8,14 @@ use Behat\Mink\Element\Element;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore navigationuser linksuserwrapper
 /**
  * Tests for \Drupal\navigation\Plugin\NavigationBlock\NavigationUserBlock.
  */
 #[Group('navigation')]
+#[RunTestsInSeparateProcesses]
 class NavigationUserBlockTest extends WebDriverTestBase {
 
   /**

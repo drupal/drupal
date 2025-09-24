@@ -6,6 +6,7 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the reordering of fields via AJAX.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views_ui\Form\Ajax\Rearrange
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class RearrangeFieldsTest extends UITestBase {
 
   /**

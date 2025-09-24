@@ -8,6 +8,7 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Execute migration.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * via a Functional test.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateNoMigrateDrupalTest extends BrowserTestBase {
   use ContentTypeCreationTrait;
 

@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\System;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Performs tests on the Drupal error and exception handler.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class ErrorHandlerTest extends BrowserTestBase {
 
   /**

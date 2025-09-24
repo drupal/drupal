@@ -12,12 +12,14 @@ use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests link field UI functionality.
  */
 #[Group('link')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class LinkFieldUITest extends BrowserTestBase {
 
   use FieldUiTestTrait;

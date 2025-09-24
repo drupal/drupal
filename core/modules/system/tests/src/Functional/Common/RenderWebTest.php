@@ -9,11 +9,13 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Performs integration tests on \Drupal::service('renderer')->render().
  */
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class RenderWebTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

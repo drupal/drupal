@@ -6,11 +6,13 @@ namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the vocabulary argument.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyVocabularyArgumentTest extends TaxonomyTestBase {
 
   /**

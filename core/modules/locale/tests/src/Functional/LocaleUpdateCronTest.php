@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\locale\Hook\LocaleHooks;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for using cron to update project interface translations.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleUpdateCronTest extends LocaleUpdateBase {
 
   use CronRunTrait;

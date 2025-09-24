@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests caches during updates.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class UpdateCacheTest extends BrowserTestBase {
   use RequirementsPageTrait;
 

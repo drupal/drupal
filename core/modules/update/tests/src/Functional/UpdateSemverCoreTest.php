@@ -6,6 +6,7 @@ namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Url;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests edge cases of the Available Updates report UI.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * connecting to the release history server, clearing the disk cache, and more.
  */
 #[Group('update')]
+#[RunTestsInSeparateProcesses]
 class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
 
   /**

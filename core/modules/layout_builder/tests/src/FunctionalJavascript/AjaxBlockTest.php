@@ -8,11 +8,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ajax blocks tests.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class AjaxBlockTest extends WebDriverTestBase {
 
   use OffCanvasTestTrait;

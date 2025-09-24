@@ -8,12 +8,14 @@ use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\path_alias\Entity\PathAlias;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "PathAlias" content entity type.
  */
 #[Group('jsonapi')]
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class PathAliasTest extends ResourceTestBase {
 
   /**

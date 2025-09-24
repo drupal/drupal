@@ -8,6 +8,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Route;
  * Tests low-level theme functions.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ThemeTest extends BrowserTestBase {
 
   /**

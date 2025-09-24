@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests active link JS behavior.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see Drupal.behaviors.activeLinks
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class ActiveLinkTest extends WebDriverTestBase {
 
   /**

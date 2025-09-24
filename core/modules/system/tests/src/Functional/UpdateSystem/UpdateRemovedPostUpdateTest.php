@@ -10,12 +10,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore postupdate
 /**
  * Tests hook_removed_post_updates().
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class UpdateRemovedPostUpdateTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

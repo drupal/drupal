@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the installation of experimental themes.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ExperimentalThemeTest extends BrowserTestBase {
 
   /**

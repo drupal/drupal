@@ -8,11 +8,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\locale\StringStorageInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests translation of configuration strings.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleConfigTranslationTest extends BrowserTestBase {
 
   /**

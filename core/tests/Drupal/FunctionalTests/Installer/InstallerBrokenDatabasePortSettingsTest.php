@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the installer with incorrect connection info in settings.php.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerBrokenDatabasePortSettingsTest extends InstallerTestBase {
 
   /**

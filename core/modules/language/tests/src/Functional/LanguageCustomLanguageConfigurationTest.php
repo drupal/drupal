@@ -9,11 +9,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Adds and configures custom languages.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
 
   /**

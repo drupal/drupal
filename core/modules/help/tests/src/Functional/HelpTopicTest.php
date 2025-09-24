@@ -7,11 +7,13 @@ namespace Drupal\Tests\help\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies help topic display and user access to help based on permissions.
  */
 #[Group('help')]
+#[RunTestsInSeparateProcesses]
 class HelpTopicTest extends BrowserTestBase {
   use AssertBreadcrumbTrait;
 

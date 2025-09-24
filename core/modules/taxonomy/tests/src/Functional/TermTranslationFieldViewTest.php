@@ -6,11 +6,13 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the translation of taxonomy terms field on nodes.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermTranslationFieldViewTest extends TaxonomyTestBase {
 
   use TaxonomyTranslationTestTrait;

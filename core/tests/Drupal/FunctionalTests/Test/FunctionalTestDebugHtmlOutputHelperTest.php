@@ -6,6 +6,7 @@ namespace Drupal\FunctionalTests\Test;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Helper test for FunctionalTestDebugHtmlOutputTest.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\FunctionalTests\Test\FunctionalTestDebugHtmlOutputTest::testFunctionalTestDebugHtmlOutput
  */
 #[Group('browsertestbase')]
+#[RunTestsInSeparateProcesses]
 class FunctionalTestDebugHtmlOutputHelperTest extends BrowserTestBase {
 
   /**

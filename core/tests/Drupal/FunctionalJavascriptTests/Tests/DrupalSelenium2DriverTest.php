@@ -12,12 +12,14 @@ use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the DrupalSelenium2Driver methods.
  */
 #[CoversClass(DrupalSelenium2Driver::class)]
 #[Group('javascript')]
+#[RunTestsInSeparateProcesses]
 class DrupalSelenium2DriverTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;

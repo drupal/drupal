@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Enables the Dynamic Page Cache and tests it in various scenarios.
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber
  */
 #[Group('dynamic_page_cache')]
+#[RunTestsInSeparateProcesses]
 class DynamicPageCacheIntegrationTest extends BrowserTestBase {
 
   /**

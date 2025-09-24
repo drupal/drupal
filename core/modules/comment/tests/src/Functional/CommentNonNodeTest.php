@@ -19,11 +19,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests commenting on a test entity.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentNonNodeTest extends BrowserTestBase {
 
   use FieldUiTestTrait;

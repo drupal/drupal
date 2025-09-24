@@ -14,6 +14,7 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\taxonomy\Entity\Term;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore llamalovers catcuddlers Cuddlers
 /**
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
 
   use CommentTestTrait;

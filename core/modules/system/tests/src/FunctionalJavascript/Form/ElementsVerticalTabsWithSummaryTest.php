@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\FunctionalJavascript\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that titles and summaries in vertical-tabs form elements are set correctly.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class ElementsVerticalTabsWithSummaryTest extends WebDriverTestBase {
 
   /**

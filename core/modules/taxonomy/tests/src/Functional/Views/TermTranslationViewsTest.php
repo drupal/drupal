@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Functional\Views;
 use Drupal\Core\Url;
 use Drupal\Tests\taxonomy\Functional\TaxonomyTranslationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for views translation.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermTranslationViewsTest extends TaxonomyTestBase {
 
   use TaxonomyTranslationTestTrait;

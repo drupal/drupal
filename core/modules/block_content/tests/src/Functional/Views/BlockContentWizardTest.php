@@ -6,11 +6,13 @@ namespace Drupal\Tests\block_content\Functional\Views;
 
 use Drupal\Tests\block_content\Functional\BlockContentTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests block_content wizard and generic entity integration.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentWizardTest extends BlockContentTestBase {
 
   /**

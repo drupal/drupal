@@ -9,11 +9,13 @@ use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the image media source.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaSourceImageTest extends MediaFunctionalTestBase {
 
   use TestFileCreationTrait;

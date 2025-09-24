@@ -8,11 +8,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default value widget in Field UI.
  */
 #[Group('field_ui')]
+#[RunTestsInSeparateProcesses]
 class DefaultValueWidgetTest extends WebDriverTestBase {
 
   use TaxonomyTestTrait;

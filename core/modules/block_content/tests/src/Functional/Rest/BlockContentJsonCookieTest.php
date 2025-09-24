@@ -6,11 +6,13 @@ namespace Drupal\Tests\block_content\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Block Content Json Cookie.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class BlockContentJsonCookieTest extends BlockContentResourceTestBase {
 
   use CookieResourceTestTrait;

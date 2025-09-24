@@ -12,11 +12,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensure that password reset methods work as expected.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserPasswordResetTest extends BrowserTestBase {
 
   use AssertMailTrait {

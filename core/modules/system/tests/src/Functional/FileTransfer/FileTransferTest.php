@@ -9,12 +9,14 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests recursive file copy operations with the file transfer jail.
  */
 #[Group('FileTransfer')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class FileTransferTest extends BrowserTestBase {
 
   /**

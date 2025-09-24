@@ -6,11 +6,13 @@ namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests user registration forms via JS.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserRegisterFormTest extends WebDriverTestBase {
 
   /**

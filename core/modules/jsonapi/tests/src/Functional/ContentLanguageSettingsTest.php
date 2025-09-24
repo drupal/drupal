@@ -11,11 +11,13 @@ use Drupal\jsonapi\JsonApiSpec;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for "ContentLanguageSettings" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class ContentLanguageSettingsTest extends ConfigEntityResourceTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Menu UI and Content Moderation integration.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuUiContentModerationTest extends BrowserTestBase {
 
   use ContentModerationTestTrait;

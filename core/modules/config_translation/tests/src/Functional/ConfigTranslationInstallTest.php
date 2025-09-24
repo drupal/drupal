@@ -7,11 +7,13 @@ namespace Drupal\Tests\config_translation\Functional;
 use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Installs the config translation module on a site installed in non english.
  */
 #[Group('config_translation')]
+#[RunTestsInSeparateProcesses]
 class ConfigTranslationInstallTest extends InstallerTestBase {
 
   use ContentTypeCreationTrait;

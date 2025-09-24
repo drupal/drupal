@@ -15,12 +15,14 @@ use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests link field widgets and formatters.
  */
 #[Group('link')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class LinkFieldTest extends BrowserTestBase {
 
   use PathAliasTestTrait;

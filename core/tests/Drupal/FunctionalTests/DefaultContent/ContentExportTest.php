@@ -25,6 +25,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LogLevel;
 
 /**
@@ -34,6 +35,7 @@ use Psr\Log\LogLevel;
 #[CoversClass(Exporter::class)]
 #[Group('DefaultContent')]
 #[Group('Recipe')]
+#[RunTestsInSeparateProcesses]
 class ContentExportTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

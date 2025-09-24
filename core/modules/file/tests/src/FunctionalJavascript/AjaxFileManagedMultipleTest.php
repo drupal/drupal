@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ajax upload to managed files.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class AjaxFileManagedMultipleTest extends WebDriverTestBase {
 
   use TestFileCreationTrait {

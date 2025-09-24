@@ -11,6 +11,7 @@ use Drupal\filter\Entity\FilterFormat;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore drupalmediaediting
 /**
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(Media::class)]
 #[Group('ckeditor5')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class MediaPreviewTest extends MediaTestBase {
 
   /**

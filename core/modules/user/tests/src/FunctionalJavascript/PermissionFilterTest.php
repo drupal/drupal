@@ -6,11 +6,13 @@ namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JavaScript functionality of the permission filter.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class PermissionFilterTest extends WebDriverTestBase {
 
   /**

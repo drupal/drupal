@@ -8,12 +8,14 @@ use Drupal\Component\Utility\Xss;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore titel
 /**
  * Tests views title translation.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewTranslationTest extends ViewTestBase {
 
   /**

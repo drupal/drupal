@@ -12,11 +12,13 @@ use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Media overview page.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaOverviewPageTest extends MediaFunctionalTestBase {
 
   use TestFileCreationTrait;

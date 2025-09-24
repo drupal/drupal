@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Date Format Json Cookie.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class DateFormatJsonCookieTest extends DateFormatResourceTestBase {
 
   use CookieResourceTestTrait;

@@ -11,6 +11,7 @@ use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests overrides editing uses the correct theme.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  * uses the front end theme.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderOverridesEditingThemeTest extends LayoutBuilderTestBase {
 
   use EnableLayoutBuilderTrait;

@@ -8,12 +8,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\TestTools\Extension\InfoWriterTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the theme UI.
  */
 #[Group('Theme')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ThemeUiTest extends BrowserTestBase {
   use InfoWriterTrait;
 

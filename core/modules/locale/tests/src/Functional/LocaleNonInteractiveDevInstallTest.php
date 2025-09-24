@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installing in a different language with a dev version string.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleNonInteractiveDevInstallTest extends LocaleNonInteractiveInstallTest {
 
   /**

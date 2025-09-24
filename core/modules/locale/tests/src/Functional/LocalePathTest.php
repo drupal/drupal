@@ -9,12 +9,14 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests you can configure a language for individual URL aliases.
  */
 #[Group('locale')]
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class LocalePathTest extends BrowserTestBase {
 
   use PathAliasTestTrait;

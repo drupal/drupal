@@ -6,6 +6,7 @@ namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the permission field handler ui.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\user\Plugin\views\filter\Permissions
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class FilterPermissionUiTest extends ViewTestBase {
 
   /**

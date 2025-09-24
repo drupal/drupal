@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\DrupalKernel;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that the container rebuild works as expected.
  */
 #[Group('DrupalKernel')]
+#[RunTestsInSeparateProcesses]
 class ContainerRebuildWebTest extends BrowserTestBase {
 
   /**

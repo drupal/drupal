@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldConfigInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the creation of numeric fields.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class NumberFieldTest extends BrowserTestBase {
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Module;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the deprecated template is correctly marked.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class DeprecatedTemplateTest extends BrowserTestBase {
 
   /**

@@ -16,6 +16,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore arrakis complote détruire harkonnen
@@ -26,6 +27,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  */
 #[CoversClass(MediaLibrary::class)]
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class MediaLibraryTest extends WebDriverTestBase {
 
   use MediaTypeCreationTrait;

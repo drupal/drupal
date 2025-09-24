@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\FunctionalJavascript\Plugin;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the bulk operations.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class BulkOperationsTest extends WebDriverTestBase {
 
   /**

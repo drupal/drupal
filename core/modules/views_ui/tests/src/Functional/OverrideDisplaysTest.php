@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that displays can be correctly overridden via the user interface.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class OverrideDisplaysTest extends UITestBase {
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\Tests\views\Functional;
 use Drupal\Core\Url;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests glossary functionality of taxonomy views.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyGlossaryTest extends ViewTestBase {
 
   use TaxonomyTestTrait;

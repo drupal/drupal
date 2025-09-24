@@ -7,11 +7,13 @@ namespace Drupal\Tests\field_layout\FunctionalJavascript;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests using field layout for entity displays.
  */
 #[Group('field_layout')]
+#[RunTestsInSeparateProcesses]
 class FieldLayoutTest extends WebDriverTestBase {
 
   /**

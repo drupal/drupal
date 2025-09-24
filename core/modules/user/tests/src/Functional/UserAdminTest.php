@@ -9,11 +9,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests user administration page functionality.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserAdminTest extends BrowserTestBase {
 
   use AssertMailTrait {

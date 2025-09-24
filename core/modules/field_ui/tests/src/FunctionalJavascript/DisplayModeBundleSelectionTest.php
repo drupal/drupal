@@ -8,11 +8,13 @@ use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the bundle selection for view & form display modes.
  */
 #[Group('field_ui')]
+#[RunTestsInSeparateProcesses]
 class DisplayModeBundleSelectionTest extends WebDriverTestBase {
 
   /**

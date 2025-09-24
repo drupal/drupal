@@ -8,11 +8,13 @@ use Drupal\Core\Site\Settings;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests importing configuration from an uploaded file.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigImportUploadTest extends BrowserTestBase {
 
   use TestFileCreationTrait;

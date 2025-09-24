@@ -13,6 +13,7 @@ use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the views 'moderation_state_filter' filter plugin.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(ModerationStateFilter::class)]
 #[Group('content_moderation')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ViewsModerationStateFilterTest extends ViewTestBase {
 
   use ContentModerationTestTrait;

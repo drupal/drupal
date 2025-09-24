@@ -8,11 +8,13 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests managing taxonomy parents through the user interface.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermParentsTest extends BrowserTestBase {
 
   /**

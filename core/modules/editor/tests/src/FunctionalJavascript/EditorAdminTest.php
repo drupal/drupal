@@ -6,12 +6,14 @@ namespace Drupal\Tests\editor\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore sulaco
 /**
  * Tests Editor Admin.
  */
 #[Group('editor')]
+#[RunTestsInSeparateProcesses]
 class EditorAdminTest extends WebDriverTestBase {
 
   /**

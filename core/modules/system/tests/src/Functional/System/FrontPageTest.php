@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests front page functionality and administration.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class FrontPageTest extends BrowserTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the shortcut translation UI.
  */
 #[Group('Shortcut')]
+#[RunTestsInSeparateProcesses]
 class ShortcutTranslationUITest extends ContentTranslationUITestBase {
 
   /**

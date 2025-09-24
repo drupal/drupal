@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment links altering.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentLinksAlterTest extends CommentTestBase {
 
   /**

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Media module's requirements checks.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaRequirementsTest extends MediaFunctionalTestBase {
 
   /**

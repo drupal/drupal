@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests hook_post_update() when there is an exception in a post update.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class UpdatePostUpdateExceptionTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

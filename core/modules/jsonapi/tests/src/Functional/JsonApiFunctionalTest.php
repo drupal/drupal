@@ -10,6 +10,7 @@ use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * General functional test class.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
 
   use WaitTerminateTestTrait;

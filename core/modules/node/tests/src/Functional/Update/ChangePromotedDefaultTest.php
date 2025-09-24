@@ -7,11 +7,13 @@ namespace Drupal\Tests\node\Functional\Update;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests creating base field overrides for the promote field on node types.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class ChangePromotedDefaultTest extends UpdatePathTestBase {
 
   /**

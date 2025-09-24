@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Core\Url;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Testing the media settings.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaSettingsTest extends MediaFunctionalTestBase {
 
   /**

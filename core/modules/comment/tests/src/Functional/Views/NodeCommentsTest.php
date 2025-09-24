@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional\Views;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comments on nodes.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class NodeCommentsTest extends CommentTestBase {
 
   /**

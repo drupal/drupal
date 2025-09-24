@@ -10,11 +10,13 @@ use Drupal\media_library\MediaLibraryState;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the media library UI access.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class WidgetAccessTest extends MediaLibraryTestBase {
 
   /**

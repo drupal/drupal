@@ -9,6 +9,7 @@ use Drupal\user\UserInterface;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the handler of the view: entity target argument.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\argument\EntityArgument
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class EntityArgumentTest extends TaxonomyTestBase {
 
   /**

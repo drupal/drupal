@@ -7,11 +7,13 @@ namespace Drupal\FunctionalTests\Theme;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Olivero theme.
  */
 #[Group('olivero')]
+#[RunTestsInSeparateProcesses]
 class OliveroTest extends BrowserTestBase {
 
   /**

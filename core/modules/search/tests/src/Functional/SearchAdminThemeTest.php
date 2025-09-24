@@ -6,6 +6,7 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verify the search results using administration theme for specific plugins.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Tests\system\Functional\System\ThemeTest::testAdministrationTheme()
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchAdminThemeTest extends BrowserTestBase {
 
   /**

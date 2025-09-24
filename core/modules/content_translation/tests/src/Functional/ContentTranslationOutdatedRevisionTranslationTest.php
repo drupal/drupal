@@ -7,11 +7,13 @@ namespace Drupal\Tests\content_translation\Functional;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Flag as outdated" functionality with revision translations.
  */
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationOutdatedRevisionTranslationTest extends ContentTranslationPendingRevisionTestBase {
 
   /**

@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\system\Functional\Module\ModuleTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the largest configuration import possible with all available modules.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('config')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ConfigImportAllTest extends ModuleTestBase {
 
   use SchemaCheckTestTrait;

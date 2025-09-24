@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Functional\Routing;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for $_GET['destination'] and $_REQUEST['destination'] validation.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * but we want to be absolutely sure it works.
  */
 #[Group('Routing')]
+#[RunTestsInSeparateProcesses]
 class DestinationTest extends BrowserTestBase {
 
   /**

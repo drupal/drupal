@@ -8,11 +8,13 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that an entity with a UUID as ID can be managed.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityUuidIdTest extends BrowserTestBase {
 
   use ContentTranslationTestTrait;

@@ -8,11 +8,13 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Drupal session handling tests.
  */
 #[Group('Session')]
+#[RunTestsInSeparateProcesses]
 class SessionTest extends BrowserTestBase {
 
   /**

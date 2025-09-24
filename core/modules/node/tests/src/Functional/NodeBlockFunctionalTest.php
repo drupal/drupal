@@ -11,11 +11,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node block functionality.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeBlockFunctionalTest extends NodeTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

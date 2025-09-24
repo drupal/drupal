@@ -7,11 +7,13 @@ namespace Drupal\FunctionalTests\Update;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that update.php is accessible even if there are unstable modules.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class UpdateReducedThemeRegistryTest extends BrowserTestBase {
 
   /**

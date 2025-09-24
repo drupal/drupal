@@ -14,6 +14,7 @@ use Drupal\Tests\media\Traits\OEmbedTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore Schipulcon
 
@@ -23,6 +24,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('media')]
 #[Group('#slow')]
 #[CoversClass(OEmbedFormatter::class)]
+#[RunTestsInSeparateProcesses]
 class OEmbedFormatterTest extends MediaFunctionalTestBase {
 
   use OEmbedTestTrait;

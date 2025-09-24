@@ -8,11 +8,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests creating entity reference fields in the UI.
  */
 #[Group('entity')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceFieldCreationTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

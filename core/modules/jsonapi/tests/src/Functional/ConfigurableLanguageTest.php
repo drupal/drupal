@@ -11,11 +11,13 @@ use Drupal\jsonapi\JsonApiSpec;
 use Drupal\language\Entity\ConfigurableLanguage;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "ConfigurableLanguage" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class ConfigurableLanguageTest extends ConfigEntityResourceTestBase {
 
   /**

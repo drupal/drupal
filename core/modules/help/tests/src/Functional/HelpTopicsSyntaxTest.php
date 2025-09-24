@@ -11,6 +11,7 @@ use Drupal\help_topics_twig_tester\HelpTestTwigNodeVisitor;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -18,6 +19,7 @@ use PHPUnit\Framework\ExpectationFailedException;
  */
 #[Group('help')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class HelpTopicsSyntaxTest extends BrowserTestBase {
 
   /**

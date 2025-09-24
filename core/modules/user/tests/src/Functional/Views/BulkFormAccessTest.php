@@ -6,6 +6,7 @@ namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests if entity access is respected on a user bulk form.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\user\Tests\Views\BulkFormTest
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class BulkFormAccessTest extends UserTestBase {
 
   /**

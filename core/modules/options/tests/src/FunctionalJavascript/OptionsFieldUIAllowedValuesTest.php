@@ -10,12 +10,14 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Options field allowed values UI functionality.
  */
 #[Group('options')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;

@@ -8,6 +8,7 @@ use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager_test_validation\TestExecutableFinder;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that Package Manager shows the Composer version on the status report.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('package_manager')]
+#[RunTestsInSeparateProcesses]
 class ComposerRequirementTest extends PackageManagerTestBase {
 
   /**

@@ -15,11 +15,13 @@ use Drupal\form_test\Form\FormTestDisabledElementsForm;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests various form element validation mechanisms.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class FormTest extends BrowserTestBase {
 
   /**

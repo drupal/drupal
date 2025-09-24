@@ -11,12 +11,14 @@ use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore wõrd
 /**
  * Tests abstract handler definitions.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class HandlerTest extends ViewTestBase {
 
   use CommentTestTrait;

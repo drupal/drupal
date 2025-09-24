@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Functional\Wizard;
 
 use Drupal\Core\Url;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ability of the views wizard to put views in a menu.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class MenuTest extends WizardTestBase {
 
   /**

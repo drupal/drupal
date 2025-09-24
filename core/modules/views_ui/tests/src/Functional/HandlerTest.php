@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\ViewExecutable;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handler UI for views.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\HandlerBase
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class HandlerTest extends UITestBase {
 
   /**

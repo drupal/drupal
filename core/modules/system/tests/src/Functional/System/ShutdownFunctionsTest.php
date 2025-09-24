@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Functional tests shutdown functions.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class ShutdownFunctionsTest extends BrowserTestBase {
 
   /**

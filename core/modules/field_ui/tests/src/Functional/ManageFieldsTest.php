@@ -11,12 +11,14 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cSpell:ignore downlander
 /**
  * Tests the Manage Display page of a fieldable entity type.
  */
 #[Group('field_ui')]
+#[RunTestsInSeparateProcesses]
 class ManageFieldsTest extends BrowserTestBase {
 
   use FieldUiTestTrait;

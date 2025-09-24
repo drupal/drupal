@@ -6,11 +6,13 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests content translation for vocabularies.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class VocabularyTranslationTest extends TaxonomyTestBase {
 
   /**

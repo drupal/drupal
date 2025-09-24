@@ -8,11 +8,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests page not found functionality, including custom 404 pages.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class PageNotFoundTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

@@ -7,12 +7,14 @@ namespace Drupal\Tests\system\Functional\Datetime;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore ABCDEFGHIJK
 /**
  * Tests converting JavaScript time zone abbreviations to time zone identifiers.
  */
 #[Group('Datetime')]
+#[RunTestsInSeparateProcesses]
 class TimeZoneAbbreviationRouteTest extends BrowserTestBase {
 
   /**

@@ -11,11 +11,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests personal contact form functionality.
  */
 #[Group('contact')]
+#[RunTestsInSeparateProcesses]
 class ContactPersonalTest extends BrowserTestBase {
 
   use AssertMailTrait;

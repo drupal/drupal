@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests covering Preview of unsaved Views.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class UnsavedPreviewTest extends UITestBase {
 
   /**

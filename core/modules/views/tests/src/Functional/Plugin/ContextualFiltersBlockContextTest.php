@@ -9,11 +9,13 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * A test for contextual filters exposed as block context.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ContextualFiltersBlockContextTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

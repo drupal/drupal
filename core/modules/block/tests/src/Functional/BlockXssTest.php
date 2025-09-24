@@ -11,11 +11,13 @@ use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the block module properly escapes block descriptions.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockXssTest extends BrowserTestBase {
 
   /**

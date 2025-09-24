@@ -7,11 +7,13 @@ namespace Drupal\FunctionalTests\Rest;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Base Field Override Xml Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class BaseFieldOverrideXmlAnonTest extends BaseFieldOverrideResourceTestBase {
 
   use AnonResourceTestTrait;

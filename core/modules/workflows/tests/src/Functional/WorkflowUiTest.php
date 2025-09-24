@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests workflow creation UI.
  */
 #[Group('workflows')]
+#[RunTestsInSeparateProcesses]
 class WorkflowUiTest extends BrowserTestBase {
 
   /**

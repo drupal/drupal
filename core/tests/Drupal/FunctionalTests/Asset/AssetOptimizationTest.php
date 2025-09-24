@@ -7,12 +7,14 @@ namespace Drupal\FunctionalTests\Asset;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore abcdefghijklmnop
 /**
  * Tests asset aggregation.
  */
 #[Group('asset')]
+#[RunTestsInSeparateProcesses]
 class AssetOptimizationTest extends BrowserTestBase {
 
   /**

@@ -10,11 +10,13 @@ use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the /add and /add/{type} controllers.
  */
 #[Group('entity')]
+#[RunTestsInSeparateProcesses]
 class EntityAddUITest extends BrowserTestBase {
 
   /**

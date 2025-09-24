@@ -9,12 +9,14 @@ use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Content Moderation's integration with Layout Builder.
  */
 #[Group('content_moderation')]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
 
   use BlockContentCreationTrait;

@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests User related helper methods of BrowserTestBase.
  */
 #[Group('browsertestbase')]
+#[RunTestsInSeparateProcesses]
 class UserHelpersTest extends BrowserTestBase {
 
   /**

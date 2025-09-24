@@ -8,11 +8,13 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "BlockContentType" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class BlockContentTypeTest extends ConfigEntityResourceTestBase {
 
   /**

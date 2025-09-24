@@ -7,12 +7,14 @@ namespace Drupal\Tests\system\Functional\System;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the authorize.php script and related API.
  */
 #[IgnoreDeprecations]
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class SystemAuthorizeTest extends BrowserTestBase {
 
   /**

@@ -13,11 +13,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity reference selection handler.
  */
 #[Group('entity_reference')]
+#[RunTestsInSeparateProcesses]
 class SelectionTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

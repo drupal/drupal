@@ -6,11 +6,13 @@ namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Message Json Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class MessageJsonAnonTest extends MessageResourceTestBase {
 
   use AnonResourceTestTrait;

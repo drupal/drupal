@@ -8,11 +8,13 @@ use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures the language config overrides can be synchronized.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageConfigOverrideImportTest extends BrowserTestBase {
 
   /**

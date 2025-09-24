@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Yaml\Yaml;
 
 // cspell:ignore esque imageUpload sourceediting Editing's
@@ -17,6 +18,7 @@ use Symfony\Component\Yaml\Yaml;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
   /**

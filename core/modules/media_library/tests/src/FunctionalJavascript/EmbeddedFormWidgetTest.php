@@ -11,11 +11,13 @@ use Drupal\media\Entity\Media;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests media widget nested inside another widget.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class EmbeddedFormWidgetTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;

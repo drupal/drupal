@@ -6,11 +6,13 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JavaScript filtering of options in add handler form.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class FilterOptionsTest extends WebDriverTestBase {
 
   /**

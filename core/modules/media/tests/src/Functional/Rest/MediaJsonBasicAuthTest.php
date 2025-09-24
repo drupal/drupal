@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Media Json Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class MediaJsonBasicAuthTest extends MediaResourceTestBase {
 
   use BasicAuthResourceTestTrait;

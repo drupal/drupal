@@ -9,12 +9,14 @@ use Drupal\Core\Render\MainContent\HtmxRenderer;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the cache headers set HtmxRenderer responses.
  */
 #[CoversClass(HtmxRenderer::class)]
 #[Group('Htmx')]
+#[RunTestsInSeparateProcesses]
 class HtmxRendererCacheTest extends BrowserTestBase {
 
   /**

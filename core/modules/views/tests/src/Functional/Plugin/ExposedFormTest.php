@@ -14,12 +14,14 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests exposed forms functionality.
  */
 #[Group('views')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ExposedFormTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

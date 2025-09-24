@@ -10,11 +10,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\NodeInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "Date" field.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
 
   /**

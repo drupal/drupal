@@ -7,11 +7,13 @@ namespace Drupal\Tests\menu_ui\Functional;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that uninstalling menu does not remove custom menus.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuUninstallTest extends BrowserTestBase {
 
   /**

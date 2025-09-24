@@ -6,12 +6,14 @@ namespace Drupal\Tests\update\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests legacy Update Manager functionality of the Update Status module.
  */
 #[IgnoreDeprecations]
 #[Group('update')]
+#[RunTestsInSeparateProcesses]
 class UpdateManagerTest extends UpdateTestBase {
 
   /**

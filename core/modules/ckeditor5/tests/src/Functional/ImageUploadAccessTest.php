@@ -7,6 +7,7 @@ namespace Drupal\Tests\ckeditor5\Functional;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\File\FileExists;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test image upload access.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class ImageUploadAccessTest extends ImageUploadTest {
 
   /**

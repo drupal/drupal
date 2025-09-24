@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node field filters with translations.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeFieldFilterTest extends NodeTestBase {
 
   /**

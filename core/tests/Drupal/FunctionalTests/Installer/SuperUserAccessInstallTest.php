@@ -8,11 +8,13 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests superuser access and the installer.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class SuperUserAccessInstallTest extends InstallerTestBase {
 
   /**

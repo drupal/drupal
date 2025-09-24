@@ -8,6 +8,7 @@ use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests performance for JSON:API routes.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 #[Group('Common')]
 #[Group('#slow')]
 #[RequiresPhpExtension('apcu')]
+#[RunTestsInSeparateProcesses]
 class JsonApiPerformanceTest extends PerformanceTestBase {
 
   /**

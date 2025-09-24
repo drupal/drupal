@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\NodeInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the output of node links (read more, add new comment, etc).
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeLinksTest extends NodeTestBase {
 
   /**

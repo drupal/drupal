@@ -10,11 +10,13 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Performs tests on opening and manipulating dialogs via AJAX commands.
  */
 #[Group('Ajax')]
+#[RunTestsInSeparateProcesses]
 class OffCanvasDialogTest extends BrowserTestBase {
 
   /**

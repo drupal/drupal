@@ -6,12 +6,14 @@ namespace Drupal\Tests\mailer\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Mailer\Transport\NullTransport;
 
 /**
  * Tests the transport service factory in the child site of browser tests.
  */
 #[Group('mailer')]
+#[RunTestsInSeparateProcesses]
 class TransportServiceFactoryTest extends BrowserTestBase {
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\FunctionalTests\Bootstrap;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests kernel panic when things are really messed up.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class UncaughtExceptionTest extends BrowserTestBase {
 
   /**

@@ -10,11 +10,13 @@ use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Adds a new language and tests changing its status and the default language.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageListTest extends BrowserTestBase {
 
   /**

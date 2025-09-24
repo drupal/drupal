@@ -13,11 +13,13 @@ use Drupal\media\Plugin\media\Source\Image;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the image media source.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaSourceImageTest extends MediaSourceTestBase {
 
   /**

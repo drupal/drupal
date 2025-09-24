@@ -6,11 +6,13 @@ namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures the language config is installed but not altered on install.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageConfigInstallOverrideExistingTest extends BrowserTestBase {
 
   /**

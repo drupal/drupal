@@ -16,11 +16,13 @@ use Drupal\Tests\comment\Functional\CommentTestBase as CommentBrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment approval functionality.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentAdminTest extends CommentBrowserTestBase {
 
   /**

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests a page with multiple Views forms.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewsFormMultipleTest extends ViewTestBase {
 
   /**

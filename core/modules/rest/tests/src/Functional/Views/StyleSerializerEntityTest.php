@@ -14,6 +14,7 @@ use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -27,6 +28,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  * @see \Drupal\rest\Plugin\views\row\DataFieldRow
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class StyleSerializerEntityTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

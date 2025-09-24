@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Cache;
 
 use Drupal\Core\Cache\Cache;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests our clearing is done the proper way.
  */
 #[Group('Cache')]
+#[RunTestsInSeparateProcesses]
 class ClearTest extends CacheTestBase {
 
   /**

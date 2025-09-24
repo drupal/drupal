@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test whether deprecation notices are triggered via \Drupal::service().
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[CoversClass(Container::class)]
 #[Group('Container')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class ServiceDeprecationTest extends BrowserTestBase {
 
   /**

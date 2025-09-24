@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Theme;
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for Twig debug markup.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigDebugMarkupTest extends BrowserTestBase {
 
   /**

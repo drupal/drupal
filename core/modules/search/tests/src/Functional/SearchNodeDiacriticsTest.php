@@ -6,11 +6,13 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests search functionality with diacritics.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchNodeDiacriticsTest extends BrowserTestBase {
 
   /**

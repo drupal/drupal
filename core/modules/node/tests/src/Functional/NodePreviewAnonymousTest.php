@@ -8,11 +8,13 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node entity preview functionality for anonymous user.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodePreviewAnonymousTest extends BrowserTestBase {
 
   /**

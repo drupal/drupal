@@ -7,12 +7,14 @@ namespace Drupal\Tests\layout_builder\Functional\Jsonapi;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\Tests\jsonapi\Functional\EntityViewDisplayTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "EntityViewDisplay" config entity type.
  */
 #[Group('jsonapi')]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderEntityViewDisplayTest extends EntityViewDisplayTest {
 
   /**

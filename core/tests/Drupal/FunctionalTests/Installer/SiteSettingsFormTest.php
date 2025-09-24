@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the extension of the site settings form.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class SiteSettingsFormTest extends BrowserTestBase {
 
   /**

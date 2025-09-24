@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests processing of theme .info.yml properties.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ThemeInfoTest extends BrowserTestBase {
 
   /**

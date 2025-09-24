@@ -11,6 +11,7 @@ use Drupal\layout_builder\Plugin\Block\FieldBlock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore datefield
 /**
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[CoversClass(FieldBlock::class)]
 #[Group('field')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class FieldBlockTest extends WebDriverTestBase {
 
   /**

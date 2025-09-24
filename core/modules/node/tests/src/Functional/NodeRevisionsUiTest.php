@@ -9,11 +9,13 @@ use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI for controlling node revision behavior.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeRevisionsUiTest extends NodeTestBase {
 
   /**

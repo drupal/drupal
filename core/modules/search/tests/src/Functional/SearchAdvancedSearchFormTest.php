@@ -6,11 +6,13 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Indexes content and tests the advanced search form.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchAdvancedSearchFormTest extends BrowserTestBase {
 
   /**

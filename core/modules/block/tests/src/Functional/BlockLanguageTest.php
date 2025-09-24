@@ -7,11 +7,13 @@ namespace Drupal\Tests\block\Functional;
 use Drupal\block\Entity\Block;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests per-language block configuration.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockLanguageTest extends BrowserTestBase {
 
   /**

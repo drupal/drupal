@@ -6,11 +6,13 @@ namespace Drupal\Tests\filter\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Filter Format Json Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class FilterFormatJsonBasicAuthTest extends FilterFormatResourceTestBase {
 
   use BasicAuthResourceTestTrait;

@@ -6,11 +6,13 @@ namespace Drupal\Tests\search\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Search Page Json Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class SearchPageJsonAnonTest extends SearchPageResourceTestBase {
 
   use AnonResourceTestTrait;

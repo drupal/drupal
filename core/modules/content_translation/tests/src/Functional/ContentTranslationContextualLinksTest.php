@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that contextual links are available for content translation.
  */
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationContextualLinksTest extends BrowserTestBase {
 
   use ContentTranslationTestTrait;

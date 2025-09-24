@@ -8,12 +8,14 @@ use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore descripcion mostrar
 /**
  * Tests parsing js files for translatable strings.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleJavascriptTranslationTest extends BrowserTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Claro theme.
  */
 #[Group('claro')]
+#[RunTestsInSeparateProcesses]
 class ClaroTest extends BrowserTestBase {
 
   /**

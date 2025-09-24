@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests non-standard named translation files get imported during install.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerTranslationNonStandardFilenamesTest extends InstallerTranslationMultipleLanguageNonInteractiveTest {
 
   /**

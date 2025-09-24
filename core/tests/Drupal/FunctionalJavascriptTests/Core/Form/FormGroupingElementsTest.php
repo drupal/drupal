@@ -6,11 +6,13 @@ namespace Drupal\FunctionalJavascriptTests\Core\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for form grouping elements.
  */
 #[Group('form')]
+#[RunTestsInSeparateProcesses]
 class FormGroupingElementsTest extends WebDriverTestBase {
 
   /**

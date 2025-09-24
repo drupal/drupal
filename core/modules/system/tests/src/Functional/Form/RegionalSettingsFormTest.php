@@ -9,12 +9,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the system_regional_settings form.
  */
 #[Group('system')]
 #[CoversClass(RegionalForm::class)]
+#[RunTestsInSeparateProcesses]
 class RegionalSettingsFormTest extends BrowserTestBase {
 
   /**

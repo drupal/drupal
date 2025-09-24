@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\KernelTests\AssertConfigTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the interactive installer installing the minimal profile.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class MinimalInstallerTest extends ConfigAfterInstallerTestBase {
 
   use AssertConfigTrait;

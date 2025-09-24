@@ -9,11 +9,13 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity display modes UI.
  */
 #[Group('field_ui')]
+#[RunTestsInSeparateProcesses]
 class EntityDisplayModeTest extends BrowserTestBase {
 
   /**

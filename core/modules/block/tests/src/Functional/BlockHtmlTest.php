@@ -6,11 +6,13 @@ namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests block HTML ID validity.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockHtmlTest extends BrowserTestBase {
 
   /**

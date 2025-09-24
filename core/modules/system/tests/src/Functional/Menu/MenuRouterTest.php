@@ -8,11 +8,13 @@ use Drupal\Core\Url;
 use Drupal\menu_test\MenuTestHelper;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests menu router and default menu link functionality.
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuRouterTest extends BrowserTestBase {
 
   /**

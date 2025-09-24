@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Functional\Rest;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Vocabulary Xml Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class VocabularyXmlBasicAuthTest extends VocabularyResourceTestBase {
 
   use BasicAuthResourceTestTrait;

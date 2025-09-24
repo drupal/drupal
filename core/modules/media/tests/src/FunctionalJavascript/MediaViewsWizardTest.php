@@ -6,6 +6,7 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the media entity type integration into the wizard.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\media\Plugin\views\wizard\MediaRevision
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaViewsWizardTest extends MediaJavascriptTestBase {
 
   /**

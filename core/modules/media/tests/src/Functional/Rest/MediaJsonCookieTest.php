@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Media Json Cookie.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class MediaJsonCookieTest extends MediaResourceTestBase {
 
   use CookieResourceTestTrait;

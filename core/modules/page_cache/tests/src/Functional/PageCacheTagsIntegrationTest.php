@@ -16,6 +16,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -24,6 +25,7 @@ use Symfony\Component\Yaml\Yaml;
  * @see \Drupal\Tests\page_cache\Functional\PageCacheTest
  */
 #[Group('Cache')]
+#[RunTestsInSeparateProcesses]
 class PageCacheTagsIntegrationTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

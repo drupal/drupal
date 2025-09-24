@@ -7,6 +7,7 @@ namespace Drupal\Tests\views_ui\Functional;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the wizard.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\wizard\WizardPluginBase
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class WizardTest extends WizardTestBase {
 
   /**

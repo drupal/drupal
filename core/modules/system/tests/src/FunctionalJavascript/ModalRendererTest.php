@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that dialog links use different renderer services.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class ModalRendererTest extends WebDriverTestBase {
 
   /**

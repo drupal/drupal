@@ -7,11 +7,13 @@ namespace Drupal\Tests\rest\Functional\EntityResource\ModeratedNode;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Moderated Node Xml Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ModeratedNodeXmlAnonTest extends ModeratedNodeResourceTestBase {
 
   use AnonResourceTestTrait;

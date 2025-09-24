@@ -7,12 +7,14 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\Core\File\FileExists;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore janvier lundi
 /**
  * Tests the exportation of locale files.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleExportTest extends BrowserTestBase {
 
   /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node/{node} page.
@@ -12,6 +13,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\node\Controller\NodeController
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeViewTest extends NodeTestBase {
 
   /**

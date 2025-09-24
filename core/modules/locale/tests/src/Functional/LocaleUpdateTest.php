@@ -8,12 +8,14 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore extraday lundi
 /**
  * Tests for updating the interface translations of projects.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleUpdateTest extends LocaleUpdateBase {
 
   use StringTranslationTrait;

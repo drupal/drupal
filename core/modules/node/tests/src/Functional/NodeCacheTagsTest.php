@@ -9,11 +9,13 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Node entity's cache tags.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   /**

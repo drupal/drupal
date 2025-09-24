@@ -6,11 +6,13 @@ namespace Drupal\Tests\update\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests update_post_update_fix_update_emails.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class UpdateEmptyEmailsUpdatePathTest extends UpdatePathTestBase {
 
   /**

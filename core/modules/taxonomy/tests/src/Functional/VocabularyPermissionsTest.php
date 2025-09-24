@@ -6,11 +6,13 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the taxonomy vocabulary permissions.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class VocabularyPermissionsTest extends TaxonomyTestBase {
 
   /**

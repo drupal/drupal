@@ -15,11 +15,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment user interfaces.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentInterfaceTest extends CommentTestBase {
 
   /**

@@ -10,6 +10,7 @@ use Drupal\Tests\workspaces\Functional\WorkspaceTestUtilities;
 use Drupal\user\UserInterface;
 use Drupal\workspaces\Entity\Workspace;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for layout editing in workspaces.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('layout_builder')]
 #[Group('workspaces')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class WorkspacesLayoutBuilderIntegrationTest extends InlineBlockTestBase {
 
   use OffCanvasTestTrait;

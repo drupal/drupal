@@ -7,11 +7,13 @@ namespace Drupal\Tests\block_content\Functional\Rest;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Block Content Type Xml Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class BlockContentTypeXmlBasicAuthTest extends BlockContentTypeResourceTestBase {
 
   use BasicAuthResourceTestTrait;

@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests selecting a display variant.
  */
 #[Group('Render')]
+#[RunTestsInSeparateProcesses]
 class DisplayVariantTest extends BrowserTestBase {
 
   /**

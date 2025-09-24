@@ -13,11 +13,13 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests media library for translatable media.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class TranslationsTest extends WebDriverTestBase {
 
   use EntityReferenceFieldCreationTrait;

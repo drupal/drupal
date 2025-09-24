@@ -7,11 +7,13 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the media library widget when no media types are available.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class WidgetWithoutTypesTest extends MediaLibraryTestBase {
 
   /**

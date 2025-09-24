@@ -9,11 +9,13 @@ use Drupal\jsonapi\JsonApiSpec;
 use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "Action" config entity type.
  */
 #[Group('Action')]
+#[RunTestsInSeparateProcesses]
 class ActionTest extends ConfigEntityResourceTestBase {
 
   /**

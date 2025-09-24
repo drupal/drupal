@@ -6,11 +6,13 @@ namespace Drupal\Tests\editor\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Editor Json Basic Auth.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class EditorJsonBasicAuthTest extends EditorResourceTestBase {
 
   use BasicAuthResourceTestTrait;

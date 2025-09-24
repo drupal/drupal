@@ -11,11 +11,13 @@ use Drupal\Core\Url;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for \Drupal\navigation\Plugin\Block\NavigationLinkBlockTest.
  */
 #[Group('navigation')]
+#[RunTestsInSeparateProcesses]
 class NavigationLinkBlockTest extends PageCacheTagsTestBase {
 
   /**

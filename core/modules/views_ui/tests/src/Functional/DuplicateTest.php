@@ -6,11 +6,13 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI for view duplicate tool.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class DuplicateTest extends UITestBase {
 
   /**

@@ -9,6 +9,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI of generic display path plugin.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class DisplayPathTest extends UITestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

@@ -6,11 +6,13 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests moderated content dynamic local task.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ModeratedContentLocalTaskTest extends BrowserTestBase {
 
   /**

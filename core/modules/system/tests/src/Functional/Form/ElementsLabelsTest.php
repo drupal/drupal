@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Functional\Form;
 use Drupal\form_test\Form\FormTestLabelForm;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests form element labels, required markers and associated output.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class ElementsLabelsTest extends BrowserTestBase {
 
   /**

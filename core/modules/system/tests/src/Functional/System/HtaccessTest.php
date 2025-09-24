@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests .htaccess is working correctly.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class HtaccessTest extends BrowserTestBase {
 
   /**

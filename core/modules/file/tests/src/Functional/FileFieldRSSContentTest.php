@@ -6,11 +6,13 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensure that files added to nodes appear correctly in RSS feeds.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileFieldRSSContentTest extends FileFieldTestBase {
 
   /**

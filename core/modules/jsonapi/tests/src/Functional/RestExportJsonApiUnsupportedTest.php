@@ -6,6 +6,7 @@ namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that the 'api_json' format is not supported by the REST module.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class RestExportJsonApiUnsupportedTest extends ViewTestBase {
 
   /**

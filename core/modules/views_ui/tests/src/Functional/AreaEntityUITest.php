@@ -8,6 +8,7 @@ use Drupal\block\Entity\Block;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity area UI test.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\area\Entity
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class AreaEntityUITest extends UITestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\FunctionalJavascript\Batch;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Processing.
  */
 #[Group('Batch')]
+#[RunTestsInSeparateProcesses]
 class ProcessingTest extends WebDriverTestBase {
 
   /**

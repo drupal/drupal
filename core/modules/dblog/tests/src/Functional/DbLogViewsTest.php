@@ -6,6 +6,7 @@ namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies user access to log reports based on permissions.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see Drupal\dblog\Tests\DbLogTest
  */
 #[Group('dblog')]
+#[RunTestsInSeparateProcesses]
 class DbLogViewsTest extends DbLogTest {
 
   /**

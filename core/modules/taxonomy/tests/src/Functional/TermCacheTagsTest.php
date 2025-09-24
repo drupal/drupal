@@ -8,11 +8,13 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Taxonomy term entity's cache tags.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   /**

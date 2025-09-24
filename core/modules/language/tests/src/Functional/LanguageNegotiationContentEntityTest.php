@@ -12,6 +12,7 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -21,6 +22,7 @@ use Symfony\Component\Routing\Route;
  * Tests language negotiation with the language negotiator content entity.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageNegotiationContentEntityTest extends BrowserTestBase {
 
   /**

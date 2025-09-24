@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests re-visiting the installer after a successful installation.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerPostInstallTest extends InstallerTestBase {
 
   /**

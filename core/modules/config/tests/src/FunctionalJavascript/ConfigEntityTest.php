@@ -6,11 +6,13 @@ namespace Drupal\Tests\config\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Config operations through the UI.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigEntityTest extends WebDriverTestBase {
 
   /**

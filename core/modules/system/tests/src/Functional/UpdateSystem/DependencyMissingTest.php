@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that missing update dependencies are correctly flagged.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class DependencyMissingTest extends BrowserTestBase {
 
   /**

@@ -7,6 +7,7 @@ namespace Drupal\Tests\views_ui\Functional;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the token display for the TokenizeAreaPluginBase UI.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\area\Entity
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class TokenizeAreaUITest extends UITestBase {
 
   /**

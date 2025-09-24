@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests breadcrumbs functionality.
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class BreadcrumbFrontCacheContextsTest extends BrowserTestBase {
 
   use AssertBreadcrumbTrait;

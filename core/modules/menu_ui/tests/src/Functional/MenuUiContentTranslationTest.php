@@ -9,11 +9,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Menu UI and Content Translation integration for content entities.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuUiContentTranslationTest extends BrowserTestBase {
 
   use LanguageTestTrait;

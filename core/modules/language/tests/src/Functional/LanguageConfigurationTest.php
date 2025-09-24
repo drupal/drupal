@@ -9,11 +9,13 @@ use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Adds and configures languages to check negotiation changes.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageConfigurationTest extends BrowserTestBase {
 
   /**

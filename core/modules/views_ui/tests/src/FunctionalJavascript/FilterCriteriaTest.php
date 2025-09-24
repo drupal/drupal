@@ -6,11 +6,13 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the View UI filter criteria group dialog.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class FilterCriteriaTest extends WebDriverTestBase {
 
   /**

@@ -16,6 +16,7 @@ use Drupal\system\MenuStorage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the menu UI.
@@ -24,6 +25,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Tools menu, checks their data, and deletes them using the UI.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuUiTest extends BrowserTestBase {
 
   use MenuUiTrait;

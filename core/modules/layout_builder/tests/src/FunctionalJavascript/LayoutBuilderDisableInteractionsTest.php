@@ -12,6 +12,7 @@ use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore blocknodebundle fieldbody
 /**
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('layout_builder')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 
   use BlockContentCreationTrait;

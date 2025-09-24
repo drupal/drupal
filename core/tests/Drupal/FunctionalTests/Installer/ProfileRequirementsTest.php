@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installing a profile that implements InstallRequirementsInterface.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class ProfileRequirementsTest extends InstallerTestBase {
 
   /**

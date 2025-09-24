@@ -9,6 +9,7 @@ use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests file field validation functions.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * and whether the field is required.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileFieldValidateTest extends FileFieldTestBase {
 
   /**

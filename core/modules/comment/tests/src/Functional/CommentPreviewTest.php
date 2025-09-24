@@ -11,11 +11,13 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment preview.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentPreviewTest extends CommentTestBase {
 
   use TestFileCreationTrait {

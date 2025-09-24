@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Link;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the hook implementations that maintain the taxonomy index.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermIndexTest extends TaxonomyTestBase {
 
   /**

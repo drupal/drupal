@@ -14,11 +14,13 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests integration searching comments.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchCommentTest extends BrowserTestBase {
 
   use CommentTestTrait;

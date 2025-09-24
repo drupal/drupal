@@ -6,6 +6,7 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\user_auth_decorator_test\UserAuthDecorator;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensure that login works as expected with a decorator.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * The decorator does not implement UserAuthenticationInterface.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserLoginDecoratedTest extends UserLoginTest {
 
   /**

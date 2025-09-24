@@ -9,11 +9,13 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests modifying path aliases from the UI.
  */
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class PathAliasTest extends PathTestBase {
 
   use WaitTerminateTestTrait;

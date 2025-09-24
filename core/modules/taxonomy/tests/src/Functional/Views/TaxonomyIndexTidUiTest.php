@@ -11,6 +11,7 @@ use Drupal\Tests\views_ui\Functional\UITestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the taxonomy index filter handler UI.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\taxonomy\Plugin\views\field\TaxonomyIndexTid
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyIndexTidUiTest extends UITestBase {
 
   use EntityReferenceFieldCreationTrait;

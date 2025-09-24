@@ -6,6 +6,7 @@ namespace Drupal\FunctionalJavascriptTests\Theme;
 
 use Drupal\Tests\menu_ui\FunctionalJavascript\MenuUiJavascriptTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Runs MenuUiJavascriptTest in Claro.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Tests\menu_ui\FunctionalJavascript\MenuUiJavascriptTest;
  */
 #[Group('claro')]
+#[RunTestsInSeparateProcesses]
 class ClaroMenuUiJavascriptTest extends MenuUiJavascriptTest {
 
   /**

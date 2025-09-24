@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that outlines of node meta values are displayed in summaries and tabs.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class CollapsedSummariesTest extends WebDriverTestBase {
 
   /**

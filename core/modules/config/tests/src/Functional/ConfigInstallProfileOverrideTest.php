@@ -13,6 +13,7 @@ use Drupal\system\Entity\Action;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that configuration objects are correct after various operations.
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
  * and uninstall functionality is tested.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigInstallProfileOverrideTest extends BrowserTestBase {
 
   /**

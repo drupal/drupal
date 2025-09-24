@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test disabling content translation module.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('content_translation')]
 #[CoversClass(ContentLanguageSettingsForm::class)]
 #[CoversFunction('_content_translation_form_language_content_settings_form_alter')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationDisableSettingTest extends BrowserTestBase {
 
   /**

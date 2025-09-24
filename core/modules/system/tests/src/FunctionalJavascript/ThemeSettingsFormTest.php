@@ -9,11 +9,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that theme form settings works correctly.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class ThemeSettingsFormTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;

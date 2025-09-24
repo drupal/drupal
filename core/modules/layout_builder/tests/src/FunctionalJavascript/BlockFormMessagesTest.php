@@ -8,11 +8,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that messages appear in the off-canvas dialog with configuring blocks.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class BlockFormMessagesTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;

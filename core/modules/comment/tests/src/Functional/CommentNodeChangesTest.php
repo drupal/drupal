@@ -8,11 +8,13 @@ use Drupal\comment\Entity\Comment;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that comments behave correctly when the node is changed.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentNodeChangesTest extends CommentTestBase {
 
   /**

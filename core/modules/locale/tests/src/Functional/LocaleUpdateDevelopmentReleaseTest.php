@@ -6,11 +6,13 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test for proper version fallback in case of a development release.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
 
   /**

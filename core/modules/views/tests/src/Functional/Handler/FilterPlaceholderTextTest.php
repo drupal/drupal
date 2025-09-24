@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the placeholder text on the appropriate filter handlers.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FilterPlaceholderTextTest extends ViewTestBase {
 
   /**

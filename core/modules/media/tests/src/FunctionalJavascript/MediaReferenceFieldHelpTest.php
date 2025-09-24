@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests related to media reference fields.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
 
   /**

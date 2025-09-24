@@ -12,6 +12,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore suis
 /**
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('config')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ConfigInstallWebTest extends BrowserTestBase {
 
   /**

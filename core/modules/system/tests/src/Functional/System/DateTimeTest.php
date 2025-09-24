@@ -9,11 +9,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test date formatting and time zone handling, including daylight saving time.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class DateTimeTest extends BrowserTestBase {
 
   use FieldUiTestTrait;

@@ -7,6 +7,7 @@ namespace Drupal\FunctionalJavascriptTests\Theme;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\Tests\field_ui\FunctionalJavascript\EntityDisplayTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Runs EntityDisplayTest in Claro.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Tests\field_ui\FunctionalJavascript\EntityDisplayTest.
  */
 #[Group('claro')]
+#[RunTestsInSeparateProcesses]
 class ClaroEntityDisplayTest extends EntityDisplayTest {
 
   /**

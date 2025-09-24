@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests BrowserTestBase functionality.
  */
 #[Group('browsertestbase')]
+#[RunTestsInSeparateProcesses]
 class BrowserTestBaseUserAgentTest extends BrowserTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language_test\Entity\NoLanguageEntityTest;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the view creation of non-translatable entities.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewNonTranslatableEntityTest extends BrowserTestBase {
 
   /**

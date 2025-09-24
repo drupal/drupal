@@ -9,12 +9,14 @@ use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests revision route provider.
  */
 #[CoversClass(RevisionHtmlRouteProvider::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class RevisionRouteProviderTest extends BrowserTestBase {
 
   /**

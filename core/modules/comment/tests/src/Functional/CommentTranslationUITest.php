@@ -9,11 +9,13 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Comment Translation UI.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentTranslationUITest extends ContentTranslationUITestBase {
 
   use CommentTestTrait;

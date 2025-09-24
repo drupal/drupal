@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the user interface for importing/exporting configuration.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * the next rebuild.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigExportImportUITest extends BrowserTestBase {
 
   /**

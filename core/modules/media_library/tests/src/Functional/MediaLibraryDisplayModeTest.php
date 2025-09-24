@@ -13,11 +13,13 @@ use Drupal\media\Plugin\media\Source\Image;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the Media Library automatically configures form/view modes.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class MediaLibraryDisplayModeTest extends BrowserTestBase {
 
   use MediaTypeCreationTrait;

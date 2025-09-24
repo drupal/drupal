@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\block_content\Functional\Views;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the redirect destination on block content on entity operations.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentRedirectTest extends BlockContentTestBase {
 
   /**

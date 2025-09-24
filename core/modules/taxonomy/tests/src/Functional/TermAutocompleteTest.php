@@ -11,11 +11,13 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the autocomplete implementation of the taxonomy class.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermAutocompleteTest extends TaxonomyTestBase {
 
   /**

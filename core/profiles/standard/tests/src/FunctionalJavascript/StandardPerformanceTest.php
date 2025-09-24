@@ -11,6 +11,7 @@ use Drupal\Tests\PerformanceData;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cSpell:ignore mlid
 /**
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 #[Group('Common')]
 #[Group('#slow')]
 #[RequiresPhpExtension('apcu')]
+#[RunTestsInSeparateProcesses]
 class StandardPerformanceTest extends PerformanceTestBase {
 
   /**

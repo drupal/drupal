@@ -8,12 +8,14 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the upgrade path for the clean-up of empty remember_roles display settings for views filters.
  */
 #[Group('Update')]
 #[CoversFunction('views_post_update_update_remember_role_empty')]
+#[RunTestsInSeparateProcesses]
 class UserRememberRolesFilterSettingTest extends UpdatePathTestBase {
 
   /**

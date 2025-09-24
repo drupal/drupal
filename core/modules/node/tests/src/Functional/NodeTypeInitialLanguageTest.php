@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node type initial language settings.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeTypeInitialLanguageTest extends NodeTestBase {
 
   /**

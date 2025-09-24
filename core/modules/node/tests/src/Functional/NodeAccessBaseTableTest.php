@@ -11,11 +11,13 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests behavior of the node access subsystem if the base table is not node.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessBaseTableTest extends NodeTestBase {
 
   use EntityReferenceFieldCreationTrait;

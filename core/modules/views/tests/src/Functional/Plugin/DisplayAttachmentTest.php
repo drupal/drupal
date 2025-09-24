@@ -7,6 +7,7 @@ namespace Drupal\Tests\views\Functional\Plugin;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the attachment display plugin.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\display\Attachment
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class DisplayAttachmentTest extends ViewTestBase {
 
   /**

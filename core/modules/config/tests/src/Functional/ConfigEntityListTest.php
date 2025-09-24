@@ -10,11 +10,13 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the listing of configuration entities.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigEntityListTest extends BrowserTestBase {
 
   use RedirectDestinationTrait;

@@ -8,12 +8,14 @@ use Drupal\media_library\Form\SettingsForm;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Media Library settings form.
  */
 #[CoversClass(SettingsForm::class)]
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class SettingsFormTest extends BrowserTestBase {
 
   /**

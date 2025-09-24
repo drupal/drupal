@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore curlopt returntransfer
 /**
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('page_cache')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class PageCacheTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;

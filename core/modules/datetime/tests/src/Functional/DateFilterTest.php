@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test exposed datetime filters functionality.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\datetime\Plugin\views\filter\Date
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class DateFilterTest extends ViewTestBase {
 
   /**

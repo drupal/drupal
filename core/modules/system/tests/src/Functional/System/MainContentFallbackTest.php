@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test SimplePageVariant main content rendering fallback page display variant.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class MainContentFallbackTest extends BrowserTestBase {
 
   /**

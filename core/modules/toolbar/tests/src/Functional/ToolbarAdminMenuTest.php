@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the caching of the admin menu subtree items.
@@ -30,6 +31,7 @@ use PHPUnit\Framework\Attributes\Group;
  * menu subtrees is compared to the new hash.
  */
 #[Group('toolbar')]
+#[RunTestsInSeparateProcesses]
 class ToolbarAdminMenuTest extends BrowserTestBase {
 
   use StringTranslationTrait;

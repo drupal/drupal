@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests user edited own account can still log in.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserEditedOwnAccountTest extends BrowserTestBase {
 
   /**

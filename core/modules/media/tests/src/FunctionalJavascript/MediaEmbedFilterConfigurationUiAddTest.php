@@ -7,6 +7,7 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Media Embed Filter Configuration Ui Add.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('media')]
 #[Group('#slow')]
 #[CoversFunction('media_filter_format_edit_form_validate')]
+#[RunTestsInSeparateProcesses]
 class MediaEmbedFilterConfigurationUiAddTest extends MediaEmbedFilterTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests media Install / Uninstall logic.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaInstallTest extends BrowserTestBase {
 
   /**

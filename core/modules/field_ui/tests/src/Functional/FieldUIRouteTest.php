@@ -8,11 +8,13 @@ use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the functionality of the Field UI route subscriber.
  */
 #[Group('field_ui')]
+#[RunTestsInSeparateProcesses]
 class FieldUIRouteTest extends BrowserTestBase {
 
   /**

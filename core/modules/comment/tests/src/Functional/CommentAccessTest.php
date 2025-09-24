@@ -9,11 +9,13 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment administration and preview access.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentAccessTest extends BrowserTestBase {
 
   use CommentTestTrait;

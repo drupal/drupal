@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Display all values in the same row" setting.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FieldGroupRowsWebTest extends ViewTestBase {
 
   /**

@@ -10,11 +10,13 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for comment language.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentLanguageTest extends BrowserTestBase {
 
   use CommentTestTrait;

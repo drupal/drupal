@@ -9,11 +9,13 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the exposed filter ajax functionality in a block.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class BlockExposedFilterAJAXTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;

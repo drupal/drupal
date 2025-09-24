@@ -8,12 +8,14 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the update_settings form.
  */
 #[Group('update')]
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class UpdateSettingsFormTest extends BrowserTestBase {
 
   /**

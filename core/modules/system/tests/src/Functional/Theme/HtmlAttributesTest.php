@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests attributes inserted in the 'html' and 'body' elements on the page.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class HtmlAttributesTest extends BrowserTestBase {
 
   /**

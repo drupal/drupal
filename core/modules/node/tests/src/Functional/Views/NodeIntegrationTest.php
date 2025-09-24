@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional\Views;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node integration into views.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeIntegrationTest extends NodeTestBase {
 
   /**

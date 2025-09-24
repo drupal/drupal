@@ -7,11 +7,13 @@ namespace Drupal\FunctionalTests\Installer;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that an install profile can require modules.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallProfileDependenciesTest extends BrowserTestBase {
 
   /**

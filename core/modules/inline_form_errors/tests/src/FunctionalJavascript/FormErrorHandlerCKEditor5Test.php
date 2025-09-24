@@ -13,11 +13,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the inline errors fragment link to a CKEditor5-enabled textarea.
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
 
   /**

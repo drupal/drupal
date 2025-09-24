@@ -8,11 +8,13 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "CommentType" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class CommentTypeTest extends ConfigEntityResourceTestBase {
 
   /**

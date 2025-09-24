@@ -6,11 +6,13 @@ namespace Drupal\Tests\syslog\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests syslog settings.
  */
 #[Group('syslog')]
+#[RunTestsInSeparateProcesses]
 class SyslogTest extends BrowserTestBase {
 
   /**

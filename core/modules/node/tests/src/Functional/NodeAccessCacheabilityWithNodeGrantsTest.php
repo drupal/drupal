@@ -9,11 +9,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node view access cacheability with node grants.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessCacheabilityWithNodeGrantsTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

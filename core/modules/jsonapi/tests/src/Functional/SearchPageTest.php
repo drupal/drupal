@@ -8,12 +8,14 @@ use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\search\Entity\SearchPage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore hinode
 /**
  * JSON:API integration test for the "SearchPage" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class SearchPageTest extends ConfigEntityResourceTestBase {
 
   /**

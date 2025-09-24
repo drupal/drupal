@@ -9,11 +9,13 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests moderated content administration page functionality.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ModeratedContentViewTest extends BrowserTestBase {
 
   use ContentModerationTestTrait;

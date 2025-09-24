@@ -9,11 +9,13 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests fields on comments.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentFieldsTest extends CommentTestBase {
 
   /**

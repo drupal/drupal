@@ -10,12 +10,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Taxonomy term revision form test.
  */
 #[CoversClass(RevisionRevertForm::class)]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyRevisionRevertTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;

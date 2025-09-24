@@ -8,6 +8,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the comment module integration into the wizard.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\comment\Plugin\views\wizard\Comment
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class WizardTest extends WizardTestBase {
 
   use CommentTestTrait;

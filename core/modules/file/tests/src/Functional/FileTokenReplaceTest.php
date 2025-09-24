@@ -9,11 +9,13 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\file\Entity\File;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests file token replacement.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileTokenReplaceTest extends FileFieldTestBase {
 
   /**

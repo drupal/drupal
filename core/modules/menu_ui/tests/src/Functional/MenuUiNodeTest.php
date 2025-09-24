@@ -12,11 +12,13 @@ use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Add, edit, and delete a node with menu link.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuUiNodeTest extends BrowserTestBase {
 
   use ContentTranslationTestTrait;

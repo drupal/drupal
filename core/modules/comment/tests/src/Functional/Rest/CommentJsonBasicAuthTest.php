@@ -6,12 +6,14 @@ namespace Drupal\Tests\comment\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Comment Json Basic Auth.
  */
 #[Group('rest')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class CommentJsonBasicAuthTest extends CommentResourceTestBase {
 
   use BasicAuthResourceTestTrait;

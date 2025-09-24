@@ -7,12 +7,14 @@ namespace Drupal\Tests\block_content\Functional;
 use Drupal\Core\Entity\Controller\VersionHistoryController;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Block content version history test.
  */
 #[CoversClass(VersionHistoryController::class)]
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentRevisionVersionHistoryTest extends BlockContentTestBase {
 
   /**

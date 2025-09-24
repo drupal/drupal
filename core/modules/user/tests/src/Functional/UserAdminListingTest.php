@@ -7,6 +7,7 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the user admin listing if views is not enabled.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see user_admin_account()
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserAdminListingTest extends BrowserTestBase {
 
   /**

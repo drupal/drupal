@@ -10,11 +10,13 @@ use Drupal\entity_test\Entity\EntityTestComputedField;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "EntityTestComputedField" content entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class EntityTestComputedFieldTest extends ResourceTestBase {
 
   /**

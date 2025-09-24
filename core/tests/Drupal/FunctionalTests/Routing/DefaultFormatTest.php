@@ -6,11 +6,13 @@ namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Default Format.
  */
 #[Group('routing')]
+#[RunTestsInSeparateProcesses]
 class DefaultFormatTest extends BrowserTestBase {
 
   /**

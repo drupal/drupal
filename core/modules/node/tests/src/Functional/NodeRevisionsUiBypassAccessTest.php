@@ -6,6 +6,7 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the revision tab display.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * check adds correct cacheability metadata.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
   /**

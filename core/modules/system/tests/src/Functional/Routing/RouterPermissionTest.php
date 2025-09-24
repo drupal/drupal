@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Routing;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Function Tests for the routing permission system.
  */
 #[Group('Routing')]
+#[RunTestsInSeparateProcesses]
 class RouterPermissionTest extends BrowserTestBase {
 
   /**

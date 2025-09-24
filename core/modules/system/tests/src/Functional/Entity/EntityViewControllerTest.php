@@ -8,11 +8,13 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests EntityViewController functionality.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityViewControllerTest extends BrowserTestBase {
 
   /**

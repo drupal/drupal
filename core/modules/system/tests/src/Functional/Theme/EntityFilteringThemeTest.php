@@ -14,11 +14,13 @@ use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests XSS filtering for themed output for each entity type in all themes.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class EntityFilteringThemeTest extends BrowserTestBase {
 
   use CommentTestTrait;

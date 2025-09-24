@@ -6,11 +6,13 @@ namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that blocks are not added to hidden regions on theme installation.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockHiddenRegionTest extends BrowserTestBase {
 
   /**

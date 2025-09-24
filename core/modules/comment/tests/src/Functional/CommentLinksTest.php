@@ -11,11 +11,13 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Basic comment links tests to ensure markup present.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentLinksTest extends CommentTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\shortcut\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Shortcut Json Anon.
  */
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class ShortcutJsonAnonTest extends ShortcutResourceTestBase {
 
   use AnonResourceTestTrait;

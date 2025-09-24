@@ -12,11 +12,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "FieldConfig" config entity type.
  */
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class FieldConfigTest extends ConfigEntityResourceTestBase {
 
   /**

@@ -6,9 +6,11 @@ namespace Drupal\FunctionalTests\Recipe\Core\article_tags;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Generic.
  */
 #[Group('core_article_tags_recipe')]
+#[RunTestsInSeparateProcesses]
 class GenericTest extends GenericRecipeTestBase {}

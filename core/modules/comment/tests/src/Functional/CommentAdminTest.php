@@ -10,11 +10,13 @@ use Drupal\Component\Utility\Html;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment approval functionality.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentAdminTest extends CommentTestBase {
 
   /**

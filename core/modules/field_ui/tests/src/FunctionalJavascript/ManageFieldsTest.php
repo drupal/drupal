@@ -9,12 +9,14 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore horserad
 /**
  * Tests the Field UI "Manage Fields" screens.
  */
 #[Group('field_ui')]
+#[RunTestsInSeparateProcesses]
 class ManageFieldsTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;

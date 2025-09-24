@@ -11,11 +11,13 @@ use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests file listing page functionality.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileListingTest extends FileFieldTestBase {
 
   /**

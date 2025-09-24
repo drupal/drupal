@@ -8,6 +8,7 @@ use Drupal\language\Form\ContentLanguageSettingsForm;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity type without language support.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('language')]
 #[CoversClass(ContentLanguageSettingsForm::class)]
+#[RunTestsInSeparateProcesses]
 class EntityTypeWithoutLanguageFormTest extends BrowserTestBase {
 
   /**

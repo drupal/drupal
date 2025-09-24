@@ -9,11 +9,13 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that block type functions work correctly.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentTypeTest extends BlockContentTestBase {
 
   use AssertBreadcrumbTrait;

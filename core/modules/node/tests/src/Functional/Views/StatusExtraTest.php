@@ -8,6 +8,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node.status_extra field handler.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\node\Plugin\views\filter\Status
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class StatusExtraTest extends NodeTestBase {
 
   use NodeAccessTrait;

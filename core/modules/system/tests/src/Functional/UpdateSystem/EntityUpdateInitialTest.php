@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handling of existing initial keys during updates.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see https://www.drupal.org/project/drupal/issues/2925550
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class EntityUpdateInitialTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 

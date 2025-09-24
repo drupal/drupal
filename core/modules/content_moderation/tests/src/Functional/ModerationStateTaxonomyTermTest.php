@@ -8,11 +8,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the taxonomy term moderation handler.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
 
   /**

@@ -9,12 +9,14 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\node\Entity\Node;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that override layout sections are not exposed via the REST API.
  */
 #[Group('layout_builder')]
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class OverrideSectionsTest extends LayoutRestTestBase {
 
   /**

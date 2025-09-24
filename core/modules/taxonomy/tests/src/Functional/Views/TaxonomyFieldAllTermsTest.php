@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Functional\Views;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "All terms" taxonomy term field handler.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
 
   /**

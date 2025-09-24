@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\FunctionalJavascript\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that FAPI correctly determines the triggering element.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class TriggeringElementTest extends WebDriverTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests field UI integration with field type categories for loading libraries.
  */
 #[Group('field_ui')]
+#[RunTestsInSeparateProcesses]
 class FieldTypeCategoriesIntegrationTest extends BrowserTestBase {
 
   /**

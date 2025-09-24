@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Module;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Attempts enabling a module that fails hook_requirements('install').
  */
 #[Group('Module')]
+#[RunTestsInSeparateProcesses]
 class HookRequirementsTest extends ModuleTestBase {
 
   /**

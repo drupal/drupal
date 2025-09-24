@@ -6,11 +6,13 @@ namespace Drupal\Tests\workspaces\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the upgrade path for the workspace_association_revision table.
  */
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceAssociationRevisionTableUpdateTest extends UpdatePathTestBase {
 
   /**

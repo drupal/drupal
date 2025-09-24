@@ -7,6 +7,7 @@ namespace Drupal\Tests\contact\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests contact messages with language module.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * page.
  */
 #[Group('contact')]
+#[RunTestsInSeparateProcesses]
 class ContactLanguageTest extends BrowserTestBase {
 
   use LanguageTestTrait;

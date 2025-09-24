@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the integration of responsive image with Views.
  */
 #[Group('responsive_image')]
+#[RunTestsInSeparateProcesses]
 class ViewsIntegrationTest extends ViewTestBase {
 
   /**

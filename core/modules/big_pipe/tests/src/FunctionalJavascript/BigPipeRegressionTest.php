@@ -9,12 +9,14 @@ use Drupal\big_pipe_regression_test\BigPipeRegressionTestController;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * BigPipe regression tests.
  */
 #[Group('big_pipe')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class BigPipeRegressionTest extends WebDriverTestBase {
 
   /**

@@ -6,12 +6,14 @@ namespace Drupal\Tests\layout_builder\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Layout Builder Entity View Display Json Cookie.
  */
 #[Group('layout_builder')]
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderEntityViewDisplayJsonCookieTest extends LayoutBuilderEntityViewDisplayResourceTestBase {
 
   use CookieResourceTestTrait;

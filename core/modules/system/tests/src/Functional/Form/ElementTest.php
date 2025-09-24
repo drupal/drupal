@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests building and processing of core form elements.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class ElementTest extends BrowserTestBase {
 
   /**

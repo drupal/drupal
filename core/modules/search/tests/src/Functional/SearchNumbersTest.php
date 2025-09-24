@@ -8,11 +8,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that numbers can be searched.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchNumbersTest extends BrowserTestBase {
 
   use CronRunTrait;

@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that update functions are run in the proper order.
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class DependencyOrderingTest extends BrowserTestBase {
 
   /**

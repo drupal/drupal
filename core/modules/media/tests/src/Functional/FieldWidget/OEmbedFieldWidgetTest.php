@@ -9,12 +9,14 @@ use Drupal\media\Plugin\Field\FieldWidget\OEmbedWidget;
 use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests OEmbed Field Widget.
  */
 #[Group('media')]
 #[CoversClass(OEmbedWidget::class)]
+#[RunTestsInSeparateProcesses]
 class OEmbedFieldWidgetTest extends MediaFunctionalTestBase {
 
   /**
