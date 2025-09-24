@@ -453,6 +453,27 @@ class HookCollectorPass implements CompilerPassInterface {
               break;
             }
             if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches) && !StaticReflectionParser::hasAttribute($attributes, LegacyModuleImplementsAlter::class)) {
+              // Skip hooks that are not supported by the new hook system, they
+              // do not need to be added to the BC layer. Note that is different
+              // from static::checkForProceduralOnlyHooks(). hook_requirements
+              // is allowed and only update hooks are considered as dynamic
+              // exclusion, since post updates are not expected to be parsed.
+              // Also, update hooks are checked as ends with, since the regular
+              // expression sometimes attributes them to the wrong module,
+              // resulting in a prefix.
+              $staticDenyHooks = [
+                'install',
+                'install_tasks',
+                'install_tasks_alter',
+                'schema',
+                'uninstall',
+                'update_last_removed',
+                'update_dependencies',
+              ];
+              if (in_array($matches['hook'], $staticDenyHooks) || preg_match('/update_\d+$/', $function)) {
+                continue;
+              }
+
               assert($function === $matches['module'] . '_' . $matches['hook']);
               $implementations[] = ['module' => $matches['module'], 'hook' => $matches['hook']];
             }

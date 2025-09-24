@@ -276,6 +276,24 @@ class HookCollectorPassTest extends KernelTestBase {
   }
 
   /**
+   * Tests that legacy install/update hooks are ignored.
+   */
+  public function testHookIgnoreNonOop(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['system_module_test', 'update', 'update_test_2']));
+
+    $map = $this->container->getParameter('hook_implementations_map');
+    $this->assertArrayHasKey('help', $map);
+    // Ensure that no install or update hooks are registered in the
+    // implementations map, including update functions incorrectly mapped to
+    // the wrong module.
+    $this->assertArrayNotHasKey('install', $map);
+    $this->assertArrayNotHasKey('update_dependencies', $map);
+    $this->assertArrayNotHasKey('test_2_update_8001', $map);
+    $this->assertArrayNotHasKey('update_8001', $map);
+  }
+
+  /**
    * Tests hook override.
    */
   public function testHookOverride(): void {
