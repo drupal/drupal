@@ -102,24 +102,6 @@ class MediaLibraryHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'media__media_library' => [
-        'base hook' => 'media',
-      ],
-      'media_library_wrapper' => [
-        'render element' => 'element',
-      ],
-      'media_library_item' => [
-        'render element' => 'element',
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_views_pre_render().
    */
   #[Hook('views_pre_render')]

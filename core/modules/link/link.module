@@ -4,7 +4,7 @@
  * @file
  */
 
-use Drupal\Core\Link;
+use Drupal\link\Hook\LinkThemeHooks;
 
 /**
  * Prepares variables for separated link field templates.
@@ -19,7 +19,13 @@ use Drupal\Core\Link;
  *     may be different than the actual link text.
  *   - url_title: The anchor text for the link.
  *   - url: A \Drupal\Core\Url object.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_link_formatter_link_separate(&$variables): void {
-  $variables['link'] = Link::fromTextAndUrl($variables['url_title'], $variables['url'])->toString();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(LinkThemeHooks::class)->preprocessLinkFormatterLinkSeparate($variables);
 }

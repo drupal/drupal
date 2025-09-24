@@ -5,11 +5,10 @@
  */
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RenderContext;
-use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
 use Drupal\toolbar\Controller\ToolbarController;
+use Drupal\toolbar\Hook\ToolbarThemeHooks;
 
 /**
  * Prepares variables for administration toolbar templates.
@@ -20,63 +19,15 @@ use Drupal\toolbar\Controller\ToolbarController;
  *   An associative array containing:
  *   - element: An associative array containing the properties and children of
  *     the tray. Properties used: #children, #attributes and #bar.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_toolbar(&$variables): void {
-  $element = $variables['element'];
-
-  // Prepare the toolbar attributes.
-  $variables['attributes'] = $element['#attributes'];
-  $variables['toolbar_attributes'] = new Attribute($element['#bar']['#attributes']);
-  $variables['toolbar_heading'] = $element['#bar']['#heading'];
-
-  // Prepare the trays and tabs for each toolbar item as well as the remainder
-  // variable that will hold any non-tray, non-tab elements.
-  $variables['trays'] = [];
-  $variables['tabs'] = [];
-  $variables['remainder'] = [];
-  foreach (Element::children($element) as $key) {
-    // Early rendering to collect the wrapper attributes from
-    // ToolbarItem elements.
-    if (!empty($element[$key])) {
-      Drupal::service('renderer')->render($element[$key]);
-    }
-    // Add the tray.
-    if (isset($element[$key]['tray'])) {
-      $attributes = [];
-      if (!empty($element[$key]['tray']['#wrapper_attributes'])) {
-        $attributes = $element[$key]['tray']['#wrapper_attributes'];
-      }
-      $variables['trays'][$key] = [
-        'links' => $element[$key]['tray'],
-        'attributes' => new Attribute($attributes),
-      ];
-      if (array_key_exists('#heading', $element[$key]['tray'])) {
-        $variables['trays'][$key]['label'] = $element[$key]['tray']['#heading'];
-      }
-    }
-
-    // Add the tab.
-    if (isset($element[$key]['tab'])) {
-      $attributes = [];
-      // Pass the wrapper attributes along.
-      if (!empty($element[$key]['#wrapper_attributes'])) {
-        $attributes = $element[$key]['#wrapper_attributes'];
-      }
-
-      $variables['tabs'][$key] = [
-        'link' => $element[$key]['tab'],
-        'attributes' => new Attribute($attributes),
-      ];
-    }
-
-    // Add other non-tray, non-tab child elements to the remainder variable for
-    // later rendering.
-    foreach (Element::children($element[$key]) as $child_key) {
-      if (!in_array($child_key, ['tray', 'tab'])) {
-        $variables['remainder'][$key][$child_key] = $element[$key][$child_key];
-      }
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ToolbarThemeHooks::class)->preprocessToolbar($variables);
 }
 
 /**

@@ -37,23 +37,6 @@ class ToolbarHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme($existing, $type, $theme, $path) : array {
-    $items['toolbar'] = ['render element' => 'element'];
-    $items['menu__toolbar'] = [
-      'base hook' => 'menu',
-      'variables' => [
-        'menu_name' => NULL,
-        'items' => [],
-        'attributes' => [],
-      ],
-    ];
-    return $items;
-  }
-
-  /**
    * Implements hook_page_top().
    *
    * Add admin toolbar to the top of the page automatically.

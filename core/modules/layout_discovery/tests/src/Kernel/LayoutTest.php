@@ -6,6 +6,7 @@ namespace Drupal\Tests\layout_discovery\Kernel;
 
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\layout_discovery\Hook\LayoutDiscoveryThemeHooks;
 
 /**
  * Tests Layout functionality.
@@ -43,7 +44,7 @@ class LayoutTest extends KernelTestBase {
     $this->config('system.theme')->set('default', 'test_layout_theme')->save();
 
     $theme_definitions = $this->container->get('theme.registry')->get();
-    $this->assertContains('template_preprocess_layout', $theme_definitions['test_layout_theme']['preprocess functions']);
+    $this->assertSame(LayoutDiscoveryThemeHooks::class . ':preprocessLayout', $theme_definitions['test_layout_theme']['initial preprocess']);
   }
 
   /**

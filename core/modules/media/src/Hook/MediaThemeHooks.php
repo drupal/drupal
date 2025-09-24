@@ -13,6 +13,59 @@ use Drupal\Core\Hook\Attribute\Hook;
 class MediaThemeHooks {
 
   /**
+   * Implements hook_theme().
+   */
+  #[Hook('theme')]
+  public function theme() : array {
+    return [
+      'media' => [
+        'render element' => 'elements',
+        'initial preprocess' => static::class . ':preprocessMedia',
+      ],
+      'media_reference_help' => [
+        'render element' => 'element',
+        'base hook' => 'field_multiple_value_form',
+      ],
+      'media_oembed_iframe' => [
+        'variables' => [
+          'resource' => NULL,
+          'media' => NULL,
+          'placeholder_token' => '',
+        ],
+      ],
+      'media_embed_error' => [
+        'variables' => [
+          'message' => NULL,
+          'attributes' => [],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Prepares variables for media templates.
+   *
+   * Default template: media.html.twig.
+   *
+   * @param array $variables
+   *   An associative array containing:
+   *   - elements: An array of elements to display in view mode.
+   *   - media: The media item.
+   *   - name: The label for the media item.
+   *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
+   */
+  public function preprocessMedia(array &$variables): void {
+    $variables['media'] = $variables['elements']['#media'];
+    $variables['view_mode'] = $variables['elements']['#view_mode'];
+    $variables['name'] = $variables['media']->label();
+
+    // Helpful $content variable for templates.
+    foreach (Element::children($variables['elements']) as $key) {
+      $variables['content'][$key] = $variables['elements'][$key];
+    }
+  }
+
+  /**
    * Implements hook_preprocess_HOOK() for media reference widgets.
    */
   #[Hook('preprocess_media_reference_help')]

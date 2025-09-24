@@ -75,35 +75,6 @@ class MediaHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'media' => [
-        'render element' => 'elements',
-      ],
-      'media_reference_help' => [
-        'render element' => 'element',
-        'base hook' => 'field_multiple_value_form',
-      ],
-      'media_oembed_iframe' => [
-        'variables' => [
-          'resource' => NULL,
-          'media' => NULL,
-          'placeholder_token' => '',
-        ],
-      ],
-      'media_embed_error' => [
-        'variables' => [
-          'message' => NULL,
-          'attributes' => [],
-        ],
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_entity_access().
    */
   #[Hook('entity_access')]

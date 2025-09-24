@@ -90,25 +90,6 @@ class UserHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'user' => [
-        'render element' => 'elements',
-      ],
-      'username' => [
-        'variables' => [
-          'account' => NULL,
-          'attributes' => [],
-          'link_options' => [],
-        ],
-      ],
-    ];
-  }
-
-  /**
    * Implements hook_js_settings_alter().
    */
   #[Hook('js_settings_alter')]

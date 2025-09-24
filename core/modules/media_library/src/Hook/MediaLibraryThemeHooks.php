@@ -2,6 +2,7 @@
 
 namespace Drupal\media_library\Hook;
 
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -9,6 +10,58 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for media_library.
  */
 class MediaLibraryThemeHooks {
+
+  /**
+   * Implements hook_theme().
+   */
+  #[Hook('theme')]
+  public function theme() : array {
+    return [
+      'media__media_library' => [
+        'base hook' => 'media',
+      ],
+      'media_library_wrapper' => [
+        'render element' => 'element',
+        'initial preprocess' => static::class . ':preprocessMediaLibraryWrapper',
+      ],
+      'media_library_item' => [
+        'render element' => 'element',
+        'initial preprocess' => static::class . ':preprocessMediaLibraryItem',
+      ],
+    ];
+  }
+
+  /**
+   * Prepares variables for the media library modal dialog.
+   *
+   * Default template: media-library-wrapper.html.twig.
+   *
+   * @param array $variables
+   *   An associative array containing:
+   *   - element: An associative array containing the properties of the element.
+   *     Properties used: #menu, #content.
+   */
+  public function preprocessMediaLibraryWrapper(array &$variables): void {
+    $variables['menu'] = &$variables['element']['menu'];
+    $variables['content'] = &$variables['element']['content'];
+  }
+
+  /**
+   * Prepares variables for a selected media item.
+   *
+   * Default template: media-library-item.html.twig.
+   *
+   * @param array $variables
+   *   An associative array containing:
+   *   - element: An associative array containing the properties and children of
+   *     the element.
+   */
+  public function preprocessMediaLibraryItem(array &$variables): void {
+    $element = &$variables['element'];
+    foreach (Element::children($element) as $key) {
+      $variables['content'][$key] = $element[$key];
+    }
+  }
 
   /**
    * Implements hook_preprocess_media().

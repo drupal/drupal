@@ -91,45 +91,6 @@ class NavigationHooks {
   }
 
   /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme($existing, $type, $theme, $path) : array {
-    $items['top_bar'] = ['render element' => 'element'];
-    $items['top_bar_page_actions'] = ['variables' => ['page_actions' => [], 'featured_page_actions' => []]];
-    $items['top_bar_page_action'] = ['variables' => ['link' => []]];
-    $items['block__navigation'] = ['render element' => 'elements', 'base hook' => 'block'];
-    $items['navigation_menu'] = [
-      'base hook' => 'menu',
-      'variables' => [
-        'menu_name' => NULL,
-        'title' => NULL,
-        'items' => [],
-        'attributes' => [],
-      ],
-    ];
-    $items['navigation_content_top'] = [
-      'variables' => [
-        'items' => [],
-      ],
-    ];
-    $items['navigation__messages'] = [
-      'variables' => [
-        'message_list' => NULL,
-      ],
-    ];
-    $items['navigation__message'] = [
-      'variables' => [
-        'attributes' => [],
-        'url' => NULL,
-        'content' => NULL,
-        'type' => 'status',
-      ],
-    ];
-    return $items;
-  }
-
-  /**
    * Implements hook_menu_links_discovered_alter().
    */
   #[Hook('menu_links_discovered_alter')]

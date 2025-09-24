@@ -18,6 +18,7 @@ use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\layout_discovery\Hook\LayoutDiscoveryThemeHooks;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -294,6 +295,7 @@ EOS;
     $expected = [
       'layout' => [
         'render element' => 'content',
+        'initial preprocess' => LayoutDiscoveryThemeHooks::class . ':preprocessLayout',
       ],
       'twocol' => [
         'render element' => 'content',

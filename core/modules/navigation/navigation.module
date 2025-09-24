@@ -4,7 +4,7 @@
  * @file
  */
 
-use Drupal\navigation\TopBarRegion;
+use Drupal\navigation\Hook\NavigationThemeHooks;
 
 /**
  * Prepares variables for navigation top bar template.
@@ -15,11 +15,13 @@ use Drupal\navigation\TopBarRegion;
  *   An associative array containing:
  *    - element: An associative array containing the properties and children of
  *      the top bar.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *        template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_top_bar(&$variables): void {
-  $element = $variables['element'];
-
-  foreach (TopBarRegion::cases() as $region) {
-    $variables[$region->value] = $element[$region->value] ?? NULL;
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(NavigationThemeHooks::class)->preprocessTopBar($variables);
 }
