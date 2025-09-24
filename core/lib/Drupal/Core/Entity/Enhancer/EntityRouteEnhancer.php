@@ -21,7 +21,7 @@ class EntityRouteEnhancer implements EnhancerInterface {
       return $defaults;
     }
 
-    if (empty($defaults['_controller'])) {
+    if (empty($defaults[RouteObjectInterface::CONTROLLER_NAME])) {
       if (!empty($defaults['_entity_form'])) {
         $defaults = $this->enhanceEntityForm($defaults, $request);
       }
@@ -45,7 +45,7 @@ class EntityRouteEnhancer implements EnhancerInterface {
    *   TRUE when the route enhancer runs on the current route, FALSE otherwise.
    */
   protected function applies(Route $route) {
-    return !$route->hasDefault('_controller') &&
+    return !$route->hasDefault(RouteObjectInterface::CONTROLLER_NAME) &&
       ($route->hasDefault('_entity_form')
         || $route->hasDefault('_entity_list')
         || $route->hasDefault('_entity_view')
@@ -64,7 +64,7 @@ class EntityRouteEnhancer implements EnhancerInterface {
    *   The modified defaults.
    */
   protected function enhanceEntityForm(array $defaults, Request $request) {
-    $defaults['_controller'] = 'controller.entity_form:getContentResult';
+    $defaults[RouteObjectInterface::CONTROLLER_NAME] = 'controller.entity_form:getContentResult';
 
     return $defaults;
   }
@@ -81,7 +81,7 @@ class EntityRouteEnhancer implements EnhancerInterface {
    *   The modified defaults.
    */
   protected function enhanceEntityList(array $defaults, Request $request) {
-    $defaults['_controller'] = '\Drupal\Core\Entity\Controller\EntityListController::listing';
+    $defaults[RouteObjectInterface::CONTROLLER_NAME] = '\Drupal\Core\Entity\Controller\EntityListController::listing';
     $defaults['entity_type'] = $defaults['_entity_list'];
     unset($defaults['_entity_list']);
 
@@ -103,7 +103,7 @@ class EntityRouteEnhancer implements EnhancerInterface {
    *   Thrown when an entity of a type cannot be found in a route.
    */
   protected function enhanceEntityView(array $defaults, Request $request) {
-    $defaults['_controller'] = '\Drupal\Core\Entity\Controller\EntityViewController::view';
+    $defaults[RouteObjectInterface::CONTROLLER_NAME] = '\Drupal\Core\Entity\Controller\EntityViewController::view';
     if (str_contains($defaults['_entity_view'], '.')) {
       // The _entity_view entry is of the form entity_type.view_mode.
       [$entity_type, $view_mode] = explode('.', $defaults['_entity_view']);

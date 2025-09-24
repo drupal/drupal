@@ -23,7 +23,7 @@ class SpecialAttributesRouteSubscriber extends RouteSubscriberBase {
       RouteObjectInterface::ROUTE_OBJECT,
       RouteObjectInterface::ROUTE_NAME,
       '_content',
-      '_controller',
+      RouteObjectInterface::CONTROLLER_NAME,
       '_form',
     ];
     foreach ($collection->all() as $name => $route) {

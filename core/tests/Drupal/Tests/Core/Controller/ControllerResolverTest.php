@@ -8,6 +8,7 @@ use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -113,7 +114,7 @@ class ControllerResolverTest extends UnitTestCase {
     return [
       // Tests passing a controller via the request.
       [
-        ['_controller' => MockContainerInjection::class . '::getResult'],
+        [RouteObjectInterface::CONTROLLER_NAME => MockContainerInjection::class . '::getResult'],
         MockContainerInjection::class,
         'This used injection.',
       ],

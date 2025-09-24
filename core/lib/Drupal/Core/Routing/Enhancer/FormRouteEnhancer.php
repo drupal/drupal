@@ -22,7 +22,7 @@ class FormRouteEnhancer implements EnhancerInterface {
    *   TRUE when the enhancer runs on the current route, FALSE otherwise.
    */
   protected function applies(Route $route) {
-    return $route->hasDefault('_form') && !$route->hasDefault('_controller');
+    return $route->hasDefault('_form') && !$route->hasDefault(RouteObjectInterface::CONTROLLER_NAME);
   }
 
   /**
@@ -34,7 +34,7 @@ class FormRouteEnhancer implements EnhancerInterface {
       return $defaults;
     }
 
-    $defaults['_controller'] = 'controller.form:getContentResult';
+    $defaults[RouteObjectInterface::CONTROLLER_NAME] = 'controller.form:getContentResult';
     return $defaults;
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,7 +44,7 @@ class ControllerResolver implements ControllerResolverInterface {
    * {@inheritdoc}
    */
   public function getController(Request $request): callable|FALSE {
-    if (!$controller = $request->attributes->get('_controller')) {
+    if (!$controller = $request->attributes->get(RouteObjectInterface::CONTROLLER_NAME)) {
       return FALSE;
     }
     return $this->getControllerFromDefinition($controller, $request->getPathInfo());
