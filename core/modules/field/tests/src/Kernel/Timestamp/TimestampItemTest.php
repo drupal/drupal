@@ -10,12 +10,12 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the timestamp fields.
- *
- * @group field
  */
+#[Group('field')]
 class TimestampItemTest extends FieldKernelTestBase {
 
   /**

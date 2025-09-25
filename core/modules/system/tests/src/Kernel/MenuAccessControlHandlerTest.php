@@ -7,12 +7,17 @@ namespace Drupal\Tests\system\Kernel;
 use Drupal\Core\Access\AccessResult;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
+use Drupal\system\MenuAccessControlHandler;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\system\MenuAccessControlHandler
- * @group system
+ * Tests Drupal\system\MenuAccessControlHandler.
  */
+#[CoversClass(MenuAccessControlHandler::class)]
+#[Group('system')]
 class MenuAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {
@@ -44,10 +49,12 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::checkAccess
-   * @covers ::checkCreateAccess
-   * @dataProvider providerTestAccess
+   * Tests access.
+   *
+   * @legacy-covers ::checkAccess
+   * @legacy-covers ::checkCreateAccess
    */
+  #[DataProvider('providerTestAccess')]
   public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result): void {
     $user = $this->drupalCreateUser($permissions);
 

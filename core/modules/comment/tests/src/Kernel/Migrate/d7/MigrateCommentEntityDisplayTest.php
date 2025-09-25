@@ -6,13 +6,13 @@ namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the migration of comment entity displays from Drupal 7.
- *
- * @group comment
- * @group migrate_drupal_7
  */
+#[Group('comment')]
+#[Group('migrate_drupal_7')]
 class MigrateCommentEntityDisplayTest extends MigrateDrupal7TestBase {
 
   /**

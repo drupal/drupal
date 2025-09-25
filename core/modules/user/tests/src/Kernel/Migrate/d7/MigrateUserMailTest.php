@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Migrates user mail configuration.
- *
- * @group user
  */
+#[Group('user')]
 class MigrateUserMailTest extends MigrateDrupal7TestBase {
 
   /**

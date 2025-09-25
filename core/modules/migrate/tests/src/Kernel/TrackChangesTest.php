@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests migration track changes property.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class TrackChangesTest extends MigrateTestBase {
 
   /**

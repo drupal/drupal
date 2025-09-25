@@ -12,12 +12,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test to ensure the datetime range separator is translatable.
- *
- * @group datetime
  */
+#[Group('datetime')]
 class SeparatorTranslationTest extends KernelTestBase {
 
   /**

@@ -7,10 +7,12 @@ namespace Drupal\Tests\image\Kernel;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group image
+ * Tests Config Actions.
  */
+#[Group('image')]
 class ConfigActionsTest extends KernelTestBase {
 
   /**

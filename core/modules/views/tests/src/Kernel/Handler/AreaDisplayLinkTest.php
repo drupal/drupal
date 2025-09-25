@@ -13,6 +13,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,9 +23,9 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 /**
  * Tests the core views_handler_area_display_link handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\area\DisplayLink
  */
+#[Group('views')]
 class AreaDisplayLinkTest extends ViewsKernelTestBase {
 
   /**

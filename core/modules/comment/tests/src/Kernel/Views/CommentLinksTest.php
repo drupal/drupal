@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Kernel\Views;
 
 use Drupal\comment\CommentManagerInterface;
-use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Link;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the comment link field handlers.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentLinksTest extends CommentViewsKernelTestBase {
 
   /**

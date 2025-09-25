@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\Kernel;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests core view token replacement.
- *
- * @group views
  */
+#[Group('views')]
 class TokenReplaceTest extends ViewsKernelTestBase {
 
   /**

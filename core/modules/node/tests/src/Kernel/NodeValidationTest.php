@@ -7,12 +7,12 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node validation constraints.
- *
- * @group node
  */
+#[Group('node')]
 class NodeValidationTest extends EntityKernelTestBase {
 
   /**

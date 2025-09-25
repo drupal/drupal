@@ -8,13 +8,13 @@ use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests Field display.
- *
- * @group field
  */
+#[Group('field')]
 class FieldDisplayTest extends KernelTestBase {
 
   /**

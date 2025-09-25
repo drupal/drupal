@@ -7,14 +7,13 @@ namespace Drupal\Tests\views\Kernel\Entity;
 use Drupal\entity_test\Entity\EntityTestMultiValueBaseField;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore basefield
-
 /**
  * Tests entity views with multivalue base fields.
- *
- * @group views
  */
+#[Group('views')]
 class EntityViewsWithMultivalueBaseFieldTest extends ViewsKernelTestBase {
 
   /**

@@ -7,12 +7,12 @@ namespace Drupal\Tests\big_pipe\Kernel;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that big_pipe responses can be serialized.
- *
- * @group big_pipe
  */
+#[Group('big_pipe')]
 class SerializeResponseTest extends KernelTestBase {
 
   /**

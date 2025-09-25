@@ -6,12 +6,12 @@ namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that the prefix info for a database schema is correct.
- *
- * @group Database
  */
+#[Group('Database')]
 class PrefixInfoTest extends DriverSpecificKernelTestBase {
 
   /**

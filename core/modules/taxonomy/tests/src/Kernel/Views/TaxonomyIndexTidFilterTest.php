@@ -8,14 +8,14 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the taxonomy term index filter.
  *
  * @see \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTid
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
 
   /**

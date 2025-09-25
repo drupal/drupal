@@ -10,12 +10,12 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests PathElement validation and conversion functionality.
- *
- * @group Form
  */
+#[Group('Form')]
 class TextFormatElementFormTest extends KernelTestBase implements FormInterface {
 
   /**

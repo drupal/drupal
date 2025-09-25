@@ -13,12 +13,13 @@ use Drupal\file_test\StreamWrapper\DummyRemoteReadOnlyStreamWrapper;
 use Drupal\file_test\StreamWrapper\DummyStreamWrapper;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests derivative generation with source images using stream wrappers.
- *
- * @group image
  */
+#[Group('image')]
 class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
 
   /**
@@ -78,9 +79,8 @@ class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
    *   The source stream wrapper scheme.
    * @param string $expected_scheme
    *   The derivative expected stream wrapper scheme.
-   *
-   * @dataProvider providerTestCustomStreamWrappers
    */
+  #[DataProvider('providerTestCustomStreamWrappers')]
   public function testCustomStreamWrappers($source_scheme, $expected_scheme): void {
     $derivative_uri = $this->imageStyle->buildUri("$source_scheme://some/path/image.png");
     $derivative_scheme = StreamWrapperManager::getScheme($derivative_uri);

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests building the translatable project information.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleBuildTest extends KernelTestBase {
 
   /**

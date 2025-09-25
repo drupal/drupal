@@ -12,17 +12,20 @@ use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher
- * @group jsonapi
+ * Tests Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher.
  *
  * @internal
  */
+#[CoversClass(ResourceObjectNormalizationCacher::class)]
+#[Group('jsonapi')]
 class ResourceObjectNormalizerCacherTest extends KernelTestBase {
 
   /**

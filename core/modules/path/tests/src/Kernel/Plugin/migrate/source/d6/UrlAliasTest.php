@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\path\Plugin\migrate\source\d6\UrlAlias;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the d6_url_alias source plugin.
  *
- * @covers \Drupal\path\Plugin\migrate\source\d6\UrlAlias
- * @group path
- * @coversDefaultClass \Drupal\path\Plugin\migrate\source\d6\UrlAlias
+ * @legacy-covers \Drupal\path\Plugin\migrate\source\d6\UrlAlias
  */
+#[CoversClass(UrlAlias::class)]
+#[Group('path')]
 class UrlAliasTest extends MigrateSqlSourceTestBase {
 
   /**

@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Kernel\Plugin\migrate\source\d7;
 
+use Drupal\language\Plugin\migrate\source\d7\LanguageContentSettingsTaxonomyVocabulary;
 use Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7\VocabularyTest;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests i18ntaxonomy vocabulary setting source plugin.
  *
- * @covers \Drupal\language\Plugin\migrate\source\d7\LanguageContentSettingsTaxonomyVocabulary
- *
- * @group language
- * @coversDefaultClass \Drupal\language\Plugin\migrate\source\d7\LanguageContentSettingsTaxonomyVocabulary
+ * @legacy-covers \Drupal\language\Plugin\migrate\source\d7\LanguageContentSettingsTaxonomyVocabulary
  */
+#[CoversClass(LanguageContentSettingsTaxonomyVocabulary::class)]
+#[Group('language')]
 class LanguageContentTaxonomyVocabularySettingsTest extends VocabularyTest {
 
   /**

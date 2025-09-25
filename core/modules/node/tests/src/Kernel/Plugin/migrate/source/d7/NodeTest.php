@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel\Plugin\migrate\source\d7;
 
+use Drupal\node\Plugin\migrate\source\d7\Node;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore tnid
-
 /**
  * Tests D7 node source plugin.
  *
- * @covers \Drupal\node\Plugin\migrate\source\d7\Node
- *
- * @group node
- * @coversDefaultClass \Drupal\node\Plugin\migrate\source\d7\Node
+ * @legacy-covers \Drupal\node\Plugin\migrate\source\d7\Node
  */
+#[CoversClass(Node::class)]
+#[Group('node')]
 class NodeTest extends MigrateSqlSourceTestBase {
 
   /**

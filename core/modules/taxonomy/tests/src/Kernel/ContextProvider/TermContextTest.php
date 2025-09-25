@@ -8,12 +8,14 @@ use Drupal\Core\Routing\RouteMatch;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\ContextProvider\TermRouteContext;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\taxonomy\ContextProvider\TermRouteContext
- *
- * @group taxonomy
+ * Tests Drupal\taxonomy\ContextProvider\TermRouteContext.
  */
+#[CoversClass(TermRouteContext::class)]
+#[Group('taxonomy')]
 class TermContextTest extends KernelTestBase {
 
   use TaxonomyTestTrait;
@@ -34,7 +36,9 @@ class TermContextTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getAvailableContexts
+   * Tests get available contexts.
+   *
+   * @legacy-covers ::getAvailableContexts
    */
   public function testGetAvailableContexts(): void {
     $context_repository = $this->container->get('context.repository');
@@ -47,7 +51,9 @@ class TermContextTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getRuntimeContexts
+   * Tests get runtime contexts.
+   *
+   * @legacy-covers ::getRuntimeContexts
    */
   public function testGetRuntimeContexts(): void {
     // Create term.

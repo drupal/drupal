@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views_ui\Kernel;
 
-use Drupal\Core\Url;
 use Drupal\block\Entity\Block;
+use Drupal\Core\Url;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views_ui\Hook\ViewsUiHooks;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests ViewsBlock.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class ViewsBlockTest extends ViewsKernelTestBase {
 
   use UserCreationTrait;

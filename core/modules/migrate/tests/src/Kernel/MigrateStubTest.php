@@ -6,12 +6,12 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the migrate.stub Service.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateStubTest extends MigrateTestBase {
   use ContentTypeCreationTrait;
 

@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Installer;
 
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that we handle module dependency resolution during install.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallerDependenciesResolutionTest extends KernelTestBase {
 
   /**

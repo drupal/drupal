@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Kernel\Migrate;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore vocabfixed vocablocalized vocabtranslate
-
 /**
  * Tests d7 taxonomy term deriver.
- *
- * @group migrate_drupal_7
  */
+#[Group('migrate_drupal_7')]
 class TaxonomyTermDeriverTest extends MigrateDrupal7TestBase {
 
   /**

@@ -10,13 +10,17 @@ use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\Validator\ComposerPatchesValidator
- * @group package_manager
- * @group #slow
+ * Tests Composer Patches Validator.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\ComposerPatchesValidator
  */
+#[Group('package_manager')]
+#[Group('#slow')]
 class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;
@@ -88,9 +92,8 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
    *   What aspects of the patcher are installed how.
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   The expected validation results.
-   *
-   *  @dataProvider providerErrorDuringPreCreate
    */
+  #[DataProvider('providerErrorDuringPreCreate')]
   public function testErrorDuringPreCreate(int $options, array $expected_results): void {
     $active_manipulator = new ActiveFixtureManipulator();
     if ($options & static::CONFIG_ALLOWED_PLUGIN) {
@@ -205,9 +208,8 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
    *   Whether patcher is installed in stage.
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   The expected validation results.
-   *
-   * @dataProvider providerErrorDuringPreApply
    */
+  #[DataProvider('providerErrorDuringPreApply')]
   public function testErrorDuringPreApply(int $in_active, int $in_stage, array $expected_results): void {
     // Simulate in active.
     $active_manipulator = new ActiveFixtureManipulator();
@@ -283,9 +285,8 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
    *   An associative array of fragments (anchors) in the online help. The keys
    *   should be the numeric indices of the validation result messages which
    *   should link to those fragments.
-   *
-   * @dataProvider providerErrorDuringPreApply
    */
+  #[DataProvider('providerErrorDuringPreApply')]
   public function testErrorDuringPreApplyWithHelp(int $in_active, int $in_stage, array $expected_results, array $help_page_sections): void {
     $this->enableModules(['help']);
 

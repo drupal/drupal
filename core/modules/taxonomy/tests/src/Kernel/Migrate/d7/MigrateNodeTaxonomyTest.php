@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d7;
 
-use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group taxonomy
+ * Tests Migrate Node Taxonomy.
  */
+#[Group('taxonomy')]
 class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
   /**

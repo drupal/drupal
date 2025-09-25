@@ -7,12 +7,12 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of D7 view modes.
- *
- * @group field
  */
+#[Group('field')]
 class MigrateViewModesTest extends MigrateDrupal7TestBase {
 
   /**

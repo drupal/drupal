@@ -8,10 +8,12 @@ use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Entity\MediaType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group media
+ * Tests Config Actions.
  */
+#[Group('media')]
 class ConfigActionsTest extends KernelTestBase {
 
   /**

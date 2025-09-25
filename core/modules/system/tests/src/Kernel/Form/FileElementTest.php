@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Form;
 
 use Drupal\form_test\Form\FormTestFileForm;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the 'file' form element.
- *
- * @group Form
  */
+#[Group('Form')]
 class FileElementTest extends KernelTestBase {
 
   /**

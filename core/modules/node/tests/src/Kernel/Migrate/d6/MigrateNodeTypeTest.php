@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodePreviewMode;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
-use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Upgrade node types to node.type.*.yml.
- *
- * @group migrate_drupal_6
  */
+#[Group('migrate_drupal_6')]
 class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 
   /**

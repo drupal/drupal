@@ -7,20 +7,20 @@ namespace Drupal\Tests\filter\Kernel\Migrate\d6;
 use Drupal\filter\Plugin\migrate\process\d6\FilterFormatPermission;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests conversion of format serial to string id in permission name.
- *
- * @coversDefaultClass \Drupal\filter\Plugin\migrate\process\d6\FilterFormatPermission
- *
- * @group filter
  */
+#[CoversClass(FilterFormatPermission::class)]
+#[Group('filter')]
 class FilterFormatPermissionTest extends MigrateDrupalTestBase {
 
   /**
    * Tests configurability of filter_format migration name.
    *
-   * @covers ::__construct
+   * @legacy-covers ::__construct
    */
   public function testConfigurableFilterFormat(): void {
     $migration = Migration::create($this->container, [], 'custom_migration', []);

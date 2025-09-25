@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\image\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of Image variables to configuration.
- *
- * @group image
  */
+#[Group('image')]
 class MigrateImageSettingsTest extends MigrateDrupal7TestBase {
 
   /**

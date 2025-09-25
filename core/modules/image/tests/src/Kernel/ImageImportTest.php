@@ -6,12 +6,12 @@ namespace Drupal\Tests\image\Kernel;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests config import for Image styles.
- *
- * @group image
  */
+#[Group('image')]
 class ImageImportTest extends KernelTestBase {
 
   /**

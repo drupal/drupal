@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\migrate_high_water_test\Plugin\migrate\source\HighWaterTest;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the high water handling.
  *
- * @covers \Drupal\migrate_high_water_test\Plugin\migrate\source\HighWaterTest
- * @group migrate
- * @coversDefaultClass \Drupal\migrate_high_water_test\Plugin\migrate\source\HighWaterTest
+ * @legacy-covers \Drupal\migrate_high_water_test\Plugin\migrate\source\HighWaterTest
  */
+#[CoversClass(HighWaterTest::class)]
+#[Group('migrate')]
 class HighWaterNotJoinableTest extends MigrateSqlSourceTestBase {
 
   /**

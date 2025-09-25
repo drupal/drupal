@@ -7,16 +7,16 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node access with multiple languages and two node access modules.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
 
   use NodeAccessTrait;

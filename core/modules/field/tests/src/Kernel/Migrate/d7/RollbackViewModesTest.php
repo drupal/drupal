@@ -6,12 +6,12 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\migrate\MigrateExecutable;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Migrates and rolls back Drupal 7 view modes.
- *
- * @group field
  */
+#[Group('field')]
 class RollbackViewModesTest extends MigrateViewModesTest {
 
   /**

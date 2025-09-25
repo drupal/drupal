@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use Drupal\user\Plugin\migrate\source\d7\UserEntityTranslation;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 user entity translation source plugin.
  *
- * @covers \Drupal\user\Plugin\migrate\source\d7\UserEntityTranslation
- *
- * @group user
- * @coversDefaultClass \Drupal\user\Plugin\migrate\source\d7\UserEntityTranslation
+ * @legacy-covers \Drupal\user\Plugin\migrate\source\d7\UserEntityTranslation
  */
+#[CoversClass(UserEntityTranslation::class)]
+#[Group('user')]
 class UserEntityTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

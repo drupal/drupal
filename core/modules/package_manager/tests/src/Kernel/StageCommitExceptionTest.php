@@ -8,18 +8,24 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\package_manager\Exception\ApplyFailedException;
 use Drupal\package_manager\Exception\SandboxException;
 use Drupal\package_manager\FailureMarker;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager_bypass\LoggingCommitter;
 use PhpTuf\ComposerStager\API\Exception\ExceptionInterface;
 use PhpTuf\ComposerStager\API\Exception\InvalidArgumentException;
 use PhpTuf\ComposerStager\API\Exception\PreconditionException;
 use PhpTuf\ComposerStager\API\Precondition\Service\PreconditionInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\SandboxManagerBase
- * @covers \Drupal\package_manager\PackageManagerUninstallValidator
- * @group package_manager
+ * Tests Drupal\package_manager\SandboxManagerBase.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\PackageManagerUninstallValidator
  */
+#[CoversClass(SandboxManagerBase::class)]
+#[Group('package_manager')]
 class StageCommitExceptionTest extends PackageManagerKernelTestBase {
 
   /**
@@ -73,9 +79,8 @@ class StageCommitExceptionTest extends PackageManagerKernelTestBase {
    *   The throwable class that should be thrown by Composer Stager.
    * @param string $expected_class
    *   The expected exception class, if different from $thrown_class.
-   *
-   * @dataProvider providerCommitException
    */
+  #[DataProvider('providerCommitException')]
   public function testCommitException(string $thrown_class, string $expected_class): void {
     $stage = $this->createStage();
     $stage->create();

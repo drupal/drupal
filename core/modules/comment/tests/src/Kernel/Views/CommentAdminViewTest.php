@@ -12,12 +12,12 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment admin view filters.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentAdminViewTest extends ViewsKernelTestBase {
 
   /**

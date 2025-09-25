@@ -7,13 +7,14 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the sql query plugin.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\query\Sql
  */
+#[Group('views')]
 class SqlQueryTest extends ViewsKernelTestBase {
 
   /**
@@ -92,7 +93,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
    * \Drupal\Core\Database\Database::getConnection() which is a 'final' method
    * and therefore cannot be mocked.
    *
-   * @covers \Drupal\views\Plugin\views\query\Sql::getConnection
+   * @legacy-covers \Drupal\views\Plugin\views\query\Sql::getConnection
    */
   public function testGetConnection(): void {
     $view = Views::getView('test_view');

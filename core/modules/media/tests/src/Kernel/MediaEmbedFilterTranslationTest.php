@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\media\Plugin\Filter\MediaEmbed;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that media embeds are translated based on text (host entity) language.
- *
- * @coversDefaultClass \Drupal\media\Plugin\Filter\MediaEmbed
- * @group media
  */
+#[CoversClass(MediaEmbed::class)]
+#[Group('media')]
 class MediaEmbedFilterTranslationTest extends MediaEmbedFilterTestBase {
 
   /**
@@ -43,9 +46,8 @@ class MediaEmbedFilterTranslationTest extends MediaEmbedFilterTestBase {
 
   /**
    * Tests that the expected embedded media entity translation is selected.
-   *
-   * @dataProvider providerTranslationSituations
    */
+  #[DataProvider('providerTranslationSituations')]
   public function testTranslationSelection($text_langcode, $expected_title_langcode): void {
     $text = $this->createEmbedCode([
       'data-entity-type' => 'media',

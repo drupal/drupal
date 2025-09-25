@@ -7,14 +7,14 @@ namespace Drupal\Tests\node\Kernel\Views;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\user\Entity\User;
 use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
+use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests base field access in Views for the node entity.
- *
- * @group Node
  */
+#[Group('Node')]
 class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
   /**

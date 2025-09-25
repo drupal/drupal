@@ -7,12 +7,12 @@ namespace Drupal\Tests\filter\Kernel\Migrate\d6;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Upgrade variables to filter.formats.*.yml.
- *
- * @group migrate_drupal_6
  */
+#[Group('migrate_drupal_6')]
 class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
 
   /**

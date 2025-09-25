@@ -7,12 +7,13 @@ namespace Drupal\Tests\layout_discovery\Kernel;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_discovery\Hook\LayoutDiscoveryThemeHooks;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Layout functionality.
- *
- * @group Layout
  */
+#[Group('Layout')]
 class LayoutTest extends KernelTestBase {
 
   /**
@@ -49,9 +50,8 @@ class LayoutTest extends KernelTestBase {
 
   /**
    * Tests rendering a layout.
-   *
-   * @dataProvider renderLayoutData
    */
+  #[DataProvider('renderLayoutData')]
   public function testRenderLayout($layout_id, $config, $regions, array $html): void {
     $layout = $this->layoutPluginManager->createInstance($layout_id, $config);
     $built['layout'] = $layout->build($regions);

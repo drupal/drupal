@@ -11,15 +11,15 @@ use Drupal\Core\Link;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Url object.
  *
- * @covers \Drupal\Component\Utility\UrlHelper::filterQueryParameters
- * @covers \Drupal\Core\Utility\LinkGenerator::generate
- *
- * @group Common
+ * @legacy-covers \Drupal\Component\Utility\UrlHelper::filterQueryParameters
+ * @legacy-covers \Drupal\Core\Utility\LinkGenerator::generate
  */
+#[Group('Common')]
 class UrlTest extends KernelTestBase {
 
   /**

@@ -7,13 +7,14 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the user entity class.
  *
- * @group user
  * @see \Drupal\user\Entity\User
  */
+#[Group('user')]
 class UserEntityTest extends KernelTestBase {
 
   /**

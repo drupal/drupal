@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the representative node relationship for terms.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class RelationshipRepresentativeNodeTest extends TaxonomyTestBase {
 
   /**

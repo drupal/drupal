@@ -11,11 +11,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\Plugin\Field\FieldWidget\ModerationStateWidget
- * @group content_moderation
+ * Tests Drupal\content_moderation\Plugin\Field\FieldWidget\ModerationStateWidget.
  */
+#[CoversClass(ModerationStateWidget::class)]
+#[Group('content_moderation')]
 class ModerationStateWidgetTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -81,7 +84,9 @@ class ModerationStateWidgetTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::isApplicable
+   * Tests is applicable.
+   *
+   * @legacy-covers ::isApplicable
    */
   public function testIsApplicable(): void {
     // The moderation_state field definition should be applicable to our widget.

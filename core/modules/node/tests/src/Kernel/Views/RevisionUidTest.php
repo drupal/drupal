@@ -11,12 +11,12 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the node_revision_uid field.
- *
- * @group node
  */
+#[Group('node')]
 class RevisionUidTest extends ViewsKernelTestBase {
 
   use UserCreationTrait;

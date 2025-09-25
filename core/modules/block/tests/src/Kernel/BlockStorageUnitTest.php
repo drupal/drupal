@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel;
 
+use Drupal\block\Entity\Block;
+use Drupal\block_test\Plugin\Block\TestHtmlBlock;
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\block_test\Plugin\Block\TestHtmlBlock;
-use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\block\Entity\Block;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the storage of blocks.
- *
- * @group block
  */
+#[Group('block')]
 class BlockStorageUnitTest extends KernelTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\image\Kernel;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of image_style entities.
- *
- * @group image
  */
+#[Group('image')]
 class ImageStyleValidationTest extends ConfigEntityValidationTestBase {
 
   /**

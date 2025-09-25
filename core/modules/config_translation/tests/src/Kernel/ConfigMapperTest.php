@@ -6,13 +6,13 @@ namespace Drupal\Tests\config_translation\Kernel;
 
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 
 /**
  * Tests config mapper.
- *
- * @group config_translation
  */
+#[Group('config_translation')]
 class ConfigMapperTest extends KernelTestBase {
 
   /**

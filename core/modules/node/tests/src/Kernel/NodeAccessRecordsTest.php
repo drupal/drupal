@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests hook_node_access_records when acquiring grants.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessRecordsTest extends NodeAccessTestBase {
 
   /**

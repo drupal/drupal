@@ -8,13 +8,14 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the generic field handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
+#[Group('views')]
 class FieldKernelTest extends ViewsKernelTestBase {
 
   /**

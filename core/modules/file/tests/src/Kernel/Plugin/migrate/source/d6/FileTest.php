@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\file\Plugin\migrate\source\d6\File;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 file source plugin.
  *
- * @covers \Drupal\file\Plugin\migrate\source\d6\File
- *
- * @group file
- * @coversDefaultClass \Drupal\file\Plugin\migrate\source\d6\File
+ * @legacy-covers \Drupal\file\Plugin\migrate\source\d6\File
  */
+#[CoversClass(File::class)]
+#[Group('file')]
 class FileTest extends MigrateSqlSourceTestBase {
 
   /**

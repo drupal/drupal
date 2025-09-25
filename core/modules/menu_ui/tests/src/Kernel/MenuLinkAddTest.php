@@ -8,13 +8,14 @@ use Drupal\Core\Menu\LocalActionWithDestination;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests \Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd deprecation.
- *
- * @group menu_ui
- * @group legacy
  */
+#[Group('menu_ui')]
+#[IgnoreDeprecations]
 class MenuLinkAddTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

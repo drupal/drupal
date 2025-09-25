@@ -8,13 +8,14 @@ use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the exposed form.
  *
- * @group views
  * @see \Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest
  */
+#[Group('views')]
 class ExposedFormRenderTest extends ViewsKernelTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Field\BaseFieldDefinition;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the field formatter plugin manager.
- *
- * @group field
  */
+#[Group('field')]
 class FormatterPluginManagerTest extends FieldKernelTestBase {
 
   /**

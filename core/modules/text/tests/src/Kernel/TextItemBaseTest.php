@@ -10,13 +10,15 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\text\Plugin\Field\FieldType\TextItemBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests TextItemBase.
- *
- * @coversDefaultClass \Drupal\text\Plugin\Field\FieldType\TextItemBase
- * @group text
  */
+#[CoversClass(TextItemBase::class)]
+#[Group('text')]
 class TextItemBaseTest extends KernelTestBase {
 
   /**
@@ -27,9 +29,9 @@ class TextItemBaseTest extends KernelTestBase {
   /**
    * Tests creation of sample values.
    *
-   * @covers ::generateSampleValue
-   * @dataProvider providerTextFieldSampleValue
+   * @legacy-covers ::generateSampleValue
    */
+  #[DataProvider('providerTextFieldSampleValue')]
   public function testTextFieldSampleValue($max_length): void {
     // Create a text field.
     $field_definition = BaseFieldDefinition::create('text')
@@ -64,7 +66,9 @@ class TextItemBaseTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::calculateDependencies
+   * Tests calculate dependencies.
+   *
+   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     $this->installEntitySchema('user');

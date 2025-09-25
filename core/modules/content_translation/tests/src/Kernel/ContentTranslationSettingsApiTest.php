@@ -6,12 +6,12 @@ namespace Drupal\Tests\content_translation\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the content translation settings API.
- *
- * @group content_translation
  */
+#[Group('content_translation')]
 class ContentTranslationSettingsApiTest extends KernelTestBase {
 
   /**

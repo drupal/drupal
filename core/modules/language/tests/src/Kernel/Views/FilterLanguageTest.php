@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Kernel\Views;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the filter language handler.
  *
- * @group language
  * @see \Drupal\language\Plugin\views\filter\Language
  */
+#[Group('language')]
 class FilterLanguageTest extends LanguageTestBase {
 
   /**

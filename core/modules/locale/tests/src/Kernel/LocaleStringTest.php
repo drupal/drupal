@@ -7,12 +7,12 @@ namespace Drupal\Tests\locale\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\StringInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the locale string storage, string objects and data API.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleStringTest extends KernelTestBase {
 
   /**

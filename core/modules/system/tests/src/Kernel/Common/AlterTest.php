@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests alteration of arguments passed to \Drupal::moduleHandler->alter().
- *
- * @group Common
  */
+#[Group('Common')]
 class AlterTest extends KernelTestBase {
 
   /**
@@ -25,9 +26,8 @@ class AlterTest extends KernelTestBase {
 
   /**
    * Tests if the theme has been altered.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testDrupalAlter(): void {
     // This test depends on Olivero, so make sure that it is always the current
     // active theme.

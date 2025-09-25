@@ -6,12 +6,15 @@ namespace Drupal\Tests\package_manager\Kernel\PathExcluder;
 
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\PathExcluder\SiteFilesExcluder
- * @group package_manager
+ * Tests Site Files Excluder.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\PathExcluder\SiteFilesExcluder
  */
+#[Group('package_manager')]
 class SiteFilesExcluderTest extends PackageManagerKernelTestBase {
 
   /**

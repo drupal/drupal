@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of Theme settings variables to configuration.
- *
- * @group system
  */
+#[Group('system')]
 class MigrateThemeSettingsTest extends MigrateDrupal7TestBase {
 
   /**

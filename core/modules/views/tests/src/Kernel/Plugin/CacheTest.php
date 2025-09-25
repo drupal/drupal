@@ -10,13 +10,14 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests pluggable caching for views.
  *
- * @group views
  * @see views_plugin_cache
  */
+#[Group('views')]
 class CacheTest extends ViewsKernelTestBase {
 
   /**

@@ -5,17 +5,22 @@ declare(strict_types=1);
 namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
- *
- * @group KernelTests
- * @group Database
+ * Tests Drupal\KernelTests\KernelTestBase.
  */
+#[CoversClass(KernelTestBase::class)]
+#[Group('KernelTests')]
+#[Group('Database')]
 class KernelTestBaseTest extends DriverSpecificKernelTestBase {
 
   /**
-   * @covers ::setUp
+   * Tests set up.
+   *
+   * @legacy-covers ::setUp
    */
   public function testSetUp(): void {
     // Ensure that the database tasks have been run during set up.

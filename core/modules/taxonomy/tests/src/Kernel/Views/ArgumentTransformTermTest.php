@@ -6,14 +6,15 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\TestTools\Random;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests taxonomy term argument transformation.
  *
- * @group taxonomy
- *
  * @see \Drupal\taxonomy\Plugin\views\argument_validator\TermName
  */
+#[Group('taxonomy')]
 class ArgumentTransformTermTest extends TaxonomyTestBase {
 
   /**
@@ -26,9 +27,8 @@ class ArgumentTransformTermTest extends TaxonomyTestBase {
    *
    * @param string $name
    *   The name of the taxonomy term to use for the test.
-   *
-   * @dataProvider termArgumentTransformationProvider
    */
+  #[DataProvider('termArgumentTransformationProvider')]
   public function testTermArgumentTransformation($name): void {
     /** @var \Drupal\taxonomy\TermInterface $term */
     $term = $this->createTerm(['name' => $name]);

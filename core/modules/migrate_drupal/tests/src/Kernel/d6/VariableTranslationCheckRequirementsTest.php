@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\migrate\Exception\RequirementsException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests check requirements for variable translation source plugin.
- *
- * @group migrate_drupal
  */
+#[Group('migrate_drupal')]
 class VariableTranslationCheckRequirementsTest extends MigrateDrupal6TestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Module;
 
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Covers hook_requirements and hook_requirements_alter.
- *
- * @group Module
  */
+#[Group('Module')]
 class RequirementsTest extends KernelTestBase {
 
   /**

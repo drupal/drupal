@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the service views.views_data.
- *
- * @group views
  */
+#[Group('views')]
 class ViewsDataTest extends ViewsKernelTestBase {
 
   /**

@@ -9,13 +9,17 @@ use Drupal\Component\FileSystem\FileSystem as DrupalFileSystem;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * @covers \Drupal\package_manager\PathExcluder\UnknownPathExcluder
- * @group package_manager
+ * Tests Unknown Path Excluder.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\PathExcluder\UnknownPathExcluder
  */
+#[Group('package_manager')]
 class UnknownPathExcluderTest extends PackageManagerKernelTestBase {
 
   /**
@@ -140,9 +144,8 @@ class UnknownPathExcluderTest extends PackageManagerKernelTestBase {
    *   The path of unknown directory to test or NULL none should be tested.
    * @param string[] $unknown_files
    *   The list of unknown files.
-   *
-   * @dataProvider providerTestUnknownPath
    */
+  #[DataProvider('providerTestUnknownPath')]
   public function testUnknownPath(bool $use_nested_webroot, ?string $unknown_dir, array $unknown_files): void {
     $this->createTestProjectForTemplate($use_nested_webroot);
 

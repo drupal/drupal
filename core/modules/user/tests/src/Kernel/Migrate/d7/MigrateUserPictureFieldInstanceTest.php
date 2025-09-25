@@ -7,12 +7,12 @@ namespace Drupal\Tests\user\Kernel\Migrate\d7;
 use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * User picture field instance migration.
- *
- * @group user
  */
+#[Group('user')]
 class MigrateUserPictureFieldInstanceTest extends MigrateDrupal7TestBase {
 
   /**

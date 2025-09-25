@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\big_pipe\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\block\Entity\Block;
+use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the big pipe theme suggestions.
- *
- * @group big_pipe
  */
+#[Group('big_pipe')]
 class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
 
   /**

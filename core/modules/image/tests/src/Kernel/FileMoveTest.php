@@ -10,12 +10,12 @@ use Drupal\file\FileRepository;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the file move function for images and image styles.
- *
- * @group image
  */
+#[Group('image')]
 class FileMoveTest extends KernelTestBase {
 
   use TestFileCreationTrait {

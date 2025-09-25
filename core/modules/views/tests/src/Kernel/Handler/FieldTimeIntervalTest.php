@@ -6,13 +6,14 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the time interval handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\field\TimeInterval
  */
+#[Group('views')]
 class FieldTimeIntervalTest extends ViewsKernelTestBase {
 
   /**

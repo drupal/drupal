@@ -6,13 +6,13 @@ namespace Drupal\Tests\language\Kernel\Migrate\d7;
 
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the migration of language negotiation.
- *
- * @group #slow
- * @group migrate_drupal_7
  */
+#[Group('#slow')]
+#[Group('migrate_drupal_7')]
 class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal7TestBase {
 
   /**

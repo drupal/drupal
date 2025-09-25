@@ -6,12 +6,12 @@ namespace Drupal\Tests\shortcut\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\shortcut\Entity\ShortcutSet;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of shortcut_set entities.
- *
- * @group shortcut
  */
+#[Group('shortcut')]
 class ShortcutSetValidationTest extends ConfigEntityValidationTestBase {
 
   /**

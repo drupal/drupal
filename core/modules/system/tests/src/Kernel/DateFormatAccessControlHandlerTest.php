@@ -9,13 +9,18 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\system\DateFormatAccessControlHandler;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophet;
 
 /**
- * @coversDefaultClass \Drupal\system\DateFormatAccessControlHandler
- * @group system
+ * Tests Drupal\system\DateFormatAccessControlHandler.
  */
+#[CoversClass(DateFormatAccessControlHandler::class)]
+#[Group('system')]
 class DateFormatAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {
@@ -47,10 +52,12 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::checkAccess
-   * @covers ::checkCreateAccess
-   * @dataProvider providerTestAccess
+   * Tests access.
+   *
+   * @legacy-covers ::checkAccess
+   * @legacy-covers ::checkCreateAccess
    */
+  #[DataProvider('providerTestAccess')]
   public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result): void {
 
     $user = $this->drupalCreateUser($permissions);

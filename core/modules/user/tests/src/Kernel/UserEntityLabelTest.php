@@ -7,12 +7,12 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the label callback.
- *
- * @group user
  */
+#[Group('user')]
 class UserEntityLabelTest extends KernelTestBase {
 
   use UserCreationTrait;

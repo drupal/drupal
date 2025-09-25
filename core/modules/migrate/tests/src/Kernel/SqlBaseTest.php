@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\migrate\Exception\RequirementsException;
-use Drupal\Core\Database\Database;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\MigrationInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the functionality of SqlBase.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class SqlBaseTest extends MigrateTestBase {
 
   /**
@@ -160,9 +161,8 @@ class SqlBaseTest extends MigrateTestBase {
    *   (optional) The high-water value to set.
    * @param array $query_result
    *   (optional) The expected query results.
-   *
-   * @dataProvider highWaterDataProvider
    */
+  #[DataProvider('highWaterDataProvider')]
   public function testHighWater($high_water = NULL, array $query_result = []): void {
     $configuration = [
       'high_water_property' => [

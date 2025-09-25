@@ -9,12 +9,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the File access control.
- *
- * @group file
  */
+#[Group('file')]
 class AccessTest extends KernelTestBase {
 
   use UserCreationTrait;

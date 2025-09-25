@@ -8,11 +8,16 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\media\Plugin\Filter\MediaEmbed;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\Filter\MediaEmbed
- * @group media
+ * Tests Drupal\media\Plugin\Filter\MediaEmbed.
  */
+#[CoversClass(MediaEmbed::class)]
+#[Group('media')]
 class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 
   /**
@@ -26,9 +31,8 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 
   /**
    * Ensures media entities are rendered correctly.
-   *
-   * @dataProvider providerTestBasics
    */
+  #[DataProvider('providerTestBasics')]
   public function testBasics(array $embed_attributes, $expected_view_mode, array $expected_attributes, CacheableMetadata $expected_cacheability): void {
     $content = $this->createEmbedCode($embed_attributes);
 
@@ -128,9 +132,8 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 
   /**
    * Tests that entity access is respected by embedding an unpublished entity.
-   *
-   * @dataProvider providerAccessUnpublished
    */
+  #[DataProvider('providerAccessUnpublished')]
   public function testAccessUnpublished($allowed_to_view_unpublished, $expected_rendered, CacheableMetadata $expected_cacheability, array $expected_attachments): void {
     // Unpublish the embedded entity so we can test variations in behavior.
     $this->embeddedEntity->setUnpublished()->save();
@@ -200,9 +203,11 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   }
 
   /**
-   * @covers ::applyPerEmbedMediaOverrides
-   * @dataProvider providerOverridesAltAndTitle
+   * Tests overrides alt and title.
+   *
+   * @legacy-covers ::applyPerEmbedMediaOverrides
    */
+  #[DataProvider('providerOverridesAltAndTitle')]
   public function testOverridesAltAndTitle($title_field_property_enabled, array $expected_title_attributes): void {
     // The `alt` field property is enabled by default, the `title` one is not.
     if ($title_field_property_enabled) {
@@ -277,9 +282,8 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 
   /**
    * Tests the indicator for missing entities.
-   *
-   * @dataProvider providerMissingEntityIndicator
    */
+  #[DataProvider('providerMissingEntityIndicator')]
   public function testMissingEntityIndicator($uuid, array $filter_ids, array $additional_attributes): void {
     $content = $this->createEmbedCode([
       'data-entity-type' => 'media',
@@ -394,10 +398,12 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   }
 
   /**
-   * @covers \Drupal\filter\Plugin\Filter\FilterAlign
-   * @covers \Drupal\filter\Plugin\Filter\FilterCaption
-   * @dataProvider providerFilterIntegration
+   * Tests filter integration.
+   *
+   * @legacy-covers \Drupal\filter\Plugin\Filter\FilterAlign
+   * @legacy-covers \Drupal\filter\Plugin\Filter\FilterCaption
    */
+  #[DataProvider('providerFilterIntegration')]
   public function testFilterIntegration(array $filter_ids, array $additional_attributes, $verification_selector, $expected_verification_success, array $expected_asset_libraries = [], $prefix = '', $suffix = ''): void {
     $content = $this->createEmbedCode([
       'data-entity-type' => 'media',

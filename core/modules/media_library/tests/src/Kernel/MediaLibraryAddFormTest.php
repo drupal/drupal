@@ -12,12 +12,12 @@ use Drupal\media_library\MediaLibraryState;
 use Drupal\media_library_form_overwrite_test\Form\TestAddForm;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the media library add form.
- *
- * @group media_library
  */
+#[Group('media_library')]
 class MediaLibraryAddFormTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;

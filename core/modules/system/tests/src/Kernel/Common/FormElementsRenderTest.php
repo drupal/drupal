@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Performs integration tests on \Drupal::service('renderer')->render().
- *
- * @group system
  */
+#[Group('system')]
 class FormElementsRenderTest extends KernelTestBase {
 
   /**

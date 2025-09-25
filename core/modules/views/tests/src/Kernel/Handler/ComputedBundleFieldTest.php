@@ -9,13 +9,14 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Provides some integration tests for computed bundle fields.
  *
  * @see \Drupal\views\Plugin\views\field\EntityField
- * @group views
  */
+#[Group('views')]
 class ComputedBundleFieldTest extends ViewsKernelTestBase {
 
   /**

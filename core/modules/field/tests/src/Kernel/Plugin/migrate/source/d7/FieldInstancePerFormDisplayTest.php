@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d7;
 
+use Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 field instance per form display source plugin.
  *
- * @covers \Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay
- * @group field
- * @coversDefaultClass \Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay
+ * @legacy-covers \Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay
  */
+#[CoversClass(FieldInstancePerFormDisplay::class)]
+#[Group('field')]
 class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestBase {
 
   /**

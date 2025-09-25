@@ -8,13 +8,14 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the nid argument handler.
  *
- * @group node
  * @see \Drupal\node\Plugin\views\argument\Nid
  */
+#[Group('node')]
 class NidArgumentTest extends ViewsKernelTestBase {
 
   /**

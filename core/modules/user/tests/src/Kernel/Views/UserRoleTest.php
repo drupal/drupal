@@ -8,12 +8,12 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests rendering when the role is numeric.
- *
- * @group user
  */
+#[Group('user')]
 class UserRoleTest extends ViewsKernelTestBase {
 
   /**

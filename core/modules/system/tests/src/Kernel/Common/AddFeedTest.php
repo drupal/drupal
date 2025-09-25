@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Make sure that attaching feeds works correctly with various constructs.
- *
- * @group Common
  */
+#[Group('Common')]
 class AddFeedTest extends KernelTestBase {
 
   /**

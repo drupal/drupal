@@ -11,14 +11,18 @@ use Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder;
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * @covers \Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder
- * @group package_manager
+ * Tests Sqlite Database Excluder.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder
  */
+#[Group('package_manager')]
 class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
 
   /**
@@ -105,9 +109,8 @@ class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
    *   The path to the database, as it should be given to
    *   CollectPathsToExcludeEvent. If FALSE, the database is located outside the
    *   project and therefore is not excluded.
-   *
-   * @dataProvider providerSqliteDatabaseFilesExcluded
    */
+  #[DataProvider('providerSqliteDatabaseFilesExcluded')]
   public function testSqliteDatabaseFilesExcluded(string $web_root, string $db_path, string|false $expected_excluded_path): void {
     /** @var \Drupal\package_manager_bypass\MockPathLocator $path_locator */
     $path_locator = $this->container->get(PathLocator::class);

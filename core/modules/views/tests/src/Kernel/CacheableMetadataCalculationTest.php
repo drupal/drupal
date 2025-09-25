@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that cacheability metadata is only calculated when needed.
- *
- * @group views
  */
+#[Group('views')]
 class CacheableMetadataCalculationTest extends KernelTestBase {
 
   /**

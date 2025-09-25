@@ -7,16 +7,16 @@ namespace Drupal\Tests\migrate\Kernel\process;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\KernelTests\Core\File\FileTestBase;
 use Drupal\migrate\MigrateException;
-use Drupal\migrate\Plugin\migrate\process\Download;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\Plugin\migrate\process\Download;
 use Drupal\migrate\Row;
 use GuzzleHttp\Client;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the download process plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class DownloadTest extends FileTestBase {
 
   /**

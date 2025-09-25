@@ -14,15 +14,15 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the entity display configuration entities.
- *
- * @group field_ui
  */
+#[Group('field_ui')]
 class EntityDisplayTest extends KernelTestBase {
 
   /**
@@ -154,7 +154,9 @@ class EntityDisplayTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Entity\EntityDisplayRepository::getViewDisplay
+   * Tests entity get display.
+   *
+   * @legacy-covers \Drupal\Core\Entity\EntityDisplayRepository::getViewDisplay
    */
   public function testEntityGetDisplay(): void {
     $display_repository = $this->container->get('entity_display.repository');

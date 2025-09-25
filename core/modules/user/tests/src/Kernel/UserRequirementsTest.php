@@ -7,12 +7,12 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user_requirements().
- *
- * @group user
  */
+#[Group('user')]
 class UserRequirementsTest extends KernelTestBase {
 
   use UserCreationTrait;

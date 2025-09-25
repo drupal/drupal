@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\field\Plugin\migrate\source\d6\Field;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 field source plugin.
  *
- * @covers \Drupal\field\Plugin\migrate\source\d6\Field
- * @group field
- * @coversDefaultClass \Drupal\field\Plugin\migrate\source\d6\Field
+ * @legacy-covers \Drupal\field\Plugin\migrate\source\d6\Field
  */
+#[CoversClass(Field::class)]
+#[Group('field')]
 class FieldTest extends MigrateSqlSourceTestBase {
 
   /**

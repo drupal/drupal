@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the MigrateExecutable class.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateExecutableTest extends MigrateTestBase {
 
   /**

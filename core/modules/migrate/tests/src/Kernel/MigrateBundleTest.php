@@ -7,12 +7,12 @@ namespace Drupal\Tests\migrate\Kernel;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests setting of bundles on content entity migrations.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateBundleTest extends MigrateTestBase {
 
   /**

@@ -9,12 +9,12 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node token replacement.
- *
- * @group node
  */
+#[Group('node')]
 class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
   use ContentTypeCreationTrait;

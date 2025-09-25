@@ -11,13 +11,14 @@ use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
 use Drupal\file\Entity\File;
 use Drupal\file\FileRepository;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the file move function.
- *
- * @coversDefaultClass \Drupal\file\FileRepository
- * @group file
  */
+#[CoversClass(FileRepository::class)]
+#[Group('file')]
 class MoveTest extends FileManagedUnitTestBase {
 
   /**
@@ -38,7 +39,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Move a normal file.
    *
-   * @covers ::move
+   * @legacy-covers ::move
    */
   public function testNormal(): void {
     $contents = $this->randomMachineName(10);
@@ -70,7 +71,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Tests renaming when moving onto a file that already exists.
    *
-   * @covers ::move
+   * @legacy-covers ::move
    */
   public function testExistingRename(): void {
     // Setup a file to overwrite.
@@ -107,7 +108,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Tests replacement when moving onto a file that already exists.
    *
-   * @covers ::move
+   * @legacy-covers ::move
    */
   public function testExistingReplace(): void {
     // Setup a file to overwrite.
@@ -141,7 +142,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Tests replacement when moving onto itself.
    *
-   * @covers ::move
+   * @legacy-covers ::move
    */
   public function testExistingReplaceSelf(): void {
     // Setup a file to overwrite.
@@ -170,7 +171,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Tests that moving onto an existing file fails when instructed to do so.
    *
-   * @covers ::move
+   * @legacy-covers ::move
    */
   public function testExistingError(): void {
     $contents = $this->randomMachineName(10);
@@ -204,7 +205,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Tests for an invalid stream wrapper.
    *
-   * @covers ::move
+   * @legacy-covers ::move
    */
   public function testInvalidStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -216,7 +217,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Tests for entity storage exception.
    *
-   * @covers ::move
+   * @legacy-covers ::move
    */
   public function testEntityStorageException(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */

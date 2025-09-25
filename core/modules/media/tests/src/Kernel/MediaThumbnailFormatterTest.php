@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter
- * @group media
+ * Tests Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter.
  */
+#[CoversClass(MediaThumbnailFormatter::class)]
+#[Group('media')]
 class MediaThumbnailFormatterTest extends MediaKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -71,10 +76,9 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
    * @param array $expected_summary
    *   The expected settings summary.
    *
-   * @covers ::settingsSummary
-   *
-   * @dataProvider providerTestSettingsSummary
+   * @legacy-covers ::settingsSummary
    */
+  #[DataProvider('providerTestSettingsSummary')]
   public function testSettingsSummary(array $settings, array $expected_summary): void {
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display  */
     $display = \Drupal::service('entity_display.repository')->getViewDisplay($this->testEntityTypeId, $this->testEntityBundleId);

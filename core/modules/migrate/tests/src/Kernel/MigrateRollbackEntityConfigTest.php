@@ -6,12 +6,12 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\taxonomy\Entity\Vocabulary;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests rolling back of imports.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateRollbackEntityConfigTest extends MigrateTestBase {
 
   /**

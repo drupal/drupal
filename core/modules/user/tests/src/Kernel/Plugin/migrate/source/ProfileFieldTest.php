@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel\Plugin\migrate\source;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use Drupal\user\Plugin\migrate\source\ProfileField;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the profile_field source plugin.
  *
- * @covers \Drupal\user\Plugin\migrate\source\ProfileField
- * @group user
- * @coversDefaultClass \Drupal\user\Plugin\migrate\source\ProfileField
+ * @legacy-covers \Drupal\user\Plugin\migrate\source\ProfileField
  */
+#[CoversClass(ProfileField::class)]
+#[Group('user')]
 class ProfileFieldTest extends MigrateSqlSourceTestBase {
 
   /**

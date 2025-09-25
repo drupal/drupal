@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @group migrate_drupal
+ * Tests Entity Content Base.
  */
+#[Group('migrate_drupal')]
 class EntityContentBaseTest extends MigrateDrupal6TestBase {
 
   /**

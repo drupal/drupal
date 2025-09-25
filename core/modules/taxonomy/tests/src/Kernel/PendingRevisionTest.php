@@ -11,12 +11,12 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Kernel tests for taxonomy pending revisions.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class PendingRevisionTest extends KernelTestBase {
 
   /**

@@ -6,16 +6,17 @@ namespace Drupal\Tests\migrate\Kernel\Plugin\id_map;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
+use Drupal\migrate\MigrateException;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate\Unit\TestSqlIdMap;
-use Drupal\migrate\MigrateException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests that the migrate map table is created.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class SqlTest extends MigrateTestBase {
 
   /**
@@ -80,9 +81,8 @@ class SqlTest extends MigrateTestBase {
 
   /**
    * Tests that ensureTables creates the migrate map table.
-   *
-   * @dataProvider providerTestEnsureTables
    */
+  #[DataProvider('providerTestEnsureTables')]
   public function testEnsureTables($ids): void {
     $this->migrationDefinition['source']['ids'] = $ids;
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition);
@@ -134,9 +134,8 @@ class SqlTest extends MigrateTestBase {
 
   /**
    * Tests exception is thrown in ensureTables fails.
-   *
-   * @dataProvider providerTestFailEnsureTables
    */
+  #[DataProvider('providerTestFailEnsureTables')]
   public function testFailEnsureTables($ids): void {
     // This just tests mysql, as other PDO integrations allow longer indexes.
     if (Database::getConnection()->databaseType() !== 'mysql') {

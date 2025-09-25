@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Component\Datetime\Time;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
@@ -11,19 +12,24 @@ use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\SandboxEvent;
 use Drupal\package_manager\Exception\SandboxException;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager_bypass\LoggingCommitter;
 use PhpTuf\ComposerStager\API\Exception\PreconditionException;
 use PhpTuf\ComposerStager\API\Precondition\Service\PreconditionInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LogLevel;
-use ColinODell\PsrTestLogger\TestLogger;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\SandboxManagerBase
- * @covers \Drupal\package_manager\PackageManagerUninstallValidator
- * @group package_manager
- * @group #slow
+ * Tests Drupal\package_manager\SandboxManagerBase.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\PackageManagerUninstallValidator
  */
+#[CoversClass(SandboxManagerBase::class)]
+#[Group('package_manager')]
+#[Group('#slow')]
 class StageConflictTest extends PackageManagerKernelTestBase {
 
   /**
@@ -119,9 +125,8 @@ class StageConflictTest extends PackageManagerKernelTestBase {
    * @param string|null $expected_exception_message
    *   The expected exception message string if an exception is expected, or
    *   NULL if no exception message was expected.
-   *
-   * @dataProvider providerDestroyDuringApply
    */
+  #[DataProvider('providerDestroyDuringApply')]
   public function testDestroyDuringApply(string $event_class, bool $force, int $time_offset, ?string $expected_exception_message): void {
     $listener = function (SandboxEvent $event) use ($force, $time_offset): void {
       // Simulate that a certain amount of time has passed since we started

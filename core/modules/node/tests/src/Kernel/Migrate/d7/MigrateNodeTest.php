@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use Drupal\node\Entity\Node;
-use Drupal\node\NodeInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node migration.
- *
- * @group node
  */
+#[Group('node')]
 class MigrateNodeTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;

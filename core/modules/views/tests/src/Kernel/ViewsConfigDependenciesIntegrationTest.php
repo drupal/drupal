@@ -10,12 +10,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests integration of views with other modules.
- *
- * @group views
  */
+#[Group('views')]
 class ViewsConfigDependenciesIntegrationTest extends ViewsKernelTestBase {
 
   /**

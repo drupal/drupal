@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests loading, saving and deleting vocabularies.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class VocabularyCrudTest extends KernelTestBase {
 
   use TaxonomyTestTrait;

@@ -14,14 +14,13 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore drépal
-
 /**
  * Performs tests on the pluggable mailing framework.
- *
- * @group Mail
  */
+#[Group('Mail')]
 class MailTest extends KernelTestBase {
 
   /**

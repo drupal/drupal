@@ -8,14 +8,14 @@ use Drupal\rest\Plugin\views\display\RestExport;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the REST export view display plugin.
- *
- * @coversDefaultClass \Drupal\rest\Plugin\views\display\RestExport
- *
- * @group rest
  */
+#[CoversClass(RestExport::class)]
+#[Group('rest')]
 class RestExportTest extends ViewsKernelTestBase {
 
   /**
@@ -44,7 +44,9 @@ class RestExportTest extends ViewsKernelTestBase {
   }
 
   /**
-   * @covers ::buildResponse
+   * Tests build response.
+   *
+   * @legacy-covers ::buildResponse
    */
   public function testBuildResponse(): void {
     /** @var \Drupal\views\Entity\View $view */

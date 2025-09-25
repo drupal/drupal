@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel;
 
+use Drupal\block\Entity\Block;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\block\Entity\Block;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the block view builder.
- *
- * @group block
  */
+#[Group('block')]
 class BlockViewBuilderTest extends KernelTestBase {
 
   /**

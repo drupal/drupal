@@ -7,12 +7,15 @@ namespace Drupal\Tests\package_manager\Kernel;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\Validator\ComposerMinimumStabilityValidator
- * @group package_manager
+ * Tests Composer Minimum Stability Validator.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\ComposerMinimumStabilityValidator
  */
+#[Group('package_manager')]
 class ComposerMinimumStabilityValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;

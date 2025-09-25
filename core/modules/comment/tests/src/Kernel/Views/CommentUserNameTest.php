@@ -13,12 +13,12 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment user name field.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentUserNameTest extends ViewsKernelTestBase {
 
   /**

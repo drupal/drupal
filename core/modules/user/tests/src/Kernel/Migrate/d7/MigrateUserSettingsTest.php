@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
-use Drupal\Tests\SchemaCheckTestTrait;
-use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use Drupal\user\AccountSettingsForm;
 use Drupal\Core\Database\Database;
+use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use Drupal\Tests\SchemaCheckTestTrait;
+use Drupal\user\AccountSettingsForm;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of user settings.
- *
- * @group migrate_drupal_7
  */
+#[Group('migrate_drupal_7')]
 class MigrateUserSettingsTest extends MigrateDrupal7TestBase {
 
   use SchemaCheckTestTrait;

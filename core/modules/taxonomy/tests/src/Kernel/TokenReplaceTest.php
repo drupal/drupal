@@ -11,12 +11,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests taxonomy token replacement.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TokenReplaceTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

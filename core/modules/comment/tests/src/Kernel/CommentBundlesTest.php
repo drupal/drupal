@@ -6,12 +6,12 @@ namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\Entity\CommentType;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that comment bundles behave as expected.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentBundlesTest extends KernelTestBase {
 
   /**

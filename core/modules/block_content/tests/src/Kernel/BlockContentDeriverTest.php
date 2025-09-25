@@ -9,12 +9,12 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\block_content\Plugin\Derivative\BlockContent as DerivativeBlockContent;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests block content plugin deriver.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockContentDeriverTest extends KernelTestBase {
 
   /**

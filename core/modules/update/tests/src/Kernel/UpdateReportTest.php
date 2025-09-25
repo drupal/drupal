@@ -9,13 +9,15 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\update\Hook\UpdateThemeHooks;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests update report functionality.
- *
- * @coversDefaultClass \Drupal\update\Hook\UpdateThemeHooks
- * @group update
  */
+#[CoversClass(UpdateThemeHooks::class)]
+#[Group('update')]
 class UpdateReportTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -29,9 +31,11 @@ class UpdateReportTest extends KernelTestBase {
   ];
 
   /**
-   * @dataProvider providerTemplatePreprocessUpdateReport
-   * @covers ::preprocessUpdateReport
+   * Tests template preprocess update report.
+   *
+   * @legacy-covers ::preprocessUpdateReport
    */
+  #[DataProvider('providerTemplatePreprocessUpdateReport')]
   public function testTemplatePreprocessUpdateReport($variables): void {
     // The function should run without an exception being thrown when the value
     // of $variables['data'] is not set or is not an array.
@@ -65,7 +69,7 @@ class UpdateReportTest extends KernelTestBase {
   /**
    * Tests the error message when failing to fetch data without dblog installed.
    *
-   * @covers ::preprocessUpdateFetchErrorMessage
+   * @legacy-covers ::preprocessUpdateFetchErrorMessage
    */
   public function testTemplatePreprocessUpdateFetchErrorMessageNoDblog(): void {
     $build = [
@@ -86,7 +90,7 @@ class UpdateReportTest extends KernelTestBase {
   /**
    * Tests the error message when failing to fetch data with dblog installed.
    *
-   * @covers ::preprocessUpdateFetchErrorMessage
+   * @legacy-covers ::preprocessUpdateFetchErrorMessage
    */
   public function testTemplatePreprocessUpdateFetchErrorMessageWithDblog(): void {
 

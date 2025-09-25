@@ -9,12 +9,12 @@ use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment module uninstall.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentUninstallTest extends KernelTestBase {
 
   use CommentTestTrait;

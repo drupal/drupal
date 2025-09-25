@@ -14,14 +14,14 @@ use Drupal\Tests\workspaces\Kernel\WorkspaceTestTrait;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\WorkflowInterface;
 use Drupal\workspaces\WorkspacePublishException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that Workspaces and Content Moderation work together properly.
- *
- * @group content_moderation
- * @group workspaces
- * @group #slow
  */
+#[Group('content_moderation')]
+#[Group('workspaces')]
+#[Group('#slow')]
 class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
 
   use ContentModerationTestTrait {

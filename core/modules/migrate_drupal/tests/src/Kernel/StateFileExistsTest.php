@@ -7,6 +7,7 @@ namespace Drupal\Tests\migrate_drupal\Kernel;
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that core modules have a migrate_drupal.yml file as needed.
@@ -15,9 +16,8 @@ use Drupal\migrate_drupal\MigrationConfigurationTrait;
  * Because more that one migrate_drupal.yml file may have the same entry the
  * ValidateMigrationStateTest, which validates the file contents, is not able
  * to determine that all the required files exits.
- *
- * @group migrate_drupal
  */
+#[Group('migrate_drupal')]
 class StateFileExistsTest extends MigrateDrupalTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

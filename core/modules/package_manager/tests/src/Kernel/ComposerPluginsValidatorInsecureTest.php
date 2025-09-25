@@ -10,12 +10,15 @@ use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\Validator\ComposerPluginsValidator
- * @group package_manager
+ * Tests Composer Plugins Validator Insecure.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\ComposerPluginsValidator
  */
+#[Group('package_manager')]
 class ComposerPluginsValidatorInsecureTest extends PackageManagerKernelTestBase {
 
   /**

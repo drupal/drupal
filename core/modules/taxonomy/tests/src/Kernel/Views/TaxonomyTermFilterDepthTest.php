@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the taxonomy term with depth filter.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyTermFilterDepthTest extends TaxonomyTestBase {
 
   /**

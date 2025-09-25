@@ -7,14 +7,16 @@ namespace Drupal\Tests\workspaces\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
+use Drupal\workspaces\WorkspaceAssociation;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests workspace associations.
- *
- * @coversDefaultClass \Drupal\workspaces\WorkspaceAssociation
- *
- * @group workspaces
  */
+#[CoversClass(WorkspaceAssociation::class)]
+#[Group('workspaces')]
 class WorkspaceAssociationTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -77,11 +79,10 @@ class WorkspaceAssociationTest extends KernelTestBase {
    * @param array $entity_values
    *   An array of values for the entities created in this test.
    *
-   * @covers ::getTrackedEntities
-   * @covers ::getAssociatedRevisions
-   *
-   * @dataProvider getEntityTypeIds
+   * @legacy-covers ::getTrackedEntities
+   * @legacy-covers ::getAssociatedRevisions
    */
+  #[DataProvider('getEntityTypeIds')]
   public function testWorkspaceAssociation(string $entity_type_id, array $entity_values): void {
     $entity_1 = $this->createEntity($entity_type_id, $entity_values[1]);
     $this->createEntity($entity_type_id, $entity_values[2]);
@@ -197,7 +198,7 @@ class WorkspaceAssociationTest extends KernelTestBase {
   /**
    * Tests the count of revisions returned for tracked entities listing.
    *
-   * @covers ::getTrackedEntitiesForListing
+   * @legacy-covers ::getTrackedEntitiesForListing
    */
   public function testWorkspaceAssociationForListing(): void {
     $this->switchToWorkspace($this->workspaces['stage']->id());

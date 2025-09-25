@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Base class for tests of Migrate source plugins.
@@ -148,9 +149,8 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *   (optional) Configuration for the source plugin.
    * @param mixed $high_water
    *   (optional) The value of the high water field.
-   *
-   * @dataProvider providerSource
    */
+  #[DataProvider('providerSource')]
   public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL): void {
     $plugin = $this->getPlugin($configuration);
     $clone_plugin = clone $plugin;

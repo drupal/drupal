@@ -8,6 +8,8 @@ use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -18,10 +20,10 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @see \Drupal\Tests\auto_updates\Build\CoreUpdateTest::assertReadOnlyFileSystemError()
  *
- * @covers \Drupal\package_manager\Validator\WritableFileSystemValidator
- * @group package_manager
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\WritableFileSystemValidator
  */
+#[Group('package_manager')]
 class WritableFileSystemValidatorTest extends PackageManagerKernelTestBase {
 
   /**
@@ -125,9 +127,8 @@ class WritableFileSystemValidatorTest extends PackageManagerKernelTestBase {
    *   the web root and project root are the same.
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   The expected validation results.
-   *
-   * @dataProvider providerWritable
    */
+  #[DataProvider('providerWritable')]
   public function testWritable(int $root_permissions, int $webroot_permissions, int $vendor_permissions, string $webroot_relative_directory, array $expected_results): void {
     $this->setUpPermissions($root_permissions, $webroot_permissions, $vendor_permissions, $webroot_relative_directory);
 
@@ -149,9 +150,8 @@ class WritableFileSystemValidatorTest extends PackageManagerKernelTestBase {
    *   the web root and project root are the same.
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   The expected validation results.
-   *
-   * @dataProvider providerWritable
    */
+  #[DataProvider('providerWritable')]
   public function testWritableDuringPreApply(int $root_permissions, int $webroot_permissions, int $vendor_permissions, string $webroot_relative_directory, array $expected_results): void {
     $this->addEventTestListener(
       function () use ($webroot_permissions, $root_permissions, $vendor_permissions, $webroot_relative_directory): void {
@@ -245,9 +245,8 @@ class WritableFileSystemValidatorTest extends PackageManagerKernelTestBase {
    *   The expected validation results.
    * @param bool $delete_staging_root
    *   Whether the stage root directory will exist at all.
-   *
-   * @dataProvider providerStagingRootPermissions
    */
+  #[DataProvider('providerStagingRootPermissions')]
   public function testStagingRootPermissions(int $permissions, array $expected_results, bool $delete_staging_root): void {
     $dir = $this->container->get(PathLocator::class)
       ->getStagingRoot();

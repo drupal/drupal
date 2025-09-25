@@ -7,15 +7,16 @@ namespace Drupal\Tests\system\Kernel\Element;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Element\StatusReportPage;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 include_once \DRUPAL_ROOT . '/core/includes/install.inc';
 
 /**
  * Tests the status report page element.
- *
- * @group system
- * @group legacy
  */
+#[Group('system')]
+#[IgnoreDeprecations]
 class StatusReportPageTest extends KernelTestBase {
 
   /**

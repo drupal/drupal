@@ -7,14 +7,13 @@ namespace Drupal\Tests\block\Kernel;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore displaymessage
-
 /**
  * Tests that the block plugin can work properly without a supporting entity.
- *
- * @group block
  */
+#[Group('block')]
 class BlockInterfaceTest extends KernelTestBase {
 
   /**

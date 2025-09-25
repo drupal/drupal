@@ -7,12 +7,12 @@ namespace Drupal\Tests\block_content\Kernel\Migrate;
 use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of the basic block content type.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class MigrateBlockContentTypeTest extends MigrateDrupal7TestBase {
 
   /**

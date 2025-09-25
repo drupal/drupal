@@ -6,14 +6,15 @@ namespace Drupal\Tests\migrate\Kernel\Plugin\source;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\source\ContentEntity;
+use Drupal\migrate\Plugin\MigrationInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the constructor of the entity content source plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class ContentEntityConstructorTest extends KernelTestBase {
 
   /**
@@ -27,9 +28,8 @@ class ContentEntityConstructorTest extends KernelTestBase {
 
   /**
    * Tests the constructor.
-   *
-   * @dataProvider providerTestConstructor
    */
+  #[DataProvider('providerTestConstructor')]
   public function testConstructor(array $configuration, array $plugin_definition, string $exception_class, string $expected): void {
     $migration = $this->prophesize(MigrationInterface::class)->reveal();
     $this->expectException($exception_class);

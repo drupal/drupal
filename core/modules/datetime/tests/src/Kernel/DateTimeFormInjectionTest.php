@@ -10,12 +10,12 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests serializing a form with an injected datetime instance.
- *
- * @group datetime
  */
+#[Group('datetime')]
 class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface {
 
   use DependencySerializationTrait;

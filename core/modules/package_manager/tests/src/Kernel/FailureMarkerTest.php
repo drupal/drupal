@@ -10,21 +10,28 @@ use Drupal\package_manager\Exception\FailureMarkerExistsException;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\FailureMarker
- * @group package_manager
+ * Tests Drupal\package_manager\FailureMarker.
+ *
  * @internal
  */
+#[CoversClass(FailureMarker::class)]
+#[Group('package_manager')]
 class FailureMarkerTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;
 
   /**
-   * @covers ::getMessage
-   * @testWith [true]
-   *   [false]
+   * Tests get message without throwable.
+   *
+   * @legacy-covers ::getMessage
    */
+  #[TestWith([TRUE])]
+  #[TestWith([FALSE])]
   public function testGetMessageWithoutThrowable(bool $include_backtrace): void {
     $failure_marker = $this->container->get(FailureMarker::class);
     $failure_marker->write($this->createStage(), $this->t('Disastrous catastrophe!'));
@@ -33,10 +40,12 @@ class FailureMarkerTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers ::getMessage
-   * @testWith [true]
-   *   [false]
+   * Tests get message with throwable.
+   *
+   * @legacy-covers ::getMessage
    */
+  #[TestWith([TRUE])]
+  #[TestWith([FALSE])]
   public function testGetMessageWithThrowable(bool $include_backtrace): void {
     $failure_marker = $this->container->get(FailureMarker::class);
     $failure_marker->write($this->createStage(), $this->t('Disastrous catastrophe!'), new \Exception('Witchcraft!'));
@@ -60,7 +69,7 @@ REGEXP
   /**
    * Tests that an exception is thrown if the marker file contains invalid YAML.
    *
-   * @covers ::assertNotExists
+   * @legacy-covers ::assertNotExists
    */
   public function testExceptionForInvalidYaml(): void {
     $failure_marker = $this->container->get(FailureMarker::class);
@@ -75,7 +84,7 @@ REGEXP
   /**
    * Tests that the failure marker can contain an exception message.
    *
-   * @covers ::assertNotExists
+   * @legacy-covers ::assertNotExists
    */
   public function testAssertNotExists(): void {
     $failure_marker = $this->container->get(FailureMarker::class);
@@ -87,8 +96,10 @@ REGEXP
   }
 
   /**
-   * @covers ::getSubscribedEvents
-   * @covers ::excludeMarkerFile
+   * Tests marker file is excluded.
+   *
+   * @legacy-covers ::getSubscribedEvents
+   * @legacy-covers ::excludeMarkerFile
    */
   public function testMarkerFileIsExcluded(): void {
     $event = new CollectPathsToExcludeEvent(

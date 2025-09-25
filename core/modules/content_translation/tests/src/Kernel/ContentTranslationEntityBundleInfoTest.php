@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\entity_test\Entity\EntityTestMul;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Content Translation bundle info logic.
- *
- * @group content_translation
  */
+#[Group('content_translation')]
 class ContentTranslationEntityBundleInfoTest extends KernelTestBase {
 
   /**

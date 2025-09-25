@@ -9,12 +9,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the user role condition.
- *
- * @group user
  */
+#[Group('user')]
 class UserRoleConditionTest extends KernelTestBase {
 
   /**

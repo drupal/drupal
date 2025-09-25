@@ -10,12 +10,12 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests serializing a form with an injected dblog logger instance.
- *
- * @group dblog
  */
+#[Group('dblog')]
 class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
 
   use DependencySerializationTrait;

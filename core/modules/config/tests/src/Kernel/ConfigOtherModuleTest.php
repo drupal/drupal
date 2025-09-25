@@ -6,12 +6,12 @@ namespace Drupal\Tests\config\Kernel;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests default configuration provided by a module that does not own it.
- *
- * @group config
  */
+#[Group('config')]
 class ConfigOtherModuleTest extends KernelTestBase {
 
   /**

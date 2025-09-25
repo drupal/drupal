@@ -6,13 +6,14 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\FileSize handler.
  *
- * @group views
  * @see CommonXssUnitTest
  */
+#[Group('views')]
 class FieldFileSizeTest extends ViewsKernelTestBase {
 
   /**

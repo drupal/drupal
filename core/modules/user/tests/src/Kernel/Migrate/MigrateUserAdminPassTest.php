@@ -6,12 +6,12 @@ namespace Drupal\Tests\user\Kernel\Migrate;
 
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests preservation of root account password.
- *
- * @group user
  */
+#[Group('user')]
 class MigrateUserAdminPassTest extends MigrateTestBase {
 
   /**

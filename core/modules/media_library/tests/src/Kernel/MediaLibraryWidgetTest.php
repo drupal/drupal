@@ -12,14 +12,16 @@ use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Entity\MediaType;
 use Drupal\media_library\MediaLibraryState;
+use Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the media library widget.
- *
- * @coversDefaultClass \Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget
- * @group media_library
  */
+#[CoversClass(MediaLibraryWidget::class)]
+#[Group('media_library')]
 class MediaLibraryWidgetTest extends KernelTestBase {
 
   use UserCreationTrait;

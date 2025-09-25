@@ -6,19 +6,19 @@ namespace Drupal\Tests\filter\Kernel;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Plugin\DataType\FilterFormat as FilterFormatDataType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Tests the behavior of the API of the Filter module.
- *
- * @group filter
  */
+#[Group('filter')]
 class FilterAPITest extends EntityKernelTestBase {
 
   /**
@@ -96,8 +96,8 @@ class FilterAPITest extends EntityKernelTestBase {
   /**
    * Tests that HTML restrictions and filter types are correct.
    *
-   * @covers \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions
-   * @covers \Drupal\filter\Entity\FilterFormat::getFilterTypes
+   * @legacy-covers \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions
+   * @legacy-covers \Drupal\filter\Entity\FilterFormat::getFilterTypes
    */
   public function testFilterFormatAPI(): void {
     // Test on filtered_html.

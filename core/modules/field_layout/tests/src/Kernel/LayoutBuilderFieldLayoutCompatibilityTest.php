@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_layout\Kernel;
 
-use Drupal\Tests\layout_builder\Kernel\LayoutBuilderCompatibilityTestBase;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
+use Drupal\Tests\layout_builder\Kernel\LayoutBuilderCompatibilityTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that Layout Builder and Field Layout are compatible with each other.
- *
- * @group field_layout
  */
+#[Group('field_layout')]
 class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibilityTestBase {
 
   /**

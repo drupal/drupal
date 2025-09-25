@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal\Kernel\d7;
 
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the getProcess() method of all Drupal 7 migrations.
- *
- * @group migrate_drupal
  */
+#[Group('migrate_drupal')]
 class MigrationProcessTest extends MigrateDrupal7TestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

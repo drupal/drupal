@@ -7,12 +7,12 @@ namespace Drupal\Tests\dblog\Kernel;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\dblog\Functional\FakeLogEntries;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Generate events and verify dblog entries.
- *
- * @group dblog
  */
+#[Group('dblog')]
 class DbLogTest extends KernelTestBase {
 
   use FakeLogEntries;

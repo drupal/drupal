@@ -6,12 +6,15 @@ namespace Drupal\Tests\package_manager\Kernel\PathExcluder;
 
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\PathExcluder\VendorHardeningExcluder
- * @group package_manager
+ * Tests Vendor Hardening Excluder.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\PathExcluder\VendorHardeningExcluder
  */
+#[Group('package_manager')]
 class VendorHardeningExcluderTest extends PackageManagerKernelTestBase {
 
   /**

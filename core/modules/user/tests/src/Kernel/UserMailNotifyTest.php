@@ -8,13 +8,14 @@ use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Hook\UserHooks;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 
 /**
  * Tests _user_mail_notify() use of user.settings.notify.*.
- *
- * @group user
  */
+#[Group('user')]
 class UserMailNotifyTest extends EntityKernelTestBase {
 
   /**
@@ -79,9 +80,8 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *   The operation being performed on the account.
    * @param array $mail_keys
    *   The mail keys to test for.
-   *
-   * @dataProvider userMailsProvider
    */
+  #[DataProvider('userMailsProvider')]
   public function testUserMailsSent($op, array $mail_keys): void {
     $this->installConfig('user');
     $this->config('system.site')->set('mail', 'test@example.com')->save();
@@ -100,9 +100,8 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *
    * @param string $op
    *   The operation being performed on the account.
-   *
-   * @dataProvider userMailsProvider
    */
+  #[DataProvider('userMailsProvider')]
   public function testUserMailsNotSent($op): void {
     $this->installConfig('user');
     $this->config('user.settings')->set('notify.' . $op, FALSE)->save();
@@ -116,9 +115,8 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *
    * @param string $op
    *   The operation being performed on the account.
-   *
-   * @dataProvider userMailsProvider
    */
+  #[DataProvider('userMailsProvider')]
   public function testUserMailsWithoutAccountEmail($op): void {
     $this->installConfig('user');
     $this->config('user.settings')->set('notify.' . $op, TRUE)->save();

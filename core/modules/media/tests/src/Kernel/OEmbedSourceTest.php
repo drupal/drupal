@@ -17,13 +17,16 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\media\Source\OEmbed
- *
- * @group media
+ * Tests Drupal\media\Plugin\media\Source\OEmbed.
  */
+#[CoversClass(OEmbed::class)]
+#[Group('media')]
 class OEmbedSourceTest extends MediaKernelTestBase {
 
   /**
@@ -32,7 +35,9 @@ class OEmbedSourceTest extends MediaKernelTestBase {
   protected static $modules = ['media'];
 
   /**
-   * @covers ::getMetadata
+   * Tests get metadata.
+   *
+   * @legacy-covers ::getMetadata
    */
   public function testGetMetadata(): void {
     $configuration = [
@@ -103,10 +108,9 @@ class OEmbedSourceTest extends MediaKernelTestBase {
    * @param string $expected_extension
    *   The extension that the downloaded thumbnail should have.
    *
-   * @covers ::getLocalThumbnailUri
-   *
-   * @dataProvider providerThumbnailUri
+   * @legacy-covers ::getLocalThumbnailUri
    */
+  #[DataProvider('providerThumbnailUri')]
   public function testThumbnailUri(string $remote_thumbnail_url, array $thumbnail_headers, string $expected_extension): void {
     // Create a fake resource with the given thumbnail URL.
     $resource = Resource::rich('<html></html>', 16, 16, NULL, 'Test resource', NULL, NULL, NULL, $remote_thumbnail_url, 16, 16);

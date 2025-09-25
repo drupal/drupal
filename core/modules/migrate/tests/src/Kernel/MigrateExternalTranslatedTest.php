@@ -7,15 +7,15 @@ namespace Drupal\Tests\migrate\Kernel;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migrating non-Drupal translated content.
  *
  * Ensure it's possible to migrate in translations, even if there's no nid or
  * tnid property on the source.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateExternalTranslatedTest extends MigrateTestBase {
 
   /**

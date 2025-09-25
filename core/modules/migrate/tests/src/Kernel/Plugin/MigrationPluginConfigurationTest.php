@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\migrate\Plugin\MigratePluginManager;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the migration plugin manager.
- *
- * @coversDefaultClass \Drupal\migrate\Plugin\MigratePluginManager
- * @group migrate
  */
+#[CoversClass(MigratePluginManager::class)]
+#[Group('migrate')]
 class MigrationPluginConfigurationTest extends KernelTestBase {
 
   /**
@@ -27,9 +30,8 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
 
   /**
    * Tests merging configuration into a plugin through the plugin manager.
-   *
-   * @dataProvider mergeProvider
    */
+  #[DataProvider('mergeProvider')]
   public function testConfigurationMerge($id, $configuration, $expected): void {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->container->get('plugin.manager.migration')

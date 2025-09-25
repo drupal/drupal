@@ -8,12 +8,12 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests fieldset element rendering and description placement.
- *
- * @group Form
  */
+#[Group('Form')]
 class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
 
   /**

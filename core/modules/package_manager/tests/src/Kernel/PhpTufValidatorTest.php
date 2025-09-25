@@ -14,13 +14,18 @@ use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
 use Drupal\package_manager\Validator\LockFileValidator;
 use Drupal\package_manager\Validator\PhpTufValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\Validator\PhpTufValidator
- * @group package_manager
- * @group #slow
+ * Tests Drupal\package_manager\Validator\PhpTufValidator.
+ *
  * @internal
  */
+#[CoversClass(PhpTufValidator::class)]
+#[Group('package_manager')]
+#[Group('#slow')]
 class PhpTufValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;
@@ -192,9 +197,8 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
    *   The Composer configuration to set.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $expected_messages
    *   The expected error messages.
-   *
-   * @dataProvider providerInvalidConfiguration
    */
+  #[DataProvider('providerInvalidConfiguration')]
   public function testInvalidConfigurationInProjectRoot(array $config, array $expected_messages): void {
     (new ActiveFixtureManipulator())->addConfig($config)->commitChanges()->updateLock();
 
@@ -212,9 +216,8 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
    *   The expected error messages.
    * @param string $event_class
    *   The event before which the plugin's configuration should be changed.
-   *
-   * @dataProvider providerInvalidConfigurationInStage
    */
+  #[DataProvider('providerInvalidConfigurationInStage')]
   public function testInvalidConfigurationInStage(array $config, array $expected_messages, string $event_class): void {
     $listener = function (PreRequireEvent|PreApplyEvent $event) use ($config): void {
       (new FixtureManipulator())

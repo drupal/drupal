@@ -13,13 +13,16 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\workflows\Entity\Workflow;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\content_moderation\Plugin\ConfigAction\AddModeration
- * @covers \Drupal\content_moderation\Plugin\ConfigAction\AddModerationDeriver
- * @group content_moderation
- * @group Recipe
+ * Tests Add Moderation Config Action.
+ *
+ * @legacy-covers \Drupal\content_moderation\Plugin\ConfigAction\AddModeration
+ * @legacy-covers \Drupal\content_moderation\Plugin\ConfigAction\AddModerationDeriver
  */
+#[Group('content_moderation')]
+#[Group('Recipe')]
 class AddModerationConfigActionTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

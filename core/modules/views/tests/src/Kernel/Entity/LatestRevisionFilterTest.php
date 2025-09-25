@@ -9,12 +9,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the 'Latest revision' filter.
- *
- * @group views
  */
+#[Group('views')]
 class LatestRevisionFilterTest extends ViewsKernelTestBase {
 
   /**

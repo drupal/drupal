@@ -6,12 +6,12 @@ namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the admin listing fallback when views is not enabled.
- *
- * @group node
  */
+#[Group('node')]
 class NodeListBuilderTest extends KernelTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\inline_form_errors\Kernel;
 
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests messages on form elements.
- *
- * @group InlineFormErrors
  */
+#[Group('InlineFormErrors')]
 class FormElementInlineErrorTest extends KernelTestBase {
 
   /**

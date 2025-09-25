@@ -8,12 +8,12 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the options allowed values api.
- *
- * @group options
  */
+#[Group('options')]
 class OptionsDynamicValuesApiTest extends OptionsFieldUnitTestBase {
 
   /**

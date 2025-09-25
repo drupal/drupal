@@ -6,13 +6,14 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTest;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests other Field API functions.
  *
- * @group field
  * @todo move this to the Entity module
  */
+#[Group('field')]
 class FieldAttachOtherTest extends FieldKernelTestBase {
 
   /**

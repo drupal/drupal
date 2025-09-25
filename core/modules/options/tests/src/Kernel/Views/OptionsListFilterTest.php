@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\options\Kernel\Views;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests options list filter for views.
  *
  * @see \Drupal\field\Plugin\views\filter\ListField.
- * @group views
  */
+#[Group('views')]
 class OptionsListFilterTest extends OptionsTestBase {
 
   /**

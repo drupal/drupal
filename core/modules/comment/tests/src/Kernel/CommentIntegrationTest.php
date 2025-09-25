@@ -13,12 +13,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests integration of comment with other components.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentIntegrationTest extends KernelTestBase {
 
   use UserCreationTrait;

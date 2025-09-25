@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Field\FieldConfigBase;
 use Drupal\Core\Field\FieldException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Create field entities by attaching fields to entities.
- *
- * @coversDefaultClass \Drupal\Core\Field\FieldConfigBase
- *
- * @group field
  */
+#[CoversClass(FieldConfigBase::class)]
+#[Group('field')]
 class FieldCrudTest extends FieldKernelTestBase {
 
   /**
@@ -128,8 +129,8 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Tests setting and adding property constraints to a configurable field.
    *
-   * @covers ::setPropertyConstraints
-   * @covers ::addPropertyConstraints
+   * @legacy-covers ::setPropertyConstraints
+   * @legacy-covers ::addPropertyConstraints
    */
   public function testFieldPropertyConstraints(): void {
     $field = FieldConfig::create($this->fieldDefinition);

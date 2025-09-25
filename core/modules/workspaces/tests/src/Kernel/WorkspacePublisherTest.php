@@ -16,16 +16,17 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
 use Drupal\workspaces\Form\WorkspacePublishForm;
 use Drupal\workspaces\WorkspaceOperationFactory;
+use Drupal\workspaces\WorkspacePublisher;
 use Drupal\workspaces\WorkspacePublisherInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 
 /**
  * Tests workspace publishing.
- *
- * @coversDefaultClass \Drupal\workspaces\WorkspacePublisher
- *
- * @group workspaces
  */
+#[CoversClass(WorkspacePublisher::class)]
+#[Group('workspaces')]
 class WorkspacePublisherTest extends KernelTestBase {
 
   use NodeCreationTrait;
@@ -105,7 +106,9 @@ class WorkspacePublisherTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\workspaces\Form\WorkspacePublishForm::submitForm
+   * Tests submit form with exception.
+   *
+   * @legacy-covers \Drupal\workspaces\Form\WorkspacePublishForm::submitForm
    */
   public function testSubmitFormWithException(): void {
     /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */

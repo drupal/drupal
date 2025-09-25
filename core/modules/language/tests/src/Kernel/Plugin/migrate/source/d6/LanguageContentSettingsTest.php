@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\language\Plugin\migrate\source\d6\LanguageContentSettings;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests menu source plugin.
  *
- * @covers \Drupal\language\Plugin\migrate\source\d6\LanguageContentSettings
- *
- * @group language
- * @coversDefaultClass \Drupal\language\Plugin\migrate\source\d6\LanguageContentSettings
+ * @legacy-covers \Drupal\language\Plugin\migrate\source\d6\LanguageContentSettings
  */
+#[CoversClass(LanguageContentSettings::class)]
+#[Group('language')]
 class LanguageContentSettingsTest extends MigrateSqlSourceTestBase {
 
   /**

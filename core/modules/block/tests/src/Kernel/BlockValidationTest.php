@@ -7,13 +7,15 @@ namespace Drupal\Tests\block\Kernel;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests validation of block entities.
- *
- * @group block
- * @group #slow
  */
+#[Group('block')]
+#[Group('#slow')]
 class BlockValidationTest extends ConfigEntityValidationTestBase {
 
   /**
@@ -171,8 +173,9 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * @group legacy
-   */
+ * Tests weight cannot be null.
+ */
+  #[IgnoreDeprecations]
   public function testWeightCannotBeNull(): void {
     $this->entity->set('weight', NULL);
     $this->assertNull($this->entity->getWeight());
@@ -243,9 +246,8 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
 
   /**
    * Tests validating menu block `level` and `depth` settings.
-   *
-   * @dataProvider providerMenuBlockLevelAndDepth
    */
+  #[DataProvider('providerMenuBlockLevelAndDepth')]
   public function testMenuBlockLevelAndDepth(int $level, ?int $depth, array $expected_errors): void {
     $this->installConfig('system');
 

@@ -8,10 +8,12 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\rest\RestResourceConfigInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group content_moderation
+ * Tests Content Moderation State Resource.
  */
+#[Group('content_moderation')]
 class ContentModerationStateResourceTest extends KernelTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel\System;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the effectiveness of hook_system_info_alter().
- *
- * @group system
  */
+#[Group('system')]
 class InfoAlterTest extends KernelTestBase {
 
   /**

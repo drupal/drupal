@@ -8,12 +8,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\file\Kernel\FileItemTest;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests using entity fields of the file field type in a workspace.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspacesFileItemTest extends FileItemTest {
 
   use UserCreationTrait;

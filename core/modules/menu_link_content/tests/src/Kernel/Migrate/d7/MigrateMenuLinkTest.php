@@ -8,12 +8,12 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Tests\menu_link_content\Kernel\Migrate\MigrateMenuLinkTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Menu link migration.
- *
- * @group menu_link_content
  */
+#[Group('menu_link_content')]
 class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   const MENU_NAME = 'menu-test-menu';
 

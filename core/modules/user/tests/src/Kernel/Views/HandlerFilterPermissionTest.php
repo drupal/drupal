@@ -6,13 +6,14 @@ namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\Component\Utility\Html;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the permissions filter handler.
  *
- * @group user
  * @see \Drupal\user\Plugin\views\filter\Permissions
  */
+#[Group('user')]
 class HandlerFilterPermissionTest extends UserKernelTestBase {
 
   /**

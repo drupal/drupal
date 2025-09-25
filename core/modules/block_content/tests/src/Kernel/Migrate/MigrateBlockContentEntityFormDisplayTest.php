@@ -6,12 +6,12 @@ namespace Drupal\Tests\block_content\Kernel\Migrate;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of block content body field form display configuration.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class MigrateBlockContentEntityFormDisplayTest extends MigrateDrupal7TestBase {
 
   /**

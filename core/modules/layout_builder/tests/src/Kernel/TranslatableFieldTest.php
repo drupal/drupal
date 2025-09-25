@@ -13,12 +13,12 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Layout Builder with a translatable layout field.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class TranslatableFieldTest extends KernelTestBase {
 
   /**

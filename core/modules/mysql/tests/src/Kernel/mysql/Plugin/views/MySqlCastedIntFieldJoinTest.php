@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\mysql\Kernel\mysql\Plugin\views;
 
 use Drupal\Tests\views\Kernel\Plugin\CastedIntFieldJoinTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests MySQL specific cast handling.
- *
- * @group Database
  */
+#[Group('Database')]
 class MySqlCastedIntFieldJoinTest extends CastedIntFieldJoinTestBase {
 
   /**

@@ -10,12 +10,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the integration of block_content_revision table.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class RevisionRelationshipsTest extends KernelTestBase {
 
   use ViewResultAssertionTrait;

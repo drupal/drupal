@@ -8,12 +8,12 @@ use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests redundant status filter warnings raised by node_requirements().
- *
- * @group node
  */
+#[Group('node')]
 class NodeRequirementsStatusFilterWarningTest extends KernelTestBase {
 
   use UserCreationTrait;

@@ -7,14 +7,20 @@ namespace Drupal\Tests\package_manager\Kernel;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\ValidationResult;
+use Drupal\package_manager\Validator\SupportedReleaseValidator;
 use Drupal\Tests\package_manager\Traits\FixtureUtilityTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\Validator\SupportedReleaseValidator
- * @group #slow
- * @group package_manager
+ * Tests Drupal\package_manager\Validator\SupportedReleaseValidator.
+ *
  * @internal
  */
+#[CoversClass(SupportedReleaseValidator::class)]
+#[Group('#slow')]
+#[Group('package_manager')]
 class SupportedReleaseValidatorTest extends PackageManagerKernelTestBase {
 
   use FixtureUtilityTrait;
@@ -218,9 +224,8 @@ class SupportedReleaseValidatorTest extends PackageManagerKernelTestBase {
    *   The package that will be added or modified.
    * @param array $expected_results
    *   The expected validation results.
-   *
-   * @dataProvider providerException
    */
+  #[DataProvider('providerException')]
   public function testException(array $release_metadata, bool $project_in_active, array $package, array $expected_results): void {
     $this->setReleaseMetadata(['drupal' => __DIR__ . '/../../fixtures/release-history/drupal.9.8.2.xml'] + $release_metadata);
 

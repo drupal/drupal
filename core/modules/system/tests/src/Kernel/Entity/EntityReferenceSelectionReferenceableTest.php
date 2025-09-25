@@ -6,18 +6,18 @@ namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\Component\Utility\Html;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore xyabz
-
 /**
  * Tests entity reference selection plugins.
- *
- * @group entity_reference
- * @group #slow
  */
+#[Group('entity_reference')]
+#[Group('#slow')]
 class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -108,10 +108,9 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
    * @param int $count_all
    *   The total number (unlimited) of entities to be retrieved.
    *
-   * @dataProvider providerTestCases
-   *
    * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface::getReferenceableEntities()
    */
+  #[DataProvider('providerTestCases')]
   public function testReferenceablesWithNoLabelKey($match, $match_operator, $limit, $count_limited, array $items, $count_all): void {
     // Test ::getReferenceableEntities().
     $referenceables = $this->selectionHandler->getReferenceableEntities($match, $match_operator, $limit);

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\shortcut\Kernel\Migrate;
 
-use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
+use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test stub creation for shortcut entities.
- *
- * @group shortcut
  */
+#[Group('shortcut')]
 class MigrateShortcutStubTest extends MigrateDrupalTestBase {
 
   use StubTestTrait;

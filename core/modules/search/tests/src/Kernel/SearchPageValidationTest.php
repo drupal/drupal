@@ -8,12 +8,12 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\search\Entity\SearchPage;
 use Drupal\search\Plugin\Derivative\SearchLocalTask;
 use Drupal\search\SearchPageRepository;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of search_page entities.
- *
- * @group search
  */
+#[Group('search')]
 class SearchPageValidationTest extends ConfigEntityValidationTestBase {
 
   /**

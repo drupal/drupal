@@ -6,12 +6,12 @@ namespace Drupal\Tests\datetime\Kernel\Views;
 
 use Drupal\node\Entity\Node;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Drupal\datetime\Plugin\views\filter\Date handler.
- *
- * @group datetime
  */
+#[Group('datetime')]
 class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
 
   /**

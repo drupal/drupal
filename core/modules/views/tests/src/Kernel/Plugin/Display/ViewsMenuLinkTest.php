@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel\Plugin\Display;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Menu link test.
- *
- * @group views
  */
+#[Group('views')]
 class ViewsMenuLinkTest extends ViewsKernelTestBase {
 
   /**

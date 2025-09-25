@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Plugin\Validation\Constraint;
 
+use Drupal\file\Plugin\Validation\Constraint\FileSizeLimitConstraintValidator;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the FileSizeLimitConstraintValidator.
- *
- * @group file
- * @coversDefaultClass \Drupal\file\Plugin\Validation\Constraint\FileSizeLimitConstraintValidator
  */
+#[CoversClass(FileSizeLimitConstraintValidator::class)]
+#[Group('file')]
 class FileSizeLimitConstraintValidatorTest extends FileValidatorTestBase {
 
   /**
-   * @covers ::validate
+   * Tests file validate size.
+   *
+   * @legacy-covers ::validate
    */
   public function testFileValidateSize(): void {
     $validators = ['FileSizeLimit' => []];

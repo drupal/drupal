@@ -7,12 +7,12 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Migrate field widget settings.
- *
- * @group field
  */
+#[Group('field')]
 class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
 
   /**

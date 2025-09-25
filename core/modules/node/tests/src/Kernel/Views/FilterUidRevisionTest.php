@@ -10,12 +10,12 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the node_uid_revision handler.
- *
- * @group node
  */
+#[Group('node')]
 class FilterUidRevisionTest extends KernelTestBase {
 
   use NodeCreationTrait;

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user_install().
- *
- * @group user
  */
+#[Group('user')]
 class UserInstallTest extends KernelTestBase {
 
   /**

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
-use Drupal\user\UserInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node field overrides.
- *
- * @group node
  */
+#[Group('node')]
 class NodeFieldOverridesTest extends EntityKernelTestBase {
 
   /**

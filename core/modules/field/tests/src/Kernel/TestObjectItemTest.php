@@ -7,12 +7,12 @@ namespace Drupal\Tests\field\Kernel;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the serialization of an object.
- *
- * @group field
  */
+#[Group('field')]
 class TestObjectItemTest extends FieldKernelTestBase {
 
   /**

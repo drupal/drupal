@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests compatibility of the MySQL driver with various sql_mode options.
- *
- * @group Database
  */
+#[Group('Database')]
 class SqlModeTest extends DriverSpecificDatabaseTestBase {
 
   /**

@@ -8,12 +8,12 @@ use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the 'Options' field types.
- *
- * @group options
  */
+#[Group('options')]
 class OptionsFieldTest extends OptionsFieldUnitTestBase {
 
   /**

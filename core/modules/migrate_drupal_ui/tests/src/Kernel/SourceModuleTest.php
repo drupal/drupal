@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal_ui\Kernel;
 
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests source_module selection.
- *
- * @group migrate_drupal_ui
  */
+#[Group('migrate_drupal_ui')]
 class SourceModuleTest extends MigrateDrupalTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test for installing Layout Builder before Block Content in the same request.
- *
- * @group layout_builder
  */
+#[Group('layout_builder')]
 class LayoutBuilderBlockContentDependencyTest extends KernelTestBase {
 
   /**

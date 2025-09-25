@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * A basic query test for Views.
- *
- * @group views
  */
+#[Group('views')]
 class BasicTest extends ViewsKernelTestBase {
 
   /**

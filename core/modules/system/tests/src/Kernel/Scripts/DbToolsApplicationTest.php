@@ -6,15 +6,15 @@ namespace Drupal\Tests\system\Kernel\Scripts;
 
 use Drupal\Core\Command\DbToolsApplication;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test that the DbToolsApplication works correctly.
  *
  * The way console application's run it is impossible to test. For now we only
  * test that we are registering the correct commands.
- *
- * @group console
  */
+#[Group('console')]
 class DbToolsApplicationTest extends KernelTestBase {
 
   /**

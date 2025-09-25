@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
-use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\SchemaCheckTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the block config schema.
- *
- * @group block
  */
+#[Group('block')]
 class BlockConfigSchemaTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PostCreateEvent;
@@ -12,16 +13,21 @@ use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Exception\SandboxEventException;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager_test_validation\EventSubscriber\TestSubscriber;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LogLevel;
-use ColinODell\PsrTestLogger\TestLogger;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\SandboxManagerBase
- * @covers \Drupal\package_manager\PackageManagerUninstallValidator
- * @group package_manager
+ * Tests Drupal\package_manager\SandboxManagerBase.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\PackageManagerUninstallValidator
  */
+#[CoversClass(SandboxManagerBase::class)]
+#[Group('package_manager')]
 class StageLoggedOnErrorTest extends PackageManagerKernelTestBase {
 
   /**
@@ -59,13 +65,14 @@ class StageLoggedOnErrorTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\package_manager\SandboxManagerBase::dispatch
-   *
-   * @dataProvider providerLoggedOnError
+   * Tests logged on error.
    *
    * @param string $event_class
    *   The event class to throw an exception on.
+   *
+   * @legacy-covers \Drupal\package_manager\SandboxManagerBase::dispatch
    */
+  #[DataProvider('providerLoggedOnError')]
   public function testLoggedOnError(string $event_class): void {
     $exception = new \Exception("This should be logged!");
     TestSubscriber::setException($exception, $event_class);

@@ -12,14 +12,14 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigratePluginManagerInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Tests the format of messages from process plugin exceptions.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateProcessErrorMessagesTest extends MigrateTestBase {
 
   /**

@@ -8,12 +8,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
 use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Migrates Drupal 7 field instances.
- *
- * @group field
  */
+#[Group('field')]
 class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
 
   /**

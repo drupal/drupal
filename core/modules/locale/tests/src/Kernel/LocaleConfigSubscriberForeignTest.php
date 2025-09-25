@@ -7,12 +7,12 @@ namespace Drupal\Tests\locale\Kernel;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests default configuration handling with a foreign default language.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
 
   /**

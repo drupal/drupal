@@ -8,14 +8,14 @@ use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\system\MenuStorage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests MenuStorage.
  *
- * @group Menu
- *
  * @see \Drupal\system\MenuStorage
  */
+#[Group('Menu')]
 class MenuStorageTest extends KernelTestBase {
 
   /**

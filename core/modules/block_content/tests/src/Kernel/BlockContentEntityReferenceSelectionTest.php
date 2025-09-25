@@ -8,14 +8,15 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\block_content_test\Plugin\EntityReferenceSelection\TestSelection;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests EntityReference selection handlers don't return non-reusable blocks.
  *
  * @see block_content_query_entity_reference_alter()
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockContentEntityReferenceSelectionTest extends KernelTestBase {
 
   /**
@@ -163,10 +164,9 @@ class BlockContentEntityReferenceSelectionTest extends KernelTestBase {
   /**
    * Tests setting 'reusable' condition on different levels.
    *
-   * @dataProvider fieldConditionProvider
-   *
    * @throws \Exception
    */
+  #[DataProvider('fieldConditionProvider')]
   public function testFieldConditions($condition_type, $is_reusable): void {
     $this->selectionHandler->setTestMode($condition_type, $is_reusable);
     $this->assertEquals(

@@ -6,12 +6,12 @@ namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the block theme suggestions.
- *
- * @group block
  */
+#[Group('block')]
 class BlockTemplateSuggestionsTest extends KernelTestBase {
 
   /**

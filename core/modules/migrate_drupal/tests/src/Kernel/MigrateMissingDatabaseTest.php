@@ -8,12 +8,12 @@ use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that a migration can be instantiated without a database connection.
- *
- * @group migrate_drupal
  */
+#[Group('migrate_drupal')]
 class MigrateMissingDatabaseTest extends KernelTestBase {
 
   /**

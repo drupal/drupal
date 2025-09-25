@@ -6,12 +6,12 @@ namespace Drupal\Tests\views\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the preprocessing functionality in views.theme.inc.
- *
- * @group views
  */
+#[Group('views')]
 class ViewsPreprocessTest extends ViewsKernelTestBase {
 
   /**
@@ -62,7 +62,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
   /**
    * Tests template_preprocess_views_mini_pager() when an empty pagination_heading_level value is passed.
    *
-   * @covers ::template_preprocess_views_mini_pager
+   * @legacy-covers ::template_preprocess_views_mini_pager
    */
   public function testEmptyPaginationHeadingLevelSet(): void {
     require_once $this->root . '/core/modules/views/views.theme.inc';
@@ -81,7 +81,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
   /**
    * Tests template_preprocess_views_mini_pager() when no pagination_heading_level is passed.
    *
-   * @covers ::template_preprocess_views_mini_pager
+   * @legacy-covers ::template_preprocess_views_mini_pager
    */
   public function testPaginationHeadingLevelNotSet(): void {
     require_once $this->root . '/core/modules/views/views.theme.inc';
@@ -99,7 +99,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
   /**
    * Tests template_preprocess_views_mini_pager() when a pagination_heading_level value is passed.
    *
-   * @covers ::template_preprocess_views_mini_pager
+   * @legacy-covers ::template_preprocess_views_mini_pager
    */
   public function testPaginationHeadingLevelSet(): void {
     require_once $this->root . '/core/modules/views/views.theme.inc';

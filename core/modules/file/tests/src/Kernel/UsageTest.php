@@ -11,12 +11,12 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests file usage functions.
- *
- * @group file
  */
+#[Group('file')]
 class UsageTest extends FileManagedUnitTestBase {
 
   /**

@@ -10,12 +10,12 @@ use Drupal\filter\FilterFormatInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\migrate\Kernel\MigrateDumpAlterInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Upgrade variables to filter.formats.*.yml.
- *
- * @group filter
  */
+#[Group('filter')]
 class MigrateFilterFormatTest extends MigrateDrupal7TestBase implements MigrateDumpAlterInterface {
 
   /**

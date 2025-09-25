@@ -7,13 +7,14 @@ namespace Drupal\Tests\system\Kernel\Scripts;
 use Drupal\Core\Command\DbImportCommand;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Test that the DbImportCommand works correctly.
- *
- * @group console
  */
+#[Group('console')]
 class DbImportCommandTest extends KernelTestBase {
 
   /**
@@ -57,9 +58,8 @@ class DbImportCommandTest extends KernelTestBase {
 
   /**
    * Tests the command directly.
-   *
-   * @requires extension pdo_sqlite
    */
+  #[RequiresPhpExtension('pdo_sqlite')]
   public function testDbImportCommand(): void {
     $connection_info = [
       'driver' => 'sqlite',

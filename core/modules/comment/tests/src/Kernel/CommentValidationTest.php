@@ -12,12 +12,12 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests comment validation constraints.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentValidationTest extends EntityKernelTestBase {
   use CommentTestTrait;
   use EntityReferenceFieldCreationTrait;

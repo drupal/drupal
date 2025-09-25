@@ -8,16 +8,16 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
 /**
  * Tests the roles filter handler.
  *
- * @group user
- *
  * @see \Drupal\user\Plugin\views\filter\Roles
  */
+#[Group('user')]
 class HandlerFilterRolesTest extends UserKernelTestBase {
 
   /**

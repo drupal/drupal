@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\update\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the update_delete_file_if_stale() function.
- *
- * @group update
- * @group legacy
  */
+#[Group('update')]
+#[IgnoreDeprecations]
 class UpdateDeleteFileIfStaleTest extends KernelTestBase {
 
   /**

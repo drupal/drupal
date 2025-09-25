@@ -7,12 +7,12 @@ namespace Drupal\Tests\field\Kernel\KernelString;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the output of a UUID field.
- *
- * @group field
  */
+#[Group('field')]
 class UuidFormatterTest extends KernelTestBase {
 
   use UserCreationTrait;

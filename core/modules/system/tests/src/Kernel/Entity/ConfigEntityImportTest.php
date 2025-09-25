@@ -12,12 +12,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\Entity\SearchPage;
 use Drupal\system\Entity\Action;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests ConfigEntity importing.
- *
- * @group Entity
  */
+#[Group('Entity')]
 class ConfigEntityImportTest extends KernelTestBase {
 
   use BlockCreationTrait;

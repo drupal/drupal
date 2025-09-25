@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel;
 
+use Drupal\block\Entity\Block;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\block\Entity\Block;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests that blocks are not created during config sync.
- *
- * @group block
  */
+#[Group('block')]
 class BlockConfigSyncTest extends KernelTestBase {
 
   /**
@@ -66,10 +67,9 @@ class BlockConfigSyncTest extends KernelTestBase {
    * @param string|null $expected_block_id
    *   The expected ID of the block that should be created, or NULL if no block
    *   should be created.
-   *
-   * @testWith [true, null]
-   *   [false, "claro_test_block"]
    */
+  #[TestWith([TRUE, NULL])]
+  #[TestWith([FALSE, "claro_test_block"])]
   public function testNoBlocksCreatedDuringConfigSync(bool $syncing, ?string $expected_block_id): void {
     \Drupal::service(ConfigInstallerInterface::class)
       ->setSyncing($syncing);

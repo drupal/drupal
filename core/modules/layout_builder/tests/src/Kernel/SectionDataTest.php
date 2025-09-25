@@ -7,13 +7,16 @@ namespace Drupal\Tests\layout_builder\Kernel;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\layout_builder\Plugin\DataType\SectionData;
 use Drupal\layout_builder\Section;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Plugin\DataType\SectionData
- *
- * @group layout_builder
+ * Tests Drupal\layout_builder\Plugin\DataType\SectionData.
  */
+#[CoversClass(SectionData::class)]
+#[Group('layout_builder')]
 class SectionDataTest extends KernelTestBase {
 
   /**
@@ -22,7 +25,9 @@ class SectionDataTest extends KernelTestBase {
   protected static $modules = ['layout_builder'];
 
   /**
-   * @covers ::setValue
+   * Tests set array value.
+   *
+   * @legacy-covers ::setValue
    */
   public function testSetArrayValue(): void {
     $definition = DataDefinition::create('layout_section');

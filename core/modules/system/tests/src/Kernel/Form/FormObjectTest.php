@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Form;
 
 use Drupal\form_test\FormTestObject;
 use Drupal\KernelTests\ConfigFormTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests building a form from an object.
- *
- * @group Form
  */
+#[Group('Form')]
 class FormObjectTest extends ConfigFormTestBase {
 
   /**

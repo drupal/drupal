@@ -17,6 +17,7 @@ use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
@@ -75,9 +76,8 @@ class AddComponentTest extends KernelTestBase {
 
   /**
    * Tests adding a component to a view display using a config action.
-   *
-   * @dataProvider provider
    */
+  #[DataProvider('provider')]
   public function testAddComponent(array $config_action_value, string $expected_region, int $added_component_expected_weight, int $existing_component_expected_weight, ?array $expected_error = NULL): void {
     if ($expected_error !== NULL) {
       $this->expectException($expected_error[0]);

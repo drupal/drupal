@@ -10,12 +10,12 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensure display modes are updated when fields are created.
- *
- * @group field
  */
+#[Group('field')]
 class DisplayModeUpdateTest extends FieldKernelTestBase {
 
   /**

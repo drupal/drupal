@@ -6,14 +6,16 @@ namespace Drupal\Tests\file\Kernel\Plugin\Validation\Constraint;
 
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\file\Plugin\Validation\Constraint\FileImageDimensionsConstraintValidator;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the FileImageDimensionsConstraintValidator.
- *
- * @group file
- * @coversDefaultClass \Drupal\file\Plugin\Validation\Constraint\FileImageDimensionsConstraintValidator
  */
+#[CoversClass(FileImageDimensionsConstraintValidator::class)]
+#[Group('file')]
 class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
 
   /**
@@ -51,7 +53,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
    *
    * The image will be resized if it's too large.
    *
-   * @covers ::validate
+   * @legacy-covers ::validate
    */
   public function testFileValidateImageResolution(): void {
     // Non-images.

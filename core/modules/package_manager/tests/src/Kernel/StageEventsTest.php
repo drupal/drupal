@@ -11,22 +11,24 @@ use Drupal\package_manager\Event\PostCreateEvent;
 use Drupal\package_manager\Event\PostRequireEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Event\SandboxEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
 use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Tests that the stage fires events during its lifecycle.
  *
- * @covers \Drupal\package_manager\Event\SandboxEvent
- * @group package_manager
  * @internal
+ * @legacy-covers \Drupal\package_manager\Event\SandboxEvent
  */
+#[Group('package_manager')]
 class StageEventsTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
 
   use StringTranslationTrait;
@@ -133,9 +135,8 @@ class StageEventsTest extends PackageManagerKernelTestBase implements EventSubsc
    *
    * @param string $event_class
    *   The event class to test.
-   *
-   * @dataProvider providerValidationResults
    */
+  #[DataProvider('providerValidationResults')]
   public function testValidationResults(string $event_class): void {
     $error_messages = [$this->t('Burn, baby, burn')];
     // Set up an event listener which will only flag an error for the event

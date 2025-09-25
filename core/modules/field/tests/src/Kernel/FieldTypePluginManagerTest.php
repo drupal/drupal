@@ -7,12 +7,12 @@ namespace Drupal\Tests\field\Kernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the field type manager.
- *
- * @group field
  */
+#[Group('field')]
 class FieldTypePluginManagerTest extends FieldKernelTestBase {
 
   /**

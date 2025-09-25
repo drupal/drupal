@@ -16,6 +16,7 @@ use Drupal\system\Entity\Menu;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -25,12 +26,12 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Tests \Drupal\navigation\Plugin\Block\NavigationMenuBlock.
  *
- * @group navigation
  * @see \Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock
  * @see \Drupal\navigation\Plugin\Block\NavigationMenuBlock
  * @todo Expand test coverage to all SystemMenuNavigationBlock functionality,
  * including block_menu_delete().
  */
+#[Group('navigation')]
 class NavigationMenuBlockTest extends KernelTestBase {
 
   /**

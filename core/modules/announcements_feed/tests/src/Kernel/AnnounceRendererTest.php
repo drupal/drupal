@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\announcements_feed\Kernel;
 
+use Drupal\announcements_feed\AnnounceRenderer;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\announcements_feed\AnnounceRenderer
- *
- * @group announcements_feed
+ * Tests Drupal\announcements_feed\AnnounceRenderer.
  */
+#[CoversClass(AnnounceRenderer::class)]
+#[Group('announcements_feed')]
 class AnnounceRendererTest extends AnnounceTestBase {
 
   /**

@@ -6,13 +6,13 @@ namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the migration of comment field instances from Drupal 7.
- *
- * @group comment
- * @group migrate_drupal_7
  */
+#[Group('comment')]
+#[Group('migrate_drupal_7')]
 class MigrateCommentFieldInstanceTest extends MigrateDrupal7TestBase {
 
   /**

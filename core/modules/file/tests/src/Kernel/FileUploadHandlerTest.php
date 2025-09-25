@@ -9,13 +9,13 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\file\Upload\FileUploadHandler;
 use Drupal\file\Upload\UploadedFileInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Tests the file upload handler.
- *
- * @group file
  */
+#[Group('file')]
 class FileUploadHandlerTest extends KernelTestBase {
 
   /**

@@ -17,13 +17,13 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\workspaces\Entity\Workspace;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the views integration for workspaces.
- *
- * @group views
- * @group workspaces
  */
+#[Group('views')]
+#[Group('workspaces')]
 class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -100,8 +100,8 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
   /**
    * Tests workspace query alter for views.
    *
-   * @covers \Drupal\workspaces\Hook\ViewsOperations::alterQueryForEntityType
-   * @covers \Drupal\workspaces\Hook\ViewsOperations::getRevisionTableJoin
+   * @legacy-covers \Drupal\workspaces\Hook\ViewsOperations::alterQueryForEntityType
+   * @legacy-covers \Drupal\workspaces\Hook\ViewsOperations::getRevisionTableJoin
    */
   public function testViewsQueryAlter(): void {
     // Create a test entity and two nodes.

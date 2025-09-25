@@ -12,12 +12,12 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the project data when the installed version is a dev version.
- *
- * @group update
  */
+#[Group('update')]
 class DevReleaseTest extends KernelTestBase {
 
   /**

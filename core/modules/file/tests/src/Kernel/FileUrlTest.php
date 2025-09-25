@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\File\FileSystemInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the file URL.
- *
- * @group file
  */
+#[Group('file')]
 class FileUrlTest extends FileManagedUnitTestBase {
 
   /**

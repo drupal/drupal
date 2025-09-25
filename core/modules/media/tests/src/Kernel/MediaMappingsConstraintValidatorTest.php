@@ -6,14 +6,17 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Plugin\media\Source\File;
+use Drupal\media\Plugin\Validation\Constraint\MediaMappingsConstraintValidator;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\Validation\Constraint\MediaMappingsConstraintValidator
- *
- * @group media
+ * Tests Drupal\media\Plugin\Validation\Constraint\MediaMappingsConstraintValidator.
  */
+#[CoversClass(MediaMappingsConstraintValidator::class)]
+#[Group('media')]
 class MediaMappingsConstraintValidatorTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;
@@ -34,7 +37,9 @@ class MediaMappingsConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::validate
+   * Tests media mapping source.
+   *
+   * @legacy-covers ::validate
    */
   public function testMediaMappingSource(): void {
     $media_type = $this->createMediaType('image', [

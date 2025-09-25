@@ -6,12 +6,12 @@ namespace Drupal\Tests\config_translation\Kernel\Migrate\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests rollback of user profile translations.
- *
- * @group migrate_drupal_6
  */
+#[Group('migrate_drupal_6')]
 class MigrateUserProfileTranslationRollbackTest extends MigrateDrupal6TestBase {
 
   /**

@@ -8,12 +8,16 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\ValidationResult;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\Validator\PendingUpdatesValidator
- * @group package_manager
+ * Tests Pending Updates Validator.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\PendingUpdatesValidator
  */
+#[Group('package_manager')]
 class PendingUpdatesValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;
@@ -33,9 +37,8 @@ class PendingUpdatesValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests that an error is raised if there are pending schema updates.
-   *
-   * @depends testNoPendingUpdates
    */
+  #[Depends('testNoPendingUpdates')]
   public function testPendingUpdateHook(): void {
     // Set the installed schema version of Package Manager to its default value
     // and import an empty update hook which is numbered much higher than will

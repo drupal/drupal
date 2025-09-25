@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests field validation.
- *
- * @group field
  */
+#[Group('field')]
 class FieldValidationTest extends FieldKernelTestBase {
 
   /**

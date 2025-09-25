@@ -7,13 +7,14 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the base relationship handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\relationship\RelationshipPluginBase
  */
+#[Group('views')]
 class RelationshipTest extends RelationshipJoinTestBase {
   use UserCreationTrait;
 

@@ -10,11 +10,15 @@ use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
+use Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraintValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraintValidator
- * @group workspaces
+ * Tests Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraintValidator.
  */
+#[CoversClass(EntityWorkspaceConflictConstraintValidator::class)]
+#[Group('workspaces')]
 class EntityWorkspaceConflictConstraintValidatorTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -51,7 +55,9 @@ class EntityWorkspaceConflictConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::validate
+   * Tests new entities allowed in default workspace.
+   *
+   * @legacy-covers ::validate
    */
   public function testNewEntitiesAllowedInDefaultWorkspace(): void {
     // Create two top-level workspaces and a second-level one.

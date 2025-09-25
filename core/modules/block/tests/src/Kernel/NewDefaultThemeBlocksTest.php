@@ -6,12 +6,12 @@ namespace Drupal\Tests\block\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that a new default theme gets blocks.
- *
- * @group block
  */
+#[Group('block')]
 class NewDefaultThemeBlocksTest extends KernelTestBase {
 
   use BlockCreationTrait;

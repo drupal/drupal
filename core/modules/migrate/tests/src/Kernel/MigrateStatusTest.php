@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration status tracking.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateStatusTest extends MigrateTestBase {
 
   /**

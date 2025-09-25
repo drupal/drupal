@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Kernel\Migrate\d6;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of the ability to translate menu content.
- *
- * @group migrate_drupal_6
  */
+#[Group('migrate_drupal_6')]
 class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal6TestBase {
 
   /**

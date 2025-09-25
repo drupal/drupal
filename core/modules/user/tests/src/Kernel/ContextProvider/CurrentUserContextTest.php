@@ -6,13 +6,16 @@ namespace Drupal\Tests\user\Kernel\ContextProvider;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\user\ContextProvider\CurrentUserContext;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\user\ContextProvider\CurrentUserContext
- *
- * @group user
+ * Tests Drupal\user\ContextProvider\CurrentUserContext.
  */
+#[CoversClass(CurrentUserContext::class)]
+#[Group('user')]
 class CurrentUserContextTest extends KernelTestBase {
 
   /**
@@ -30,7 +33,9 @@ class CurrentUserContextTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getAvailableContexts
+   * Tests get available contexts.
+   *
+   * @legacy-covers ::getAvailableContexts
    */
   public function testGetAvailableContexts(): void {
     $context_repository = $this->container->get('context.repository');

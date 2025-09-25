@@ -7,20 +7,23 @@ namespace Drupal\Tests\package_manager\Kernel;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
+use Drupal\package_manager\Event\SandboxValidationEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\ValidationResult;
 use Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator;
 use Drupal\package_manager\Validator\BaseRequirementValidatorTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * @covers \Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator
- * @covers \Drupal\package_manager\Validator\BaseRequirementValidatorTrait
+ * Tests Base Requirements Fulfilled Validator.
  *
- * @group package_manager
+ * @legacy-covers \Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator
+ * @legacy-covers \Drupal\package_manager\Validator\BaseRequirementValidatorTrait
  */
+#[Group('package_manager')]
 class BaseRequirementsFulfilledValidatorTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
 
   use BaseRequirementValidatorTrait;
@@ -73,9 +76,8 @@ class BaseRequirementsFulfilledValidatorTest extends PackageManagerKernelTestBas
    * @param string $event_class
    *   The event which should raise a base requirement error, and thus stop
    *   event propagation.
-   *
-   * @dataProvider providerBaseRequirement
    */
+  #[DataProvider('providerBaseRequirement')]
   public function testBaseRequirement(string $event_class): void {
     $this->eventClass = $event_class;
 

@@ -8,12 +8,12 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Delete field storages and fields during config delete method invocation.
- *
- * @group field
  */
+#[Group('field')]
 class FieldImportDeleteTest extends FieldKernelTestBase {
 
   /**

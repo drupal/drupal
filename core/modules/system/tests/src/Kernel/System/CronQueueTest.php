@@ -9,21 +9,21 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
+use Drupal\Core\Queue\QueueWorkerManagerInterface;
+use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestDatabaseDelayException;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestDeriverQueue;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestException;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestRequeueException;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestSuspendQueue;
-use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestDatabaseDelayException;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
 /**
  * Tests the Cron Queue runner.
- *
- * @group system
  */
+#[Group('system')]
 class CronQueueTest extends KernelTestBase {
 
   /**
@@ -222,7 +222,7 @@ class CronQueueTest extends KernelTestBase {
    * Tests suspend queue exception is handled properly.
    *
    * @see \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestSuspendQueue
-   * @covers \Drupal\Core\Queue\SuspendQueueException
+   * @legacy-covers \Drupal\Core\Queue\SuspendQueueException
    */
   public function testSuspendQueueException(): void {
     $this->logger->log(
@@ -266,7 +266,7 @@ class CronQueueTest extends KernelTestBase {
    * Tests requeue exception is handled properly.
    *
    * @see \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestRequeueException
-   * @covers \Drupal\Core\Queue\RequeueException
+   * @legacy-covers \Drupal\Core\Queue\RequeueException
    */
   public function testRequeueException(): void {
     // Test the requeueing functionality.

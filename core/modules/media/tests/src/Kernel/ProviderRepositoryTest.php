@@ -6,14 +6,15 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\media\OEmbed\ProviderException;
 use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the oEmbed provider repository.
  *
- * @covers \Drupal\media\OEmbed\ProviderRepository
- *
- * @group media
+ * @legacy-covers \Drupal\media\OEmbed\ProviderRepository
  */
+#[Group('media')]
 class ProviderRepositoryTest extends MediaKernelTestBase {
 
   /**
@@ -21,9 +22,8 @@ class ProviderRepositoryTest extends MediaKernelTestBase {
    *
    * @param string $content
    *   The expected JSON content of the provider database.
-   *
-   * @dataProvider providerEmptyProviderList
    */
+  #[DataProvider('providerEmptyProviderList')]
   public function testEmptyProviderList($content): void {
     $response = $this->prophesize('\GuzzleHttp\Psr7\Response');
     $response->getBody()->willReturn(Utils::streamFor($content));
@@ -59,9 +59,8 @@ class ProviderRepositoryTest extends MediaKernelTestBase {
    *   The URL of the provider database.
    * @param string $exception_message
    *   The expected exception message.
-   *
-   * @dataProvider providerNonExistingProviderDatabase
    */
+  #[DataProvider('providerNonExistingProviderDatabase')]
   public function testNonExistingProviderDatabase($providers_url, $exception_message): void {
     $this->config('media.settings')
       ->set('oembed_providers_url', $providers_url)

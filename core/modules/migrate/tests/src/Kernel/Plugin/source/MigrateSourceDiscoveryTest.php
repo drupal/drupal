@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Kernel\Plugin\source;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests discovery of source plugins with annotations.
@@ -13,9 +14,8 @@ use Drupal\KernelTests\KernelTestBase;
  * providers. This tests that the backwards compatibility of discovery for
  * plugin classes using annotations still works, even after all core plugins
  * have been converted to attributes.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class MigrateSourceDiscoveryTest extends KernelTestBase {
 
   /**
@@ -24,7 +24,9 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
   protected static $modules = ['migrate'];
 
   /**
-   * @covers \Drupal\migrate\Plugin\MigrateSourcePluginManager::getDefinitions
+   * Tests get definitions.
+   *
+   * @legacy-covers \Drupal\migrate\Plugin\MigrateSourcePluginManager::getDefinitions
    */
   public function testGetDefinitions(): void {
     // First, check the expected plugins are provided by migrate only.
@@ -71,7 +73,9 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\migrate\Plugin\MigrateSourcePluginManager::getDefinitions
+   * Tests annotation get definitions backwards compatibility.
+   *
+   * @legacy-covers \Drupal\migrate\Plugin\MigrateSourcePluginManager::getDefinitions
    */
   public function testAnnotationGetDefinitionsBackwardsCompatibility(): void {
     // First, test attribute-only discovery.

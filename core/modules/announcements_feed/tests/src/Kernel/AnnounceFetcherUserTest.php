@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\announcements_feed\Kernel;
 
+use Drupal\announcements_feed\AnnounceFetcher;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\announcements_feed\AnnounceFetcher
- *
- * @group announcements_feed
+ * Tests Drupal\announcements_feed\AnnounceFetcher.
  */
+#[CoversClass(AnnounceFetcher::class)]
+#[Group('announcements_feed')]
 class AnnounceFetcherUserTest extends AnnounceTestBase {
 
   use UserCreationTrait;

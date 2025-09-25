@@ -9,17 +9,21 @@ use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\InstalledPackage;
 use Drupal\package_manager\InstalledPackagesList;
 use Drupal\package_manager\PathLocator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\InstalledPackagesList
- *
- * @group package_manager
+ * Tests Drupal\package_manager\InstalledPackagesList.
  */
+#[CoversClass(InstalledPackagesList::class)]
+#[Group('package_manager')]
 class InstalledPackagesListTest extends PackageManagerKernelTestBase {
 
   /**
-   * @covers \Drupal\package_manager\InstalledPackage::getProjectName
-   * @covers ::getPackageByDrupalProjectName
+   * Tests package by drupal project name.
+   *
+   * @legacy-covers \Drupal\package_manager\InstalledPackage::getProjectName
+   * @legacy-covers ::getPackageByDrupalProjectName
    */
   public function testPackageByDrupalProjectName(): void {
     // In getPackageByDrupalProjectName(), we don't expect that projects will be

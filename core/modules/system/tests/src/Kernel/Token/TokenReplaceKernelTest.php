@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Token;
 
-use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests token replacement.
- *
- * @group system
  */
+#[Group('system')]
 class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
 
   /**

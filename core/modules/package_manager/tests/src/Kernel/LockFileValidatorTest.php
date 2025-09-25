@@ -13,16 +13,21 @@ use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Exception\SandboxException;
 use Drupal\package_manager\InstalledPackagesList;
 use Drupal\package_manager\PathLocator;
-use Drupal\package_manager\Validator\LockFileValidator;
 use Drupal\package_manager\ValidationResult;
+use Drupal\package_manager\Validator\LockFileValidator;
 use Drupal\package_manager_bypass\NoOpStager;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\Validator\LockFileValidator
- * @group package_manager
+ * Tests Drupal\package_manager\Validator\LockFileValidator.
+ *
  * @internal
  */
+#[CoversClass(LockFileValidator::class)]
+#[Group('package_manager')]
 class LockFileValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;
@@ -68,7 +73,7 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
   /**
    * Tests that if no active lock file exists, a stage cannot be created.
    *
-   * @covers ::storeHash
+   * @legacy-covers ::storeHash
    */
   public function testCreateWithNoLock(): void {
     unlink($this->activeDir . '/composer.lock');
@@ -86,8 +91,8 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
   /**
    * Tests that if an active lock file exists, a stage can be created.
    *
-   * @covers ::storeHash
-   * @covers ::deleteHash
+   * @legacy-covers ::storeHash
+   * @legacy-covers ::deleteHash
    */
   public function testCreateWithLock(): void {
     $this->assertResults([]);
@@ -100,9 +105,8 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests validation when the lock file has changed.
-   *
-   * @dataProvider providerValidateStageEvents
    */
+  #[DataProvider('providerValidateStageEvents')]
   public function testLockFileChanged(string $event_class): void {
     // Add a listener with an extremely high priority to the same event that
     // should raise the validation error. Because the validator uses the default
@@ -124,9 +128,8 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests validation when the lock file is deleted.
-   *
-   * @dataProvider providerValidateStageEvents
    */
+  #[DataProvider('providerValidateStageEvents')]
   public function testLockFileDeleted(string $event_class): void {
     // Add a listener with an extremely high priority to the same event that
     // should raise the validation error. Because the validator uses the default
@@ -147,9 +150,8 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests exception when a stored hash of the active lock file is unavailable.
-   *
-   * @dataProvider providerValidateStageEvents
    */
+  #[DataProvider('providerValidateStageEvents')]
   public function testNoStoredHash(string $event_class): void {
     $reflector = new \ReflectionClassConstant(LockFileValidator::class, 'KEY');
     $key = $reflector->getValue();

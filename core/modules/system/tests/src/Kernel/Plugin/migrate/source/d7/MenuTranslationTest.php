@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Plugin\migrate\source\d7;
 
+use Drupal\system\Plugin\migrate\source\d7\MenuTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore objectid objectindex plid textgroup
-
 /**
  * Tests the menu translation source plugin.
  *
- * @covers Drupal\system\Plugin\migrate\source\d7\MenuTranslation
- * @group system
- * @coversDefaultClass Drupal\system\Plugin\migrate\source\d7\MenuTranslation
+ * @legacy-covers Drupal\system\Plugin\migrate\source\d7\MenuTranslation
  */
+#[CoversClass(MenuTranslation::class)]
+#[Group('system')]
 class MenuTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

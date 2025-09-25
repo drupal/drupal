@@ -6,12 +6,12 @@ namespace Drupal\Tests\field\Kernel\Entity;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of field_storage_config entities.
- *
- * @group field
  */
+#[Group('field')]
 class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
 
   /**

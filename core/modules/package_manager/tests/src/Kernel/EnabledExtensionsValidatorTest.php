@@ -10,12 +10,16 @@ use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
 use Drupal\Tests\package_manager\Traits\ComposerInstallersTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\Validator\EnabledExtensionsValidator
- * @group package_manager
+ * Tests Enabled Extensions Validator.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\EnabledExtensionsValidator
  */
+#[Group('package_manager')]
 class EnabledExtensionsValidatorTest extends PackageManagerKernelTestBase {
 
   use ComposerInstallersTrait;
@@ -96,9 +100,8 @@ class EnabledExtensionsValidatorTest extends PackageManagerKernelTestBase {
    *   stage directory.
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   The expected validation results.
-   *
-   * @dataProvider providerExtensionRemoved
    */
+  #[DataProvider('providerExtensionRemoved')]
   public function testExtensionRemoved(array $packages, array $expected_results): void {
     $project_root = $this->container->get(PathLocator::class)->getProjectRoot();
     $this->installComposerInstallers($project_root);

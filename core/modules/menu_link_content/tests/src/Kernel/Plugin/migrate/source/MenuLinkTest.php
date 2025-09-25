@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\source;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use Drupal\TestTools\Random;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore mlid plid tsid
-
 /**
  * Tests the menu link source plugin.
  *
- * @covers \Drupal\menu_link_content\Plugin\migrate\source\MenuLink
- *
- * @group menu_link_content
- * @coversDefaultClass \Drupal\menu_link_content\Plugin\migrate\source\MenuLink
+ * @legacy-covers \Drupal\menu_link_content\Plugin\migrate\source\MenuLink
  */
+#[CoversClass(MenuLink::class)]
+#[Group('menu_link_content')]
 class MenuLinkTest extends MigrateSqlSourceTestBase {
 
   /**

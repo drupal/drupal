@@ -8,12 +8,12 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests handling of large queries.
- *
- * @group Database
  */
+#[Group('Database')]
 class LargeQueryTest extends DriverSpecificDatabaseTestBase {
 
   /**

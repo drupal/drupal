@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\announcements_feed\Kernel;
 
+use Drupal\announcements_feed\AnnounceFetcher;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\announcements_feed\AnnounceFetcher
- *
- * @group announcements_feed
+ * Tests Drupal\announcements_feed\AnnounceFetcher.
  */
+#[CoversClass(AnnounceFetcher::class)]
+#[Group('announcements_feed')]
 class AnnounceFetcherTest extends AnnounceTestBase {
 
   /**
@@ -28,9 +32,8 @@ class AnnounceFetcherTest extends AnnounceTestBase {
    * @param mixed[] $feed_item
    *   The feed item to test. 'title' and 'url' are omitted from this array
    *   because they do not need to vary between test cases.
-   *
-   * @dataProvider providerShowAnnouncements
    */
+  #[DataProvider('providerShowAnnouncements')]
   public function testShowAnnouncements(array $feed_item): void {
     $this->setFeedItems([$feed_item]);
     $feeds = $this->fetchFeedItems();

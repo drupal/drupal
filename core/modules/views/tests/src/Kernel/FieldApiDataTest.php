@@ -12,12 +12,12 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Field Views data.
- *
- * @group views
  */
+#[Group('views')]
 class FieldApiDataTest extends ViewsKernelTestBase {
 
   /**

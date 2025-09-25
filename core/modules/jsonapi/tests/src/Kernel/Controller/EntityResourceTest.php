@@ -6,24 +6,28 @@ namespace Drupal\Tests\jsonapi\Kernel\Controller;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\jsonapi\CacheableResourceResponse;
-use Drupal\jsonapi\ResourceType\ResourceType;
+use Drupal\jsonapi\Controller\EntityResource;
 use Drupal\jsonapi\JsonApiResource\Data;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
+use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Controller\EntityResource
- * @group jsonapi
+ * Tests Drupal\jsonapi\Controller\EntityResource.
  *
  * @internal
  */
+#[CoversClass(EntityResource::class)]
+#[Group('jsonapi')]
 class EntityResourceTest extends JsonapiKernelTestBase {
 
   /**
@@ -193,7 +197,9 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::getCollection
+   * Tests get paged collection.
+   *
+   * @legacy-covers ::getCollection
    */
   public function testGetPagedCollection(): void {
     $request = Request::create('/jsonapi/node/article');
@@ -222,7 +228,9 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::getCollection
+   * Tests get empty collection.
+   *
+   * @legacy-covers ::getCollection
    */
   public function testGetEmptyCollection(): void {
     $request = Request::create('/jsonapi/node/article');

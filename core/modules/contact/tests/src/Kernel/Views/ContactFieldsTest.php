@@ -8,12 +8,12 @@ use Drupal\contact\Entity\ContactForm;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that no storage is created for the contact_message entity.
- *
- * @group contact
  */
+#[Group('contact')]
 class ContactFieldsTest extends KernelTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests general rendering of a view.
- *
- * @group views
  */
+#[Group('views')]
 class ViewRenderTest extends ViewsKernelTestBase {
 
   /**

@@ -6,12 +6,13 @@ namespace Drupal\Tests\system\Kernel\Installer;
 
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for installer language support.
- *
- * @group Installer
  */
+#[Group('Installer')]
 class InstallTranslationFilePatternTest extends KernelTestBase {
 
   /**
@@ -35,8 +36,9 @@ class InstallTranslationFilePatternTest extends KernelTestBase {
   }
 
   /**
-   * @dataProvider providerValidTranslationFiles
-   */
+ * Tests files pattern valid.
+ */
+  #[DataProvider('providerValidTranslationFiles')]
   public function testFilesPatternValid($langcode, $filename): void {
     $pattern = $this->filePatternMethod->invoke($this->fileTranslation, $langcode);
     $this->assertNotEmpty(preg_match($pattern, $filename));
@@ -55,8 +57,9 @@ class InstallTranslationFilePatternTest extends KernelTestBase {
   }
 
   /**
-   * @dataProvider providerInvalidTranslationFiles
-   */
+ * Tests files pattern invalid.
+ */
+  #[DataProvider('providerInvalidTranslationFiles')]
   public function testFilesPatternInvalid($langcode, $filename): void {
     $pattern = $this->filePatternMethod->invoke($this->fileTranslation, $langcode);
     $this->assertEmpty(preg_match($pattern, $filename));

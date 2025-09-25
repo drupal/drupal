@@ -13,12 +13,15 @@ use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
 use Drupal\package_manager\Validator\SupportedReleaseValidator;
 use Drupal\Tests\package_manager\Traits\ComposerInstallersTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\Validator\OverwriteExistingPackagesValidator
- * @group package_manager
+ * Tests Overwrite Existing Packages Validator.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\OverwriteExistingPackagesValidator
  */
+#[Group('package_manager')]
 class OverwriteExistingPackagesValidatorTest extends PackageManagerKernelTestBase {
 
   use ComposerInstallersTrait;

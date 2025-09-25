@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Contains tests related to the views data for the user entity type.
  *
- * @group user
- *
  * @see \Drupal\user\UserViewsData
  */
+#[Group('user')]
 class UserViewsDataTest extends KernelTestBase {
 
   /**

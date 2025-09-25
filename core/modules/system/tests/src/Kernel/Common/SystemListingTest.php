@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests scanning system directories in drupal_system_listing().
- *
- * @group Common
  */
+#[Group('Common')]
 class SystemListingTest extends KernelTestBase {
 
   /**

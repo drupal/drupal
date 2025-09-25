@@ -10,12 +10,12 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests user argument validators for ID and name.
- *
- * @group user
  */
+#[Group('user')]
 class ArgumentValidateTest extends ViewsKernelTestBase {
 
   use UserCreationTrait;

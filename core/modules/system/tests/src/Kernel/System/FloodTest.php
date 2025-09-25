@@ -8,12 +8,12 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Flood\DatabaseBackend;
 use Drupal\Core\Flood\MemoryBackend;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Functional tests for the flood control mechanism.
- *
- * @group system
  */
+#[Group('system')]
 class FloodTest extends KernelTestBase {
 
   /**

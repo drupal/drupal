@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views_ui\Kernel;
 
-use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\views_ui\Controller\ViewsUIController;
 use Drupal\Component\Utility\Html;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Entity\View;
+use Drupal\views_ui\Controller\ViewsUIController;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the views ui tagging functionality.
- *
- * @group views_ui
  */
+#[Group('views_ui')]
 class TagTest extends ViewsKernelTestBase {
 
   /**
@@ -74,9 +75,8 @@ class TagTest extends ViewsKernelTestBase {
 
   /**
    * Tests that comma delimited tags are treated as individual tags.
-   *
-   * @dataProvider providerViewsUiAutocompleteIndividualTags
    */
+  #[DataProvider('providerViewsUiAutocompleteIndividualTags')]
   public function testViewsUiAutocompleteIndividualTags($expected_tag, $search_string): void {
     $controller = ViewsUIController::create($this->container);
     $request = $this->container->get('request_stack')->getCurrentRequest();

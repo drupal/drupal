@@ -14,13 +14,15 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\field\Plugin\ConfigAction\AddToAllBundles
+ * Tests Add To All Bundles Config Action.
  *
- * @group Recipe
- * @group field
+ * @legacy-covers \Drupal\field\Plugin\ConfigAction\AddToAllBundles
  */
+#[Group('Recipe')]
+#[Group('field')]
 class AddToAllBundlesConfigActionTest extends KernelTestBase {
 
   use RecipeTestTrait;

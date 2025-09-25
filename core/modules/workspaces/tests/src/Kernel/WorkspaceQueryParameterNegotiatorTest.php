@@ -8,13 +8,16 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
+use Drupal\workspaces\Negotiator\QueryParameterWorkspaceNegotiator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the query parameter workspace negotiator.
- *
- * @coversDefaultClass \Drupal\workspaces\Negotiator\QueryParameterWorkspaceNegotiator
- * @group workspaces
  */
+#[CoversClass(QueryParameterWorkspaceNegotiator::class)]
+#[Group('workspaces')]
 class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -49,9 +52,11 @@ class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getActiveWorkspaceId
-   * @dataProvider providerTestWorkspaceQueryParameter
+   * Tests workspace query parameter.
+   *
+   * @legacy-covers ::getActiveWorkspaceId
    */
+  #[DataProvider('providerTestWorkspaceQueryParameter')]
   public function testWorkspaceQueryParameter(?string $workspace, ?string $token, ?string $negotiated_workspace, bool $has_active_workspace): void {
     // We can't access the settings service in the data provider method, so we
     // generate a good token here.

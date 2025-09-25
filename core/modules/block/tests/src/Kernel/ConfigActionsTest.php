@@ -12,12 +12,16 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @covers \Drupal\block\Plugin\ConfigAction\PlaceBlock
- * @covers \Drupal\block\Plugin\ConfigAction\PlaceBlockDeriver
- * @group block
+ * Tests Config Actions.
+ *
+ * @legacy-covers \Drupal\block\Plugin\ConfigAction\PlaceBlock
+ * @legacy-covers \Drupal\block\Plugin\ConfigAction\PlaceBlockDeriver
  */
+#[Group('block')]
 class ConfigActionsTest extends KernelTestBase {
 
   use BlockCreationTrait;
@@ -74,9 +78,10 @@ class ConfigActionsTest extends KernelTestBase {
   }
 
   /**
-   * @testWith ["placeBlockInDefaultTheme"]
-   *           ["placeBlockInAdminTheme"]
-   */
+ * Tests place block action only works on blocks.
+ */
+  #[TestWith(["placeBlockInDefaultTheme"])]
+  #[TestWith(["placeBlockInAdminTheme"])]
   public function testPlaceBlockActionOnlyWorksOnBlocks(string $action): void {
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage("The \"user_role\" entity does not support the \"$action\" config action.");
@@ -101,9 +106,10 @@ class ConfigActionsTest extends KernelTestBase {
   }
 
   /**
-   * @testWith ["placeBlockInDefaultTheme", "olivero", "header"]
-   *           ["placeBlockInAdminTheme", "claro", "page_bottom"]
-   */
+ * Tests place block in dynamic region.
+ */
+  #[TestWith(["placeBlockInDefaultTheme", "olivero", "header"])]
+  #[TestWith(["placeBlockInAdminTheme", "claro", "page_bottom"])]
   public function testPlaceBlockInDynamicRegion(string $action, string $expected_theme, string $expected_region): void {
     $this->configActionManager->applyAction($action, 'block.block.test_block', [
       'plugin' => 'system_powered_by_block',
@@ -129,9 +135,10 @@ class ConfigActionsTest extends KernelTestBase {
   }
 
   /**
-   * @testWith ["placeBlockInDefaultTheme", "olivero"]
-   *           ["placeBlockInAdminTheme", "claro"]
-   */
+ * Tests place block in static region.
+ */
+  #[TestWith(["placeBlockInDefaultTheme", "olivero"])]
+  #[TestWith(["placeBlockInAdminTheme", "claro"])]
   public function testPlaceBlockInStaticRegion(string $action, string $expected_theme): void {
     $this->configActionManager->applyAction($action, 'block.block.test_block', [
       'plugin' => 'system_powered_by_block',

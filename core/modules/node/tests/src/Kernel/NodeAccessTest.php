@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+
 /**
  * Tests basic node_access functionality.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessTest extends NodeAccessTestBase {
 
   /**
@@ -183,11 +185,12 @@ class NodeAccessTest extends NodeAccessTestBase {
   }
 
   /**
+   * Tests node access view all nodes deprecation.
+   *
    * @see node_access_view_all_nodes()
    * @see drupal_static_reset()
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testNodeAccessViewAllNodesDeprecation(): void {
     $this->expectDeprecation('node_access_view_all_nodes() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use  \Drupal::entityTypeManager()->getAccessControlHandler(\'node\')->checkAllGrants(). See https://www.drupal.org/node/3038909');
     $this->assertTrue(node_access_view_all_nodes());

@@ -14,12 +14,12 @@ use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests image theme functions.
- *
- * @group image
  */
+#[Group('image')]
 class ImageThemeFunctionTest extends KernelTestBase {
 
   use TestFileCreationTrait {

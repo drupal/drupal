@@ -7,12 +7,12 @@ namespace Drupal\Tests\language\Kernel\Migrate\d6;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the default language variable migration.
- *
- * @group migrate_drupal_6
  */
+#[Group('migrate_drupal_6')]
 class MigrateDefaultLanguageTest extends MigrateDrupal6TestBase {
 
   /**

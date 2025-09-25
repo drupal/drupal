@@ -8,12 +8,12 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Url handler.
- *
- * @group views
  */
+#[Group('views')]
 class FieldUrlTest extends ViewsKernelTestBase {
 
   /**

@@ -16,14 +16,15 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the block content entity access handler.
- *
- * @coversDefaultClass \Drupal\block_content\BlockContentAccessControlHandler
- *
- * @group block_content
  */
+#[CoversClass(BlockContentAccessControlHandler::class)]
+#[Group('block_content')]
 class BlockContentAccessHandlerTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -129,13 +130,11 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
    * @param string|null $expected_access_message
    *   The expected access message.
    *
-   * @covers ::checkAccess
-   *
-   * @dataProvider providerTestAccess
-   *
    * @phpstan-param class-string<\Drupal\Core\Access\AccessResultInterface>|null $parent_access
    * @phpstan-param class-string<\Drupal\Core\Access\AccessResultInterface> $expected_access
+   * @legacy-covers ::checkAccess
    */
+  #[DataProvider('providerTestAccess')]
   public function testAccess(string $operation, bool $published, bool $reusable, array $permissions, bool $isLatest, ?string $parent_access, string $expected_access, ?string $expected_access_message = NULL): void {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage */
     $entityStorage = \Drupal::entityTypeManager()->getStorage('block_content');

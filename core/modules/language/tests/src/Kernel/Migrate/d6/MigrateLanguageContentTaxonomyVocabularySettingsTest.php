@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Kernel\Migrate\d6;
 
-use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of i18ntaxonomy vocabulary settings.
- *
- * @group migrate_drupal_6
  */
+#[Group('migrate_drupal_6')]
 class MigrateLanguageContentTaxonomyVocabularySettingsTest extends MigrateDrupal6TestBase {
 
   /**

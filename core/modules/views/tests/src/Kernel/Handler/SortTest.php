@@ -6,12 +6,12 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\SortPluginBase handler.
- *
- * @group views
  */
+#[Group('views')]
 class SortTest extends ViewsKernelTestBase {
 
   /**

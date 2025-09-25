@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel\Form;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests for form_element_label theme hook.
- *
- * @group Form
  */
+#[Group('Form')]
 class FormElementLabelTest extends KernelTestBase {
 
   /**

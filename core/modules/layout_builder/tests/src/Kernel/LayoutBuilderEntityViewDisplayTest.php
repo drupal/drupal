@@ -6,12 +6,15 @@ namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay
- *
- * @group layout_builder
+ * Tests Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay.
  */
+#[CoversClass(LayoutBuilderEntityViewDisplay::class)]
+#[Group('layout_builder')]
 class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
 
   /**
@@ -46,8 +49,9 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
   }
 
   /**
-   * @dataProvider providerTestIsLayoutBuilderEnabled
-   */
+ * Tests is layout builder enabled.
+ */
+  #[DataProvider('providerTestIsLayoutBuilderEnabled')]
   public function testIsLayoutBuilderEnabled($expected, $view_mode, $enabled): void {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',

@@ -9,12 +9,12 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the handler of the user: uid Argument.
- *
- * @group user
  */
+#[Group('user')]
 class HandlerArgumentUserUidTest extends KernelTestBase {
 
   use UserCreationTrait;

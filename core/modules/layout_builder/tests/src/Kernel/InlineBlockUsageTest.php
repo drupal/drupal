@@ -8,15 +8,16 @@ use Drupal\Core\Database\Connection;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\layout_builder\InlineBlockUsage;
 use Drupal\layout_builder\InlineBlockUsageInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class for testing the InlineBlockUsage service.
- *
- * @coversDefaultClass \Drupal\layout_builder\InlineBlockUsage
- *
- * @group layout_builder
  */
+#[CoversClass(InlineBlockUsage::class)]
+#[Group('layout_builder')]
 class InlineBlockUsageTest extends KernelTestBase {
 
   /**

@@ -10,12 +10,12 @@ use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests creation of media types and media items.
- *
- * @group media
  */
+#[Group('media')]
 class MediaCreationTest extends MediaKernelTestBase {
 
   /**

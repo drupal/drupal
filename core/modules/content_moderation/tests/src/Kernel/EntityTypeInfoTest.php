@@ -9,12 +9,15 @@ use Drupal\content_moderation\EntityTypeInfo;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\EntityTypeInfo
- *
- * @group content_moderation
+ * Tests Drupal\content_moderation\EntityTypeInfo.
  */
+#[CoversClass(EntityTypeInfo::class)]
+#[Group('content_moderation')]
 class EntityTypeInfoTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -64,7 +67,9 @@ class EntityTypeInfoTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::entityBaseFieldInfo
+   * Tests entity base field info.
+   *
+   * @legacy-covers ::entityBaseFieldInfo
    */
   public function testEntityBaseFieldInfo(): void {
     $definition = $this->entityTypeManager->getDefinition('entity_test');
@@ -81,10 +86,9 @@ class EntityTypeInfoTest extends KernelTestBase {
   /**
    * Tests the correct entity types have moderation added.
    *
-   * @covers ::entityTypeAlter
-   *
-   * @dataProvider providerTestEntityTypeAlter
+   * @legacy-covers ::entityTypeAlter
    */
+  #[DataProvider('providerTestEntityTypeAlter')]
   public function testEntityTypeAlter($entity_type_id, $moderatable): void {
     $entity_types = $this->entityTypeManager->getDefinitions();
     $this->assertSame($moderatable, $entity_types[$entity_type_id]->hasHandlerClass('moderation'));
@@ -109,7 +113,9 @@ class EntityTypeInfoTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::entityBaseFieldInfo
+   * Tests base field only added to moderated entity types.
+   *
+   * @legacy-covers ::entityBaseFieldInfo
    */
   public function testBaseFieldOnlyAddedToModeratedEntityTypes(): void {
     $definition = $this->entityTypeManager->getDefinition('entity_test_with_bundle');

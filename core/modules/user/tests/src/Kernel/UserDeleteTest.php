@@ -8,12 +8,12 @@ use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests deleting of user accounts.
- *
- * @group user
  */
+#[Group('user')]
 class UserDeleteTest extends KernelTestBase {
 
   use UserCreationTrait;

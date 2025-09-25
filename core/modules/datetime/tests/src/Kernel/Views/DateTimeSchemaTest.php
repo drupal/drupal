@@ -6,12 +6,12 @@ namespace Drupal\Tests\datetime\Kernel\Views;
 
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Drupal\datetime\Plugin\views schemas.
- *
- * @group datetime
  */
+#[Group('datetime')]
 class DateTimeSchemaTest extends DateTimeHandlerTestBase {
 
   use SchemaCheckTestTrait;

@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\Kernel\Entity;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ViewSelection EntityReferenceSelection plugin.
- *
- * @group views
  */
+#[Group('views')]
 class ViewSelectionEntityReferenceTest extends EntityKernelTestBase {
 
   /**

@@ -6,12 +6,12 @@ namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verifies operation of a taxonomy-based Entity Query.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermEntityQueryTest extends KernelTestBase {
 
   use TaxonomyTestTrait;

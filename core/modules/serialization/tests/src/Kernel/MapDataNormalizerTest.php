@@ -7,10 +7,12 @@ namespace Drupal\Tests\serialization\Kernel;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group TypedData
+ * Tests Map Data Normalizer.
  */
+#[Group('TypedData')]
 class MapDataNormalizerTest extends KernelTestBase {
 
   /**

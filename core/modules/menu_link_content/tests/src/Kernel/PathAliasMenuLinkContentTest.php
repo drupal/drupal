@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\menu_link_content\Kernel;
 
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Ensures that the menu tree adapts to path alias changes.
- *
- * @group menu_link_content
- * @group path
  */
+#[Group('menu_link_content')]
+#[Group('path')]
 class PathAliasMenuLinkContentTest extends KernelTestBase {
 
   use PathAliasTestTrait;

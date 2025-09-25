@@ -9,14 +9,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore sisko
-
 /**
  * Tests media source plugins related logic.
- *
- * @group media
  */
+#[Group('media')]
 class MediaSourceTest extends MediaKernelTestBase {
 
   /**

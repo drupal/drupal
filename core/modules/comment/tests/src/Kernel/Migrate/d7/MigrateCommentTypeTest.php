@@ -6,13 +6,14 @@ namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
 use Drupal\comment\Entity\CommentType;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the migration of comment types from Drupal 7.
- *
- * @group comment
- * @group migrate_drupal_7
  */
+#[Group('comment')]
+#[Group('migrate_drupal_7')]
 class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
 
   /**
@@ -77,9 +78,8 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
    * @param string[][] $expected_messages
    *   List of the expected migration messages, keyed by the message type.
    *   Message type should be "status" "warning" or "error".
-   *
-   * @dataProvider providerTestNoCommentTypeMigration
    */
+  #[DataProvider('providerTestNoCommentTypeMigration')]
   public function testNoCommentTypeMigration(array $disabled_source_modules, array $expected_messages): void {
     if (!empty($disabled_source_modules)) {
       $this->sourceDatabase->update('system')

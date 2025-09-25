@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use Drupal\user\Plugin\migrate\source\d7\User;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the d7_user source plugin.
  *
- * @covers \Drupal\user\Plugin\migrate\source\d7\User
- * @group user
- * @coversDefaultClass \Drupal\user\Plugin\migrate\source\d7\User
+ * @legacy-covers \Drupal\user\Plugin\migrate\source\d7\User
  */
+#[CoversClass(User::class)]
+#[Group('user')]
 class UserTest extends MigrateSqlSourceTestBase {
 
   /**

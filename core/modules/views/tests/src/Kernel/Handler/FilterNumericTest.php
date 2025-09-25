@@ -6,13 +6,14 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the numeric filter handler.
- *
- * @group views
- * @group #slow
  */
+#[Group('views')]
+#[Group('#slow')]
 class FilterNumericTest extends ViewsKernelTestBase {
 
   /**
@@ -107,9 +108,8 @@ class FilterNumericTest extends ViewsKernelTestBase {
    *   The max value.
    * @param array $expected_result
    *   The expected results.
-   *
-   * @dataProvider providerTestFilterNumericBetween
    */
+  #[DataProvider('providerTestFilterNumericBetween')]
   public function testFilterNumericBetween($operator, $min, $max, array $expected_result): void {
     $view = Views::getView('test_view');
     $view->setDisplay();

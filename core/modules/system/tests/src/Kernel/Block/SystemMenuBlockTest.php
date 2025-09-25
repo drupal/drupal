@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Block;
 
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\system\Entity\Menu;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\system\Entity\Menu;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\user\Entity\User;
-use Drupal\Core\Routing\RouteObjectInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -21,13 +23,13 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Tests \Drupal\system\Plugin\Block\SystemMenuBlock.
  *
- * @group Block
  * @todo Expand test coverage to all SystemMenuBlock functionality, including
  *   block_menu_delete().
  *
  * @see \Drupal\system\Plugin\Derivative\SystemMenuBlock
  * @see \Drupal\system\Plugin\Block\SystemMenuBlock
  */
+#[Group('Block')]
 class SystemMenuBlockTest extends KernelTestBase {
 
   /**
@@ -337,9 +339,8 @@ class SystemMenuBlockTest extends KernelTestBase {
 
   /**
    * Tests the config expanded option.
-   *
-   * @dataProvider configExpandedTestCases
    */
+  #[DataProvider('configExpandedTestCases')]
   public function testConfigExpanded($active_route, $menu_block_level, $expected_items): void {
     // Replace the path.matcher service so it always returns FALSE when
     // checking whether a route is the front page. Otherwise, the default

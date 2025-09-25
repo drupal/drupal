@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\Random handler.
- *
- * @group views
  */
+#[Group('views')]
 class SortRandomTest extends ViewsKernelTestBase {
 
   /**

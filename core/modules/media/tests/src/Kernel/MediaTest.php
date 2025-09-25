@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\media\Entity\Media;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Media.
- *
- * @group media
  */
+#[Group('media')]
 class MediaTest extends MediaKernelTestBase {
 
   /**

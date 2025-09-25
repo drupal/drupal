@@ -8,14 +8,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore tabarnak
-
 /**
  * Tests the EntityRevision destination plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class EntityRevisionTest extends MigrateTestBase {
 
   use ContentTypeCreationTrait;

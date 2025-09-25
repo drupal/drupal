@@ -8,14 +8,14 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_test\FieldTestHelper;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests multilingual fields logic.
  *
  * The following tests will check the multilingual logic in field handling.
- *
- * @group field
  */
+#[Group('field')]
 class TranslationTest extends FieldKernelTestBase {
 
   /**

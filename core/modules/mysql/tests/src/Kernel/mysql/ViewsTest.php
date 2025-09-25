@@ -7,12 +7,12 @@ namespace Drupal\Tests\mysql\Kernel\mysql;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 use Drupal\mysql\Plugin\views\query\MysqlCastSql;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests views service.
- *
- * @group Database
  */
+#[Group('Database')]
 class ViewsTest extends DriverSpecificDatabaseTestBase {
 
   /**

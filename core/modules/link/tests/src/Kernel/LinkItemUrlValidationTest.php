@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\link\Kernel;
 
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests link field validation.
- *
- * @group link
  */
+#[Group('link')]
 class LinkItemUrlValidationTest extends FieldKernelTestBase {
 
   /**

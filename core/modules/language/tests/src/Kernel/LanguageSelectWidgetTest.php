@@ -6,12 +6,12 @@ namespace Drupal\Tests\language\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the language select widget.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageSelectWidgetTest extends KernelTestBase {
 
   /**

@@ -7,12 +7,12 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the loading of multiple nodes.
- *
- * @group node
  */
+#[Group('node')]
 class NodeLoadMultipleTest extends NodeAccessTestBase {
 
   /**

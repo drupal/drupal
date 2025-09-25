@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\taxonomy\Plugin\migrate\source\d6\Term;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore trid
-
 /**
  * Tests taxonomy term source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d6\Term
- * @group taxonomy
- * @coversDefaultClass \Drupal\taxonomy\Plugin\migrate\source\d6\Term
+ * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d6\Term
  */
+#[CoversClass(Term::class)]
+#[Group('taxonomy')]
 class TermTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

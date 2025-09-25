@@ -15,12 +15,12 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the comment field name field.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentFieldNameTest extends KernelTestBase {
 
   use CommentTestTrait;

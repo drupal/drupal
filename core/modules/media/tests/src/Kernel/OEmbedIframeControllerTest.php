@@ -9,14 +9,17 @@ use Drupal\media\Controller\OEmbedIframeController;
 use Drupal\media\OEmbed\Provider;
 use Drupal\media\OEmbed\Resource;
 use Drupal\TestTools\Random;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\media\Controller\OEmbedIframeController
- *
- * @group media
+ * Tests Drupal\media\Controller\OEmbedIframeController.
  */
+#[CoversClass(OEmbedIframeController::class)]
+#[Group('media')]
 class OEmbedIframeControllerTest extends MediaKernelTestBase {
 
   /**
@@ -47,10 +50,9 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    * @param string $hash
    *   The 'hash' query string parameter.
    *
-   * @dataProvider providerBadHashParameter
-   *
-   * @covers ::render
+   * @legacy-covers ::render
    */
+  #[DataProvider('providerBadHashParameter')]
   public function testBadHashParameter($hash): void {
     /** @var callable $controller */
     $controller = $this->container
@@ -73,7 +75,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    *
    * @see media_test_oembed_preprocess_media_oembed_iframe()
    *
-   * @covers ::render
+   * @legacy-covers ::render
    */
   public function testResourcePassedToPreprocess(): void {
     $hash = $this->container->get('media.oembed.iframe_url_helper')

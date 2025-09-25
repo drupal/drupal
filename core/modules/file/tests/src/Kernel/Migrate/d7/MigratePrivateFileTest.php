@@ -6,12 +6,12 @@ namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests private files migration.
- *
- * @group file
  */
+#[Group('file')]
 class MigratePrivateFileTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;

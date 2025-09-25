@@ -7,14 +7,15 @@ namespace Drupal\Tests\views\Kernel\Handler;
 use Drupal\Component\Utility\Xss;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the plugin base of the area handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\area\AreaPluginBase
  * @see \Drupal\views_test\Plugin\views\area\TestExample
  */
+#[Group('views')]
 class AreaTest extends ViewsKernelTestBase {
 
   /**

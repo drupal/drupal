@@ -7,12 +7,12 @@ namespace Drupal\Tests\file\Kernel\Formatter;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the default file formatter.
- *
- * @group field
  */
+#[Group('field')]
 class FileEntityFormatterTest extends KernelTestBase {
 
   /**

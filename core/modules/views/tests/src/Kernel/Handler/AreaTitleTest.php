@@ -6,13 +6,14 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the title area handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\area\Title
  */
+#[Group('views')]
 class AreaTitleTest extends ViewsKernelTestBase {
 
   /**

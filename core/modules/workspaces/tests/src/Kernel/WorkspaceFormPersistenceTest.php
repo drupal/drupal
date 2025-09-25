@@ -12,13 +12,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
 use Drupal\workspaces_test\Form\ActiveWorkspaceTestForm;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests form persistence for the active workspace.
- *
- * @group workspaces
  */
+#[Group('workspaces')]
 class WorkspaceFormPersistenceTest extends KernelTestBase {
 
   use UserCreationTrait;

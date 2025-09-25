@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\Kernel\Handler;
 use Drupal\Component\Utility\Xss;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Custom handler.
- *
- * @group views
  */
+#[Group('views')]
 class FieldCustomTest extends ViewsKernelTestBase {
 
   /**

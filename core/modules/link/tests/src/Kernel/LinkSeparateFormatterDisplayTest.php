@@ -11,17 +11,16 @@ use Drupal\link\LinkItemInterface;
 use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\Tests\link\Traits\LinkInputValuesTraits;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore Fragm
-
 /**
  * Tests the 'link_separate' field formatter.
  *
  * The formatter is tested with several forms of complex query parameters. And
  * each form is tested with different display settings.
- *
- * @group link
  */
+#[Group('link')]
 class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
 
   use LinkInputValuesTraits;

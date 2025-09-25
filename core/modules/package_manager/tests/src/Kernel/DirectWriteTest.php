@@ -19,16 +19,19 @@ use Drupal\package_manager\ValidationResult;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @covers \Drupal\package_manager\EventSubscriber\DirectWriteSubscriber
- * @covers \Drupal\package_manager\SandboxManagerBase::isDirectWrite
- * @covers \Drupal\package_manager\DirectWritePreconditionBypass
+ * Tests Direct Write.
  *
- * @group package_manager
+ * @legacy-covers \Drupal\package_manager\EventSubscriber\DirectWriteSubscriber
+ * @legacy-covers \Drupal\package_manager\SandboxManagerBase::isDirectWrite
+ * @legacy-covers \Drupal\package_manager\DirectWritePreconditionBypass
  */
+#[Group('package_manager')]
 class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
 
   use StatusCheckTrait;
@@ -238,10 +241,9 @@ class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubsc
    *
    * @param class-string $service_class
    *   The class name of the precondition service.
-   *
-   * @testWith ["PhpTuf\\ComposerStager\\API\\Precondition\\Service\\ActiveAndStagingDirsAreDifferentInterface"]
-   *   ["PhpTuf\\ComposerStager\\API\\Precondition\\Service\\RsyncIsAvailableInterface"]
    */
+  #[TestWith(["PhpTuf\\ComposerStager\\API\\Precondition\\Service\\ActiveAndStagingDirsAreDifferentInterface"])]
+  #[TestWith(["PhpTuf\\ComposerStager\\API\\Precondition\\Service\\RsyncIsAvailableInterface"])]
   public function testPreconditionBypass(string $service_class): void {
     // Set up conditions where the active and sandbox directories are the same,
     // and the path to rsync isn't valid.

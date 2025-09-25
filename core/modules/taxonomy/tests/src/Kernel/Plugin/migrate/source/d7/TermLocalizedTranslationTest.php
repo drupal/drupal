@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 
-// cspell:ignore ltlanguage objectid objectindex plid tdlanguage tsid
+use Drupal\taxonomy\Plugin\migrate\source\d7\TermLocalizedTranslation;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
+// cspell:ignore ltlanguage objectid objectindex plid tdlanguage tsid
 /**
  * Tests D7 i18n term localized source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d7\TermLocalizedTranslation
- * @group taxonomy
- * @coversDefaultClass \Drupal\taxonomy\Plugin\migrate\source\d7\TermLocalizedTranslation
+ * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d7\TermLocalizedTranslation
  */
+#[CoversClass(TermLocalizedTranslation::class)]
+#[Group('taxonomy')]
 class TermLocalizedTranslationTest extends TermTest {
 
   /**

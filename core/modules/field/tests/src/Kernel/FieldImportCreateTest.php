@@ -8,12 +8,12 @@ use Drupal\Core\Site\Settings;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Create field storages and fields during config create method invocation.
- *
- * @group field
  */
+#[Group('field')]
 class FieldImportCreateTest extends FieldKernelTestBase {
 
   /**

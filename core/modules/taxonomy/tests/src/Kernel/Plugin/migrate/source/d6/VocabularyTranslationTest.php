@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore objectid objectindex plid
-
 /**
  * Tests D6 i18n vocabulary source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyTranslation
- * @group taxonomy
- * @coversDefaultClass \Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyTranslation
+ * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyTranslation
  */
+#[CoversClass(VocabularyTranslation::class)]
+#[Group('taxonomy')]
 class VocabularyTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

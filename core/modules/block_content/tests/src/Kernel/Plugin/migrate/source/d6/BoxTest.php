@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\block_content\Plugin\migrate\source\d6\Box;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 block boxes source plugin.
  *
- * @covers \Drupal\block_content\Plugin\migrate\source\d6\Box
- * @group block_content
- * @coversDefaultClass \Drupal\block_content\Plugin\migrate\source\d6\Box
+ * @legacy-covers \Drupal\block_content\Plugin\migrate\source\d6\Box
  */
+#[CoversClass(Box::class)]
+#[Group('block_content')]
 class BoxTest extends MigrateSqlSourceTestBase {
 
   /**

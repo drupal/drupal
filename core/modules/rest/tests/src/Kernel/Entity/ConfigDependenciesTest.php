@@ -8,12 +8,15 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\rest\Entity\ConfigDependencies;
 use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\rest\RestResourceConfigInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\rest\Entity\ConfigDependencies
- *
- * @group rest
+ * Tests Drupal\rest\Entity\ConfigDependencies.
  */
+#[CoversClass(ConfigDependencies::class)]
+#[Group('rest')]
 class ConfigDependenciesTest extends KernelTestBase {
 
   /**
@@ -22,10 +25,11 @@ class ConfigDependenciesTest extends KernelTestBase {
   protected static $modules = ['rest', 'entity_test', 'serialization', 'user'];
 
   /**
-   * @covers ::calculateDependencies
+   * Tests calculate dependencies.
    *
-   * @dataProvider providerBasicDependencies
+   * @legacy-covers ::calculateDependencies
    */
+  #[DataProvider('providerBasicDependencies')]
   public function testCalculateDependencies(array $configuration): void {
     $config_dependencies = new ConfigDependencies(['json' => 'serialization'], ['basic_auth' => 'basic_auth']);
 
@@ -38,12 +42,13 @@ class ConfigDependenciesTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::onDependencyRemoval
-   * @covers ::onDependencyRemovalForMethodGranularity
-   * @covers ::onDependencyRemovalForResourceGranularity
+   * Tests on dependency removal remove unrelated dependency.
    *
-   * @dataProvider providerBasicDependencies
+   * @legacy-covers ::onDependencyRemoval
+   * @legacy-covers ::onDependencyRemovalForMethodGranularity
+   * @legacy-covers ::onDependencyRemovalForResourceGranularity
    */
+  #[DataProvider('providerBasicDependencies')]
   public function testOnDependencyRemovalRemoveUnrelatedDependency(array $configuration): void {
     $config_dependencies = new ConfigDependencies(['json' => 'serialization'], ['basic_auth' => 'basic_auth']);
 
@@ -91,8 +96,10 @@ class ConfigDependenciesTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::onDependencyRemoval
-   * @covers ::onDependencyRemovalForMethodGranularity
+   * Tests on dependency removal remove auth.
+   *
+   * @legacy-covers ::onDependencyRemoval
+   * @legacy-covers ::onDependencyRemovalForMethodGranularity
    */
   public function testOnDependencyRemovalRemoveAuth(): void {
     $config_dependencies = new ConfigDependencies(['json' => 'serialization'], ['basic_auth' => 'basic_auth']);
@@ -127,11 +134,12 @@ class ConfigDependenciesTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::onDependencyRemoval
-   * @covers ::onDependencyRemovalForResourceGranularity
+   * Tests on dependency removal for resource granularity.
    *
-   * @dataProvider providerOnDependencyRemovalForResourceGranularity
+   * @legacy-covers ::onDependencyRemoval
+   * @legacy-covers ::onDependencyRemovalForResourceGranularity
    */
+  #[DataProvider('providerOnDependencyRemovalForResourceGranularity')]
   public function testOnDependencyRemovalForResourceGranularity(array $configuration, $module, $expected_configuration): void {
     assert(is_string($module));
     assert($expected_configuration === FALSE || is_array($expected_configuration));

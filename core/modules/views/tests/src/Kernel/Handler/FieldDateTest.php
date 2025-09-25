@@ -7,12 +7,12 @@ namespace Drupal\Tests\views\Kernel\Handler;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Date handler.
- *
- * @group views
  */
+#[Group('views')]
 class FieldDateTest extends ViewsKernelTestBase {
 
   /**

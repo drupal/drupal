@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the migration of used files.
- *
- * @group file
  */
+#[Group('file')]
 class MigrateFileGetIdsTest extends MigrateFileTest {
 
   /**

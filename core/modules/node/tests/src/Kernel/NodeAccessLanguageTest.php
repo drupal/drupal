@@ -9,12 +9,12 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests multilingual node access with a module that is not language-aware.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessLanguageTest extends NodeAccessTestBase {
 
   use NodeAccessTrait;

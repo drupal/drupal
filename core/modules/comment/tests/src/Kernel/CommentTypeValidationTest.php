@@ -6,12 +6,12 @@ namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\Entity\CommentType;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of comment_type entities.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentTypeValidationTest extends ConfigEntityValidationTestBase {
 
   /**

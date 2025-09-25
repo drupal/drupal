@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use Drupal\content_moderation\ContentModerationStateStorageSchema;
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the ContentModerationState storage schema.
- *
- * @coversDefaultClass \Drupal\content_moderation\ContentModerationStateStorageSchema
- * @group content_moderation
  */
+#[CoversClass(ContentModerationStateStorageSchema::class)]
+#[Group('content_moderation')]
 class ContentModerationStateStorageSchemaTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -57,7 +59,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
   /**
    * Tests the ContentModerationState unique keys.
    *
-   * @covers ::getEntitySchema
+   * @legacy-covers ::getEntitySchema
    */
   public function testUniqueKeys(): void {
     // Create a node which will create a new ContentModerationState entity.

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\config_translation\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migrations of i18n maintenance variable.
- *
- * @group migrate_drupal_7
  */
+#[Group('migrate_drupal_7')]
 class MigrateSystemMaintenanceTranslationTest extends MigrateDrupal7TestBase {
 
   /**

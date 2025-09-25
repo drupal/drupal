@@ -10,13 +10,14 @@ use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the generic entity area handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\area\Entity
  */
+#[Group('views')]
 class AreaEntityTest extends ViewsKernelTestBase {
 
   use BlockCreationTrait;

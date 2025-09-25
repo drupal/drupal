@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Kernel\Migrate;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test stub creation for taxonomy terms.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class MigrateTaxonomyTermStubTest extends MigrateDrupalTestBase {
 
   use StubTestTrait;

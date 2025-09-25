@@ -16,13 +16,14 @@ use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Core\StagerInterface;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 use PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that Package Manager services are wired correctly.
  *
- * @group package_manager
  * @internal
  */
+#[Group('package_manager')]
 class ServicesTest extends KernelTestBase {
 
   use AssertPreconditionsTrait;

@@ -7,11 +7,14 @@ namespace Drupal\Tests\ban\Kernel;
 use Drupal\ban\BanIpManagerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @group ban
- * @group legacy
+ * Tests Ban Ip.
  */
+#[Group('ban')]
+#[IgnoreDeprecations]
 class BanIpTest extends KernelTestBase {
 
   /**

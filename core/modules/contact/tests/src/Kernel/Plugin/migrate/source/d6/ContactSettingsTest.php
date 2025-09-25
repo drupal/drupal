@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contact\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\contact\Plugin\migrate\source\ContactSettings;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 contact settings source plugin.
  *
- * @covers \Drupal\contact\Plugin\migrate\source\ContactSettings
- * @group contact
- * @coversDefaultClass \Drupal\contact\Plugin\migrate\source\ContactSettings
+ * @legacy-covers \Drupal\contact\Plugin\migrate\source\ContactSettings
  */
+#[CoversClass(ContactSettings::class)]
+#[Group('contact')]
 class ContactSettingsTest extends MigrateSqlSourceTestBase {
 
   /**

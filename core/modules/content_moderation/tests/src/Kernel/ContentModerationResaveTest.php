@@ -7,12 +7,12 @@ namespace Drupal\Tests\content_moderation\Kernel;
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Content Moderation with entities that get re-saved automatically.
- *
- * @group content_moderation
  */
+#[Group('content_moderation')]
 class ContentModerationResaveTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

@@ -13,12 +13,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the creation of text fields.
- *
- * @group field
  */
+#[Group('field')]
 class StringFormatterTest extends KernelTestBase {
 
   use UserCreationTrait;

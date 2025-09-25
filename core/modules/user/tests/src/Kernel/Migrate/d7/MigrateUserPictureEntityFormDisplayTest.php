@@ -6,12 +6,12 @@ namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of the user_picture field's entity form display settings.
- *
- * @group user
  */
+#[Group('user')]
 class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupal7TestBase {
 
   /**

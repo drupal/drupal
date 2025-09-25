@@ -8,12 +8,12 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the user_name formatter.
- *
- * @group field
  */
+#[Group('field')]
 class UserNameFormatterTest extends KernelTestBase {
 
   /**

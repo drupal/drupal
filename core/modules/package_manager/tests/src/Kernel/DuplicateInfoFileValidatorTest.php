@@ -7,13 +7,17 @@ namespace Drupal\Tests\package_manager\Kernel;
 use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * @covers \Drupal\package_manager\Validator\DuplicateInfoFileValidator
- * @group package_manager
+ * Tests Duplicate Info File Validator.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\DuplicateInfoFileValidator
  */
+#[Group('package_manager')]
 class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
 
   /**
@@ -194,9 +198,8 @@ class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
    *   An array of info.yml files in stage directory.
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   An array of expected results.
-   *
-   * @dataProvider providerDuplicateInfoFilesInStage
    */
+  #[DataProvider('providerDuplicateInfoFilesInStage')]
   public function testDuplicateInfoFilesInStage(array $active_info_files, array $stage_info_files, array $expected_results): void {
     $stage = $this->createStage();
     $stage->create();

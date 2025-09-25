@@ -6,12 +6,12 @@ namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * User picture entity display.
- *
- * @group user
  */
+#[Group('user')]
 class MigrateUserPictureEntityDisplayTest extends MigrateDrupal7TestBase {
 
   /**

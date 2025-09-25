@@ -8,6 +8,7 @@ use Drupal\Core\Command\DbCommandBase;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -17,9 +18,8 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * The way console application's run it is impossible to test. For now we only
  * test that we are registering the correct commands.
- *
- * @group console
  */
+#[Group('console')]
 class DbCommandBaseTest extends KernelTestBase {
 
   /**

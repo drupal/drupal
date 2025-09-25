@@ -11,14 +11,13 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore sourceid
-
 /**
  * Tests the migration auditor for ID conflicts.
- *
- * @group migrate_drupal
  */
+#[Group('migrate_drupal')]
 class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

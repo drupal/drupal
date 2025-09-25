@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel\Boolean;
 
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the new entity API for the boolean field type.
- *
- * @group field
  */
+#[Group('field')]
 class BooleanItemTest extends FieldKernelTestBase {
 
   /**

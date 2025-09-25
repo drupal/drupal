@@ -6,12 +6,12 @@ namespace Drupal\Tests\dblog\Kernel;
 
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the DbLogController class.
- *
- * @group dblog
  */
+#[Group('dblog')]
 class DbLogControllerTest extends KernelTestBase {
 
   /**

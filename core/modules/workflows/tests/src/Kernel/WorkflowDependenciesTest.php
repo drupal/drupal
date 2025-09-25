@@ -6,14 +6,14 @@ namespace Drupal\Tests\workflows\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\workflows\Entity\Workflow;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests configuration dependencies in workflows.
- *
- * @coversDefaultClass \Drupal\workflows\Entity\Workflow
- *
- * @group workflows
  */
+#[CoversClass(Workflow::class)]
+#[Group('workflows')]
 class WorkflowDependenciesTest extends KernelTestBase {
 
   /**

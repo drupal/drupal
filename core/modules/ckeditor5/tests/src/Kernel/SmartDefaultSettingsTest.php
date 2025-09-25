@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
-// cspell:ignore arta codesnippet
-
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -15,14 +13,19 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+// cspell:ignore arta codesnippet
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @covers \Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings
- * @group ckeditor5
+ * Tests Smart Default Settings.
+ *
  * @internal
+ * @legacy-covers \Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings
  */
+#[Group('ckeditor5')]
 class SmartDefaultSettingsTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;
@@ -409,9 +412,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
    * @param array|null $expected_post_update_text_editor_violations
    *   All expected media and filter settings violations for the given text
    *   format.
-   *
-   * @dataProvider provider
    */
+  #[DataProvider('provider')]
   public function test(string $format_id, array $filters_to_drop, array $expected_ckeditor5_settings, string $expected_superset, array $expected_fundamental_compatibility_violations, array $expected_db_logs, array $expected_messages, ?array $expected_post_filter_drop_fundamental_compatibility_violations = NULL, ?array $expected_post_update_text_editor_violations = NULL): void {
     $text_format = FilterFormat::load($format_id);
     $text_editor = Editor::load($format_id);

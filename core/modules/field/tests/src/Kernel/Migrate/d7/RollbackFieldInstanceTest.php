@@ -6,12 +6,12 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\migrate\MigrateExecutable;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Migrates and rolls back Drupal 7 fields.
- *
- * @group field
  */
+#[Group('field')]
 class RollbackFieldInstanceTest extends MigrateFieldInstanceTest {
 
   /**

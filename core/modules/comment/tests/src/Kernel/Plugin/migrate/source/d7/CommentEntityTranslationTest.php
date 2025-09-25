@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Kernel\Plugin\migrate\source\d7;
 
+use Drupal\comment\Plugin\migrate\source\d7\CommentEntityTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore tnid
-
 /**
  * Tests D7 comment entity translation source plugin.
  *
- * @covers \Drupal\comment\Plugin\migrate\source\d7\CommentEntityTranslation
- * @coversDefaultClass \Drupal\comment\Plugin\migrate\source\d7\CommentEntityTranslation
- * @group comment
+ * @legacy-covers \Drupal\comment\Plugin\migrate\source\d7\CommentEntityTranslation
  */
+#[CoversClass(CommentEntityTranslation::class)]
+#[Group('comment')]
 class CommentEntityTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

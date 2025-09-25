@@ -6,13 +6,14 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the core date argument handlers.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\argument\Date
  */
+#[Group('views')]
 class ArgumentDateTest extends ViewsKernelTestBase {
 
   /**

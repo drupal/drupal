@@ -6,14 +6,14 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the representative node relationship for terms.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
 
   /**

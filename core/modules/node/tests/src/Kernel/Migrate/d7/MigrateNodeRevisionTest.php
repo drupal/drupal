@@ -7,12 +7,12 @@ namespace Drupal\Tests\node\Kernel\Migrate\d7;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node revision migrations.
- *
- * @group node
  */
+#[Group('node')]
 class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;

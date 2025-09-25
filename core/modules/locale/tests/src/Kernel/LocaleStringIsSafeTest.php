@@ -6,12 +6,12 @@ namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests locale translation safe string handling.
- *
- * @group locale
  */
+#[Group('locale')]
 class LocaleStringIsSafeTest extends KernelTestBase {
 
   use StringTranslationTrait;

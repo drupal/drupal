@@ -7,12 +7,12 @@ namespace Drupal\Tests\system\Kernel;
 use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\decorated_service_test\TestServiceDecorator;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test handling of decorated services with the reverse container.
- *
- * @group system
  */
+#[Group('system')]
 class DecoratedServiceTest extends KernelTestBase {
 
   /**

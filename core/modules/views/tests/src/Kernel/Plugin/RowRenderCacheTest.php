@@ -13,12 +13,12 @@ use Drupal\node\NodeInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests row render caching.
- *
- * @group views
  */
+#[Group('views')]
 class RowRenderCacheTest extends ViewsKernelTestBase {
 
   use UserCreationTrait;

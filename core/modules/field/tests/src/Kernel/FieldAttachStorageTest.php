@@ -8,13 +8,14 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_test\FieldTestHelper;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests storage-related Field Attach API functions.
  *
- * @group field
  * @todo move this to the Entity module
  */
+#[Group('field')]
 class FieldAttachStorageTest extends FieldKernelTestBase {
 
   /**

@@ -6,10 +6,12 @@ namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group migrate_drupal_6
+ * Tests Migrate Node Setting Promote.
  */
+#[Group('migrate_drupal_6')]
 class MigrateNodeSettingPromoteTest extends MigrateDrupal6TestBase {
 
   /**

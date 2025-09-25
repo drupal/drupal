@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests adding Twig loaders.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class TwigLoaderTest extends KernelTestBase {
 
   /**

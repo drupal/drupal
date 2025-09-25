@@ -18,13 +18,16 @@ use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Drupal\layout_builder\SectionStorageInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\LayoutEntityHelperTrait
- *
- * @group layout_builder
+ * Tests Drupal\layout_builder\LayoutEntityHelperTrait.
  */
+#[CoversClass(LayoutEntityHelperTrait::class)]
+#[Group('layout_builder')]
 class LayoutEntityHelperTraitTest extends KernelTestBase {
 
   /**
@@ -75,10 +78,11 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getSectionStorageForEntity
+   * Tests get section storage for entity.
    *
-   * @dataProvider providerTestGetSectionStorageForEntity
+   * @legacy-covers ::getSectionStorageForEntity
    */
+  #[DataProvider('providerTestGetSectionStorageForEntity')]
   public function testGetSectionStorageForEntity($entity_type_id, $values, $expected_context_keys): void {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $section_storage_manager->load('')->willReturn(NULL);
@@ -179,10 +183,11 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::originalEntityUsesDefaultStorage
+   * Tests original entity uses default storage.
    *
-   * @dataProvider providerTestOriginalEntityUsesDefaultStorage
+   * @legacy-covers ::originalEntityUsesDefaultStorage
    */
+  #[DataProvider('providerTestOriginalEntityUsesDefaultStorage')]
   public function testOriginalEntityUsesDefaultStorage($entity_storages, $is_new, $has_original, $expected): void {
     $this->assertFalse($is_new && $has_original);
     $entity = EntityTest::create(['name' => 'updated']);
@@ -217,7 +222,9 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getEntitySections
+   * Tests get entity sections.
+   *
+   * @legacy-covers ::getEntitySections
    */
   public function testGetEntitySections(): void {
     $entity = EntityTest::create(['name' => 'updated']);

@@ -10,15 +10,16 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\path_alias\AliasManager;
 use Drupal\path_alias\AliasPrefixList;
+use Drupal\path_alias\AliasRepository;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests path alias CRUD and lookup functionality.
- *
- * @coversDefaultClass \Drupal\path_alias\AliasRepository
- *
- * @group path_alias
  */
+#[CoversClass(AliasRepository::class)]
+#[Group('path_alias')]
 class AliasTest extends KernelTestBase {
 
   use PathAliasTestTrait;
@@ -42,7 +43,9 @@ class AliasTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::preloadPathAlias
+   * Tests preload path alias.
+   *
+   * @legacy-covers ::preloadPathAlias
    */
   public function testPreloadPathAlias(): void {
     $path_alias_repository = $this->container->get('path_alias.repository');
@@ -286,7 +289,9 @@ class AliasTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::lookupBySystemPath
+   * Tests lookup by system path.
+   *
+   * @legacy-covers ::lookupBySystemPath
    */
   public function testLookupBySystemPath(): void {
     $this->createPathAlias('/test-source-Case', '/test-alias');
@@ -297,7 +302,9 @@ class AliasTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::lookupByAlias
+   * Tests lookup by alias.
+   *
+   * @legacy-covers ::lookupByAlias
    */
   public function testLookupByAlias(): void {
     $this->createPathAlias('/test-source', '/test-alias-Case');
@@ -308,8 +315,10 @@ class AliasTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\path_alias\AliasManager::getPathByAlias
-   * @covers \Drupal\path_alias\AliasManager::getAliasByPath
+   * Tests lookup path.
+   *
+   * @legacy-covers \Drupal\path_alias\AliasManager::getPathByAlias
+   * @legacy-covers \Drupal\path_alias\AliasManager::getAliasByPath
    */
   public function testLookupPath(): void {
     // Create AliasManager and Path object.

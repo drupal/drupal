@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Kernel\Plugin\Validation\Constraint;
 
 use Drupal\file\Entity\File;
+use Drupal\file\Plugin\Validation\Constraint\FileEncodingConstraintValidator;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore räme
-
 /**
  * Tests the FileEncodingConstraintValidator.
- *
- * @group file
- * @coversDefaultClass \Drupal\file\Plugin\Validation\Constraint\FileEncodingConstraintValidator
  */
+#[CoversClass(FileEncodingConstraintValidator::class)]
+#[Group('file')]
 class FileEncodingConstraintValidatorTest extends FileValidatorTestBase {
 
   /**
@@ -27,9 +29,9 @@ class FileEncodingConstraintValidatorTest extends FileValidatorTestBase {
    * @param string[] $expected_errors
    *   The expected error messages as string.
    *
-   * @dataProvider providerTestFileValidateEncodings
-   * @covers ::validate
+   * @legacy-covers ::validate
    */
+  #[DataProvider('providerTestFileValidateEncodings')]
   public function testFileEncodings(array $file_properties, array $encodings, array $expected_errors): void {
     $data = 'Räme';
     $data = mb_convert_encoding($data, $file_properties['encoding']);

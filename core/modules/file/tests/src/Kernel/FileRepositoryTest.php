@@ -12,13 +12,14 @@ use Drupal\Core\File\FileExists;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileRepository;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the FileRepository.
- *
- * @coversDefaultClass \Drupal\file\FileRepository
- * @group file
  */
+#[CoversClass(FileRepository::class)]
+#[Group('file')]
 class FileRepositoryTest extends FileManagedUnitTestBase {
 
   /**
@@ -47,7 +48,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests the writeData() method.
    *
-   * @covers ::writeData
+   * @legacy-covers ::writeData
    */
   public function testWithFilename(): void {
     $contents = $this->randomMachineName();
@@ -77,7 +78,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests writeData() when renaming around an existing file.
    *
-   * @covers ::writeData
+   * @legacy-covers ::writeData
    */
   public function testExistingRename(): void {
     // Setup a file to overwrite.
@@ -109,7 +110,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests writeData() when replacing an existing file.
    *
-   * @covers ::writeData
+   * @legacy-covers ::writeData
    */
   public function testExistingReplace(): void {
     // Setup a file to overwrite.
@@ -140,7 +141,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests that writeData() fails overwriting an existing file.
    *
-   * @covers ::writeData
+   * @legacy-covers ::writeData
    */
   public function testExistingError(): void {
     $contents = $this->randomMachineName();
@@ -167,7 +168,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests for an invalid stream wrapper.
    *
-   * @covers ::writeData
+   * @legacy-covers ::writeData
    */
   public function testInvalidStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -178,7 +179,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests for entity storage exception.
    *
-   * @covers ::writeData
+   * @legacy-covers ::writeData
    */
   public function testEntityStorageException(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */
@@ -203,7 +204,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests loading a file by URI.
    *
-   * @covers ::loadByUri
+   * @legacy-covers ::loadByUri
    */
   public function testLoadByUri(): void {
     $source = $this->createFile();
@@ -214,7 +215,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests loading a file by case-sensitive URI.
    *
-   * @covers ::loadByUri
+   * @legacy-covers ::loadByUri
    */
   public function testLoadByUriCaseSensitive(): void {
     $source = $this->createFile('FooBar.txt');

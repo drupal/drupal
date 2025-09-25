@@ -8,14 +8,14 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests URI field functionality.
  *
  * @see \Drupal\Core\Field\Plugin\Field\FieldType\UriItem
- *
- * @group field
  */
+#[Group('field')]
 class UriItemTest extends FieldKernelTestBase {
 
   /**

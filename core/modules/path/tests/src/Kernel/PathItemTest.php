@@ -8,14 +8,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore furchtbar
-
 /**
  * Tests loading and storing data using PathItem.
- *
- * @group path
  */
+#[Group('path')]
 class PathItemTest extends KernelTestBase {
 
   /**

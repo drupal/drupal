@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests term validation constraints.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TermValidationTest extends EntityKernelTestBase {
 
   /**

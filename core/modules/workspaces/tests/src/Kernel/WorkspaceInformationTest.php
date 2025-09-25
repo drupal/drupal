@@ -9,15 +9,16 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
 use Drupal\workspaces\Entity\Workspace;
+use Drupal\workspaces\WorkspaceInformation;
 use Drupal\workspaces_test\EntityTestRevPubWorkspaceHandler;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the workspace information service.
- *
- * @coversDefaultClass \Drupal\workspaces\WorkspaceInformation
- *
- * @group workspaces
  */
+#[CoversClass(WorkspaceInformation::class)]
+#[Group('workspaces')]
 class WorkspaceInformationTest extends KernelTestBase {
 
   use UserCreationTrait;

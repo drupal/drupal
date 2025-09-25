@@ -10,12 +10,12 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\InOperator handler.
- *
- * @group views
  */
+#[Group('views')]
 class FilterInOperatorTest extends ViewsKernelTestBase {
   use StringTranslationTrait;
 

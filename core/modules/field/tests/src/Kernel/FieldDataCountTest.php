@@ -9,14 +9,15 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the count of field data records.
  *
- * @group field
  * @see \Drupal\Core\Entity\FieldableEntityStorageInterface::countFieldData()
  * @see \Drupal\field\Entity\FieldStorageConfig::hasData()
  */
+#[Group('field')]
 class FieldDataCountTest extends FieldKernelTestBase {
 
   /**

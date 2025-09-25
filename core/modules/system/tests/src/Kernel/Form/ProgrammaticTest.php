@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Form;
 
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the programmatic form submission behavior.
- *
- * @group Form
  */
+#[Group('Form')]
 class ProgrammaticTest extends KernelTestBase {
 
   /**

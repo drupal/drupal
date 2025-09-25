@@ -6,14 +6,17 @@ namespace Drupal\Tests\link\Kernel\Plugin\migrate\field\d7;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\link\LinkTitleVisibility;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\link\Plugin\migrate\field\d7\LinkField;
+use Drupal\migrate\Plugin\MigrationInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\link\Plugin\migrate\field\d7\LinkField
- * @group link
+ * Tests Drupal\link\Plugin\migrate\field\d7\LinkField.
  */
+#[CoversClass(LinkField::class)]
+#[Group('link')]
 class LinkFieldTest extends KernelTestBase {
 
   /**
@@ -49,7 +52,9 @@ class LinkFieldTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::alterFieldInstanceMigration
+   * Tests alter field instance migration.
+   *
+   * @legacy-covers ::alterFieldInstanceMigration
    */
   public function testAlterFieldInstanceMigration($method = 'alterFieldInstanceMigration'): void {
     $this->plugin->$method($this->migration);

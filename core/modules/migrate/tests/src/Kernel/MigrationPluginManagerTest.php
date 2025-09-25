@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\migrate\Plugin\MigrationPluginManager;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the migration plugin manager.
- *
- * @group migrate
- *
- * @coversDefaultClass \Drupal\migrate\Plugin\MigrationPluginManager
  */
+#[CoversClass(MigrationPluginManager::class)]
+#[Group('migrate')]
 class MigrationPluginManagerTest extends MigrateTestBase {
 
   /**
@@ -36,10 +39,9 @@ class MigrationPluginManagerTest extends MigrateTestBase {
   /**
    * Tests Migration::createInstancesByTag().
    *
-   * @covers ::createInstancesByTag
-   *
-   * @dataProvider providerCreateInstanceByTag
+   * @legacy-covers ::createInstancesByTag
    */
+  #[DataProvider('providerCreateInstanceByTag')]
   public function testCreateInstancesByTag($tags, $expected): void {
     // The test module includes a migration that does not use the migration_tags
     // property. It is there to confirm that it is not included in the results.

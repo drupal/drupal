@@ -8,12 +8,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests node body field storage.
- *
- * @group node
  */
+#[Group('node')]
 class NodeBodyFieldStorageTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

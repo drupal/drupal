@@ -6,14 +6,13 @@ namespace Drupal\Tests\search\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchTextProcessorInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore verygreatdrupalmodule
-
 /**
  * Test search text preprocessing functionality.
- *
- * @group search
  */
+#[Group('search')]
 class SearchTextProcessorTest extends KernelTestBase {
 
   /**

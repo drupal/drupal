@@ -9,10 +9,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodePreviewMode;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @group node
+ * Tests Config Actions.
  */
+#[Group('node')]
 class ConfigActionsTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

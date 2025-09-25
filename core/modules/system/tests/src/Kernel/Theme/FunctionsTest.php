@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Theme;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for common theme functions.
- *
- * @group Theme
  */
+#[Group('Theme')]
 class FunctionsTest extends KernelTestBase {
 
   /**

@@ -10,13 +10,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the node row plugin.
  *
- * @group node
  * @see \Drupal\node\Plugin\views\row\NodeRow
  */
+#[Group('node')]
 class RowPluginTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;

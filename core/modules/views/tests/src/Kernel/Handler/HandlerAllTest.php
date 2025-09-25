@@ -9,17 +9,17 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\views\Plugin\views\filter\NumericFilter;
-use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\HandlerBase;
-use Drupal\views\Plugin\views\filter\InOperator;
 use Drupal\views\Entity\View;
+use Drupal\views\Plugin\views\filter\InOperator;
+use Drupal\views\Plugin\views\filter\NumericFilter;
+use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\ViewExecutable;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests instances of all handlers.
- *
- * @group views
  */
+#[Group('views')]
 class HandlerAllTest extends ViewsKernelTestBase {
 
   use CommentTestTrait;

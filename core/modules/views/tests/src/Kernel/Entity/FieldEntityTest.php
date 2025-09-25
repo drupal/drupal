@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Entity;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-use Drupal\user\Entity\User;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
-use Drupal\comment\Entity\Comment;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the field plugin base integration with the entity system.
- *
- * @group views
  */
+#[Group('views')]
 class FieldEntityTest extends ViewsKernelTestBase {
 
   use CommentTestTrait;

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests unformatted style functionality.
- *
- * @group views
  */
+#[Group('views')]
 class StyleUnformattedTest extends StyleTestBase {
 
   /**

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test migrate_drupal module uninstall.
- *
- * @group migrate_drupal
  */
+#[Group('migrate_drupal')]
 class MigrateDrupalUninstallTest extends KernelTestBase {
 
   /**
@@ -19,7 +19,9 @@ class MigrateDrupalUninstallTest extends KernelTestBase {
   protected static $modules = ['migrate', 'migrate_drupal'];
 
   /**
-   * @covers migrate_drupal_uninstall
+   * Tests uninstall.
+   *
+   * @legacy-covers migrate_drupal_uninstall
    */
   public function testUninstall(): void {
     $state = \Drupal::state();

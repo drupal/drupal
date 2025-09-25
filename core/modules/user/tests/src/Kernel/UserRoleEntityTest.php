@@ -8,12 +8,15 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 /**
- * @group user
- * @coversDefaultClass \Drupal\user\Entity\Role
+ * Tests Drupal\user\Entity\Role.
  */
+#[CoversClass(Role::class)]
+#[Group('user')]
 class UserRoleEntityTest extends KernelTestBase {
 
   /**

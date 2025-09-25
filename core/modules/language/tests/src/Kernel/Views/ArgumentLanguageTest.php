@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Kernel\Views;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the argument language handler.
  *
- * @group language
  * @see \Drupal\language\Plugin\views\argument\Language.php
  */
+#[Group('language')]
 class ArgumentLanguageTest extends LanguageTestBase {
 
   /**

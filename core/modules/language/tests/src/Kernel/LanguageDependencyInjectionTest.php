@@ -6,12 +6,12 @@ namespace Drupal\Tests\language\Kernel;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that a language object can be injected.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageDependencyInjectionTest extends LanguageTestBase {
 
   /**

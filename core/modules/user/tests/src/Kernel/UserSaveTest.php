@@ -6,12 +6,12 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests account saving for arbitrary new uid.
- *
- * @group user
  */
+#[Group('user')]
 class UserSaveTest extends KernelTestBase {
 
   /**

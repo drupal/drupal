@@ -11,13 +11,16 @@ use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
 use Drupal\Tests\package_manager\Traits\ComposerInstallersTrait;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * @covers \Drupal\package_manager\PathExcluder\GitExcluder
- * @group package_manager
+ * Tests Git Excluder.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\PathExcluder\GitExcluder
  */
+#[Group('package_manager')]
 class GitExcluderTest extends PackageManagerKernelTestBase {
 
   use ComposerInstallersTrait;

@@ -12,12 +12,12 @@ use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests schema API for the MySQL driver.
- *
- * @group Database
  */
+#[Group('Database')]
 class SchemaTest extends DriverSpecificSchemaTestBase {
 
   /**
@@ -194,7 +194,9 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
-   * @covers \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
+   * Tests introspect index schema.
+   *
+   * @legacy-covers \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
    */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [

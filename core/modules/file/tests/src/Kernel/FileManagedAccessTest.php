@@ -10,12 +10,12 @@ use Drupal\file\FileInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests access to managed files.
- *
- * @group file
  */
+#[Group('file')]
 class FileManagedAccessTest extends KernelTestBase {
 
   use UserCreationTrait;

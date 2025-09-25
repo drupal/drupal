@@ -7,12 +7,12 @@ namespace Drupal\Tests\taxonomy\Kernel;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that appropriate query tags are added.
- *
- * @group taxonomy
  */
+#[Group('taxonomy')]
 class TaxonomyQueryAlterTest extends KernelTestBase {
 
   use TaxonomyTestTrait;

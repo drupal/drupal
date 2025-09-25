@@ -10,13 +10,16 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\jsonapi\Normalizer\FieldItemNormalizer;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Normalizer\FieldItemNormalizer
- * @group jsonapi
+ * Tests Drupal\jsonapi\Normalizer\FieldItemNormalizer.
  *
  * @internal
  */
+#[CoversClass(FieldItemNormalizer::class)]
+#[Group('jsonapi')]
 class FieldItemNormalizerTest extends JsonapiKernelTestBase {
 
   /**
@@ -57,7 +60,7 @@ class FieldItemNormalizerTest extends JsonapiKernelTestBase {
   /**
    * Tests a field item that has no properties.
    *
-   * @covers ::normalize
+   * @legacy-covers ::normalize
    */
   public function testNormalizeFieldItemWithoutProperties(): void {
     $item = $this->prophesize(FieldItemInterface::class);

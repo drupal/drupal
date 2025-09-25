@@ -6,15 +6,15 @@ namespace Drupal\Tests\language\Kernel\Migrate\d6;
 
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the migration of language-related settings.
  *
  * Settings tested include language content setting variables,
  * language_content_type_$type, i18n_node_options_* and i18n_lock_node_*.
- *
- * @group migrate_drupal_6
  */
+#[Group('migrate_drupal_6')]
 class MigrateLanguageContentSettingsTest extends MigrateDrupal6TestBase {
 
   /**

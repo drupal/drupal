@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mailer\Kernel;
 
+use Drupal\Core\Mailer\TransportServiceFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\mailer_transport_factory_kernel_test\Transport\CanaryTransport;
 use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Mailer\Transport\NullTransport;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
@@ -15,10 +19,9 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
 
 /**
  * Tests the transport factory service.
- *
- * @group mailer
- * @coversDefaultClass \Drupal\Core\Mailer\TransportServiceFactory
  */
+#[CoversClass(TransportServiceFactory::class)]
+#[Group('mailer')]
 class TransportTest extends KernelTestBase {
 
   /**
@@ -72,7 +75,9 @@ class TransportTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createTransport
+   * Tests default test mail factory.
+   *
+   * @legacy-covers ::createTransport
    */
   public function testDefaultTestMailFactory(): void {
     $actual = $this->container->get(TransportInterface::class);
@@ -80,9 +85,11 @@ class TransportTest extends KernelTestBase {
   }
 
   /**
-   * @dataProvider providerTestBuiltinFactory
-   * @covers ::createTransport
+   * Tests builtin factory.
+   *
+   * @legacy-covers ::createTransport
    */
+  #[DataProvider('providerTestBuiltinFactory')]
   public function testBuiltinFactory(string $schema, string $host, string $expected): void {
     $this->setUpMailerDsnConfigOverride($schema, $host);
 
@@ -100,8 +107,10 @@ class TransportTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createTransport
-   * @covers \Drupal\Core\Mailer\Transport\SendmailCommandValidationTransportFactory::create
+   * Tests sendmail factory allowed command.
+   *
+   * @legacy-covers ::createTransport
+   * @legacy-covers \Drupal\Core\Mailer\Transport\SendmailCommandValidationTransportFactory::create
    */
   public function testSendmailFactoryAllowedCommand(): void {
     // Test sendmail command allowlist.
@@ -118,8 +127,10 @@ class TransportTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createTransport
-   * @covers \Drupal\Core\Mailer\Transport\SendmailCommandValidationTransportFactory::create
+   * Tests sendmail factory unlisted command.
+   *
+   * @legacy-covers ::createTransport
+   * @legacy-covers \Drupal\Core\Mailer\Transport\SendmailCommandValidationTransportFactory::create
    */
   public function testSendmailFactoryUnlistedCommand(): void {
     // Test sendmail command allowlist.
@@ -136,7 +147,9 @@ class TransportTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createTransport
+   * Tests missing factory.
+   *
+   * @legacy-covers ::createTransport
    */
   public function testMissingFactory(): void {
     $this->setUpMailerDsnConfigOverride('drupal.no-transport', 'default');
@@ -146,7 +159,9 @@ class TransportTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::createTransport
+   * Tests third party factory.
+   *
+   * @legacy-covers ::createTransport
    */
   public function testThirdPartyFactory(): void {
     $this->enableModules(['mailer_transport_factory_kernel_test']);

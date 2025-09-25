@@ -6,13 +6,13 @@ namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\system\Entity\Action;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of action entities.
- *
- * @group system
- * @group #slow
  */
+#[Group('system')]
+#[Group('#slow')]
 class ActionValidationTest extends ConfigEntityValidationTestBase {
 
   /**

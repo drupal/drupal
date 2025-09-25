@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * File URI field item test.
  *
- * @group file
- *
  * @see \Drupal\file\Plugin\Field\FieldType\FileUriItem
  * @see \Drupal\file\FileUrl
  */
+#[Group('file')]
 class FileUriItemTest extends FileManagedUnitTestBase {
 
   /**

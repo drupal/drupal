@@ -6,16 +6,16 @@ namespace Drupal\Tests\link\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\link\LinkItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\link\LinkItemInterface;
 use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests link field widgets.
- *
- * @group link
  */
+#[Group('link')]
 class LinkFieldWidgetTest extends FieldKernelTestBase {
 
   /**

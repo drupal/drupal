@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests discovery of field type categories provided by modules.
- *
- * @group field
  */
+#[Group('field')]
 class FieldTypeCategoryDiscoveryTest extends KernelTestBase {
 
   /**

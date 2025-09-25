@@ -6,12 +6,12 @@ namespace Drupal\Tests\language\Kernel;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the language fallback behavior.
- *
- * @group language
  */
+#[Group('language')]
 class LanguageFallbackTest extends LanguageTestBase {
 
   /**

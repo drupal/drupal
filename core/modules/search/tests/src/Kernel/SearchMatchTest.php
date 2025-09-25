@@ -9,14 +9,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchIndexInterface;
 use Drupal\search\SearchQuery;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore cillum dolore enim veniam
-
 /**
  * Indexes content and queries it.
- *
- * @group search
  */
+#[Group('search')]
 class SearchMatchTest extends KernelTestBase {
 
   // The search index can contain different types of content. Typically the type
@@ -81,7 +80,7 @@ class SearchMatchTest extends KernelTestBase {
    *   4  am ut enim am
    *   5  ut enim am minim veniam
    *   6  enim am minim veniam es cillum
-   *   7  am minim veniam es cillum dolore eu
+   *   7  am minim veniam es cillum dolore eu.
    */
   public function getText($n) {
     $words = explode(' ', "Ipsum dolore sit am. Ut enim am minim veniam. Es cillum dolore eu.");
@@ -96,7 +95,7 @@ class SearchMatchTest extends KernelTestBase {
    *   9  king philip
    *   10 philip came over
    *   11 came over from germany
-   *   12 over from germany swimming
+   *   12 over from germany swimming.
    */
   public function getText2($n) {
     $words = explode(' ', "Dear King Philip came over from Germany swimming.");

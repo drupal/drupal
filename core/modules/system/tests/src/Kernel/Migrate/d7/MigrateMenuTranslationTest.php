@@ -6,12 +6,12 @@ namespace Drupal\Tests\system\Kernel\Migrate\d7;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests menu translation migration.
- *
- * @group migrate_drupal_7
  */
+#[Group('migrate_drupal_7')]
 class MigrateMenuTranslationTest extends MigrateDrupal7TestBase {
 
   /**

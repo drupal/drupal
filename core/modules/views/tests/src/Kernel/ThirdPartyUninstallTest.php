@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests proper removal of third-party settings from views.
- *
- * @group views
  */
+#[Group('views')]
 class ThirdPartyUninstallTest extends ViewsKernelTestBase {
 
   /**

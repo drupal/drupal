@@ -8,12 +8,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the EntityExists process plugin.
- *
- * @group migrate
  */
+#[Group('migrate')]
 class EntityExistsTest extends KernelTestBase {
 
   /**

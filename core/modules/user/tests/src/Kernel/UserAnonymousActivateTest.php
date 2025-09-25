@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests unblocking the anonymous user account.
- *
- * @group user
  */
+#[Group('user')]
 class UserAnonymousActivateTest extends KernelTestBase {
 
   /**

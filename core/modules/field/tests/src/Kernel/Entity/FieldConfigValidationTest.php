@@ -9,12 +9,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests validation of field_config entities.
- *
- * @group field
  */
+#[Group('field')]
 class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

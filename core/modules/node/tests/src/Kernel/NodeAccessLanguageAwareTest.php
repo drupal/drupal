@@ -7,14 +7,14 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests multilingual node access with a language-aware module.
- *
- * @group node
  */
+#[Group('node')]
 class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
   /**

@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
+use Drupal\block\Hook\BlockHooks;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
-use Drupal\block\Hook\BlockHooks;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests block_rebuild().
- *
- * @group block
  */
+#[Group('block')]
 class BlockRebuildTest extends KernelTestBase {
 
   use BlockCreationTrait;
@@ -46,7 +46,9 @@ class BlockRebuildTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\block\Hook\BlockHooks::rebuild
+   * Tests rebuild no blocks.
+   *
+   * @legacy-covers \Drupal\block\Hook\BlockHooks::rebuild
    */
   public function testRebuildNoBlocks(): void {
     $blockRebuild = new BlockHooks();
@@ -57,7 +59,9 @@ class BlockRebuildTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\block\Hook\BlockHooks::rebuild
+   * Tests rebuild no invalid blocks.
+   *
+   * @legacy-covers \Drupal\block\Hook\BlockHooks::rebuild
    */
   public function testRebuildNoInvalidBlocks(): void {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
@@ -70,7 +74,9 @@ class BlockRebuildTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\block\Hook\BlockHooks::rebuild
+   * Tests rebuild invalid blocks.
+   *
+   * @legacy-covers \Drupal\block\Hook\BlockHooks::rebuild
    */
   public function testRebuildInvalidBlocks(): void {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);

@@ -8,12 +8,12 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests date-only fields.
- *
- * @group datetime
  */
+#[Group('datetime')]
 class FilterDateTest extends DateTimeHandlerTestBase {
 
   /**

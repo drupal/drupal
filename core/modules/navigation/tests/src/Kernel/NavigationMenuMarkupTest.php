@@ -11,16 +11,17 @@ use Drupal\navigation\Plugin\Block\NavigationMenuBlock;
 use Drupal\system\Entity\Menu;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Tests \Drupal\navigation\Plugin\Block\NavigationMenuBlock.
  *
- * @group navigation
  * @see \Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock
  * @see \Drupal\navigation\Plugin\Block\NavigationMenuBlock
  */
+#[Group('navigation')]
 class NavigationMenuMarkupTest extends KernelTestBase {
 
   /**

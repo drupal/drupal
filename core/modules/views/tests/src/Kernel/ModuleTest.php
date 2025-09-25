@@ -11,12 +11,12 @@ use Drupal\views\Plugin\views\filter\Broken as BrokenFilter;
 use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Plugin\views\ViewsHandlerInterface;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests basic functions from the Views module.
- *
- * @group views
  */
+#[Group('views')]
 class ModuleTest extends ViewsKernelTestBase {
 
   /**

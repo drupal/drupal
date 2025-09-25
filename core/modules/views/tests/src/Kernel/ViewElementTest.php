@@ -6,12 +6,12 @@ namespace Drupal\Tests\views\Kernel;
 
 use Drupal\views\Exception\ViewRenderElementException;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the view render element.
- *
- * @group views
  */
+#[Group('views')]
 class ViewElementTest extends ViewsKernelTestBase {
 
   /**

@@ -7,14 +7,14 @@ namespace Drupal\Tests\file\Kernel;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Managed file element test.
  *
- * @group file
- *
  * @see \Drupal\file\Element\ManagedFile
  */
+#[Group('file')]
 class ManagedFileTest extends FileManagedUnitTestBase implements FormInterface {
 
   /**

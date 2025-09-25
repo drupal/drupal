@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\options\Kernel\Views;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests options list argument for views.
  *
  * @see \Drupal\options\Plugin\views\argument\NumberListField.
- * @group views
  */
+#[Group('views')]
 class OptionsListArgumentTest extends OptionsTestBase {
 
   /**

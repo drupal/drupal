@@ -6,12 +6,16 @@ namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
- * @covers \Drupal\package_manager\Validator\SandboxDatabaseUpdatesValidator
- * @group package_manager
+ * Tests Staged DBUpdate Validator.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\SandboxDatabaseUpdatesValidator
  */
+#[Group('package_manager')]
 class StagedDBUpdateValidatorTest extends PackageManagerKernelTestBase {
 
   /**
@@ -137,9 +141,8 @@ class StagedDBUpdateValidatorTest extends PackageManagerKernelTestBase {
    *   either `install` or `post_update.php`.
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   The expected validation results.
-   *
-   * @dataProvider providerStagedDatabaseUpdate
    */
+  #[DataProvider('providerStagedDatabaseUpdate')]
   public function testStagedDatabaseUpdate(string $extension_dir, string $file_extension, array $expected_results): void {
     $extension_name = basename($extension_dir);
     $relative_file_path = $extension_dir . '/' . $extension_name . '.' . $file_extension;

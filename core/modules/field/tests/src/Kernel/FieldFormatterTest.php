@@ -9,12 +9,12 @@ use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for field formatters.
- *
- * @group field
  */
+#[Group('field')]
 class FieldFormatterTest extends KernelTestBase {
 
   /**

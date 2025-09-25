@@ -10,12 +10,12 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the new entity API for the comment field type.
- *
- * @group comment
  */
+#[Group('comment')]
 class CommentItemTest extends FieldKernelTestBase {
 
   use CommentTestTrait;

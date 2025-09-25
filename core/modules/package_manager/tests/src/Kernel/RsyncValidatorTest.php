@@ -12,13 +12,16 @@ use Drupal\package_manager\Validator\RsyncValidator;
 use PhpTuf\ComposerStager\API\Exception\LogicException;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 use PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * @covers \Drupal\package_manager\Validator\RsyncValidator
- * @group package_manager
+ * Tests Rsync Validator.
+ *
  * @internal
+ * @legacy-covers \Drupal\package_manager\Validator\RsyncValidator
  */
+#[Group('package_manager')]
 class RsyncValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;

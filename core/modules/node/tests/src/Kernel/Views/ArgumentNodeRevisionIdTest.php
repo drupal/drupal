@@ -9,12 +9,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the node_vid handler.
- *
- * @group node
  */
+#[Group('node')]
 class ArgumentNodeRevisionIdTest extends ViewsKernelTestBase {
 
   /**

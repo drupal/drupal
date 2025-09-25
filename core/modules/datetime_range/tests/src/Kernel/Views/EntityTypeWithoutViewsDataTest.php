@@ -8,12 +8,12 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Entity\View;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests datetime_range.module when an entity type provides no views data.
- *
- * @group datetime
  */
+#[Group('datetime')]
 class EntityTypeWithoutViewsDataTest extends KernelTestBase {
 
   /**

@@ -7,12 +7,12 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests migration of D7 field formatter settings.
- *
- * @group field
  */
+#[Group('field')]
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
 
   /**

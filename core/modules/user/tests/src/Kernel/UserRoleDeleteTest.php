@@ -9,12 +9,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the handling of user_role entity from the user module.
- *
- * @group user
  */
+#[Group('user')]
 class UserRoleDeleteTest extends KernelTestBase {
 
   /**

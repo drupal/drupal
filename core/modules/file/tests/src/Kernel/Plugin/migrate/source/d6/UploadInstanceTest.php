@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Plugin\migrate\source\d6;
 
+use Drupal\file\Plugin\migrate\source\d6\UploadInstance;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore uploadsize
-
 /**
  * Tests D6 d6_upload_instance source plugin.
  *
- * @covers \Drupal\file\Plugin\migrate\source\d6\UploadInstance
- *
- * @group file
- * @coversDefaultClass \Drupal\file\Plugin\migrate\source\d6\UploadInstance
+ * @legacy-covers \Drupal\file\Plugin\migrate\source\d6\UploadInstance
  */
+#[CoversClass(UploadInstance::class)]
+#[Group('file')]
 class UploadInstanceTest extends MigrateSqlSourceTestBase {
 
   /**

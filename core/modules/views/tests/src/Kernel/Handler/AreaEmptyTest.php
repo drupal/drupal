@@ -6,13 +6,14 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the generic entity area handler.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\area\Entity
  */
+#[Group('views')]
 class AreaEmptyTest extends ViewsKernelTestBase {
 
   /**

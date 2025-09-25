@@ -6,12 +6,12 @@ namespace Drupal\Tests\dblog\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests logging of connection failures.
- *
- * @group dblog
  */
+#[Group('dblog')]
 class ConnectionFailureTest extends KernelTestBase {
 
   /**

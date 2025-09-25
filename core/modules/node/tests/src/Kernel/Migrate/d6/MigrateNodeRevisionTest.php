@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 use Drupal\node\NodeInterface;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Node content revisions migration.
- *
- * @group migrate_drupal_6
  */
+#[Group('migrate_drupal_6')]
 class MigrateNodeRevisionTest extends MigrateNodeTestBase {
 
   /**

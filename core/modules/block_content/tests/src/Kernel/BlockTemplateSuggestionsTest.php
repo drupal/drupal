@@ -7,14 +7,14 @@ namespace Drupal\Tests\block_content\Kernel;
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\block_content\Hook\BlockContentHooks;
+use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the block_content_theme_suggestions_block() function.
- *
- * @group block_content
  */
+#[Group('block_content')]
 class BlockTemplateSuggestionsTest extends KernelTestBase {
 
   /**
