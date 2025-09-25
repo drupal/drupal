@@ -51,6 +51,8 @@ trait I18nQueryTrait {
    * @throws \Drupal\migrate\MigrateException
    */
   protected function getPropertyNotInRowTranslation(Row $row, string $property_not_in_row, string $object_id_name, MigrateIdMapInterface $id_map): bool {
+    @trigger_error('Trait "' . __TRAIT__ . '" used by "' . static::class . '" is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533564', E_USER_DEPRECATED);
+
     $language = $row->getSourceProperty('language');
     if (!$language) {
       throw new MigrateException('No language found.');

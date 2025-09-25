@@ -11150,6 +11150,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ban/src/Form/BanDelete.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\ban\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\BlockedIps extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/ban/src/Plugin/migrate/source/d7/BlockedIps.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\basic_auth_test\\\\BasicAuthTestController\\:\\:modifyState\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11430,6 +11438,30 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/src/Form/BlockDeleteForm.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method getModuleSchemaVersion\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/block/src/Plugin/migrate/source/Block.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 8,
+	'path' => __DIR__ . '/modules/block/src/Plugin/migrate/source/Block.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\block\\\\Plugin\\\\migrate\\\\source\\\\Block extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/block/src/Plugin/migrate/source/Block.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\block_test\\\\BlockRenderAlterContent\\:\\:preRender\\(\\) has no return type specified\\.$#',
@@ -11736,6 +11768,30 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/src/Plugin/Block/BlockContentBlock.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\block_content\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Box extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/block_content/src/Plugin/migrate/source/d6/Box.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\block_content\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\BlockCustom extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/block_content/src/Plugin/migrate/source/d7/BlockCustom.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\block_content\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\BlockCustomTranslation extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/block_content/src/Plugin/migrate/source/d7/BlockCustomTranslation.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\block_content\\\\Routing\\\\RouteSubscriber\\:\\:alterRoutes\\(\\) has no return type specified\\.$#',
@@ -12548,10 +12604,82 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/destination/EntityComment.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method checkRequirements\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/CommentType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/CommentType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/CommentType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\comment\\\\Plugin\\\\migrate\\\\source\\\\CommentType extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/CommentType.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\Plugin\\\\migrate\\\\source\\\\CommentType\\:\\:checkRequirements\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/CommentType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/d6/Comment.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\comment\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Comment extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/d6/Comment.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/d7/Comment.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/d7/Comment.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/source/d7/CommentEntityTranslation.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\CommentEntityTranslation\\:\\:checkRequirements\\(\\) has no return type specified\\.$#',
@@ -13760,6 +13888,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/contact/src/MessageInterface.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\contact\\\\Plugin\\\\migrate\\\\source\\\\ContactCategory extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/contact/src/Plugin/migrate/source/ContactCategory.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\contact\\\\Plugin\\\\views\\\\field\\\\ContactLink\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14624,6 +14760,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_translation/src/Plugin/Validation/Constraint/ContentTranslationSynchronizedFieldsConstraintValidator.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\content_translation\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\EntityTranslationSettings extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/content_translation/src/Plugin/migrate/source/d7/EntityTranslationSettings.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\content_translation\\\\Routing\\\\ContentTranslationRouteSubscriber\\:\\:alterRoutes\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -15438,6 +15582,94 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/field/Email.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Field extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d6/Field.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d6/FieldInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\FieldInstance extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d6/FieldInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\FieldInstancePerFormDisplay extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d6/FieldInstancePerFormDisplay.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\FieldLabelDescriptionTranslation extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d6/FieldLabelDescriptionTranslation.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d7/Field.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\Field extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d7/Field.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d7/FieldInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d7/FieldInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\FieldInstance extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d7/FieldInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\FieldLabelDescriptionTranslation extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field/src/Plugin/migrate/source/d7/FieldLabelDescriptionTranslation.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_test\\\\FieldDefaultValueCallbackProvider\\:\\:calculateDefaultValue\\(\\) has no return type specified\\.$#',
@@ -16790,6 +17022,62 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/src/Plugin/migrate/field/d7/FileField.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/file/src/Plugin/migrate/source/d6/File.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\file\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\File extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/src/Plugin/migrate/source/d6/File.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\file\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Upload extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/src/Plugin/migrate/source/d6/Upload.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/file/src/Plugin/migrate/source/d6/UploadInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\file\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\UploadInstance extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/src/Plugin/migrate/source/d6/UploadInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/file/src/Plugin/migrate/source/d7/File.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\file\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\File extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/src/Plugin/migrate/source/d7/File.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\file\\\\Plugin\\\\rest\\\\resource\\\\FileUploadResource\\:\\:resourceValidate\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -17480,6 +17768,30 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/src/Plugin/FilterBase.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 4,
+	'path' => __DIR__ . '/modules/filter/src/Plugin/migrate/source/d6/FilterFormat.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\FilterFormat extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/src/Plugin/migrate/source/d6/FilterFormat.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\FilterFormat extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/src/Plugin/migrate/source/d7/FilterFormat.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\filter_test\\\\Form\\\\FilterTestFormatForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -18078,6 +18390,22 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Plugin/migrate/field/d7/ImageField.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\image\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\ImageCachePreset extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/image/src/Plugin/migrate/source/d6/ImageCachePreset.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\image\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\ImageStyles extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/image/src/Plugin/migrate/source/d7/ImageStyles.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Routing\\\\ImageStyleRoutes\\:\\:create\\(\\) has no return type specified\\.$#',
@@ -19740,6 +20068,70 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/Plugin/LanguageNegotiation/LanguageNegotiationSession.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/language/src/Plugin/migrate/source/Language.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\language\\\\Plugin\\\\migrate\\\\source\\\\Language extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/language/src/Plugin/migrate/source/Language.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/language/src/Plugin/migrate/source/d6/LanguageContentSettings.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\language\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\LanguageContentSettings extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/language/src/Plugin/migrate/source/d6/LanguageContentSettings.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/language/src/Plugin/migrate/source/d6/LanguageContentSettingsTaxonomyVocabulary.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\language\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\LanguageContentSettingsTaxonomyVocabulary extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/language/src/Plugin/migrate/source/d6/LanguageContentSettingsTaxonomyVocabulary.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/language/src/Plugin/migrate/source/d7/LanguageContentSettings.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\language\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\LanguageContentSettings extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/language/src/Plugin/migrate/source/d7/LanguageContentSettings.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language_elements_test\\\\Form\\\\LanguageConfigurationElement\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -22952,6 +23344,22 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_link_content/src/Plugin/Validation/Constraint/MenuTreeHierarchyConstraintValidator.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/menu_link_content/src/Plugin/migrate/source/MenuLink.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\menu_link_content\\\\Plugin\\\\migrate\\\\source\\\\MenuLink extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/menu_link_content/src/Plugin/migrate/source/MenuLink.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_link_content_dynamic_route\\\\Routes\\:\\:dynamic\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -23810,6 +24218,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/Row.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\migrate_source_annotation_bc_test\\\\Plugin\\\\migrate\\\\source\\\\MigrateSourceWithAnnotationsMultipleProviders extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\EmptySource\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+  replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate/tests/modules/migrate_source_annotation_bc_test/src/Plugin/migrate/source/MigrateSourceWithAnnotationsMultipleProviders.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateDumpAlterInterface\\:\\:migrateDumpAlter\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -24405,10 +24821,90 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/EmptySource.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method __construct\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/Variable.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\Variable extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/Variable.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\VariableMultiRow extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/VariableMultiRow.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method __construct\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/d6/VariableTranslation.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method checkRequirements\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/d6/VariableTranslation.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\VariableTranslation extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/d6/VariableTranslation.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\VariableTranslation\\:\\:checkRequirements\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/d6/VariableTranslation.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/d7/FieldableEntity.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\FieldableEntity extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/d7/FieldableEntity.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method __construct\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/d7/VariableTranslation.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\VariableTranslation extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Plugin/migrate/source/d7/VariableTranslation.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\MigrateDrupalTestBase\\:\\:loadFixture\\(\\) has no return type specified\\.$#',
@@ -24705,10 +25201,74 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/MigrationStateUnitTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Access to constant on deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'classConstant.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/DrupalSqlBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method checkRequirements\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/DrupalSqlBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\Tests\\\\migrate_drupal\\\\Unit\\\\source\\\\TestDrupalSqlBase extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/DrupalSqlBaseTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Unit\\\\source\\\\DrupalSqlBaseTest\\:\\:providerMinimumVersion\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/DrupalSqlBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method getModuleSchemaVersion\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/d6/Drupal6SqlBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method getSystemData\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/d6/Drupal6SqlBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/d6/Drupal6SqlBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/d6/Drupal6SqlBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\Tests\\\\migrate_drupal\\\\Unit\\\\source\\\\d6\\\\TestDrupal6SqlBase extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/source/d6/Drupal6SqlBaseTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Unit\\\\source\\\\d6\\\\TestDrupal6SqlBase\\:\\:getModuleSchemaVersionWrapper\\(\\) has no return type specified\\.$#',
@@ -24883,6 +25443,22 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Routing/MigrateDrupalUiRouteSubscriber.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\migration_provider_test\\\\Plugin\\\\migrate\\\\source\\\\NoSourceModule extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/modules/migration_provider_test/src/Plugin/migrate/source/NoSourceModule.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\migration_source_module_test\\\\Plugin\\\\migrate\\\\source\\\\NoSourceModule extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/modules/migration_source_module_test/src/Plugin/migrate/source/NoSourceModule.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\CredentialFormTest\\:\\:providerCredentialForm\\(\\) has no return type specified\\.$#',
@@ -25605,6 +26181,46 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Plugin/Search/NodeSearch.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method __construct\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/Node.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method getModuleSchemaVersion\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/Node.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/Node.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/Node.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\node\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Node extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/Node.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Node\\:\\:handleTranslations\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25617,6 +26233,54 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/NodeRevision.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/NodeType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 6,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/NodeType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\node\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\NodeType extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/NodeType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\node\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\ViewModeBase extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d6/ViewModeBase.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d7/Node.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d7/Node.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\Node\\:\\:handleTranslations\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25627,6 +26291,38 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d7/NodeComplete.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d7/NodeEntityTranslation.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d7/NodeType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 7,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d7/NodeType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\node\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\NodeType extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/src/Plugin/migrate/source/d7/NodeType.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\views\\\\argument\\\\Type\\:\\:node_type\\(\\) has no return type specified\\.$#',
@@ -26559,6 +27255,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/path/src/Plugin/Validation/Constraint/PathAliasConstraintValidator.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\path\\\\Plugin\\\\migrate\\\\source\\\\UrlAliasBase extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/path/src/Plugin/migrate/source/UrlAliasBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Functional\\\\PathTestBase\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -26977,6 +27681,14 @@ $ignoreErrors[] = [
 	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/responsive_image/src/Plugin/Field/FieldFormatter/ResponsiveImageFormatter.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\responsive_image\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\ResponsiveImageStyles extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/responsive_image/src/Plugin/migrate/source/d7/ResponsiveImageStyles.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:breakpointMappingFormAjax\\(\\) has no return type specified\\.$#',
@@ -27789,6 +28501,22 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/search/src/Plugin/SearchPluginCollection.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/search/src/Plugin/migrate/source/d7/SearchPage.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/search/src/Plugin/migrate/source/d7/SearchPage.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\search\\\\Plugin\\\\views\\\\argument\\\\Search\\:\\:init\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28597,6 +29325,30 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/shortcut/src/Form/SwitchShortcutSet.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\shortcut\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\Shortcut extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/src/Plugin/migrate/source/d7/Shortcut.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\shortcut\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\ShortcutSet extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/src/Plugin/migrate/source/d7/ShortcutSet.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\shortcut\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\ShortcutSetUsers extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/src/Plugin/migrate/source/d7/ShortcutSetUsers.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\shortcut\\\\ShortcutForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -29581,6 +30333,38 @@ $ignoreErrors[] = [
 	'identifier' => 'isset.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Plugin/migrate/destination/d7/ThemeSettings.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method getModuleSchemaVersion\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/system/src/Plugin/migrate/source/Action.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\system\\\\Plugin\\\\migrate\\\\source\\\\Action extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/src/Plugin/migrate/source/Action.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\system\\\\Plugin\\\\migrate\\\\source\\\\Extension extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/src/Plugin/migrate/source/Extension.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\system\\\\Plugin\\\\migrate\\\\source\\\\Menu extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/src/Plugin/migrate/source/Menu.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Routing\\\\AssetRoutes\\:\\:create\\(\\) has no return type specified\\.$#',
@@ -33223,10 +34007,98 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/field/TaxonomyTermReference.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Term extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d6/Term.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\TermNode extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d6/TermNode.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d6/Vocabulary.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Vocabulary extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d6/Vocabulary.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d6/VocabularyPerType.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\VocabularyTranslation extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d6/VocabularyTranslation.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d7/Term.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d7/Term.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d7/TermEntityTranslation.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\TermTranslation\\:\\:prepareRow\\(\\) should return bool but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d7/TermTranslation.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d7/Vocabulary.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\Vocabulary extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d7/Vocabulary.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\argument\\\\IndexTid\\:\\:titleQuery\\(\\) has no return type specified\\.$#',
@@ -34557,6 +35429,30 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/destination/EntityUser.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to method checkRequirements\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/ProfileField.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method getModuleSchemaVersion\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/ProfileField.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\ProfileField extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/ProfileField.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\ProfileField\\:\\:checkRequirements\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -34567,6 +35463,86 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/ProfileField.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/UserPictureInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\UserPictureInstance extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/UserPictureInstance.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\ProfileFieldValues extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/d6/ProfileFieldValues.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\Role extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/d6/Role.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\User extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/d6/User.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\UserPicture extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/d6/UserPicture.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method variableGet\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/d6/UserPictureFile.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\UserPictureFile extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/d6/UserPictureFile.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\user\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\Role extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'class.extendsDeprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/d7/Role.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method moduleExists\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/source/d7/User.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\rest\\\\resource\\\\UserRegistrationResource\\:\\:checkEditFieldAccess\\(\\) has no return type specified\\.$#',
