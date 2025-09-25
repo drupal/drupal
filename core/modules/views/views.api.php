@@ -1275,3 +1275,53 @@ function hook_views_plugins_sort_alter(array &$plugins) {
 /**
  * @} End of "addtogroup hooks".
  */
+
+/**
+ * @defgroup views_templates Views template files
+ * @{
+ * Describes various views templates & overriding options.
+ *
+ * All views templates can be overridden with a variety of names, using
+ * the view, the display ID of the view, the display type of the view,
+ * or some combination thereof.
+ *
+ * For each view, there will be a minimum of two templates used. The first
+ * is used for all views: views-view.html.twig.
+ *
+ * The second template is determined by the style selected for the view. Note
+ * that certain aspects of the view can also change which style is used; for
+ * example, arguments which provide a summary view might change the style to
+ * one of the special summary styles.
+ *
+ * The default style for all views is views-view-unformatted.html.twig.
+ *
+ * Many styles will then farm out the actual display of each row to a row
+ * style; the default row style is views-view-fields.html.twig.
+ *
+ * Here is an example of all the templates that will be tried in the following
+ * case:
+ *
+ * View, named foobar. Style: unformatted. Row style: Fields. Display: Page.
+ *
+ * - views-view--foobar--page.html.twig
+ * - views-view--page.html.twig
+ * - views-view--foobar.html.twig
+ * - views-view.html.twig
+ *
+ * - views-view-unformatted--foobar--page.html.twig
+ * - views-view-unformatted--page.html.twig
+ * - views-view-unformatted--foobar.html.twig
+ * - views-view-unformatted.html.twig
+ *
+ * - views-view-fields--foobar--page.html.twig
+ * - views-view-fields--page.html.twig
+ * - views-view-fields--foobar.html.twig
+ * - views-view-fields.html.twig
+ *
+ * Important! When adding a new template to your theme, be sure to flush the
+ * theme registry cache!
+ *
+ * @ingroup views_overview
+ * @see \Drupal\views\ViewExecutable::buildThemeFunctions()
+ * @}
+ */
