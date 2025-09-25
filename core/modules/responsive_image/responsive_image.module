@@ -4,12 +4,8 @@
  * @file
  */
 
-use Drupal\Core\File\MimeType\MimeTypeMapInterface;
-use Drupal\Core\Template\Attribute;
-use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\image\Entity\ImageStyle;
-use Drupal\responsive_image\Entity\ResponsiveImageStyle;
-use Drupal\responsive_image\ResponsiveImageStyleInterface;
+use Drupal\responsive_image\Hook\ResponsiveImageThemeHooks;
+use Drupal\responsive_image\ResponsiveImageBuilder;
 use Drupal\breakpoint\BreakpointInterface;
 
 /**
@@ -24,44 +20,15 @@ use Drupal\breakpoint\BreakpointInterface;
  *     placed in the img tag.
  *   - responsive_image_style_id: A responsive image style.
  *   - url: An optional \Drupal\Core\Url object.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_responsive_image_formatter(&$variables): void {
-  // Provide fallback to standard image if valid responsive image style is not
-  // provided in the responsive image formatter.
-  $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
-  if ($responsive_image_style) {
-    $variables['responsive_image'] = [
-      '#type' => 'responsive_image',
-      '#responsive_image_style_id' => $variables['responsive_image_style_id'],
-    ];
-  }
-  else {
-    $variables['responsive_image'] = [
-      '#theme' => 'image',
-    ];
-  }
-  $item = $variables['item'];
-  $attributes = [];
-  // Do not output an empty 'title' attribute.
-  if (!is_null($item->title) && mb_strlen($item->title) != 0) {
-    $attributes['title'] = $item->title;
-  }
-  $attributes['alt'] = $item->alt;
-  // Need to check that item_attributes has a value since it can be NULL.
-  if ($variables['item_attributes']) {
-    $attributes += $variables['item_attributes'];
-  }
-  if (($entity = $item->entity) && empty($item->uri)) {
-    $variables['responsive_image']['#uri'] = $entity->getFileUri();
-  }
-  else {
-    $variables['responsive_image']['#uri'] = $item->uri;
-  }
-
-  foreach (['width', 'height'] as $key) {
-    $variables['responsive_image']["#$key"] = $item->$key;
-  }
-  $variables['responsive_image']['#attributes'] = $attributes;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ResponsiveImageThemeHooks::class)->preprocessResponsiveImageFormatter($variables);
 }
 
 /**
@@ -76,96 +43,15 @@ function template_preprocess_responsive_image_formatter(&$variables): void {
  *   - height: The height of the image (if known).
  *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - responsive_image_style_id: The ID of the responsive image style.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_responsive_image(&$variables): void {
-  // Make sure that width and height are proper values, if they exist we'll
-  // output them.
-  if (isset($variables['width']) && empty($variables['width'])) {
-    unset($variables['width']);
-    unset($variables['height']);
-  }
-  elseif (isset($variables['height']) && empty($variables['height'])) {
-    unset($variables['width']);
-    unset($variables['height']);
-  }
-
-  $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
-  // If a responsive image style is not selected, log the error and stop
-  // execution.
-  if (!$responsive_image_style) {
-    $variables['img_element'] = [];
-    \Drupal::logger('responsive_image')->log(RfcLogLevel::ERROR, 'Failed to load responsive image style: “@style“ while displaying responsive image.', ['@style' => $variables['responsive_image_style_id']]);
-    return;
-  }
-  // Retrieve all breakpoints and multipliers and reverse order of breakpoints.
-  // By default, breakpoints are ordered from smallest weight to largest:
-  // the smallest weight is expected to have the smallest breakpoint width,
-  // while the largest weight is expected to have the largest breakpoint
-  // width. For responsive images, we need largest breakpoint widths first, so
-  // we need to reverse the order of these breakpoints.
-  $breakpoints = array_reverse(\Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup()));
-  foreach ($responsive_image_style->getKeyedImageStyleMappings() as $breakpoint_id => $multipliers) {
-    if (isset($breakpoints[$breakpoint_id])) {
-      $variables['sources'][] = _responsive_image_build_source_attributes($variables, $breakpoints[$breakpoint_id], $multipliers);
-    }
-  }
-
-  if (isset($variables['sources']) && count($variables['sources']) === 1 && !isset($variables['sources'][0]['media'])) {
-    // There is only one source tag with an empty media attribute. This means
-    // we can output an image tag with the srcset attribute instead of a
-    // picture tag.
-    $variables['output_image_tag'] = TRUE;
-    foreach ($variables['sources'][0] as $attribute => $value) {
-      if ($attribute != 'type') {
-        $variables['attributes'][$attribute] = $value;
-      }
-    }
-    $variables['img_element'] = [
-      '#theme' => 'image',
-      '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
-      '#attributes' => [],
-    ];
-  }
-  else {
-    $variables['output_image_tag'] = FALSE;
-    // Prepare the fallback image. We use the src attribute, which might cause
-    // double downloads in browsers that don't support the picture tag.
-    $variables['img_element'] = [
-      '#theme' => 'image',
-      '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
-      '#attributes' => [],
-    ];
-  }
-
-  // Get width and height from fallback responsive image style and transfer them
-  // to img tag so browser can do aspect ratio calculation and prevent
-  // recalculation of layout on image load.
-  $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(), [
-    'width' => $variables['width'],
-    'height' => $variables['height'],
-  ],
-    $variables['uri']
-  );
-  $variables['img_element']['#width'] = $dimensions['width'];
-  $variables['img_element']['#height'] = $dimensions['height'];
-
-  if (isset($variables['attributes'])) {
-    if (isset($variables['attributes']['alt'])) {
-      $variables['img_element']['#alt'] = $variables['attributes']['alt'];
-      unset($variables['attributes']['alt']);
-    }
-    if (isset($variables['attributes']['title'])) {
-      $variables['img_element']['#title'] = $variables['attributes']['title'];
-      unset($variables['attributes']['title']);
-    }
-    if (isset($variables['img_element']['#width'])) {
-      $variables['attributes']['width'] = $variables['img_element']['#width'];
-    }
-    if (isset($variables['img_element']['#height'])) {
-      $variables['attributes']['height'] = $variables['img_element']['#height'];
-    }
-    $variables['img_element']['#attributes'] = $variables['attributes'];
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ResponsiveImageThemeHooks::class)->preprocessResponsiveImage($variables);
 }
 
 /**
@@ -182,6 +68,7 @@ function template_preprocess_responsive_image(&$variables): void {
  * image style for this breakpoint and multiplier). A responsive image style
  * can contain image style mappings of mixed types (both 'image_style' and
  * 'sizes'). For example:
+ *
  * @code
  * $responsive_img_style = ResponsiveImageStyle::create([
  *   'id' => 'style_one',
@@ -304,96 +191,16 @@ function template_preprocess_responsive_image(&$variables): void {
  *
  * @return \Drupal\Core\Template\Attribute
  *   An object of attributes for the source tag.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\responsive_image\ResponsiveImageBuilder::buildSourceAttributes()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3548329
  */
 function _responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers) {
-  if ((empty($variables['width']) || empty($variables['height']))) {
-    $image = \Drupal::service('image.factory')->get($variables['uri']);
-    $width = $image->getWidth();
-    $height = $image->getHeight();
-  }
-  else {
-    $width = $variables['width'];
-    $height = $variables['height'];
-  }
-  $extension = pathinfo($variables['uri'], PATHINFO_EXTENSION);
-  $sizes = [];
-  $srcset = [];
-  $derivative_mime_types = [];
-  // Traverse the multipliers in reverse so the largest image is processed last.
-  // The last image's dimensions are used for img.srcset height and width.
-  foreach (array_reverse($multipliers) as $multiplier => $image_style_mapping) {
-    switch ($image_style_mapping['image_mapping_type']) {
-      // Create a <source> tag with the 'sizes' attribute.
-      case 'sizes':
-        // Loop through the image styles for this breakpoint and multiplier.
-        foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
-          // Get the dimensions.
-          $dimensions = responsive_image_get_image_dimensions($image_style_name, ['width' => $width, 'height' => $height], $variables['uri']);
-          // Get MIME type.
-          $derivative_mime_type = responsive_image_get_mime_type($image_style_name, $extension);
-          $derivative_mime_types[] = $derivative_mime_type;
-
-          // Add the image source with its width descriptor. When a width
-          // descriptor is used in a srcset, we can't add a multiplier to
-          // it. Because of this, the image styles for all multipliers of
-          // this breakpoint should be merged into one srcset and the sizes
-          // attribute should be merged as well.
-          if (is_null($dimensions['width'])) {
-            throw new \LogicException("Could not determine image width for '{$variables['uri']}' using image style with ID: $image_style_name. This image style can not be used for a responsive image style mapping using the 'sizes' attribute.");
-          }
-          // Use the image width as key so we can sort the array later on.
-          // Images within a srcset should be sorted from small to large, since
-          // the first matching source will be used.
-          $srcset[intval($dimensions['width'])] = _responsive_image_image_style_url($image_style_name, $variables['uri']) . ' ' . $dimensions['width'] . 'w';
-          $sizes = array_merge(explode(',', $image_style_mapping['image_mapping']['sizes']), $sizes);
-        }
-        break;
-
-      case 'image_style':
-        // Get MIME type.
-        $derivative_mime_type = responsive_image_get_mime_type($image_style_mapping['image_mapping'], $extension);
-        $derivative_mime_types[] = $derivative_mime_type;
-        // Add the image source with its multiplier. Use the multiplier as key
-        // so we can sort the array later on. Multipliers within a srcset should
-        // be sorted from small to large, since the first matching source will
-        // be used. We multiply it by 100 so multipliers with up to two decimals
-        // can be used.
-        $srcset[intval(mb_substr($multiplier, 0, -1) * 100)] = _responsive_image_image_style_url($image_style_mapping['image_mapping'], $variables['uri']) . ' ' . $multiplier;
-        $dimensions = responsive_image_get_image_dimensions($image_style_mapping['image_mapping'], ['width' => $width, 'height' => $height], $variables['uri']);
-        break;
-    }
-  }
-  // Sort the srcset from small to large image width or multiplier.
-  ksort($srcset);
-  $source_attributes = new Attribute([
-    'srcset' => implode(', ', array_unique($srcset)),
-  ]);
-  $media_query = trim($breakpoint->getMediaQuery());
-  if (!empty($media_query)) {
-    $source_attributes->setAttribute('media', $media_query);
-  }
-  if (count(array_unique($derivative_mime_types)) == 1) {
-    $source_attributes->setAttribute('type', $derivative_mime_types[0]);
-  }
-  if (!empty($sizes)) {
-    $source_attributes->setAttribute('sizes', implode(',', array_unique($sizes)));
-  }
-  // The images used in a particular srcset attribute should all have the same
-  // aspect ratio. The sizes attribute paired with the srcset attribute provides
-  // information on how much space these images take up within the viewport at
-  // different breakpoints, but the aspect ratios should remain the same across
-  // those breakpoints. Multiple source elements can be used for art direction,
-  // where aspect ratios should change at particular breakpoints. Each source
-  // element can still have srcset and sizes attributes to handle variations for
-  // that particular aspect ratio. Because the same aspect ratio is assumed for
-  // all images in a srcset, dimensions are always added to the source
-  // attribute. Within srcset, images are sorted from largest to smallest in
-  // terms of the real dimension of the image.
-  if (!empty($dimensions['width']) && !empty($dimensions['height'])) {
-    $source_attributes->setAttribute('width', $dimensions['width']);
-    $source_attributes->setAttribute('height', $dimensions['height']);
-  }
-  return $source_attributes;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\responsive_image\ResponsiveImageBuilder::buildSourceAttributes() instead. See https://www.drupal.org/node/3548329', E_USER_DEPRECATED);
+  return \Drupal::service(ResponsiveImageBuilder::class)->buildSourceAttributes($variables, $breakpoint, $multipliers);
 }
 
 /**
@@ -411,20 +218,16 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
  * @return array
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
+ *    \Drupal\responsive_image\ResponsiveImageBuilder::getImageDimensions()
+ *    instead.
+ *
+ * @see https://www.drupal.org/node/3548329
  */
 function responsive_image_get_image_dimensions($image_style_name, array $dimensions, $uri) {
-  // Determine the dimensions of the styled image.
-  if ($image_style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
-    $dimensions = [
-      'width' => 1,
-      'height' => 1,
-    ];
-  }
-  elseif ($entity = ImageStyle::load($image_style_name)) {
-    $entity->transformDimensions($dimensions, $uri);
-  }
-
-  return $dimensions;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\responsive_image\ResponsiveImageBuilder::getImageDimensions() instead. See https://www.drupal.org/node/3548329', E_USER_DEPRECATED);
+  return \Drupal::service(ResponsiveImageBuilder::class)->getImageDimensions($image_style_name, $dimensions, $uri);
 }
 
 /**
@@ -438,40 +241,28 @@ function responsive_image_get_image_dimensions($image_style_name, array $dimensi
  * @return string|null
  *   The MIME type of the image after the image style is applied, or NULL if not
  *   found.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use
+ *    \Drupal\responsive_image\ResponsiveImageBuilder::getMimeType()
+ *    instead.
+ *
+ * @see https://www.drupal.org/node/3548329
  */
 function responsive_image_get_mime_type($image_style_name, $extension) {
-  $extension = match ($image_style_name) {
-    // The file extension for the empty image is 'gif'.
-    ResponsiveImageStyleInterface::EMPTY_IMAGE => 'gif',
-    // If using the original image, the file extension is just passed on to the
-    // MIME type mapper.
-    ResponsiveImageStyleInterface::ORIGINAL_IMAGE => $extension,
-    // In all other cases, get the file extension of the derivative image from
-    // the image style configuration.
-    default => ImageStyle::load($image_style_name)->getDerivativeExtension($extension),
-  };
-
-  return \Drupal::service(MimeTypeMapInterface::class)->getMimeTypeForExtension(
-    $extension
-  );
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\responsive_image\ResponsiveImageBuilder::getMimeType() instead. See https://www.drupal.org/node/3548329', E_USER_DEPRECATED);
+  return \Drupal::service(ResponsiveImageBuilder::class)->getMimeType($image_style_name, $extension);
 }
 
 /**
  * Wrapper around image_style_url() so we can return an empty image.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use
+ *    \Drupal\responsive_image\ResponsiveImageBuilder::getImageStyleUrl()
+ *    instead.
+ *
+ * @see https://www.drupal.org/node/3548329
  */
 function _responsive_image_image_style_url($style_name, $path) {
-  if ($style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
-    // The smallest data URI for a 1px square transparent GIF image.
-    // http://probablyprogramming.com/2009/03/15/the-tiniest-gif-ever
-    return 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-  }
-
-  /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
-  $file_url_generator = \Drupal::service('file_url_generator');
-
-  $entity = ImageStyle::load($style_name);
-  if ($entity instanceof ImageStyle) {
-    return $file_url_generator->transformRelative($entity->buildUrl($path));
-  }
-  return $file_url_generator->generateString($path);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\responsive_image\ResponsiveImageBuilder::getImageStyleUrl() instead. See https://www.drupal.org/node/3548329', E_USER_DEPRECATED);
+  return \Drupal::service(ResponsiveImageBuilder::class)->getImageStyleUrl($style_name, $path);
 }

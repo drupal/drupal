@@ -1,0 +1,344 @@
+<?php
+
+namespace Drupal\responsive_image;
+
+use Drupal\breakpoint\BreakpointInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\File\MimeType\MimeTypeMapInterface;
+use Drupal\Core\Image\ImageFactory;
+use Drupal\Core\Template\Attribute;
+use Drupal\image\Entity\ImageStyle;
+
+/**
+ * Provides methods related to building responsive image source attributes.
+ */
+class ResponsiveImageBuilder {
+
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected MimeTypeMapInterface $mimeTypeMap,
+    protected ImageFactory $imageFactory,
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
+  ) {
+
+  }
+
+  /**
+   * Helper function for template_preprocess_responsive_image().
+   *
+   * Builds an array of attributes for <source> tags to be used in a <picture>
+   * tag. In other words, this function provides the attributes for each
+   * <source> tag in a <picture> tag.
+   *
+   * In a responsive image style, each breakpoint has an image style mapping for
+   * each of its multipliers. An image style mapping can be either of two types:
+   * 'sizes' (meaning it will output a <source> tag with the 'sizes' attribute)
+   * or 'image_style' (meaning it will output a <source> tag based on the
+   * selected image style for this breakpoint and multiplier). A responsive
+   * image style can contain image style mappings of mixed types (both
+   * 'image_style' and 'sizes'). For example:
+   * @code
+   * $responsive_img_style = ResponsiveImageStyle::create([
+   *   'id' => 'style_one',
+   *   'label' => 'Style One',
+   *   'breakpoint_group' => 'responsive_image_test_module',
+   * ]);
+   * $responsive_img_style->addImageStyleMapping('responsive_image_test_module.mobile', '1x', [
+   *   'image_mapping_type' => 'image_style',
+   *   'image_mapping' => 'thumbnail',
+   * ])
+   * ->addImageStyleMapping('responsive_image_test_module.narrow', '1x', [
+   *   'image_mapping_type' => 'sizes',
+   *   'image_mapping' => [
+   *     'sizes' => '(min-width: 700px) 700px, 100vw',
+   *     'sizes_image_styles' => [
+   *       'large' => 'large',
+   *       'medium' => 'medium',
+   *     ],
+   *   ],
+   * ])
+   * ->save();
+   * @endcode
+   * The above responsive image style will result in a <picture> tag like this:
+   * @code
+   * <picture>
+   *   <source media="(min-width: 0px)" srcset="sites/default/files/styles/thumbnail/image.jpeg" />
+   *   <source media="(min-width: 560px)" sizes="(min-width: 700px) 700px, 100vw" srcset="sites/default/files/styles/large/image.jpeg 480w, sites/default/files/styles/medium/image.jpeg 220w" />
+   *   <img src="fallback.jpeg" />
+   * </picture>
+   * @endcode
+   *
+   * When all the images in the 'srcset' attribute of a <source> tag have the
+   * same MIME type, the source tag will get a 'mime-type' attribute as well.
+   * This way we can gain some front-end performance because browsers can select
+   * which image (<source> tag) to load based on the MIME types they support
+   * (which, for instance, can be beneficial for browsers supporting WebP).
+   * For example:
+   * A <source> tag can contain multiple images:
+   * @code
+   * <source [...] srcset="image1.jpeg 1x, image2.jpeg 2x, image3.jpeg 3x" />
+   * @endcode
+   * In the above example we can add the 'mime-type' attribute ('image/jpeg')
+   * since all images in the 'srcset' attribute of the <source> tag have the
+   * same MIME type.
+   * If a <source> tag were to look like this:
+   * @code
+   * <source [...] srcset="image1.jpeg 1x, image2.webp 2x, image3.jpeg 3x" />
+   * @endcode
+   * We can't add the 'mime-type' attribute ('image/jpeg' vs 'image/webp').
+   * So in order to add the 'mime-type' attribute to the <source> tag all images
+   * in the 'srcset' attribute of the <source> tag need to be of the same MIME
+   * type. This way, a <picture> tag could look like this:
+   * @code
+   * <picture>
+   *   <source [...] mime-type="image/webp" srcset="image1.webp 1x, image2.webp 2x, image3.webp 3x"/>
+   *   <source [...] mime-type="image/jpeg" srcset="image1.jpeg 1x, image2.jpeg 2x, image3.jpeg 3x"/>
+   *   <img src="fallback.jpeg" />
+   * </picture>
+   * @endcode
+   * This way a browser can decide which <source> tag is preferred based on the
+   * MIME type. In other words, the MIME types of all images in one <source> tag
+   * need to be the same in order to set the 'mime-type' attribute but not all
+   * MIME types within the <picture> tag need to be the same.
+   *
+   * For image style mappings of the type 'sizes', a width descriptor is added
+   * to each source. For example:
+   * @code
+   * <source media="(min-width: 0px)" srcset="image1.jpeg 100w" />
+   * @endcode
+   * The width descriptor here is "100w". This way the browser knows this image
+   * is 100px wide without having to load it. According to the spec, a
+   * multiplier can not be present if a width descriptor is.
+   * For example:
+   * Valid:
+   * @code
+   * <source media="(min-width:0px)" srcset="img1.jpeg 50w, img2.jpeg=100w" />
+   * @endcode
+   * Invalid:
+   * @code
+   * <source media="(min-width:0px)" srcset="img1.jpeg 50w 1x, img2.jpeg=100w 1x" />
+   * @endcode
+   *
+   * Note: Since the specs do not allow width descriptors and multipliers
+   * combined inside one 'srcset' attribute, we either have to use something
+   * like
+   * @code
+   * <source [...] srcset="image1.jpeg 1x, image2.webp 2x, image3.jpeg 3x" />
+   * @endcode
+   * to support multipliers or
+   * @code
+   * <source [...] sizes"(min-width: 40em) 80vw, 100vw" srcset="image1.jpeg 300w, image2.webp 600w, image3.jpeg 1200w" />
+   * @endcode
+   * to support the 'sizes' attribute.
+   *
+   * In theory people could add an image style mapping for the same breakpoint
+   * (but different multiplier) so the array contains an entry for
+   * breakpointA.1x and breakpointA.2x. If we would output those we will end up
+   * with something like
+   * @code
+   * <source [...] sizes="(min-width: 40em) 80vw, 100vw" srcset="a1.jpeg 300w 1x, a2.jpeg 600w 1x, a3.jpeg 1200w 1x, b1.jpeg 250w 2x, b2.jpeg 680w 2x, b3.jpeg 1240w 2x" />
+   * @endcode
+   * which is illegal. So the solution is to merge both arrays into one and
+   * disregard the multiplier. Which, in this case, would output
+   * @code
+   * <source [...] sizes="(min-width: 40em) 80vw, 100vw" srcset="b1.jpeg 250w, a1.jpeg 300w, a2.jpeg 600w, b2.jpeg 680w, a3.jpeg 1200w,  b3.jpeg 1240w" />
+   * @endcode
+   * See https://www.w3.org/html/wg/drafts/html/master/embedded-content.html#image-candidate-string
+   * for further information.
+   *
+   * @param array $variables
+   *   An array with the following keys:
+   *     - responsive_image_style_id: The
+   *       \Drupal\responsive_image\Entity\ResponsiveImageStyle ID.
+   *     - width: The width of the image (if known).
+   *     - height: The height of the image (if known).
+   *     - uri: The URI of the image file.
+   * @param \Drupal\breakpoint\BreakpointInterface $breakpoint
+   *   The breakpoint for this source tag.
+   * @param array $multipliers
+   *   An array with multipliers as keys and image style mappings as values.
+   *
+   * @return \Drupal\Core\Template\Attribute
+   *   An object of attributes for the source tag.
+   */
+  public function buildSourceAttributes(array $variables, BreakpointInterface $breakpoint, array $multipliers): Attribute {
+    if ((empty($variables['width']) || empty($variables['height']))) {
+      $image = $this->imageFactory->get($variables['uri']);
+      $width = $image->getWidth();
+      $height = $image->getHeight();
+    }
+    else {
+      $width = $variables['width'];
+      $height = $variables['height'];
+    }
+    $extension = pathinfo($variables['uri'], PATHINFO_EXTENSION);
+    $sizes = [];
+    $srcset = [];
+    $derivative_mime_types = [];
+    // Traverse the multipliers in reverse so the largest image is processed
+    // last./ The last image's dimensions are used for img.srcset height and
+    // width.
+    foreach (array_reverse($multipliers) as $multiplier => $image_style_mapping) {
+      switch ($image_style_mapping['image_mapping_type']) {
+        // Create a <source> tag with the 'sizes' attribute.
+        case 'sizes':
+          // Loop through the image styles for this breakpoint and multiplier.
+          foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
+            // Get the dimensions.
+            $dimensions = $this->getImageDimensions($image_style_name, ['width' => $width, 'height' => $height], $variables['uri']);
+            // Get MIME type.
+            $derivative_mime_type = $this->getMimeType($image_style_name, $extension);
+            $derivative_mime_types[] = $derivative_mime_type;
+
+            // Add the image source with its width descriptor. When a width
+            // descriptor is used in a srcset, we can't add a multiplier to
+            // it. Because of this, the image styles for all multipliers of
+            // this breakpoint should be merged into one srcset and the sizes
+            // attribute should be merged as well.
+            if (is_null($dimensions['width'])) {
+              throw new \LogicException("Could not determine image width for '{$variables['uri']}' using image style with ID: $image_style_name. This image style can not be used for a responsive image style mapping using the 'sizes' attribute.");
+            }
+            // Use the image width as key so we can sort the array later on.
+            // Images within a srcset should be sorted from small to large,
+            // since the first matching source will be used.
+            $srcset[intval($dimensions['width'])] = $this->getImageStyleUrl($image_style_name, $variables['uri']) . ' ' . $dimensions['width'] . 'w';
+            $sizes = array_merge(explode(',', $image_style_mapping['image_mapping']['sizes']), $sizes);
+          }
+          break;
+
+        case 'image_style':
+          // Get MIME type.
+          $derivative_mime_type = $this->getMimeType($image_style_mapping['image_mapping'], $extension);
+          $derivative_mime_types[] = $derivative_mime_type;
+          // Add the image source with its multiplier. Use the multiplier as
+          // key so we can sort the array later on. Multipliers within a srcset
+          // should be sorted from small to large, since the first matching
+          // source will be used. We multiply it by 100 so multipliers with up
+          // to two decimals can be used.
+          $srcset[intval(mb_substr($multiplier, 0, -1) * 100)] = $this->getImageStyleUrl($image_style_mapping['image_mapping'], $variables['uri']) . ' ' . $multiplier;
+          $dimensions = $this->getImageDimensions($image_style_mapping['image_mapping'], ['width' => $width, 'height' => $height], $variables['uri']);
+          break;
+      }
+    }
+    // Sort the srcset from small to large image width or multiplier.
+    ksort($srcset);
+    $source_attributes = new Attribute([
+      'srcset' => implode(', ', array_unique($srcset)),
+    ]);
+    $media_query = trim($breakpoint->getMediaQuery());
+    if (!empty($media_query)) {
+      $source_attributes->setAttribute('media', $media_query);
+    }
+    if (count(array_unique($derivative_mime_types)) == 1) {
+      $source_attributes->setAttribute('type', $derivative_mime_types[0]);
+    }
+    if (!empty($sizes)) {
+      $source_attributes->setAttribute('sizes', implode(',', array_unique($sizes)));
+    }
+    // The images used in a particular srcset attribute should all have the same
+    // aspect ratio. The sizes attribute paired with the srcset attribute
+    // provides information on how much space these images take up within the
+    // viewport at different breakpoints, but the aspect ratios should remain
+    // the same across those breakpoints. Multiple source elements can be used
+    // for art direction, where aspect ratios should change at particular
+    // breakpoints. Each source element can still have srcset and sizes
+    // attributes to handle variations for that particular aspect ratio. Because
+    // the same aspect ratio is assumed for all images in a srcset, dimensions
+    // are always added to the source attribute. Within srcset, images are
+    // sorted from largest to smallest in terms of the real dimension of the
+    // image.
+    if (!empty($dimensions['width']) && !empty($dimensions['height'])) {
+      $source_attributes->setAttribute('width', $dimensions['width']);
+      $source_attributes->setAttribute('height', $dimensions['height']);
+    }
+    return $source_attributes;
+  }
+
+  /**
+   * Determines the dimensions of an image.
+   *
+   * @param string $image_style_name
+   *   The name of the style to be used to alter the original image.
+   * @param array $dimensions
+   *   An associative array containing:
+   *   - width: The width of the source image (if known).
+   *   - height: The height of the source image (if known).
+   * @param string $uri
+   *   The URI of the image file.
+   *
+   * @return array
+   *   Dimensions to be modified - an array with components width and height, in
+   *   pixels.
+   */
+  public function getImageDimensions(string $image_style_name, array $dimensions, string $uri): array {
+    // Determine the dimensions of the styled image.
+    if ($image_style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
+      $dimensions = [
+        'width' => 1,
+        'height' => 1,
+      ];
+    }
+    elseif ($entity = $this->entityTypeManager->getStorage('image_style')->load($image_style_name)) {
+      assert($entity instanceof ImageStyle);
+      $entity->transformDimensions($dimensions, $uri);
+    }
+
+    return $dimensions;
+  }
+
+  /**
+   * Determines the MIME type of an image.
+   *
+   * @param string $image_style_name
+   *   The image style that will be applied to the image.
+   * @param string $extension
+   *   The original extension of the image (without the leading dot).
+   *
+   * @return string|null
+   *   The MIME type of the image after the image style is applied, or NULL if
+   *   not found.
+   */
+  public function getMimeType(string $image_style_name, string $extension): ?string {
+    $extension = match ($image_style_name) {
+      // The file extension for the empty image is 'gif'.
+      ResponsiveImageStyleInterface::EMPTY_IMAGE => 'gif',
+      // If using the original image, the file extension is just passed on to
+      // the MIME type mapper.
+      ResponsiveImageStyleInterface::ORIGINAL_IMAGE => $extension,
+      // In all other cases, get the file extension of the derivative image from
+      // the image style configuration.
+      default => $this->entityTypeManager->getStorage('image_style')->load($image_style_name)->getDerivativeExtension($extension),
+    };
+
+    return $this->mimeTypeMap->getMimeTypeForExtension($extension);
+  }
+
+  /**
+   * Returns the given image style URL.
+   *
+   * Explicitly supports the special empty image as aa data: URL.
+   *
+   * @param string $style_name
+   *   Name of the image style.
+   * @param string $path
+   *   The path or URI to the original image.
+   *
+   * @return string
+   *   The image style URL.
+   */
+  public function getImageStyleUrl(string $style_name, string $path): string {
+    if ($style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
+      // The smallest data URI for a 1px square transparent GIF image.
+      // http://probablyprogramming.com/2009/03/15/the-tiniest-gif-ever
+      return 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+    }
+
+    $entity = ImageStyle::load($style_name);
+    if ($entity instanceof ImageStyle) {
+      return $this->fileUrlGenerator->transformRelative($entity->buildUrl($path));
+    }
+    return $this->fileUrlGenerator->generateString($path);
+  }
+
+}

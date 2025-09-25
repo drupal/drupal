@@ -71,30 +71,4 @@ class ResponsiveImageHooks {
     return NULL;
   }
 
-  /**
-   * Implements hook_theme().
-   */
-  #[Hook('theme')]
-  public function theme() : array {
-    return [
-      'responsive_image' => [
-        'variables' => [
-          'uri' => NULL,
-          'attributes' => [],
-          'responsive_image_style_id' => [],
-          'height' => NULL,
-          'width' => NULL,
-        ],
-      ],
-      'responsive_image_formatter' => [
-        'variables' => [
-          'item' => NULL,
-          'item_attributes' => NULL,
-          'url' => NULL,
-          'responsive_image_style_id' => NULL,
-        ],
-      ],
-    ];
-  }
-
 }

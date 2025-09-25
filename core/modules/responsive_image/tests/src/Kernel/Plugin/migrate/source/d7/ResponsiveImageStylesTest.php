@@ -24,6 +24,7 @@ class ResponsiveImageStylesTest extends MigrateSqlSourceTestBase {
   protected static $modules = [
     'migrate_drupal',
     'responsive_image',
+    'breakpoint',
   ];
 
   /**

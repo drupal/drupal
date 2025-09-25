@@ -1,2 +1,8 @@
 parameters:
   responsive_image.skip_procedural_hook_scan: true
+services:
+  logger.responsive_image:
+    parent: logger.channel_base
+    arguments: ['responsive_image']
+  Drupal\responsive_image\ResponsiveImageBuilder:
+    autowire: true
