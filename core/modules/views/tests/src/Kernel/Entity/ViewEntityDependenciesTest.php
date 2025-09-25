@@ -7,7 +7,7 @@ namespace Drupal\Tests\views\Kernel\Entity;
 use Drupal\comment\Entity\CommentType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -18,6 +18,8 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('views')]
 class ViewEntityDependenciesTest extends ViewsKernelTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * Views used by this test.
@@ -61,11 +63,10 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     ]);
     $comment_type->save();
 
-    $content_type = NodeType::create([
+    $content_type = $this->createContentType([
       'type' => $this->randomMachineName(),
       'name' => $this->randomString(),
     ]);
-    $content_type->save();
     $field_storage = FieldStorageConfig::create([
       'field_name' => $this->randomMachineName(),
       'entity_type' => 'node',
@@ -79,15 +80,6 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       'description' => $this->randomMachineName() . '_description',
       'settings' => [
         'comment_type' => $comment_type->id(),
-      ],
-    ])->save();
-    FieldConfig::create([
-      'field_storage' => FieldStorageConfig::loadByName('node', 'body'),
-      'bundle' => $content_type->id(),
-      'label' => $this->randomMachineName() . '_body',
-      'settings' => [
-        'display_summary' => TRUE,
-        'allowed_formats' => [],
       ],
     ])->save();
 

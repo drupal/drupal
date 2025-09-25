@@ -27,6 +27,11 @@ class CommentPreviewTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $profile = 'minimal';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['olivero_test', 'test_user_config'];
 
   /**

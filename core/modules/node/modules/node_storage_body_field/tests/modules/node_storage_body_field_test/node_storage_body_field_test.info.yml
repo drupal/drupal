@@ -1,0 +1,7 @@
+name: 'Node storage body field tests'
+type: module
+description: 'Tests the node_storage_body_field deprecated module.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:node_storage_body_field

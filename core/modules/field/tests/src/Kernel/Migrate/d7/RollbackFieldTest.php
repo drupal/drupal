@@ -52,7 +52,6 @@ class RollbackFieldTest extends MigrateFieldTest {
 
     // Check that fields that should persist have not been rolled back.
     $non_rolled_back_field_ids = [
-      'node.body',
       'comment.comment_body',
     ];
     foreach ($non_rolled_back_field_ids as $field_id) {

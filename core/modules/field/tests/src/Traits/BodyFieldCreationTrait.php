@@ -35,7 +35,9 @@ trait BodyFieldCreationTrait {
         'type' => 'text_with_summary',
         'entity_type' => $entityType,
         'cardinality' => $cardinality,
+        'persist_with_no_fields' => TRUE,
       ])->save();
+      $fieldStorage = FieldStorageConfig::loadByName($entityType, $fieldName);
     }
     if (!FieldConfig::loadByName($entityType, $bundle, $fieldName)) {
       FieldConfig::create([

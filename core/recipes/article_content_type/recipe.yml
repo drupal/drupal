@@ -8,7 +8,6 @@ install:
 config:
   strict:
     # Treat field storages strictly, since they influence the database layout.
-    - field.storage.node.body
     - field.storage.node.field_image
   import:
     node:
@@ -16,7 +15,6 @@ config:
       - core.entity_view_mode.node.full
       - core.entity_view_mode.node.rss
       - core.entity_view_mode.node.teaser
-      - field.storage.node.body
       - system.action.node_delete_action
       - system.action.node_make_sticky_action
       - system.action.node_make_unsticky_action

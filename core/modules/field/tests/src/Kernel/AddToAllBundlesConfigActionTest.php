@@ -9,11 +9,13 @@ use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\NodeType;
+use Drupal\Tests\field\Traits\BodyFieldCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
@@ -25,12 +27,20 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('field')]
 class AddToAllBundlesConfigActionTest extends KernelTestBase {
 
+  use BodyFieldCreationTrait;
   use RecipeTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'node', 'system', 'text', 'user'];
+  protected static $modules = [
+    'field',
+    'entity_test',
+    'entity_test_with_storage',
+    'system',
+    'text',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}
@@ -38,12 +48,14 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installEntitySchema('node');
-    NodeType::create([
+    $this->installEntitySchema('entity_test');
+    EntityTestHelper::createBundle('one');
+    EntityTestHelper::createBundle('two');
+    EntityTest::create([
       'type' => 'one',
       'name' => 'One',
     ])->save();
-    NodeType::create([
+    EntityTest::create([
       'type' => 'two',
       'name' => 'Two',
     ])->save();
@@ -55,21 +67,21 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
   public function testInstantiateNewFieldOnAllBundles(): void {
     // Ensure the body field doesn't actually exist yet.
     $storage_definitions = $this->container->get(EntityFieldManagerInterface::class)
-      ->getFieldStorageDefinitions('node');
+      ->getFieldStorageDefinitions('entity_test');
     $this->assertArrayNotHasKey('body', $storage_definitions);
 
-    $this->applyAction('field.storage.node.body');
+    $this->applyAction('field.storage.entity_test.body');
 
     // Fields and expected data exist.
     /** @var \Drupal\field\FieldConfigInterface[] $body_fields */
     $body_fields = $this->container->get(EntityTypeManagerInterface::class)
       ->getStorage('field_config')
       ->loadByProperties([
-        'entity_type' => 'node',
+        'entity_type' => 'entity_test',
         'field_name' => 'body',
       ]);
     ksort($body_fields);
-    $this->assertSame(['node.one.body', 'node.two.body'], array_keys($body_fields));
+    $this->assertSame(['entity_test.entity_test.body', 'entity_test.one.body', 'entity_test.two.body'], array_keys($body_fields));
     foreach ($body_fields as $field) {
       $this->assertSame('Body field label', $field->label());
       $this->assertSame('Set by config actions.', $field->getDescription());
@@ -86,9 +98,10 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
    * Tests that the action can be set to fail if the field already exists.
    */
   public function testFailIfExists(): void {
-    $this->installConfig('node');
+    $this->installConfig('entity_test');
+    $this->installConfig('entity_test_with_storage');
 
-    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    $field_storage = FieldStorageConfig::loadByName('entity_test', 'body');
     // Manually create the field.
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
@@ -98,17 +111,19 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
     $field->save();
 
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('Field node.one.body already exists.');
-    $this->applyAction('field.storage.node.body', TRUE);
+    $this->expectExceptionMessage('Field entity_test.one.body already exists.');
+    $this->applyAction('field.storage.entity_test.body', TRUE);
   }
 
   /**
    * Tests that the action will ignore existing fields by default.
    */
   public function testIgnoreExistingFields(): void {
-    $this->installConfig('node');
+    $this->installConfig('entity_test');
+    $this->installConfig('entity_test_with_storage');
 
-    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    $field_storage = FieldStorageConfig::loadByName('entity_test', 'body');
+    // Manually create the field.
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'one',
@@ -117,16 +132,16 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
     ]);
     $field->save();
 
-    $this->applyAction('field.storage.node.body');
+    $this->applyAction('field.storage.entity_test.body');
 
     // The existing field should not be changed.
-    $field = FieldConfig::loadByName('node', 'one', 'body');
+    $field = FieldConfig::loadByName('entity_test', 'one', 'body');
     $this->assertInstanceOf(FieldConfig::class, $field);
     $this->assertSame('Original label', $field->label());
     $this->assertSame('Original description', $field->getDescription());
 
     // But the new field should be created as expected.
-    $field = FieldConfig::loadByName('node', 'two', 'body');
+    $field = FieldConfig::loadByName('entity_test', 'two', 'body');
     $this->assertInstanceOf(FieldConfig::class, $field);
     $this->assertSame('Body field label', $field->label());
     $this->assertSame('Set by config actions.', $field->getDescription());
@@ -148,8 +163,8 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
 name: Instantiate field on all bundles
 config:
   import:
-    node:
-      - field.storage.node.body
+    entity_test_with_storage:
+      - field.storage.entity_test.body
   actions:
     $config_name:
       addToAllBundles:

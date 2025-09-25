@@ -39,6 +39,16 @@ class EntityNodeType extends EntityConfigBase {
     if ($row->getDestinationProperty('create_body')) {
       $node_type = $this->storage->load(reset($entity_ids));
       $field_storage = FieldStorageConfig::loadByName('node', 'body');
+      if (!$field_storage) {
+        FieldStorageConfig::create([
+          'field_name' => 'body',
+          'type' => 'text_with_summary',
+          'entity_type' => 'node',
+          'cardinality' => 1,
+          'persist_with_no_fields' => FALSE,
+        ])->save();
+        $field_storage = FieldStorageConfig::loadByName('node', 'body');
+      }
       $field = FieldConfig::loadByName('node', $node_type->id(), 'body');
 
       if (!$field) {
