@@ -182,13 +182,9 @@ class CommentTokenReplaceTest extends CommentTestBase {
     // user and term.
     $tests = [];
     $tests['[entity:comment-count]'] = 2;
-    $tests['[entity:comment-count-new]'] = 2;
     $tests['[node:comment-count]'] = 2;
-    $tests['[node:comment-count-new]'] = 2;
     $tests['[user:comment-count]'] = 1;
-    $tests['[user:comment-count-new]'] = 1;
     $tests['[term:comment-count]'] = 1;
-    $tests['[term:comment-count-new]'] = 1;
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['entity' => $node, 'node' => $node, 'user' => $user, 'term' => $term], ['langcode' => $language_interface->getId()]);

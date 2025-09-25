@@ -25,10 +25,12 @@ class CommentNewIndicatorTest extends CommentTestBase {
    * Use the main node listing to test rendering on teasers.
    *
    * @var array
-   *
-   * @todo Remove this dependency.
    */
-  protected static $modules = ['views'];
+  protected static $modules = [
+    'history',
+    // @todo Remove this dependency.
+    'views',
+  ];
 
   /**
    * {@inheritdoc}

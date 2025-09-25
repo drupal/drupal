@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\comment\Functional;
+namespace Drupal\Tests\history\Functional;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Tests\comment\Functional\CommentTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -16,7 +17,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests comments with other entities.
  */
-#[Group('comment')]
+#[Group('history')]
 #[RunTestsInSeparateProcesses]
 class CommentEntityTest extends CommentTestBase {
 

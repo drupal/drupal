@@ -29,7 +29,6 @@ abstract class CommentTestBase extends BrowserTestBase {
     'block',
     'comment',
     'node',
-    'history',
     'field_ui',
     'datetime',
   ];
