@@ -19,8 +19,6 @@ use PHPUnit\Framework\Attributes\UsesClass;
 #[CoversClass(ContextDefinition::class)]
 #[Group('Plugin')]
 #[UsesClass(\Drupal::class)]
-#[UsesClass(\Drupal::class)]
-#[UsesClass(\Drupal::class)]
 class ContextDefinitionTest extends UnitTestCase {
 
   /**

@@ -6,7 +6,7 @@ namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -15,9 +15,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests Drupal\Component\Plugin\Discovery\DiscoveryTrait.
  */
-#[CoversClass(DiscoveryTrait::class)]
+#[CoversTrait(DiscoveryTrait::class)]
 #[Group('Plugin')]
-#[UsesClass(PluginNotFoundException::class)]
 #[UsesClass(PluginNotFoundException::class)]
 class DiscoveryTraitTest extends TestCase {
 

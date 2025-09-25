@@ -6,7 +6,6 @@ namespace Drupal\Tests\system\Unit;
 
 use Drupal\Tests\system\Traits\TestTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
@@ -21,7 +20,6 @@ class TraitAccessTest extends UnitTestCase {
   /**
    * Tests \Drupal\Tests\system\Traits\TestTrait::getStuff().
    */
-  #[CoversNothing]
   public function testSimpleStuff(): void {
     $stuff = $this->getStuff();
     $this->assertSame($stuff, 'stuff', "Same old stuff");

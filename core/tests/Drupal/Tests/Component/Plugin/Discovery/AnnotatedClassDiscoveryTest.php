@@ -10,7 +10,6 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -58,7 +57,6 @@ class AnnotatedClassDiscoveryTest extends TestCase {
   /**
    * Make sure AnnotatedClassDiscovery never tries to autoload bad annotations.
    */
-  #[CoversNothing]
   #[DataProvider('provideBadAnnotations')]
   public function testAutoloadBadAnnotations($annotation): void {
     // Set up a class file in vfsStream.

@@ -6,18 +6,18 @@ namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait.
  */
-#[CoversClass(DiscoveryCachedTrait::class)]
+#[CoversTrait(DiscoveryCachedTrait::class)]
 #[Group('Plugin')]
-#[UsesClass(DiscoveryTrait::class)]
+#[UsesTrait(DiscoveryTrait::class)]
 class DiscoveryCachedTraitTest extends TestCase {
 
   /**
