@@ -9,9 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Stub of http_middleware class that is declared final but is not terminable.
+ * Stub of http_middleware class.
  */
-final class FinalTestNonTerminableHttpMiddlewareClass implements HttpKernelInterface {
+class TestHttpMiddlewareClass implements HttpKernelInterface {
 
   public function __construct(protected readonly HttpKernelInterface $inner) {
   }

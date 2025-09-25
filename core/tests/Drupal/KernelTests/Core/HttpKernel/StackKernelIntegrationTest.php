@@ -35,22 +35,19 @@ class StackKernelIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Tests that late middlewares are automatically flagged lazy.
+   * Tests that service closure middleware avoids creation of http kernel.
    */
-  public function testLazyLateMiddlewares(): void {
-    $this->assertFalse($this->container->getDefinition('http_middleware.reverse_proxy')->isLazy(), 'lazy flag on http_middleware.reverse_proxy definition is not set');
-    $this->assertFalse($this->container->getDefinition('http_middleware.kernel_pre_handle')->isLazy(), 'lazy flag on http_middleware.kernel_pre_handle definition is not set');
-    $this->assertFalse($this->container->getDefinition('http_middleware.session')->isLazy(), 'lazy flag on http_middleware.session definition is not set');
-    $this->assertFalse($this->container->getDefinition('http_kernel.basic')->isLazy(), 'lazy flag on http_kernel.basic definition is not set');
+  public function testServiceClosureMiddlewares(): void {
+    $this->assertFalse(\Drupal::getContainer()->initialized('http_kernel.basic'));
+    \Drupal::service('http_kernel');
+    $this->assertTrue(\Drupal::getContainer()->initialized('http_kernel.basic'));
 
+    // Page cache provides a service closure middleware.
     \Drupal::service('module_installer')->install(['page_cache']);
-    $this->container = \Drupal::service('kernel')->rebuildContainer();
 
-    $this->assertFalse($this->container->getDefinition('http_middleware.reverse_proxy')->isLazy(), 'lazy flag on http_middleware.reverse_proxy definition is not set');
-    $this->assertFalse($this->container->getDefinition('http_middleware.page_cache')->isLazy(), 'lazy flag on http_middleware.page_cache definition is not set');
-    $this->assertTrue($this->container->getDefinition('http_middleware.kernel_pre_handle')->isLazy(), 'lazy flag on http_middleware.kernel_pre_handle definition is automatically set if page_cache is enabled.');
-    $this->assertTrue($this->container->getDefinition('http_middleware.session')->isLazy(), 'lazy flag on http_middleware.session definition is automatically set if page_cache is enabled.');
-    $this->assertTrue($this->container->getDefinition('http_kernel.basic')->isLazy(), 'lazy flag on http_kernel.basic definition is automatically set if page_cache is enabled.');
+    $this->assertFalse(\Drupal::getContainer()->initialized('http_kernel.basic'));
+    \Drupal::service('http_kernel');
+    $this->assertFalse(\Drupal::getContainer()->initialized('http_kernel.basic'));
   }
 
 }

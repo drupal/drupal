@@ -14,6 +14,9 @@ use Symfony\Component\HttpKernel\TerminableInterface;
  */
 final class FinalTestHttpMiddlewareClass implements HttpKernelInterface, TerminableInterface {
 
+  public function __construct(protected readonly HttpKernelInterface $inner) {
+  }
+
   /**
    * {@inheritdoc}
    */

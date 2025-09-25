@@ -27,7 +27,7 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
   /**
    * A set of middlewares that are wrapped around this kernel.
    *
-   * @var array
+   * @var iterable<\Symfony\Component\HttpKernel\HttpKernelInterface>
    */
   private $middlewares = [];
 
@@ -36,10 +36,13 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The decorated kernel.
-   * @param array $middlewares
+   * @param iterable<\Symfony\Component\HttpKernel\HttpKernelInterface> $middlewares
    *   An array of previous middleware services.
    */
-  public function __construct(HttpKernelInterface $http_kernel, array $middlewares) {
+  public function __construct(HttpKernelInterface $http_kernel, iterable $middlewares) {
+    if (is_array($middlewares)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with an array of $middlewares is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. Pass in a lazy iterator instead. See https://www.drupal.org/node/3538740', E_USER_DEPRECATED);
+    }
     $this->httpKernel = $http_kernel;
     $this->middlewares = $middlewares;
   }

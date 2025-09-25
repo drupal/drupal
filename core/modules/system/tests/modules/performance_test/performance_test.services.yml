@@ -6,7 +6,7 @@ services:
   Drupal\performance_test\DatabaseEventEnabler:
     arguments: ['@database']
     tags:
-      - { name: http_middleware, priority: 1000, responder: true }
+      - { name: http_middleware, priority: 1000 }
   performance_test.cache_factory:
     class: Drupal\performance_test\Cache\CacheFactoryDecorator
     public: false

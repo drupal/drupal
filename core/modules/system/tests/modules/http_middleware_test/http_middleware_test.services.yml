@@ -2,4 +2,4 @@ services:
   http_middleware.alter_content_middleware:
     class: Drupal\http_middleware_test\StackMiddleware\AlterContentMiddleware
     tags:
-      - { name: http_middleware, priority: 100, responder: true }
+      - { name: http_middleware, priority: 100 }

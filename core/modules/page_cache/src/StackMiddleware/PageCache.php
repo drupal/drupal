@@ -26,10 +26,8 @@ class PageCache implements HttpKernelInterface {
 
   /**
    * The wrapped HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
-  protected $httpKernel;
+  protected \Closure $httpKernel;
 
   /**
    * The cache bin.
@@ -62,7 +60,7 @@ class PageCache implements HttpKernelInterface {
   /**
    * Constructs a PageCache object.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface|\Closure $http_kernel
    *   The decorated kernel.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache bin.
@@ -71,7 +69,11 @@ class PageCache implements HttpKernelInterface {
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of the response.
    */
-  public function __construct(HttpKernelInterface $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
+  public function __construct(HttpKernelInterface|\Closure $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
+    if ($http_kernel instanceof HttpKernelInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() without a service closure $http_kernel argument is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. See https://www.drupal.org/node/3538740', E_USER_DEPRECATED);
+      $http_kernel = static fn() => $http_kernel;
+    }
     $this->httpKernel = $http_kernel;
     $this->cache = $cache;
     $this->requestPolicy = $request_policy;
@@ -113,7 +115,7 @@ class PageCache implements HttpKernelInterface {
    *   A response object.
    */
   protected function pass(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
-    return $this->httpKernel->handle($request, $type, $catch);
+    return ($this->httpKernel)()->handle($request, $type, $catch);
   }
 
   /**
@@ -198,7 +200,7 @@ class PageCache implements HttpKernelInterface {
    */
   protected function fetch(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
     /** @var \Symfony\Component\HttpFoundation\Response $response */
-    $response = $this->httpKernel->handle($request, $type, $catch);
+    $response = ($this->httpKernel)()->handle($request, $type, $catch);
 
     // Only set the 'X-Drupal-Cache' header if caching is allowed for this
     // response.
