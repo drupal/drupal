@@ -3,7 +3,6 @@
 namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -109,18 +108,6 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
                 'fragment' => 'comments',
                 'url' => $entity->toUrl(),
               ];
-              if ($this->moduleHandler->moduleExists('history')) {
-                $links['comment-new-comments'] = [
-                  'title' => '',
-                  'url' => Url::fromRoute('<current>'),
-                  'attributes' => [
-                    'class' => 'hidden',
-                    'title' => $this->t('Jump to the first new comment.'),
-                    'data-history-node-last-comment-timestamp' => $entity->get($field_name)->last_comment_timestamp,
-                    'data-history-node-field-name' => $field_name,
-                  ],
-                ];
-              }
             }
           }
           // Provide a link to new comment form.
@@ -193,29 +180,6 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
           '#links' => $links,
           '#attributes' => ['class' => ['links', 'inline']],
         ];
-        if ($view_mode == 'teaser' && $this->moduleHandler->moduleExists('history') && $this->currentUser->isAuthenticated()) {
-          $entity_links['comment__' . $field_name]['#cache']['contexts'][] = 'user';
-          $entity_links['comment__' . $field_name]['#attached']['library'][] = 'comment/drupal.node-new-comments-link';
-          // Embed the metadata for the "X new comments" link (if any) on this
-          // entity.
-          $entity_links['comment__' . $field_name]['#attached']['drupalSettings']['history']['lastReadTimestamps'][$entity->id()] = history_read($entity->id());
-          $new_comments = $this->commentManager->getCountNewComments($entity);
-          if ($new_comments > 0) {
-            $page_number = $this->entityTypeManager
-              ->getStorage('comment')
-              ->getNewCommentPageNumber($entity->{$field_name}->comment_count, $new_comments, $entity, $field_name);
-            $query = $page_number ? ['page' => $page_number] : NULL;
-            $value = [
-              'new_comment_count' => (int) $new_comments,
-              'first_new_comment_link' => $entity->toUrl('canonical', [
-                'query' => $query,
-                'fragment' => 'new',
-              ])->toString(),
-            ];
-            $parents = ['comment', 'newCommentsLinks', $entity->getEntityTypeId(), $field_name, $entity->id()];
-            NestedArray::setValue($entity_links['comment__' . $field_name]['#attached']['drupalSettings'], $parents, $value);
-          }
-        }
       }
     }
     return $entity_links;

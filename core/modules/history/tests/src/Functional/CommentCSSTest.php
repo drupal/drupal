@@ -2,24 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\comment\Functional;
+namespace Drupal\Tests\history\Functional;
 
-use Drupal\comment\CommentInterface;
-use Drupal\comment\Entity\Comment;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
+use Drupal\comment\CommentInterface;
+use Drupal\Tests\comment\Functional\CommentTestBase;
 use Drupal\user\RoleInterface;
+use Drupal\comment\Entity\Comment;
+use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests CSS classes on comments.
  */
-#[Group('comment')]
-#[RunTestsInSeparateProcesses]
+#[Group('history')]
 class CommentCSSTest extends CommentTestBase {
 
   use GeneratePermutationsTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['history'];
 
   /**
    * The theme to install as the default for testing.
@@ -94,41 +98,19 @@ class CommentCSSTest extends CommentTestBase {
       // Request the node with the comment.
       $this->drupalGet('node/' . $node->id());
 
-      // Verify classes if the comment is visible for the current user.
+      // Verify the data-history-node-id attribute, which is necessary for the
+      // by-viewer class and the "new" indicator, see below.
+      $this->assertSession()->elementsCount('xpath', '//*[@data-history-node-id="' . $node->id() . '"]', 1);
+
+      // Verify the data-comment-timestamp attribute, which is used by the
+      // drupal.comment-new-indicator library to add a "new" indicator to each
+      // comment that was created or changed after the last time the current
+      // user read the corresponding node.
       if ($case['comment_status'] == CommentInterface::PUBLISHED || $case['user'] == 'admin') {
-        // Verify the by-anonymous class.
-        $comments = '//*[contains(@class, "comment") and contains(@class, "by-anonymous")]';
-        if ($case['comment_uid'] == 0) {
-          $this->assertSession()->elementsCount('xpath', $comments, 1);
-        }
-        else {
-          $this->assertSession()->elementNotExists('xpath', $comments);
-        }
-
-        // Verify the by-node-author class.
-        $comments = '//*[contains(@class, "comment") and contains(@class, "by-node-author")]';
-        if ($case['comment_uid'] > 0 && $case['comment_uid'] == $case['node_uid']) {
-          $this->assertSession()->elementsCount('xpath', $comments, 1);
-        }
-        else {
-          $this->assertSession()->elementNotExists('xpath', $comments);
-        }
-
-        // Verify the data-comment-user-id attribute, which is used by the
-        // drupal.comment-by-viewer library to add a by-viewer when the current
-        // user (the viewer) was the author of the comment. We do this in Java-
-        // Script to prevent breaking the render cache.
-        $this->assertSession()->elementsCount('xpath', '//*[contains(@class, "comment") and @data-comment-user-id="' . $case['comment_uid'] . '"]', 1);
-        $this->assertSession()->responseContains($this->getModulePath('comment') . '/js/comment-by-viewer.js');
-      }
-
-      // Verify the unpublished class.
-      $comments = '//*[contains(@class, "comment") and contains(@class, "unpublished")]';
-      if ($case['comment_status'] == CommentInterface::NOT_PUBLISHED && $case['user'] == 'admin') {
-        $this->assertSession()->elementsCount('xpath', $comments, 1);
-      }
-      else {
-        $this->assertSession()->elementNotExists('xpath', $comments);
+        $this->assertSession()->elementsCount('xpath', '//*[contains(@class, "comment")]/*[@data-comment-timestamp="' . $comment->getChangedTime() . '"]', 1);
+        $expectedJS = ($case['user'] !== 'anonymous');
+        $settings = $this->getDrupalSettings();
+        $this->assertSame($expectedJS, isset($settings['ajaxPageState']['libraries']) && in_array('history/drupal.comment-new-indicator', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.comment-new-indicator library is present.');
       }
     }
   }

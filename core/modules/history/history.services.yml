@@ -1,2 +1,8 @@
 parameters:
   history.skip_procedural_hook_scan: true
+services:
+  history.comment_link_builder:
+    class: Drupal\history\HistoryCommentLinkBuilder
+    decorates: 'comment.link_builder'
+    decoration_on_invalid: ignore
+    arguments: ['@history.comment_link_builder.inner', '@comment.manager', '@current_user', '@entity_type.manager']

@@ -2,6 +2,7 @@
 
 namespace Drupal\history\Hook;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\UserInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -16,6 +17,17 @@ use Drupal\Core\Hook\Attribute\Hook;
 class HistoryHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * Constructs a new HistoryHooks object.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user account.
+   */
+  public function __construct(
+    protected AccountInterface $currentUser,
+  ) {
+  }
 
   /**
    * Implements hook_help().
@@ -91,6 +103,30 @@ class HistoryHooks {
   #[Hook('user_delete')]
   public function userDelete($account): void {
     \Drupal::database()->delete('history')->condition('uid', $account->id())->execute();
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_view for comment entities.
+   */
+  #[Hook('comment_view')]
+  public function commentView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
+    if (!$this->currentUser->isAuthenticated()) {
+      return;
+    }
+
+    /** @var \Drupal\comment\CommentInterface $entity */
+    $commented_entity = $entity->getCommentedEntity();
+    if ($commented_entity?->getEntityTypeId() !== 'node') {
+      return;
+    }
+
+    $build[$entity->id()]['#attached']['library'][] = 'history/drupal.comment-new-indicator';
+
+    // Embed the metadata for the comment "new" indicators on this node.
+    $build[$entity->id()]['history'] = [
+      '#lazy_builder' => ['\Drupal\history\HistoryRenderCallback::lazyBuilder', [$commented_entity->id()]],
+      '#create_placeholder' => TRUE,
+    ];
   }
 
 }

@@ -120,7 +120,6 @@ class CommentViewBuilder extends EntityViewBuilder {
 
     // A counter to track the indentation level.
     $current_indent = 0;
-    $attach_history = $this->moduleHandler->moduleExists('history') && $this->currentUser->isAuthenticated();
 
     foreach ($entities as $id => $entity) {
       if ($build[$id]['#comment_threaded']) {
@@ -144,7 +143,6 @@ class CommentViewBuilder extends EntityViewBuilder {
       $commented_entity = $entity->getCommentedEntity();
       // Set defaults if the commented_entity does not exist.
       $bundle = $commented_entity ? $commented_entity->bundle() : '';
-      $is_node = $commented_entity ? $commented_entity->getEntityTypeId() === 'node' : NULL;
 
       $build[$id]['#entity'] = $entity;
       $build[$id]['#theme'] = 'comment__' . $entity->getFieldName() . '__' . $bundle;
@@ -168,15 +166,6 @@ class CommentViewBuilder extends EntityViewBuilder {
         $build[$id]['#attached'] = [];
       }
       $build[$id]['#attached']['library'][] = 'comment/drupal.comment-by-viewer';
-      if ($attach_history && $is_node) {
-        $build[$id]['#attached']['library'][] = 'comment/drupal.comment-new-indicator';
-
-        // Embed the metadata for the comment "new" indicators on this node.
-        $build[$id]['history'] = [
-          '#lazy_builder' => ['\Drupal\history\HistoryRenderCallback::lazyBuilder', [$commented_entity->id()]],
-          '#create_placeholder' => TRUE,
-        ];
-      }
     }
     if ($build[$id]['#comment_threaded']) {
       // The final comment must close up some hanging divs.

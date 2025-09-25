@@ -13076,12 +13076,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function Drupal\\\\comment\\\\history_read\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Unit/CommentLinkBuilderTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Unit\\\\CommentLinkBuilderTest\\:\\:getLinkCombinations\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

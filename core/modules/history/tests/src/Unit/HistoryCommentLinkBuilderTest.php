@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\comment\Unit;
+namespace Drupal\Tests\history\Unit;
 
 use Drupal\comment\CommentLinkBuilder;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
+use Drupal\history\HistoryCommentLinkBuilder;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -15,11 +16,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\comment\CommentLinkBuilder.
+ * This is duplicated from CommentLinkBuilderTest with history additions.
+ *
+ * @see \Drupal\Tests\comment\Unit\CommentLinkBuilderTest
  */
-#[CoversClass(CommentLinkBuilder::class)]
-#[Group('comment')]
-class CommentLinkBuilderTest extends UnitTestCase {
+#[CoversClass(HistoryCommentLinkBuilder::class)]
+#[Group('history')]
+class HistoryCommentLinkBuilderTest extends UnitTestCase {
 
   use GeneratePermutationsTrait;
 
@@ -73,6 +76,13 @@ class CommentLinkBuilderTest extends UnitTestCase {
   protected $commentLinkBuilder;
 
   /**
+   * The decorated comment link builder.
+   *
+   * @var \Drupal\comment\CommentLinkBuilderInterface
+   */
+  protected $decoratedCommentLinkBuilder;
+
+  /**
    * Prepares mocks for the test.
    */
   protected function setUp(): void {
@@ -84,6 +94,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
     $this->currentUser = $this->createMock('\Drupal\Core\Session\AccountProxyInterface');
     $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->moduleHandler, $this->stringTranslation, $this->entityTypeManager);
+    $this->decoratedCommentLinkBuilder = new HistoryCommentLinkBuilder($this->commentLinkBuilder, $this->commentManager, $this->currentUser, $this->entityTypeManager);
     $this->commentManager->expects($this->any())
       ->method('getFields')
       ->with('node')
@@ -107,6 +118,8 @@ class CommentLinkBuilderTest extends UnitTestCase {
    *   Context for the links.
    * @param bool $has_access_comments
    *   TRUE if the user has 'access comments' permission.
+   * @param bool $history_exists
+   *   TRUE if the history module exists.
    * @param bool $has_post_comments
    *   TRUE if the use has 'post comments' permission.
    * @param bool $is_anonymous
@@ -118,8 +131,12 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * @legacy-covers ::buildCommentedEntityLinks
    */
   #[DataProvider('getLinkCombinations')]
-  public function testCommentLinkBuilder(array $node_args, $context, $has_access_comments, $has_post_comments, $is_anonymous, $expected): void {
+  public function testCommentLinkBuilder(array $node_args, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected): void {
     $node = $this->getMockNode(...$node_args);
+    $this->moduleHandler->expects($this->any())
+      ->method('moduleExists')
+      ->with('history')
+      ->willReturn($history_exists);
     $this->currentUser->expects($this->any())
       ->method('hasPermission')
       ->willReturnMap([
@@ -132,7 +149,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $this->currentUser->expects($this->any())
       ->method('isAnonymous')
       ->willReturn($is_anonymous);
-    $links = $this->commentLinkBuilder->buildCommentedEntityLinks($node, $context);
+    $links = $this->decoratedCommentLinkBuilder->buildCommentedEntityLinks($node, $context);
     if (!empty($expected)) {
       if (!empty($links)) {
         foreach ($expected as $link => $detail) {
@@ -160,12 +177,13 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Data provider for ::testCommentLinkBuilder.
    */
-  public static function getLinkCombinations() {
+  public static function getLinkCombinations(): array {
     $cases = [];
     // No links should be created if the entity doesn't have the field.
     $cases[] = [
       [FALSE, CommentItemInterface::OPEN, CommentItemInterface::FORM_BELOW, 1],
       ['view_mode' => 'teaser'],
+      TRUE,
       TRUE,
       TRUE,
       TRUE,
@@ -179,6 +197,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
         TRUE,
         TRUE,
         TRUE,
+        TRUE,
         [],
       ];
     }
@@ -187,6 +206,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
       'is_anonymous' => [FALSE, TRUE],
       'comment_count' => [0, 1],
       'has_access_comments' => [0, 1],
+      'history_exists' => [FALSE, TRUE],
       'has_post_comments'   => [0, 1],
       'form_location'            => [CommentItemInterface::FORM_BELOW, CommentItemInterface::FORM_SEPARATE_PAGE],
       'comments'        => [
@@ -204,6 +224,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
         [TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']],
         ['view_mode' => $combination['view_mode']],
         $combination['has_access_comments'],
+        $combination['history_exists'],
         $combination['has_post_comments'],
         $combination['is_anonymous'],
       ];
@@ -212,6 +233,10 @@ class CommentLinkBuilderTest extends UnitTestCase {
       // user has access - we can output the comment count.
       if ($combination['comments'] && $combination['view_mode'] == 'teaser' && $combination['comment_count'] && $combination['has_access_comments']) {
         $expected['comment-comments'] = '1 comment';
+        // And if history module exists, we can show a 'new comments' link.
+        if ($combination['history_exists']) {
+          $expected['comment-new-comments'] = '';
+        }
       }
       // All view modes other than RSS.
       if ($combination['view_mode'] != 'rss') {
@@ -316,6 +341,19 @@ class CommentLinkBuilderTest extends UnitTestCase {
       ->willReturn($url);
 
     return $node;
+  }
+
+}
+
+namespace Drupal\history;
+
+if (!function_exists('history_read')) {
+
+  /**
+   * Gets a timestamp for the current user's last view of a specified node.
+   */
+  function history_read($nid): int {
+    return 0;
   }
 
 }
