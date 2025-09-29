@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 contact category source plugin.
- *
- * @legacy-covers \Drupal\contact\Plugin\migrate\source\ContactCategory
  */
 #[CoversClass(ContactCategory::class)]
 #[Group('contact')]

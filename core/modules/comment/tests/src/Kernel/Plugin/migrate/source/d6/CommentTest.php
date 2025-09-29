@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 comment source plugin.
- *
- * @legacy-covers \Drupal\comment\Plugin\migrate\source\d6\Comment
  */
 #[CoversClass(Comment::class)]
 #[Group('comment')]

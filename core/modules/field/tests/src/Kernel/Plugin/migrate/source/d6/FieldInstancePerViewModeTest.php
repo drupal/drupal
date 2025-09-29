@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 fields per view mode source plugin.
- *
- * @legacy-covers \Drupal\field\Plugin\migrate\source\d6\FieldInstancePerViewMode
  */
 #[CoversClass(FieldInstancePerViewMode::class)]
 #[Group('field')]

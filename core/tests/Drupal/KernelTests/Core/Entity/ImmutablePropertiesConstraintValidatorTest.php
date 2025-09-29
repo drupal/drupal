@@ -6,21 +6,23 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraint;
+use Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Exception\LogicException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 /**
  * Tests Immutable Properties Constraint Validator.
- *
- * @legacy-covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraint
- * @legacy-covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator
  */
 #[Group('Entity')]
 #[Group('Validation')]
+#[CoversClass(ImmutablePropertiesConstraint::class)]
+#[CoversClass(ImmutablePropertiesConstraintValidator::class)]
 class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
 
   /**

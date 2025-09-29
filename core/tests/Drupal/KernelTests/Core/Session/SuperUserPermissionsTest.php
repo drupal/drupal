@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Session;
 
+use Drupal\Core\DependencyInjection\Compiler\SuperUserAccessPolicyPass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test case for getting all permissions as a super user.
- *
- * @legacy-covers \Drupal\Core\DependencyInjection\Compiler\SuperUserAccessPolicyPass
  */
 #[Group('Session')]
+#[CoversClass(SuperUserAccessPolicyPass::class)]
 class SuperUserPermissionsTest extends KernelTestBase {
 
   use UserCreationTrait;

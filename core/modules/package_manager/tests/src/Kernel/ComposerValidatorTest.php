@@ -9,6 +9,8 @@ use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\ValidationResult;
+use Drupal\package_manager\Validator\ComposerValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -16,9 +18,9 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests Composer Validator.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\Validator\ComposerValidator
  */
 #[Group('package_manager')]
+#[CoversClass(ComposerValidator::class)]
 class ComposerValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;

@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore tnid
 /**
  * Tests d6_term_node source plugin.
- *
- * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d6\TermNode
  */
 #[CoversClass(TermNode::class)]
 #[Group('taxonomy')]

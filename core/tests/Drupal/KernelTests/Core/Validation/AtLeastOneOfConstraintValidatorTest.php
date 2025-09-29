@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Validation;
 
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\AtLeastOneOfConstraint;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\AtLeastOneOfConstraintValidator;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests AtLeastOneOf validation constraint with both valid and invalid values.
- *
- * @legacy-covers \Drupal\Core\Validation\Plugin\Validation\Constraint\AtLeastOneOfConstraint
- * @legacy-covers \Drupal\Core\Validation\Plugin\Validation\Constraint\AtLeastOneOfConstraintValidator
  */
 #[Group('Validation')]
+#[CoversClass(AtLeastOneOfConstraint::class)]
+#[CoversClass(AtLeastOneOfConstraintValidator::class)]
 class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
 
   /**

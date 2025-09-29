@@ -6,11 +6,13 @@ namespace Drupal\Tests\package_manager\Kernel\PathExcluder;
 
 use Drupal\Core\Serialization\Yaml;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
+use Drupal\package_manager\PathExcluder\GitExcluder;
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
 use Drupal\Tests\package_manager\Traits\ComposerInstallersTrait;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -18,9 +20,9 @@ use Symfony\Component\Filesystem\Filesystem;
  * Tests Git Excluder.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\PathExcluder\GitExcluder
  */
 #[Group('package_manager')]
+#[CoversClass(GitExcluder::class)]
 class GitExcluderTest extends PackageManagerKernelTestBase {
 
   use ComposerInstallersTrait;

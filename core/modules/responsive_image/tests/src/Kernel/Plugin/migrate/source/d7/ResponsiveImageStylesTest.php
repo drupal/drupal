@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 responsive image styles source plugin.
- *
- * @legacy-covers \Drupal\responsive_image\Plugin\migrate\source\d7\ResponsiveImageStyles
  */
 #[CoversClass(ResponsiveImageStyles::class)]
 #[Group('image')]

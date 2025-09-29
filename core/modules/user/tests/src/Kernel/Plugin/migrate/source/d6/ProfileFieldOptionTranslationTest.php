@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore objectid
 /**
  * Tests the field option translation source plugin.
- *
- * @legacy-covers \Drupal\user\Plugin\migrate\source\d6\ProfileFieldOptionTranslation
  */
 #[CoversClass(ProfileFieldOptionTranslation::class)]
 #[Group('migrate_drupal')]

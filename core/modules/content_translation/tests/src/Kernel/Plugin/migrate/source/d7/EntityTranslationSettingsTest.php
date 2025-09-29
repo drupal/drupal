@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests entity translation settings source plugin.
- *
- * @legacy-covers \Drupal\content_translation\Plugin\migrate\source\d7\EntityTranslationSettings
  */
 #[CoversClass(EntityTranslationSettings::class)]
 #[Group('content_translation')]

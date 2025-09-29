@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the config source plugin.
- *
- * @legacy-covers \Drupal\migrate_drupal\Plugin\migrate\source\d8\Config
  */
 #[CoversClass(Config::class)]
 #[IgnoreDeprecations]

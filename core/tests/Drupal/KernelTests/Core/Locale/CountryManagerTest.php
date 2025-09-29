@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Locale;
 
+use Drupal\Core\Locale\CountryManager;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Country Manager functionality.
- *
- * @legacy-covers Drupal\Core\Locale\CountryManager
  */
 #[Group('CountryManager')]
+#[CoversClass(CountryManager::class)]
 class CountryManagerTest extends KernelTestBase {
 
   /**

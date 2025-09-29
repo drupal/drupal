@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 block boxes source plugin.
- *
- * @legacy-covers \Drupal\block_content\Plugin\migrate\source\d6\Box
  */
 #[CoversClass(Box::class)]
 #[Group('block_content')]

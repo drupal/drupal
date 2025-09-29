@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
+use Drupal\block\Plugin\ConfigAction\PlaceBlock;
+use Drupal\block\Plugin\ConfigAction\PlaceBlockDeriver;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionManager;
@@ -12,16 +14,16 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests Config Actions.
- *
- * @legacy-covers \Drupal\block\Plugin\ConfigAction\PlaceBlock
- * @legacy-covers \Drupal\block\Plugin\ConfigAction\PlaceBlockDeriver
  */
 #[Group('block')]
+#[CoversClass(PlaceBlock::class)]
+#[CoversClass(PlaceBlockDeriver::class)]
 class ConfigActionsTest extends KernelTestBase {
 
   use BlockCreationTrait;

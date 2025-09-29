@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore objectid objectindex plid
 /**
  * Tests D6 i18n term localized source plugin.
- *
- * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d6\TermLocalizedTranslation
  */
 #[CoversClass(TermLocalizedTranslation::class)]
 #[Group('taxonomy')]

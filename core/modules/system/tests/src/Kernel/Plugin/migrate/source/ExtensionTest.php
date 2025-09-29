@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests legacy extension source plugin.
- *
- * @legacy-covers \Drupal\system\Plugin\migrate\source\Extension
  */
 #[CoversClass(Extension::class)]
 #[Group('migrate_drupal')]

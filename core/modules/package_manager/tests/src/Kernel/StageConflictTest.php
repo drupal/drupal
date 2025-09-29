@@ -12,6 +12,7 @@ use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\SandboxEvent;
 use Drupal\package_manager\Exception\SandboxException;
+use Drupal\package_manager\PackageManagerUninstallValidator;
 use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager_bypass\LoggingCommitter;
 use PhpTuf\ComposerStager\API\Exception\PreconditionException;
@@ -25,11 +26,11 @@ use Psr\Log\LogLevel;
  * Tests Drupal\package_manager\SandboxManagerBase.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\PackageManagerUninstallValidator
  */
 #[CoversClass(SandboxManagerBase::class)]
 #[Group('package_manager')]
 #[Group('#slow')]
+#[CoversClass(PackageManagerUninstallValidator::class)]
 class StageConflictTest extends PackageManagerKernelTestBase {
 
   /**

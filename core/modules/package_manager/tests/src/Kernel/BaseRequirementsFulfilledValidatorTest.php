@@ -13,17 +13,18 @@ use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\ValidationResult;
 use Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator;
 use Drupal\package_manager\Validator\BaseRequirementValidatorTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Tests Base Requirements Fulfilled Validator.
- *
- * @legacy-covers \Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator
- * @legacy-covers \Drupal\package_manager\Validator\BaseRequirementValidatorTrait
  */
 #[Group('package_manager')]
+#[CoversClass(BaseRequirementsFulfilledValidator::class)]
+#[CoversTrait(BaseRequirementValidatorTrait::class)]
 class BaseRequirementsFulfilledValidatorTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
 
   use BaseRequirementValidatorTrait;

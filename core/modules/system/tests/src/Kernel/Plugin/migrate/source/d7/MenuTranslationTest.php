@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore objectid objectindex plid textgroup
 /**
  * Tests the menu translation source plugin.
- *
- * @legacy-covers Drupal\system\Plugin\migrate\source\d7\MenuTranslation
  */
 #[CoversClass(MenuTranslation::class)]
 #[Group('system')]

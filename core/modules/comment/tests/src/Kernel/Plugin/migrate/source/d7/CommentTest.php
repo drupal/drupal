@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore tnid
 /**
  * Tests D7 comment source plugin.
- *
- * @legacy-covers \Drupal\comment\Plugin\migrate\source\d7\Comment
  */
 #[CoversClass(Comment::class)]
 #[Group('comment')]

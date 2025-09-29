@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 filter format source plugin.
- *
- * @legacy-covers \Drupal\filter\Plugin\migrate\source\d7\FilterFormat
  */
 #[CoversClass(FilterFormat::class)]
 #[Group('filter')]

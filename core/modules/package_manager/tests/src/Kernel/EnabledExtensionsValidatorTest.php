@@ -9,7 +9,9 @@ use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
+use Drupal\package_manager\Validator\EnabledExtensionsValidator;
 use Drupal\Tests\package_manager\Traits\ComposerInstallersTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -17,9 +19,9 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests Enabled Extensions Validator.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\Validator\EnabledExtensionsValidator
  */
 #[Group('package_manager')]
+#[CoversClass(EnabledExtensionsValidator::class)]
 class EnabledExtensionsValidatorTest extends PackageManagerKernelTestBase {
 
   use ComposerInstallersTrait;

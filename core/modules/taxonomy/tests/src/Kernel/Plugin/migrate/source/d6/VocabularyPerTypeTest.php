@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 vocabulary per type source plugin.
- *
- * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyPerType
  */
 #[CoversClass(VocabularyPerType::class)]
 #[Group('taxonomy')]

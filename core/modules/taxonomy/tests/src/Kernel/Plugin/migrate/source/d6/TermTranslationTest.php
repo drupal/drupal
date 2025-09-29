@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore trid
 /**
  * Tests taxonomy term source plugin.
- *
- * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d6\Term
  */
 #[CoversClass(Term::class)]
 #[Group('taxonomy')]

@@ -9,7 +9,9 @@ use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
+use Drupal\package_manager\Validator\SymlinkValidator;
 use PhpTuf\ComposerStager\API\Environment\Service\EnvironmentInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
@@ -18,9 +20,9 @@ use Prophecy\Argument;
  * Tests Symlink Validator.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\Validator\SymlinkValidator
  */
 #[Group('package_manager')]
+#[CoversClass(SymlinkValidator::class)]
 class SymlinkValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;

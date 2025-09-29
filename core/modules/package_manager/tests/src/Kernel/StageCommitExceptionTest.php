@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\package_manager\Exception\ApplyFailedException;
 use Drupal\package_manager\Exception\SandboxException;
 use Drupal\package_manager\FailureMarker;
+use Drupal\package_manager\PackageManagerUninstallValidator;
 use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager_bypass\LoggingCommitter;
 use PhpTuf\ComposerStager\API\Exception\ExceptionInterface;
@@ -22,10 +23,10 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests Drupal\package_manager\SandboxManagerBase.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\PackageManagerUninstallValidator
  */
 #[CoversClass(SandboxManagerBase::class)]
 #[Group('package_manager')]
+#[CoversClass(PackageManagerUninstallValidator::class)]
 class StageCommitExceptionTest extends PackageManagerKernelTestBase {
 
   /**

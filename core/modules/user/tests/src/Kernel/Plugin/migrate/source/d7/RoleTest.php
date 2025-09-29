@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the d7_user_role source plugin.
- *
- * @legacy-covers \Drupal\user\Plugin\migrate\source\d7\Role
  */
 #[CoversClass(Role::class)]
 #[Group('user')]

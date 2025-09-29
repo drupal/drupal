@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore mlid objectid objectindex plid tsid textgroup
 /**
  * Tests menu link localized translation source plugin.
- *
- * @legacy-covers \Drupal\menu_link_content\Plugin\migrate\source\d7\MenuLinkTranslation
  */
 #[CoversClass(MenuLinkTranslation::class)]
 #[Group('menu_link_content')]

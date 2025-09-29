@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 field instance per form display source plugin.
- *
- * @legacy-covers \Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay
  */
 #[CoversClass(FieldInstancePerFormDisplay::class)]
 #[Group('field')]

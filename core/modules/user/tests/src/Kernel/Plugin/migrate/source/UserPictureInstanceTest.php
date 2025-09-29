@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the user_picture_instance source plugin.
- *
- * @legacy-covers \Drupal\user\Plugin\migrate\source\UserPictureInstance
  */
 #[CoversClass(UserPictureInstance::class)]
 #[Group('user')]

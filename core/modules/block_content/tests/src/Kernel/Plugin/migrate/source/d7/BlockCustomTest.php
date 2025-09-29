@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests d7_block_custom source plugin.
- *
- * @legacy-covers \Drupal\block_content\Plugin\migrate\source\d7\BlockCustom
  */
 #[CoversClass(BlockCustom::class)]
 #[Group('block_content')]

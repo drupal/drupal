@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore filefield
 /**
  * Tests d6_field_instance_per_form_display source plugin.
- *
- * @legacy-covers \Drupal\field\Plugin\migrate\source\d6\FieldInstancePerFormDisplay
  */
 #[CoversClass(FieldInstancePerFormDisplay::class)]
 #[Group('field')]

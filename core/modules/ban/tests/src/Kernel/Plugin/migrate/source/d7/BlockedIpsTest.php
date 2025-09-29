@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests D7 blocked_ip source plugin.
- *
- * @legacy-covers \Drupal\ban\Plugin\migrate\source\d7\BlockedIps
  */
 #[CoversClass(BlockedIps::class)]
 #[Group('ban')]

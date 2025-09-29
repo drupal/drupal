@@ -8,14 +8,14 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Recipe\InstallConfigurator;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Install Configurator.
- *
- * @legacy-covers \Drupal\Core\Recipe\InstallConfigurator
  */
 #[Group('Recipe')]
+#[CoversClass(InstallConfigurator::class)]
 class InstallConfiguratorTest extends KernelTestBase {
 
   /**

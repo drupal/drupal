@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 view mode source plugin.
- *
- * @legacy-covers \Drupal\node\Plugin\migrate\source\d6\ViewMode
  */
 #[CoversClass(ViewMode::class)]
 #[Group('node')]

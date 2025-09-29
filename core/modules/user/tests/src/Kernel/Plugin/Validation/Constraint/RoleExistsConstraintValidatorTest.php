@@ -7,17 +7,19 @@ namespace Drupal\Tests\user\Kernel\Plugin\Validation\Constraint;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
+use Drupal\user\Plugin\Validation\Constraint\RoleExistsConstraint;
+use Drupal\user\Plugin\Validation\Constraint\RoleExistsConstraintValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
  * Tests Role Exists Constraint Validator.
- *
- * @legacy-covers \Drupal\user\Plugin\Validation\Constraint\RoleExistsConstraint
- * @legacy-covers \Drupal\user\Plugin\Validation\Constraint\RoleExistsConstraintValidator
  */
 #[Group('user')]
 #[Group('Validation')]
+#[CoversClass(RoleExistsConstraint::class)]
+#[CoversClass(RoleExistsConstraintValidator::class)]
 class RoleExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

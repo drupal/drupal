@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore mlid plid
 /**
  * Tests D7 Shortcut source plugin.
- *
- * @legacy-covers Drupal\shortcut\Plugin\migrate\source\d7\Shortcut
  */
 #[CoversClass(Shortcut::class)]
 #[Group('shortcut')]

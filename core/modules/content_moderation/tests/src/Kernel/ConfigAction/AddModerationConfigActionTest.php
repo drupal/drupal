@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_moderation\Kernel\ConfigAction;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\content_moderation\Plugin\ConfigAction\AddModeration;
+use Drupal\content_moderation\Plugin\ConfigAction\AddModerationDeriver;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
@@ -13,16 +15,16 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\workflows\Entity\Workflow;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Add Moderation Config Action.
- *
- * @legacy-covers \Drupal\content_moderation\Plugin\ConfigAction\AddModeration
- * @legacy-covers \Drupal\content_moderation\Plugin\ConfigAction\AddModerationDeriver
  */
 #[Group('content_moderation')]
 #[Group('Recipe')]
+#[CoversClass(AddModeration::class)]
+#[CoversClass(AddModerationDeriver::class)]
 class AddModerationConfigActionTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore objectid objectindex plid textgroup
 /**
  * Tests D7 i18n vocabulary source plugin.
- *
- * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d7\VocabularyTranslation
  */
 #[CoversClass(VocabularyTranslation::class)]
 #[Group('taxonomy')]

@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
+use Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator;
+use Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator;
+use Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator;
+use Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator;
+use Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\EditorInterface;
@@ -12,6 +17,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
@@ -20,14 +26,14 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Tests Validators.
  *
- * @legacy-covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
- * @legacy-covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
- * @legacy-covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
  * @legacy-covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair
- * @legacy-covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
- * @legacy-covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator
  */
 #[Group('ckeditor5')]
+#[CoversClass(ToolbarItemConstraintValidator::class)]
+#[CoversClass(ToolbarItemDependencyConstraintValidator::class)]
+#[CoversClass(EnabledConfigurablePluginsConstraintValidator::class)]
+#[CoversClass(FundamentalCompatibilityConstraintValidator::class)]
+#[CoversClass(CKEditor5MediaAndFilterSettingsInSyncConstraintValidator::class)]
 class ValidatorsTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;

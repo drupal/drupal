@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the language source plugin.
- *
- * @legacy-covers \Drupal\language\Plugin\migrate\source\Language
  */
 #[CoversClass(Language::class)]
 #[Group('language')]

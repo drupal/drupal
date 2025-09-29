@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 file source plugin.
- *
- * @legacy-covers \Drupal\file\Plugin\migrate\source\d7\File
  */
 #[CoversClass(File::class)]
 #[Group('file')]

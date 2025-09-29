@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests i18ntaxonomy vocabulary setting source plugin.
- *
- * @legacy-covers \Drupal\language\Plugin\migrate\source\d6\LanguageContentSettingsTaxonomyVocabulary
  */
 #[CoversClass(LanguageContentSettingsTaxonomyVocabulary::class)]
 #[Group('language')]

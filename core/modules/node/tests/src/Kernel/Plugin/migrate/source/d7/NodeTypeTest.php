@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 node type source plugin.
- *
- * @legacy-covers \Drupal\node\Plugin\migrate\source\d7\NodeType
  */
 #[CoversClass(NodeType::class)]
 #[Group('node')]

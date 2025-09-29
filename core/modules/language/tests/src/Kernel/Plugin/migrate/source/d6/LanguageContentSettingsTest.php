@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests menu source plugin.
- *
- * @legacy-covers \Drupal\language\Plugin\migrate\source\d6\LanguageContentSettings
  */
 #[CoversClass(LanguageContentSettings::class)]
 #[Group('language')]

@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the variable source plugin.
- *
- * @legacy-covers \Drupal\migrate_drupal\Plugin\migrate\source\d6\VariableTranslation
  */
 #[CoversClass(VariableTranslation::class)]
 #[Group('migrate_drupal')]

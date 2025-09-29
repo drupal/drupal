@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore optionwidgets selectlist objectid objectindex plid
 /**
  * Tests the field option translation source plugin.
- *
- * @legacy-covers \Drupal\field\Plugin\migrate\source\d6\FieldOptionTranslation
  */
 #[CoversClass(FieldOptionTranslation::class)]
 #[Group('migrate_drupal')]

@@ -11,17 +11,19 @@ use Drupal\package_manager\Event\PostCreateEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
+use Drupal\package_manager\Validator\OverwriteExistingPackagesValidator;
 use Drupal\package_manager\Validator\SupportedReleaseValidator;
 use Drupal\Tests\package_manager\Traits\ComposerInstallersTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Overwrite Existing Packages Validator.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\Validator\OverwriteExistingPackagesValidator
  */
 #[Group('package_manager')]
+#[CoversClass(OverwriteExistingPackagesValidator::class)]
 class OverwriteExistingPackagesValidatorTest extends PackageManagerKernelTestBase {
 
   use ComposerInstallersTrait;

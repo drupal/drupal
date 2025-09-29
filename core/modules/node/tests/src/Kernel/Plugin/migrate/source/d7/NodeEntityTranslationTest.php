@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore tnid
 /**
  * Tests Drupal 7 node entity translations source plugin.
- *
- * @legacy-covers \Drupal\node\Plugin\migrate\source\d7\NodeEntityTranslation
  */
 #[CoversClass(NodeEntityTranslation::class)]
 #[Group('node')]

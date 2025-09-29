@@ -12,7 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 /**
  * Tests SqlBase source count caching.
  *
- * @legacy-covers \Drupal\migrate_sql_count_cache_test\Plugin\migrate\source\SqlCountCache
  * @legacy-covers \Drupal\migrate\Plugin\migrate\source\SqlBase::doCount
  * @legacy-covers \Drupal\migrate\Plugin\migrate\source\SourcePluginBase::count
  */

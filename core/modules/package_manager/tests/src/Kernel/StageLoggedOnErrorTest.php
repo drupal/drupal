@@ -13,6 +13,7 @@ use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Exception\SandboxEventException;
+use Drupal\package_manager\PackageManagerUninstallValidator;
 use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager_test_validation\EventSubscriber\TestSubscriber;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -24,10 +25,10 @@ use Psr\Log\LogLevel;
  * Tests Drupal\package_manager\SandboxManagerBase.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\PackageManagerUninstallValidator
  */
 #[CoversClass(SandboxManagerBase::class)]
 #[Group('package_manager')]
+#[CoversClass(PackageManagerUninstallValidator::class)]
 class StageLoggedOnErrorTest extends PackageManagerKernelTestBase {
 
   /**

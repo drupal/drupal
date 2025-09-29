@@ -11,14 +11,14 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Admin Account Switcher.
- *
- * @legacy-covers \Drupal\Core\DefaultContent\AdminAccountSwitcher
  */
 #[Group('DefaultContent')]
+#[CoversClass(AdminAccountSwitcher::class)]
 class AdminAccountSwitcherTest extends KernelTestBase {
 
   use UserCreationTrait;

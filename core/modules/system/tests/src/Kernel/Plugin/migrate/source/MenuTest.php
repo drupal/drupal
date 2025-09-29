@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests menu source plugin.
- *
- * @legacy-covers Drupal\system\Plugin\migrate\source\Menu
  */
 #[CoversClass(Menu::class)]
 #[Group('system')]

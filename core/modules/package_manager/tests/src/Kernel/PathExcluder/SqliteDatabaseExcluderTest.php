@@ -11,6 +11,7 @@ use Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder;
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -20,9 +21,9 @@ use Symfony\Component\DependencyInjection\Reference;
  * Tests Sqlite Database Excluder.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder
  */
 #[Group('package_manager')]
+#[CoversClass(SqliteDatabaseExcluder::class)]
 class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
 
   /**

@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore uploadsize
 /**
  * Tests D6 d6_upload_instance source plugin.
- *
- * @legacy-covers \Drupal\file\Plugin\migrate\source\d6\UploadInstance
  */
 #[CoversClass(UploadInstance::class)]
 #[Group('file')]

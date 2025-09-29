@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore tnid
 /**
  * Tests D7 node source plugin.
- *
- * @legacy-covers \Drupal\node\Plugin\migrate\source\d7\Node
  */
 #[CoversClass(Node::class)]
 #[Group('node')]

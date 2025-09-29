@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore tnid
 /**
  * Tests D6 node source plugin with 'node_type' configuration.
- *
- * @legacy-covers \Drupal\node\Plugin\migrate\source\d6\Node
  */
 #[CoversClass(Node::class)]
 #[Group('node')]

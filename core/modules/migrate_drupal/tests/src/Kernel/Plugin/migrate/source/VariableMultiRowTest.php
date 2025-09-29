@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore multirow
 /**
  * Tests the variable multirow source plugin.
- *
- * @legacy-covers \Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow
  */
 #[CoversClass(VariableMultiRow::class)]
 #[Group('migrate_drupal')]

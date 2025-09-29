@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the profile_field source plugin.
- *
- * @legacy-covers \Drupal\user\Plugin\migrate\source\ProfileField
  */
 #[CoversClass(ProfileField::class)]
 #[Group('user')]

@@ -10,8 +10,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the taxonomy term source with vocabulary filter.
- *
- * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d6\Term
  */
 #[CoversClass(Term::class)]
 #[Group('taxonomy')]

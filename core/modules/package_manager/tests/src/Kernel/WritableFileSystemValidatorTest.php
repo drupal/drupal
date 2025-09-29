@@ -8,6 +8,8 @@ use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\ValidationResult;
+use Drupal\package_manager\Validator\WritableFileSystemValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Filesystem;
@@ -21,9 +23,9 @@ use Symfony\Component\Filesystem\Filesystem;
  * @see \Drupal\Tests\auto_updates\Build\CoreUpdateTest::assertReadOnlyFileSystemError()
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\Validator\WritableFileSystemValidator
  */
 #[Group('package_manager')]
+#[CoversClass(WritableFileSystemValidator::class)]
 class WritableFileSystemValidatorTest extends PackageManagerKernelTestBase {
 
   /**

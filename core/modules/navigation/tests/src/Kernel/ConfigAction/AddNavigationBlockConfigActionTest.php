@@ -9,16 +9,17 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\navigation\Plugin\ConfigAction\AddNavigationBlock;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests Add Navigation Block Config Action.
- *
- * @legacy-covers \Drupal\navigation\Plugin\ConfigAction\AddNavigationBlock
  */
 #[Group('navigation')]
 #[Group('Recipe')]
+#[CoversClass(AddNavigationBlock::class)]
 class AddNavigationBlockConfigActionTest extends KernelTestBase {
 
   use RecipeTestTrait;

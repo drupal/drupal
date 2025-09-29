@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 ShortcutSetUsers source plugin.
- *
- * @legacy-covers Drupal\shortcut\Plugin\migrate\source\d7\ShortcutSetUsers
  */
 #[CoversClass(ShortcutSetUsers::class)]
 #[Group('shortcut')]

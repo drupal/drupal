@@ -6,20 +6,22 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraint;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraintValidator;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
  * Tests Entity Bundle Exists Constraint Validator.
- *
- * @legacy-covers \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraint
- * @legacy-covers \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraintValidator
  */
 #[Group('Entity')]
 #[Group('Validation')]
+#[CoversClass(EntityBundleExistsConstraint::class)]
+#[CoversClass(EntityBundleExistsConstraintValidator::class)]
 class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

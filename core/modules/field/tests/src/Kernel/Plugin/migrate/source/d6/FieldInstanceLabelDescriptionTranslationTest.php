@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore objectid
 /**
  * Tests the field label and description translation source plugin.
- *
- * @legacy-covers \Drupal\field\Plugin\migrate\source\d6\FieldLabelDescriptionTranslation
  */
 #[CoversClass(FieldLabelDescriptionTranslation::class)]
 #[Group('migrate_drupal')]

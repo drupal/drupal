@@ -7,15 +7,16 @@ namespace Drupal\Tests\package_manager\Kernel;
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
+use Drupal\package_manager\EventSubscriber\ChangeLogger;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LogLevel;
 
 /**
  * Tests Change Logger.
- *
- * @legacy-covers \Drupal\package_manager\EventSubscriber\ChangeLogger
  */
 #[Group('package_manager')]
+#[CoversClass(ChangeLogger::class)]
 class ChangeLoggerTest extends PackageManagerKernelTestBase {
 
   /**

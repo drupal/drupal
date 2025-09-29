@@ -7,8 +7,10 @@ namespace Drupal\Tests\package_manager\Kernel\PathExcluder;
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Component\FileSystem\FileSystem as DrupalFileSystem;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\package_manager\PathExcluder\UnknownPathExcluder;
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,9 +19,9 @@ use Symfony\Component\Filesystem\Filesystem;
  * Tests Unknown Path Excluder.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\PathExcluder\UnknownPathExcluder
  */
 #[Group('package_manager')]
+#[CoversClass(UnknownPathExcluder::class)]
 class UnknownPathExcluderTest extends PackageManagerKernelTestBase {
 
   /**

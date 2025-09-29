@@ -9,6 +9,7 @@ use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Recipe\ConsoleInputCollector;
 use Drupal\Core\Recipe\InputCollectorInterface;
+use Drupal\Core\Recipe\InputConfigurator;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\Core\TypedData\DataDefinitionInterface;
@@ -16,6 +17,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,10 +27,9 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
  * Tests Input.
- *
- * @legacy-covers \Drupal\Core\Recipe\InputConfigurator
  */
 #[Group('Recipe')]
+#[CoversClass(InputConfigurator::class)]
 class InputTest extends KernelTestBase {
 
   use RecipeTestTrait;

@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\media\OEmbed\ProviderException;
+use Drupal\media\OEmbed\ProviderRepository;
 use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the oEmbed provider repository.
- *
- * @legacy-covers \Drupal\media\OEmbed\ProviderRepository
  */
 #[Group('media')]
+#[CoversClass(ProviderRepository::class)]
 class ProviderRepositoryTest extends MediaKernelTestBase {
 
   /**

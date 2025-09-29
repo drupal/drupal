@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel\PathExcluder;
 
+use Drupal\package_manager\PathExcluder\VendorHardeningExcluder;
 use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Vendor Hardening Excluder.
  *
  * @internal
- * @legacy-covers \Drupal\package_manager\PathExcluder\VendorHardeningExcluder
  */
 #[Group('package_manager')]
+#[CoversClass(VendorHardeningExcluder::class)]
 class VendorHardeningExcluderTest extends PackageManagerKernelTestBase {
 
   /**

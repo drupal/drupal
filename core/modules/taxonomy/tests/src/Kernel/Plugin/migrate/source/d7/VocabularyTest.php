@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 vocabulary source plugin.
- *
- * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d7\Vocabulary
  */
 #[CoversClass(Vocabulary::class)]
 #[Group('taxonomy')]

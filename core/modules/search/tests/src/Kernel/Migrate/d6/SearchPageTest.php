@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D6 search page source plugin.
- *
- * @legacy-covers \Drupal\search\Plugin\migrate\source\d6\SearchPage
  */
 #[CoversClass(SearchPage::class)]
 #[Group('search')]

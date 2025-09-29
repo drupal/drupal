@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests actions source plugin.
- *
- * @legacy-covers \Drupal\system\Plugin\migrate\source\Action
  */
 #[CoversClass(Action::class)]
 #[Group('action')]

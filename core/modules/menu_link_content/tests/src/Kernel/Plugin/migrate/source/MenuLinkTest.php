@@ -14,8 +14,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore mlid plid tsid
 /**
  * Tests the menu link source plugin.
- *
- * @legacy-covers \Drupal\menu_link_content\Plugin\migrate\source\MenuLink
  */
 #[CoversClass(MenuLink::class)]
 #[Group('menu_link_content')]

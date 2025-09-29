@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the config source plugin.
- *
- * @legacy-covers \Drupal\migrate\Plugin\migrate\source\ConfigEntity
  */
 #[CoversClass(ConfigEntity::class)]
 #[Group('migrate')]

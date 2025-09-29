@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Extension;
 
+use Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint;
+use Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraintValidator;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ExtensionExists constraint validator.
- *
- * @legacy-covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint
- * @legacy-covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraintValidator
  */
 #[Group('Validation')]
+#[CoversClass(ExtensionExistsConstraint::class)]
+#[CoversClass(ExtensionExistsConstraintValidator::class)]
 class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

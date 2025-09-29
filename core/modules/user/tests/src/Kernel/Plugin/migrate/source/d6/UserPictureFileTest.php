@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the d6_user_picture_file source plugin.
- *
- * @legacy-covers \Drupal\user\Plugin\migrate\source\d6\UserPictureFile
  */
 #[CoversClass(UserPictureFile::class)]
 #[Group('user')]

@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore objectid
 /**
  * Tests the i18nProfileField source plugin.
- *
- * @legacy-covers \Drupal\config_translation\Plugin\migrate\source\d6\ProfileFieldTranslation
  */
 #[CoversClass(ProfileFieldTranslation::class)]
 #[Group('migrate_drupal')]

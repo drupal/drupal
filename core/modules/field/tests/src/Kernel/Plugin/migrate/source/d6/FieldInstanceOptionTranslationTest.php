@@ -10,8 +10,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the field instance option translation source plugin.
- *
- * @legacy-covers \Drupal\field\Plugin\migrate\source\d6\FieldInstanceOptionTranslation
  */
 #[CoversClass(FieldInstanceOptionTranslation::class)]
 #[Group('migrate_drupal')]

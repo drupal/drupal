@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests i18n block source plugin.
- *
- * @legacy-covers \Drupal\block\Plugin\migrate\source\d6\BlockTranslation
  */
 #[CoversClass(BlockTranslation::class)]
 #[Group('content_translation')]

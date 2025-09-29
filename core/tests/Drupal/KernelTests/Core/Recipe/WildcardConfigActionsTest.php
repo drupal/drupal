@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Recipe;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionException;
+use Drupal\Core\Config\Action\Plugin\ConfigAction\CreateForEachBundle;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\InvalidConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
@@ -18,6 +19,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -25,10 +27,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests config actions targeting multiple entities using wildcards.
- *
- * @legacy-covers \Drupal\Core\Config\Action\Plugin\ConfigAction\CreateForEachBundle
  */
 #[Group('Recipe')]
+#[CoversClass(CreateForEachBundle::class)]
 class WildcardConfigActionsTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

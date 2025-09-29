@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 theme settings source plugin.
- *
- * @legacy-covers Drupal\system\Plugin\migrate\source\d7\ThemeSettings
  */
 #[CoversClass(ThemeSettings::class)]
 #[Group('system')]

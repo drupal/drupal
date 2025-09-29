@@ -6,15 +6,16 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\ClassResolverConstraintValidator;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests ClassResolver validation constraint with both valid and invalid values.
- *
- * @legacy-covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ClassResolverConstraintValidator
  */
 #[Group('Validation')]
+#[CoversClass(ClassResolverConstraintValidator::class)]
 class ClassResolverConstraintValidatorTest extends KernelTestBase {
 
   /**

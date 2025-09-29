@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests block source plugin.
- *
- * @legacy-covers \Drupal\block\Plugin\migrate\source\Block
  */
 #[CoversClass(Block::class)]
 #[Group('block')]

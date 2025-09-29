@@ -7,6 +7,8 @@ namespace Drupal\KernelTests\Core\Recipe;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\Action\ConfigActionException;
+use Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\PermissionsPerBundleDeriver;
+use Drupal\Core\Config\Action\Plugin\ConfigAction\PermissionsPerBundle;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
@@ -16,16 +18,16 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests Permissions Per Bundle.
- *
- * @legacy-covers \Drupal\Core\Config\Action\Plugin\ConfigAction\PermissionsPerBundle
- * @legacy-covers \Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\PermissionsPerBundleDeriver
  */
 #[Group('Recipe')]
+#[CoversClass(PermissionsPerBundle::class)]
+#[CoversClass(PermissionsPerBundleDeriver::class)]
 class PermissionsPerBundleTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

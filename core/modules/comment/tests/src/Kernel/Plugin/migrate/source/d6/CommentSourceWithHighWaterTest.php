@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the Drupal 6 comment source w/ high water handling.
- *
- * @legacy-covers \Drupal\comment\Plugin\migrate\source\d6\Comment
  */
 #[CoversClass(Comment::class)]
 #[Group('comment')]

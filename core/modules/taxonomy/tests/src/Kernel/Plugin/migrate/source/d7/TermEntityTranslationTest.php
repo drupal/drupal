@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests taxonomy term entity translation source plugin.
- *
- * @legacy-covers \Drupal\taxonomy\Plugin\migrate\source\d7\TermEntityTranslation
  */
 #[CoversClass(TermEntityTranslation::class)]
 #[Group('taxonomy')]

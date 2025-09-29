@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore abantu tnid
 /**
  * Tests D6 d6_upload source plugin.
- *
- * @legacy-covers \Drupal\file\Plugin\migrate\source\d6\Upload
  */
 #[CoversClass(Upload::class)]
 #[Group('file')]

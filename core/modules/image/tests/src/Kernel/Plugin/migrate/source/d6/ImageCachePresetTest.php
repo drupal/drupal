@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore actionid imagecache presetid presetname
 /**
  * Tests the d6_imagecache_presets source plugin.
- *
- * @legacy-covers \Drupal\image\Plugin\migrate\source\d6\ImageCachePreset
  */
 #[CoversClass(ImageCachePreset::class)]
 #[Group('image')]

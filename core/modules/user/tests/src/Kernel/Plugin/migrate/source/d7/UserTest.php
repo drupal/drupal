@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the d7_user source plugin.
- *
- * @legacy-covers \Drupal\user\Plugin\migrate\source\d7\User
  */
 #[CoversClass(User::class)]
 #[Group('user')]

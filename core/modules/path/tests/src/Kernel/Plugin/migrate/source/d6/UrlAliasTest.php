@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the d6_url_alias source plugin.
- *
- * @legacy-covers \Drupal\path\Plugin\migrate\source\d6\UrlAlias
  */
 #[CoversClass(UrlAlias::class)]
 #[Group('path')]

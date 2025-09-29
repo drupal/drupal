@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Core\Config\Action\ConfigActionException;
+use Drupal\Core\Config\Action\Plugin\ConfigAction\EntityClone;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Entity Clone Config Action.
- *
- * @legacy-covers \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityClone
  */
 #[Group('Recipe')]
+#[CoversClass(EntityClone::class)]
 class EntityCloneConfigActionTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

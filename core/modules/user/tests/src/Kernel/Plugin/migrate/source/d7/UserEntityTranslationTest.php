@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 user entity translation source plugin.
- *
- * @legacy-covers \Drupal\user\Plugin\migrate\source\d7\UserEntityTranslation
  */
 #[CoversClass(UserEntityTranslation::class)]
 #[Group('user')]

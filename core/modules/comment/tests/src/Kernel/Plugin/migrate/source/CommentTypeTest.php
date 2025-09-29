@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the comment type source plugin.
- *
- * @legacy-covers \Drupal\comment\Plugin\migrate\source\CommentType
  */
 #[CoversClass(CommentType::class)]
 #[Group('comment')]

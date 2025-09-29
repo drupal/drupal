@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests D7 view mode source plugin.
- *
- * @legacy-covers \Drupal\field\Plugin\migrate\source\d7\ViewMode
  */
 #[CoversClass(ViewMode::class)]
 #[Group('field')]

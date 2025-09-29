@@ -10,8 +10,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the high water handling.
- *
- * @legacy-covers \Drupal\migrate_high_water_test\Plugin\migrate\source\HighWaterTest
  */
 #[CoversClass(HighWaterTest::class)]
 #[Group('migrate')]

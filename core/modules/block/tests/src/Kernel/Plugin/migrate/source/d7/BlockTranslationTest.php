@@ -12,8 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
 // cspell:ignore objectid objectindex plid textgroup
 /**
  * Tests i18n block source plugin.
- *
- * @legacy-covers \Drupal\block\Plugin\migrate\source\d7\BlockTranslation
  */
 #[CoversClass(BlockTranslation::class)]
 #[Group('content_translation')]
