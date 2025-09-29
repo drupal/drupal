@@ -144,6 +144,103 @@ class EntityApiTest extends EntityKernelTestBase {
   }
 
   /**
+   * Test lazy preloading.
+   */
+  public function testLazyPreLoading(): void {
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+    $ids = [];
+    $entity = $storage->create(['name' => 'test']);
+    $entity->save();
+    $ids[] = $entity->id();
+
+    $entity = $storage->create(['name' => 'test2']);
+    $entity->save();
+    $ids[] = $entity->id();
+
+    $fiber1 = new \Fiber(fn () => $storage->load($ids[0]));
+    $fiber2 = new \Fiber(fn () => $storage->load($ids[1]));
+
+    // Make sure the entity cache is empty.
+    $this->container->get('entity.memory_cache')->reset();
+
+    // Start Fiber 1, this should set the first entity to be loaded, without
+    // actually loading it, and then suspend.
+    $fiber1->start();
+    $this->assertTrue($fiber1->isSuspended());
+    $this->assertFalse($this->container->get('entity.memory_cache')->get('values:entity_test:' . $ids[0]));
+
+    // Start Fiber 2, this should set the first entity to be loaded, without
+    // actually loading it, and then suspend.
+    $fiber2->start();
+    $this->assertTrue($fiber2->isSuspended());
+    $this->assertFalse($this->container->get('entity.memory_cache')->get('values:entity_test:' . $ids[1]));
+
+    $fiber2->resume();
+
+    $this->assertTrue($fiber2->isTerminated());
+
+    $this->assertSame($fiber2->getReturn()->id(), $ids[1]);
+
+    // Now both entities should be loaded.
+    $this->assertNotFalse($this->container->get('entity.memory_cache')->get('values:entity_test:' . $ids[0]));
+    $this->assertNotFalse($this->container->get('entity.memory_cache')->get('values:entity_test:' . $ids[1]));
+    $fiber1->resume();
+    $this->assertTrue($fiber1->isTerminated());
+    $this->assertSame($fiber1->getReturn()->id(), $ids[0]);
+  }
+
+  /**
+   * Test lazy preloading.
+   */
+  public function testLazyPreLoadingMultiple(): void {
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+    $ids = [];
+    $entity = $storage->create(['name' => 'test']);
+    $entity->save();
+    $ids[] = $entity->id();
+
+    $entity = $storage->create(['name' => 'test2']);
+    $entity->save();
+    $ids[] = $entity->id();
+
+    $fiber1 = new \Fiber(fn () => $storage->loadMultiple([$ids[0]]));
+    $fiber2 = new \Fiber(fn () => $storage->loadMultiple([$ids[1]]));
+
+    // Make sure the entity cache is empty.
+    $this->container->get('entity.memory_cache')->reset();
+
+    // Start Fiber 1, this should set the first entity to be loaded, without
+    // actually loading it, and then suspend.
+    $fiber1->start();
+    $this->assertTrue($fiber1->isSuspended());
+    $this->assertFalse($this->container->get('entity.memory_cache')->get('values:entity_test:' . $ids[0]));
+
+    // Start Fiber 2, this should set the first entity to be loaded, without
+    // actually loading it, and then suspend.
+    $fiber2->start();
+    $this->assertTrue($fiber2->isSuspended());
+    $this->assertFalse($this->container->get('entity.memory_cache')->get('values:entity_test:' . $ids[1]));
+
+    $fiber2->resume();
+
+    $this->assertTrue($fiber2->isTerminated());
+
+    $return2 = $fiber2->getReturn();
+
+    $this->assertSame($return2[2]->id(), $ids[1]);
+    $this->assertSame(\count($return2), 1);
+
+    // Now both entities should be loaded.
+    $this->assertNotFalse($this->container->get('entity.memory_cache')->get('values:entity_test:' . $ids[0]));
+    $this->assertNotFalse($this->container->get('entity.memory_cache')->get('values:entity_test:' . $ids[1]));
+    $fiber1->resume();
+    $this->assertTrue($fiber1->isTerminated());
+    $return1 = $fiber1->getReturn();
+    $this->assertSame($return1[1]->id(), $ids[0]);
+    $this->assertSame(\count($return1), 1);
+  }
+
+  /**
    * Tests that the Entity storage loads the entities in the correct order.
    *
    * Entities should be returned in the same order as the passed IDs.

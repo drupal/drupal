@@ -90,6 +90,11 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected $memoryCacheTag;
 
   /**
+   * Entity IDs awaiting loading.
+   */
+  protected array $entityIdsToLoad = [];
+
+  /**
    * Constructs an EntityStorageBase instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -177,11 +182,9 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected function getFromStaticCache(array $ids) {
     $entities = [];
     // Load any available entities from the internal cache.
-    if ($this->entityType->isStaticallyCacheable()) {
-      foreach ($ids as $id) {
-        if ($cached = $this->memoryCache->get($this->buildCacheId($id))) {
-          $entities[$id] = $cached->data;
-        }
+    foreach ($ids as $id) {
+      if ($cached = $this->memoryCache->get($this->buildCacheId($id))) {
+        $entities[$id] = $cached->data;
       }
     }
     return $entities;
@@ -279,10 +282,36 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $flipped_ids = $ids ? array_flip($ids) : FALSE;
     // Try to load entities from the static cache, if the entity type supports
     // static caching.
-    if ($ids) {
+    if ($ids && $this->entityType->isStaticallyCacheable()) {
       $entities += $this->getFromStaticCache($ids);
-      // If any entities were loaded, remove them from the IDs still to load.
-      $ids = array_keys(array_diff_key($flipped_ids, $entities));
+      // If any entities were in the static cache remove them from the
+      // remaining IDs.
+      $ids = array_diff($ids, array_keys($entities));
+
+      $fiber = \Fiber::getCurrent();
+      if ($ids && $fiber !== NULL) {
+        // Before suspending the fiber, add the IDs passed in to the full list
+        // of entities to load, so that another call can load everything at
+        // once.
+        $this->entityIdsToLoad = array_unique(array_merge($this->entityIdsToLoad, $ids));
+        $fiber->suspend();
+
+        // At this point the entityIdsToLoad property will either have been
+        // reset within another Fiber, or will contain the IDs passed in as
+        // well as any others waiting to be loaded.
+        if ($this->entityIdsToLoad) {
+          $ids = $this->entityIdsToLoad;
+
+          // Reset the entityIdsToLoad property so that any further calls start
+          // with a blank slate (apart from the entity static cache).
+          $this->entityIdsToLoad = [];
+        }
+        $entities += $this->getFromStaticCache($ids);
+
+        // If any entities were in the static cache remove them from the
+        // remaining IDs.
+        $ids = array_diff($ids, array_keys($entities));
+      }
     }
 
     // Try to gather any remaining entities from a 'preload' method. This method
@@ -300,7 +329,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
       // If any entities were pre-loaded, remove them from the IDs still to
       // load.
-      $ids = array_keys(array_diff_key($flipped_ids, $entities));
+      $ids = array_diff($ids, array_keys($entities));
 
       // Add pre-loaded entities to the cache.
       $this->setStaticCache($preloaded_entities);
@@ -324,12 +353,19 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       $this->setStaticCache($queried_entities);
     }
 
-    // Ensure that the returned array is ordered the same as the original
-    // $ids array if this was passed in and remove any invalid IDs.
     if ($flipped_ids) {
-      // Remove any invalid IDs from the array and preserve the order passed in.
-      $flipped_ids = array_intersect_key($flipped_ids, $entities);
-      $entities = array_replace($flipped_ids, $entities);
+      // When IDs were passed in, ensure only entities that were loaded by this
+      // specific method call (e.g. not for other Fibers) are returned, and that
+      // any entities that could not be loaded are removed.
+      foreach ($flipped_ids as $entity_id => $value) {
+        if (isset($entities[$entity_id])) {
+          $flipped_ids[$entity_id] = $entities[$entity_id];
+        }
+        else {
+          unset($flipped_ids[$entity_id]);
+        }
+      }
+      $entities = $flipped_ids;
     }
 
     return $entities;

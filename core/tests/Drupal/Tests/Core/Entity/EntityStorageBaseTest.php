@@ -91,10 +91,10 @@ class EntityStorageBaseTest extends UnitTestCase {
 
     // Data set for results for all IDs.
     $ids = ['1', '2', '3'];
-    yield 'results-for-all-ids' => [$ids, $ids, $ids];
+    yield 'results-for-all-ids' => [array_combine($ids, $ids), array_combine($ids, $ids), $ids];
 
     // Data set for partial results for multiple IDs.
-    yield 'partial-results-for-multiple-ids' => [$ids, $ids, array_merge($ids, ['11', '12'])];
+    yield 'partial-results-for-multiple-ids' => [array_combine($ids, $ids), array_combine($ids, $ids), array_merge($ids, ['11', '12'])];
   }
 
   /**
