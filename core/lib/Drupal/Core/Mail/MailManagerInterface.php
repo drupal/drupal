@@ -106,7 +106,8 @@ interface MailManagerInterface extends PluginManagerInterface {
    *   to provide translatable markup to display as a message if an error
    *   occurs, or set this to false to disable error display.
    * @param string|null $reply
-   *   Optional email address to be used to answer.
+   *   (optional) The email address or addresses to set as the reply-to header.
+   *   The format must be the same as the $to parameter.
    * @param bool $send
    *   If TRUE, call an implementation of
    *   \Drupal\Core\Mail\MailInterface->mail() to deliver the message, and
