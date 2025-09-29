@@ -161,19 +161,19 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
     $args = func_get_args();
     $cacheability = $args[1] ?? new CacheableMetadata();
     $operations = [];
+    $variables = [
+      '@entity_label' => $entity->label(),
+      '@entity_bundle' => $entity->bundle(),
+      '@entity_id' => $entity->id(),
+    ];
+
     $update_access = $entity->access('update', return_as_object: TRUE);
     $cacheability->addCacheableDependency($update_access);
     if ($update_access->isAllowed() && $entity->hasLinkTemplate('edit-form')) {
       $edit_url = $this->ensureDestination($entity->toUrl('edit-form'));
-      if (!empty($entity->label())) {
-        $label = $this->t('Edit @entity_label', ['@entity_label' => $entity->label()]);
-      }
-      else {
-        $label = $this->t('Edit @entity_bundle @entity_id', [
-          '@entity_bundle' => $entity->bundle(),
-          '@entity_id' => $entity->id(),
-        ]);
-      }
+      $label = $entity->label()
+        ? $this->t('Edit @entity_label', $variables)
+        : $this->t('Edit @entity_bundle @entity_id', $variables);
       $attributes = $edit_url->getOption('attributes') ?: [];
       $attributes += ['aria-label' => $label];
       $edit_url->setOption('attributes', $attributes);
@@ -184,19 +184,14 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
         'url' => $edit_url,
       ];
     }
+
     $delete_access = $entity->access('delete', return_as_object: TRUE);
     $cacheability->addCacheableDependency($delete_access);
     if ($delete_access->isAllowed() && $entity->hasLinkTemplate('delete-form')) {
       $delete_url = $this->ensureDestination($entity->toUrl('delete-form'));
-      if (!empty($entity->label())) {
-        $label = $this->t('Delete @entity_label', ['@entity_label' => $entity->label()]);
-      }
-      else {
-        $label = $this->t('Delete @entity_bundle @entity_id', [
-          '@entity_bundle' => $entity->bundle(),
-          '@entity_id' => $entity->id(),
-        ]);
-      }
+      $label = $entity->label()
+        ? $this->t('Delete @entity_label', $variables)
+        : $this->t('Delete @entity_bundle @entity_id', $variables);
       $attributes = $delete_url->getOption('attributes') ?: [];
       $attributes += ['aria-label' => $label];
       $delete_url->setOption('attributes', $attributes);
@@ -212,6 +207,24 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
           ]),
         ],
         'url' => $delete_url,
+      ];
+    }
+
+    $view_access = $entity->access('view', return_as_object: TRUE);
+    $cacheability->addCacheableDependency($view_access);
+    if ($view_access->isAllowed() && $entity->hasLinkTemplate('canonical')) {
+      $view_url = $entity->toUrl('canonical');
+      $label = $entity->label()
+        ? $this->t('View @entity_label', $variables)
+        : $this->t('View @entity_bundle @entity_id', $variables);
+      $attributes = $view_url->getOption('attributes') ?: [];
+      $attributes += ['aria-label' => $label];
+      $view_url->setOption('attributes', $attributes);
+
+      $operations['view'] = [
+        'title' => $this->t('View'),
+        'url' => $view_url,
+        'weight' => 200,
       ];
     }
 

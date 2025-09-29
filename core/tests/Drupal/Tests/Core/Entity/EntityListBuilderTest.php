@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -139,6 +140,8 @@ class EntityListBuilderTest extends UnitTestCase {
 
     $operations = $list->getOperations($this->role);
     $this->assertIsArray($operations);
+    $this->assertArrayHasKey('view', $operations);
+    $this->assertIsArray($operations['view']);
     $this->assertArrayHasKey('edit', $operations);
     $this->assertIsArray($operations['edit']);
     $this->assertArrayHasKey('title', $operations['edit']);
@@ -148,6 +151,10 @@ class EntityListBuilderTest extends UnitTestCase {
     $this->assertArrayHasKey($operation_name, $operations);
     $this->assertIsArray($operations[$operation_name]);
     $this->assertArrayHasKey('title', $operations[$operation_name]);
+
+    // Ensure the operations are in the correct relative order.
+    uasort($operations, SortArray::sortByWeightElement(...));
+    $this->assertSame([$operation_name, 'edit', 'delete', 'view'], array_keys($operations));
   }
 
 }
