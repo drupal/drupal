@@ -2,7 +2,6 @@
 
 namespace Drupal\system\Access;
 
-use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
@@ -25,8 +24,6 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
   /**
    * Constructs a new SystemAdminMenuBlockAccessCheck.
    *
-   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
-   *   The access manager.
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTree
    *   The menu link tree service.
    * @param \Drupal\Core\Routing\AccessAwareRouter $router
@@ -35,7 +32,6 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    *   The menu link manager service.
    */
   public function __construct(
-    private readonly AccessManagerInterface $accessManager,
     private readonly MenuLinkTreeInterface $menuLinkTree,
     private readonly AccessAwareRouter $router,
     private readonly MenuLinkManagerInterface $menuLinkManager,
@@ -97,13 +93,20 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
       ->setTopLevelOnly()
       ->onlyEnabledLinks();
 
-    $route = $this->router->getRouteCollection()->get($link->getRouteName());
+    $link_url = $link->getUrlObject();
+    if (!$link_url->isRouted()) {
+      // If the link is not routed, we cannot check access to it.
+      return AccessResult::neutral();
+    }
+
+    $route = $this->router->getRouteCollection()->get($link_url->getRouteName());
     if ($route && empty($route->getRequirement('_access_admin_menu_block_page')) && empty($route->getRequirement('_access_admin_overview_page'))) {
       return AccessResult::allowed();
     }
 
     foreach ($this->menuLinkTree->load(NULL, $parameters) as $element) {
-      if (!$this->accessManager->checkNamedRoute($element->link->getRouteName(), $element->link->getRouteParameters(), $account)) {
+      // Skip the link if the user does not have access.
+      if (!$element->link->getUrlObject()->access($account)) {
         continue;
       }
 
