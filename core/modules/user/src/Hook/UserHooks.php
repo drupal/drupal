@@ -135,20 +135,6 @@ class UserHooks {
   }
 
   /**
-   * Implements hook_ENTITY_TYPE_presave() for user entities.
-   *
-   * @todo https://www.drupal.org/project/drupal/issues/3112704 Move to
-   *   \Drupal\user\Entity\User::preSave().
-   */
-  #[Hook('user_presave')]
-  public function userPresave(UserInterface $account): void {
-    $config = \Drupal::config('system.date');
-    if ($config->get('timezone.user.configurable') && !$account->getTimeZone() && !$config->get('timezone.user.default')) {
-      $account->timezone = $config->get('timezone.default');
-    }
-  }
-
-  /**
    * Implements hook_ENTITY_TYPE_view() for user entities.
    */
   #[Hook('user_view')]

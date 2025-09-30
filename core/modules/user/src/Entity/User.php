@@ -119,6 +119,11 @@ class User extends ContentEntityBase implements UserInterface {
         \Drupal::service('user.data')->set('user', $this->id(), substr($key, 5), $this->{$key});
       }
     }
+
+    $config = \Drupal::config('system.date');
+    if ($config->get('timezone.user.configurable') && !$this->getTimeZone() && !$config->get('timezone.user.default')) {
+      $this->set('timezone', $config->get('timezone.default'));
+    }
   }
 
   /**
