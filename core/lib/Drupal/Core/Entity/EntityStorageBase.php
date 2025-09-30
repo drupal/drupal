@@ -296,21 +296,18 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
         $this->entityIdsToLoad = array_unique(array_merge($this->entityIdsToLoad, $ids));
         $fiber->suspend();
 
-        // At this point the entityIdsToLoad property will either have been
-        // reset within another Fiber, or will contain the IDs passed in as
-        // well as any others waiting to be loaded.
-        if ($this->entityIdsToLoad) {
-          $ids = $this->entityIdsToLoad;
+        // If all the IDs we need to return have already been loaded into the
+        // static cache, ignore any additionally requested entities here since
+        // deferring these may allow them to be loaded with more other entities
+        // later.
+        $entities += $this->getFromStaticCache($ids);
+        $ids = array_diff($ids, array_keys($entities));
 
-          // Reset the entityIdsToLoad property so that any further calls start
-          // with a blank slate (apart from the entity static cache).
+        // Otherwise load additional entities now.
+        if ($ids && $this->entityIdsToLoad) {
+          $ids = array_unique(array_merge($ids, $this->entityIdsToLoad));
           $this->entityIdsToLoad = [];
         }
-        $entities += $this->getFromStaticCache($ids);
-
-        // If any entities were in the static cache remove them from the
-        // remaining IDs.
-        $ids = array_diff($ids, array_keys($entities));
       }
     }
 

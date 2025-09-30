@@ -46,7 +46,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     // response tasks run in different orders each time.
     $this->drupalGet('node/1');
     // Allow time for image style and aggregate requests to finish.
-    sleep(1);
+    sleep(2);
     $this->drupalGet('node/1');
     $this->clearCaches();
     $performance_data = $this->collectPerformanceData(function () {
