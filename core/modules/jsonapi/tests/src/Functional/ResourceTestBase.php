@@ -977,7 +977,15 @@ abstract class ResourceTestBase extends BrowserTestBase {
         ],
       ],
     ];
-    $this->assertResourceResponse(400, $expected_document, $response, ['4xx-response', 'http_response'], ['url.query_args', 'url.site'], 'UNCACHEABLE (request policy)', TRUE);
+    $this->assertResourceResponse(
+      400,
+      $expected_document,
+      $response,
+      ['4xx-response', 'http_response'],
+      ['url.query_args', 'url.site'],
+      'UNCACHEABLE (request policy)',
+      TRUE,
+    );
 
     // 200 for well-formed HEAD request.
     $response = $this->request('HEAD', $url, $request_options);
@@ -1062,14 +1070,50 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $random_uuid]);
     $response = $this->request('GET', $url, $request_options);
     $message_url = clone $url;
-    $path = str_replace($random_uuid, '{entity}', $message_url->setAbsolute()->setOptions(['base_url' => '', 'query' => []])->toString());
+    $path = str_replace(
+      $random_uuid,
+     '{entity}',
+      $message_url->setAbsolute()->setOptions(['base_url' => '', 'query' => []])->toString(),
+    );
     $message = 'The "entity" parameter was not converted for the path "' . $path . '" (route name: "jsonapi.' . static::$resourceTypeName . '.individual")';
-    $this->assertResourceErrorResponse(404, $message, $url, $response, FALSE, ['4xx-response', 'http_response'], ['url.query_args', 'url.site'], 'UNCACHEABLE (request policy)', 'UNCACHEABLE (poor cacheability)');
+    $this->assertResourceErrorResponse(
+      404,
+      $message,
+      $url,
+      $response,
+      FALSE,
+      [
+        '4xx-response',
+        'http_response',
+      ],
+      [
+        'url.query_args',
+        'url.site',
+      ],
+      'UNCACHEABLE (request policy)',
+      'UNCACHEABLE (poor cacheability)',
+    );
 
     // DX: when Accept request header is missing, still 404, same response.
     unset($request_options[RequestOptions::HEADERS]['Accept']);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(404, $message, $url, $response, FALSE, ['4xx-response', 'http_response'], ['url.query_args', 'url.site'], 'UNCACHEABLE (request policy)', 'UNCACHEABLE (poor cacheability)');
+    $this->assertResourceErrorResponse(
+      404,
+      $message,
+      $url,
+      $response,
+      FALSE,
+      [
+        '4xx-response',
+        'http_response',
+      ],
+      [
+        'url.query_args',
+        'url.site',
+      ],
+      'UNCACHEABLE (request policy)',
+      'UNCACHEABLE (poor cacheability)',
+    );
   }
 
   /**
@@ -3031,7 +3075,15 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'url.query_args',
       'url.site',
     ];
-    $this->assertResourceErrorResponse(400, 'Collection resources only support the following resource version identifiers: rel:latest-version, rel:working-copy', $rel_invalid_collection_url, $actual_response, FALSE, ['4xx-response', 'http_response'], $invalid_version_expected_cache_contexts);
+    $this->assertResourceErrorResponse(
+      400,
+      'Collection resources only support the following resource version identifiers: rel:latest-version, rel:working-copy',
+      $rel_invalid_collection_url,
+      $actual_response,
+      FALSE,
+      ['4xx-response', 'http_response'],
+      $invalid_version_expected_cache_contexts,
+    );
 
     // Move the entity to its draft moderation state.
     $entity->set('field_revisionable_number', 42);

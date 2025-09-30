@@ -176,7 +176,12 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
     $this->assertSession()->pageTextContains("There is 1 entity with 2 or more values in this field");
 
     // Create a second entity with three values.
-    $edit = ['title[0][value]' => 'Cardinality 3', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2', 'body[2][value]' => 'Body 3'];
+    $edit = [
+      'title[0][value]' => 'Cardinality 3',
+      'body[0][value]' => 'Body 1',
+      'body[1][value]' => 'Body 2',
+      'body[2][value]' => 'Body 3',
+    ];
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
 

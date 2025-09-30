@@ -113,7 +113,11 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->assertEquals($message, $translation['message']);
 
     // Check default medium date format exists and create a translation for it.
-    $string = $this->storage->findString(['source' => 'D, j M Y - H:i', 'context' => 'PHP date format', 'type' => 'configuration']);
+    $string = $this->storage->findString([
+      'source' => 'D, j M Y - H:i',
+      'context' => 'PHP date format',
+      'type' => 'configuration',
+    ]);
     $this->assertNotEmpty($string, 'Configuration date formats have been created upon installation.');
 
     // Translate using the UI so configuration is refreshed.
@@ -157,7 +161,11 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->assertArrayHasKey('image.style.medium', $locations['configuration']);
 
     // Check the string is unique and has no translation yet.
-    $translations = $this->storage->getTranslations(['language' => $this->langcode, 'type' => 'configuration', 'name' => 'image.style.medium']);
+    $translations = $this->storage->getTranslations([
+      'language' => $this->langcode,
+      'type' => 'configuration',
+      'name' => 'image.style.medium',
+    ]);
     $this->assertCount(1, $translations);
     $translation = reset($translations);
     $this->assertEquals($string->source, $translation->source);
@@ -181,7 +189,11 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save translations');
 
     // Check the right single translation has been created.
-    $translations = $this->storage->getTranslations(['language' => $this->langcode, 'type' => 'configuration', 'name' => 'image.style.medium']);
+    $translations = $this->storage->getTranslations([
+      'language' => $this->langcode,
+      'type' => 'configuration',
+      'name' => 'image.style.medium',
+    ]);
     $translation = reset($translations);
     $this->assertCount(1, $translations, 'Got only one translation for image configuration.');
     $this->assertEquals($string->source, $translation->source);
@@ -271,7 +283,11 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     }
 
     // Check the optional default configuration in node module.
-    $string = $this->storage->findString(['source' => 'No front page content has been created yet.<br/>Follow the <a target="_blank" href="https://www.drupal.org/docs/user_guide/en/index.html">User Guide</a> to start building your site.', 'context' => '', 'type' => 'configuration']);
+    $string = $this->storage->findString([
+      'source' => 'No front page content has been created yet.<br/>Follow the <a target="_blank" href="https://www.drupal.org/docs/user_guide/en/index.html">User Guide</a> to start building your site.',
+      'context' => '',
+      'type' => 'configuration',
+    ]);
     if ($optional) {
       $this->assertFalse($this->config('views.view.frontpage')->isNew());
       $this->assertNotEmpty($string, 'Node view text can be found with node and views modules.');

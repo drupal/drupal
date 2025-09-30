@@ -153,7 +153,16 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getAdministratorPermissions(): array {
-    return array_merge(parent::getAdministratorPermissions(), ['access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access', 'administer languages', 'administer themes', 'view the administration theme']);
+    return array_merge(parent::getAdministratorPermissions(), [
+      'access administration pages',
+      'administer content types',
+      'administer node fields',
+      'access content overview',
+      'bypass node access',
+      'administer languages',
+      'administer themes',
+      'view the administration theme',
+    ]);
   }
 
   /**

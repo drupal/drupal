@@ -407,7 +407,8 @@ class NodeTest extends ResourceTestBase {
     // the internal properties of our variation cache. Reset it.
     $variation_cache->reset();
 
-    $cache = $variation_cache->get(['node--camelids', $this->entity->uuid(), $this->entity->language()->getId()], new CacheableMetadata());
+    $cache = $variation_cache
+      ->get(['node--camelids', $this->entity->uuid(), $this->entity->language()->getId()], new CacheableMetadata());
     $cached_fields = $cache->data['fields'];
     $this->assertSameSize($field_names, $cached_fields);
     array_walk($field_names, function ($field_name) use ($cached_fields) {

@@ -32,7 +32,10 @@ class ThemeUpdateTest extends BrowserTestBase {
   public function testThemeUpdates(): void {
     \Drupal::service('module_installer')->install(['test_module_required_by_theme']);
     $this->rebuildAll();
-    \Drupal::state()->set('test_theme_depending_on_modules.system_info_alter', ['dependencies' => ['test_module_required_by_theme', 'stark']]);
+    \Drupal::state()->set(
+      'test_theme_depending_on_modules.system_info_alter',
+      ['dependencies' => ['test_module_required_by_theme', 'stark']],
+    );
     \Drupal::service('theme_installer')->install(['test_theme_depending_on_modules']);
     $this->assertTrue(\Drupal::service('theme_handler')->themeExists('test_theme_depending_on_modules'), 'test_theme_depending_on_modules theme installed');
     \Drupal::state()->set('test_theme_depending_on_modules.system_info_alter', FALSE);

@@ -24,7 +24,12 @@ class DisplayPageWebTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_page_display', 'test_page_display_arguments', 'test_page_display_menu', 'test_page_display_path'];
+  public static $testViews = [
+    'test_page_display',
+    'test_page_display_arguments',
+    'test_page_display_menu',
+    'test_page_display_path',
+  ];
 
   /**
    * {@inheritdoc}

@@ -47,8 +47,18 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
     // Move a link into the new menu.
-    $menu_link = $menu_link_manager->updateDefinition('test_page_test.test_page', ['menu_name' => 'llama', 'parent' => '']);
-    $block = $this->drupalPlaceBlock('system_menu_block:llama', ['label' => 'Llama', 'provider' => 'system', 'region' => 'footer']);
+    $menu_link = $menu_link_manager->updateDefinition(
+      'test_page_test.test_page',
+      [
+        'menu_name' => 'llama',
+        'parent' => '',
+      ],
+    );
+    $block = $this->drupalPlaceBlock('system_menu_block:llama', [
+      'label' => 'Llama',
+      'provider' => 'system',
+      'region' => 'footer',
+    ]);
 
     // Prime the page cache.
     $this->verifyPageCache($url, 'MISS');

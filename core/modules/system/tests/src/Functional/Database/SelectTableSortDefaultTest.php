@@ -64,7 +64,12 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
     ];
 
     foreach ($sorts as $sort) {
-      $this->drupalGet('database_test/tablesort_first/', ['query' => ['order' => $sort['field'], 'sort' => $sort['sort']]]);
+      $this->drupalGet('database_test/tablesort_first/', [
+        'query' => [
+          'order' => $sort['field'],
+          'sort' => $sort['sort'],
+        ],
+      ]);
       $data = json_decode($this->getSession()->getPage()->getContent());
 
       $first = array_shift($data->tasks);

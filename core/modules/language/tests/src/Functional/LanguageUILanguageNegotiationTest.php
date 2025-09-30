@@ -260,7 +260,11 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       ],
       // Default, browser language preference is not one of site's lang.
       [
-        'language_negotiation' => [LanguageNegotiationUrl::METHOD_ID, LanguageNegotiationBrowser::METHOD_ID, LanguageNegotiationSelected::METHOD_ID],
+        'language_negotiation' => [
+          LanguageNegotiationUrl::METHOD_ID,
+          LanguageNegotiationBrowser::METHOD_ID,
+          LanguageNegotiationSelected::METHOD_ID,
+        ],
         'path' => 'admin/config',
         'expect' => $default_string,
         'expected_method_id' => LanguageNegotiatorInterface::METHOD_ID,

@@ -215,10 +215,31 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Add more forms.
-    $this->addContactForm($this->randomMachineName(16), $label = $this->randomMachineName(16), implode(',', [$recipients[0], $recipients[1]]), '', FALSE);
+    $this->addContactForm(
+      $this->randomMachineName(16),
+      $label = $this->randomMachineName(16),
+      implode(',',
+        [
+          $recipients[0],
+          $recipients[1],
+        ]),
+      '',
+      FALSE,
+    );
     $this->assertSession()->pageTextContains('Contact form ' . $label . ' has been added.');
 
-    $this->addContactForm($name = $this->randomMachineName(16), $label = $this->randomMachineName(16), implode(',', [$recipients[0], $recipients[1], $recipients[2]]), '', FALSE);
+    $this->addContactForm(
+      $name = $this->randomMachineName(16),
+      $label = $this->randomMachineName(16),
+      implode(',',
+        [
+          $recipients[0],
+          $recipients[1],
+          $recipients[2],
+        ]),
+      '',
+      FALSE,
+    );
     $this->assertSession()->pageTextContains('Contact form ' . $label . ' has been added.');
 
     // Try adding a form that already exists.

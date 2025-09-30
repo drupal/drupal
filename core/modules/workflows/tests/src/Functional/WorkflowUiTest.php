@@ -156,7 +156,12 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->clickLink('Add a new transition');
     $this->assertCount(2, $this->cssSelect('input[name="to"][type="radio"]'));
     $this->assertCount(0, $this->cssSelect('input[name="to"][checked="checked"][type="radio"]'));
-    $this->submitForm(['id' => 'create_new_draft', 'label' => 'Create new draft', 'from[draft]' => 'draft', 'to' => 'draft'], 'Save');
+    $this->submitForm([
+      'id' => 'create_new_draft',
+      'label' => 'Create new draft',
+      'from[draft]' => 'draft',
+      'to' => 'draft',
+    ], 'Save');
     $this->assertSession()->pageTextContains('Created Create new draft transition.');
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertTrue($workflow->getTypePlugin()->getState('draft')->canTransitionTo('draft'), 'Can transition from draft to draft');
@@ -177,14 +182,31 @@ class WorkflowUiTest extends BrowserTestBase {
 
     // Try creating a duplicate transition.
     $this->clickLink('Add a new transition');
-    $this->submitForm(['id' => 'create_new_draft', 'label' => 'Create new draft', 'from[published]' => 'published', 'to' => 'draft'], 'Save');
-    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+    $this->submitForm([
+      'id' => 'create_new_draft',
+      'label' => 'Create new draft',
+      'from[published]' => 'published',
+      'to' => 'draft',
+    ], 'Save');
+    $this->assertSession()
+      ->pageTextContains('The machine-readable name is already in use. It must be unique.');
     // Try creating a transition which duplicates the states of another.
-    $this->submitForm(['id' => 'create_new_draft2', 'label' => 'Create new draft again', 'from[published]' => 'published', 'to' => 'draft'], 'Save');
-    $this->assertSession()->pageTextContains('The transition from Live to Draft already exists.');
+    $this->submitForm([
+      'id' => 'create_new_draft2',
+      'label' => 'Create new draft again',
+      'from[published]' => 'published',
+      'to' => 'draft',
+    ], 'Save');
+    $this->assertSession()
+      ->pageTextContains('The transition from Live to Draft already exists.');
 
     // Create a new transition.
-    $this->submitForm(['id' => 'save_and_publish', 'label' => 'Save and publish', 'from[published]' => 'published', 'to' => 'published'], 'Save');
+    $this->submitForm([
+      'id' => 'save_and_publish',
+      'label' => 'Save and publish',
+      'from[published]' => 'published',
+      'to' => 'published',
+    ], 'Save');
     $this->assertSession()->pageTextContains('Created Save and publish transition.');
     // Edit the new transition and try to add an existing transition.
     $this->clickLink('Edit', 4);

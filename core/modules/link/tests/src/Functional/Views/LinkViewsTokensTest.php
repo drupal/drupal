@@ -81,7 +81,11 @@ class LinkViewsTokensTest extends ViewTestBase {
     // Add nodes with the URI's and titles.
     foreach ($uris as $uri => $title) {
       $values = ['type' => 'page'];
-      $values[$this->fieldName][] = ['uri' => $uri, 'title' => $title, 'options' => ['attributes' => ['class' => 'test-link-class']]];
+      $values[$this->fieldName][] = [
+        'uri' => $uri,
+        'title' => $title,
+        'options' => ['attributes' => ['class' => 'test-link-class']],
+      ];
       $this->drupalCreateNode($values);
     }
 

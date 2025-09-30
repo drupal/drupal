@@ -26,7 +26,15 @@ class PagerTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_store_pager_settings', 'test_pager_none', 'test_pager_some', 'test_pager_full', 'test_view_pager_full_zero_items_per_page', 'test_view', 'content'];
+  public static $testViews = [
+    'test_store_pager_settings',
+    'test_pager_none',
+    'test_pager_some',
+    'test_pager_full',
+    'test_view_pager_full_zero_items_per_page',
+    'test_view',
+    'content',
+  ];
 
   /**
    * {@inheritdoc}
@@ -363,7 +371,13 @@ class PagerTest extends ViewTestBase {
 
     // Test pager cache contexts.
     $this->drupalGet('test_pager_full');
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'timezone', 'url.query_args', 'user.node_grants:view']);
+    $this->assertCacheContexts([
+      'languages:language_interface',
+      'theme',
+      'timezone',
+      'url.query_args',
+      'user.node_grants:view',
+    ]);
 
     // Set "Number of pager links visible" to 1 and check the active page number
     // on the last page.

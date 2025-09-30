@@ -93,7 +93,12 @@ class NodeLanguageTest extends NodeTestBase {
       $node = $this->drupalCreateNode(['title' => $title, 'langcode' => 'es', 'type' => 'page', 'promote' => 1]);
       foreach (['en', 'fr'] as $langcode) {
         if (isset($this->nodeTitles[$langcode][$index])) {
-          $translation = $node->addTranslation($langcode, ['title' => $this->nodeTitles[$langcode][$index], 'promote' => TRUE]);
+          $translation = $node->addTranslation(
+            $langcode,
+            [
+              'title' => $this->nodeTitles[$langcode][$index],
+              'promote' => TRUE,
+            ]);
           $translation->body->value = $this->randomMachineName(32);
         }
       }
@@ -101,7 +106,12 @@ class NodeLanguageTest extends NodeTestBase {
     }
     // Create non-translatable nodes.
     foreach ($this->nodeTitles[LanguageInterface::LANGCODE_NOT_SPECIFIED] as $index => $title) {
-      $node = $this->drupalCreateNode(['title' => $title, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED, 'type' => 'page', 'promote' => 1]);
+      $node = $this->drupalCreateNode([
+        'title' => $title,
+        'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+        'type' => 'page',
+        'promote' => 1,
+      ]);
       $node->body->value = $this->randomMachineName(32);
       $node->save();
     }

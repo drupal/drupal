@@ -460,7 +460,9 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
+    $keys = \Drupal::service('cache_contexts_manager')
+      ->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])
+      ->getKeys();
     $this->assertSame($expected_cache_tags, $cache_entry->tags);
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
     $expected_cache_tags = [
@@ -509,7 +511,9 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
+    $keys = \Drupal::service('cache_contexts_manager')
+      ->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])
+      ->getKeys();
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
     $this->assertSame($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
@@ -518,7 +522,9 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
+    $keys = \Drupal::service('cache_contexts_manager')
+      ->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])
+      ->getKeys();
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered_2:' . implode(':', $keys));
     $this->assertSame($expected_cache_tags, $cache_entry->tags);
 

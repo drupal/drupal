@@ -206,7 +206,10 @@ class ConfigInstallWebTest extends BrowserTestBase {
     }
     catch (PreExistingConfigException $e) {
       $this->assertEquals('config_clash_test_theme', $e->getExtension());
-      $this->assertEquals([StorageInterface::DEFAULT_COLLECTION => ['config_test.dynamic.dotted.default'], 'language.fr' => ['config_test.dynamic.dotted.default']], $e->getConfigObjects());
+      $this->assertEquals([
+        StorageInterface::DEFAULT_COLLECTION => ['config_test.dynamic.dotted.default'],
+        'language.fr' => ['config_test.dynamic.dotted.default'],
+      ], $e->getConfigObjects());
       $this->assertEquals('Configuration objects (config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default) provided by config_clash_test_theme already exist in active configuration', $e->getMessage());
     }
   }

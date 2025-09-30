@@ -37,7 +37,10 @@ abstract class ModeratedNodeResourceTestBase extends NodeResourceTestBase {
       case 'POST':
       case 'PATCH':
       case 'DELETE':
-        $this->grantPermissionsToTestedRole(['use editorial transition publish', 'use editorial transition create_new_draft']);
+        $this->grantPermissionsToTestedRole([
+          'use editorial transition publish',
+          'use editorial transition create_new_draft',
+        ]);
         break;
     }
   }

@@ -53,7 +53,14 @@ class StyleSerializerTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_serializer_display_field', 'test_serializer_display_entity', 'test_serializer_display_entity_translated', 'test_serializer_node_display_field', 'test_serializer_node_exposed_filter', 'test_serializer_shared_path'];
+  public static $testViews = [
+    'test_serializer_display_field',
+    'test_serializer_display_entity',
+    'test_serializer_display_entity_translated',
+    'test_serializer_node_display_field',
+    'test_serializer_node_exposed_filter',
+    'test_serializer_shared_path',
+  ];
 
   /**
    * A user with permissions to look at test entity and configure views.
@@ -264,7 +271,14 @@ class StyleSerializerTest extends ViewTestBase {
     $this->assertSame($expected, $result, 'Querying a view with no exposed filter returns all nodes.');
 
     // Test that title starts with 'Node 11' query finds 2 of the 3 nodes.
-    $result = Json::decode($this->drupalGet('test/serialize/node-exposed-filter', ['query' => ['_format' => 'json', 'title' => 'Node 11']]));
+    $result = Json::decode(
+      $this->drupalGet('test/serialize/node-exposed-filter', [
+        'query' => [
+          '_format' => 'json',
+          'title' => 'Node 11',
+        ],
+      ])
+    );
 
     $expected = [
       0 => [

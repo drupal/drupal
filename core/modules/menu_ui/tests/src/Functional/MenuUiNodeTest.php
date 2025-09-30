@@ -329,7 +329,11 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Create translation.
     $translated_node_title = $this->randomMachineName(8);
-    $node->addTranslation($langcodes[1], ['title' => $translated_node_title, 'body' => $this->randomMachineName(16), 'status' => 1]);
+    $node->addTranslation($langcodes[1], [
+      'title' => $translated_node_title,
+      'body' => $this->randomMachineName(16),
+      'status' => 1,
+    ]);
     $node->save();
 
     // Edit the node and create a menu link.

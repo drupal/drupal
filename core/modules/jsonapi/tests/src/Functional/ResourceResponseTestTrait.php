@@ -526,7 +526,9 @@ trait ResourceResponseTestTrait {
       'jsonapi' => static::$jsonApiMember,
       'errors' => [$error],
     ], 403))
-      ->addCacheableDependency((new CacheableMetadata())->addCacheTags(['4xx-response', 'http_response'])->addCacheContexts(['url.query_args', 'url.site']))
+      ->addCacheableDependency((new CacheableMetadata())
+        ->addCacheTags(['4xx-response', 'http_response'])
+        ->addCacheContexts(['url.query_args', 'url.site']))
       ->addCacheableDependency($access);
   }
 

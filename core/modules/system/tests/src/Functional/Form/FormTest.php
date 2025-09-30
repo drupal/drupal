@@ -61,7 +61,14 @@ class FormTest extends BrowserTestBase {
   public function testRequiredFields(): void {
     // Originates from https://www.drupal.org/node/117748.
     // Sets of empty strings and arrays.
-    $empty_strings = ['""' => "", '"\n"' => "\n", '" "' => " ", '"\t"' => "\t", '" \n\t "' => " \n\t ", '"\n\n\n\n\n"' => "\n\n\n\n\n"];
+    $empty_strings = [
+      '""' => "",
+      '"\n"' => "\n",
+      '" "' => " ",
+      '"\t"' => "\t",
+      '" \n\t "' => " \n\t ",
+      '"\n\n\n\n\n"' => "\n\n\n\n\n",
+    ];
     $empty_arrays = ['array()' => []];
     $empty_checkbox = [NULL];
 
@@ -89,16 +96,46 @@ class FormTest extends BrowserTestBase {
     $elements['textarea']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'textarea'];
     $elements['textarea']['empty_values'] = $empty_strings;
 
-    $elements['radios']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'radios', '#options' => ['' => 'None', $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
+    $elements['radios']['element'] = [
+      '#title' => $this->randomMachineName(),
+      '#type' => 'radios',
+      '#options' => [
+        '' => 'None',
+        $this->randomMachineName(),
+        $this->randomMachineName(),
+        $this->randomMachineName(),
+      ],
+    ];
     $elements['radios']['empty_values'] = $empty_arrays;
 
-    $elements['checkbox']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'checkbox', '#required' => TRUE];
+    $elements['checkbox']['element'] = [
+      '#title' => $this->randomMachineName(),
+      '#type' => 'checkbox',
+      '#required' => TRUE,
+    ];
     $elements['checkbox']['empty_values'] = $empty_checkbox;
 
-    $elements['checkboxes']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'checkboxes', '#options' => [$this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
+    $elements['checkboxes']['element'] = [
+      '#title' => $this->randomMachineName(),
+      '#type' => 'checkboxes',
+      '#options' => [
+        $this->randomMachineName(),
+        $this->randomMachineName(),
+        $this->randomMachineName(),
+      ],
+    ];
     $elements['checkboxes']['empty_values'] = $empty_arrays;
 
-    $elements['select']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'select', '#options' => ['' => 'None', $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
+    $elements['select']['element'] = [
+      '#title' => $this->randomMachineName(),
+      '#type' => 'select',
+      '#options' => [
+        '' => 'None',
+        $this->randomMachineName(),
+        $this->randomMachineName(),
+        $this->randomMachineName(),
+      ],
+    ];
     $elements['select']['empty_values'] = $empty_strings;
 
     $elements['file']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'file'];

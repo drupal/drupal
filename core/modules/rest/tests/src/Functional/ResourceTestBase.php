@@ -149,7 +149,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param string[] $methods
    *   The allowed methods for this resource.
    */
-  protected function provisionResource($formats = [], $authentication = [], array $methods = ['GET', 'POST', 'PATCH', 'DELETE']) {
+  protected function provisionResource(
+    $formats = [],
+    $authentication = [],
+    array $methods = ['GET', 'POST', 'PATCH', 'DELETE'],
+  ) {
     $this->resourceConfigStorage->create([
       'id' => static::$resourceConfigId,
       'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,

@@ -128,7 +128,11 @@ class LocalePathTest extends BrowserTestBase {
 
     // Create language nodes to check priority of aliases.
     $first_node = $this->drupalCreateNode(['type' => 'page', 'promote' => 1, 'langcode' => 'en']);
-    $second_node = $this->drupalCreateNode(['type' => 'page', 'promote' => 1, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED]);
+    $second_node = $this->drupalCreateNode([
+      'type' => 'page',
+      'promote' => 1,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ]);
 
     // Assign a custom path alias to the first node with the English language.
     $this->createPathAlias('/node/' . $first_node->id(), '/' . $custom_path, $first_node->language()->getId());

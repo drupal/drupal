@@ -115,7 +115,12 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
    * Returns an array of permissions needed for the translator.
    */
   protected function getTranslatorPermissions() {
-    return array_filter([$this->getTranslatePermission(), 'create content translations', 'update content translations', 'delete content translations']);
+    return array_filter([
+      $this->getTranslatePermission(),
+      'create content translations',
+      'update content translations',
+      'delete content translations',
+    ]);
   }
 
   /**
@@ -140,7 +145,11 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
    * Returns an array of permissions needed for the administrator.
    */
   protected function getAdministratorPermissions() {
-    return array_merge($this->getEditorPermissions(), $this->getTranslatorPermissions(), ['administer languages', 'administer content translation']);
+    return array_merge(
+      $this->getEditorPermissions(),
+      $this->getTranslatorPermissions(),
+      ['administer languages', 'administer content translation'],
+    );
   }
 
   /**

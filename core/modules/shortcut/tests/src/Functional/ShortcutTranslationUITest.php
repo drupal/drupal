@@ -20,7 +20,15 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultCacheContexts = ['languages:language_interface', 'session', 'theme', 'user', 'url.path', 'url.query_args', 'url.site'];
+  protected $defaultCacheContexts = [
+    'languages:language_interface',
+    'session',
+    'theme',
+    'user',
+    'url.path',
+    'url.query_args',
+    'url.site',
+  ];
 
   /**
    * {@inheritdoc}
@@ -52,7 +60,10 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions(): array {
-    return array_merge(parent::getTranslatorPermissions(), ['access shortcuts', 'administer shortcuts', 'access toolbar']);
+    return array_merge(
+      parent::getTranslatorPermissions(),
+      ['access shortcuts', 'administer shortcuts', 'access toolbar'],
+    );
   }
 
   /**

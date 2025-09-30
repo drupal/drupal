@@ -100,7 +100,12 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     ])->save();
 
     // Create term with translations.
-    $taxonomy = $this->createTermWithProperties(['name' => $this->termNames['en'], 'langcode' => 'en', 'description' => $this->termNames['en'], 'field_foo' => $this->termNames['en']]);
+    $taxonomy = $this->createTermWithProperties([
+      'name' => $this->termNames['en'],
+      'langcode' => 'en',
+      'description' => $this->termNames['en'],
+      'field_foo' => $this->termNames['en'],
+    ]);
     foreach (['es', 'fr'] as $langcode) {
       $translation = $taxonomy->addTranslation($langcode, ['name' => $this->termNames[$langcode]]);
       $translation->description->value = $this->termNames[$langcode];

@@ -64,7 +64,9 @@ class EngineTwigTest extends BrowserTestBase {
       'url (as route) absolute: ' . $url_generator->generateFromRoute('user.register', [], ['absolute' => TRUE]),
       'path (as route) not absolute with fragment: ' . $url_generator->generateFromRoute('user.register', [], ['fragment' => 'bottom']),
       'url (as route) absolute despite option: ' . $url_generator->generateFromRoute('user.register', [], ['absolute' => TRUE]),
-      'url (as route) absolute with fragment: ' . $url_generator->generateFromRoute('user.register', [], ['absolute' => TRUE, 'fragment' => 'bottom']),
+      'url (as route) absolute with fragment: ' . $url_generator->generateFromRoute(
+        'user.register', [], ['absolute' => TRUE, 'fragment' => 'bottom']
+      ),
     ];
 
     // Verify that url() has the ability to bubble cacheability metadata:
@@ -93,13 +95,33 @@ class EngineTwigTest extends BrowserTestBase {
     $generated_url = Url::fromRoute('user.register', [], ['absolute' => TRUE])->toString(TRUE)->getGeneratedUrl();
     $expected = [
       'link via the link generator: ' . $link_generator->generate('register', new Url('user.register', [], ['absolute' => TRUE])),
-      'link via the link generator: ' . $link_generator->generate('register', new Url('user.register', [], ['absolute' => TRUE, 'attributes' => ['foo' => 'bar']])),
-      'link via the link generator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['foo' => 'bar', 'id' => 'kitten']])),
+      'link via the link generator: ' . $link_generator->generate('register', new Url(
+        'user.register',
+        [],
+        ['absolute' => TRUE, 'attributes' => ['foo' => 'bar']],
+      )),
+      'link via the link generator: ' . $link_generator->generate('register', new Url(
+        'user.register',
+        [],
+        ['attributes' => ['foo' => 'bar', 'id' => 'kitten']],
+      )),
       'link via the link generator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['id' => 'kitten']])),
-      'link via the link generator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['class' => ['llama', 'kitten', 'panda']]])),
+      'link via the link generator: ' . $link_generator->generate('register', new Url(
+        'user.register',
+        [],
+        ['attributes' => ['class' => ['llama', 'kitten', 'panda']]],
+      )),
       'link via the link generator: ' . $link_generator->generate(Markup::create('<span>register</span>'), new Url('user.register', [], ['absolute' => TRUE])),
       'link via the link generator: <a href="' . $generated_url . '"><span>register</span><svg></svg></a>',
-      'link via the link generator: ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['foo' => 'bar']])) . ' ' . $link_generator->generate('register', new Url('user.register', [], ['attributes' => ['foo' => 'bar']])),
+      'link via the link generator: ' . $link_generator->generate('register', new Url(
+        'user.register',
+        [],
+        ['attributes' => ['foo' => 'bar']],
+      )) . ' ' . $link_generator->generate('register', new Url(
+        'user.register',
+        [],
+        ['attributes' => ['foo' => 'bar']],
+      )),
     ];
 
     // Verify that link() has the ability to bubble cacheability metadata:

@@ -57,7 +57,10 @@ class StatusExtraTest extends NodeTestBase {
 
     // Create one unpublished node by a user who does not have the `view own
     // unpublished content` permission.
-    $node_unpublished3 = $this->drupalCreateNode(['uid' => $node_author_not_unpublished->id(), 'status' => NodeInterface::NOT_PUBLISHED]);
+    $node_unpublished3 = $this->drupalCreateNode([
+      'uid' => $node_author_not_unpublished->id(),
+      'status' => NodeInterface::NOT_PUBLISHED,
+    ]);
 
     // The administrator should simply see all nodes.
     $this->drupalLogin($admin_user);
@@ -105,7 +108,11 @@ class StatusExtraTest extends NodeTestBase {
     $this->addPrivateField(NodeType::load('page'));
     node_access_rebuild();
     $node_published_private = $this->drupalCreateNode(['uid' => $admin_user->id(), 'private' => ['value' => 1]]);
-    $node_unpublished_private = $this->drupalCreateNode(['uid' => $admin_user->id(), 'status' => NodeInterface::NOT_PUBLISHED, 'private' => ['value' => 1]]);
+    $node_unpublished_private = $this->drupalCreateNode([
+      'uid' => $admin_user->id(),
+      'status' => NodeInterface::NOT_PUBLISHED,
+      'private' => ['value' => 1],
+    ]);
 
     // An unprivileged user must not see the published and unpublished content
     // when access is granted via hook_node_grants().

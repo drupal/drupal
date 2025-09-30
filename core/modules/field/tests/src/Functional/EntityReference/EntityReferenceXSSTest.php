@@ -50,7 +50,15 @@ class EntityReferenceXSSTest extends BrowserTestBase {
       'title' => 'My bundle has markup',
     ]);
 
-    $this->createEntityReferenceField('node', 'article', 'entity_reference_test', 'Entity Reference test', 'node', 'default', ['target_bundles' => [$node_type_one->id(), $node_type_two->id()]]);
+    $this->createEntityReferenceField(
+      'node',
+      'article',
+      'entity_reference_test',
+      'Entity Reference test',
+      'node',
+      'default',
+      ['target_bundles' => [$node_type_one->id(), $node_type_two->id()]],
+    );
 
     EntityFormDisplay::load('node.article.default')
       ->setComponent('entity_reference_test', ['type' => 'options_select'])

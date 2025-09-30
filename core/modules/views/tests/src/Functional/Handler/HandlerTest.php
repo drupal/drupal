@@ -28,7 +28,13 @@ class HandlerTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_view', 'test_view_handler_weight', 'test_handler_relationships', 'test_handler_test_access', 'test_filter_in_operator_ui'];
+  public static $testViews = [
+    'test_view',
+    'test_view_handler_weight',
+    'test_handler_relationships',
+    'test_handler_test_access',
+    'test_filter_in_operator_ui',
+  ];
 
   /**
    * {@inheritdoc}

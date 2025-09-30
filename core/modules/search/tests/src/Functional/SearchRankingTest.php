@@ -237,7 +237,12 @@ class SearchRankingTest extends BrowserTestBase {
     foreach ($shuffled_tags as $tag) {
       switch ($tag) {
         case 'a':
-          $settings['body'] = [['value' => Link::fromTextAndUrl('Drupal Rocks', Url::fromRoute('<front>'))->toString(), 'format' => 'full_html']];
+          $settings['body'] = [
+            [
+              'value' => Link::fromTextAndUrl('Drupal Rocks', Url::fromRoute('<front>'))->toString(),
+              'format' => 'full_html',
+            ],
+          ];
           break;
 
         case 'NoTag':
