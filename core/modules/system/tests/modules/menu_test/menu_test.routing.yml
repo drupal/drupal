@@ -151,6 +151,13 @@ menu_test.child_test_param_explicit:
   requirements:
     _permission: 'access child1 test page'
 
+menu_test.parent_url_test:
+  path: '/parent_url_test'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access child1 test page'
+
 menu_test.menu_no_title_callback:
   path: '/menu_no_title_callback'
   defaults:
