@@ -5,6 +5,7 @@
  */
 
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\Hook\ImageThemeHooks;
 
 /**
  * The name of the query parameter for image derivative tokens.
@@ -74,52 +75,95 @@ function image_style_options($include_empty = TRUE): array {
  *     popular browsers.
  *   - attributes: Associative array of additional attributes to be placed in
  *     the img tag.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
  */
 function template_preprocess_image_style(&$variables): void {
-  $style = ImageStyle::load($variables['style_name']);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ImageThemeHooks::class)->preprocessImageStyle($variables);
+}
 
-  // Determine the dimensions of the styled image.
-  $dimensions = [
-    'width' => $variables['width'],
-    'height' => $variables['height'],
-  ];
+/**
+ * Prepares variables for image style preview templates.
+ *
+ * Default template: image-style-preview.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - style: \Drupal\image\ImageStyleInterface image style being previewed.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_image_style_preview(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ImageThemeHooks::class)->preprocessImageStylePreview($variables);
+}
 
-  $style->transformDimensions($dimensions, $variables['uri']);
+/**
+ * Prepares variables for image anchor templates.
+ *
+ * Default template: image-anchor.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the image.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_image_anchor(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ImageThemeHooks::class)->preprocessImageAnchor($variables);
+}
 
-  $variables['image'] = [
-    '#theme' => 'image',
-    '#width' => $dimensions['width'],
-    '#height' => $dimensions['height'],
-    '#attributes' => $variables['attributes'],
-    '#style_name' => $variables['style_name'],
-  ];
+/**
+ * Prepares variables for image widget templates.
+ *
+ * Default template: image-widget.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: A render element representing the image field widget.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_image_widget(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ImageThemeHooks::class)->preprocessImageWidget($variables);
+}
 
-  // If the current image toolkit supports this file type, prepare the URI for
-  // the derivative image. If not, just use the original image resized to the
-  // dimensions specified by the style.
-  if ($style->supportsUri($variables['uri'])) {
-    $variables['image']['#uri'] = $style->buildUrl($variables['uri']);
-  }
-  else {
-    $variables['image']['#uri'] = $variables['uri'];
-    // Don't render the image by default, but allow other preprocess functions
-    // to override that if they need to.
-    $variables['image']['#access'] = FALSE;
-
-    // Inform the site builders why their image didn't work.
-    \Drupal::logger('image')->warning('Could not apply @style image style to @uri because the style does not support it.', [
-      '@style' => $style->label(),
-      '@uri' => $variables['uri'],
-    ]);
-  }
-
-  if (\array_key_exists('alt', $variables)) {
-    $variables['image']['#alt'] = $variables['alt'];
-  }
-  if (\array_key_exists('title', $variables)) {
-    $variables['image']['#title'] = $variables['title'];
-  }
-
+/**
+ * Prepares variables for image formatter templates.
+ *
+ * Default template: image-formatter.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - item: An ImageItem object.
+ *   - item_attributes: An optional associative array of html attributes to be
+ *     placed in the img tag.
+ *   - image_style: An optional image style.
+ *   - url: An optional \Drupal\Core\Url object.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *    template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3504125
+ */
+function template_preprocess_image_formatter(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+  \Drupal::service(ImageThemeHooks::class)->preprocessImageFormatter($variables);
 }
 
 /**

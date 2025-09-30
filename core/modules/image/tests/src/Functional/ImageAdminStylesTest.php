@@ -536,7 +536,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $style->save();
 
     // Build the derivative preview image file with the Image Style.
-    // @see template_preprocess_image_style_preview()
+    // @see \Drupal\image\Hook\ImageThemeHooks::preprocessImageStylePreview()
     $preview_file = $style->buildUri($original_path);
     $style->createDerivative($original_path, $preview_file);
 
