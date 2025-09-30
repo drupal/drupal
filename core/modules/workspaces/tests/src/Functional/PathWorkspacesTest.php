@@ -105,20 +105,13 @@ class PathWorkspacesTest extends BrowserTestBase {
     $path = $edit['path[0][alias]'];
     $this->assertAccessiblePaths([$path]);
 
-    // Check that the 'preload-paths' cache includes the active workspace ID in
-    // the cache key.
-    $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:stage:/node/1'));
-    $this->assertFalse(\Drupal::cache('data')->get('preload-paths:/node/1'));
-
     // Check that the alias can not be accessed in Live.
     $this->switchToLive();
     $this->assertNotAccessiblePaths([$path]);
-    $this->assertFalse(\Drupal::cache('data')->get('preload-paths:/node/1'));
 
     // Publish the workspace and check that the alias can be accessed in Live.
     $stage->publish();
     $this->assertAccessiblePaths([$path]);
-    $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:/node/1'));
   }
 
   /**
@@ -144,16 +137,10 @@ class PathWorkspacesTest extends BrowserTestBase {
     $path = $edit['path[0][alias]'];
     $this->assertAccessiblePaths([$path]);
 
-    // Check that the 'preload-paths' cache includes the active workspace ID in
-    // the cache key.
-    $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:stage:/node/1'));
-    $this->assertFalse(\Drupal::cache('data')->get('preload-paths:/node/1'));
-
     // Check that the alias can not be accessed in Live, by logging out without
     // an explicit switch.
     $this->drupalLogout();
     $this->assertNotAccessiblePaths([$path]);
-    $this->assertFalse(\Drupal::cache('data')->get('preload-paths:/node/1'));
 
     // Publish the workspace and check that the alias can be accessed in Live.
     $this->drupalLogin($this->rootUser);
@@ -161,7 +148,6 @@ class PathWorkspacesTest extends BrowserTestBase {
 
     $this->drupalLogout();
     $this->assertAccessiblePaths([$path]);
-    $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:/node/1'));
   }
 
   /**

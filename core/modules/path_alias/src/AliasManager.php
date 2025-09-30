@@ -13,20 +13,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 class AliasManager implements AliasManagerInterface {
 
   /**
-   * The cache key to use when caching paths.
-   *
-   * @var string
-   */
-  protected $cacheKey;
-
-  /**
-   * Whether the cache needs to be written.
-   *
-   * @var bool
-   */
-  protected $cacheNeedsWriting = FALSE;
-
-  /**
    * Holds the map of path lookups per language.
    *
    * @var array
@@ -48,21 +34,9 @@ class AliasManager implements AliasManagerInterface {
   protected $noAlias = [];
 
   /**
-   * Whether preloaded path lookups has already been loaded.
-   *
-   * @var array
+   * Holds an array of paths that have been requested but not loaded yet.
    */
-  protected $langcodePreloaded = [];
-
-  /**
-   * Holds an array of previously looked up paths for the current request path.
-   *
-   * This will only get populated if a cache key has been set, which for example
-   * happens if the alias manager is used in the context of a request.
-   *
-   * @var array
-   */
-  protected $preloadedPathLookups = FALSE;
+  protected array $requestedPaths = [];
 
   public function __construct(
     protected AliasRepositoryInterface $pathAliasRepository,
@@ -74,37 +48,25 @@ class AliasManager implements AliasManagerInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Sets the cache key for the preload alias cache.
+   *
+   * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There
+   *   is no replacement.
+   * @see https://www.drupal.org/node/3532412
    */
   public function setCacheKey($key) {
-    // Prefix the cache key to avoid clashes with other caches.
-    $this->cacheKey = 'preload-paths:' . $key;
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3532412', E_USER_DEPRECATED);
   }
 
   /**
-   * {@inheritdoc}
+   * Writes to the per-page system path cache.
    *
-   * Cache an array of the paths available on each page. We assume that aliases
-   * will be needed for the majority of these paths during subsequent requests,
-   * and load them in a single query during path alias lookup.
+   * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There
+   *   is no replacement.
+   * @see https://www.drupal.org/node/3532412
    */
   public function writeCache() {
-    // Check if the paths for this page were loaded from cache in this request
-    // to avoid writing to cache on every request.
-    if ($this->cacheNeedsWriting && !empty($this->cacheKey)) {
-      // Start with the preloaded path lookups, so that cached entries for other
-      // languages will not be lost.
-      $path_lookups = $this->preloadedPathLookups ?: [];
-      foreach ($this->lookupMap as $langcode => $lookups) {
-        $path_lookups[$langcode] = array_keys($lookups);
-        if (!empty($this->noAlias[$langcode])) {
-          $path_lookups[$langcode] = array_merge($path_lookups[$langcode], array_keys($this->noAlias[$langcode]));
-        }
-      }
-
-      $twenty_four_hours = 60 * 60 * 24;
-      $this->cache->set($this->cacheKey, $path_lookups, $this->time->getRequestTime() + $twenty_four_hours);
-    }
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3532412', E_USER_DEPRECATED);
   }
 
   /**
@@ -160,33 +122,43 @@ class AliasManager implements AliasManagerInterface {
       return $path;
     }
 
-    // During the first call to this method per language, load the expected
-    // paths for the page from cache.
-    if (empty($this->langcodePreloaded[$langcode])) {
-      $this->langcodePreloaded[$langcode] = TRUE;
-      $this->lookupMap[$langcode] = [];
-
-      // Load the cached paths that should be used for preloading. This only
-      // happens if a cache key has been set.
-      if ($this->preloadedPathLookups === FALSE) {
-        $this->preloadedPathLookups = [];
-        if ($this->cacheKey) {
-          if ($cached = $this->cache->get($this->cacheKey)) {
-            $this->preloadedPathLookups = $cached->data;
-          }
-          else {
-            $this->cacheNeedsWriting = TRUE;
-          }
-        }
-      }
-
-      // Load paths from cache.
-      if (!empty($this->preloadedPathLookups[$langcode])) {
-        $this->lookupMap[$langcode] = $this->pathAliasRepository->preloadPathAlias($this->preloadedPathLookups[$langcode], $langcode);
-        // Keep a record of paths with no alias to avoid querying twice.
-        $this->noAlias[$langcode] = array_flip(array_diff($this->preloadedPathLookups[$langcode], array_keys($this->lookupMap[$langcode])));
-      }
+    // If we already know that there are no aliases for this path simply return.
+    if (!empty($this->noAlias[$langcode][$path])) {
+      return $path;
     }
+    // If the alias has already been loaded, return it from static cache.
+    if (isset($this->lookupMap[$langcode][$path])) {
+      return $this->lookupMap[$langcode][$path];
+    }
+
+    // Add the path to the list of requested paths.
+    $this->requestedPaths[$langcode][$path] = $path;
+
+    // If we're inside a Fiber, suspend now, this allows other fibers to collect
+    // more requested paths.
+    if (\Fiber::getCurrent() !== NULL) {
+      \Fiber::suspend();
+    }
+
+    // If we reach here, then either there are no other Fibers, or none of them
+    // have aliases left to look up. Check the static caches in case the path
+    // we're looking for was looked up in the meantime.
+    if (!empty($this->noAlias[$langcode][$path])) {
+      return $path;
+    }
+
+    // If the alias has already been loaded, return it from static cache.
+    if (isset($this->lookupMap[$langcode][$path])) {
+      return $this->lookupMap[$langcode][$path];
+    }
+
+    $this->lookupMap[$langcode] = array_merge($this->lookupMap[$langcode] ?? [], $this->pathAliasRepository->preloadPathAlias($this->requestedPaths[$langcode], $langcode));
+
+    // Keep a record of paths with no alias to avoid querying twice.
+    $this->noAlias[$langcode] = array_merge($this->noAlias[$langcode] ?? [], array_diff_key($this->requestedPaths[$langcode], $this->lookupMap[$langcode]));
+
+    // Unset the requested paths variable now they've been loaded.
+    unset($this->requestedPaths[$langcode]);
 
     // If we already know that there are no aliases for this path simply return.
     if (!empty($this->noAlias[$langcode][$path])) {
@@ -197,16 +169,6 @@ class AliasManager implements AliasManagerInterface {
     if (isset($this->lookupMap[$langcode][$path])) {
       return $this->lookupMap[$langcode][$path];
     }
-
-    // Try to load alias from storage.
-    if ($path_alias = $this->pathAliasRepository->lookupBySystemPath($path, $langcode)) {
-      $this->lookupMap[$langcode][$path] = $path_alias['alias'];
-      return $path_alias['alias'];
-    }
-
-    // We can't record anything into $this->lookupMap because we didn't find any
-    // aliases for this path. Thus cache to $this->noAlias.
-    $this->noAlias[$langcode][$path] = TRUE;
     return $path;
   }
 
@@ -228,8 +190,6 @@ class AliasManager implements AliasManagerInterface {
     }
     $this->noPath = [];
     $this->noAlias = [];
-    $this->langcodePreloaded = [];
-    $this->preloadedPathLookups = [];
     $this->pathAliasPrefixListRebuild($source);
   }
 
