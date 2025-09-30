@@ -36,18 +36,13 @@ class BlockContentRedirectTest extends BlockContentTestBase {
    */
   public function testRedirectDestination(): void {
     $this->drupalLogin($this->drupalCreateUser(['access block library', 'administer block content']));
-    $this->drupalGet('admin/content/block');
 
     // Create a content block.
-    $this->clickLink('content block');
-    $edit = [];
-    $edit['info[0][value]'] = 'Test redirect destination';
-    $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->submitForm($edit, 'Save');
+    $block = $this->createBlockContent();
 
     // Check the block content is present in the view redirect destination.
     $this->drupalGet('admin/content/redirect_destination');
-    $this->assertSession()->pageTextContains('Test redirect destination');
+    $this->assertSession()->pageTextContains($block->label());
 
     // Edit the created block and save.
     $this->clickLink('Edit');

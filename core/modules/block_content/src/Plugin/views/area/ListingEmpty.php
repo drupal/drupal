@@ -13,6 +13,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines an area plugin to display a block add link.
  *
  * @ingroup views_area_handlers
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement.
+ * @see https://www.drupal.org/node/3336219
  */
 #[ViewsArea("block_content_listing_empty")]
 class ListingEmpty extends AreaPluginBase {
@@ -47,7 +50,7 @@ class ListingEmpty extends AreaPluginBase {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, AccessManagerInterface $access_manager, AccountInterface $current_user) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3336219', E_USER_DEPRECATED);
     $this->accessManager = $access_manager;
     $this->currentUser = $current_user;
   }

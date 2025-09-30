@@ -76,6 +76,9 @@ class ViewsConfigUpdater {
       if ($this->processTableCssClassUpdate($view)) {
         $changed = TRUE;
       }
+      if ($this->processBlockContentListingEmptyUpdate($view)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
   }
@@ -293,6 +296,56 @@ class ViewsConfigUpdater {
     if ($this->areDeprecationsEnabled() && $changed && !$deprecations_triggered) {
       $deprecations_triggered = TRUE;
       @trigger_error(sprintf('The update to add a default table CSS class for view "%s" is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3499943', $view->id()), E_USER_DEPRECATED);
+    }
+
+    return $changed;
+  }
+
+  /**
+   * Checks if 'block_content_listing_empty' needs to be removed.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view has the plugin.
+   */
+  public function needsBlockContentListingEmptyUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processBlockContentListingEmptyUpdate($view);
+    });
+  }
+
+  /**
+   * Processes area plugins and removes block_content_listing_empty.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  public function processBlockContentListingEmptyUpdate(ViewEntityInterface $view): bool {
+    $changed = FALSE;
+    $displays = $view->get('display');
+
+    foreach ($displays as &$display) {
+      foreach ($display['display_options']['empty'] ?? [] as $id => $emptyOptions) {
+        if ($emptyOptions['id'] === 'block_content_listing_empty') {
+          $changed = TRUE;
+          unset($display['display_options']['empty'][$id]);
+        }
+      }
+    }
+
+    if ($changed) {
+      $view->set('display', $displays);
+    }
+
+    $deprecations_triggered = &$this->triggeredDeprecations['block_content_listing_empty'][$view->id()];
+    if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
+      $deprecations_triggered = TRUE;
+      @trigger_error(sprintf('The update to remove the block_content_listing_empty plugin from view "%s" is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3336219', $view->id()), E_USER_DEPRECATED);
     }
 
     return $changed;
