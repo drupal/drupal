@@ -18,19 +18,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 class DbImportCommandTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'config',
-    'dblog',
-    'menu_link_content',
-    'link',
-    'block_content',
-    'file',
-    'user',
-  ];
-
-  /**
    * Tables that should be part of the exported script.
    *
    * @var array
