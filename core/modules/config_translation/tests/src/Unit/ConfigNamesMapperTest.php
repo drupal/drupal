@@ -471,11 +471,6 @@ class ConfigNamesMapperTest extends UnitTestCase {
         'enabled' => FALSE,
         'message' => '@site is currently under maintenance.',
       ],
-      'system.rss' => [
-        'items' => [
-          'view_mode' => 'rss',
-        ],
-      ],
     ];
 
     $this->configNamesMapper->setConfigNames(array_keys($configs));

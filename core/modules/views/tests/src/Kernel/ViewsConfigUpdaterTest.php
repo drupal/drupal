@@ -24,7 +24,9 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
   protected static $modules = [
     'views_config_entity_test',
     'entity_test',
+    'text',
     'field',
+    'node',
   ];
 
   /**
@@ -34,6 +36,120 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     // ViewsConfigUpdater currently contains no actual configuration update
     // logic. Replace this method with a real test when it does.
     $this->markTestSkipped();
+  }
+
+  /**
+   * Tests the `needsRssViewModeUpdate` method.
+   */
+  public function testUpdateRssViewMode(): void {
+    $this->strictConfigSchema = FALSE;
+
+    /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+    $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+
+    // Load the test view.
+    $view_id = 'views.view.test_display_feed';
+    $test_view = $this->loadTestView($view_id);
+    $display = $test_view->getDisplay('feed_1');
+
+    // Check the initial view mode.
+    $rowViewMode = $display['display_options']['row']['options']['view_mode'] ?? FALSE;
+    $this->assertEquals('default', $rowViewMode);
+
+    // Update the view mode using the method under test.
+    $view_config_updater->needsRssViewModeUpdate($test_view, 'old_view_mode');
+
+    // Assert if the view mode was updated correctly.
+    $display = $test_view->getDisplay('feed_1');
+    $updatedRowViewMode = $display['display_options']['row']['options']['view_mode'] ?? FALSE;
+    $this->assertEquals('old_view_mode', $updatedRowViewMode);
+  }
+
+  /**
+   * Tests the `needsRssViewModeUpdate` method.
+   */
+  public function testUpdateRssViewModeWithoutKnownPreviousMode(): void {
+    $this->installEntitySchema('node');
+    $this->installConfig(['text', 'field', 'node']);
+
+    $this->strictConfigSchema = FALSE;
+
+    /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+    $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+
+    // Load the test view.
+    $view_id = 'views.view.test_display_feed';
+    $test_view = $this->loadTestView($view_id);
+    $display = $test_view->getDisplay('feed_1');
+
+    // Check the initial view mode.
+    $rowViewMode = $display['display_options']['row']['options']['view_mode'] ?? FALSE;
+    $this->assertEquals('default', $rowViewMode);
+
+    // Update the view mode using the method under test.
+    $view_config_updater->needsRssViewModeUpdate($test_view);
+
+    // Assert if the view mode was updated correctly.
+    $display = $test_view->getDisplay('feed_1');
+    $updatedRowViewMode = $display['display_options']['row']['options']['view_mode'] ?? FALSE;
+
+    // This should be the first node view mode since we have nothing else
+    $this->assertEquals('rss', $updatedRowViewMode);
+  }
+
+  /**
+   * Tests if onSave also updates the view.
+   */
+  public function testUpdateRssViewModeWithoutKnownPreviousModeOnSaveHandler(): void {
+    $this->installEntitySchema('node');
+    $this->installConfig(['text', 'field', 'node']);
+
+    $this->strictConfigSchema = FALSE;
+
+    // Load the test view.
+    $view_id = 'views.view.test_display_feed';
+    $test_view = $this->loadTestView($view_id);
+    $display = $test_view->getDisplay('feed_1');
+
+    // Check the initial view mode.
+    $rowViewMode = $display['display_options']['row']['options']['view_mode'] ?? FALSE;
+    $this->assertEquals('default', $rowViewMode);
+
+    $test_view->save();
+
+    // Assert if the view mode was updated correctly onSave.
+    $display = $test_view->getDisplay('feed_1');
+    $updatedRowViewMode = $display['display_options']['row']['options']['view_mode'] ?? FALSE;
+
+    // This should be the first node view mode since we have nothing else
+    $this->assertEquals('rss', $updatedRowViewMode);
+  }
+
+  /**
+   * Tests the `needsRssViewModeUpdate` method.
+   */
+  public function testUpdateRssViewModeSkipsOtherType(): void {
+    $this->strictConfigSchema = FALSE;
+
+    /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+    $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+
+    // Load the test view.
+    $view_id = 'views.view.test_display_feed_no_update';
+    $test_view = $this->loadTestView($view_id);
+    $display = $test_view->getDisplay('feed_1');
+
+    // Check the initial view mode.
+    $rowViewMode = $display['display_options']['row']['options']['view_mode'] ?? FALSE;
+    $this->assertEquals('default', $rowViewMode);
+
+    // Update the view mode using the method under test.
+    $view_config_updater->needsRssViewModeUpdate($test_view, 'old_view_mode');
+
+    // Assert if the view mode was updated correctly.
+    $display = $test_view->getDisplay('feed_1');
+    $updatedRowViewMode = $display['display_options']['row']['options']['view_mode'] ?? FALSE;
+    $this->assertEquals('default', $updatedRowViewMode);
   }
 
   /**

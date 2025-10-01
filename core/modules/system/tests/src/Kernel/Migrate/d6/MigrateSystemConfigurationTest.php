@@ -95,11 +95,6 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
         'gzip' => TRUE,
       ],
     ],
-    'system.rss' => [
-      'items' => [
-        'view_mode' => 'title',
-      ],
-    ],
     'system.site' => [
       // Neither langcode nor default_langcode are not handled by the migration.
       'langcode' => 'en',
@@ -141,7 +136,6 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'system_logging',
       'system_maintenance',
       'd6_system_performance',
-      'system_rss',
       'system_site',
     ];
     $this->executeMigrations($migrations);

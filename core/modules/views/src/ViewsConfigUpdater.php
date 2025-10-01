@@ -4,6 +4,7 @@ namespace Drupal\views;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -35,6 +36,7 @@ class ViewsConfigUpdater {
     private readonly ViewsData $viewsData,
     #[Autowire(service: 'plugin.manager.field.formatter')]
     private readonly PluginManagerInterface $formatterPluginManager,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
   ) {
   }
 
@@ -77,6 +79,9 @@ class ViewsConfigUpdater {
         $changed = TRUE;
       }
       if ($this->processBlockContentListingEmptyUpdate($view)) {
+        $changed = TRUE;
+      }
+      if ($this->processRssViewModeUpdate($view)) {
         $changed = TRUE;
       }
       return $changed;
@@ -346,6 +351,83 @@ class ViewsConfigUpdater {
     if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
       $deprecations_triggered = TRUE;
       @trigger_error(sprintf('The update to remove the block_content_listing_empty plugin from view "%s" is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3336219', $view->id()), E_USER_DEPRECATED);
+    }
+
+    return $changed;
+  }
+
+  /**
+   * Checks for views needing a default RSS view mode.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   * @param string|null $previous_view_mode
+   *   The previous view mode.
+   *
+   * @return bool
+   *   TRUE if the view has been updated.
+   */
+  public function needsRssViewModeUpdate(ViewEntityInterface $view, ?string $previous_view_mode = NULL): bool {
+    return $this->processRssViewModeUpdate($view, $previous_view_mode);
+  }
+
+  /**
+   * Processes views and sets the default RSS view mode if necessary.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   * @param string|null $previous_view_mode
+   *   The previous view mode.
+   *
+   * @return bool
+   *   TRUE if the view was updated with a default RSS view mode.
+   */
+  public function processRssViewModeUpdate(ViewEntityInterface $view, ?string $previous_view_mode = NULL) : bool {
+    $changed = FALSE;
+    $displays = $view->get('display');
+
+    // Row types that need updating.
+    $row_types = [
+      'comment_rss' => 'comment',
+      'node_rss' => 'node',
+    ];
+
+    foreach ($displays as &$display) {
+      if (isset($display['display_options']['row']['options']['view_mode']) &&
+        array_key_exists($display['display_options']['row']['type'], $row_types) &&
+        $display['display_options']['row']['options']['view_mode'] === 'default') {
+
+        // When system.rss is already removed but a view is saved, we still need
+        // to try and set the view_mode to something more sane. But detecting
+        // if the view mode was always default, or default because it used the
+        // system.rss setting is hard. So if there is a default mode available
+        // it will use that.
+        // It would make sense to use any RSS view_mode if available, but that
+        // would mean 'default' can never be set as a view mode. That is an
+        // issue, therefore, if we have a default view mode available, we will
+        // use that.
+        if ($previous_view_mode === NULL) {
+          $view_modes = $this->entityDisplayRepository->getViewModes($row_types[$display['display_options']['row']['type']]);
+          if (array_key_exists('default', $view_modes)) {
+            return FALSE;
+          }
+
+          // If there is no default, the most likely view mode is RSS. If that
+          // is available we use that. Otherwise, fall back to the first
+          // available.
+          $probable_view_mode = isset($view_modes['rss']) ? 'rss' : array_key_first($view_modes);
+          $display['display_options']['row']['options']['view_mode'] = $probable_view_mode;
+          $changed = TRUE;
+        }
+        else {
+          $display['display_options']['row']['options']['view_mode'] = $previous_view_mode;
+          $changed = TRUE;
+        }
+      }
+    }
+
+    if ($changed) {
+      $view->set('display', $displays);
     }
 
     return $changed;

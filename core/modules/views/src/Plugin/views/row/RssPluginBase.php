@@ -13,6 +13,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class RssPluginBase extends RowPluginBase {
 
   /**
+   * A fake view mode to only display titles.
+   */
+  const string TITLE_VIEW_MODE = '_views.rss.title';
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -73,7 +78,15 @@ abstract class RssPluginBase extends RowPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['view_mode'] = ['default' => 'default'];
+    // Select the rss view mode by default, otherwise select the first available
+    // view mode.
+    $view_modes = $this->entityDisplayRepository->getViewModes($this->entityTypeId);
+    if (isset($view_modes['rss'])) {
+      $options['view_mode'] = ['default' => 'rss'];
+    }
+    else {
+      $options['view_mode'] = ['default' => key($view_modes)];
+    }
 
     return $options;
   }

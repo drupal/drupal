@@ -53,11 +53,6 @@ system.admin_config_services:
   title: 'Web services'
   parent: system.admin_config
   route_name: system.admin_config_services
-system.rss_feeds_settings:
-  title: 'RSS publishing'
-  parent: system.admin_config_services
-  description: 'Configure the site description, the number of items per feed, and whether feeds should be titles/teasers/full-text.'
-  route_name: system.rss_feeds_settings
 system.admin_config_development:
   route_name: system.admin_config_development
   parent: system.admin_config

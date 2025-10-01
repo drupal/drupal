@@ -7,6 +7,8 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\EntityFormModeInterface;
+use Drupal\views\ViewEntityInterface;
+use Drupal\views\ViewsConfigUpdater;
 
 /**
  * Implements hook_removed_post_updates().
@@ -122,4 +124,27 @@ function system_post_update_convert_empty_description_entity_form_modes_to_null(
       return FALSE;
     });
 
+}
+
+/**
+ * Delete obsolete system.rss configuration.
+ */
+function system_post_update_delete_rss_config(array &$sandbox): void {
+  if (!isset($sandbox['#system_post_update_delete_rss_config__previous_view_mode'])) {
+    $sandbox['#system_post_update_delete_rss_config__previous_view_mode'] = \Drupal::configFactory()->getEditable('system.rss')->get('items.view_mode');
+  }
+
+  if (\Drupal::moduleHandler()->moduleExists('views')) {
+    /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+    $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+    $view_config_updater->setDeprecationsEnabled(FALSE);
+    \Drupal::classResolver(ConfigEntityUpdater::class)
+      ->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater, $sandbox): bool {
+        return $view_config_updater->needsRssViewModeUpdate($view, $sandbox['#system_post_update_delete_rss_config__previous_view_mode']);
+      });
+  }
+
+  if (!isset($sandbox['#finished']) || $sandbox['#finished'] >= 1) {
+    \Drupal::configFactory()->getEditable('system.rss')->delete();
+  }
 }

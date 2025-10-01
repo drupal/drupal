@@ -1,8 +1,3 @@
-system.rss_feeds_settings_tab:
-  route_name: system.rss_feeds_settings
-  title: Settings
-  base_route: system.rss_feeds_settings
-
 system.site_maintenance_mode_tab:
   route_name: system.site_maintenance_mode
   title: Settings
