@@ -69,8 +69,11 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
     $this->drupalGet("$field_ui_prefix/display/full");
     $assert_session->linkExists('Manage layout');
     $page->clickLink('Manage layout');
-    // Confirm the body field only is shown once.
-    $assert_session->elementsCount('css', '.field--name-body', 1);
+    // The fields have all been hidden at this point.
+    // Verify no Layout Builder blocks exist.
+    $assert_session->addressEquals("$field_ui_prefix/display/full/layout");
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementsCount('css', '.layout-builder-block', 0);
   }
 
   /**

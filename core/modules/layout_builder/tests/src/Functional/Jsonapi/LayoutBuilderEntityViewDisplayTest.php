@@ -48,10 +48,12 @@ class LayoutBuilderEntityViewDisplayTest extends EntityViewDisplayTest {
     $document = parent::getExpectedDocument();
     array_unshift($document['data']['attributes']['dependencies']['module'], 'layout_builder');
     $document['data']['attributes']['hidden'][OverridesSectionStorage::FIELD_NAME] = TRUE;
+    $document['data']['attributes']['hidden']['links'] = TRUE;
     $document['data']['attributes']['third_party_settings']['layout_builder'] = [
       'enabled' => TRUE,
       'allow_custom' => TRUE,
     ];
+    $document['data']['attributes']['content'] = [];
     return $document;
   }
 

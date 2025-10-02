@@ -38,10 +38,12 @@ abstract class LayoutBuilderEntityViewDisplayResourceTestBase extends EntityView
     $expected = parent::getExpectedNormalizedEntity();
     array_unshift($expected['dependencies']['module'], 'layout_builder');
     $expected['hidden'][OverridesSectionStorage::FIELD_NAME] = TRUE;
+    $expected['hidden']['links'] = TRUE;
     $expected['third_party_settings']['layout_builder'] = [
       'enabled' => TRUE,
       'allow_custom' => TRUE,
     ];
+    $expected['content'] = [];
     return $expected;
   }
 

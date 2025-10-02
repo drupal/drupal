@@ -155,7 +155,14 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         // Sort the components by weight.
         uasort($components, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
         foreach ($components as $name => $component) {
+          // We need to call setComponent so fields are added to the default
+          // section if enabled. However, this also adds the fields to the
+          // content key because of EntityDisplayBase::setComponent.
+          // Therefore, we need to hide the fields afterward.
+          // @todo simplify this in https://www.drupal.org/project/drupal/issues/3423225
           $this->setComponent($name, $component);
+          $this->hidden[$name] = $name;
+          unset($this->content[$name]);
         }
       }
       else {
