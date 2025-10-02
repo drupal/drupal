@@ -145,8 +145,8 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
     elseif (is_bool($value)) {
       $value = new AttributeBoolean($name, $value);
     }
-    // As a development aid, we allow the value to be a safe string object.
-    elseif ($value instanceof MarkupInterface) {
+    // As a development aid, we allow the value to be any Stringable object.
+    elseif ($value instanceof \Stringable) {
       // Attributes are not supposed to display HTML markup, so we just convert
       // the value to plain text.
       $value = PlainTextOutput::renderFromHtml($value);

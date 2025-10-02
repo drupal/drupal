@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Twig\Environment;
+use Twig\Markup as TwigMarkup;
 
 /**
  * Tests Drupal\Core\Template\Attribute.
@@ -389,6 +390,10 @@ class AttributeTest extends UnitTestCase {
     $string = '&quot;><script>alert(123)</script>';
     $data['safe-object-xss2'] = [['title' => Markup::create($string)], ' title="&quot;&gt;alert(123)"'];
     $data['non-safe-object-xss2'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
+
+    // \Twig\Markup objects are generated when using twig defined variables
+    // like `{% set xxx %}Foo{% endset %}`.
+    $data['twig-markup'] = [['title' => new TwigMarkup('foo', 'UTF-8')], ' title="foo"'];
 
     return $data;
   }
