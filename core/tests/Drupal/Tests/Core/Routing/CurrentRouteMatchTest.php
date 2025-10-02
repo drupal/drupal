@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Routing\NullRouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -78,6 +79,10 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
     // Restored original request.
     $request_stack->pop();
     $this->assertSame('1', $current_route_match->getParameter('foo'));
+
+    // Test a null request.
+    $request_stack->pop();
+    $this->assertTrue($current_route_match->getCurrentRouteMatch() instanceof NullRouteMatch);
   }
 
   /**
