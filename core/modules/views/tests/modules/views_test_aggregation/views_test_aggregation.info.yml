@@ -1,0 +1,8 @@
+name: 'Views Test Aggregation'
+type: module
+description: 'Provides a view with aggregation enabled.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:user
+  - drupal:views
