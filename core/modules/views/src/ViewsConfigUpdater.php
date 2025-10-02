@@ -215,45 +215,6 @@ class ViewsConfigUpdater {
   }
 
   /**
-   * Checks for fields with the format plural option set.
-   *
-   * @param \Drupal\views\ViewEntityInterface $view
-   *   The View to update.
-   *
-   * @return bool
-   *   TRUE if view has fields with the format plural option.
-   */
-  public function needsFormatPluralUpdate(ViewEntityInterface $view): bool {
-    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type) {
-      return $this->processFieldHandlerWithFormatPlural($handler, $handler_type);
-    });
-  }
-
-  /**
-   * Processes fields with the format plural option set.
-   *
-   * This option is only set for fields using an aggregation function such as
-   * COUNT or SUM. The data type is changed so it matches the field schema.
-   *
-   * @param array $handler
-   *   A display handler.
-   * @param string $handler_type
-   *   The handler type.
-   *
-   * @return bool
-   *   Whether the handler was updated.
-   */
-  protected function processFieldHandlerWithFormatPlural(array &$handler, string $handler_type): bool {
-    // Force view re-save if the format plural option exists.
-    if ($handler_type === 'field' && isset($handler['format_plural'])) {
-      // Cast to the correct data type. This changes 1/0 to true/false.
-      $handler['format_plural'] = (bool) $handler['format_plural'];
-      return TRUE;
-    }
-    return FALSE;
-  }
-
-  /**
    * Checks if 'remember_roles' setting of an exposed filter has disabled roles.
    *
    * @param \Drupal\views\ViewEntityInterface $view
