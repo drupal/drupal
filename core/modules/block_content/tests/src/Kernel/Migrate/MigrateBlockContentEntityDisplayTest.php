@@ -29,6 +29,7 @@ class MigrateBlockContentEntityDisplayTest extends MigrateDrupal7TestBase {
     $this->executeMigrations([
       'block_content_type',
       'block_content_body_field',
+      'block_content_body_field_storage',
       'block_content_entity_display',
     ]);
   }

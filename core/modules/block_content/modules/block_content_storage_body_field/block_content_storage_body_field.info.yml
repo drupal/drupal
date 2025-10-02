@@ -1,0 +1,10 @@
+name: 'Block Content storage body field'
+type: module
+description: 'When enabled, this module adds a default block content body field.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:block_content
+lifecycle: deprecated
+lifecycle_link: "https://www.drupal.org/node/3223395#s-block-content-storage-body-field"
+hidden: true

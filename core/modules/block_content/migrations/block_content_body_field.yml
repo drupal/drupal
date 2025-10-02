@@ -12,7 +12,6 @@ source:
       bundle: basic
       field_name: body
       label: Body
-      display_summary: false
       allowed_formats: {  }
   ids:
     entity_type:
@@ -27,12 +26,12 @@ process:
   bundle: bundle
   field_name: field_name
   label: label
-  'settings/display_summary': display_summary
 destination:
   plugin: entity:field_config
 migration_dependencies:
   required:
     - block_content_type
+    - block_content_body_field_storage
 provider:
   - block_content
   - migrate_drupal

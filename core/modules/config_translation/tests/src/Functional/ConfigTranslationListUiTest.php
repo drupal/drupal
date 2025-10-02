@@ -6,12 +6,11 @@ namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\contact\Entity\ContactForm;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -24,6 +23,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('config_translation')]
 #[RunTestsInSeparateProcesses]
 class ConfigTranslationListUiTest extends BrowserTestBase {
+
+  use BlockContentCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -413,24 +414,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     ]);
 
     // Create a block content type.
-    $block_content_type = BlockContentType::create([
+    $this->createBlockContentType([
       'id' => 'basic',
       'label' => 'Basic',
       'revision' => FALSE,
-    ]);
-    $block_content_type->save();
-    $field = FieldConfig::create([
-      // The field storage is guaranteed to exist because it is supplied by the
-      // block_content module.
-      'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
-      'bundle' => $block_content_type->id(),
-      'label' => 'Body',
-      'settings' => [
-        'display_summary' => FALSE,
-        'allowed_formats' => [],
-      ],
-    ]);
-    $field->save();
+    ], TRUE);
 
     // Look at a few fields on a few entity types.
     $pages = [

@@ -36,6 +36,7 @@ class MigrateCustomBlockTest extends MigrateDrupal7TestBase {
       'd7_filter_format',
       'block_content_type',
       'block_content_body_field',
+      'block_content_body_field_storage',
       'd7_custom_block',
     ]);
   }
