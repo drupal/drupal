@@ -77,7 +77,7 @@ class UpdateMailTest extends UnitTestCase {
    * Test the subject and body of update text.
    */
   #[DataProvider('providerTestUpdateEmail')]
-  public function testUpdateEmail($notification_threshold, $params, $authorized, array $expected_body): void {
+  public function testUpdateEmail($notification_threshold, $params, array $expected_body): void {
     $langcode = 'en';
     $available_updates_url = 'https://example.com/admin/reports/updates';
     $update_settings_url = 'https://example.com/admin/reports/updates/settings';
@@ -124,8 +124,8 @@ class UpdateMailTest extends UnitTestCase {
       ->expects($this->exactly(2))
       ->method('generateFromRoute')
       ->willReturnMap([
-        ['update.status', [], ['absolute' => TRUE, 'language' => $langcode], FALSE, $update_settings_url],
-        ['update.settings', [], ['absolute' => TRUE], FALSE, $available_updates_url],
+        ['update.status', [], ['absolute' => TRUE, 'language' => $langcode], FALSE, $available_updates_url],
+        ['update.settings', [], ['absolute' => TRUE], FALSE, $update_settings_url],
       ]);
 
     // Set the container.
@@ -143,21 +143,9 @@ class UpdateMailTest extends UnitTestCase {
     $this->assertSame("New release(s) available for $site_name", $message['subject']);
 
     // Confirm each part of the body.
-    if ($authorized) {
-      $this->assertSame($expected_body[0], $message['body'][0]);
-      $this->assertSame($expected_body[1], $message['body'][1]->render());
-    }
-    else {
-      if (empty($params)) {
-        $this->assertSame($expected_body[0], $message['body'][0]);
-        $this->assertSame($expected_body[1], $message['body'][1]->render());
-      }
-      else {
-        $this->assertSame($expected_body[0], $message['body'][0]->render());
-        $this->assertSame($expected_body[1], $message['body'][1]);
-        $this->assertSame($expected_body[2], $message['body'][2]);
-        $this->assertSame($expected_body[3], $message['body'][3]->render());
-      }
+    for ($i = 0; $i < count($expected_body); $i++) {
+      $body_part = is_string($message['body'][$i]) ? $message['body'][$i] : $message['body'][$i]->render();
+      $this->assertSame($expected_body[$i], $body_part);
     }
   }
 
@@ -167,51 +155,242 @@ class UpdateMailTest extends UnitTestCase {
    * @return array
    *   - The value of the update setting 'notification.threshold'.
    *   - An array of parameters for update_mail.
-   *   - TRUE if the user is authorized.
-   *   - An array of message body strings.
+   *   - An array of expected message body strings.
    */
   public static function providerTestUpdateEmail(): array {
     return [
-      'all' => [
+      // Configured to notify for all available releases. Drupal Core is missing
+      // an available update, there are no contrib modules installed.
+      'all: only core, not current' => [
         'all',
-        [],
-        FALSE,
         [
-          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
-          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates.',
+          'core' => UpdateManagerInterface::NOT_CURRENT,
+        ],
+        [
+          'There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
         ],
       ],
-      'security' => [
-        'security',
-        [],
-        FALSE,
+      // Configured to notify for all available releases. Drupal Core is missing
+      // a security release, there are no contrib modules installed.
+      'all: only core, not secure' => [
+        'all',
         [
-          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
-          'Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates.',
+          'core' => UpdateManagerInterface::NOT_SECURE,
+        ],
+        [
+          'There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
         ],
       ],
-      // Choose parameters that do not require changes to the mocks.
-      'not secure' => [
+      // Configured to notify for all available releases. Drupal Core is missing
+      // an available update, contrib is up to date.
+      'all: core not current, contrib current' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::NOT_CURRENT,
+          'contrib' => UpdateManagerInterface::CURRENT,
+        ],
+        [
+          'There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.',
+          '',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to notify for all available releases. Drupal Core is up to
+      // date, but contrib is missing an available update.
+      'all: core current, contrib not current' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::CURRENT,
+          'contrib' => UpdateManagerInterface::NOT_CURRENT,
+        ],
+        [
+          '',
+          'There are updates available for one or more of your modules or themes. To ensure the proper functioning of your site, you should update as soon as possible.',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to notify for all available releases. Both Drupal Core and
+      // contrib are missing available updates.
+      'all: both not current' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::NOT_CURRENT,
+          'contrib' => UpdateManagerInterface::NOT_CURRENT,
+        ],
+        [
+          'There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.',
+          'There are updates available for one or more of your modules or themes. To ensure the proper functioning of your site, you should update as soon as possible.',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to notify for all available releases. Core is missing a
+      // security release, contrib is up to date.
+      'all: core not secure, contrib current' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::NOT_SECURE,
+          'contrib' => UpdateManagerInterface::CURRENT,
+        ],
+        [
+          'There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!',
+          '',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to notify for all available releases. Core is missing a
+      // security release, contrib is missing a regular update.
+      'all: core not secure, contrib not current' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::NOT_SECURE,
+          'contrib' => UpdateManagerInterface::NOT_CURRENT,
+        ],
+        [
+          'There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!',
+          'There are updates available for one or more of your modules or themes. To ensure the proper functioning of your site, you should update as soon as possible.',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to notify for all available releases. Core is up to date,
+      // but contrib is missing a security update.
+      'all: core current, contrib not secure' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::CURRENT,
+          'contrib' => UpdateManagerInterface::NOT_SECURE,
+        ],
+        [
+          '',
+          'There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to notify for all available releases. Core is missing a
+      // regular update, contrib is missing a security update.
+      'all: core not current, contrib not secure' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::NOT_CURRENT,
+          'contrib' => UpdateManagerInterface::NOT_SECURE,
+        ],
+        [
+          'There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.',
+          'There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to notify for all available releases. Both core and contrib
+      // are missing a security update.
+      'all: both not secure' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::NOT_SECURE,
+          'contrib' => UpdateManagerInterface::NOT_SECURE,
+        ],
+        [
+          'There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!',
+          'There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to only show security notifications. Core is missing a
+      // security release, no contrib modules installed.
+      'security: only core, not secure' => [
         'security',
         [
           'core' => UpdateManagerInterface::NOT_SECURE,
-          'contrib' => NULL,
         ],
-        FALSE,
         [
-          "There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!",
-          '',
-          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
-          "Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates.",
+          'There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates/settings.',
         ],
       ],
-      'authorize' => [
-        'all',
-        [],
-        TRUE,
+      // Configured to only show security notifications. Core is missing a
+      // security release, contrib is up to date.
+      'security: core not secure, contrib current' => [
+        'security',
         [
-          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
-          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates.',
+          'core' => UpdateManagerInterface::NOT_SECURE,
+          'contrib' => UpdateManagerInterface::CURRENT,
+        ],
+        [
+          'There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!',
+          '',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to only show security notifications. Core is missing a
+      // security release, contrib is missing a regular release.
+      'security: core not secure, contrib not current' => [
+        'security',
+        [
+          'core' => UpdateManagerInterface::NOT_SECURE,
+          'contrib' => UpdateManagerInterface::NOT_CURRENT,
+        ],
+        [
+          'There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!',
+          'There are updates available for one or more of your modules or themes. To ensure the proper functioning of your site, you should update as soon as possible.',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to only show security notifications. Core is up to date, but
+      // contrib is missing a security update.
+      'security: core current, contrib not secure' => [
+        'security',
+        [
+          'core' => UpdateManagerInterface::CURRENT,
+          'contrib' => UpdateManagerInterface::NOT_SECURE,
+        ],
+        [
+          '',
+          'There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to only show security notifications. Core is missing a
+      // regular update, contrib is missing a security update.
+      'security: core not current, contrib not secure' => [
+        'security',
+        [
+          'core' => UpdateManagerInterface::NOT_CURRENT,
+          'contrib' => UpdateManagerInterface::NOT_SECURE,
+        ],
+        [
+          'There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.',
+          'There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates/settings.',
+        ],
+      ],
+      // Configured to only show security notifications. Both core and contrib
+      // are missing a security update.
+      'security: both not secure' => [
+        'security',
+        [
+          'core' => UpdateManagerInterface::NOT_SECURE,
+          'contrib' => UpdateManagerInterface::NOT_SECURE,
+        ],
+        [
+          'There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!',
+          'There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates",
+          'Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates/settings.',
         ],
       ],
     ];
