@@ -144,7 +144,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *       label: Indent
  *     outdent:
  *       label: Outdent
- *   @encode
+ *   @endcode
  * - drupal.conditions: Conditions required for the plugin to load (other than
  *   module dependencies, which are defined by the 'provider' property).
  *   Conditions can check for five different things:
