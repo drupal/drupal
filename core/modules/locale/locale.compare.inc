@@ -173,8 +173,6 @@ function locale_translation_default_translation_server() {
  *   Array of project names to check. Defaults to all translatable projects.
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
- *
- * @todo Return batch or NULL.
  */
 function locale_translation_check_projects($projects = [], $langcodes = []): void {
   if (locale_translation_use_remote_source()) {
