@@ -46,7 +46,7 @@ class PathProcessorFront implements InboundPathProcessorInterface {
       // with URL query, so that actual URL takes precedence.
       if (!empty($components['query'])) {
         parse_str($components['query'], $parameters);
-        array_replace($parameters, $request->query->all());
+        $parameters = array_replace($parameters, $request->query->all());
         $request->query->replace($parameters);
       }
     }
