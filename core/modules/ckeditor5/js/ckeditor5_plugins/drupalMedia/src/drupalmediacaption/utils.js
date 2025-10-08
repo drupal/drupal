@@ -6,7 +6,7 @@ import { isDrupalMedia } from '../utils';
  *
  * @param {module:engine/model/selection~Selection} selection
  *   The current selection.
- * @returns {module:engine/model/element~Element|null}
+ * @returns {module:engine/model/element~ModelElement|null}
  *   The Drupal Media caption element for a model selection. Returns null if the
  *   selection has no Drupal Media caption element ancestor.
  */

@@ -9,7 +9,6 @@ import {
   View,
   ViewCollection,
   createLabeledInputText,
-  injectCssTransitionDisabler,
   submitHandler,
   Template,
 } from 'ckeditor5/src/ui';
@@ -104,8 +103,6 @@ export default class TextAlternativeFormView extends View {
         this.cancelButtonView,
       ],
     });
-
-    injectCssTransitionDisabler(this);
   }
 
   /**

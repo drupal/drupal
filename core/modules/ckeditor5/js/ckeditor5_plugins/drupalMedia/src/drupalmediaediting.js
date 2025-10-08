@@ -75,7 +75,7 @@ export default class DrupalMediaEditing extends Plugin {
   /**
    * Upcast `drupalMediaIsImage` from Drupal Media metadata.
    *
-   * @param {module:engine/model/node~Node} modelElement
+   * @param {module:engine/model/node~ModelNode} modelElement
    *   The `drupalMedia` model element.
    *
    * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
@@ -124,7 +124,7 @@ export default class DrupalMediaEditing extends Plugin {
   /**
    * Upcast `drupalMediaType` from Drupal Media metadata.
    *
-   * @param {module:engine/model/node~Node} modelElement
+   * @param {module:engine/model/node~ModelNode} modelElement
    *   The `drupalMedia` model element.
    *
    * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
@@ -168,7 +168,7 @@ export default class DrupalMediaEditing extends Plugin {
   /**
    * Fetches preview from the server.
    *
-   * @param {module:engine/model/element~Element} modelElement
+   * @param {module:engine/model/element~ModelElement} modelElement
    *   The model element which preview should be loaded.
    * @return {Promise<{preview: string, label: string}>}
    *   A promise that returns an object.
@@ -464,7 +464,7 @@ export default class DrupalMediaEditing extends Plugin {
    *
    * Not previewing data-caption since it does not get updated by new changes.
    *
-   * @param {module:engine/model/element~Element} modelElement
+   * @param {module:engine/model/element~ModelElement} modelElement
    *   The drupalMedia model element to be converted.
    * @return {string}
    *   The model element converted into HTML.
