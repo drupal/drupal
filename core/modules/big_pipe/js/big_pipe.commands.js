@@ -56,6 +56,12 @@
     insert({ data, method, selector }) {
       const target = htmx.find(selector);
 
+      // In rare circumstances, the target may not be found, such as if
+      // the target is in a noscript element.
+      if (target === null) {
+        return;
+      }
+
       // Detach behaviors.
       htmx.trigger(target, 'htmx:drupal:unload');
 
