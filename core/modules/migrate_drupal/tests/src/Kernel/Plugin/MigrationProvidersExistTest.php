@@ -186,6 +186,8 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
    *   A field plugin definition.
    * @param string $missing_property
    *   The name of the property missing from the definition.
+   *
+   * @group legacy
    */
   #[DataProvider('fieldPluginDefinitionsProvider')]
   public function testFieldProviderMissingRequiredProperty(array $definitions, $missing_property): void {

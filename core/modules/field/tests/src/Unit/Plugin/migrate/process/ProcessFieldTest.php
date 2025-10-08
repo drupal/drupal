@@ -20,6 +20,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Tests the ProcessField migrate process plugin.
+ *
+ * @phpstan-ignore classConstant.deprecatedClass
  */
 #[CoversClass(ProcessField::class)]
 #[Group('field')]

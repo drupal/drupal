@@ -9,12 +9,14 @@ use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the field plugin manager.
  */
 #[CoversClass(MigrateFieldPluginManager::class)]
 #[Group('migrate_drupal')]
+#[IgnoreDeprecations]
 class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
 
   /**

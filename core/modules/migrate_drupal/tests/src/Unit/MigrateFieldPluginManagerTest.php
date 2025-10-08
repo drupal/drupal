@@ -17,6 +17,8 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the MigrateFieldPluginManager class.
+ *
+ * @phpstan-ignore classConstant.deprecatedClass
  */
 #[CoversClass(MigrateFieldPluginManager::class)]
 #[Group('migrate_drupal')]

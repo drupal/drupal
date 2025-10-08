@@ -37,6 +37,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  * @see \Drupal\migrate_drupal\Plugin\MigrateFieldInterface;
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ * replacement.
+ *
+ * @see https://www.drupal.org/node/3533566
  */
 #[MigrateProcess('process_field')]
 class ProcessField extends ProcessPluginBase implements ContainerFactoryPluginInterface {
@@ -73,6 +78,7 @@ class ProcessField extends ProcessPluginBase implements ContainerFactoryPluginIn
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->fieldPluginManager = $field_plugin_manager;
     $this->migration = $migration;
+    @trigger_error(__CLASS__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566', E_USER_DEPRECATED);
   }
 
   /**
@@ -83,6 +89,7 @@ class ProcessField extends ProcessPluginBase implements ContainerFactoryPluginIn
       $configuration,
       $plugin_id,
       $plugin_definition,
+      // @phpstan-ignore getDeprecatedService.deprecated
       $container->get('plugin.manager.migrate.field'),
       $migration
     );
