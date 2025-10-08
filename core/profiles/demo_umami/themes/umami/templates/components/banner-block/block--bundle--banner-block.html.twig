@@ -34,7 +34,7 @@
     {% block image %}
       {{ content.field_media_image }}
     {% endblock %}
-    {% block content %}
+    {% block banner_content %}
       {% include "umami:title" with {
         attributes: create_attribute({'class': ['banner__title']}),
         label: content.field_title,
