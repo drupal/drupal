@@ -40,7 +40,7 @@ trait CKEditor5TestTrait {
     // use the CKEditor API.
     $javascript = <<<JS
 (function(){
-  return Drupal.CKEditor5Instances.get(Drupal.CKEditor5Instances.keys().next().value).getData();
+  return Drupal.CKEditor5Instances.get(Drupal.CKEditor5Instances.keys().next().value).getData({ skipListItemIds: true });
 })();
 JS;
     return $this->getSession()->evaluateScript($javascript);

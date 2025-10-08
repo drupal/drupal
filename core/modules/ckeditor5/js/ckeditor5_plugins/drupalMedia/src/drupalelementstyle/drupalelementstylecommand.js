@@ -72,7 +72,7 @@ export default class DrupalElementStyleCommand extends Command {
    *
    * @example {drupalAlign: 'left', drupalViewMode: 'full'}
    *
-   * @param {module:engine/model/element~Element} element
+   * @param {module:engine/model/element~ModelElement} element
    *   The element.
    *
    * @return {Object}

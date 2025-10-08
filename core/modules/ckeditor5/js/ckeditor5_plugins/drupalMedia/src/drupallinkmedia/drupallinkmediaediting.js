@@ -7,10 +7,10 @@ import { toMap } from 'ckeditor5/src/utils';
 /**
  * Returns the first drupal-media element in a given view element.
  *
- * @param {module:engine/view/element~Element} viewElement
+ * @param {module:engine/view/element~ModelElement} viewElement
  *   The view element.
  *
- * @return {module:engine/view/element~Element|undefined}
+ * @return {module:engine/view/element~ModelElement|undefined}
  *   The first <drupal-media> element or undefined if the element doesn't have
  *   <drupal-media> as a child element.
  */

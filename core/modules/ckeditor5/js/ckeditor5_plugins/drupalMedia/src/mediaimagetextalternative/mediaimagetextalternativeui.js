@@ -7,6 +7,7 @@ import { IconLowVision } from '@ckeditor/ckeditor5-icons';
 import {
   ButtonView,
   ContextualBalloon,
+  CssTransitionDisablerMixin,
   clickOutsideHandler,
 } from 'ckeditor5/src/ui';
 
@@ -100,7 +101,9 @@ export default class MediaImageTextAlternativeUi extends Plugin {
     /**
      * A form containing a textarea and buttons, used to change the `alt` text value.
      */
-    this._form = new TextAlternativeFormView(editor.locale);
+    this._form = new (CssTransitionDisablerMixin(TextAlternativeFormView))(
+      editor.locale,
+    );
 
     // Render the form so its #element is available for clickOutsideHandler.
     this._form.render();

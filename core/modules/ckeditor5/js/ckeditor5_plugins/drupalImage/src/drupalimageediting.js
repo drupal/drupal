@@ -2,7 +2,7 @@
 // cspell:ignore datafilter downcasted linkimageediting emptyelement downcastdispatcher imageloadobserver
 import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
-import ImageLoadObserver from '@ckeditor/ckeditor5-image/src/image/imageloadobserver';
+import { ImageLoadObserver } from '@ckeditor/ckeditor5-image/src/image/imageloadobserver';
 /**
  * @typedef {function} converterHandler
  *
@@ -22,7 +22,7 @@ import ImageLoadObserver from '@ckeditor/ckeditor5-image/src/image/imageloadobse
  * @param {writer} writer
  *  The CKEditor 5 writer object.
  *
- * @return {module:engine/view/emptyelement~EmptyElement}
+ * @return {module:engine/view/emptyelement~ViewEmptyElement}
  *  The empty image element.
  *
  * @private

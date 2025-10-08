@@ -2,7 +2,7 @@
 /**
  * Checks the schema to see if drupalElementStyle is supported on the element.
  *
- * @param {module:engine/model/element~Element|null} selectedElement
+ * @param {module:engine/model/element~ModelElement|null} selectedElement
  *   The selected element.
  * @param {string[]} modelAttributes
  *   Array of model attribute keys.
@@ -38,7 +38,7 @@ export function elementSupportsDrupalElementStyles(
  * @param {string[]} modelAttributes
  *   All available Drupal Element Style model attributes.
  *
- * @return {null|module:engine/model/element~Element}
+ * @return {null|module:engine/model/element~ModelElement}
  *   The closest element that supports element styles.
  *
  * @internal

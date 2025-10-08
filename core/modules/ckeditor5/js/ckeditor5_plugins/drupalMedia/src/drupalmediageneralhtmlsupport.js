@@ -55,11 +55,11 @@ function viewToModelDrupalMediaAttributeConverter(dataFilter) {
  *
  * @param {module:engine/model/writer~Writer} writer
  *   The writer.
- * @param {module:engine/view/element~Element} containerElement
+ * @param {module:engine/view/element~ModelElement} containerElement
  *   The container element.
  * @param {string} elementName
  *   The element name.
- * @return {module:engine/view/element~Element|undefined}
+ * @return {module:engine/view/element~ModelElement|undefined}
  *   The descendant element matching element name or undefined if not found.
  */
 function getDescendantElement(writer, containerElement, elementName) {
