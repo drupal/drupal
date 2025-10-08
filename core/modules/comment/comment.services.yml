@@ -30,5 +30,5 @@ services:
 
   comment.link_builder:
     class: Drupal\comment\CommentLinkBuilder
-    arguments: ['@current_user', '@comment.manager', '@module_handler', '@string_translation', '@entity_type.manager']
+    autowire: true
   Drupal\comment\CommentLinkBuilderInterface: '@comment.link_builder'

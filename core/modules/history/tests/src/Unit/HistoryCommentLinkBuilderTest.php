@@ -48,13 +48,6 @@ class HistoryCommentLinkBuilderTest extends UnitTestCase {
   protected $entityTypeManager;
 
   /**
-   * Module handler mock.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $moduleHandler;
-
-  /**
    * Current user proxy mock.
    *
    * @var \Drupal\Core\Session\AccountProxyInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -91,9 +84,8 @@ class HistoryCommentLinkBuilderTest extends UnitTestCase {
     $this->commentManager = $this->createMock('\Drupal\comment\CommentManagerInterface');
     $this->stringTranslation = $this->getStringTranslationStub();
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
-    $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
     $this->currentUser = $this->createMock('\Drupal\Core\Session\AccountProxyInterface');
-    $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->moduleHandler, $this->stringTranslation, $this->entityTypeManager);
+    $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->stringTranslation);
     $this->decoratedCommentLinkBuilder = new HistoryCommentLinkBuilder($this->commentLinkBuilder, $this->commentManager, $this->currentUser, $this->entityTypeManager);
     $this->commentManager->expects($this->any())
       ->method('getFields')
@@ -133,10 +125,6 @@ class HistoryCommentLinkBuilderTest extends UnitTestCase {
   #[DataProvider('getLinkCombinations')]
   public function testCommentLinkBuilder(array $node_args, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected): void {
     $node = $this->getMockNode(...$node_args);
-    $this->moduleHandler->expects($this->any())
-      ->method('moduleExists')
-      ->with('history')
-      ->willReturn($history_exists);
     $this->currentUser->expects($this->any())
       ->method('hasPermission')
       ->willReturnMap([

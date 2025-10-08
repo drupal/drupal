@@ -3,6 +3,7 @@
 namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -10,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a class for building markup for comment links on a commented entity.
@@ -18,7 +20,18 @@ use Drupal\Core\Url;
  */
 class CommentLinkBuilder implements CommentLinkBuilderInterface {
 
+  use DeprecatedServicePropertyTrait;
   use StringTranslationTrait;
+
+  /**
+   * Deprecated service properties.
+   *
+   * @see https://www.drupal.org/node/3544527
+   */
+  protected array $deprecatedProperties = [
+    'moduleHandler' => 'module_handler',
+    'entityTypeManager' => 'entity_type.manager',
+  ];
 
   /**
    * Current user.
@@ -35,39 +48,31 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
   protected $commentManager;
 
   /**
-   * Module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new CommentLinkBuilder object.
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   Current user.
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   Comment manager service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   Module handler service.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   * @param \Drupal\Core\StringTranslation\TranslationInterface|\Drupal\Core\Extension\ModuleHandlerInterface $string_translation
    *   String translation service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    */
-  public function __construct(AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    AccountInterface $current_user,
+    CommentManagerInterface $comment_manager,
+    #[Autowire(service: TranslationInterface::class)]
+    TranslationInterface|ModuleHandlerInterface $string_translation,
+  ) {
+    if ($string_translation instanceof ModuleHandlerInterface) {
+      @trigger_error('Passing the $module_handler argument to ' . __METHOD__ . '() is deprecated in drupal:11.3.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3544527', E_USER_DEPRECATED);
+      $string_translation = \Drupal::service(TranslationInterface::class);
+    }
+    if (array_any(func_get_args(), fn ($arg) => $arg instanceof EntityTypeManagerInterface)) {
+      @trigger_error('Passing the $entity_type_manager argument to ' . __METHOD__ . '() is deprecated in drupal:11.3.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3544527', E_USER_DEPRECATED);
+    }
     $this->currentUser = $current_user;
     $this->commentManager = $comment_manager;
-    $this->moduleHandler = $module_handler;
     $this->stringTranslation = $string_translation;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
