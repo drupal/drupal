@@ -13,6 +13,8 @@ use Behat\Mink\Session;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Utility\Error;
@@ -420,6 +422,20 @@ abstract class BrowserTestBase extends TestCase {
       $session = $this->container->get('request_stack')->getSession();
       $session->clear();
       $session->save();
+
+      // If cron is running because Automated Cron started it at the end of a
+      // test request, wait for it to complete.
+      if ($this->container->has('module_handler') && $this->container->has('lock')) {
+        $module_handler = $this->container->get('module_handler');
+        assert($module_handler instanceof ModuleHandlerInterface);
+        $lock = $this->container->get('lock');
+        assert($lock instanceof LockBackendInterface);
+        if ($module_handler->moduleExists('automated_cron') && !$lock->lockMayBeAvailable('cron')) {
+          // Use the timeout that is used for acquiring the lock as a delay.
+          /* @see \Drupal\Core\Cron::run() */
+          $lock->wait('cron', 900.0);
+        }
+      }
     }
 
     // Destroy the testing kernel.
