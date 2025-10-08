@@ -10,7 +10,9 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 
 /**
  * Methods to help with entities using the layout builder.
@@ -19,10 +21,8 @@ trait LayoutEntityHelperTrait {
 
   /**
    * The section storage manager.
-   *
-   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
    */
-  protected $sectionStorageManager;
+  protected SectionStorageManagerInterface $sectionStorageManager;
 
   /**
    * Determines if an entity can have a layout.
@@ -152,7 +152,45 @@ trait LayoutEntityHelperTrait {
    *   The section storage manager.
    */
   private function sectionStorageManager() {
-    return $this->sectionStorageManager ?: \Drupal::service('plugin.manager.layout_builder.section_storage');
+    return $this->sectionStorageManager ?? \Drupal::service('plugin.manager.layout_builder.section_storage');
+  }
+
+  /**
+   * Gets the overrides section storage for an entity.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The entity with the overridden layout.
+   *
+   * @return \Drupal\layout_builder\OverridesSectionStorageInterface|null
+   *   The overrides section storage if found otherwise NULL.
+   */
+  public function getOverridesSectionStorageForEntity(FieldableEntityInterface $entity): ?OverridesSectionStorageInterface {
+    $contexts = $this->getSectionStorageContextsForEntity($entity);
+    return $this->sectionStorageManager()->load('overrides', $contexts);
+  }
+
+  /**
+   * Gets the section storage contexts for an entity.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The entity with the overridden layout.
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextInterface[]
+   *   The section storage contexts.
+   */
+  public function getSectionStorageContextsForEntity(FieldableEntityInterface $entity): array {
+    $contexts = [];
+
+    $contexts['entity'] = EntityContext::fromEntity($entity);
+    // @todo Expand to work for all view modes in
+    //   https://www.drupal.org/node/2907413.
+    $view_mode = 'full';
+    // Retrieve the actual view mode from the returned view display as the
+    // requested view mode may not exist and a fallback will be used.
+    $view_mode = LayoutBuilderEntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getMode();
+    $contexts['view_mode'] = new Context(new ContextDefinition('string'), $view_mode);
+
+    return $contexts;
   }
 
 }
