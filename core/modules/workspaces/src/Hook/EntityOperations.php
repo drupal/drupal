@@ -168,6 +168,10 @@ class EntityOperations {
       }
 
       $entity->setPublished();
+      // Ensure that the second (workspace-specific) revision is marked as new
+      // early, so operations that are executed before the entity presave hook
+      // (e.g. field-level presave) can take that into account.
+      $entity->setNewRevision();
       $entity->isDefaultRevision(FALSE);
       $entity->save();
     }
