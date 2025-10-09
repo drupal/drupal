@@ -263,7 +263,9 @@ trait PerformanceTestTrait {
       $args[':keys__0'] = 'KEY';
     }
 
-    // Inline query arguments and log the query.
+    // Inline query arguments and log the query, reverse arguments to avoid
+    // matches on placeholders with 2+ digits.
+    $args = array_reverse($args);
     $query = str_replace(array_keys($args), array_values(static::quoteQueryArgs($args)), $query);
     $performance_data->logQuery($query);
   }
