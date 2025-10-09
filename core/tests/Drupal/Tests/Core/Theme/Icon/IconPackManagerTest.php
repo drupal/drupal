@@ -88,7 +88,6 @@ class IconPackManagerTest extends UnitTestCase {
 
     $reflection = new \ReflectionClass($iconPackManager);
     $method = $reflection->getMethod('validateDefinition');
-    $method->setAccessible(TRUE);
 
     try {
       $result = $method->invoke($iconPackManager, $definition);
