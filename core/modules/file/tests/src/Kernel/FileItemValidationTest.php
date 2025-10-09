@@ -11,12 +11,13 @@ use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests that files referenced in file and image fields are always validated.
- *
- * @group file
  */
+#[Group('file')]
 class FileItemValidationTest extends KernelTestBase {
 
   /**
@@ -57,10 +58,12 @@ class FileItemValidationTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\file\Plugin\Validation\Constraint\FileValidationConstraint
-   * @covers \Drupal\file\Plugin\Validation\Constraint\FileValidationConstraintValidator
-   * @dataProvider getFileTypes
+   * Tests file validation constraint.
+   *
+   * @legacy-covers \Drupal\file\Plugin\Validation\Constraint\FileValidationConstraint
+   * @legacy-covers \Drupal\file\Plugin\Validation\Constraint\FileValidationConstraintValidator
    */
+  #[DataProvider('getFileTypes')]
   public function testFileValidationConstraint($file_type): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_test_file',

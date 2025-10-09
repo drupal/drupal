@@ -8,13 +8,12 @@ use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\join\CastedIntFieldJoin;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * Tests the "casted_int_field_join" join plugin.
  *
- * @group views
  * @see \Drupal\views\Plugin\views\join\CastedIntFieldJoin
  */
 abstract class CastedIntFieldJoinTestBase extends DriverSpecificKernelTestBase {

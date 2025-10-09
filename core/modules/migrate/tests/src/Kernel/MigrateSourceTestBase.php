@@ -80,7 +80,10 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   }
 
   /**
-   * Determines the plugin to be tested by reading the class @covers annotation.
+   * Determines the plugin to be tested.
+   *
+   * This is identified by the first #[CoverClass] attribute set on the
+   * concrete test class.
    *
    * @return string
    *   The fully qualified class name of the plugin to be tested.

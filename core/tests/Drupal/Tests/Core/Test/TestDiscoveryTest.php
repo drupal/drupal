@@ -122,14 +122,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests['phpunit-kernel'] = [
       // Expected result.
       [
-        'name' => '\Drupal\Tests\file\Kernel\FileItemValidationTest',
+        'name' => 'Drupal\Tests\file\Kernel\FileItemValidationTest',
         'group' => 'file',
         'groups' => ['file'],
         'description' => 'Tests that files referenced in file and image fields are always validated.',
         'type' => 'PHPUnit-Kernel',
       ],
       // Classname.
-      '\Drupal\Tests\file\Kernel\FileItemValidationTest',
+      'Drupal\Tests\file\Kernel\FileItemValidationTest',
     ];
 
     // Test with a different amount of leading spaces.

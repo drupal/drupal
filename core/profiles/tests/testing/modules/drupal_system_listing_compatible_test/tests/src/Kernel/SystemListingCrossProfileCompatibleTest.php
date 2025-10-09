@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\drupal_system_listing_compatible_test\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Verifies that tests in installation profile modules are found.
- *
- * @group drupal_system_listing_compatible_test
  */
+#[Group('drupal_system_listing_compatible_test')]
 class SystemListingCrossProfileCompatibleTest extends KernelTestBase {
 
   /**

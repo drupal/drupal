@@ -11,8 +11,8 @@ use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Exception\ComposerNotReadyException;
 use Drupal\package_manager\InstalledPackage;
 use Drupal\package_manager\InstalledPackagesList;
-use Drupal\Tests\package_manager\Traits\InstalledPackagesListTrait;
 use Drupal\package_manager\PathLocator;
+use Drupal\Tests\package_manager\Traits\InstalledPackagesListTrait;
 use PhpTuf\ComposerStager\API\Exception\PreconditionException;
 use PhpTuf\ComposerStager\API\Exception\RuntimeException;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
@@ -20,20 +20,26 @@ use PhpTuf\ComposerStager\API\Precondition\Service\ComposerIsAvailableInterface;
 use PhpTuf\ComposerStager\API\Process\Service\ComposerProcessRunnerInterface;
 use PhpTuf\ComposerStager\API\Process\Service\OutputCallbackInterface;
 use PhpTuf\ComposerStager\API\Process\Value\OutputTypeEnum;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
- * @coversDefaultClass \Drupal\package_manager\ComposerInspector
- *
- * @group package_manager
+ * Tests Drupal\package_manager\ComposerInspector.
  */
+#[CoversClass(ComposerInspector::class)]
+#[Group('package_manager')]
 class ComposerInspectorTest extends PackageManagerKernelTestBase {
 
   use InstalledPackagesListTrait;
 
   /**
-   * @covers ::getConfig
+   * Tests config.
+   *
+   * @legacy-covers ::getConfig
    */
   public function testConfig(): void {
     $dir = $this->container->get(PathLocator::class)
@@ -74,7 +80,9 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers ::getConfig
+   * Tests config undefined key.
+   *
+   * @legacy-covers ::getConfig
    */
   public function testConfigUndefinedKey(): void {
     $project_root = $this->container->get(PathLocator::class)
@@ -99,7 +107,9 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers ::getInstalledPackagesList
+   * Tests get installed packages list.
+   *
+   * @legacy-covers ::getInstalledPackagesList
    */
   public function testGetInstalledPackagesList(): void {
     $project_root = $this->container->get(PathLocator::class)
@@ -153,7 +163,9 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers ::validate
+   * Tests composer unavailable.
+   *
+   * @legacy-covers ::validate
    */
   public function testComposerUnavailable(): void {
     $precondition = $this->prophesize(ComposerIsAvailableInterface::class);
@@ -192,11 +204,10 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
    *   The filename to delete, which should cause validate() to raise an
    *   error.
    *
-   * @covers ::validate
-   *
-   * @testWith ["composer.json"]
-   *   ["composer.lock"]
+   * @legacy-covers ::validate
    */
+  #[TestWith(["composer.json"])]
+  #[TestWith(["composer.lock"])]
   public function testComposerFilesDoNotExist(string $filename): void {
     $project_root = $this->container->get(PathLocator::class)
       ->getProjectRoot();
@@ -216,6 +227,8 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   }
 
   /**
+   * Tests version check.
+   *
    * @param string|null $reported_version
    *   The version of Composer that will be returned by ::getVersion().
    * @param string|null $expected_message
@@ -223,30 +236,29 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
    *   Composer. If not passed, will default to the message format defined in
    *   ::validate().
    *
-   * @covers ::validate
-   *
-   * @testWith ["2.2.12", "<default>"]
-   *   ["2.2.13", "<default>"]
-   *   ["2.5.0", "<default>"]
-   *   ["2.5.5", "<default>"]
-   *   ["2.5.11", "<default>"]
-   *   ["2.7.0", null]
-   *   ["2.2.11", "<default>"]
-   *   ["2.2.0-dev", "<default>"]
-   *   ["2.3.6", "<default>"]
-   *   ["2.4.1", "<default>"]
-   *   ["2.3.4", "<default>"]
-   *   ["2.1.6", "<default>"]
-   *   ["1.10.22", "<default>"]
-   *   ["1.7.3", "<default>"]
-   *   ["2.0.0-alpha3", "<default>"]
-   *   ["2.1.0-RC1", "<default>"]
-   *   ["1.0.0-RC", "<default>"]
-   *   ["1.0.0-beta1", "<default>"]
-   *   ["1.9-dev", "<default>"]
-   *   ["@package_version@", "Invalid version string \"@package_version@\""]
-   *   [null, "Unable to determine Composer version"]
+   * @legacy-covers ::validate
    */
+  #[TestWith(["2.2.12", "<default>"])]
+  #[TestWith(["2.2.13", "<default>"])]
+  #[TestWith(["2.5.0", "<default>"])]
+  #[TestWith(["2.5.5", "<default>"])]
+  #[TestWith(["2.5.11", "<default>"])]
+  #[TestWith(["2.7.0", NULL])]
+  #[TestWith(["2.2.11", "<default>"])]
+  #[TestWith(["2.2.0-dev", "<default>"])]
+  #[TestWith(["2.3.6", "<default>"])]
+  #[TestWith(["2.4.1", "<default>"])]
+  #[TestWith(["2.3.4", "<default>"])]
+  #[TestWith(["2.1.6", "<default>"])]
+  #[TestWith(["1.10.22", "<default>"])]
+  #[TestWith(["1.7.3", "<default>"])]
+  #[TestWith(["2.0.0-alpha3", "<default>"])]
+  #[TestWith(["2.1.0-RC1", "<default>"])]
+  #[TestWith(["1.0.0-RC", "<default>"])]
+  #[TestWith(["1.0.0-beta1", "<default>"])]
+  #[TestWith(["1.9-dev", "<default>"])]
+  #[TestWith(["@package_version@", "Invalid version string \"@package_version@\""])]
+  #[TestWith([NULL, "Unable to determine Composer version"])]
   public function testVersionCheck(?string $reported_version, ?string $expected_message): void {
     $runner = $this->mockComposerRunner($reported_version);
 
@@ -294,11 +306,12 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers ::getVersion
+   * Tests get version.
    *
-   * @testWith ["2.5.6"]
-   *   [null]
+   * @legacy-covers ::getVersion
    */
+  #[TestWith(["2.5.6"])]
+  #[TestWith([NULL])]
   public function testGetVersion(?string $reported_version): void {
     $this->container->set(ComposerProcessRunnerInterface::class, $this->mockComposerRunner($reported_version)->reveal());
 
@@ -310,7 +323,9 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers ::validate
+   * Tests composer validate is called.
+   *
+   * @legacy-covers ::validate
    */
   public function testComposerValidateIsCalled(): void {
     $project_root = $this->container->get(PathLocator::class)
@@ -340,7 +355,9 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   }
 
   /**
-   * @covers ::getRootPackageInfo
+   * Tests root package info.
+   *
+   * @legacy-covers ::getRootPackageInfo
    */
   public function testRootPackageInfo(): void {
     $project_root = $this->container->get(PathLocator::class)
@@ -364,13 +381,16 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
    *   The expected exception message, or NULL if no exception should be thrown.
    *   The token <PROJECT_ROOT> will be replaced with the project root.
    *
-   * @covers ::getInstalledPackagesList
-   *
-   * @testWith [true, null, null]
-   *   [true, "<PROJECT_ROOT>/another/directory", "Metapackage 'test/package' is installed at unexpected path: '<PROJECT_ROOT>/another/directory', expected NULL"]
-   *   [false, null, null]
-   *   [false, "<PROJECT_ROOT>", "Package 'test/package' cannot be installed at path: '<PROJECT_ROOT>'"]
+   * @legacy-covers ::getInstalledPackagesList
    */
+  #[TestWith([TRUE, NULL, NULL])]
+  #[TestWith([
+    TRUE,
+    "<PROJECT_ROOT>/another/directory",
+    "Metapackage 'test/package' is installed at unexpected path: '<PROJECT_ROOT>/another/directory', expected NULL",
+  ])]
+  #[TestWith([FALSE, NULL, NULL])]
+  #[TestWith([FALSE, "<PROJECT_ROOT>", "Package 'test/package' cannot be installed at path: '<PROJECT_ROOT>'"])]
   public function testMetapackagePath(bool $is_metapackage, ?string $install_path, ?string $exception_message): void {
     $inspector = new class (
       $this->container->get(ComposerProcessRunnerInterface::class),
@@ -500,10 +520,9 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
    * @param array|bool $expected_value
    *   The expected return value from getAllowPluginsConfig().
    *
-   * @covers ::getAllowPluginsConfig
-   *
-   * @dataProvider providerAllowedPlugins
+   * @legacy-covers ::getAllowPluginsConfig
    */
+  #[DataProvider('providerAllowedPlugins')]
   public function testAllowedPlugins(array $config, bool|array $expected_value): void {
     (new ActiveFixtureManipulator())
       ->addConfig($config)

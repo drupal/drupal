@@ -68,7 +68,7 @@ variables:
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.4-ubuntu"
   PHPUNIT_CONFIGURATION_FILE_PATH: $CI_PROJECT_DIR/core
-  PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: false
+  PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 #############
 # Stages    #
@@ -597,7 +597,6 @@ default:
     KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
     _TARGET_PHP: "8.3-ubuntu"
-    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ PHPUnit Unit tests on PHP 8.4':
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
@@ -605,7 +604,6 @@ default:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
-    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ PHPUnit Unit tests on PHP 8.5':
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
@@ -615,20 +613,17 @@ default:
     KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
     _TARGET_PHP: "8.5-ubuntu"
-    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ Component unit tests on PHP 8.3':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     _TARGET_PHP: "8.3-ubuntu"
-    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ Component unit tests on PHP 8.4':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '⚡️ Component unit tests on PHP 8.5':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
@@ -636,7 +631,6 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     _TARGET_PHP: "8.5-ubuntu"
-    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 '✅️ PHPStan rules tests':
   <<: [ *default-job-settings-lint ]

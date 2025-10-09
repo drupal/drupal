@@ -393,7 +393,7 @@ YAML
   /**
    * Tests getting a fallback value for an undefined environment variable.
    *
-   * @covers \Drupal\Core\Recipe\InputConfigurator::getDefaultValue
+   * @legacy-covers \Drupal\Core\Recipe\InputConfigurator::getDefaultValue
    */
   public function testFallbackValueForUndefinedEnvironmentVariable(): void {
     $recipe_data = [

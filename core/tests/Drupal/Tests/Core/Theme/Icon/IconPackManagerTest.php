@@ -18,8 +18,6 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Drupal\Core\Theme\Icon\Plugin\IconPackManager.
- *
- * @group icon
  */
 #[CoversClass(IconPackManager::class)]
 #[Group('icon')]

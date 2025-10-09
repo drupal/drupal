@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel\ConfigAction;
 
+use Drupal\ckeditor5\Plugin\ConfigAction\AddItemToToolbar;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Recipe\InvalidConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\editor\Entity\Editor;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @covers \Drupal\ckeditor5\Plugin\ConfigAction\AddItemToToolbar
- * @group ckeditor5
- * @group Recipe
+ * Tests add item to toolbar config action.
  */
+#[CoversClass(AddItemToToolbar::class)]
+#[Group('ckeditor5')]
+#[Group('Recipe')]
 class AddItemToToolbarConfigActionTest extends KernelTestBase {
 
   use RecipeTestTrait;
@@ -60,18 +65,22 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests add item to toolbar.
+   *
    * @param string|array<string, mixed> $action
    *   The value to pass to the config action.
    * @param string[] $expected_toolbar_items
    *   The items which should be in the editor toolbar, in the expected order.
-   *
-   * @testWith ["sourceEditing", ["heading", "bold", "italic", "sourceEditing"]]
-   *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic", "sourceEditing"]]
-   *   [{"item_name": "sourceEditing", "position": 1}, ["heading", "sourceEditing", "bold", "italic"]]
-   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "sourceEditing", "italic"]]
-   *   [{"item_name": "bold"}, ["heading", "bold", "italic"]]
-   *   [{"item_name": "bold", "allow_duplicate": true}, ["heading", "bold", "italic", "bold"]]
    */
+  #[TestWith(["sourceEditing", ["heading", "bold", "italic", "sourceEditing"]])]
+  #[TestWith([["item_name" => "sourceEditing"], ["heading", "bold", "italic", "sourceEditing"]])]
+  #[TestWith([["item_name" => "sourceEditing", "position" => 1], ["heading", "sourceEditing", "bold", "italic"]])]
+  #[TestWith([
+    ["item_name" => "sourceEditing", "position" => 1, "replace" => TRUE],
+    ["heading", "sourceEditing", "italic"],
+  ])]
+  #[TestWith([["item_name" => "bold"], ["heading", "bold", "italic"]])]
+  #[TestWith([["item_name" => "bold", "allow_duplicate" => TRUE], ["heading", "bold", "italic", "bold"]])]
   public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
     $recipe = $this->createRecipe([
       'name' => 'CKEditor 5 toolbar item test',

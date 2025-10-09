@@ -21364,12 +21364,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Abstract test class Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\SectionListTestBase must not add annotation @coversDefaultClass\\.$#',
-	'identifier' => 'abstractTestClass.metadataForbidden',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/SectionListTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\SectionListTestBase\\:\\:assertSections\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -27339,12 +27333,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/tests/src/Kernel/Migrate/d6/MigrateUrlAliasTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Abstract test class Drupal\\\\Tests\\\\path\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateUrlAliasTestBase must not add annotation @group\\.$#',
-	'identifier' => 'abstractTestClass.metadataForbidden',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Kernel/Migrate/d7/MigrateUrlAliasTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateUrlAliasTestBase\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
@@ -43733,12 +43721,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/CacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Abstract test class Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\CastedIntFieldJoinTestBase must not add annotation @group\\.$#',
-	'identifier' => 'abstractTestClass.metadataForbidden',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/CastedIntFieldJoinTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\CastedIntFieldJoinTestBase\\:\\:setUpFixtures\\(\\) has no return type specified\\.$#',

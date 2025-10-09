@@ -13,10 +13,14 @@ use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
- * @group Recipe
+ * Tests entity method config actions.
  */
+#[Group('Recipe')]
 class EntityMethodConfigActionsTest extends KernelTestBase {
 
   use BlockCreationTrait;
@@ -50,7 +54,9 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   }
 
   /**
-   *  @covers \Drupal\Core\Config\Entity\ConfigEntityBase::getThirdPartySetting
+   * Tests set single third party setting.
+   *
+   * @legacy-covers \Drupal\Core\Config\Entity\ConfigEntityBase::getThirdPartySetting
    */
   public function testSetSingleThirdPartySetting(): void {
     $this->configActionManager->applyAction(
@@ -98,9 +104,16 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   }
 
   /**
-   * @testWith ["set", {"property_name": "protected_property", "value": "Here be sandworms..."}]
-   *   ["setMultiple", [{"property_name": "protected_property", "value": "Here be sandworms..."}, {"property_name": "label", "value": "New face"}]]
+   * Tests set.
    */
+  #[TestWith(["set", ["property_name" => "protected_property", "value" => "Here be sandworms..."]])]
+  #[TestWith([
+    "setMultiple",
+    [
+      ["property_name" => "protected_property", "value" => "Here be sandworms..."],
+      ["property_name" => "label", "value" => "New face"],
+    ],
+  ])]
   public function testSet(string $action_name, array $value): void {
     $storage = $this->container->get(EntityTypeManagerInterface::class)
       ->getStorage('config_test');
@@ -128,11 +141,12 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   }
 
   /**
-   * @testWith [true, "setStatus", false, false]
-   *   [false, "setStatus", true, true]
-   *   [true, "disable", [], false]
-   *   [false, "enable", [], true]
+   * Tests set status.
    */
+  #[TestWith([TRUE, "setStatus", FALSE, FALSE])]
+  #[TestWith([FALSE, "setStatus", TRUE, TRUE])]
+  #[TestWith([TRUE, "disable", [], FALSE])]
+  #[TestWith([FALSE, "enable", [], TRUE])]
   public function testSetStatus(bool $initial_status, string $action_name, array|bool $value, bool $expected_status): void {
     $storage = $this->container->get(EntityTypeManagerInterface::class)
       ->getStorage('config_test');
@@ -155,9 +169,10 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   }
 
   /**
-   * @testWith ["hideComponent"]
-   *   ["hideComponents"]
+   * Tests remove component from display.
    */
+  #[TestWith(["hideComponent"])]
+  #[TestWith(["hideComponents"])]
   public function testRemoveComponentFromDisplay(string $action_name): void {
     $this->assertStringStartsWith('hideComponent', $action_name);
 
@@ -231,10 +246,9 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
 
   /**
    * Tests that the setProperties action refuses to modify entity IDs or UUIDs.
-   *
-   * @testWith ["id"]
-   *   ["uuid"]
    */
+  #[TestWith(["id"])]
+  #[TestWith(["uuid"])]
   public function testSetPropertiesWillNotChangeEntityKeys(string $key): void {
     $view_display = $this->container->get(EntityDisplayRepositoryInterface::class)
       ->getViewDisplay('entity_test_with_bundle', 'test');
@@ -254,9 +268,8 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
 
   /**
    * Tests that the simpleConfigUpdate action cannot be used on entities.
-   *
-   * @group legacy
    */
+  #[IgnoreDeprecations]
   public function testSimpleConfigUpdateFailsOnEntities(): void {
     $view_display = $this->container->get(EntityDisplayRepositoryInterface::class)
       ->getViewDisplay('entity_test_with_bundle', 'test');

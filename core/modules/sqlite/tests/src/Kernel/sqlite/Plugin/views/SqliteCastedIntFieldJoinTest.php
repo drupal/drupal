@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests SQLite specific cast handling.
  */
 #[Group('Database')]
+#[Group('views')]
 class SqliteCastedIntFieldJoinTest extends CastedIntFieldJoinTestBase {
 
   /**

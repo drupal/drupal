@@ -6,12 +6,13 @@ namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\system\Entity\Menu;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests validation of menu entities.
- *
- * @group system
  */
+#[Group('system')]
 class MenuValidationTest extends ConfigEntityValidationTestBase {
 
   /**
@@ -60,19 +61,19 @@ class MenuValidationTest extends ConfigEntityValidationTestBase {
   /**
    * Tests that description is optional, and limited to 512 characters.
    *
-   * phpcs:disable Drupal.Commenting
+   * phpcs:ignore Drupal.Commenting.DocComment.LongNotCapital
    * cspell:disable
-   *
-   * @testWith [null, {}]
-   *           ["", {}]
-   *           ["This is an ASCII description.", {}]
-   *           ["This is an emoji in a description: 🕺.", []]
-   *           ["Iste et sunt ut cum. Suscipit officia molestias amet provident et sunt sit. Tenetur doloribus odit sapiente doloremque sequi id dignissimos. In rerum nihil voluptatibus architecto laborum. Repellendus eligendi laborum id nesciunt alias incidunt non. Tenetur deserunt facere voluptas nisi id. Aut ab eaque eligendi. Nihil quasi illum sit provident voluptatem repellat temporibus autem. Mollitia quisquam error facilis quasi voluptate. Dignissimos quis culpa nobis veritatis ut vel laudantium cumque. Rerum mollitia deleniti possimus placeat rerum. Reiciendis distinctio soluta voluptatem.", {"description": "This value is too long. It should have <em class=\"placeholder\">512</em> characters or less."}]
-   *
-   * cspell:enable
-   * phpcs:enable Drupal.Commenting
    */
+  #[TestWith([NULL, []])]
+  #[TestWith(["", []])]
+  #[TestWith(["This is an ASCII description.", []])]
+  #[TestWith(["This is an emoji in a description: 🕺.", []])]
+  #[TestWith([
+    "Iste et sunt ut cum. Suscipit officia molestias amet provident et sunt sit. Tenetur doloribus odit sapiente doloremque sequi id dignissimos. In rerum nihil voluptatibus architecto laborum. Repellendus eligendi laborum id nesciunt alias incidunt non. Tenetur deserunt facere voluptas nisi id. Aut ab eaque eligendi. Nihil quasi illum sit provident voluptatem repellat temporibus autem. Mollitia quisquam error facilis quasi voluptate. Dignissimos quis culpa nobis veritatis ut vel laudantium cumque. Rerum mollitia deleniti possimus placeat rerum. Reiciendis distinctio soluta voluptatem.",
+    ["description" => "This value is too long. It should have <em class=\"placeholder\">512</em> characters or less."],
+  ])]
   public function testDescription(?string $description, array $expected_errors): void {
+    // cspell:enable
     $this->entity->set('description', $description);
     $this->assertValidationErrors($expected_errors);
   }

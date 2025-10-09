@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests PostgreSQL specific cast handling.
  */
 #[Group('Database')]
+#[Group('views')]
 class PgsqlCastedIntFieldJoinTest extends CastedIntFieldJoinTestBase {
 
   /**

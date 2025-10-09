@@ -8,15 +8,16 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Performs tests on AJAX framework commands.
- *
- * @group Ajax
  */
+#[Group('Ajax')]
 class CommandsTest extends KernelTestBase {
 
   /**
@@ -66,9 +67,8 @@ class CommandsTest extends KernelTestBase {
 
   /**
    * Checks empty content in commands does not throw exceptions.
-   *
-   * @doesNotPerformAssertions
    */
+  #[DoesNotPerformAssertions]
   public function testEmptyInsertCommand(): void {
     (new InsertCommand('foobar', []))->render();
   }

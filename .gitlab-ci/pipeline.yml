@@ -27,10 +27,6 @@ default:
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - echo "SIMPLETEST_DB = $SIMPLETEST_DB"
     - export PHPUNIT_CONFIGURATION_FILE_PATH=$CI_PROJECT_DIR/core
-    - |
-      [[ $TESTSUITE == PHPUnit-Build ]] && export PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION=true
-      [[ $TESTSUITE == PHPUnit-Functional ]] && export PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION=true
-      [[ $TESTSUITE == PHPUnit-FunctionalJavascript ]] && export PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION=true
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
@@ -77,7 +73,7 @@ variables:
   MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
-  PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: false
+  PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
 
 .with-database: &with-database
   name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production

@@ -7,13 +7,13 @@ namespace Drupal\Tests\layout_builder\Kernel;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
 use Drupal\layout_builder\SectionListTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Drupal\layout_builder\SectionListTrait.
  */
-#[CoversClass(SectionListTrait::class)]
+#[CoversTrait(SectionListTrait::class)]
 #[Group('layout_builder')]
 class SectionListTraitTest extends SectionListTestBase {
 

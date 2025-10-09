@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests MySQL specific cast handling.
  */
 #[Group('Database')]
+#[Group('views')]
 class MySqlCastedIntFieldJoinTest extends CastedIntFieldJoinTestBase {
 
   /**

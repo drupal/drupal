@@ -6,16 +6,19 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
+use Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint;
+use Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraintValidator;
 
 /**
  * Tests the ConfigExists constraint validator.
- *
- * @group config
- * @group Validation
- *
- * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint
- * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraintValidator
  */
+#[CoversClass(ConfigExistsConstraint::class)]
+#[CoversClass(ConfigExistsConstraintValidator::class)]
+#[Group('config')]
+#[Group('Validation')]
 class ConfigExistsConstraintValidatorTest extends KernelTestBase {
 
   /**
@@ -25,11 +28,10 @@ class ConfigExistsConstraintValidatorTest extends KernelTestBase {
 
   /**
    * Tests the ConfigExists constraint validator.
-   *
-   * @testWith [{}, "system.site", "system.site"]
-   *           [{"prefix": "system."}, "site", "system.site"]
-   *           [{"prefix": "system.[%parent.reference]."}, "admin", "system.menu.admin"]
    */
+  #[TestWith([[], "system.site", "system.site"])]
+  #[TestWith([["prefix" => "system."], "site", "system.site"])]
+  #[TestWith([["prefix" => "system.[%parent.reference]."], "admin", "system.menu.admin"])]
   public function testValidation(array $constraint_options, string $value, string $expected_config_name): void {
     // Create a data definition that specifies the value must be a string with
     // the name of an existing piece of config.
