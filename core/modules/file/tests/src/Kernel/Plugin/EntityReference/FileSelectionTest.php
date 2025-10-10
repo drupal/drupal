@@ -11,12 +11,12 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests file selection plugin.
- *
- * @group file
  */
+#[Group('file')]
 class FileSelectionTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
