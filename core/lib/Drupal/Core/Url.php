@@ -820,7 +820,7 @@ class Url implements TrustedCallbackInterface {
    * @param bool $return_as_object
    *   (optional) Defaults to FALSE.
    *
-   * @return bool|\Drupal\Core\Access\AccessResultInterface
+   * @return ($return_as_object is true ? \Drupal\Core\Access\AccessResultInterface : bool)
    *   The access result. Returns a boolean if $return_as_object is FALSE (this
    *   is the default) and otherwise an AccessResultInterface object.
    *   When a boolean is returned, the result of AccessInterface::isAllowed() is
