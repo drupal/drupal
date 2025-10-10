@@ -1,0 +1,7 @@
+name: 'Text test'
+type: module
+description: 'Provides test hook implementations for text tests'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:text
