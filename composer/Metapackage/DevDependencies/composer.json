@@ -21,6 +21,7 @@
         "open-telemetry/exporter-otlp": "^1",
         "open-telemetry/sdk": "^1",
         "php-http/guzzle7-adapter": "^1.0",
+        "phpspec/prophecy": "^1.23",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan": "^1.12.27 || ^2.1.26",
