@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of field_storage_config entities.
  */
 #[Group('field')]
+#[Group('config')]
+#[Group('Validation')]
 class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
 
   /**

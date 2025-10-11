@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of filter_format entities.
  */
 #[Group('filter')]
+#[Group('config')]
+#[Group('Validation')]
 class FilterFormatValidationTest extends ConfigEntityValidationTestBase {
 
   /**

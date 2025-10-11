@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('Entity')]
 #[Group('Validation')]
+#[Group('config')]
 class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

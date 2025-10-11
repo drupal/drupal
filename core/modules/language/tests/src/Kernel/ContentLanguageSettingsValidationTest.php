@@ -14,6 +14,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of content_language_settings entities.
  */
 #[Group('language')]
+#[Group('config')]
+#[Group('Validation')]
 class ContentLanguageSettingsValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

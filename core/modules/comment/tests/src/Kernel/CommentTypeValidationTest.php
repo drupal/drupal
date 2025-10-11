@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of comment_type entities.
  */
 #[Group('comment')]
+#[Group('config')]
+#[Group('Validation')]
 class CommentTypeValidationTest extends ConfigEntityValidationTestBase {
 
   /**

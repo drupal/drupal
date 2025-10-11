@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of rest_resource_config entities.
  */
 #[Group('rest')]
+#[Group('config')]
+#[Group('Validation')]
 class RestResourceConfigValidationTest extends ConfigEntityValidationTestBase {
 
   /**

@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of shortcut_set entities.
  */
 #[Group('shortcut')]
+#[Group('config')]
+#[Group('Validation')]
 class ShortcutSetValidationTest extends ConfigEntityValidationTestBase {
 
   /**

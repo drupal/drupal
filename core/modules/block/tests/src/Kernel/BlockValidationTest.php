@@ -16,6 +16,8 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  */
 #[Group('block')]
 #[Group('#slow')]
+#[Group('config')]
+#[Group('Validation')]
 class BlockValidationTest extends ConfigEntityValidationTestBase {
 
   /**

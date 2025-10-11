@@ -16,6 +16,8 @@ use PHPUnit\Framework\Attributes\TestWith;
  */
 #[Group('node')]
 #[Group('#slow')]
+#[Group('config')]
+#[Group('Validation')]
 class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

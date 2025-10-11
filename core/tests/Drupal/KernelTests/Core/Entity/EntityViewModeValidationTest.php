@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('Entity')]
 #[Group('Validation')]
+#[Group('config')]
 class EntityViewModeValidationTest extends ConfigEntityValidationTestBase {
 
   /**

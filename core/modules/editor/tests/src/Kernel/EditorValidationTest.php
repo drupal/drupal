@@ -15,6 +15,8 @@ use PHPUnit\Framework\Attributes\TestWith;
  * Tests validation of editor entities.
  */
 #[Group('editor')]
+#[Group('config')]
+#[Group('Validation')]
 class EditorValidationTest extends ConfigEntityValidationTestBase {
 
   /**

@@ -14,6 +14,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of search_page entities.
  */
 #[Group('search')]
+#[Group('config')]
+#[Group('Validation')]
 class SearchPageValidationTest extends ConfigEntityValidationTestBase {
 
   /**

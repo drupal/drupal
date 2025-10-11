@@ -17,6 +17,8 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('layout_builder')]
 #[Group('#slow')]
+#[Group('config')]
+#[Group('Validation')]
 class LayoutBuilderEntityViewDisplayValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

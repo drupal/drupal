@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of contact_form entities.
  */
 #[Group('contact')]
+#[Group('config')]
+#[Group('Validation')]
 class ContactFormValidationTest extends ConfigEntityValidationTestBase {
 
   /**

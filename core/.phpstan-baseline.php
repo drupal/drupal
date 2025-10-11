@@ -46429,12 +46429,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigDependencyTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Abstract test class Drupal\\\\KernelTests\\\\Core\\\\Config\\\\ConfigEntityValidationTestBase must not add attribute PHPUnit\\\\Framework\\\\Attributes\\\\Group\\.$#',
-	'identifier' => 'abstractTestClass.metadataForbidden',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigEntityValidationTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Config\\\\Storage\\\\CachedStorageTest\\:\\:read\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

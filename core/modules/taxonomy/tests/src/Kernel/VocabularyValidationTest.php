@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of vocabulary entities.
  */
 #[Group('taxonomy')]
+#[Group('config')]
+#[Group('Validation')]
 class VocabularyValidationTest extends ConfigEntityValidationTestBase {
 
   /**

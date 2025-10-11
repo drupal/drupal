@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of responsive_image_style entities.
  */
 #[Group('responsive_image')]
+#[Group('config')]
+#[Group('Validation')]
 class ResponsiveImageStyleValidationTest extends ConfigEntityValidationTestBase {
 
   /**

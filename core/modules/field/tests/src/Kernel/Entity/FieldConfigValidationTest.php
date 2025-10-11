@@ -15,6 +15,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of field_config entities.
  */
 #[Group('field')]
+#[Group('config')]
+#[Group('Validation')]
 class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

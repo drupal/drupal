@@ -19,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('Entity')]
 #[Group('Validation')]
+#[Group('config')]
 class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

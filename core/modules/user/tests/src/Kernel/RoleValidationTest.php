@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of user_role entities.
  */
 #[Group('user')]
+#[Group('config')]
+#[Group('Validation')]
 class RoleValidationTest extends ConfigEntityValidationTestBase {
 
   /**

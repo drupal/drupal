@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\TestWith;
  */
 #[Group('Entity')]
 #[Group('Validation')]
+#[Group('config')]
 class DateFormatValidationTest extends ConfigEntityValidationTestBase {
 
   /**

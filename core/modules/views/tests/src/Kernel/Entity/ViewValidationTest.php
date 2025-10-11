@@ -14,6 +14,8 @@ use PHPUnit\Framework\Attributes\TestWith;
  * Tests validation of view entities.
  */
 #[Group('views')]
+#[Group('config')]
+#[Group('Validation')]
 class ViewValidationTest extends ConfigEntityValidationTestBase {
 
   /**

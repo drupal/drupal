@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\TestWith;
  * Tests validation of menu entities.
  */
 #[Group('system')]
+#[Group('config')]
+#[Group('Validation')]
 class MenuValidationTest extends ConfigEntityValidationTestBase {
 
   /**

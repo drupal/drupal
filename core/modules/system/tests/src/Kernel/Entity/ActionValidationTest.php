@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('system')]
 #[Group('#slow')]
+#[Group('config')]
+#[Group('Validation')]
 class ActionValidationTest extends ConfigEntityValidationTestBase {
 
   /**

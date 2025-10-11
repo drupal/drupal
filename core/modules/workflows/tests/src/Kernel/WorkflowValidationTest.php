@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of workflow entities.
  */
 #[Group('workflows')]
+#[Group('config')]
+#[Group('Validation')]
 class WorkflowValidationTest extends ConfigEntityValidationTestBase {
 
   /**

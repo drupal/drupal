@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of image_style entities.
  */
 #[Group('image')]
+#[Group('config')]
+#[Group('Validation')]
 class ImageStyleValidationTest extends ConfigEntityValidationTestBase {
 
   /**

@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('block_content')]
 #[Group('#slow')]
+#[Group('config')]
+#[Group('Validation')]
 class BlockContentTypeValidationTest extends ConfigEntityValidationTestBase {
 
   /**

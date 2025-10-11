@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of media_type entities.
  */
 #[Group('media')]
+#[Group('config')]
+#[Group('Validation')]
 class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
 
   use MediaTypeCreationTrait;

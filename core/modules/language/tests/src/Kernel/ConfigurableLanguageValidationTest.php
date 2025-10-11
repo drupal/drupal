@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests validation of configurable_language entities.
  */
 #[Group('language')]
+#[Group('config')]
+#[Group('Validation')]
 class ConfigurableLanguageValidationTest extends ConfigEntityValidationTestBase {
 
   /**
