@@ -62,11 +62,10 @@ class EntityBundle extends ConditionPluginBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->getDerivativeId());
     $form['bundles'] = [
       '#title' => $this->pluginDefinition['label'],
       '#type' => 'checkboxes',
-      '#options' => array_combine(array_keys($bundles), array_column($bundles, 'label')),
+      '#options' => $this->entityTypeBundleInfo->getBundleLabels($this->getDerivativeId()),
       '#default_value' => $this->configuration['bundles'],
     ];
     return parent::buildConfigurationForm($form, $form_state);

@@ -139,8 +139,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
 
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_bundle_information */
     $entity_bundle_information = \Drupal::service('entity_type.bundle.info');
-    $bundle_info = $entity_bundle_information->getBundleInfo($target_type);
-    $bundles = array_map(fn($bundle) => $bundle_info[$bundle]['label'], $handler_settings['target_bundles']);
+    $bundles = array_intersect_key($entity_bundle_information->getBundleLabels($target_type), $handler_settings['target_bundles']);
     $bundle_label = \Drupal::entityTypeManager()->getDefinition($target_type)->getBundleLabel();
 
     if (!empty($bundles)) {

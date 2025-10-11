@@ -852,10 +852,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     }
 
     // Validate that each selected media is of an allowed bundle.
-    $all_bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('media');
-    $bundle_labels = array_map(function ($bundle) use ($all_bundles) {
-      return $all_bundles[$bundle]['label'];
-    }, $element['#target_bundles']);
+    $bundle_labels = array_intersect_key(\Drupal::service('entity_type.bundle.info')->getBundleLabels('media'), $element['#target_bundles']);
     foreach ($media as $media_item) {
       if ($element['#target_bundles'] && !in_array($media_item->bundle(), $element['#target_bundles'], TRUE)) {
         $form_state->setError($element, new TranslatableMarkup('The media item "@label" is not of an accepted type. Allowed types: @types', [

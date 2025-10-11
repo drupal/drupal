@@ -160,14 +160,10 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#description' => $this->t('The view mode that an embedded media item should be displayed in by default. This can be overridden using the <code>data-view-mode</code> attribute.'),
     ];
 
-    $bundles = $this->entityTypeBundleInfo->getBundleInfo('media');
-    $bundle_options = array_map(function ($item) {
-      return $item['label'];
-    }, $bundles);
     $form['allowed_media_types'] = [
       '#title' => $this->t('Media types selectable in the Media Library'),
       '#type' => 'checkboxes',
-      '#options' => $bundle_options,
+      '#options' => $this->entityTypeBundleInfo->getBundleLabels('media'),
       '#default_value' => $this->settings['allowed_media_types'],
       '#description' => $this->t('If none are selected, all will be allowed.'),
       '#element_validate' => [[static::class, 'validateOptions']],
