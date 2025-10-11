@@ -162,7 +162,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
     $cacheability = $args[1] ?? new CacheableMetadata();
     $operations = [];
     $variables = [
-      '@entity_label' => $entity->label(),
+      '@entity_label' => $entity->label() ?? '',
       '@entity_bundle' => $entity->bundle(),
       '@entity_id' => $entity->id(),
     ];
