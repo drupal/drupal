@@ -1,13 +1,3 @@
-block_content.add_page:
-  path: '/block/add'
-  defaults:
-    _controller: '\Drupal\block_content\Controller\BlockContentController::add'
-    _title: 'Add content block'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _entity_create_any_access: 'block_content'
-
 block_content.add_form:
   path: '/block/add/{block_content_type}'
   defaults:
@@ -18,53 +8,10 @@ block_content.add_form:
   requirements:
     _entity_create_access: 'block_content:{block_content_type}'
 
-entity.block_content.canonical:
-  path: '/admin/content/block/{block_content}'
-  defaults:
-    _entity_form: 'block_content.edit'
-    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _entity_access: 'block_content.update'
-    _block_content_reusable: 'TRUE'
-    block_content: \d+
-
-entity.block_content.edit_form:
-  path: '/admin/content/block/{block_content}'
-  defaults:
-    _entity_form: 'block_content.edit'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _entity_access: 'block_content.update'
-    _block_content_reusable: 'TRUE'
-    block_content: \d+
-
-entity.block_content.delete_form:
-  path: '/admin/content/block/{block_content}/delete'
-  defaults:
-    _entity_form: 'block_content.delete'
-    _title: 'Delete'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _entity_access: 'block_content.delete'
-    _block_content_reusable: 'TRUE'
-    block_content: \d+
-
-block_content.type_add:
-  path: '/admin/structure/block-content/add'
-  defaults:
-    _entity_form: 'block_content_type.add'
-    _title: 'Add'
-  requirements:
-    _entity_create_access: 'block_content_type'
-
-entity.block_content.collection:
-  path: '/admin/content/block'
-  defaults:
-    _title: 'Content blocks'
-    _entity_list: 'block_content'
-  requirements:
-    _permission: 'access block library+administer block content'
+# @todo remove these aliases as well as overrides in BlockContentRouteProvider and BlockContentTypeRouteProvider when
+# https://www.drupal.org/project/drupal/issues/3506653 is done.
+# @see https://www.drupal.org/project/drupal/issues/3534380
+entity.block_content_type.add_form:
+  alias: block_content.type_add
+entity.block_content.add_page:
+  alias: block_content.add_page

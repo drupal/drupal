@@ -16,9 +16,13 @@ use Drupal\Core\Url;
  *   An associative array containing:
  *   - content: An array of block types.
  *
- * @see block_content_add_page()
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
+ *   entity_add_list instead.
+ *
+ * @see https://www.drupal.org/node/3530643
  */
 function template_preprocess_block_content_add_list(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use entity_add_list instead. See https://www.drupal.org/node/3530643', E_USER_DEPRECATED);
   $variables['types'] = [];
   $query = \Drupal::request()->query->all();
   foreach ($variables['content'] as $type) {

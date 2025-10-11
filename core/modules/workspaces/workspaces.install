@@ -92,6 +92,18 @@ function workspaces_update_last_removed(): int {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function workspaces_update_dependencies(): array {
+  // The workspaces updates must run after the router table is
+  // updated since it triggers route rebuilds due to the module install.
+  $dependencies['workspaces'][11102] = [
+    'system' => 11201,
+  ];
+  return $dependencies;
+}
+
+/**
  * Update workspace associations to support entity types with string IDs.
  */
 function workspaces_update_11101(): void {

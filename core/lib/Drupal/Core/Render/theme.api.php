@@ -1317,21 +1317,18 @@ function hook_theme($existing, $type, $theme, $path): array {
  *
  * For example:
  * @code
- * $theme_registry['block_content_add_list'] = [
- *   'template' => 'block-content-add-list',
+ * $theme_registry['entity_add_list'] = [
+ *   'template' => 'entity-add-list',
  *   'path' => 'core/themes/claro/templates',
  *   'type' => 'theme_engine',
  *   'theme path' => 'core/themes/claro',
- *   'includes' => [
- *     0 => 'core/modules/block_content/block_content.pages.inc',
- *   ],
  *   'variables' => [
- *     'content' => NULL,
+ *     'bundles' => NULL,
  *   ],
  *   'preprocess functions' => [
- *     1 => 'template_preprocess_block_content_add_list',
+ *     1 => 'template_preprocess_entity_add_list',
  *     2 => 'contextual_preprocess',
- *     3 => 'claro_preprocess_block_content_add_list',
+ *     3 => 'claro_preprocess_entity_add_list',
  *   ],
  * ];
  * @endcode

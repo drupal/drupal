@@ -63,6 +63,7 @@ class BlockContentHooks {
           'content' => NULL,
         ],
         'file' => 'block_content.pages.inc',
+        'deprecated' => 'The "block_content_add_list" template is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use "entity_add_list" instead. See https://www.drupal.org/node/3530643.',
       ],
     ];
   }

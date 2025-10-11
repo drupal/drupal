@@ -167,8 +167,13 @@ function claro_preprocess_node_add_list(&$variables): void {
  * Implements template_preprocess_HOOK() for block_content_add_list.
  *
  * Makes block_content_add_list variables compatible with entity_add_list.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use entity_add_list instead.
+ *
+ * @see https://www.drupal.org/node/3530643
  */
 function claro_preprocess_block_content_add_list(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use entity_add_list instead. See https://www.drupal.org/node/3530643', E_USER_DEPRECATED);
   if (!empty($variables['content'])) {
     $query = \Drupal::request()->query->all();
     /** @var \Drupal\block_content\BlockContentTypeInterface $type */

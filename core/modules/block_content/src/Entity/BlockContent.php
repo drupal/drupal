@@ -10,6 +10,7 @@ use Drupal\block_content\BlockContentTranslationHandler;
 use Drupal\block_content\BlockContentViewBuilder;
 use Drupal\block_content\BlockContentViewsData;
 use Drupal\block_content\Form\BlockContentDeleteForm;
+use Drupal\block_content\Routing\BlockContentRouteProvider;
 use Drupal\Core\Access\RefinableDependentAccessTrait;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
@@ -62,10 +63,15 @@ use Drupal\block_content\BlockContentInterface;
       'revision-delete' => RevisionDeleteForm::class,
       'revision-revert' => RevisionRevertForm::class,
     ],
-    'route_provider' => ['revision' => RevisionHtmlRouteProvider::class],
+    'route_provider' => [
+      'html' => BlockContentRouteProvider::class,
+      'revision' => RevisionHtmlRouteProvider::class,
+    ],
     'translation' => BlockContentTranslationHandler::class,
   ],
   links: [
+    'add-page' => '/block/add',
+    'add-form' => '/block/add/{block_content_type}',
     'canonical' => '/admin/content/block/{block_content}',
     'delete-form' => '/admin/content/block/{block_content}/delete',
     'edit-form' => '/admin/content/block/{block_content}',

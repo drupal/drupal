@@ -64,6 +64,10 @@ class EntityAddUITest extends BrowserTestBase {
     $this->drupalGet('/entity_test_with_bundle/add');
     $this->assertSession()->addressEquals('/entity_test_with_bundle/add/test');
 
+    // Confirm redirection also forwards query parameters.
+    $this->drupalGet('/entity_test_with_bundle/add', ['query' => ['donkeys' => 'ponies', 'unicorns' => 'rainbows']]);
+    $this->assertSession()->addressEquals('/entity_test_with_bundle/add/test?donkeys=ponies&unicorns=rainbows');
+
     // Two bundles exist. Confirm both are shown and that they are ordered
     // alphabetically by their labels, not by their IDs.
     EntityTestBundle::create([

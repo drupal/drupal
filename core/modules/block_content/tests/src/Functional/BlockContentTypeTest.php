@@ -89,11 +89,16 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Log in a test user.
     $this->drupalLogin($this->adminUser);
 
+    // Test the Add block type action link.
+    $this->drupalGet(Url::fromRoute('entity.block_content_type.collection'));
+    $this->assertSession()->linkExists('Add block type');
+    $this->assertSession()->linkByHrefExists('admin/structure/block-content/add');
+
     // Test the page with no block-types.
     $this->drupalGet('block/add');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('You have not created any block types yet');
-    $this->clickLink('block type creation page');
+    $this->assertSession()->pageTextContains('There is no block type yet');
+    $this->clickLink('Add a new block type');
 
     // Create a block type via the user interface.
     $edit = [

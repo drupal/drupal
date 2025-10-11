@@ -89,11 +89,9 @@ class PageEditTest extends BlockContentTestBase {
     $trail = [
       '' => 'Home',
       'admin/content/block' => 'Content blocks',
-      'admin/content/block/' . $revised_block->id() => $revised_block->label(),
+      'admin/content/block/' . $revised_block->id() => 'Edit ' . $revised_block->label(),
     ];
-    $this->assertBreadcrumb(
-      'admin/content/block/' . $revised_block->id() . '/delete', $trail
-    );
+    $this->assertBreadcrumb('admin/content/block/' . $revised_block->id() . '/delete', $trail);
   }
 
 }
