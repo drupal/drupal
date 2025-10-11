@@ -48,7 +48,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
    */
   protected function renderNewCommentsNodeLinks(array $node_ids): ResponseInterface {
     $client = $this->getHttpClient();
-    $url = Url::fromRoute('comment.new_comments_node_links');
+    $url = Url::fromRoute('history.new_comments_node_links');
 
     return $client->request('POST', $this->buildUrl($url), [
       'cookies' => $this->getSessionCookies(),

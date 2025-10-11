@@ -12,3 +12,10 @@ history.read_node:
   requirements:
     _entity_access: 'node.view'
     node: \d+
+
+history.new_comments_node_links:
+  path: '/history/render_new_comments_node_links'
+  defaults:
+    _controller: '\Drupal\history\Controller\HistoryController::renderNewCommentsNodeLinks'
+  requirements:
+    _permission: 'access content'

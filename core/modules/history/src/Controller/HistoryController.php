@@ -2,6 +2,7 @@
 
 namespace Drupal\history\Controller;
 
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -52,6 +53,52 @@ class HistoryController extends ControllerBase {
     history_write($node->id());
 
     return new JsonResponse((int) history_read($node->id()));
+  }
+
+  /**
+   * Returns a set of nodes' last read timestamps.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request of the page.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The JSON response.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   */
+  public function renderNewCommentsNodeLinks(Request $request): JsonResponse {
+    if (!$this->moduleHandler()->moduleExists('comment')) {
+      throw new NotFoundHttpException();
+    }
+
+    if ($this->currentUser()->isAnonymous()) {
+      throw new AccessDeniedHttpException();
+    }
+
+    if (!$request->request->has('node_ids') || !$request->request->has('field_name')) {
+      throw new NotFoundHttpException();
+    }
+    $nids = $request->request->all('node_ids');
+    $field_name = $request->request->get('field_name');
+
+    // Only handle up to 100 nodes.
+    $nids = array_slice($nids, 0, 100);
+
+    $links = [];
+    foreach ($nids as $nid) {
+      $node = $this->entityTypeManager()->getStorage('node')->load($nid);
+      $new = \Drupal::service('comment.manager')->getCountNewComments($node);
+      $page_number = $this->entityTypeManager()->getStorage('comment')
+        ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node, $field_name);
+      $query = $page_number ? ['page' => $page_number] : NULL;
+      $links[$nid] = [
+        'new_comment_count' => (int) $new,
+        'first_new_comment_link' => Url::fromRoute('entity.node.canonical', ['node' => $node->id()], ['query' => $query, 'fragment' => 'new'])->toString(),
+      ];
+    }
+
+    return new JsonResponse($links);
   }
 
 }

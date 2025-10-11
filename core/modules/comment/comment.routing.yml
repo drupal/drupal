@@ -92,6 +92,10 @@ comment.new_comments_node_links:
     _controller: '\Drupal\comment\Controller\CommentController::renderNewCommentsNodeLinks'
   requirements:
     _permission: 'access content'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.3.0'
+    message: 'The route "comment.new_comments_node_links" is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use "history.new_comments_node_links" route instead. See https://www.drupal.org/node/3543039'
 
 comment.node_redirect:
   path: '/comment/{node}/reply'
