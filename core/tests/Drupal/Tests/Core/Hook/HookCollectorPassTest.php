@@ -13,7 +13,6 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Tests Drupal\Core\Hook\HookCollectorPass.
@@ -62,17 +61,16 @@ function test_module_should_be_skipped();
 
 __EOF__
     );
-    $implementations['test_hook'][ProceduralCall::class]['test_module_test_hook'] = 'test_module';
-    $includes = [
-      'test_module_test_hook' => 'vfs://drupal_root/modules/test_module/includes/test_module.inc',
-    ];
 
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $module_filenames);
-    $container->setDefinition('module_handler', new Definition());
     (new HookCollectorPass())->process($container);
-    $this->assertSame($implementations, $container->getParameter('hook_implementations_map'));
-    $this->assertSame($includes, $container->getDefinition(ProceduralCall::class)->getArguments()[0]);
+
+    $this->assertEquals(
+      ['test_module_test_hook' => 'test_module'],
+      $container->getParameter('.hook_data')['hook_list']['test_hook'],
+    );
+    $this->assertEquals(['test_hook' => ['vfs://drupal_root/modules/test_module/includes/test_module.inc']], $container->getParameter('.hook_data')['includes']);
   }
 
   /**
@@ -83,12 +81,24 @@ __EOF__
    */
   public function testGroupIncludes(): void {
     $module_filenames = self::setupGroupIncludes();
+
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $module_filenames);
-    $container->setDefinition('module_handler', new Definition());
     (new HookCollectorPass())->process($container);
-    $argument = $container->getDefinition('module_handler')->getArgument('$groupIncludes');
-    $this->assertSame(self::GROUP_INCLUDES, $argument);
+
+    $expected_hook_list = [
+      'hook_info' => [
+        'test_module_hook_info' => 'test_module',
+      ],
+      'token_info' => [
+        'test_module_token_info' => 'test_module',
+      ],
+    ];
+    $hook_data = $container->getParameter('.hook_data');
+    $this->assertEquals($expected_hook_list, $hook_data['hook_list']);
+    // Assert that the group include is not duplicated into the includes list.
+    $this->assertEquals([], $hook_data['includes']);
+    $this->assertEquals(['token_info' => ['vfs://drupal_root/test_module.tokens.inc']], $hook_data['group_includes']);
   }
 
   /**
@@ -123,12 +133,14 @@ __EOF__
 
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $module_filenames);
-    $container->setDefinition('module_handler', new Definition());
     (new HookCollectorPass())->process($container);
     // Ensure that the hook is registered for the module it resides in.
     // Even though there is a more specific match the current module takes
     // precedence.
-    $this->assertSame($implementations, $container->getParameter('hook_implementations_map'));
+    $this->assertEquals(
+      ['test_module_theme_suggestions_alter' => 'test_module'],
+      $container->getParameter('.hook_data')['hook_list']['theme_suggestions_alter'],
+    );
   }
 
 }

@@ -171,6 +171,10 @@ YAML,
     // @see \Drupal\Core\DrupalKernel::guessApplicationRoot()
     $container->getDefinition('module_handler')->setArgument(0, '%app.root%');
 
+    // The key value service is set directly in kernel tests, and set as
+    // synthetic and then can't be reconstructed.
+    $container->set('keyvalue', $this->container->get('keyvalue'));
+
     // To discover per-test case config schema YAML files, work around the
     // static file cache in \Drupal\Core\Extension\ExtensionDiscovery. There is
     // no work-around that allows using both the files on disk and some in vfs.

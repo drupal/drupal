@@ -9,6 +9,7 @@ use Drupal\Core\DestructableInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Update\UpdateKernel;
 use Drupal\Core\Utility\ThemeRegistry;
@@ -185,7 +186,14 @@ class Registry implements DestructableInterface {
    *
    * @var array<string, true>
    */
-  protected array $preprocessForSuggestions;
+  protected ?array $preprocessForSuggestions = NULL;
+
+  /**
+   * The key value factory.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
+   */
+  protected $keyValueFactory;
 
   /**
    * Constructs a \Drupal\Core\Theme\Registry object.
@@ -210,10 +218,10 @@ class Registry implements DestructableInterface {
    *   The kernel.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
-   * @param array<string, true> $preprocess_for_suggestions
-   *   (optional) Grouped preprocess functions from modules.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface|null $key_value_factory
+   *   The key value factory.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, $theme_name = NULL, array $preprocess_for_suggestions = []) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, $theme_name = NULL, ?KeyValueFactoryInterface $key_value_factory = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -223,7 +231,11 @@ class Registry implements DestructableInterface {
     $this->runtimeCache = $runtime_cache;
     $this->moduleList = $module_list;
     $this->themeName = $theme_name;
-    $this->preprocessForSuggestions = $preprocess_for_suggestions;
+    if (!$key_value_factory) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $key_value_factory argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3550627', E_USER_DEPRECATED);
+      $key_value_factory = \Drupal::service('keyvalue');
+    }
+    $this->keyValueFactory = $key_value_factory;
   }
 
   /**
@@ -803,7 +815,7 @@ class Registry implements DestructableInterface {
             $level = substr_count($matches[1], '__');
             $suggestion_level[$level][$candidate] = $matches[1];
             $module_preprocess_function = $prefix . '_preprocess_' . $matches[1];
-            if (isset($this->preprocessForSuggestions[$module_preprocess_function])) {
+            if (isset($this->getPreprocessForSuggestions()[$module_preprocess_function])) {
               $invokes[$candidate] = ['module' => $prefix, 'hook' => 'preprocess_' . $matches[1]];
             }
           }
@@ -927,7 +939,7 @@ class Registry implements DestructableInterface {
       $theme_functions = $functions['user'];
     }
 
-    $theme_functions = array_merge($theme_functions, array_keys($this->preprocessForSuggestions));
+    $theme_functions = array_merge($theme_functions, array_keys($this->getPreprocessForSuggestions()));
     $grouped_functions = [];
     // Splitting user defined functions into groups by the first prefix.
     foreach ($theme_functions as $function) {
@@ -963,6 +975,19 @@ class Registry implements DestructableInterface {
       $preprocess_functions[] = $function;
     });
     return $preprocess_functions;
+  }
+
+  /**
+   * Returns discovered preprocess suggestions.
+   *
+   * @return array<string, true>
+   *   Preprocess suggestions discovered in modules.
+   */
+  protected function getPreprocessForSuggestions(): array {
+    if ($this->preprocessForSuggestions === NULL) {
+      $this->preprocessForSuggestions = $this->keyValueFactory->get('hook_data')->get('preprocess_for_suggestions') ?: [];
+    }
+    return $this->preprocessForSuggestions;
   }
 
 }

@@ -12,9 +12,9 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\HookAttributeInterface;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\ReorderHook;
-use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Hook\OrderOperation\OrderOperation;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,8 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * where either the class itself or the methods have a #[Hook] attribute.
  * These classes are automatically registered as autowired services.
  *
- * Services for procedural implementation of hooks are also registered
- * using the ProceduralCall class.
+ * Services for procedural implementation of hooks are also registered.
  *
  * Finally, a hook_implementations_map container parameter is added. This
  * contains a mapping from [hook,class,method] to the module name.
@@ -63,7 +62,9 @@ class HookCollectorPass implements CompilerPassInterface {
   protected array $orderOperations = [];
 
   /**
-   * Identifiers to remove, as "$class::$method", keyed by hook name.
+   * Lists of implementation identifiers to remove, keyed by hook name.
+   *
+   * An identifier can be a function name or a "$class::$method" string.
    *
    * @var array<string, list<string>>
    */
@@ -74,7 +75,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * (This is required only for BC.)
    *
-   * @var array<string, string>
+   * @var array<callable-string, string>
    */
   protected array $includes = [];
 
@@ -146,9 +147,6 @@ class HookCollectorPass implements CompilerPassInterface {
    *   Container builder.
    */
   protected function writeToContainer(ContainerBuilder $container): void {
-    $container->register(ProceduralCall::class, ProceduralCall::class)
-      ->addArgument($this->includes);
-
     // Gather includes for each hook_hook_info group. Store this in
     // $groupIncludes so the module handler includes the files at runtime when
     // the hooks are invoked.
@@ -163,12 +161,9 @@ class HookCollectorPass implements CompilerPassInterface {
 
     $implementationsByHook = $this->calculateImplementations();
 
-    static::writeImplementationsToContainer($container, $implementationsByHook);
-    $container->setParameter('preprocess_for_suggestions', $this->preprocessForSuggestions ?? []);
+    static::registerHookServices($container, $implementationsByHook);
 
-    // Update the module handler definition.
-    $definition = $container->getDefinition('module_handler');
-    $definition->setArgument('$groupIncludes', $groupIncludes);
+    $includes = $this->collectIncludesPerHook($implementationsByHook, $groupIncludes);
 
     $packed_order_operations = [];
     $order_operations = $this->getOrderOperations();
@@ -178,7 +173,58 @@ class HookCollectorPass implements CompilerPassInterface {
         $order_operations[$alter_hook],
       );
     }
-    $definition->setArgument('$packedOrderOperations', $packed_order_operations);
+
+    // Write aggregated data about hooks into a temporary parameter.
+    // We use a dot prefixed parameter so it will automatically get cleaned up.
+    // This will be stored in a keyvalue store in
+    // \Drupal\Core\Hook\HookCollectorKeyValueWritePass.
+    $container->setParameter('.hook_data', [
+      'hook_list' => $implementationsByHook,
+      'preprocess_for_suggestions' => $this->preprocessForSuggestions ?? [],
+      'includes' => $includes,
+      'group_includes' => $groupIncludes,
+      'packed_order_operations' => $packed_order_operations,
+    ]);
+
+    // Remove converted flags, they are only needed while building the
+    // container.
+    $parameters = $container->getParameterBag();
+    foreach ($parameters->all() as $name => $value) {
+      if (str_ends_with($name, '.skip_procedural_hook_scan')) {
+        $parameters->remove($name);
+      }
+    }
+  }
+
+  /**
+   * Collects include files by hook name.
+   *
+   * @param array<string, array<string, string>> $implementationsByHook
+   *   Implementations by hook.
+   * @param array<string, list<string>> $groupIncludes
+   *   Explicitly defined group includes to filter out.
+   *
+   * @return array<string, list<string>>
+   *   Lists of include files by hook name.
+   */
+  protected function collectIncludesPerHook(array $implementationsByHook, array $groupIncludes): array {
+    $includesMap = [];
+    foreach ($implementationsByHook as $hook => $hookImplementations) {
+      foreach ($hookImplementations as $identifier => $module) {
+        if (str_contains($identifier, '::')) {
+          continue;
+        }
+        $include = $this->includes[$identifier] ?? NULL;
+        if ($include !== NULL) {
+          // Do not add includes that are already in group includes.
+          if (isset($groupIncludes[$hook]) && in_array($include, $groupIncludes[$hook])) {
+            continue;
+          }
+          $includesMap[$hook][$include] = TRUE;
+        }
+      }
+    }
+    return array_map(array_keys(...), $includesMap);
   }
 
   /**
@@ -192,7 +238,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $implementationsByHook = [];
     foreach ($this->proceduralImplementations as $hook => $procedural_modules) {
       foreach ($procedural_modules as $module) {
-        $implementationsByHook[$hook][ProceduralCall::class . '::' . $module . '_' . $hook] = $module;
+        $implementationsByHook[$hook][$module . '_' . $hook] = $module;
       }
     }
     foreach ($this->oopImplementations as $hook => $oopImplementations) {
@@ -296,49 +342,35 @@ class HookCollectorPass implements CompilerPassInterface {
   }
 
   /**
-   * Writes all implementations to the container.
+   * Registers the hook implementation services.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The container builder.
    * @param array<string, array<string, string>> $implementationsByHook
    *   Implementations, as module names keyed by hook name and "$class::$method"
-   *   identifier.
+   *   or $function identifier.
    */
-  protected static function writeImplementationsToContainer(
+  protected static function registerHookServices(
     ContainerBuilder $container,
     array $implementationsByHook,
   ): void {
-    $map = [];
-    $tagsInfoByClass = [];
-    foreach ($implementationsByHook as $hook => $hookImplementations) {
-      $priority = 0;
-      foreach ($hookImplementations as $class_and_method => $module) {
-        [$class, $method] = explode('::', $class_and_method);
-        $tagsInfoByClass[$class][] = [
-          'event' => "drupal_hook.$hook",
-          'method' => $method,
-          'priority' => $priority,
-        ];
-        --$priority;
-        $map[$hook][$class][$method] = $module;
+    $classesMap = [];
+    foreach ($implementationsByHook as $hookImplementations) {
+      foreach (array_keys($hookImplementations) as $identifier) {
+        $parts = explode('::', $identifier, 2);
+        if (isset($parts[1])) {
+          $classesMap[$parts[0]] = TRUE;
+        }
       }
     }
 
-    foreach ($tagsInfoByClass as $class => $tagsInfo) {
-      if ($container->hasDefinition($class)) {
-        $definition = $container->findDefinition($class);
-      }
-      else {
-        $definition = $container
+    foreach (array_keys($classesMap) as $class) {
+      if (!$container->hasDefinition($class)) {
+        $container
           ->register($class, $class)
           ->setAutowired(TRUE);
       }
-      foreach ($tagsInfo as $tag_info) {
-        $definition->addTag('kernel.event_listener', $tag_info);
-      }
     }
-
-    $container->setParameter('hook_implementations_map', $map);
   }
 
   /**
@@ -450,12 +482,18 @@ class HookCollectorPass implements CompilerPassInterface {
               }
             }
             elseif ($attribute instanceof ReorderHook) {
+              $identifier = $attribute->class === ProceduralCall::class
+                ? $attribute->method
+                : $attribute->class . '::' . $attribute->method;
               // Use a higher weight for order operations that target other hook
               // listeners.
-              $this->orderOperations[$attribute->hook][1][] = $attribute->order->getOperation($attribute->class . '::' . $attribute->method);
+              $this->orderOperations[$attribute->hook][1][] = $attribute->order->getOperation($identifier);
             }
             elseif ($attribute instanceof RemoveHook) {
-              $this->removeHookIdentifiers[$attribute->hook][] = $attribute->class . '::' . $attribute->method;
+              $identifier = $attribute->class === ProceduralCall::class
+                ? $attribute->method
+                : $attribute->class . '::' . $attribute->method;
+              $this->removeHookIdentifiers[$attribute->hook][] = $identifier;
             }
           }
         }
@@ -574,26 +612,31 @@ class HookCollectorPass implements CompilerPassInterface {
   }
 
   /**
-   * This method is only to be used by ModuleHandler.
+   * Returns implementations suitable for adding in ModuleHandler::add().
    *
-   * @return array<string, array<string, array<class-string, array<string, string>>>>
-   *   Hook implementation method names keyed by hook, module, class and method.
+   * This contains only procedural implementations, because the services for OOP
+   * implementations might not be available at this point.
+   *
+   * This method is only to be used by ModuleHandler::add().
+   *
+   * @return array<string, array<string, callable-string>>
+   *   Procedural implementations, as functions keyed by hook and module.
    *
    * @todo Remove when ModuleHandler::add() is removed in Drupal 12.0.0.
    *
    * @internal
    */
-  public function getImplementations(): array {
+  public function getAddableImplementations(): array {
     $implementationsByHook = $this->getFilteredImplementations();
 
     // List of modules implementing hooks with the implementation details.
     $implementations = [];
-
     foreach ($implementationsByHook as $hook => $hookImplementations) {
       foreach ($this->modules as $module) {
         foreach (array_keys($hookImplementations, $module, TRUE) as $identifier) {
-          [$class, $method] = explode('::', $identifier);
-          $implementations[$hook][$module][$class][$method] = $method;
+          if (!str_contains($identifier, '::')) {
+            $implementations[$hook][$module] = $identifier;
+          }
         }
       }
     }

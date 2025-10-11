@@ -93,4 +93,17 @@ class HookOrderTest extends KernelTestBase {
     );
   }
 
+  /**
+   * Test procedural implementation with Reorder and Remove.
+   */
+  public function testHookReorderProcedural(): void {
+    $this->assertSameCallList(
+      [
+        'bbb_hook_order_test_test_procedural_reorder',
+        AHooks::class . '::testProceduralReorder',
+      ],
+      \Drupal::moduleHandler()->invokeAll('test_procedural_reorder'),
+    );
+  }
+
 }

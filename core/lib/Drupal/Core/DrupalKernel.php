@@ -1145,8 +1145,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function persistServices(ContainerInterface $container, array $persist) {
     foreach ($persist as $id => $object) {
       // Do not override services already set() on the new container, for
-      // example 'service_container'.
-      if (!$container->initialized($id)) {
+      // example 'service_container', always replace the request stack.
+      if (!$container->initialized($id) || $id === 'request_stack') {
         $container->set($id, $object);
       }
     }

@@ -8,6 +8,9 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Order\Order;
 use Drupal\Core\Hook\Order\OrderAfter;
 use Drupal\ccc_hook_order_test\Hook\CHooks;
+use Drupal\Core\Extension\ProceduralCall;
+use Drupal\Core\Hook\Attribute\RemoveHook;
+use Drupal\Core\Hook\Attribute\ReorderHook;
 
 /**
  * This class contains hook implementations.
@@ -46,6 +49,13 @@ class AHooks {
     )
   )]
   public function testBothParametersHook(): string {
+    return __METHOD__;
+  }
+
+  #[ReorderHook('test_procedural_reorder', ProceduralCall::class, 'bbb_hook_order_test_test_procedural_reorder', Order::First)]
+  #[RemoveHook('test_procedural_reorder', ProceduralCall::class, 'ccc_hook_order_test_test_procedural_reorder')]
+  #[Hook('test_procedural_reorder')]
+  public function testProceduralReorder(): string {
     return __METHOD__;
   }
 

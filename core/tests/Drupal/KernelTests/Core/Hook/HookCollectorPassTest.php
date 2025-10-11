@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Hook;
 
+use Drupal\Core\Cache\NullBackend;
+use Drupal\Core\Hook\HookCollectorKeyValueWritePass;
 use Drupal\Core\Hook\HookCollectorPass;
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use Drupal\module_handler_test_all1\Hook\ModuleHandlerTestAll1Hooks;
+use Drupal\user_hooks_test\Hook\UserHooksTest;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Tests Drupal\Core\Hook\HookCollectorPass.
@@ -41,17 +45,16 @@ class HookCollectorPassTest extends KernelTestBase {
       'user_hooks_test' => ['pathname' => "$this->siteDirectory/user_hooks_test.info.yml"],
     ];
     $container->setParameter('container.modules', $module_filenames);
-    $container->setDefinition('module_handler', new Definition());
+    $keyvalue = new KeyValueMemoryFactory();
+    $container->set('keyvalue', $keyvalue);
+    $container->set('cache.bootstrap', new NullBackend('bootstrap'));
     (new HookCollectorPass())->process($container);
-    $implementations = [
+    (new HookCollectorKeyValueWritePass())->process($container);
+    $this->assertRegisteredHooks([
       'user_format_name_alter' => [
-        'Drupal\user_hooks_test\Hook\UserHooksTest' => [
-          'userFormatNameAlter' => 'user_hooks_test',
-        ],
+        UserHooksTest::class . '::userFormatNameAlter' => 'user_hooks_test',
       ],
-    ];
-
-    $this->assertSame($implementations, $container->getParameter('hook_implementations_map'));
+    ], $container);
   }
 
   /**
@@ -66,25 +69,28 @@ class HookCollectorPassTest extends KernelTestBase {
     ];
     include_once 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1/src/Hook/ModuleHandlerTestAll1Hooks.php';
     $container->setParameter('container.modules', $module_filenames);
-    $container->setDefinition('module_handler', new Definition());
+    $keyvalue = new KeyValueMemoryFactory();
+    $container->set('keyvalue', $keyvalue);
+    $container->set('cache.bootstrap', new NullBackend('bootstrap'));
     (new HookCollectorPass())->process($container);
-    $priorities = [];
-    foreach ($container->findTaggedServiceIds('kernel.event_listener') as $tags) {
-      foreach ($tags as $attributes) {
-        if (str_starts_with($attributes['event'], 'drupal_hook.order')) {
-          $priorities[$attributes['event']][$attributes['method']] = $attributes['priority'];
-        }
-      }
-    }
-    // For the order1 hook, module_handler_test_all2_order1() fires first
-    // despite all1 coming before all2 in the module list, because
-    // module_handler_test_all1_module_implements_alter() moved all1 to the
-    // end. The array key 'order' comes from
-    // ModuleHandlerTestAll1Hooks::order().
-    $this->assertGreaterThan($priorities['drupal_hook.order1']['order'], $priorities['drupal_hook.order1']['module_handler_test_all2_order1']);
-    // For the hook order2 or any hook but order1, however, all1 fires first
-    // and all2 second.
-    $this->assertLessThan($priorities['drupal_hook.order2']['order'], $priorities['drupal_hook.order2']['module_handler_test_all2_order2']);
+    (new HookCollectorKeyValueWritePass())->process($container);
+    $this->assertRegisteredHooks([
+      'hook' => [
+        'module_handler_test_all1_hook' => 'module_handler_test_all1',
+        'module_handler_test_all2_hook' => 'module_handler_test_all2',
+      ],
+      'module_implements_alter' => [
+        'module_handler_test_all1_module_implements_alter' => 'module_handler_test_all1',
+      ],
+      'order1' => [
+        'module_handler_test_all2_order1' => 'module_handler_test_all2',
+        ModuleHandlerTestAll1Hooks::class . '::order' => 'module_handler_test_all1',
+      ],
+      'order2' => [
+        ModuleHandlerTestAll1Hooks::class . '::order' => 'module_handler_test_all1',
+        'module_handler_test_all2_order2' => 'module_handler_test_all2',
+      ],
+    ], $container);
   }
 
   /**
@@ -97,7 +103,9 @@ class HookCollectorPassTest extends KernelTestBase {
     ];
     include_once 'core/tests/Drupal/Tests/Core/Extension/modules/module_implements_alter_test_legacy/module_implements_alter_test_legacy.module';
     $container->setParameter('container.modules', $module_filenames);
-    $container->setDefinition('module_handler', new Definition());
+    $keyvalue = new KeyValueMemoryFactory();
+    $container->set('keyvalue', $keyvalue);
+    $container->set('cache.bootstrap', new NullBackend('bootstrap'));
     (new HookCollectorPass())->process($container);
 
     // This test will also fail if the deprecation notice shows up.
@@ -124,7 +132,7 @@ class HookCollectorPassTest extends KernelTestBase {
   }
 
   /**
-   * Test procedural hooks for a module are skipped when skip is set..
+   * Test procedural hooks for a module are skipped when skip is set.
    */
   public function testProceduralHooksSkippedWhenConfigured(): void {
     $module_installer = $this->container->get('module_installer');
@@ -143,6 +151,7 @@ class HookCollectorPassTest extends KernelTestBase {
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_after_attribute']));
     $this->assertTrue(isset($GLOBALS['procedural_attribute_skip_find']));
     $this->assertTrue(isset($GLOBALS['skipped_procedural_oop_cache_flush']));
+    $this->assertFalse($this->container->hasParameter('hook_collector_skip_procedural.skip_procedural_hook_scan'));
   }
 
   /**
@@ -282,7 +291,7 @@ class HookCollectorPassTest extends KernelTestBase {
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['system_module_test', 'update', 'update_test_2']));
 
-    $map = $this->container->getParameter('hook_implementations_map');
+    $map = $this->container->get('keyvalue')->get('hook_data')->get('hook_list');
     $this->assertArrayHasKey('help', $map);
     // Ensure that no install or update hooks are registered in the
     // implementations map, including update functions incorrectly mapped to
@@ -307,6 +316,21 @@ class HookCollectorPassTest extends KernelTestBase {
     ];
     $calls = $module_handler->invokeAll('custom_hook_override');
     $this->assertEquals($expected_calls, $calls);
+  }
+
+  /**
+   * Asserts that given hook implementations are registered in the container.
+   *
+   * @param array<string, array<string, string>> $implementationsByHook
+   *   Expected implementations, as module names keyed by hook name and
+   *   "$class::$method" identifier.
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+   *   The container builder.
+   */
+  protected function assertRegisteredHooks(array $implementationsByHook, ContainerBuilder $container): void {
+    foreach ($implementationsByHook as $hook => $implementations) {
+      $this->assertEquals($implementations, $container->get('keyvalue')->get('hook_data')->get('hook_list')[$hook]);
+    }
   }
 
 }

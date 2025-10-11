@@ -1,0 +1,5 @@
+name: Hook loader test
+type: module
+description: 'Test module used to test hook loading.'
+package: Testing
+version: VERSION
