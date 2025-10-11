@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests node token replacement.
+ * Tests node token replacement for text_with_summary.
  */
 #[Group('node')]
-class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
+class TextWithSummaryTokenReplaceTest extends TokenReplaceKernelTestBase {
 
   use ContentTypeCreationTrait;
 
@@ -31,18 +32,31 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     parent::setUp();
     $this->installConfig(['filter', 'node']);
 
-    $this->createContentType(['type' => 'article', 'name' => 'Article']);
+    // We don't create a default body field as we need a text_with_summary.
+    $this->createContentType(['type' => 'article', 'name' => 'Article'], FALSE);
+    FieldStorageConfig::create([
+      'field_name' => 'body',
+      'type' => 'text_with_summary',
+      'entity_type' => 'node',
+      'cardinality' => 1,
+      'persist_with_no_fields' => TRUE,
+    ])->save();
+    $fieldStorage = FieldStorageConfig::loadByName('node', 'body');
+    FieldConfig::create([
+      'field_storage' => $fieldStorage,
+      'bundle' => 'article',
+      'label' => 'Body',
+      'settings' => [
+        'display_summary' => TRUE,
+        'allowed_formats' => [],
+      ],
+    ])->save();
   }
 
   /**
    * Creates a node, then tests the tokens generated from it.
    */
   public function testNodeTokenReplacement(): void {
-    $url_options = [
-      'absolute' => TRUE,
-      'language' => $this->interfaceLanguage,
-    ];
-
     // Create a user and a node.
     $account = $this->createUser();
     /** @var \Drupal\node\NodeInterface $node */
@@ -53,6 +67,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'body' => [
         [
           'value' => 'Regular NODE body for the test.',
+          'summary' => 'Fancy NODE summary.',
           'format' => 'plain_text',
         ],
       ],
@@ -61,46 +76,13 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
     // Generate and test tokens.
     $tests = [];
-    $tests['[node:nid]'] = $node->id();
-    $tests['[node:uuid]'] = $node->uuid();
-    $tests['[node:vid]'] = $node->getRevisionId();
-    $tests['[node:type]'] = 'article';
-    $tests['[node:type-name]'] = 'Article';
-    $tests['[node:title]'] = Html::escape($node->getTitle());
     $tests['[node:body]'] = $node->body->processed;
-    $tests['[node:langcode]'] = $node->language()->getId();
-    $tests['[node:published_status]'] = 'Published';
-    $tests['[node:url]'] = $node->toUrl('canonical', $url_options)->toString();
-    $tests['[node:edit-url]'] = $node->toUrl('edit-form', $url_options)->toString();
-    $tests['[node:author]'] = $account->getAccountName();
-    $tests['[node:author:uid]'] = $node->getOwnerId();
-    $tests['[node:author:name]'] = $account->getAccountName();
-    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = $this->container->get('date.formatter');
-    $tests['[node:created:since]'] = $date_formatter->formatTimeDiffSince($node->getCreatedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
-    $tests['[node:changed:since]'] = $date_formatter->formatTimeDiffSince($node->getChangedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
-
+    $tests['[node:summary]'] = $node->body->summary_processed;
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($node);
 
     $metadata_tests = [];
-    $metadata_tests['[node:nid]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:uuid]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:vid]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:type]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:type-name]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:title]'] = $base_bubbleable_metadata;
     $metadata_tests['[node:body]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:langcode]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:published_status]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:url]'] = $base_bubbleable_metadata;
-    $metadata_tests['[node:edit-url]'] = $base_bubbleable_metadata;
-    $bubbleable_metadata = clone $base_bubbleable_metadata;
-    $metadata_tests['[node:author]'] = $bubbleable_metadata->addCacheTags(['user:1']);
-    $metadata_tests['[node:author:uid]'] = $bubbleable_metadata;
-    $metadata_tests['[node:author:name]'] = $bubbleable_metadata;
-    $bubbleable_metadata = clone $base_bubbleable_metadata;
-    $metadata_tests['[node:created:since]'] = $bubbleable_metadata->setCacheMaxAge(0);
-    $metadata_tests['[node:changed:since]'] = $bubbleable_metadata;
+    $metadata_tests['[node:summary]'] = $base_bubbleable_metadata;
 
     // Test to make sure that we generated something for each token.
     $this->assertNotContains(0, array_map('strlen', $tests), 'No empty tokens generated.');
@@ -133,11 +115,25 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       $this->assertEquals($output, $expected, "Node token $input replaced for unpublished node.");
     }
 
+    // Repeat for a node without a summary.
+    $node = Node::create([
+      'type' => 'article',
+      'uid' => $account->id(),
+      'title' => '<blink>Blinking Text</blink>',
+      'body' => [['value' => 'A string that looks random like TR5c2I', 'format' => 'plain_text']],
+    ]);
+    $node->save();
+
     // Generate and test token - use full body as expected value.
     $tests = [];
+    $tests['[node:summary]'] = $node->body->processed;
+
+    // Test to make sure that we generated something for each token.
+    $this->assertNotContains(0, array_map('strlen', $tests), 'No empty tokens generated for node without a summary.');
+
     foreach ($tests as $input => $expected) {
       $output = $this->tokenService->replace($input, ['node' => $node], ['language' => $this->interfaceLanguage]);
-      $this->assertSame((string) $expected, (string) $output, "Failed test case: {$input}");
+      $this->assertSame((string) $expected, $output, "Failed test case: {$input}");
     }
   }
 

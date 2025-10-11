@@ -24,11 +24,13 @@ trait ContentTypeCreationTrait {
    * @param array $values
    *   An array of settings to change from the defaults.
    *   Example: 'type' => 'foo'.
+   * @param bool $create_body
+   *   Whether to create the body field.
    *
    * @return \Drupal\node\Entity\NodeType
    *   Created content type.
    */
-  protected function createContentType(array $values = []) {
+  protected function createContentType(array $values = [], bool $create_body = TRUE) {
     // Find a non-existent random type name.
     if (!isset($values['type'])) {
       do {
@@ -45,7 +47,9 @@ trait ContentTypeCreationTrait {
     $type = NodeType::create($values);
     $status = $type->save();
 
-    $this->createBodyField('node', $type->id());
+    if ($create_body) {
+      $this->createBodyField('node', $type->id());
+    }
 
     if ($this instanceof TestCase) {
       $this->assertSame($status, SAVED_NEW, (new FormattableMarkup('Created content type %type.', ['%type' => $type->id()]))->__toString());

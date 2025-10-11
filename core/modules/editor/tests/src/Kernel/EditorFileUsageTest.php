@@ -241,37 +241,8 @@ class EditorFileUsageTest extends EntityKernelTestBase {
       $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
-    // Populate both the body and summary. Because this will be the same
-    // revision of the same node, it will record only one usage.
-    foreach ($original_values as $key => $original_value) {
-      $node->body[$key]->value = $original_value;
-      $node->body[$key]->summary = $original_value;
-    }
-    $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
-    }
-
-    // Empty out the body value, but keep the summary. The number of usages
-    // should not change.
-    foreach ($original_values as $key => $original_value) {
-      $node->body[$key]->value = '';
-      $node->body[$key]->summary = $original_value;
-    }
-    $node->save();
-    foreach ($image_entities as $key => $image_entity) {
-      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
-    }
-
-    // Empty out the body and summary. The number of usages should decrease by
-    // one.
-    foreach ($original_values as $key => $original_value) {
-      $node->body[$key]->value = '';
-      $node->body[$key]->summary = '';
-    }
-    $node->save();
-    foreach ($image_entities as $key => $image_entity) {
-      $this->assertSame(['editor' => ['node' => [1 => '1']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 1 usage.');
+      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usage.');
     }
 
     // Set the field of a custom field type that is a subclass of
@@ -282,7 +253,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
     }
 
     // Test editor_entity_delete().

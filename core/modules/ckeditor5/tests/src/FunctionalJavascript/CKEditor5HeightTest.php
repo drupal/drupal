@@ -42,16 +42,16 @@ class CKEditor5HeightTest extends CKEditor5TestBase {
     $this->drupalGet('/node/add/page');
     $this->waitForEditor();
 
-    // We expect height to be 320, but test to ensure that it's greater
-    // than 300. We want to ensure that we don't hard code a very specific
+    // We expect height to be 184, but test to ensure that it's greater
+    // than 175. We want to ensure that we don't hard code a very specific
     // value because tests might break if styles change (line-height, etc).
     // Note that the default height for CKEditor5 is 47px.
-    $this->assertGreaterThan(300, $this->getEditorHeight());
+    $this->assertGreaterThan(175, $this->getEditorHeight());
     // Check source editing height.
     $this->pressEditorButton('Source');
     $assert = $this->assertSession();
     $this->assertNotNull($assert->waitForElementVisible('css', '.ck-source-editing-area'));
-    $this->assertGreaterThan(300, $this->getEditorHeight(TRUE));
+    $this->assertGreaterThan(175, $this->getEditorHeight(TRUE));
 
     // Test the max height of the editor is less that the window height.
     $body = \str_repeat('<p>Llamas are cute.</p>', 100);
@@ -69,7 +69,7 @@ class CKEditor5HeightTest extends CKEditor5TestBase {
     // Double the editor row count.
     \Drupal::service('entity_display.repository')->getFormDisplay('node', 'page')
       ->setComponent('body', [
-        'type' => 'text_textarea_with_summary',
+        'type' => 'text_textarea',
         'settings' => [
           'rows' => 18,
         ],

@@ -346,9 +346,9 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  protected function createContentType(array $values = []) {
-    $note_type = $this->workspaceManager->executeOutsideWorkspace(function () use ($values) {
-      return $this->traitCreateContentType($values);
+  protected function createContentType(array $values = [], bool $create_body = TRUE) {
+    $note_type = $this->workspaceManager->executeOutsideWorkspace(function () use ($values, $create_body) {
+      return $this->traitCreateContentType($values, $create_body);
     });
 
     return $note_type;

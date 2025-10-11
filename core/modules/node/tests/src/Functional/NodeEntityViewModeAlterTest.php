@@ -40,11 +40,17 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     ]);
     $this->drupalLogin($web_user);
 
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'page', 'teaser');
+    $display_options = $display->getComponent('body');
+    $display_options['settings']['trim_length'] = 25;
+    $display->setComponent('body', $display_options)
+      ->save();
+
     // Create a node.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = 'Data that should appear only in the body for the node.';
-    $edit['body[0][summary]'] = 'Extra data that should appear only in the teaser for the node.';
     $this->drupalGet('node/add/page');
     $this->submitForm($edit, 'Save');
 
@@ -55,10 +61,9 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     Cache::invalidateTags(['rendered']);
     $this->drupalGet('node/' . $node->id());
 
-    // Check that teaser mode is viewed.
-    $this->assertSession()->pageTextContains('Extra data that should appear only in the teaser for the node.');
-    // Make sure body text is not present.
-    $this->assertSession()->pageTextNotContains('Data that should appear only in the body for the node.');
+    // Check that teaser mode is viewed. Should be trimmed to 25.
+    $this->assertSession()->pageTextContains('Data that should appear');
+    $this->assertSession()->pageTextNotContains(' only in the body for the node.');
 
     // Test that the correct build mode has been set.
     $build = $this->buildEntityView($node);
