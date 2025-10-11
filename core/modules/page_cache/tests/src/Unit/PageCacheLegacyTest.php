@@ -11,6 +11,7 @@ use Drupal\page_cache\StackMiddleware\PageCache;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 #[CoversClass(PageCache::class)]
 #[Group('page_cache')]
-#[Group('legacy')]
+#[IgnoreDeprecations]
 class PageCacheLegacyTest extends UnitTestCase {
 
   /**

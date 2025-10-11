@@ -14,7 +14,6 @@ use PHPUnit\Framework\Attributes\Group;
  * @see system_post_update_delete_rss_config()
  */
 #[Group('update')]
-#[Group('legacy')]
 class RssDefaultRowViewModeUpdateTest extends UpdatePathTestBase {
 
   /**
