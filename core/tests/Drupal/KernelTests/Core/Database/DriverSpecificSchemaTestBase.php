@@ -10,13 +10,11 @@ use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Schema;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests table creation and modification via the schema API.
  */
-#[CoversClass(Schema::class)]
 abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase {
 
   use SchemaIntrospectionTestTrait;

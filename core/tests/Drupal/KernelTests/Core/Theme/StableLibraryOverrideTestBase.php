@@ -6,12 +6,10 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the behavior of a theme when base_theme info key is missing.
  */
-#[Group('Theme')]
 abstract class StableLibraryOverrideTestBase extends KernelTestBase {
 
   /**

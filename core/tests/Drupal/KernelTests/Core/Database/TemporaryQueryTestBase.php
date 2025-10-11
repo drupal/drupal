@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the temporary query functionality.
  */
-#[Group('Database')]
 abstract class TemporaryQueryTestBase extends DriverSpecificDatabaseTestBase {
 
   /**

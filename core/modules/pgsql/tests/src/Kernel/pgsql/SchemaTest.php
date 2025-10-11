@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
+use Drupal\pgsql\Driver\Database\pgsql\Schema;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 // cSpell:ignore attname attnum attrelid objid refobjid refobjsubid regclass
 // cspell:ignore relkind relname
+
 /**
  * Tests schema API for the PostgreSQL driver.
  */
 #[Group('Database')]
+#[CoversClass(Schema::class)]
 class SchemaTest extends DriverSpecificSchemaTestBase {
 
   /**
