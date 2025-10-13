@@ -7,12 +7,14 @@ namespace Drupal\Tests\system\Kernel\Theme;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Twig\Error\LoaderError;
 
 /**
  * Tests including files in Twig templates.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigIncludeTest extends KernelTestBase {
   /**
    * The Twig configuration to set the container parameter to during rebuilds.

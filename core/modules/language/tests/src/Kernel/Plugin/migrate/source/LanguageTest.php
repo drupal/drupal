@@ -8,12 +8,14 @@ use Drupal\language\Plugin\migrate\source\Language;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the language source plugin.
  */
 #[CoversClass(Language::class)]
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageTest extends MigrateSqlSourceTestBase {
 
   /**

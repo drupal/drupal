@@ -9,12 +9,14 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ExtensionName constraint.
  */
 #[Group('Validation')]
 #[CoversClass(ExtensionNameConstraint::class)]
+#[RunTestsInSeparateProcesses]
 class ExtensionNameConstraintTest extends KernelTestBase {
 
   /**

@@ -12,12 +12,14 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration auditor for ID conflicts.
  */
 #[Group('migrate_drupal')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

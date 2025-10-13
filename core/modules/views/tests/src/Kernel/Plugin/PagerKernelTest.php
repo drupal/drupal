@@ -8,11 +8,13 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests pager-related APIs.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class PagerKernelTest extends ViewsKernelTestBase {
 
   /**

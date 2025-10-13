@@ -9,11 +9,13 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests fieldset element rendering and description placement.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
 
   /**

@@ -13,11 +13,13 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment validation constraints.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentValidationTest extends EntityKernelTestBase {
   use CommentTestTrait;
   use EntityReferenceFieldCreationTrait;

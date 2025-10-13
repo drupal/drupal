@@ -11,12 +11,14 @@ use Drupal\package_manager\InstalledPackagesList;
 use Drupal\package_manager\PathLocator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\package_manager\InstalledPackagesList.
  */
 #[CoversClass(InstalledPackagesList::class)]
 #[Group('package_manager')]
+#[RunTestsInSeparateProcesses]
 class InstalledPackagesListTest extends PackageManagerKernelTestBase {
 
   /**

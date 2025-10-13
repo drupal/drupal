@@ -10,6 +10,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the generic entity row plugin.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\row\EntityRow
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class RowEntityTest extends ViewsKernelTestBase {
 
   /**

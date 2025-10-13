@@ -6,6 +6,7 @@ namespace Drupal\Tests\contact\Kernel;
 
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the message entity class.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\contact\Entity\Message
  */
 #[Group('contact')]
+#[RunTestsInSeparateProcesses]
 class MessageEntityTest extends EntityKernelTestBase {
 
   /**

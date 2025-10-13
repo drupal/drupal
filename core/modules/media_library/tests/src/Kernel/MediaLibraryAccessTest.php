@@ -17,11 +17,13 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the media library access.
  */
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class MediaLibraryAccessTest extends KernelTestBase {
 
   use UserCreationTrait;

@@ -8,6 +8,7 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
 use Drupal\Tests\node\Kernel\Migrate\d6\MigrateNodeTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Image migration test.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * need to be migrated into D8.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateImageTest extends MigrateNodeTestBase {
 
   use FileMigrationTestTrait;

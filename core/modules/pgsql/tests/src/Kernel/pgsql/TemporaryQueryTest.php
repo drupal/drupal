@@ -6,12 +6,14 @@ namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\KernelTests\Core\Database\TemporaryQueryTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore relname relpersistence
 /**
  * Tests the temporary query functionality.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class TemporaryQueryTest extends TemporaryQueryTestBase {
 
   /**

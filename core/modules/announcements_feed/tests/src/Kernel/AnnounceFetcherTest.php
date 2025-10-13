@@ -9,12 +9,14 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\announcements_feed\AnnounceFetcher.
  */
 #[CoversClass(AnnounceFetcher::class)]
 #[Group('announcements_feed')]
+#[RunTestsInSeparateProcesses]
 class AnnounceFetcherTest extends AnnounceTestBase {
 
   /**

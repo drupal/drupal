@@ -10,6 +10,7 @@ use Drupal\file_test\FileTestCdn;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  */
 #[CoversClass(FileUrlGenerator::class)]
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class FileUrlGeneratorTest extends FileTestBase {
 
   /**

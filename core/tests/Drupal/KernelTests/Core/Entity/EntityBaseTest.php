@@ -11,12 +11,14 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the functionality provided by \Drupal\Core\Entity\EntityBase.
  */
 #[CoversClass(EntityBase::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityBaseTest extends EntityKernelTestBase {
 
   /**

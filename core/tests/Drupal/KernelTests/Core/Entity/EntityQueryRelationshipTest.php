@@ -13,11 +13,13 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Entity Query relationship API.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityQueryRelationshipTest extends EntityKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

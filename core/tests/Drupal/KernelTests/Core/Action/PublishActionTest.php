@@ -9,11 +9,13 @@ use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Action;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Publish Action.
  */
 #[Group('Action')]
+#[RunTestsInSeparateProcesses]
 class PublishActionTest extends KernelTestBase {
 
   /**

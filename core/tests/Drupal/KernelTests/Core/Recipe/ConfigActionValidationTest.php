@@ -12,12 +12,14 @@ use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests Config Action Validation.
  */
 #[Group('Recipe')]
+#[RunTestsInSeparateProcesses]
 class ConfigActionValidationTest extends KernelTestBase {
 
   use RecipeTestTrait;

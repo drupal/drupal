@@ -17,6 +17,7 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Add Moderation Config Action.
@@ -25,6 +26,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Recipe')]
 #[CoversClass(AddModeration::class)]
 #[CoversClass(AddModerationDeriver::class)]
+#[RunTestsInSeparateProcesses]
 class AddModerationConfigActionTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

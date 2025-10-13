@@ -6,11 +6,13 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the plugin of the taxonomy: term argument validator.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class ArgumentValidatorTermTest extends TaxonomyTestBase {
 
   /**

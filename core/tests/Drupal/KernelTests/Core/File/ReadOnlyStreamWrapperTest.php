@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\File;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the read-only stream wrapper write functions.
  */
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class ReadOnlyStreamWrapperTest extends FileTestBase {
 
   /**

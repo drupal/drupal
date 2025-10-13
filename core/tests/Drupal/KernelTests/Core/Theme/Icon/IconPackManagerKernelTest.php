@@ -11,6 +11,7 @@ use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests values are from test module icon_test.
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(IconPackManager::class)]
 #[Group('icon')]
+#[RunTestsInSeparateProcesses]
 class IconPackManagerKernelTest extends KernelTestBase {
 
   /**

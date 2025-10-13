@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Kernel\Plugin\Display;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Menu link test.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewsMenuLinkTest extends ViewsKernelTestBase {
 
   /**

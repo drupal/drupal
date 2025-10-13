@@ -6,11 +6,13 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the EmbeddedDataSource plugin.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateEmbeddedDataTest extends KernelTestBase {
 
   /**

@@ -9,6 +9,7 @@ use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\join\JoinTest as JoinTestPlugin;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the join plugin.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\join\JoinPluginBase
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class JoinTest extends RelationshipJoinTestBase {
 
   /**

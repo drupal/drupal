@@ -6,12 +6,14 @@ namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Twig\TemplateWrapper;
 
 /**
  * Tests Twig namespaces.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigNamespaceTest extends KernelTestBase {
 
   /**

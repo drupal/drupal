@@ -10,11 +10,13 @@ use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\Site\Settings;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the unmanaged file move function.
  */
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class FileMoveTest extends FileTestBase {
 
   /**

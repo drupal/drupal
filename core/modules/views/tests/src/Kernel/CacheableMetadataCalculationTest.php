@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that cacheability metadata is only calculated when needed.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class CacheableMetadataCalculationTest extends KernelTestBase {
 
   /**

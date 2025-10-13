@@ -8,6 +8,7 @@ use Drupal\file\Plugin\migrate\source\d6\UploadInstance;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore uploadsize
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(UploadInstance::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class UploadInstanceTest extends MigrateSqlSourceTestBase {
 
   /**

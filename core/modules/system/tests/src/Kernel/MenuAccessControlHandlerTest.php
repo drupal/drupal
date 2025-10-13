@@ -12,12 +12,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\system\MenuAccessControlHandler.
  */
 #[CoversClass(MenuAccessControlHandler::class)]
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class MenuAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {

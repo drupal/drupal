@@ -12,11 +12,13 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests file usage functions.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class UsageTest extends FileManagedUnitTestBase {
 
   /**

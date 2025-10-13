@@ -8,12 +8,14 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test migration of translated taxonomy terms.
  */
 #[Group('migrate_drupal_7')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class MigrateTaxonomyTermTranslationTest extends MigrateDrupal7TestBase {
 
   /**

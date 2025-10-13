@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Batch;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests batch functionality.
  */
 #[Group('Batch')]
+#[RunTestsInSeparateProcesses]
 class BatchKernelTest extends KernelTestBase {
 
   /**

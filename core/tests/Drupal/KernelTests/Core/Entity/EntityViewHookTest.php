@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Entity;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test view/render hooks for entities.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  * hook_entity_view_alter()
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityViewHookTest extends EntityKernelTestBase {
 
   /**

@@ -15,11 +15,13 @@ use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests file on user relationship handler.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class RelationshipUserFileDataTest extends ViewsKernelTestBase {
 
   use UserCreationTrait;

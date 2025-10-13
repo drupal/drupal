@@ -6,12 +6,14 @@ namespace Drupal\Tests\system\Kernel\Form;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests for form_element_label theme hook.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class FormElementLabelTest extends KernelTestBase {
 
   /**

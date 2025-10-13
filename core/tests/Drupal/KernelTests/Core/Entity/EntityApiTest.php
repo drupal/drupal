@@ -10,11 +10,13 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests basic CRUD functionality.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityApiTest extends EntityKernelTestBase {
 
   /**

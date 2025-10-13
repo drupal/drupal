@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\media\Entity\Media;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests link relationships for media items.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaLinkRelationsTest extends MediaKernelTestBase {
 
   /**

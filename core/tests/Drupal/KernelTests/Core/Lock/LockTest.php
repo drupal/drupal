@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Database lock backend.
  */
 #[Group('Lock')]
+#[RunTestsInSeparateProcesses]
 class LockTest extends KernelTestBase {
 
   /**

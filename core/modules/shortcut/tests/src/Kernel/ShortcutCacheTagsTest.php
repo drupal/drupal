@@ -13,11 +13,13 @@ use Drupal\Tests\system\Traits\CacheTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Shortcut entity's cache tags.
  */
 #[Group('shortcut')]
+#[RunTestsInSeparateProcesses]
 class ShortcutCacheTagsTest extends KernelTestBase {
   use UserCreationTrait;
   use CacheTestTrait;

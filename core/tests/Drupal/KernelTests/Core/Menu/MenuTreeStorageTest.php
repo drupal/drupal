@@ -10,6 +10,7 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Menu\MenuTreeStorage;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore mlid
 /**
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\Menu\MenuTreeStorage
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuTreeStorageTest extends KernelTestBase {
 
   /**

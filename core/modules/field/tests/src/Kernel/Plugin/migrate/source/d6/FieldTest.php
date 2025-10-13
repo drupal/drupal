@@ -8,12 +8,14 @@ use Drupal\field\Plugin\migrate\source\d6\Field;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D6 field source plugin.
  */
 #[CoversClass(Field::class)]
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldTest extends MigrateSqlSourceTestBase {
 
   /**

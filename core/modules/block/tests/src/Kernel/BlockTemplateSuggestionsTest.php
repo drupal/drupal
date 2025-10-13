@@ -7,11 +7,13 @@ namespace Drupal\Tests\block\Kernel;
 use Drupal\block\Entity\Block;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block theme suggestions.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockTemplateSuggestionsTest extends KernelTestBase {
 
   /**

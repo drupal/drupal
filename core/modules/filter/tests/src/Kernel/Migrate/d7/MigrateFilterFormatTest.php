@@ -11,11 +11,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\migrate\Kernel\MigrateDumpAlterInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade variables to filter.formats.*.yml.
  */
 #[Group('filter')]
+#[RunTestsInSeparateProcesses]
 class MigrateFilterFormatTest extends MigrateDrupal7TestBase implements MigrateDumpAlterInterface {
 
   /**

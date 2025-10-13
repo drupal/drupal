@@ -10,12 +10,14 @@ use Drupal\file\Plugin\Validation\Constraint\FileImageDimensionsConstraintValida
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the FileImageDimensionsConstraintValidator.
  */
 #[CoversClass(FileImageDimensionsConstraintValidator::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
 
   /**

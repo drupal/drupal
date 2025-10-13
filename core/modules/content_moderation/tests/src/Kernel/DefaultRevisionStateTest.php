@@ -10,11 +10,13 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the correct default revision is set.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class DefaultRevisionStateTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

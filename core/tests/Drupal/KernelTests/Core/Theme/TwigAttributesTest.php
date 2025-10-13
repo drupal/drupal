@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Core\Template\Attribute;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Twig with Attribute objects.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigAttributesTest extends KernelTestBase {
 
   /**

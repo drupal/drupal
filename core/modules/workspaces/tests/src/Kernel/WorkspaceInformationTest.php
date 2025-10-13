@@ -13,12 +13,14 @@ use Drupal\workspaces\WorkspaceInformation;
 use Drupal\workspaces_test\EntityTestRevPubWorkspaceHandler;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the workspace information service.
  */
 #[CoversClass(WorkspaceInformation::class)]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceInformationTest extends KernelTestBase {
 
   use UserCreationTrait;

@@ -13,11 +13,13 @@ use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\MigrateExecutable;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests events fired on migrations.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateEventsTest extends KernelTestBase {
 
   /**

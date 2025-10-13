@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests field settings methods on field definition structures.
  */
 #[Group('Field')]
+#[RunTestsInSeparateProcesses]
 class FieldSettingsTest extends EntityKernelTestBase {
 
   /**

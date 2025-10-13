@@ -16,11 +16,13 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests auto-wiring services.
  */
 #[Group('DependencyInjection')]
+#[RunTestsInSeparateProcesses]
 class AutowireTest extends KernelTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

@@ -9,11 +9,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test to ensure content moderation permissions are generated correctly.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ContentModerationPermissionsTest extends KernelTestBase {
 
   /**

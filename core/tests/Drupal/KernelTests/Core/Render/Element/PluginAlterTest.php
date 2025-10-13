@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Plugin Alter.
  */
 #[Group('Render')]
+#[RunTestsInSeparateProcesses]
 class PluginAlterTest extends KernelTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\media\Entity\Media;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Media.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaTest extends MediaKernelTestBase {
 
   /**

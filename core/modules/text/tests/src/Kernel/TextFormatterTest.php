@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the text formatters functionality.
  */
 #[Group('text')]
+#[RunTestsInSeparateProcesses]
 class TextFormatterTest extends EntityKernelTestBase {
 
   /**

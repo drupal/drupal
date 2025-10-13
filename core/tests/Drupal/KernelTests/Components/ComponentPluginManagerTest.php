@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\Component\Exception\ComponentNotFoundException;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the component plugin manager.
  */
 #[Group('sdc')]
+#[RunTestsInSeparateProcesses]
 class ComponentPluginManagerTest extends ComponentKernelTestBase {
 
   /**

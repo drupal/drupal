@@ -8,11 +8,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the loading of multiple nodes.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeLoadMultipleTest extends NodeAccessTestBase {
 
   /**

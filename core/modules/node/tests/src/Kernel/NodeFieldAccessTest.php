@@ -8,11 +8,13 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node field level access.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeFieldAccessTest extends EntityKernelTestBase {
 
   /**

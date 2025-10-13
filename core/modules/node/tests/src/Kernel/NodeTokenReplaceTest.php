@@ -10,11 +10,13 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node token replacement.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
   use ContentTypeCreationTrait;

@@ -8,11 +8,13 @@ use Drupal\Core\Entity\EntityType;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests general features of entity types.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityTypeTest extends KernelTestBase {
 
   /**

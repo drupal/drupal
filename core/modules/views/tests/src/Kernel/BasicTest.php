@@ -6,11 +6,13 @@ namespace Drupal\Tests\views\Kernel;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * A basic query test for Views.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class BasicTest extends ViewsKernelTestBase {
 
   /**

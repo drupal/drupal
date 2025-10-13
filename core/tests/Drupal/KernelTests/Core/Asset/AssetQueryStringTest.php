@@ -9,12 +9,14 @@ use Drupal\Core\Asset\AssetQueryString;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the asset query string functionality.
  */
 #[CoversClass(AssetQueryString::class)]
 #[Group('Asset')]
+#[RunTestsInSeparateProcesses]
 class AssetQueryStringTest extends KernelTestBase {
 
   /**

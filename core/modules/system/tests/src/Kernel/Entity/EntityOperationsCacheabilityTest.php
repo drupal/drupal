@@ -8,11 +8,13 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests cacheability added by entity operations.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityOperationsCacheabilityTest extends EntityKernelTestBase {
 
   /**

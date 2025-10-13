@@ -10,11 +10,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests base field access in Views for the node entity.
  */
 #[Group('Node')]
+#[RunTestsInSeparateProcesses]
 class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
   /**

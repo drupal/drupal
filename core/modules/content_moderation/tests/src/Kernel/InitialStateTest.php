@@ -10,11 +10,13 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the correct initial states are set on install.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class InitialStateTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

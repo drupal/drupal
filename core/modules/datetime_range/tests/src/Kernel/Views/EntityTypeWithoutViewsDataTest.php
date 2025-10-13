@@ -9,11 +9,13 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests datetime_range.module when an entity type provides no views data.
  */
 #[Group('datetime')]
+#[RunTestsInSeparateProcesses]
 class EntityTypeWithoutViewsDataTest extends KernelTestBase {
 
   /**

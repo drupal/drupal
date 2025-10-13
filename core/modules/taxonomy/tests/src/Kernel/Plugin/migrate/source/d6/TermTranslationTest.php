@@ -8,6 +8,7 @@ use Drupal\taxonomy\Plugin\migrate\source\d6\Term;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore trid
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(Term::class)]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

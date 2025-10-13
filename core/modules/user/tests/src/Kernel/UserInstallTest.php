@@ -6,11 +6,13 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests user_install().
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserInstallTest extends KernelTestBase {
 
   /**

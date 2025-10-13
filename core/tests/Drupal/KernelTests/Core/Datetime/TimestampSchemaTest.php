@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Datetime;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests timestamp schema.
  */
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class TimestampSchemaTest extends KernelTestBase {
 
   /**

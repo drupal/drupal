@@ -13,6 +13,7 @@ use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -22,6 +23,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 #[Group('package_manager')]
 #[CoversClass(UnknownPathExcluder::class)]
+#[RunTestsInSeparateProcesses]
 class UnknownPathExcluderTest extends PackageManagerKernelTestBase {
 
   /**

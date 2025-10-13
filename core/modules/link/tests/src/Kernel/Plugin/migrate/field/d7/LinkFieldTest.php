@@ -10,6 +10,7 @@ use Drupal\link\Plugin\migrate\field\d7\LinkField;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 
 /**
@@ -17,6 +18,7 @@ use Prophecy\Argument;
  */
 #[CoversClass(LinkField::class)]
 #[Group('link')]
+#[RunTestsInSeparateProcesses]
 class LinkFieldTest extends KernelTestBase {
 
   /**

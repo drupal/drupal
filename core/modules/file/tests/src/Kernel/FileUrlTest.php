@@ -6,11 +6,13 @@ namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\File\FileSystemInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file URL.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileUrlTest extends FileManagedUnitTestBase {
 
   /**

@@ -9,12 +9,14 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test whether unimplemented deprecated hook invocations trigger errors.
  */
 #[CoversClass(ModuleHandler::class)]
 #[Group('Extension')]
+#[RunTestsInSeparateProcesses]
 class ModuleHandlerDeprecatedHookUnimplementedTest extends KernelTestBase {
 
   /**

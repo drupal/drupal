@@ -17,11 +17,13 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity view builder.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityViewBuilderTest extends EntityKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

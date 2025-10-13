@@ -18,12 +18,14 @@ use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\workspaces\Entity\Workspace;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the views integration for workspaces.
  */
 #[Group('views')]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;

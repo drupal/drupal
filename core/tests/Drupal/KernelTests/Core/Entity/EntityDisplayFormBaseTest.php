@@ -11,12 +11,14 @@ use Drupal\field_ui\Form\EntityViewDisplayEditForm;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\field_ui\Form\EntityDisplayFormBase.
  */
 #[CoversClass(EntityDisplayFormBase::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityDisplayFormBaseTest extends KernelTestBase {
 
   /**

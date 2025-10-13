@@ -12,11 +12,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_test\FieldTestHelper;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests field storage create, read, update, and delete.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldStorageCrudTest extends FieldKernelTestBase {
 
   /**

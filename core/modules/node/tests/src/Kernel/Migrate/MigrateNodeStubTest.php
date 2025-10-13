@@ -8,11 +8,13 @@ use Drupal\migrate_drupal\Tests\StubTestTrait;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test stub creation for nodes.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class MigrateNodeStubTest extends MigrateDrupalTestBase {
 
   use StubTestTrait;

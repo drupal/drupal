@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 use Drupal\node\NodeInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Node content revisions migration.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateNodeRevisionTest extends MigrateNodeTestBase {
 
   /**

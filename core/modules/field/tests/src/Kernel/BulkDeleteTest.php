@@ -11,11 +11,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_test\FieldTestHelper;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Bulk delete storages and fields, and clean up afterwards.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class BulkDeleteTest extends FieldKernelTestBase {
 
   /**

@@ -22,11 +22,13 @@ use Drupal\workspaces\WorkspacePublishException;
 use PHPUnit\Framework\Attributes\DataProvider;
 // cspell:ignore differring
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests a complete publishing scenario across different workspaces.
  */
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceIntegrationTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

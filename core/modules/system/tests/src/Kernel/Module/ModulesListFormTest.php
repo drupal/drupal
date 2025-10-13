@@ -8,11 +8,13 @@ use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Form\ModulesListForm;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the modules list form.
  */
 #[Group('Module')]
+#[RunTestsInSeparateProcesses]
 class ModulesListFormTest extends KernelTestBase {
 
   /**

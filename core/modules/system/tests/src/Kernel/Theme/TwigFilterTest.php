@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal's Twig filters.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigFilterTest extends KernelTestBase {
 
   /**

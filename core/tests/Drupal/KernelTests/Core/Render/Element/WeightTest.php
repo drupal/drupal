@@ -12,12 +12,14 @@ use Drupal\element_info_test\ElementInfoTestNumberBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Render\Element\Weight.
  */
 #[CoversClass(Weight::class)]
 #[Group('Render')]
+#[RunTestsInSeparateProcesses]
 class WeightTest extends KernelTestBase {
 
   /**

@@ -12,11 +12,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default entity storage schema handler.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntitySchemaTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;

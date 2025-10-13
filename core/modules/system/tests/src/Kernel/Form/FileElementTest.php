@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Form;
 use Drupal\form_test\Form\FormTestFileForm;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the 'file' form element.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class FileElementTest extends KernelTestBase {
 
   /**

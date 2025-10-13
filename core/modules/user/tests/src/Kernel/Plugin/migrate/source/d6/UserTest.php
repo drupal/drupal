@@ -8,12 +8,14 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use Drupal\user\Plugin\migrate\source\d6\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the d6_user source plugin.
  */
 #[CoversClass(User::class)]
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserTest extends MigrateSqlSourceTestBase {
 
   /**

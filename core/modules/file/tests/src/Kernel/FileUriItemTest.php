@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * File URI field item test.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\file\FileUrl
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileUriItemTest extends FileManagedUnitTestBase {
 
   /**

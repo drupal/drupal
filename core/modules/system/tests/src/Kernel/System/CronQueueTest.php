@@ -17,6 +17,7 @@ use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestRequeueException;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestSuspendQueue;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
@@ -24,6 +25,7 @@ use Psr\Log\LoggerInterface;
  * Tests the Cron Queue runner.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class CronQueueTest extends KernelTestBase {
 
   /**

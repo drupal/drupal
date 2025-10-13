@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validating user modules' configuration.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserConfigValidationTest extends KernelTestBase {
 
   /**

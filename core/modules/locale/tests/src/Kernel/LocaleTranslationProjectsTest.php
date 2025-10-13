@@ -6,11 +6,13 @@ namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests locale translation project handling.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleTranslationProjectsTest extends KernelTestBase {
 
   /**

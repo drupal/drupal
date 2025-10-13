@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests site-specific service overrides.
  */
 #[Group('DrupalKernel')]
+#[RunTestsInSeparateProcesses]
 class DrupalKernelSiteTest extends KernelTestBase {
 
   /**

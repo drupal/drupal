@@ -8,11 +8,13 @@ use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of content blocks.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class MigrateCustomBlockTest extends MigrateDrupal7TestBase {
 
   /**

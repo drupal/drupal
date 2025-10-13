@@ -14,11 +14,13 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Drupal unit tests for the DisplayPluginBase class.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class DisplayKernelTest extends ViewsKernelTestBase {
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\Tests\block\Kernel\Migrate\d7;
 use Drupal\block\Hook\BlockHooks;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of i18n block translations.
  */
 #[Group('migrate_drupal_7')]
+#[RunTestsInSeparateProcesses]
 class MigrateBlockContentTranslationTest extends MigrateDrupal7TestBase {
 
   /**

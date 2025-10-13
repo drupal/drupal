@@ -21,11 +21,13 @@ use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests links between a content entity and a content_moderation_state entity.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ContentModerationStateTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

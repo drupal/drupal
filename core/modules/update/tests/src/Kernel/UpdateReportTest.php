@@ -12,12 +12,14 @@ use Drupal\update\Hook\UpdateThemeHooks;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests update report functionality.
  */
 #[CoversClass(UpdateThemeHooks::class)]
 #[Group('update')]
+#[RunTestsInSeparateProcesses]
 class UpdateReportTest extends KernelTestBase {
 
   use UserCreationTrait;

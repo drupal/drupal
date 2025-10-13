@@ -18,11 +18,13 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
 use Drupal\migrate_entity_test\Entity\StringIdEntityTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the EntityContentBase destination.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateEntityContentBaseTest extends KernelTestBase {
 
   use StubTestTrait;

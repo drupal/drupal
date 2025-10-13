@@ -11,12 +11,14 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\content_moderation\EntityOperations.
  */
 #[CoversClass(EntityOperations::class)]
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class EntityOperationsTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

@@ -16,11 +16,13 @@ use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\image\ImageEffectInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests schema for configuration objects.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigSchemaTest extends KernelTestBase {
 
   /**

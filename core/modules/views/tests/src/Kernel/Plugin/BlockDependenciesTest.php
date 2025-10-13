@@ -7,11 +7,13 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 use Drupal\block\Entity\Block;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests views block config dependencies functionality.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class BlockDependenciesTest extends ViewsKernelTestBase {
 
   /**

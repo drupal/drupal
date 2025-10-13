@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests built-in table theme functions.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TableTest extends KernelTestBase {
 
   /**

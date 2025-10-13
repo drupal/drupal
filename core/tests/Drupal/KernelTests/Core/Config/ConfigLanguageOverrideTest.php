@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Config;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Confirm that language overrides work.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigLanguageOverrideTest extends KernelTestBase {
 
   /**

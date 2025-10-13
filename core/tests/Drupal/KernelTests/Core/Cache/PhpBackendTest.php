@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Cache;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\PhpBackend;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Unit test of the PHP cache backend using the generic cache unit test base.
  */
 #[Group('Cache')]
+#[RunTestsInSeparateProcesses]
 class PhpBackendTest extends GenericCacheBackendUnitTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests setting of bundles on content entity migrations.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateBundleTest extends MigrateTestBase {
 
   /**

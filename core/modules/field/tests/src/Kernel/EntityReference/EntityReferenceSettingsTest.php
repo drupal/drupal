@@ -13,12 +13,14 @@ use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 /**
  * Tests entity reference field settings.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceSettingsTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

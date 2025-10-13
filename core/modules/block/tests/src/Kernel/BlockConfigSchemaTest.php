@@ -8,11 +8,13 @@ use Drupal\block\Entity\Block;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block config schema.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockConfigSchemaTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;

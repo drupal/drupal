@@ -7,11 +7,13 @@ namespace Drupal\Tests\language\Kernel;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the language select widget.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageSelectWidgetTest extends KernelTestBase {
 
   /**

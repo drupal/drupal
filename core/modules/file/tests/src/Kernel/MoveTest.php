@@ -13,12 +13,14 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file move function.
  */
 #[CoversClass(FileRepository::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class MoveTest extends FileManagedUnitTestBase {
 
   /**

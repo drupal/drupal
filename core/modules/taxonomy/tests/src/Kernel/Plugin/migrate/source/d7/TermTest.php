@@ -8,12 +8,14 @@ use Drupal\taxonomy\Plugin\migrate\source\d7\Term;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests taxonomy term source plugin.
  */
 #[CoversClass(Term::class)]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermTest extends MigrateSqlSourceTestBase {
 
   /**

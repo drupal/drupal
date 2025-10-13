@@ -6,11 +6,13 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\MigrateExecutable;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests rolling back of configuration objects.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateConfigRollbackTest extends MigrateTestBase {
 
   /**

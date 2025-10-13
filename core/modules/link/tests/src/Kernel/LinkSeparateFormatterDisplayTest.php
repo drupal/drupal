@@ -12,6 +12,7 @@ use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\Tests\link\Traits\LinkInputValuesTraits;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore Fragm
 /**
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
  * each form is tested with different display settings.
  */
 #[Group('link')]
+#[RunTestsInSeparateProcesses]
 class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
 
   use LinkInputValuesTraits;

@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -17,6 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 #[Group('Field')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class FieldStorageCreateCheckDeprecationTest extends KernelTestBase {
 
   /**

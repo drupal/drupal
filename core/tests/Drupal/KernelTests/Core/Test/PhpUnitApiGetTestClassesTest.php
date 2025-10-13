@@ -12,6 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ::getTestClasses() between TestDiscovery and PhpPUnitTestDiscovery.
@@ -23,6 +24,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[Group('TestSuites')]
 #[Group('Test')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class PhpUnitApiGetTestClassesTest extends KernelTestBase {
 
   /**

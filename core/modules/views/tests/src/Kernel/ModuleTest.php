@@ -12,11 +12,13 @@ use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Plugin\views\ViewsHandlerInterface;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests basic functions from the Views module.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ModuleTest extends ViewsKernelTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test for installing Layout Builder before Block Content in the same request.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderBlockContentDependencyTest extends KernelTestBase {
 
   /**

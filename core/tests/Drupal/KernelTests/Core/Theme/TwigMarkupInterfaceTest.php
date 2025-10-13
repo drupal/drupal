@@ -15,11 +15,13 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Twig with MarkupInterface objects.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigMarkupInterfaceTest extends KernelTestBase {
 
   /**

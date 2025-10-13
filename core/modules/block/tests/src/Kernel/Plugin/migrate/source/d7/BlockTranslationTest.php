@@ -8,6 +8,7 @@ use Drupal\block\Plugin\migrate\source\d7\BlockTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore objectid objectindex plid textgroup
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(BlockTranslation::class)]
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class BlockTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

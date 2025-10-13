@@ -10,11 +10,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests loading, saving and deleting vocabularies.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class VocabularyCrudTest extends KernelTestBase {
 
   use TaxonomyTestTrait;

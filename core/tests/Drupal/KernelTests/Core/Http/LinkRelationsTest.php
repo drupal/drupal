@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Http;
 use Drupal\Core\Http\LinkRelationType;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests link relationships in Drupal.
  */
 #[Group('HTTP')]
+#[RunTestsInSeparateProcesses]
 class LinkRelationsTest extends KernelTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\EntityTestHelper;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests adding a custom bundle field.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityBundleFieldTest extends EntityKernelTestBase {
 
   /**

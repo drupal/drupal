@@ -10,12 +10,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchIndexInterface;
 use Drupal\search\SearchQuery;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore cillum dolore enim veniam
 /**
  * Indexes content and queries it.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchMatchTest extends KernelTestBase {
 
   // The search index can contain different types of content. Typically the type

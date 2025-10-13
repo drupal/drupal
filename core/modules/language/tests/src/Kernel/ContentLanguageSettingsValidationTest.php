@@ -9,6 +9,7 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation of content_language_settings entities.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('language')]
 #[Group('config')]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class ContentLanguageSettingsValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

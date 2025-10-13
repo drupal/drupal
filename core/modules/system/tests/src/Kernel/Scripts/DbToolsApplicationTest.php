@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Kernel\Scripts;
 use Drupal\Core\Command\DbToolsApplication;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test that the DbToolsApplication works correctly.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * test that we are registering the correct commands.
  */
 #[Group('console')]
+#[RunTestsInSeparateProcesses]
 class DbToolsApplicationTest extends KernelTestBase {
 
   /**

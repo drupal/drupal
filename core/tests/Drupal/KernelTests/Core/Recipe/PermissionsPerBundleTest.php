@@ -20,6 +20,7 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -28,6 +29,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 #[Group('Recipe')]
 #[CoversClass(PermissionsPerBundle::class)]
 #[CoversClass(PermissionsPerBundleDeriver::class)]
+#[RunTestsInSeparateProcesses]
 class PermissionsPerBundleTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

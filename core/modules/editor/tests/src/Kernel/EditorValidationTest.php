@@ -9,6 +9,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 #[Group('editor')]
 #[Group('config')]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class EditorValidationTest extends ConfigEntityValidationTestBase {
 
   /**

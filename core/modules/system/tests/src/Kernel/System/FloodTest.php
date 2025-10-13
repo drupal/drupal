@@ -9,11 +9,13 @@ use Drupal\Core\Flood\DatabaseBackend;
 use Drupal\Core\Flood\MemoryBackend;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Functional tests for the flood control mechanism.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class FloodTest extends KernelTestBase {
 
   /**

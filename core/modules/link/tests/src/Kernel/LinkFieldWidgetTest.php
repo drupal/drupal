@@ -11,11 +11,13 @@ use Drupal\link\LinkItemInterface;
 use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests link field widgets.
  */
 #[Group('link')]
+#[RunTestsInSeparateProcesses]
 class LinkFieldWidgetTest extends FieldKernelTestBase {
 
   /**

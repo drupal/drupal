@@ -7,6 +7,7 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -14,6 +15,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Tests the representative node relationship for terms.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
 
   /**

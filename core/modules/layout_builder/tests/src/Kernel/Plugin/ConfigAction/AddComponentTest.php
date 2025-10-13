@@ -19,6 +19,7 @@ use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that `addComponentToLayout` config action.
@@ -26,6 +27,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('layout_builder')]
 #[CoversClass(AddComponent::class)]
 #[CoversClass(AddComponentDeriver::class)]
+#[RunTestsInSeparateProcesses]
 class AddComponentTest extends KernelTestBase {
 
   /**

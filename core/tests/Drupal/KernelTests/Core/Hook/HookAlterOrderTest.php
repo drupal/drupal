@@ -12,12 +12,14 @@ use Drupal\ddd_hook_order_test\Hook\DAlterHooks;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Hook Alter Order.
  */
 #[Group('Hook')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class HookAlterOrderTest extends KernelTestBase {
 
   use HookOrderTestTrait;

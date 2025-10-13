@@ -6,11 +6,13 @@ namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests term validation constraints.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermValidationTest extends EntityKernelTestBase {
 
   /**

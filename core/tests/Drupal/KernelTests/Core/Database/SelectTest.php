@@ -10,11 +10,13 @@ use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Query\SelectExtender;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Select query builder.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class SelectTest extends DatabaseTestBase {
 
   /**

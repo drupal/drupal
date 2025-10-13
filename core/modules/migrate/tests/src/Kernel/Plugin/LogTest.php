@@ -10,11 +10,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Row;
 use Drupal\node\Entity\Node;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Log process plugin.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class LogTest extends KernelTestBase {
 
   /**

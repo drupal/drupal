@@ -8,12 +8,14 @@ use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Checks the status and definition contents of deprecated libraries.
  */
 #[Group('Asset')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class DeprecatedAssetsTest extends KernelTestBase {
 
   /**

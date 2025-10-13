@@ -14,11 +14,13 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the image field rendering using entity fields of the image field type.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageFormatterTest extends FieldKernelTestBase {
 
   /**

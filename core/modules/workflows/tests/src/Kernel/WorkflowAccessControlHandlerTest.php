@@ -14,6 +14,7 @@ use Drupal\workflows\WorkflowAccessControlHandler;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Prophet;
 
 /**
@@ -22,6 +23,7 @@ use Prophecy\Prophet;
 #[CoversClass(WorkflowAccessControlHandler::class)]
 #[Group('workflows')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class WorkflowAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait;

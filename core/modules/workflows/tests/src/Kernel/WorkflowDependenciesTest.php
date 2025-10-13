@@ -8,12 +8,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests configuration dependencies in workflows.
  */
 #[CoversClass(Workflow::class)]
 #[Group('workflows')]
+#[RunTestsInSeparateProcesses]
 class WorkflowDependenciesTest extends KernelTestBase {
 
   /**

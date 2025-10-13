@@ -19,6 +19,7 @@ use Drupal\package_manager_bypass\NoOpStager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 
 /**
@@ -28,6 +29,7 @@ use Prophecy\Argument;
  */
 #[CoversClass(LockFileValidator::class)]
 #[Group('package_manager')]
+#[RunTestsInSeparateProcesses]
 class LockFileValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;

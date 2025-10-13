@@ -15,11 +15,13 @@ use Drupal\views\Plugin\views\filter\EntityReference;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\EntityReference handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FilterEntityReferenceTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;

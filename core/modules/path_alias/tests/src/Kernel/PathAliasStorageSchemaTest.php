@@ -8,12 +8,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\path_alias\PathAliasStorageSchema;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the path_alias storage schema.
  */
 #[CoversClass(PathAliasStorageSchema::class)]
 #[Group('path_alias')]
+#[RunTestsInSeparateProcesses]
 class PathAliasStorageSchemaTest extends KernelTestBase {
 
   /**

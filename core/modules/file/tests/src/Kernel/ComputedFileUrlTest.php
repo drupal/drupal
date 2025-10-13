@@ -11,12 +11,14 @@ use Drupal\file\FileInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\file\ComputedFileUrl.
  */
 #[CoversClass(ComputedFileUrl::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class ComputedFileUrlTest extends KernelTestBase {
 
   /**

@@ -13,12 +13,14 @@ use Drupal\module_autoload_test\Foo;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\ClassLoader\BackwardsCompatibilityClassLoader.
  */
 #[CoversClass(BackwardsCompatibilityClassLoader::class)]
 #[Group('ClassLoader')]
+#[RunTestsInSeparateProcesses]
 class BackwardsCompatibilityClassLoaderTest extends KernelTestBase {
 
   /**

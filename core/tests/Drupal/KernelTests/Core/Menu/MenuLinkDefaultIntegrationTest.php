@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Menu;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests integration of static menu links.
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkDefaultIntegrationTest extends KernelTestBase {
 
   /**

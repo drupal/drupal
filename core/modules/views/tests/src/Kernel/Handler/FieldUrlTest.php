@@ -9,11 +9,13 @@ use Drupal\Core\Url;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Url handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FieldUrlTest extends ViewsKernelTestBase {
 
   /**

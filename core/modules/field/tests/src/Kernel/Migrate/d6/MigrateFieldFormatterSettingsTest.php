@@ -7,11 +7,13 @@ namespace Drupal\Tests\field\Kernel\Migrate\d6;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade field formatter settings to entity.display.*.*.yml.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 
   /**

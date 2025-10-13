@@ -7,11 +7,13 @@ namespace Drupal\Tests\content_translation\Kernel;
 use Drupal\content_translation\FieldTranslationSynchronizer;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the field synchronization logic.
  */
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationSyncUnitTest extends KernelTestBase {
 
   /**

@@ -9,12 +9,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensures that the menu tree adapts to path alias changes.
  */
 #[Group('menu_link_content')]
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class PathAliasMenuLinkContentTest extends KernelTestBase {
 
   use PathAliasTestTrait;

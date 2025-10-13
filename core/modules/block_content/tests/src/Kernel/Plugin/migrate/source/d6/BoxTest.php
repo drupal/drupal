@@ -8,12 +8,14 @@ use Drupal\block_content\Plugin\migrate\source\d6\Box;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D6 block boxes source plugin.
  */
 #[CoversClass(Box::class)]
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BoxTest extends MigrateSqlSourceTestBase {
 
   /**

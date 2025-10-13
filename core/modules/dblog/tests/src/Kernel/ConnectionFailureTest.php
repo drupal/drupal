@@ -7,11 +7,13 @@ namespace Drupal\Tests\dblog\Kernel;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests logging of connection failures.
  */
 #[Group('dblog')]
+#[RunTestsInSeparateProcesses]
 class ConnectionFailureTest extends KernelTestBase {
 
   /**

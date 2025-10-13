@@ -7,11 +7,13 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests mapping style functionality.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class StyleMappingTest extends StyleTestBase {
 
   /**

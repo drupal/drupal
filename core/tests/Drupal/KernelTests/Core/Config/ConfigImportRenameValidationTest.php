@@ -11,11 +11,13 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validating renamed configuration in a configuration import.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigImportRenameValidationTest extends KernelTestBase {
 
   /**

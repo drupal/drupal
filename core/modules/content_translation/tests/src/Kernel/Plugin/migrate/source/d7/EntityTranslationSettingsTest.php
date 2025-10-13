@@ -8,12 +8,14 @@ use Drupal\content_translation\Plugin\migrate\source\d7\EntityTranslationSetting
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity translation settings source plugin.
  */
 #[CoversClass(EntityTranslationSettings::class)]
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class EntityTranslationSettingsTest extends MigrateSqlSourceTestBase {
 
   /**

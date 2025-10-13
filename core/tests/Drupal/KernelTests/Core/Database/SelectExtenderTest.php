@@ -13,12 +13,14 @@ use Drupal\Tests\Core\Database\Stub\StubPDO;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Select query extender classes.
  */
 #[CoversClass(Select::class)]
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class SelectExtenderTest extends KernelTestBase {
 
   /**

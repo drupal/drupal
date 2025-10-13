@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Update query builder, complex queries.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class UpdateComplexTest extends DatabaseTestBase {
 
   /**

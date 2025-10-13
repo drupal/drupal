@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Confirms that Claro can render vertical tabs correctly.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ClaroVerticalTabsTest extends KernelTestBase {
 
   /**

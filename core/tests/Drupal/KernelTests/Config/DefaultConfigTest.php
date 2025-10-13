@@ -14,12 +14,14 @@ use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the installed config matches the default config.
  */
 #[Group('Config')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class DefaultConfigTest extends KernelTestBase {
 
   use AssertConfigTrait;

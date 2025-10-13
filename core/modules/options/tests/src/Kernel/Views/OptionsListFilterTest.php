@@ -6,6 +6,7 @@ namespace Drupal\Tests\options\Kernel\Views;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests options list filter for views.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\field\Plugin\views\filter\ListField.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class OptionsListFilterTest extends OptionsTestBase {
 
   /**

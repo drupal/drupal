@@ -9,12 +9,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\migrate\Kernel\MigrateDumpAlterInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of field label and description translations.
  */
 #[Group('migrate_drupal_6')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase implements MigrateDumpAlterInterface {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\sqlite\Kernel\sqlite;
 
 use Drupal\KernelTests\Core\Database\SchemaUniquePrefixedKeysIndexTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests adding UNIQUE keys to tables.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class SchemaUniquePrefixedKeysIndexTest extends SchemaUniquePrefixedKeysIndexTestBase {
 
   /**

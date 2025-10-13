@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -25,6 +26,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  */
 #[CoversClass(ModuleInstaller::class)]
 #[Group('Extension')]
+#[RunTestsInSeparateProcesses]
 class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
 
   use RfcLoggerTrait;

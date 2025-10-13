@@ -8,11 +8,13 @@ use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests a condition that requires two users.
  */
 #[Group('condition_test')]
+#[RunTestsInSeparateProcesses]
 class ConditionTestDualUserTest extends KernelTestBase {
 
   /**

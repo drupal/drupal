@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade menus to system.menu.*.yml.
  */
 #[Group('migrate_drupal_7')]
+#[RunTestsInSeparateProcesses]
 class MigrateMenuTest extends MigrateDrupal7TestBase {
 
   /**

@@ -15,11 +15,13 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests derivative generation with source images using stream wrappers.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
 
   /**

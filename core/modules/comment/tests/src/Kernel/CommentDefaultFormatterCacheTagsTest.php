@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * Tests comment cache tag bubbling up when using the Comment list formatter.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
 
   use CommentTestTrait;

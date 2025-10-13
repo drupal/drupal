@@ -13,12 +13,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Plugin\Validation\Constraint\EntityReferenceSupportedNewEntitiesConstraintValidator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\workspaces\Plugin\Validation\Constraint\EntityReferenceSupportedNewEntitiesConstraintValidator.
  */
 #[CoversClass(EntityReferenceSupportedNewEntitiesConstraintValidator::class)]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelTestBase {
 
   use UserCreationTrait;

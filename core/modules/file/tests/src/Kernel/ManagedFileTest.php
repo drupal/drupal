@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Managed file element test.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\file\Element\ManagedFile
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class ManagedFileTest extends FileManagedUnitTestBase implements FormInterface {
 
   /**

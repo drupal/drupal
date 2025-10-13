@@ -11,11 +11,13 @@ use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the deleteFromDedicatedTables() method only executes one DELETE query.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class SqlContentEntityStorageTest extends KernelTestBase {
 
   /**

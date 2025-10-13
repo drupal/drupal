@@ -7,11 +7,13 @@ namespace Drupal\Tests\migrate\Kernel;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests rolling back of imports.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateRollbackEntityConfigTest extends MigrateTestBase {
 
   /**

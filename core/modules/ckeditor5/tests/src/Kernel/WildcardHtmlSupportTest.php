@@ -10,6 +10,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  * @legacy-covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class WildcardHtmlSupportTest extends KernelTestBase {
 
   /**

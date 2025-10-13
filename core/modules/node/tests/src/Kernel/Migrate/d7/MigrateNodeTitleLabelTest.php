@@ -7,11 +7,13 @@ namespace Drupal\Tests\node\Kernel\Migrate\d7;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of the title field label for node types.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class MigrateNodeTitleLabelTest extends MigrateDrupal7TestBase {
 
   /**

@@ -11,6 +11,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\TestTools\Random;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -19,6 +20,7 @@ use Symfony\Component\Yaml\Yaml;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class LanguageTest extends KernelTestBase {
 
   /**

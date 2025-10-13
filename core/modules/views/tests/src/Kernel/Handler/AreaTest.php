@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the plugin base of the area handler.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views_test\Plugin\views\area\TestExample
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class AreaTest extends ViewsKernelTestBase {
 
   /**

@@ -15,11 +15,13 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the new entity API for the date field type.
  */
 #[Group('datetime')]
+#[RunTestsInSeparateProcesses]
 class DateTimeItemTest extends FieldKernelTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\node\NodePreviewMode;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade node types to node.type.*.yml.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 
   /**

@@ -7,6 +7,7 @@ namespace Drupal\Tests\views\Kernel\Handler;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the result area handler.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\area\Result
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class AreaResultTest extends ViewsKernelTestBase {
 
   /**

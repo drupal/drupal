@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies operation of a taxonomy-based Entity Query.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermEntityQueryTest extends KernelTestBase {
 
   use TaxonomyTestTrait;

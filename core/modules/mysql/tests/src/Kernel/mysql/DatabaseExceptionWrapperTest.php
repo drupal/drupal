@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests exceptions thrown by queries.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class DatabaseExceptionWrapperTest extends DriverSpecificKernelTestBase {
 
   /**

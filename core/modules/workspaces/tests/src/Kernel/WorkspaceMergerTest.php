@@ -11,6 +11,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\WorkspaceMerger;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore differring
 /**
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(WorkspaceMerger::class)]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceMergerTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

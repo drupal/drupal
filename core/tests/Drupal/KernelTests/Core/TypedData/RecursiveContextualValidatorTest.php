@@ -11,12 +11,14 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\TypedData\Validation\RecursiveContextualValidator.
  */
 #[CoversClass(RecursiveContextualValidator::class)]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class RecursiveContextualValidatorTest extends KernelTestBase {
 
   /**

@@ -10,12 +10,14 @@ use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Recipe Validation.
  */
 #[Group('Recipe')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class RecipeValidationTest extends KernelTestBase {
 
   /**

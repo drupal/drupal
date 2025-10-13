@@ -7,11 +7,13 @@ namespace Drupal\Tests\views\Kernel\Handler;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\Equality handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FilterEqualityTest extends ViewsKernelTestBase {
 
   /**

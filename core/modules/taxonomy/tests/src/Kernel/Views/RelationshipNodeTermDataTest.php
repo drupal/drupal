@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the taxonomy term on node relationship handler.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class RelationshipNodeTermDataTest extends TaxonomyTestBase {
 
   /**

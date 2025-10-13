@@ -9,11 +9,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the generic entity bundle filter.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FilterEntityBundleTest extends ViewsKernelTestBase {
 
   /**

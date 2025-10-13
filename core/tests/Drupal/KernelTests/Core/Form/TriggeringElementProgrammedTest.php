@@ -9,11 +9,13 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests detection of triggering_element for programmed form submissions.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class TriggeringElementProgrammedTest extends KernelTestBase implements FormInterface {
 
   /**

@@ -10,6 +10,7 @@ use Drupal\package_manager\Validator\SandboxDatabaseUpdatesValidator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Staged DBUpdate Validator.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('package_manager')]
 #[CoversClass(SandboxDatabaseUpdatesValidator::class)]
+#[RunTestsInSeparateProcesses]
 class StagedDBUpdateValidatorTest extends PackageManagerKernelTestBase {
 
   /**

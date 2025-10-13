@@ -8,11 +8,13 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the views exception handling.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewsSqlExceptionTest extends ViewsKernelTestBase {
 
   /**

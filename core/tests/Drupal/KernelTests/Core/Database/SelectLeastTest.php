@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Database;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the SQL LEAST operator.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class SelectLeastTest extends DatabaseTestBase {
 
   /**

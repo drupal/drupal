@@ -9,12 +9,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test case for getting all permissions as a super user.
  */
 #[Group('Session')]
 #[CoversClass(SuperUserAccessPolicyPass::class)]
+#[RunTestsInSeparateProcesses]
 class SuperUserPermissionsTest extends KernelTestBase {
 
   use UserCreationTrait;

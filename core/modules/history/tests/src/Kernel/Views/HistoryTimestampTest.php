@@ -10,6 +10,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the history timestamp handlers.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\history\Plugin\views\filter\HistoryUserTimestamp
  */
 #[Group('history')]
+#[RunTestsInSeparateProcesses]
 class HistoryTimestampTest extends ViewsKernelTestBase {
 
   /**

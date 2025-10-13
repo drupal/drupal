@@ -9,11 +9,13 @@ use Drupal\block\Hook\BlockHooks;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of blocks to configuration entities.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class MigrateBlockTest extends MigrateDrupal7TestBase {
 
   /**

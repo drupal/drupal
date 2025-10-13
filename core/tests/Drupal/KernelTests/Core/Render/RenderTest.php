@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Render;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Performs functional tests on \Drupal::service('renderer')->render().
  */
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class RenderTest extends KernelTestBase {
 
   /**

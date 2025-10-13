@@ -8,11 +8,13 @@ use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Migrate field widget settings.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
 
   /**

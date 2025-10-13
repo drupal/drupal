@@ -7,12 +7,14 @@ namespace Drupal\Tests\media\Kernel;
 use Drupal\media\Plugin\Filter\MediaEmbed;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that media embed disables certain integrations.
  */
 #[CoversClass(MediaEmbed::class)]
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase {
 
   /**

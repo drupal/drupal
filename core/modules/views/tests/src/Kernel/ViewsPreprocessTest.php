@@ -8,11 +8,13 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\views\Hook\ViewsThemeHooks;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the preprocessing functionality in views theme hooks.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewsPreprocessTest extends ViewsKernelTestBase {
 
   /**

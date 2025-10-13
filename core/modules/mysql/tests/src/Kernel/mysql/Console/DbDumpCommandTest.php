@@ -7,12 +7,14 @@ namespace Drupal\Tests\mysql\Kernel\mysql\Console;
 use Drupal\Core\Command\DbDumpCommand;
 use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Test that the DbDumpCommand works correctly.
  */
 #[Group('console')]
+#[RunTestsInSeparateProcesses]
 class DbDumpCommandTest extends DriverSpecificKernelTestBase {
 
   /**

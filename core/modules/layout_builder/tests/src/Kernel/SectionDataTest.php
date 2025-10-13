@@ -11,12 +11,14 @@ use Drupal\layout_builder\Plugin\DataType\SectionData;
 use Drupal\layout_builder\Section;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\layout_builder\Plugin\DataType\SectionData.
  */
 #[CoversClass(SectionData::class)]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class SectionDataTest extends KernelTestBase {
 
   /**

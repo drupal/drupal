@@ -9,11 +9,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests process pipelines when a sub_process skips a row or process.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class SubProcessWithSkipTest extends KernelTestBase {
 
   /**

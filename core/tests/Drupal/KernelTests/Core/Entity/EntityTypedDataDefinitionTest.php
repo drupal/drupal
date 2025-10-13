@@ -19,11 +19,13 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests deriving metadata of entity and field data types.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityTypedDataDefinitionTest extends KernelTestBase {
 
   /**

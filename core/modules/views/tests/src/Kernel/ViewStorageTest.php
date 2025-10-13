@@ -9,6 +9,7 @@ use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the CRUD functionality for a view.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\Config\Entity\ConfigEntityStorage
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewStorageTest extends ViewsKernelTestBase {
 
   /**

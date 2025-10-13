@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests user saving status.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserSaveStatusTest extends KernelTestBase {
 
   /**

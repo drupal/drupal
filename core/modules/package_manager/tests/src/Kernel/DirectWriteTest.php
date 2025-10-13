@@ -23,6 +23,7 @@ use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -35,6 +36,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 #[Group('package_manager')]
 #[CoversClass(DirectWriteSubscriber::class)]
 #[CoversClass(DirectWritePreconditionBypass::class)]
+#[RunTestsInSeparateProcesses]
 class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
 
   use StatusCheckTrait;

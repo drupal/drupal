@@ -8,12 +8,14 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\ApcuBackend;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the APCu cache backend.
  */
 #[Group('Cache')]
 #[RequiresPhpExtension('apcu')]
+#[RunTestsInSeparateProcesses]
 class ApcuBackendTest extends GenericCacheBackendUnitTestBase {
 
   /**

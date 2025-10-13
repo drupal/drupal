@@ -9,12 +9,14 @@ use Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyPerType;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D6 vocabulary per type source plugin.
  */
 #[CoversClass(VocabularyPerType::class)]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class VocabularyPerTypeTest extends MigrateSqlSourceTestBase {
 
   /**

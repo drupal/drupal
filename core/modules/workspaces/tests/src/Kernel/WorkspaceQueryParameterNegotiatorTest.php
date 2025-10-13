@@ -12,12 +12,14 @@ use Drupal\workspaces\Negotiator\QueryParameterWorkspaceNegotiator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the query parameter workspace negotiator.
  */
 #[CoversClass(QueryParameterWorkspaceNegotiator::class)]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
 
   use UserCreationTrait;

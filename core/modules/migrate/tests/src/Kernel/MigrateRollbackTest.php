@@ -10,11 +10,13 @@ use Drupal\migrate\Row;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests rolling back of imports.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateRollbackTest extends MigrateTestBase {
 
   /**

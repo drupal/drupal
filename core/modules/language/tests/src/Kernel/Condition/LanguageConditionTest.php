@@ -7,11 +7,13 @@ namespace Drupal\Tests\language\Kernel\Condition;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the language condition plugin.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageConditionTest extends KernelTestBase {
 
   /**

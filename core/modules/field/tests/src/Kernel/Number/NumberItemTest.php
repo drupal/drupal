@@ -14,11 +14,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the new entity API for the number field type.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class NumberItemTest extends FieldKernelTestBase {
 
   /**

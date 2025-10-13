@@ -18,11 +18,13 @@ use Drupal\user\Entity\User;
 use Drupal\user\Plugin\Validation\Constraint\UserNameConstraint;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation of an entity during migration.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateEntityContentValidationTest extends KernelTestBase {
 
   /**

@@ -19,12 +19,14 @@ use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block content entity access handler.
  */
 #[CoversClass(BlockContentAccessControlHandler::class)]
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentAccessHandlerTest extends KernelTestBase {
 
   use UserCreationTrait;

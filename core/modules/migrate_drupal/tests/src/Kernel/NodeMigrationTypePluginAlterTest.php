@@ -10,11 +10,13 @@ use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the assignment of the node migration type in migrations_plugin_alter.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
 
   use NodeMigrateTypeTestTrait;

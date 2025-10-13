@@ -8,12 +8,14 @@ use Drupal\taxonomy\Plugin\migrate\source\d7\TermEntityTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests taxonomy term entity translation source plugin.
  */
 #[CoversClass(TermEntityTranslation::class)]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermEntityTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

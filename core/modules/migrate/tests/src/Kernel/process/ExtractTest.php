@@ -9,11 +9,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the extract process plugin.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class ExtractTest extends KernelTestBase {
 
   /**

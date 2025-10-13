@@ -8,11 +8,13 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default file formatter.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FileEntityFormatterTest extends KernelTestBase {
 
   /**

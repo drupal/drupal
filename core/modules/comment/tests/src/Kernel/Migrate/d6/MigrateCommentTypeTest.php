@@ -8,12 +8,14 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration of comment types from Drupal 6.
  */
 #[Group('comment')]
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
 
   /**

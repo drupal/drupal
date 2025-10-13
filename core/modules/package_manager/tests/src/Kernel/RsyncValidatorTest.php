@@ -14,6 +14,7 @@ use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 use PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -23,6 +24,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 #[Group('package_manager')]
 #[CoversClass(RsyncValidator::class)]
+#[RunTestsInSeparateProcesses]
 class RsyncValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;

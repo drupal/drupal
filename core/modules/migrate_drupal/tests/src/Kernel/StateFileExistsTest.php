@@ -8,6 +8,7 @@ use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that core modules have a migrate_drupal.yml file as needed.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * to determine that all the required files exits.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class StateFileExistsTest extends MigrateDrupalTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

@@ -10,12 +10,14 @@ use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the FileExtensionConstraintValidator.
  */
 #[CoversClass(FileExtensionConstraintValidator::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
 
   /**

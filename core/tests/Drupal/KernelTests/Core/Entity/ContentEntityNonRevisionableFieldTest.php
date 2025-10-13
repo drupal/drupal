@@ -11,11 +11,13 @@ use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests non-revisionable fields on revisionable (and translatable) entities.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;

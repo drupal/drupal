@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -25,6 +26,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 #[Group('package_manager')]
 #[CoversClass(BaseRequirementsFulfilledValidator::class)]
 #[CoversTrait(BaseRequirementValidatorTrait::class)]
+#[RunTestsInSeparateProcesses]
 class BaseRequirementsFulfilledValidatorTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
 
   use BaseRequirementValidatorTrait;

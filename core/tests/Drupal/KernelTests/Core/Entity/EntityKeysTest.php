@@ -8,11 +8,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the behavior of entity keys.
  */
 #[Group('entity')]
+#[RunTestsInSeparateProcesses]
 class EntityKeysTest extends EntityKernelTestBase {
 
   /**

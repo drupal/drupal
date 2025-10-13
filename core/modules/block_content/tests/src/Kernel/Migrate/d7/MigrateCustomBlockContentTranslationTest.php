@@ -7,11 +7,13 @@ namespace Drupal\Tests\block_content\Kernel\Migrate\d7;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of i18n content block strings.
  */
 #[Group('migrate_drupal_7')]
+#[RunTestsInSeparateProcesses]
 class MigrateCustomBlockContentTranslationTest extends MigrateDrupal7TestBase {
 
   /**

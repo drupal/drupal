@@ -20,6 +20,7 @@ use PhpTuf\ComposerStager\API\Precondition\Service\PreconditionInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LogLevel;
 
 /**
@@ -31,6 +32,7 @@ use Psr\Log\LogLevel;
 #[Group('package_manager')]
 #[Group('#slow')]
 #[CoversClass(PackageManagerUninstallValidator::class)]
+#[RunTestsInSeparateProcesses]
 class StageConflictTest extends PackageManagerKernelTestBase {
 
   /**

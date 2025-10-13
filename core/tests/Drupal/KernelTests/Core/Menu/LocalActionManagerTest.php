@@ -8,12 +8,14 @@ use Drupal\Core\Menu\LocalActionManager;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the local action manager.
  */
 #[CoversClass(LocalActionManager::class)]
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class LocalActionManagerTest extends KernelTestBase {
 
   /**

@@ -10,11 +10,13 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\user\AccountSettingsForm;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade variables to user.*.yml.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;

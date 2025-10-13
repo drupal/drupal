@@ -18,6 +18,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 #[CoversClass(EntityResource::class)]
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class EntityResourceTest extends JsonapiKernelTestBase {
 
   /**

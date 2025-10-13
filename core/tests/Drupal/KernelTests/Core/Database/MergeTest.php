@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\Query\InvalidMergeQueryException;
 use Drupal\Core\Database\Query\Merge;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the MERGE query builder.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class MergeTest extends DatabaseTestBase {
 
   /**

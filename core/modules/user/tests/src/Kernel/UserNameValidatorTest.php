@@ -9,11 +9,13 @@ use Drupal\user\UserInterface;
 use Drupal\user\UserNameValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verify that user validity checks behave as designed.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserNameValidatorTest extends KernelTestBase {
 
   /**

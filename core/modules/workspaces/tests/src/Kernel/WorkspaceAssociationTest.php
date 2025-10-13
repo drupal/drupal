@@ -11,12 +11,14 @@ use Drupal\workspaces\WorkspaceAssociation;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests workspace associations.
  */
 #[CoversClass(WorkspaceAssociation::class)]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspaceAssociationTest extends KernelTestBase {
 
   use UserCreationTrait;

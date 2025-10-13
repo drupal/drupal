@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Bootstrap;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that drupal_static() and drupal_static_reset() work.
  */
 #[Group('Bootstrap')]
+#[RunTestsInSeparateProcesses]
 class ResettableStaticTest extends KernelTestBase {
 
   /**

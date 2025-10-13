@@ -8,12 +8,14 @@ use Drupal\Core\Entity\EntityDefinitionUpdateManager;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests EntityDefinitionUpdateManager functionality.
  */
 #[CoversClass(EntityDefinitionUpdateManager::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;

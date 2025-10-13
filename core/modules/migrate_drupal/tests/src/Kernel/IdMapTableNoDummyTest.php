@@ -6,11 +6,13 @@ namespace Drupal\Tests\migrate_drupal\Kernel;
 
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test that no dummy migrate_map tables are created.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class IdMapTableNoDummyTest extends MigrateDrupal6TestBase {
 
   /**

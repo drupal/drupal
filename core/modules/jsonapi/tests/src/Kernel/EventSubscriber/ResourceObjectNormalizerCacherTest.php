@@ -14,6 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 #[CoversClass(ResourceObjectNormalizationCacher::class)]
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class ResourceObjectNormalizerCacherTest extends KernelTestBase {
 
   /**

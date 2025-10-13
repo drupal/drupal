@@ -8,12 +8,14 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use Drupal\user\Plugin\migrate\source\d6\Role;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the d6_user_role source plugin.
  */
 #[CoversClass(Role::class)]
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class RoleTest extends MigrateSqlSourceTestBase {
 
   /**

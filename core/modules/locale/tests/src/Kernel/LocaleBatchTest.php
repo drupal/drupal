@@ -6,11 +6,13 @@ namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests locale batches.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleBatchTest extends KernelTestBase {
 
   /**

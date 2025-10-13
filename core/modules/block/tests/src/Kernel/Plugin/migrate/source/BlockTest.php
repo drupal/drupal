@@ -8,12 +8,14 @@ use Drupal\block\Plugin\migrate\source\Block;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests block source plugin.
  */
 #[CoversClass(Block::class)]
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockTest extends MigrateSqlSourceTestBase {
 
   /**

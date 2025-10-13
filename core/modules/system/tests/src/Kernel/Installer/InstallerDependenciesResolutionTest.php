@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Installer;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that we handle module dependency resolution during install.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerDependenciesResolutionTest extends KernelTestBase {
 
   /**

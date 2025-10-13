@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore filefield imagefield imagelink nodelink nodereference
 // cspell:ignore selectlist spamspan userreference
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(FieldDiscovery::class)]
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class FieldDiscoveryTest extends MigrateDrupal6TestBase {
 
   use FieldDiscoveryTestTrait;

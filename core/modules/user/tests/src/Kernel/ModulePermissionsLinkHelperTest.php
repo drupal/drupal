@@ -9,12 +9,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\ModulePermissionsLinkHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ModulePermissionsLinkHelper.
  */
 #[CoversClass(ModulePermissionsLinkHelper::class)]
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class ModulePermissionsLinkHelperTest extends KernelTestBase {
 
   use UserCreationTrait;

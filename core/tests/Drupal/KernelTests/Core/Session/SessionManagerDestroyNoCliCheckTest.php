@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Session;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests starting and destroying a session from the CLI.
  */
 #[Group('Session')]
+#[RunTestsInSeparateProcesses]
 class SessionManagerDestroyNoCliCheckTest extends KernelTestBase {
 
   /**

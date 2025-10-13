@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Validation;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UriHost validator.
  */
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class UriHostValidatorTest extends KernelTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Migrates Drupal 7 fields.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class MigrateFieldTest extends MigrateDrupal7TestBase {
 
   /**

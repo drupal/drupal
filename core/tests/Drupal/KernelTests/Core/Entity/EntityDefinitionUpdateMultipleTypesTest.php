@@ -23,6 +23,7 @@ use Drupal\entity_test_update\Entity\EntityTestUpdate;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests EntityDefinitionUpdateManager functionality.
@@ -30,6 +31,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(EntityDefinitionUpdateManager::class)]
 #[Group('Entity')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class EntityDefinitionUpdateMultipleTypesTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;

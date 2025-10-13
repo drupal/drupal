@@ -12,11 +12,13 @@ use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\UnsupportedDataTypeConfigException;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests CRUD operations on configuration objects.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigCRUDTest extends KernelTestBase {
 
   /**

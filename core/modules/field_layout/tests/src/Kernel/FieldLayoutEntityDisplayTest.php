@@ -9,12 +9,14 @@ use Drupal\field_layout\Entity\FieldLayoutEntityViewDisplay;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\field_layout\Entity\FieldLayoutEntityDisplayTrait.
  */
 #[CoversClass(FieldLayoutEntityDisplayTrait::class)]
 #[Group('field_layout')]
+#[RunTestsInSeparateProcesses]
 class FieldLayoutEntityDisplayTest extends KernelTestBase {
 
   /**

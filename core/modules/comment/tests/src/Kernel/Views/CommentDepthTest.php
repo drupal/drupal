@@ -10,11 +10,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the depth of the comment field handler.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentDepthTest extends CommentViewsKernelTestBase {
 
   /**

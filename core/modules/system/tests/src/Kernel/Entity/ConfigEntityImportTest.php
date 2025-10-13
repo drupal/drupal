@@ -13,11 +13,13 @@ use Drupal\search\Entity\SearchPage;
 use Drupal\system\Entity\Action;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ConfigEntity importing.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class ConfigEntityImportTest extends KernelTestBase {
 
   use BlockCreationTrait;

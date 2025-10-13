@@ -6,6 +6,7 @@ namespace Drupal\Tests\options\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Options field type formatters.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\options\Plugin\Field\FieldFormatter\OptionsKeyFormatter
  */
 #[Group('options')]
+#[RunTestsInSeparateProcesses]
 class OptionsFormattersTest extends OptionsFieldUnitTestBase {
 
   /**

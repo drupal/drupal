@@ -13,12 +13,14 @@ use Drupal\filter\Plugin\DataType\FilterFormat as FilterFormatDataType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Tests the behavior of the API of the Filter module.
  */
 #[Group('filter')]
+#[RunTestsInSeparateProcesses]
 class FilterAPITest extends EntityKernelTestBase {
 
   /**

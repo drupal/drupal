@@ -10,6 +10,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -22,6 +23,7 @@ use Symfony\Component\Routing\Route;
  * @see \Drupal\Core\Routing\UrlGenerator
  */
 #[Group('route_processor')]
+#[RunTestsInSeparateProcesses]
 class RouteNoneTest extends KernelTestBase {
 
   /**

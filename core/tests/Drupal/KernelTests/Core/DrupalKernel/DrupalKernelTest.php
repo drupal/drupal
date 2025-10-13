@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 #[CoversClass(DrupalKernel::class)]
 #[Group('DrupalKernel')]
+#[RunTestsInSeparateProcesses]
 class DrupalKernelTest extends KernelTestBase {
 
   /**

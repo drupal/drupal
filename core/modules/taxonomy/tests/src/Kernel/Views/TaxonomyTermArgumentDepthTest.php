@@ -6,11 +6,13 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the taxonomy term with depth argument.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
 
   /**

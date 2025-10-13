@@ -14,11 +14,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests integration of comment with other components.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentIntegrationTest extends KernelTestBase {
 
   use UserCreationTrait;

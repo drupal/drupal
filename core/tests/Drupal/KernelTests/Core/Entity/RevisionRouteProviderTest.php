@@ -11,12 +11,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests revision route provider.
  */
 #[CoversClass(RevisionHtmlRouteProvider::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class RevisionRouteProviderTest extends KernelTestBase {
 
   use UserCreationTrait;

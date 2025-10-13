@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Common;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests alteration of arguments passed to \Drupal::moduleHandler->alter().
  */
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class AlterTest extends KernelTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\entity_test\Entity\EntityTestMulChanged;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Action;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Save Action.
  */
 #[Group('Action')]
+#[RunTestsInSeparateProcesses]
 class SaveActionTest extends KernelTestBase {
 
   /**

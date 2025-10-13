@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the sql query plugin.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\query\Sql
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class SqlQueryTest extends ViewsKernelTestBase {
 
   /**

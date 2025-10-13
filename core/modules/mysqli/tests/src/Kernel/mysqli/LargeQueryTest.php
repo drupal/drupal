@@ -9,11 +9,13 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Tests\mysql\Kernel\mysql\LargeQueryTest as BaseMySqlTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handling of large queries.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class LargeQueryTest extends BaseMySqlTest {
 
   /**

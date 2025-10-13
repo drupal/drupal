@@ -8,12 +8,14 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore displaymessage
 /**
  * Tests that the block plugin can work properly without a supporting entity.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockInterfaceTest extends KernelTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default language variable migration.
  */
 #[Group('migrate_drupal_7')]
+#[RunTestsInSeparateProcesses]
 class MigrateDefaultLanguageTest extends MigrateDrupal7TestBase {
 
   /**

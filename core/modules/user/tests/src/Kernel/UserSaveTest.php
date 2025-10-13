@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests account saving for arbitrary new uid.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserSaveTest extends KernelTestBase {
 
   /**

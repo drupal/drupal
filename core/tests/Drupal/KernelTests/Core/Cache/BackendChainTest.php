@@ -8,11 +8,13 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\BackendChain;
 use Drupal\Core\Cache\MemoryBackend;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Unit test of the backend chain using the generic cache unit test base.
  */
 #[Group('Cache')]
+#[RunTestsInSeparateProcesses]
 class BackendChainTest extends GenericCacheBackendUnitTestBase {
 
   /**

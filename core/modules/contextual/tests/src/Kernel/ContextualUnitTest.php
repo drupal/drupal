@@ -7,11 +7,13 @@ namespace Drupal\Tests\contextual\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests edge cases for converting between contextual links and IDs.
  */
 #[Group('contextual')]
+#[RunTestsInSeparateProcesses]
 class ContextualUnitTest extends KernelTestBase {
 
   /**

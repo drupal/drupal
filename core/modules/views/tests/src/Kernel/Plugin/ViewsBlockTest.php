@@ -12,11 +12,13 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests native behaviors of the block views plugin.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewsBlockTest extends ViewsKernelTestBase {
 
   use BlockCreationTrait;

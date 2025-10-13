@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Entity;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation constraints for BundleConstraintValidator.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class BundleConstraintValidatorTest extends KernelTestBase {
 
   /**

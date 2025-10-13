@@ -14,6 +14,7 @@ use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -23,6 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 #[Group('package_manager')]
 #[CoversClass(GitExcluder::class)]
+#[RunTestsInSeparateProcesses]
 class GitExcluderTest extends PackageManagerKernelTestBase {
 
   use ComposerInstallersTrait;

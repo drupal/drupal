@@ -9,6 +9,7 @@ use Drupal\system\TimeZoneResolver;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 #[CoversClass(TimeZoneResolver::class)]
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class TimezoneResolverTest extends KernelTestBase {
 
   use UserCreationTrait;

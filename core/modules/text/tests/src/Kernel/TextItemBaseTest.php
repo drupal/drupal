@@ -13,12 +13,14 @@ use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests TextItemBase.
  */
 #[CoversClass(TextItemBase::class)]
 #[Group('text')]
+#[RunTestsInSeparateProcesses]
 class TextItemBaseTest extends KernelTestBase {
 
   /**

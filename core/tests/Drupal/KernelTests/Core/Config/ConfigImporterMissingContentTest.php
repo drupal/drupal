@@ -16,12 +16,14 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LoggerInterface;
 
 /**
  * Tests importing configuration which has missing content dependencies.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigImporterMissingContentTest extends KernelTestBase implements LoggerInterface {
   use BlockCreationTrait;
   use RfcLoggerTrait;

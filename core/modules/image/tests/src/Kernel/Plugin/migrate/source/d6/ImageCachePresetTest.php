@@ -8,6 +8,7 @@ use Drupal\image\Plugin\migrate\source\d6\ImageCachePreset;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore actionid imagecache presetid presetname
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(ImageCachePreset::class)]
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageCachePresetTest extends MigrateSqlSourceTestBase {
 
   /**

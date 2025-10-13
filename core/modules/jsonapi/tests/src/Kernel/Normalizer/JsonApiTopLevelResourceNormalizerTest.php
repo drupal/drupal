@@ -33,6 +33,7 @@ use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -43,6 +44,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 #[CoversClass(JsonApiDocumentTopLevelNormalizer::class)]
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   use ImageFieldCreationTrait;

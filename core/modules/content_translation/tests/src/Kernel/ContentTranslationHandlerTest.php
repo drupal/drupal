@@ -11,12 +11,14 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the content translation handler.
  */
 #[CoversClass(ContentTranslationHandler::class)]
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationHandlerTest extends KernelTestBase {
 
   /**

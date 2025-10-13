@@ -11,12 +11,14 @@ use Drupal\migrate\Plugin\Migration;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration plugin.
  */
 #[CoversClass(Migration::class)]
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrationTest extends KernelTestBase {
 
   /**

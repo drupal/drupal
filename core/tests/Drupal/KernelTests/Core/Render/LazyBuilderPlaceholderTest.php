@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Render;
 use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Fiber suspension within Twig templates during placeholder rendering.
  */
 #[Group('render')]
+#[RunTestsInSeparateProcesses]
 class LazyBuilderPlaceholderTest extends KernelTestBase {
 
   /**

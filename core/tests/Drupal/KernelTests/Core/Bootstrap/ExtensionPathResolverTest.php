@@ -14,12 +14,14 @@ use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that extension path resolver works correctly.
  */
 #[CoversClass(ExtensionPathResolver::class)]
 #[Group('Bootstrap')]
+#[RunTestsInSeparateProcesses]
 class ExtensionPathResolverTest extends KernelTestBase {
 
   /**

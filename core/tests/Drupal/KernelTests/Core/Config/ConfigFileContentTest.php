@@ -8,11 +8,13 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests reading and writing of configuration files.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigFileContentTest extends KernelTestBase {
 
   /**

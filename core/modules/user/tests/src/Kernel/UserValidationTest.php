@@ -13,11 +13,13 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verify that user validity checks behave as designed.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserValidationTest extends KernelTestBase {
 
   /**

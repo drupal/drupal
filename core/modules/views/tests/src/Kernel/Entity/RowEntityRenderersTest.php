@@ -13,6 +13,7 @@ use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity row renderers.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Entity\Render\RendererBase
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class RowEntityRenderersTest extends ViewsKernelTestBase {
 
   /**

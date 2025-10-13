@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -15,6 +16,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * Tests service provider registration to the DIC.
  */
 #[Group('ServiceProvider')]
+#[RunTestsInSeparateProcesses]
 class ServiceProviderTest extends KernelTestBase {
 
   /**

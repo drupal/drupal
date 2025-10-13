@@ -8,6 +8,7 @@ use Drupal\TestTools\Random;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests taxonomy term argument transformation.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\taxonomy\Plugin\views\argument_validator\TermName
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class ArgumentTransformTermTest extends TaxonomyTestBase {
 
   /**

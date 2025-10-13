@@ -11,12 +11,14 @@ use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 use Drupal\layout_builder_test\Plugin\SectionStorage\SimpleConfigSectionStorage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the test implementation of section storage.
  */
 #[CoversClass(SimpleConfigSectionStorage::class)]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class SimpleConfigSectionListTest extends SectionListTestBase {
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Common;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests scanning system directories in drupal_system_listing().
  */
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class SystemListingTest extends KernelTestBase {
 
   /**

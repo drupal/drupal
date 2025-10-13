@@ -8,11 +8,13 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests revision based functions for Block Content.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentRevisionsTest extends KernelTestBase {
 
   /**

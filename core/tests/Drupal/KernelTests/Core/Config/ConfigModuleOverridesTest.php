@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests module overrides of configuration using event subscribers.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigModuleOverridesTest extends KernelTestBase {
 
   /**

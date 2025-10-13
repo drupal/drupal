@@ -11,11 +11,13 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the new entity API for the comment field type.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentItemTest extends FieldKernelTestBase {
 
   use CommentTestTrait;

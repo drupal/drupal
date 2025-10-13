@@ -11,12 +11,14 @@ use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for configuration dependencies.
  */
 #[CoversClass(ConfigManager::class)]
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigDependencyTest extends EntityKernelTestBase {
 
   /**

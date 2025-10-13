@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Kernel\System;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the effectiveness of hook_system_info_alter().
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class InfoAlterTest extends KernelTestBase {
 
   /**

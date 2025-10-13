@@ -8,12 +8,14 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal Flush All Caches.
  */
 #[Group('Common')]
 #[CoversFunction('drupal_flush_all_caches')]
+#[RunTestsInSeparateProcesses]
 class DrupalFlushAllCachesTest extends KernelTestBase {
 
   /**

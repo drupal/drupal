@@ -14,12 +14,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\menu_link_content\Plugin\migrate\process\LinkUri.
  */
 #[CoversClass(LinkUri::class)]
 #[Group('menu_link_content')]
+#[RunTestsInSeparateProcesses]
 class LinkUriTest extends KernelTestBase {
 
   use UserCreationTrait;

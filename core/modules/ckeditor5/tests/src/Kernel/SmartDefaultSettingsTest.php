@@ -16,6 +16,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 // cspell:ignore arta codesnippet
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\Yaml\Yaml;
 
@@ -26,6 +27,7 @@ use Symfony\Component\Yaml\Yaml;
  * @legacy-covers \Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class SmartDefaultSettingsTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;

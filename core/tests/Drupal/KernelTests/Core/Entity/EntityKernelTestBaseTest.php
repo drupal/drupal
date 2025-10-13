@@ -6,12 +6,14 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Entity Kernel Test Base.
  */
 #[Group('Entity')]
 #[CoversClass(EntityKernelTestBase::class)]
+#[RunTestsInSeparateProcesses]
 class EntityKernelTestBaseTest extends EntityKernelTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\filter\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of Filter's settings to configuration.
  */
 #[Group('filter')]
+#[RunTestsInSeparateProcesses]
 class MigrateFilterSettingsTest extends MigrateDrupal7TestBase {
 
   /**

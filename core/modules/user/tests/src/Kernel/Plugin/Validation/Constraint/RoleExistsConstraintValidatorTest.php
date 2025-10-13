@@ -11,6 +11,7 @@ use Drupal\user\Plugin\Validation\Constraint\RoleExistsConstraint;
 use Drupal\user\Plugin\Validation\Constraint\RoleExistsConstraintValidator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
@@ -20,6 +21,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 #[Group('Validation')]
 #[CoversClass(RoleExistsConstraint::class)]
 #[CoversClass(RoleExistsConstraintValidator::class)]
+#[RunTestsInSeparateProcesses]
 class RoleExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

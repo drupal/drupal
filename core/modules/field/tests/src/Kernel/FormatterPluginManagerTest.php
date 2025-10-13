@@ -6,11 +6,13 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the field formatter plugin manager.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FormatterPluginManagerTest extends FieldKernelTestBase {
 
   /**

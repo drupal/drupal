@@ -21,6 +21,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -30,6 +31,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 #[Group('Recipe')]
 #[CoversClass(CreateForEachBundle::class)]
+#[RunTestsInSeparateProcesses]
 class WildcardConfigActionsTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the behavior of the `base theme` key.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class BaseThemeRequiredTest extends KernelTestBase {
 
   /**

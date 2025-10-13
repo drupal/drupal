@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
-use Drupal\node\NodePreviewMode;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use Drupal\node\NodePreviewMode;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 #[Group('#slow')]
 #[Group('config')]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

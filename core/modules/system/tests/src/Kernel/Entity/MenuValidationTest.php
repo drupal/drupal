@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Kernel\Entity;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\system\Entity\Menu;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 #[Group('system')]
 #[Group('config')]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class MenuValidationTest extends ConfigEntityValidationTestBase {
 
   /**

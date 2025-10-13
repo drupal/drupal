@@ -8,6 +8,7 @@ use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\KernelTests\KernelTestBase.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(KernelTestBase::class)]
 #[Group('KernelTests')]
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class KernelTestBaseTest extends DriverSpecificKernelTestBase {
 
   /**

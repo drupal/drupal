@@ -12,12 +12,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the media access control handler.
  */
 #[CoversClass(MediaAccessControlHandler::class)]
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaAccessControlHandlerTest extends MediaKernelTestBase {
 
   use UserCreationTrait;

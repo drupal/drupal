@@ -11,11 +11,13 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the storage of blocks.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockStorageUnitTest extends KernelTestBase {
 
   /**

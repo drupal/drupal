@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTestRev;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test entity duplication.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityDuplicateTest extends EntityKernelTestBase {
 
   /**

@@ -8,11 +8,13 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the interaction between entity context and typed data.
  */
 #[Group('Context')]
+#[RunTestsInSeparateProcesses]
 class EntityContextTypedDataTest extends KernelTestBase {
 
   /**

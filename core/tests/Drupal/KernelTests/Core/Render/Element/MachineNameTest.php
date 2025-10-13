@@ -10,12 +10,14 @@ use Drupal\Core\Render\Element\MachineName;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Render\Element\MachineName.
  */
 #[CoversClass(MachineName::class)]
 #[Group('Render')]
+#[RunTestsInSeparateProcesses]
 class MachineNameTest extends KernelTestBase implements FormInterface {
 
   /**

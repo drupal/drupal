@@ -9,6 +9,7 @@ use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
@@ -18,6 +19,7 @@ use Psr\Log\LoggerInterface;
  * @see \Drupal\user\Plugin\views\filter\Roles
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class HandlerFilterRolesTest extends UserKernelTestBase {
 
   /**

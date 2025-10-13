@@ -10,6 +10,7 @@ use Drupal\media\Plugin\Validation\Constraint\MediaMappingsConstraintValidator;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -17,6 +18,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  */
 #[CoversClass(MediaMappingsConstraintValidator::class)]
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaMappingsConstraintValidatorTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;

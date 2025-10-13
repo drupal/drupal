@@ -7,11 +7,13 @@ namespace Drupal\Tests\workflows\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test a predefined workflow based on something other than configuration.
  */
 #[Group('workflows')]
+#[RunTestsInSeparateProcesses]
 class PredefinedWorkflowTypeTest extends KernelTestBase {
 
   /**

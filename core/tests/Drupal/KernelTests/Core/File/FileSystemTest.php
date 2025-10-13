@@ -13,12 +13,14 @@ use Drupal\Core\File\FileSystem;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\File\FileSystem.
  */
 #[CoversClass(FileSystem::class)]
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class FileSystemTest extends KernelTestBase {
 
   /**

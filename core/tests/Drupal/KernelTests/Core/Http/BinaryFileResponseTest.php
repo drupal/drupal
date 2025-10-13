@@ -7,12 +7,14 @@ namespace Drupal\KernelTests\Core\Http;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the headers added by BinaryFileResponse.
  */
 #[Group('Http')]
+#[RunTestsInSeparateProcesses]
 class BinaryFileResponseTest extends KernelTestBase {
 
   /**

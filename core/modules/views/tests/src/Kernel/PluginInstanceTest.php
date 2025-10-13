@@ -7,11 +7,13 @@ namespace Drupal\Tests\views\Kernel;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that an instance of all views plugins can be created.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class PluginInstanceTest extends ViewsKernelTestBase {
 
   /**

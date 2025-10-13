@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_test\FieldTestHelper;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests multilingual fields logic.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * The following tests will check the multilingual logic in field handling.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class TranslationTest extends FieldKernelTestBase {
 
   /**

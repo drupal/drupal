@@ -8,6 +8,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests field storages and fields deletion during config synchronization.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see field_config_import_steps_alter()
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
 
   /**

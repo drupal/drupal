@@ -9,11 +9,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\argument\StringArgument handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ArgumentStringTest extends ViewsKernelTestBase {
 
   /**

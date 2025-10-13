@@ -7,11 +7,13 @@ namespace Drupal\Tests\syslog\Kernel\Migrate\d7;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade variables to syslog.settings.yml.
  */
 #[Group('syslog')]
+#[RunTestsInSeparateProcesses]
 class MigrateSyslogConfigsTest extends MigrateDrupal7TestBase {
 
   use SchemaCheckTestTrait;

@@ -13,12 +13,14 @@ use Drupal\workspaces\Entity\Workspace;
 use Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraintValidator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraintValidator.
  */
 #[CoversClass(EntityWorkspaceConflictConstraintValidator::class)]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class EntityWorkspaceConflictConstraintValidatorTest extends KernelTestBase {
 
   use UserCreationTrait;

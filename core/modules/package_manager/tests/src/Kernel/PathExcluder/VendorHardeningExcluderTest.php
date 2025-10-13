@@ -9,6 +9,7 @@ use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Vendor Hardening Excluder.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('package_manager')]
 #[CoversClass(VendorHardeningExcluder::class)]
+#[RunTestsInSeparateProcesses]
 class VendorHardeningExcluderTest extends PackageManagerKernelTestBase {
 
   /**

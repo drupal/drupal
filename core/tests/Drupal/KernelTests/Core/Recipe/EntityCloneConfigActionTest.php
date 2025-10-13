@@ -14,12 +14,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Entity Clone Config Action.
  */
 #[Group('Recipe')]
 #[CoversClass(EntityClone::class)]
+#[RunTestsInSeparateProcesses]
 class EntityCloneConfigActionTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

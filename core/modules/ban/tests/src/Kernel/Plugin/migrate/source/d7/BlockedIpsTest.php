@@ -9,6 +9,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D7 blocked_ip source plugin.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[CoversClass(BlockedIps::class)]
 #[Group('ban')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class BlockedIpsTest extends MigrateSqlSourceTestBase {
 
   /**

@@ -14,6 +14,7 @@ use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -30,6 +31,7 @@ use Symfony\Component\Routing\RouteCollection;
  * @see \Drupal\system\Plugin\Block\SystemMenuBlock
  */
 #[Group('Block')]
+#[RunTestsInSeparateProcesses]
 class SystemMenuBlockTest extends KernelTestBase {
 
   /**

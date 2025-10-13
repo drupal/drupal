@@ -11,12 +11,14 @@ use Drupal\layout_builder\Field\LayoutSectionItemList;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the field type for Layout Sections.
  */
 #[CoversClass(LayoutSectionItemList::class)]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutSectionItemListTest extends SectionListTestBase {
 
   /**

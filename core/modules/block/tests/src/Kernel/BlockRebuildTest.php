@@ -10,11 +10,13 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests block_rebuild().
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockRebuildTest extends KernelTestBase {
 
   use BlockCreationTrait;

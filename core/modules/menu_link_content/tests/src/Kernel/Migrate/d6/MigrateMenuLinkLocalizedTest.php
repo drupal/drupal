@@ -8,11 +8,13 @@ use Drupal\Tests\menu_link_content\Kernel\Migrate\MigrateMenuLinkTestTrait;
 use Drupal\Tests\node\Kernel\Migrate\d6\MigrateNodeTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Menu link localized translation migration.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateMenuLinkLocalizedTest extends MigrateNodeTestBase {
 
   use MigrateMenuLinkTestTrait;

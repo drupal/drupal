@@ -20,6 +20,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Yaml\Yaml;
 
 // cspell:ignore onhover baguette
@@ -34,6 +35,7 @@ use Symfony\Component\Yaml\Yaml;
 #[CoversClass(EnabledConfigurablePluginsConstraintValidator::class)]
 #[CoversClass(FundamentalCompatibilityConstraintValidator::class)]
 #[CoversClass(CKEditor5MediaAndFilterSettingsInSyncConstraintValidator::class)]
+#[RunTestsInSeparateProcesses]
 class ValidatorsTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;

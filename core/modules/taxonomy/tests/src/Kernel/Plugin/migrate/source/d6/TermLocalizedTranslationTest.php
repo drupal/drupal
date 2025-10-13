@@ -8,6 +8,7 @@ use Drupal\taxonomy\Plugin\migrate\source\d6\TermLocalizedTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore objectid objectindex plid
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(TermLocalizedTranslation::class)]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermLocalizedTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

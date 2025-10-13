@@ -10,11 +10,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests multilingual node access with a language-aware module.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
   /**

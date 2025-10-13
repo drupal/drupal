@@ -8,11 +8,13 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests theme settings functionality.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ThemeSettingsTest extends KernelTestBase {
 
   /**

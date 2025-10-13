@@ -24,6 +24,7 @@ use Drupal\views\ViewExecutableFactory;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -33,6 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 #[Group('views')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ViewExecutableTest extends ViewsKernelTestBase {
 
   use CommentTestTrait;

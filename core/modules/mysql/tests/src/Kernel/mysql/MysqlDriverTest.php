@@ -9,11 +9,13 @@ use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Pdo\Mysql;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the deprecations of the MySQL database driver classes in Core.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class MysqlDriverTest extends DriverSpecificKernelTestBase {
 
   /**

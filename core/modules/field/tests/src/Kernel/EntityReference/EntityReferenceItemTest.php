@@ -27,11 +27,13 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the new entity API for the entity reference field type.
  */
 #[Group('entity_reference')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceItemTest extends FieldKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

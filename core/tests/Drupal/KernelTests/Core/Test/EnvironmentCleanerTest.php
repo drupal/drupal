@@ -11,6 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Console\Output\NullOutput;
 
 /**
@@ -18,6 +19,7 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 #[CoversClass(EnvironmentCleaner::class)]
 #[Group('Test')]
+#[RunTestsInSeparateProcesses]
 class EnvironmentCleanerTest extends KernelTestBase {
 
   /**

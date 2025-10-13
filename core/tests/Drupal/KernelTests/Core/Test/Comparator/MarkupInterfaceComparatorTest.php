@@ -11,6 +11,7 @@ use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 
@@ -23,6 +24,7 @@ use SebastianBergmann\Comparator\Factory;
 #[CoversClass(MarkupInterfaceComparator::class)]
 #[Group('Test')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class MarkupInterfaceComparatorTest extends KernelTestBase {
 
   /**

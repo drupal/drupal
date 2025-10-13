@@ -8,6 +8,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest as DisplayExtenderTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the display extender plugins.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class DisplayExtenderTest extends ViewsKernelTestBase {
 
   /**

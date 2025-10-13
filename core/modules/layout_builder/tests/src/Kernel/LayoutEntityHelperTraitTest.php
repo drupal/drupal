@@ -21,6 +21,7 @@ use Drupal\layout_builder\SectionStorageInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 
 /**
@@ -28,6 +29,7 @@ use Prophecy\Argument;
  */
 #[CoversClass(LayoutEntityHelperTrait::class)]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutEntityHelperTraitTest extends KernelTestBase {
 
   /**

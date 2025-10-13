@@ -10,12 +10,14 @@ use Drupal\Core\Test\TestRun;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Test\SimpletestTestRunResultsStorage.
  */
 #[CoversClass(SimpletestTestRunResultsStorage::class)]
 #[Group('Test')]
+#[RunTestsInSeparateProcesses]
 class SimpletestTestRunResultsStorageTest extends KernelTestBase {
 
   /**

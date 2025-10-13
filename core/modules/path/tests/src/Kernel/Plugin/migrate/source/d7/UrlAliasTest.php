@@ -8,12 +8,14 @@ use Drupal\path\Plugin\migrate\source\d7\UrlAlias;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the d7_url_alias source plugin.
  */
 #[CoversClass(UrlAlias::class)]
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class UrlAliasTest extends MigrateSqlSourceTestBase {
 
   /**

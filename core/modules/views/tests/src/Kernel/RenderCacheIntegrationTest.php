@@ -12,11 +12,13 @@ use Drupal\views\Entity\View;
 use Drupal\views\Tests\AssertViewsCacheTagsTrait;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the general integration between views and the render cache.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class RenderCacheIntegrationTest extends ViewsKernelTestBase {
 
   use AssertViewsCacheTagsTrait;

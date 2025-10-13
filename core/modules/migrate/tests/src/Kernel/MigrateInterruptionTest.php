@@ -10,11 +10,13 @@ use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests interruptions triggered during migrations.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateInterruptionTest extends KernelTestBase {
 
   /**

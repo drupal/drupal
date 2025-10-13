@@ -9,6 +9,7 @@ use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Config\Entity\Query\QueryFactory;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Config Entity Query functionality.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\Config\Entity\Query
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class ConfigEntityQueryTest extends KernelTestBase {
 
   /**

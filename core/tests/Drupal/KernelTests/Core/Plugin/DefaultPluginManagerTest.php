@@ -10,12 +10,14 @@ use Drupal\plugin_test\Plugin\Annotation\PluginExample as AnnotationPluginExampl
 use Drupal\plugin_test\Plugin\Attribute\PluginExample as AttributePluginExample;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default plugin manager.
  */
 #[Group('Plugin')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class DefaultPluginManagerTest extends KernelTestBase {
 
   /**

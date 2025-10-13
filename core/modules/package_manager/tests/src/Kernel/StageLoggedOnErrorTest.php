@@ -19,6 +19,7 @@ use Drupal\package_manager_test_validation\EventSubscriber\TestSubscriber;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LogLevel;
 
 /**
@@ -29,6 +30,7 @@ use Psr\Log\LogLevel;
 #[CoversClass(SandboxManagerBase::class)]
 #[Group('package_manager')]
 #[CoversClass(PackageManagerUninstallValidator::class)]
+#[RunTestsInSeparateProcesses]
 class StageLoggedOnErrorTest extends PackageManagerKernelTestBase {
 
   /**

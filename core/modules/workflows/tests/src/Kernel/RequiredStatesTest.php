@@ -10,12 +10,14 @@ use Drupal\workflows\Exception\RequiredStateMissingException;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Workflow type's required states and configuration initialization.
  */
 #[CoversClass(WorkflowTypeBase::class)]
 #[Group('workflows')]
+#[RunTestsInSeparateProcesses]
 class RequiredStatesTest extends KernelTestBase {
 
   /**

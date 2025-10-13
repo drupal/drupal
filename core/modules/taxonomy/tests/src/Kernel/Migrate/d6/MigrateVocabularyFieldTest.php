@@ -7,11 +7,13 @@ namespace Drupal\Tests\taxonomy\Kernel\Migrate\d6;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Vocabulary field migration.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
 
   /**

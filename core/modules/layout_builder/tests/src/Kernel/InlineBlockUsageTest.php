@@ -12,12 +12,14 @@ use Drupal\layout_builder\InlineBlockUsage;
 use Drupal\layout_builder\InlineBlockUsageInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class for testing the InlineBlockUsage service.
  */
 #[CoversClass(InlineBlockUsage::class)]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class InlineBlockUsageTest extends KernelTestBase {
 
   /**

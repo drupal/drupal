@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Theme;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests low-level theme functions.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ThemeTest extends KernelTestBase {
 
   /**

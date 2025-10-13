@@ -9,11 +9,13 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\Random handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class SortRandomTest extends ViewsKernelTestBase {
 
   /**

@@ -12,6 +12,7 @@ use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\Section;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation of entity_view_display entities.
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Entity')]
 #[Group('Validation')]
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class EntityViewDisplayValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

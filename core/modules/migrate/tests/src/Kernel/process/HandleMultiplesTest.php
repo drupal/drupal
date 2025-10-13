@@ -9,11 +9,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests process pipelines with scalar and multiple values handling.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class HandleMultiplesTest extends KernelTestBase {
 
   /**

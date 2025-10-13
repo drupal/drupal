@@ -11,6 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests AtLeastOneOf validation constraint with both valid and invalid values.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Validation')]
 #[CoversClass(AtLeastOneOfConstraint::class)]
 #[CoversClass(AtLeastOneOfConstraintValidator::class)]
+#[RunTestsInSeparateProcesses]
 class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
 
   /**

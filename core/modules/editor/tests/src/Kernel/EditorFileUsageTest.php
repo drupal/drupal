@@ -14,11 +14,13 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests tracking of file usage by the Text Editor module.
  */
 #[Group('editor')]
+#[RunTestsInSeparateProcesses]
 class EditorFileUsageTest extends EntityKernelTestBase {
 
   use ContentTypeCreationTrait;

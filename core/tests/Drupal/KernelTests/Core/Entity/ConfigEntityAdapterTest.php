@@ -12,6 +12,7 @@ use Drupal\Core\TypedData\Plugin\DataType\StringData;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity adapter for configuration entities.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(ConfigEntityAdapter::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class ConfigEntityAdapterTest extends KernelTestBase {
 
   /**

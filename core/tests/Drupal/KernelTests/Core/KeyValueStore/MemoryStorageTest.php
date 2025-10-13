@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\KeyValueStore;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\KeyValueStore\KeyValueFactory;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the key-value memory storage.
  */
 #[Group('KeyValueStore')]
+#[RunTestsInSeparateProcesses]
 class MemoryStorageTest extends StorageTestBase {
 
   /**

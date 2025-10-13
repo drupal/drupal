@@ -8,6 +8,7 @@ use Drupal\node\Plugin\migrate\source\d7\NodeEntityTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore tnid
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(NodeEntityTranslation::class)]
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

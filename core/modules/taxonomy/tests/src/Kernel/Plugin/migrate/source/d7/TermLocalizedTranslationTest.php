@@ -7,6 +7,7 @@ namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 use Drupal\taxonomy\Plugin\migrate\source\d7\TermLocalizedTranslation;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore ltlanguage objectid objectindex plid tdlanguage tsid
 /**
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(TermLocalizedTranslation::class)]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermLocalizedTranslationTest extends TermTest {
 
   /**

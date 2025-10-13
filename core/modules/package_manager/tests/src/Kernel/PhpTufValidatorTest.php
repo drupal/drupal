@@ -17,6 +17,7 @@ use Drupal\package_manager\Validator\PhpTufValidator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\package_manager\Validator\PhpTufValidator.
@@ -26,6 +27,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(PhpTufValidator::class)]
 #[Group('package_manager')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class PhpTufValidatorTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;

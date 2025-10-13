@@ -12,6 +12,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -20,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 #[CoversClass(MediaLibraryState::class)]
 #[Group('media_library')]
+#[RunTestsInSeparateProcesses]
 class MediaLibraryStateTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;

@@ -9,6 +9,7 @@ use Drupal\package_manager\ProjectInfo;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\package_manager\ProjectInfo.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(ProjectInfo::class)]
 #[Group('auto_updates')]
+#[RunTestsInSeparateProcesses]
 class ProjectInfoTest extends PackageManagerKernelTestBase {
 
   /**

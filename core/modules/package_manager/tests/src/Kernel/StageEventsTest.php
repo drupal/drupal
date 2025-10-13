@@ -21,6 +21,7 @@ use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -30,6 +31,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 #[Group('package_manager')]
 #[CoversClass(SandboxEvent::class)]
+#[RunTestsInSeparateProcesses]
 class StageEventsTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
 
   use StringTranslationTrait;

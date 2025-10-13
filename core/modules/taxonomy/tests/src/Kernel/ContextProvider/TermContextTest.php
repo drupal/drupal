@@ -10,12 +10,14 @@ use Drupal\taxonomy\ContextProvider\TermRouteContext;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\taxonomy\ContextProvider\TermRouteContext.
  */
 #[CoversClass(TermRouteContext::class)]
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermContextTest extends KernelTestBase {
 
   use TaxonomyTestTrait;

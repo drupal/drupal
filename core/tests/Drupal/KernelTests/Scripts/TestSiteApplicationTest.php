@@ -13,6 +13,7 @@ use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -31,6 +32,7 @@ use Symfony\Component\Process\Process;
 #[Group('Setup')]
 #[Group('#slow')]
 #[PreserveGlobalState(FALSE)]
+#[RunTestsInSeparateProcesses]
 class TestSiteApplicationTest extends KernelTestBase {
 
   /**

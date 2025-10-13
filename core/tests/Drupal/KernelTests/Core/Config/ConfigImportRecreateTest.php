@@ -10,11 +10,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests importing recreated configuration entities.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigImportRecreateTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

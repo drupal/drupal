@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Plugin;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that derivative plugins are correctly discovered.
  */
 #[Group('Plugin')]
+#[RunTestsInSeparateProcesses]
 class DerivativeTest extends PluginTestBase {
 
   /**

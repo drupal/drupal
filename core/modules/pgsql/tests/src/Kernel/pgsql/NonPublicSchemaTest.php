@@ -12,6 +12,7 @@ use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use Drupal\pgsql\Driver\Database\pgsql\Schema;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cSpell:ignore nspname schemaname upserting indexdef
 /**
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(Schema::class)]
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class NonPublicSchemaTest extends DriverSpecificKernelTestBase {
 
   use DatabaseTestSchemaDataTrait;

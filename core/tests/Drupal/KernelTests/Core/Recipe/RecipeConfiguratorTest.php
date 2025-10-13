@@ -10,6 +10,7 @@ use Drupal\Core\Recipe\UnknownRecipeException;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\TestWith;
  */
 #[CoversClass(RecipeConfigurator::class)]
 #[Group('Recipe')]
+#[RunTestsInSeparateProcesses]
 class RecipeConfiguratorTest extends KernelTestBase {
 
   /**

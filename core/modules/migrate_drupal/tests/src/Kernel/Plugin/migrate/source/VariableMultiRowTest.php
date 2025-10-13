@@ -8,6 +8,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore multirow
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(VariableMultiRow::class)]
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class VariableMultiRowTest extends MigrateSqlSourceTestBase {
 
   /**

@@ -10,12 +10,14 @@ use Drupal\Core\Render\Element\Actions;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Render\Element\Actions.
  */
 #[CoversClass(Actions::class)]
 #[Group('Render')]
+#[RunTestsInSeparateProcesses]
 class ActionsTest extends KernelTestBase implements FormInterface {
 
   /**

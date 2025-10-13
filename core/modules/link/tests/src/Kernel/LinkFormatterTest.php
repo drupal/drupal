@@ -11,11 +11,13 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Field Formatter for the link field type.
  */
 #[Group('link')]
+#[RunTestsInSeparateProcesses]
 class LinkFormatterTest extends EntityKernelTestBase {
 
   /**

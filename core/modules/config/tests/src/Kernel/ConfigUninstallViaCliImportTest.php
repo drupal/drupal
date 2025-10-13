@@ -8,11 +8,13 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests importing configuration from files into active configuration.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigUninstallViaCliImportTest extends KernelTestBase {
   /**
    * Config Importer object used for testing.

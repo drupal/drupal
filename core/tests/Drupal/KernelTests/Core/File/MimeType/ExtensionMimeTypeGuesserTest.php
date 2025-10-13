@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\File\MimeType;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore garply tarz
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * to execute and add some mappings. We check here that they are.
  */
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class ExtensionMimeTypeGuesserTest extends KernelTestBase {
 
   /**

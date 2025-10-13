@@ -9,11 +9,13 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade user roles to user.role.*.yml.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class MigrateUserRoleTest extends MigrateDrupal7TestBase {
 
   /**

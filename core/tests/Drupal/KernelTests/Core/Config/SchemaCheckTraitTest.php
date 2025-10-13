@@ -8,11 +8,13 @@ use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the functionality of SchemaCheckTrait.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class SchemaCheckTraitTest extends KernelTestBase {
 
   use SchemaCheckTrait;

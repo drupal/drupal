@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\search\Entity\SearchPage;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of search page status and settings.
  */
 #[Group('migrate_drupal_7')]
+#[RunTestsInSeparateProcesses]
 class MigrateSearchPageTest extends MigrateDrupal7TestBase {
 
   /**

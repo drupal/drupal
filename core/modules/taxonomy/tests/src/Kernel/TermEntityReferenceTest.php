@@ -11,11 +11,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the settings of restricting term selection to a single vocabulary.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class TermEntityReferenceTest extends KernelTestBase {
 
   /**

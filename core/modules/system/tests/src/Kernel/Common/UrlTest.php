@@ -12,6 +12,7 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Url object.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @legacy-covers \Drupal\Core\Utility\LinkGenerator::generate
  */
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class UrlTest extends KernelTestBase {
 
   /**

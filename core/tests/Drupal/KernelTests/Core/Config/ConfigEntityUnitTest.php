@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Unit tests for configuration entity base methods.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigEntityUnitTest extends KernelTestBase {
 
   /**

@@ -8,12 +8,14 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Log;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the query logging facility.
  */
 #[CoversClass(Log::class)]
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class LoggingTest extends DatabaseTestBase {
 
   /**

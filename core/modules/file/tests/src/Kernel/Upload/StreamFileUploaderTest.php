@@ -9,12 +9,14 @@ use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the stream file uploader.
  */
 #[CoversClass(InputStreamFileWriter::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class StreamFileUploaderTest extends KernelTestBase {
 
   /**

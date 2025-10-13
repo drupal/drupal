@@ -8,11 +8,13 @@ use Drupal\Core\Config\ManagedStorage;
 use Drupal\Core\Config\MemoryStorage;
 use Drupal\Core\Config\StorageManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ManagedStorage operations.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ManagedStorageTest extends ConfigStorageTestBase implements StorageManagerInterface {
 
   /**

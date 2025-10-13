@@ -6,12 +6,14 @@ namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration of used files.
  */
 #[Group('file')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class MigrateFileGetIdsTest extends MigrateFileTest {
 
   /**

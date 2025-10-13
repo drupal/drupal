@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore Kristiaan Silvie
 /**
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\relationship\RelationshipPluginBase
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class RelationshipJoinInTest extends RelationshipJoinTestBase {
 
   use UserCreationTrait;

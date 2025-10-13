@@ -7,6 +7,7 @@ namespace Drupal\Tests\field\Kernel;
 use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests other Field API functions.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @todo move this to the Entity module
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldAttachOtherTest extends FieldKernelTestBase {
 
   /**

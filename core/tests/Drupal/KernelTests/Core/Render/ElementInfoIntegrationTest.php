@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Render;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the element info.
  */
 #[Group('Render')]
+#[RunTestsInSeparateProcesses]
 class ElementInfoIntegrationTest extends KernelTestBase {
 
   /**

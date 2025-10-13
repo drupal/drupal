@@ -9,6 +9,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Tests that ReplicaKillSwitch functions correctly.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class ReplicaKillSwitchTest extends KernelTestBase {
 
   /**

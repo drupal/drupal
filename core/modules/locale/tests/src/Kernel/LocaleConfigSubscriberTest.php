@@ -9,11 +9,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\StringInterface;
 use Drupal\locale\TranslationString;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that shipped configuration translations are updated correctly.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleConfigSubscriberTest extends KernelTestBase {
 
   /**

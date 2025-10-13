@@ -9,11 +9,13 @@ use Drupal\Core\Routing\RouteMatch;
 use Drupal\help_test\SupernovaGenerator;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the empty HTML page.
  */
 #[Group('help')]
+#[RunTestsInSeparateProcesses]
 class HelpEmptyPageTest extends KernelTestBase {
 
   /**

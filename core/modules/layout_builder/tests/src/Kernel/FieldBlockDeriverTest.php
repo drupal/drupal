@@ -8,12 +8,14 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests field block plugin derivatives.
  */
 #[Group('layout_builder')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class FieldBlockDeriverTest extends EntityKernelTestBase {
 
   /**

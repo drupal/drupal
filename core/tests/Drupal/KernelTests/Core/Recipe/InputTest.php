@@ -19,6 +19,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -30,6 +31,7 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
  */
 #[Group('Recipe')]
 #[CoversClass(InputConfigurator::class)]
+#[RunTestsInSeparateProcesses]
 class InputTest extends KernelTestBase {
 
   use RecipeTestTrait;

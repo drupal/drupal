@@ -10,12 +10,14 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Entity\BundlePermissionHandlerTrait.
  */
 #[CoversClass(BundlePermissionHandlerTrait::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class BundlePermissionHandlerTraitTest extends KernelTestBase {
   use BundlePermissionHandlerTrait;
 

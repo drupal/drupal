@@ -10,11 +10,13 @@ use Drupal\views\Entity\View;
 use Drupal\views_ui\Controller\ViewsUIController;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the views ui tagging functionality.
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 class TagTest extends ViewsKernelTestBase {
 
   /**

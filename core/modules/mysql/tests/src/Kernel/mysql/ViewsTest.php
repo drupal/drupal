@@ -8,11 +8,13 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 use Drupal\mysql\Plugin\views\query\MysqlCastSql;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests views service.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class ViewsTest extends DriverSpecificDatabaseTestBase {
 
   /**

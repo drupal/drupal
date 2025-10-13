@@ -8,12 +8,14 @@ use Drupal\shortcut\Plugin\migrate\source\d7\ShortcutSetUsers;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D7 ShortcutSetUsers source plugin.
  */
 #[CoversClass(ShortcutSetUsers::class)]
 #[Group('shortcut')]
+#[RunTestsInSeparateProcesses]
 class ShortcutSetUsersTest extends MigrateSqlSourceTestBase {
 
   /**

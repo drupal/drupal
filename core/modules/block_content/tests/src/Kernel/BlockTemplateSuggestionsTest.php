@@ -10,11 +10,13 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\block_content\Hook\BlockContentHooks;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block_content_theme_suggestions_block() function.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockTemplateSuggestionsTest extends KernelTestBase {
 
   /**

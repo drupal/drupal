@@ -15,11 +15,13 @@ use Drupal\Core\TypedData\ListDataDefinitionInterface;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests deriving metadata of core data types.
  */
 #[Group('TypedData')]
+#[RunTestsInSeparateProcesses]
 class TypedDataDefinitionTest extends KernelTestBase {
 
   /**

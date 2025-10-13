@@ -16,11 +16,13 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the functionality of SqlBase.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class SqlBaseTest extends MigrateTestBase {
 
   /**

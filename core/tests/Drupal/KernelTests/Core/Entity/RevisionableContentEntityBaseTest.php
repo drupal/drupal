@@ -14,6 +14,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the revision system.
@@ -23,6 +24,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(RevisionableContentEntityBase::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
 
   /**

@@ -16,11 +16,13 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests using entity fields of the file field type.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileItemTest extends FieldKernelTestBase {
 
   /**

@@ -14,6 +14,7 @@ use Drupal\Tests\Core\Database\Stub\StubSchema;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -21,6 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 #[CoversClass(InstallerRedirectTrait::class)]
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class InstallerRedirectTraitTest extends KernelTestBase {
 
   /**

@@ -8,12 +8,14 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use Drupal\user\Plugin\migrate\source\d7\UserEntityTranslation;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D7 user entity translation source plugin.
  */
 #[CoversClass(UserEntityTranslation::class)]
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserEntityTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

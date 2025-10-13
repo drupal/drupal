@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Action;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the EmailAction plugin.
  */
 #[Group('action')]
+#[RunTestsInSeparateProcesses]
 class EmailActionTest extends KernelTestBase {
   use AssertMailTrait;
 

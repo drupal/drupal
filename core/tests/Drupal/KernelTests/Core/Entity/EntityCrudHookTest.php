@@ -17,6 +17,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity CRUD via hooks.
@@ -35,6 +36,7 @@ use PHPUnit\Framework\Attributes\Group;
  * These hooks are each tested for several entity types.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityCrudHookTest extends EntityKernelTestBase {
 
   use CommentTestTrait;

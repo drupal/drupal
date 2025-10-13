@@ -10,12 +10,14 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests stream wrapper functions.
  */
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class StreamWrapperTest extends FileTestBase {
 
   /**

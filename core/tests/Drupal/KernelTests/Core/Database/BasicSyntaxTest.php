@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests SQL syntax interpretation.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * database system interprets SQL syntax in an expected fashion.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class BasicSyntaxTest extends DatabaseTestBase {
 
   /**

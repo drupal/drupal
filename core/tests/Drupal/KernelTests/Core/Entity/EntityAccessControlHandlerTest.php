@@ -20,12 +20,14 @@ use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity access control handler.
  */
 #[CoversClass(EntityAccessControlHandler::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
   /**

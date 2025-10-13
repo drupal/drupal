@@ -12,12 +12,14 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests EntityDefinitionUpdateManager's fieldable entity update functionality.
  */
 #[CoversClass(EntityDefinitionUpdateManager::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;

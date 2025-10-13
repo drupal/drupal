@@ -10,12 +10,14 @@ use Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd deprecation.
  */
 #[Group('menu_ui')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class MenuLinkAddTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

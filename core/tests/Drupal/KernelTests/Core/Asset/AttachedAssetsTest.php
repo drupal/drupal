@@ -8,6 +8,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests #attached assets: attached asset libraries and JavaScript settings.
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('Common')]
 #[Group('Asset')]
+#[RunTestsInSeparateProcesses]
 class AttachedAssetsTest extends KernelTestBase {
 
   /**

@@ -15,6 +15,7 @@ use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore filefield imagelink entityreference nodelink spamspan
 /**
@@ -23,6 +24,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(FieldDiscovery::class)]
 #[Group('migrate_drupal')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class FieldDiscoveryTest extends MigrateDrupal7TestBase {
 
   use FieldDiscoveryTestTrait;

@@ -9,6 +9,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the nid argument handler.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\node\Plugin\views\argument\Nid
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NidArgumentTest extends ViewsKernelTestBase {
 
   /**

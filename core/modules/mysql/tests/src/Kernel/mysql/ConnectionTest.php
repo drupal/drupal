@@ -8,11 +8,13 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * MySQL-specific connection tests.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class ConnectionTest extends DriverSpecificDatabaseTestBase {
 
   /**

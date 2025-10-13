@@ -8,11 +8,13 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests integration with filter module.
  */
 #[Group('editor')]
+#[RunTestsInSeparateProcesses]
 class EditorFilterIntegrationTest extends KernelTestBase {
 
   /**

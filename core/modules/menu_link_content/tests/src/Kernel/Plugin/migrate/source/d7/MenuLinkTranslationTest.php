@@ -8,6 +8,7 @@ use Drupal\menu_link_content\Plugin\migrate\source\d7\MenuLinkTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore mlid objectid objectindex plid tsid textgroup
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(MenuLinkTranslation::class)]
 #[Group('menu_link_content')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

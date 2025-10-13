@@ -13,11 +13,13 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the values set in update_calculate_project_data().
  */
 #[Group('update')]
+#[RunTestsInSeparateProcesses]
 class UpdateCalculateProjectDataTest extends KernelTestBase {
 
   /**

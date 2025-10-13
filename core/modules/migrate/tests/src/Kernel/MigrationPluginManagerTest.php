@@ -8,12 +8,14 @@ use Drupal\migrate\Plugin\MigrationPluginManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration plugin manager.
  */
 #[CoversClass(MigrationPluginManager::class)]
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrationPluginManagerTest extends MigrateTestBase {
 
   /**

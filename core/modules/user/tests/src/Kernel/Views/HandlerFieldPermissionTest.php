@@ -6,6 +6,7 @@ namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the permission field handler.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\user\Plugin\views\field\Permissions
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class HandlerFieldPermissionTest extends UserKernelTestBase {
 
   /**

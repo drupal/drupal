@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\field\Kernel;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests field validation.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldValidationTest extends FieldKernelTestBase {
 
   /**

@@ -7,12 +7,14 @@ namespace Drupal\Tests\comment\Kernel\Migrate\d6;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration of comment fields from Drupal 6.
  */
 #[Group('comment')]
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateCommentFieldTest extends MigrateDrupal6TestBase {
 
   /**

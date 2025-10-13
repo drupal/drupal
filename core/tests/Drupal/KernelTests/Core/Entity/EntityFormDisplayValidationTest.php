@@ -13,6 +13,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation of entity_form_display entities.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Entity')]
 #[Group('Validation')]
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;

@@ -6,11 +6,13 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration status tracking.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateStatusTest extends MigrateTestBase {
 
   /**

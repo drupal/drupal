@@ -6,11 +6,13 @@ namespace Drupal\Tests\search\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the service "search.index".
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchIndexTest extends KernelTestBase {
 
   /**

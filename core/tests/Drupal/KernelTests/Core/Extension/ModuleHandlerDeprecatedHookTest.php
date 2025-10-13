@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test whether deprecated hook invocations trigger errors.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[CoversClass(ModuleHandler::class)]
 #[Group('Extension')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class ModuleHandlerDeprecatedHookTest extends KernelTestBase {
 
   /**

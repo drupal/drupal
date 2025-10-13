@@ -9,11 +9,13 @@ use Drupal\image\ImageEffectBase;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test image styles migration to config entities.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class MigrateImageStylesTest extends MigrateDrupal7TestBase {
 
   /**

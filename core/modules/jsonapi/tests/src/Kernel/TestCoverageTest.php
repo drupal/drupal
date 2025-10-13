@@ -10,12 +10,14 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Checks that all core content/config entity types have JSON:API test coverage.
  */
 #[Group('jsonapi')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class TestCoverageTest extends KernelTestBase {
 
   /**

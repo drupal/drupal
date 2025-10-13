@@ -15,11 +15,13 @@ use Drupal\views\Plugin\views\filter\NumericFilter;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\ViewExecutable;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests instances of all handlers.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class HandlerAllTest extends ViewsKernelTestBase {
 
   use CommentTestTrait;

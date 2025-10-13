@@ -10,11 +10,13 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Drupal\block_content\Plugin\views\field\Type handler.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class FieldTypeTest extends ViewsKernelTestBase {
 
   /**

@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the base relationship handler.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\relationship\RelationshipPluginBase
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class RelationshipTest extends RelationshipJoinTestBase {
   use UserCreationTrait;
 

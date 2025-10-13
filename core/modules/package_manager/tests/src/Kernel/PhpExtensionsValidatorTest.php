@@ -12,6 +12,7 @@ use Drupal\package_manager\Validator\PhpExtensionsValidator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Php Extensions Validator.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('package_manager')]
 #[CoversClass(PhpExtensionsValidator::class)]
+#[RunTestsInSeparateProcesses]
 class PhpExtensionsValidatorTest extends PackageManagerKernelTestBase {
 
   /**

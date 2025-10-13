@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Plugin;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that plugins implementing PluginInspectionInterface can be inspected.
  */
 #[Group('Plugin')]
+#[RunTestsInSeparateProcesses]
 class InspectionTest extends PluginTestBase {
 
   /**

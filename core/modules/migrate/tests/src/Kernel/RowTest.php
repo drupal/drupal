@@ -11,12 +11,14 @@ use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests the Row class.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class RowTest extends KernelTestBase {
 
   /**

@@ -9,12 +9,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\announcements_feed\AnnounceFetcher.
  */
 #[CoversClass(AnnounceFetcher::class)]
 #[Group('announcements_feed')]
+#[RunTestsInSeparateProcesses]
 class AnnounceFetcherUserTest extends AnnounceTestBase {
 
   use UserCreationTrait;

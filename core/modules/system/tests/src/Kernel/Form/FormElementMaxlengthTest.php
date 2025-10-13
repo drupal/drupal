@@ -9,12 +9,14 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests the maxlength HTML attribute on form elements.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class FormElementMaxlengthTest extends KernelTestBase implements FormInterface {
 
   /**

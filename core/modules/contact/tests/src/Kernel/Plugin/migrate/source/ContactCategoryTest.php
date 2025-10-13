@@ -8,12 +8,14 @@ use Drupal\contact\Plugin\migrate\source\ContactCategory;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D6 contact category source plugin.
  */
 #[CoversClass(ContactCategory::class)]
 #[Group('contact')]
+#[RunTestsInSeparateProcesses]
 class ContactCategoryTest extends MigrateSqlSourceTestBase {
 
   /**

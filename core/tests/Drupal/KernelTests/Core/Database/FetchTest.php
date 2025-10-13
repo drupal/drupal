@@ -11,6 +11,7 @@ use Drupal\Core\Database\StatementPrefetchIterator;
 use Drupal\Tests\system\Functional\Database\FakeRecord;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Database system's various fetch capabilities.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  * We get timeout errors if we try to run too many tests at once.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class FetchTest extends DatabaseTestBase {
 
   /**

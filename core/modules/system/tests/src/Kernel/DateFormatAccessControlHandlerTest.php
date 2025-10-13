@@ -14,6 +14,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Prophet;
 
 /**
@@ -21,6 +22,7 @@ use Prophecy\Prophet;
  */
 #[CoversClass(DateFormatAccessControlHandler::class)]
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class DateFormatAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {

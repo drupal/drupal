@@ -8,11 +8,13 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Custom handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FieldCustomTest extends ViewsKernelTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the library discovery and library discovery parser.
  */
 #[Group('Render')]
+#[RunTestsInSeparateProcesses]
 class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
   /**

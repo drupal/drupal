@@ -8,11 +8,13 @@ use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Content Moderation with entities that get re-saved automatically.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ContentModerationResaveTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

@@ -9,11 +9,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Who's Online Block.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class WhoIsOnlineBlockTest extends KernelTestBase {
   use UserCreationTrait;
 

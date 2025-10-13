@@ -13,6 +13,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Display all values in the same row" setting.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\field\EntityField
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FieldGroupRowsTest extends ViewsKernelTestBase {
 
   /**

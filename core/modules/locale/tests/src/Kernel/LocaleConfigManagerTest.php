@@ -8,11 +8,13 @@ use Drupal\block\Entity\Block;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the locale config manager operates correctly.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleConfigManagerTest extends KernelTestBase {
 
   /**

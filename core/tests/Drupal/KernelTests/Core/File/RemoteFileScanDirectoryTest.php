@@ -7,12 +7,14 @@ namespace Drupal\KernelTests\Core\File;
 use Drupal\Core\File\FileSystem;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\Core\File\FileSystemInterface::scanDirectory().
  */
 #[CoversClass(FileSystem::class)]
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class RemoteFileScanDirectoryTest extends ScanDirectoryTest {
 
   /**

@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\SelectExtender;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the tagging capabilities of the Select builder.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * what type of query it is, such as "node_access".
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class TaggingTest extends DatabaseTestBase {
 
   /**

@@ -12,6 +12,7 @@ use Drupal\package_manager\PathLocator;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\TestWith;
  */
 #[CoversClass(FailureMarker::class)]
 #[Group('package_manager')]
+#[RunTestsInSeparateProcesses]
 class FailureMarkerTest extends PackageManagerKernelTestBase {
 
   use StringTranslationTrait;

@@ -9,11 +9,13 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the 'Options' field types.
  */
 #[Group('options')]
+#[RunTestsInSeparateProcesses]
 class OptionsFieldTest extends OptionsFieldUnitTestBase {
 
   /**

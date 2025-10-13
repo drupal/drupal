@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Permissions.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class PermissionsTest extends KernelTestBase {
 
   /**

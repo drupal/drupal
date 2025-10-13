@@ -12,6 +12,7 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraintValid
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
@@ -21,6 +22,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 #[CoversClass(ValidKeysConstraint::class)]
 #[CoversClass(ValidKeysConstraintValidator::class)]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
   /**

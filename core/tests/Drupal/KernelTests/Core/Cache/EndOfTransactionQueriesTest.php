@@ -14,12 +14,14 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests delaying of cache tag invalidation queries to the end of transactions.
  */
 #[Group('Cache')]
+#[RunTestsInSeparateProcesses]
 class EndOfTransactionQueriesTest extends KernelTestBase {
 
   /**

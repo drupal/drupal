@@ -10,6 +10,7 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation of block entities.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[Group('#slow')]
 #[Group('config')]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class BlockValidationTest extends ConfigEntityValidationTestBase {
 
   /**

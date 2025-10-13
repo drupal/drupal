@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\File\FileExists;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file_unmanaged_save_data() function.
  */
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class FileSaveDataTest extends FileTestBase {
 
   /**

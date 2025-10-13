@@ -10,12 +10,14 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Hook\UserHooks;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LoggerInterface;
 
 /**
  * Tests _user_mail_notify() use of user.settings.notify.*.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserMailNotifyTest extends EntityKernelTestBase {
 
   /**

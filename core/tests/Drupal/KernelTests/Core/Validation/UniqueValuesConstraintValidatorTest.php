@@ -10,12 +10,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the unique field value validation constraint.
  */
 #[CoversClass(UniqueFieldValueValidator::class)]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class UniqueValuesConstraintValidatorTest extends KernelTestBase {
   use UserCreationTrait;
 

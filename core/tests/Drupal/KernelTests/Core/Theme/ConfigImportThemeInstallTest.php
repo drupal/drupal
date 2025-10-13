@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installing and uninstalling of themes via configuration import.
  */
 #[Group('Extension')]
+#[RunTestsInSeparateProcesses]
 class ConfigImportThemeInstallTest extends KernelTestBase {
 
   /**

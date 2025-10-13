@@ -8,11 +8,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * User picture field migration.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class MigrateUserPictureFieldTest extends MigrateDrupal7TestBase {
 
   /**

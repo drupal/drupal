@@ -8,11 +8,13 @@ use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests hook_update_requirements() and hook_update_requirements_alter().
  */
 #[Group('Hooks')]
+#[RunTestsInSeparateProcesses]
 class UpdateRequirementsTest extends KernelTestBase {
 
   use StringTranslationTrait;

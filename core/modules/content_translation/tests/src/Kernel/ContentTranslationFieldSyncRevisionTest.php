@@ -16,11 +16,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the field synchronization logic when revisions are involved.
  */
 #[Group('content_translation')]
+#[RunTestsInSeparateProcesses]
 class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
 
   use TestFileCreationTrait;

@@ -10,6 +10,7 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Checks that all core content/config entity types have REST test coverage.
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('rest')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class EntityResourceRestTestCoverageTest extends KernelTestBase {
 
   /**

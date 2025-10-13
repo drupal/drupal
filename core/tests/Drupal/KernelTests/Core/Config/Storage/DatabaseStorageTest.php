@@ -8,11 +8,13 @@ use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests DatabaseStorage operations.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class DatabaseStorageTest extends ConfigStorageTestBase {
 
   /**

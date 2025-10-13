@@ -8,12 +8,14 @@ use Drupal\file\Plugin\migrate\source\d7\File;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D7 file source plugin.
  */
 #[CoversClass(File::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileTest extends MigrateSqlSourceTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the user reference field functionality.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserEntityReferenceTest extends EntityKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

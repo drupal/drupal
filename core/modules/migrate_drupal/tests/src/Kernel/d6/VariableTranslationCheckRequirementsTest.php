@@ -6,11 +6,13 @@ namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\migrate\Exception\RequirementsException;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests check requirements for variable translation source plugin.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class VariableTranslationCheckRequirementsTest extends MigrateDrupal6TestBase {
 
   /**

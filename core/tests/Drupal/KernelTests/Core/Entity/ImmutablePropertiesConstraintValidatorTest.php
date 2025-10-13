@@ -13,6 +13,7 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\Exception\LogicException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
@@ -23,6 +24,7 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 #[Group('Validation')]
 #[CoversClass(ImmutablePropertiesConstraint::class)]
 #[CoversClass(ImmutablePropertiesConstraintValidator::class)]
+#[RunTestsInSeparateProcesses]
 class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
 
   /**

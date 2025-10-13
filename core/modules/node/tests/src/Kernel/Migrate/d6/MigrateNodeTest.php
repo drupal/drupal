@@ -9,11 +9,13 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Node content migration.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateNodeTest extends MigrateNodeTestBase {
 
   use FileMigrationTestTrait;

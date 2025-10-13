@@ -12,6 +12,7 @@ use Drupal\package_manager\Validator\DiskSpaceValidator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Disk Space Validator.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('package_manager')]
 #[CoversClass(DiskSpaceValidator::class)]
+#[RunTestsInSeparateProcesses]
 class DiskSpaceValidatorTest extends PackageManagerKernelTestBase {
 
   /**

@@ -13,6 +13,7 @@ use Drupal\package_manager\ValidationResult;
 use Drupal\package_manager\Validator\ComposerPluginsValidator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Composer Plugins Validator Insecure.
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('package_manager')]
 #[CoversClass(ComposerPluginsValidator::class)]
+#[RunTestsInSeparateProcesses]
 class ComposerPluginsValidatorInsecureTest extends PackageManagerKernelTestBase {
 
   /**

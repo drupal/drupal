@@ -9,11 +9,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests row skips triggered during hook_migrate_prepare_row().
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateSkipRowTest extends KernelTestBase {
 
   /**

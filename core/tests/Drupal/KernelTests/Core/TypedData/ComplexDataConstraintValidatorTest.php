@@ -8,11 +8,13 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ComplexData validation with both valid and invalid values.
  */
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class ComplexDataConstraintValidatorTest extends KernelTestBase {
 
   /**

@@ -9,11 +9,13 @@ use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Entity Validation API.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityValidationTest extends EntityKernelTestBase {
 
   /**

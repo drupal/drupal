@@ -10,11 +10,13 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test stub creation for taxonomy terms.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class MigrateTaxonomyTermStubTest extends MigrateDrupalTestBase {
 
   use StubTestTrait;

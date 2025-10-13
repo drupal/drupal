@@ -12,11 +12,13 @@ use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests image on user relationship handler.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class RelationshipUserImageDataTest extends ViewsKernelTestBase {
 
   /**

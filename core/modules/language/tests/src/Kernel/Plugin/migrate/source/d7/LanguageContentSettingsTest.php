@@ -8,12 +8,14 @@ use Drupal\language\Plugin\migrate\source\d7\LanguageContentSettings;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests menu source plugin.
  */
 #[CoversClass(LanguageContentSettings::class)]
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageContentSettingsTest extends MigrateSqlSourceTestBase {
 
   /**

@@ -8,12 +8,14 @@ use Drupal\comment\Entity\Comment;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration of comments from Drupal 7.
  */
 #[Group('comment')]
 #[Group('migrate_drupal_7')]
+#[RunTestsInSeparateProcesses]
 class MigrateCommentTest extends MigrateDrupal7TestBase {
 
   /**

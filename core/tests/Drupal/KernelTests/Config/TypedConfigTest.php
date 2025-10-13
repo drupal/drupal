@@ -13,6 +13,7 @@ use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -21,6 +22,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * Tests config validation mechanism.
  */
 #[Group('Config')]
+#[RunTestsInSeparateProcesses]
 class TypedConfigTest extends KernelTestBase {
 
   /**

@@ -13,6 +13,7 @@ use Drupal\filter\FilterPluginCollection;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore outro
 // cspell:ignore toolongdomainexampledomainexampledomainexampledomainexampledomain
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests Filter module filters individually.
  */
 #[Group('filter')]
+#[RunTestsInSeparateProcesses]
 class FilterKernelTest extends KernelTestBase {
 
   /**

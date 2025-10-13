@@ -6,6 +6,7 @@ namespace Drupal\Tests\options\Kernel\Views;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests options list argument for views.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\options\Plugin\views\argument\NumberListField.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class OptionsListArgumentTest extends OptionsTestBase {
 
   /**

@@ -14,6 +14,7 @@ use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -24,6 +25,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 #[Group('package_manager')]
 #[CoversClass(SqliteDatabaseExcluder::class)]
+#[RunTestsInSeparateProcesses]
 class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
 
   /**

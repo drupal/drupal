@@ -16,6 +16,7 @@ use Drupal\Core\State\State;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -23,6 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
  * Confirm that the matcher dumper is functioning properly.
  */
 #[Group('Routing')]
+#[RunTestsInSeparateProcesses]
 class MatcherDumperTest extends KernelTestBase {
 
   /**

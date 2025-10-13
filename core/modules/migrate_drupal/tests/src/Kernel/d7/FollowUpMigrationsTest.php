@@ -9,12 +9,14 @@ use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests follow-up migrations.
  */
 #[Group('migrate_drupal')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;

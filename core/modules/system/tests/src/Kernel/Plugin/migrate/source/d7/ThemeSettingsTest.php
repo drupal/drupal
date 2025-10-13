@@ -8,12 +8,14 @@ use Drupal\system\Plugin\migrate\source\d7\ThemeSettings;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D7 theme settings source plugin.
  */
 #[CoversClass(ThemeSettings::class)]
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class ThemeSettingsTest extends MigrateSqlSourceTestBase {
 
   /**

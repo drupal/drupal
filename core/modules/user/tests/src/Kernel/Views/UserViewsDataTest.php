@@ -6,6 +6,7 @@ namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Contains tests related to the views data for the user entity type.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\user\UserViewsData
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserViewsDataTest extends KernelTestBase {
 
   /**

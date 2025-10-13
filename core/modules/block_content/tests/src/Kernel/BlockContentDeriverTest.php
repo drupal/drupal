@@ -10,11 +10,13 @@ use Drupal\block_content\Plugin\Derivative\BlockContent as DerivativeBlockConten
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests block content plugin deriver.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentDeriverTest extends KernelTestBase {
 
   /**

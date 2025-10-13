@@ -9,11 +9,13 @@ use Drupal\Tests\menu_link_content\Kernel\Migrate\MigrateMenuLinkTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Menu link migration.
  */
 #[Group('menu_link_content')]
+#[RunTestsInSeparateProcesses]
 class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   const MENU_NAME = 'menu-test-menu';
 

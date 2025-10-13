@@ -6,11 +6,13 @@ namespace Drupal\Tests\shortcut\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests shortcut_install() and shortcut_uninstall().
  */
 #[Group('shortcut')]
+#[RunTestsInSeparateProcesses]
 class ShortcutClaroIntegrationTest extends KernelTestBase {
 
   /**

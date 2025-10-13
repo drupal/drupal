@@ -9,11 +9,13 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test stub creation for block_content entities.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class MigrateBlockContentStubTest extends MigrateDrupalTestBase {
 
   use StubTestTrait;

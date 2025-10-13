@@ -10,11 +10,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment module uninstall.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentUninstallTest extends KernelTestBase {
 
   use CommentTestTrait;

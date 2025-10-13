@@ -23,11 +23,13 @@ use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests using entity fields of the image field type.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageItemTest extends FieldKernelTestBase {
 
   /**

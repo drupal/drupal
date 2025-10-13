@@ -22,6 +22,7 @@ use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\jsonapi\Normalizer\RelationshipNormalizer.
@@ -30,6 +31,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(RelationshipNormalizer::class)]
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class RelationshipNormalizerTest extends JsonapiKernelTestBase {
 
   use UserCreationTrait;

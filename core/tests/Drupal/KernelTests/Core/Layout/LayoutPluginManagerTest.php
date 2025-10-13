@@ -9,12 +9,14 @@ use Drupal\Core\Layout\LayoutPluginManager;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Layout\LayoutPluginManager.
  */
 #[CoversClass(LayoutPluginManager::class)]
 #[Group('Layout')]
+#[RunTestsInSeparateProcesses]
 class LayoutPluginManagerTest extends KernelTestBase {
 
   /**

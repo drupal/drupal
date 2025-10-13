@@ -7,6 +7,7 @@ namespace Drupal\Tests\user\Kernel\Views;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the current user filter handler.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\user\Plugin\views\filter\Current
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class HandlerFilterCurrentUserTest extends UserKernelTestBase {
 
   /**

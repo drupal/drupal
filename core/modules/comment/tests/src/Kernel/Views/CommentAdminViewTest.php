@@ -13,11 +13,13 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment admin view filters.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentAdminViewTest extends ViewsKernelTestBase {
 
   /**

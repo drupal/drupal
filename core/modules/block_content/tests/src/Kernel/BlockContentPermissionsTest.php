@@ -9,12 +9,14 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the permissions of content blocks.
  */
 #[CoversClass(BlockContentPermissions::class)]
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentPermissionsTest extends KernelTestBase {
 
   /**

@@ -6,6 +6,7 @@ namespace Drupal\Tests\migrate\Kernel\Plugin\source;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests discovery of source plugins with annotations.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * have been converted to attributes.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateSourceDiscoveryTest extends KernelTestBase {
 
   /**

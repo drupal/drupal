@@ -6,12 +6,14 @@ namespace Drupal\KernelTests\Core\DrupalKernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests that services are correctly destructed.
  */
 #[Group('DrupalKernel')]
+#[RunTestsInSeparateProcesses]
 class ServiceDestructionTest extends KernelTestBase {
 
   /**

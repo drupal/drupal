@@ -9,12 +9,14 @@ use Drupal\migrate\Plugin\Migration;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests conversion of format serial to string id in permission name.
  */
 #[CoversClass(FilterFormatPermission::class)]
 #[Group('filter')]
+#[RunTestsInSeparateProcesses]
 class FilterFormatPermissionTest extends MigrateDrupalTestBase {
 
   /**

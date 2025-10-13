@@ -6,11 +6,13 @@ namespace Drupal\Tests\migrate_drupal\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test migrate_drupal module uninstall.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class MigrateDrupalUninstallTest extends KernelTestBase {
 
   /**

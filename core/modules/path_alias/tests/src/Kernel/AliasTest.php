@@ -14,12 +14,14 @@ use Drupal\path_alias\AliasRepository;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests path alias CRUD and lookup functionality.
  */
 #[CoversClass(AliasRepository::class)]
 #[Group('path_alias')]
+#[RunTestsInSeparateProcesses]
 class AliasTest extends KernelTestBase {
 
   use PathAliasTestTrait;

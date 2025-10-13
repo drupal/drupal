@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Path;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the capability to alter URLs.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\Routing\UrlGenerator::processPath
  */
 #[Group('Path')]
+#[RunTestsInSeparateProcesses]
 class UrlAlterTest extends KernelTestBase {
 
   /**

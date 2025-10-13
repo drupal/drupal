@@ -7,6 +7,7 @@ namespace Drupal\KernelTests;
 use Drupal\Core\Database\Database;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\KernelTests\KernelTestBase.
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('PHPUnit')]
 #[Group('Test')]
 #[Group('KernelTests')]
+#[RunTestsInSeparateProcesses]
 class KernelTestBaseDatabaseDriverModuleTest extends KernelTestBase {
 
   /**

@@ -11,12 +11,14 @@ use Drupal\node\NodeViewBuilder;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node view builder.
  */
 #[CoversClass(NodeViewBuilder::class)]
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeViewBuilderTest extends EntityKernelTestBase {
 
   /**

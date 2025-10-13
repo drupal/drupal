@@ -10,6 +10,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use Drupal\TestTools\Random;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore mlid plid tsid
 /**
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(MenuLink::class)]
 #[Group('menu_link_content')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkTest extends MigrateSqlSourceTestBase {
 
   /**

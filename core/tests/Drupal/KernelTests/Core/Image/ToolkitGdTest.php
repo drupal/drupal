@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore iccp, imagecreatefrom
 /**
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 #[CoversClass(GDToolkit::class)]
 #[Group('Image')]
 #[RequiresPhpExtension('gd')]
+#[RunTestsInSeparateProcesses]
 class ToolkitGdTest extends KernelTestBase {
 
   /**

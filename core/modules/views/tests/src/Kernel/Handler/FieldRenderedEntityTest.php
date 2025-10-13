@@ -15,11 +15,13 @@ use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\RenderedEntity handler.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FieldRenderedEntityTest extends ViewsKernelTestBase {
 
   /**

@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\pgsql\Kernel;
 
-use Drupal\Core\Entity\Query\Sql\QueryFactory as BaseQueryFactory;
 use Drupal\Core\Entity\Query\Sql\pgsql\QueryFactory as DeprecatedQueryFactory;
+use Drupal\Core\Entity\Query\Sql\QueryFactory as BaseQueryFactory;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\pgsql\EntityQuery\QueryFactory;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the move of the 'pgsql.entity.query.sql' service.
  */
 #[Group('Database')]
 #[Group('pgsql')]
+#[RunTestsInSeparateProcesses]
 class EntityQueryServiceDeprecationTest extends KernelTestBase {
 
   /**

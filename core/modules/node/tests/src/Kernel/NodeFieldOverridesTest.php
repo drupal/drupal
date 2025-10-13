@@ -10,11 +10,13 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node field overrides.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeFieldOverridesTest extends EntityKernelTestBase {
 
   /**

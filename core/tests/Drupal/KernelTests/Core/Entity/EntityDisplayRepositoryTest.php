@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore pastafazoul
 /**
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(EntityDisplayRepository::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityDisplayRepositoryTest extends KernelTestBase {
 
   /**

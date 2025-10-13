@@ -12,12 +12,14 @@ use Drupal\media\Plugin\Filter\MediaEmbed;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\media\Plugin\Filter\MediaEmbed.
  */
 #[CoversClass(MediaEmbed::class)]
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 
   /**

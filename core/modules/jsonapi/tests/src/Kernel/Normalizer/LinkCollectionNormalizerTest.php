@@ -18,6 +18,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\jsonapi\Normalizer\LinkCollectionNormalizer.
@@ -26,6 +27,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(LinkCollectionNormalizer::class)]
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class LinkCollectionNormalizerTest extends KernelTestBase {
 
   use UserCreationTrait;

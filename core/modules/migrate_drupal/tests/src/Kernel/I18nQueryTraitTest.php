@@ -9,11 +9,13 @@ use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests instantiating migrate source plugins using I18nQueryTrait.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class I18nQueryTraitTest extends KernelTestBase {
 
   /**

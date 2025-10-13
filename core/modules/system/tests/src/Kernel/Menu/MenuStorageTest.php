@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\system\MenuStorage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests MenuStorage.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\system\MenuStorage
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuStorageTest extends KernelTestBase {
 
   /**

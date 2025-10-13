@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests user_pass_rehash().
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserPassRehashTest extends KernelTestBase {
 
   use UserCreationTrait;

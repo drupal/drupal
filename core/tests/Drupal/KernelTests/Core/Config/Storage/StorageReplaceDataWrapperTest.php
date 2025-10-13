@@ -8,11 +8,13 @@ use Drupal\config\StorageReplaceDataWrapper;
 use Drupal\Core\Config\StorageInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests StorageReplaceDataWrapper operations.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class StorageReplaceDataWrapperTest extends ConfigStorageTestBase {
 
   /**

@@ -9,12 +9,14 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration of comments from Drupal 6.
  */
 #[Group('comment')]
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateCommentTest extends MigrateDrupal6TestBase {
 
   use CommentTestTrait;

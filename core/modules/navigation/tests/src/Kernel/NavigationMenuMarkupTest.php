@@ -12,6 +12,7 @@ use Drupal\system\Entity\Menu;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -22,6 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
  * @see \Drupal\navigation\Plugin\Block\NavigationMenuBlock
  */
 #[Group('navigation')]
+#[RunTestsInSeparateProcesses]
 class NavigationMenuMarkupTest extends KernelTestBase {
 
   /**

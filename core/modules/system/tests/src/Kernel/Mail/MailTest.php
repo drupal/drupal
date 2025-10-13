@@ -15,12 +15,14 @@ use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore drépal
 /**
  * Performs tests on the pluggable mailing framework.
  */
 #[Group('Mail')]
+#[RunTestsInSeparateProcesses]
 class MailTest extends KernelTestBase {
 
   /**

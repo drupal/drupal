@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Form;
 use Drupal\form_test\FormTestObject;
 use Drupal\KernelTests\ConfigFormTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests building a form from an object.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class FormObjectTest extends ConfigFormTestBase {
 
   /**

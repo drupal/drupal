@@ -10,11 +10,13 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\EntityViewTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests loading and rendering orphan comments.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentOrphanTest extends EntityKernelTestBase {
 
   use EntityViewTrait;

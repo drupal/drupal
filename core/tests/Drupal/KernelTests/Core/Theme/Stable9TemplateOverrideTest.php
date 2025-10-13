@@ -8,12 +8,14 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Theme\Registry;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Stable 9's template overrides.
  */
 #[Group('Theme')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class Stable9TemplateOverrideTest extends KernelTestBase {
 
   /**

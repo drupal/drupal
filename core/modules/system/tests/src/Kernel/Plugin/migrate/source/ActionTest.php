@@ -8,12 +8,14 @@ use Drupal\system\Plugin\migrate\source\Action;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests actions source plugin.
  */
 #[CoversClass(Action::class)]
 #[Group('action')]
+#[RunTestsInSeparateProcesses]
 class ActionTest extends MigrateSqlSourceTestBase {
 
   /**

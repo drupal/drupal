@@ -9,11 +9,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_discovery\Hook\LayoutDiscoveryThemeHooks;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Layout functionality.
  */
 #[Group('Layout')]
+#[RunTestsInSeparateProcesses]
 class LayoutTest extends KernelTestBase {
 
   /**

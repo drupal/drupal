@@ -9,12 +9,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Config\LanguageConfigOverrideEvents;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore deutsch
 /**
  * Ensures the language config overrides can be installed.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageConfigOverrideInstallTest extends KernelTestBase {
 
   /**

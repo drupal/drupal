@@ -11,11 +11,13 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests integration of views with other modules.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewsConfigDependenciesIntegrationTest extends ViewsKernelTestBase {
 
   /**

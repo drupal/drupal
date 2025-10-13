@@ -8,6 +8,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests XSS filtering.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols
  */
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class XssUnitTest extends KernelTestBase {
 
   use StringTranslationTrait;

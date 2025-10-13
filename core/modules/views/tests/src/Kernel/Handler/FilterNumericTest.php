@@ -8,12 +8,14 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the numeric filter handler.
  */
 #[Group('views')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class FilterNumericTest extends ViewsKernelTestBase {
 
   /**

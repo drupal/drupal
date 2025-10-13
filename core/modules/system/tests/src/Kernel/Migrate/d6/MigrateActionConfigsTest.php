@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Migrate\d6;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade variables to null.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateActionConfigsTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;

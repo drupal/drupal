@@ -6,11 +6,13 @@ namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests adding Twig loaders.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class TwigLoaderTest extends KernelTestBase {
 
   /**

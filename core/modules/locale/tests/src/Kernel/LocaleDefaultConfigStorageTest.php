@@ -8,11 +8,13 @@ use Drupal\Core\Config\NullStorage;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\locale\LocaleDefaultConfigStorage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Locale Default Config Storage.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleDefaultConfigStorageTest extends KernelTestBase {
 
   /**

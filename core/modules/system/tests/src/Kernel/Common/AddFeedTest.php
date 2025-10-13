@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Common;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Make sure that attaching feeds works correctly with various constructs.
  */
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class AddFeedTest extends KernelTestBase {
 
   /**

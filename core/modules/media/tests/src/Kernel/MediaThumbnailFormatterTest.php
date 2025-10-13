@@ -10,12 +10,14 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter.
  */
 #[CoversClass(MediaThumbnailFormatter::class)]
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaThumbnailFormatterTest extends MediaKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

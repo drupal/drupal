@@ -8,11 +8,13 @@ use Drupal\Core\Extension\InfoParserException;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the behavior of a theme when base_theme info key is missing.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class BaseThemeMissingTest extends KernelTestBase {
 
   /**

@@ -10,11 +10,13 @@ use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\database_test\EventSubscriber\DatabaseEventSubscriber;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the database API events.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class DatabaseEventTest extends DatabaseTestBase {
 
   /**

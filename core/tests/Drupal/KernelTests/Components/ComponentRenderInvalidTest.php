@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests invalid render options for components.
  */
 #[Group('sdc')]
+#[RunTestsInSeparateProcesses]
 class ComponentRenderInvalidTest extends ComponentKernelTestBase {
 
   /**

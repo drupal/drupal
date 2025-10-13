@@ -19,6 +19,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\field\Traits\BodyFieldCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Add To All Bundles Config Action.
@@ -26,6 +27,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Recipe')]
 #[Group('field')]
 #[CoversClass(AddToAllBundles::class)]
+#[RunTestsInSeparateProcesses]
 class AddToAllBundlesConfigActionTest extends KernelTestBase {
 
   use BodyFieldCreationTrait;

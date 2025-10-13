@@ -9,11 +9,13 @@ use Drupal\Tests\file\Kernel\FileItemTest;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests using entity fields of the file field type in a workspace.
  */
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspacesFileItemTest extends FileItemTest {
 
   use UserCreationTrait;

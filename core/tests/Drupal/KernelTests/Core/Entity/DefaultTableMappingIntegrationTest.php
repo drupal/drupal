@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default table mapping class for content entities stored in SQL.
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(DefaultTableMapping::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
 
   use EntityDefinitionTestTrait;

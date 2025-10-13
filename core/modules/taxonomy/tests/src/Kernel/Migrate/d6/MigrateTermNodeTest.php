@@ -7,12 +7,14 @@ namespace Drupal\Tests\taxonomy\Kernel\Migrate\d6;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade taxonomy term node associations.
  */
 #[Group('#slow')]
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateTermNodeTest extends MigrateDrupal6TestBase {
 
   /**

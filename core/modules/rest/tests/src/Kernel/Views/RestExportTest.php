@@ -10,12 +10,14 @@ use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the REST export view display plugin.
  */
 #[CoversClass(RestExport::class)]
 #[Group('rest')]
+#[RunTestsInSeparateProcesses]
 class RestExportTest extends ViewsKernelTestBase {
 
   /**

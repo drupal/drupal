@@ -13,11 +13,13 @@ use Drupal\user\Entity\User;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that files referenced in file and image fields are always validated.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileItemValidationTest extends KernelTestBase {
 
   /**

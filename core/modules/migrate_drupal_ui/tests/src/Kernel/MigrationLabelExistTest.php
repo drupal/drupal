@@ -7,11 +7,13 @@ namespace Drupal\Tests\migrate_drupal_ui\Kernel;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that labels exist for all migrations.
  */
 #[Group('migrate_drupal_ui')]
+#[RunTestsInSeparateProcesses]
 class MigrationLabelExistTest extends MigrateDrupalTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

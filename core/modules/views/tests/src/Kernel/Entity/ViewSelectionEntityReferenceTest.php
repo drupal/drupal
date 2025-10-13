@@ -8,11 +8,13 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ViewSelection EntityReferenceSelection plugin.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewSelectionEntityReferenceTest extends EntityKernelTestBase {
 
   /**

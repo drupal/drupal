@@ -19,12 +19,14 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage.
  */
 #[CoversClass(OverridesSectionStorage::class)]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class OverridesSectionStorageTest extends KernelTestBase {
 
   use UserCreationTrait;

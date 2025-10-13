@@ -17,6 +17,7 @@ use Drupal\node\Entity\NodeType;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -24,6 +25,7 @@ use PHPUnit\Framework\Attributes\TestWith;
  */
 #[Group('Recipe')]
 #[CoversClass(ConfigConfigurator::class)]
+#[RunTestsInSeparateProcesses]
 class ConfigConfiguratorTest extends KernelTestBase {
 
   use RecipeTestTrait;

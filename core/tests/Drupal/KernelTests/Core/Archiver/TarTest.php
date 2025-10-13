@@ -7,12 +7,14 @@ namespace Drupal\KernelTests\Core\Archiver;
 use Drupal\Core\Archiver\Tar;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Archiver\Tar.
  */
 #[CoversClass(Tar::class)]
 #[Group('tar')]
+#[RunTestsInSeparateProcesses]
 class TarTest extends ArchiverTestBase {
   /**
    * {@inheritdoc}

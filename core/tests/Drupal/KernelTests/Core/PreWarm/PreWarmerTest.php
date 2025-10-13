@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\PreWarm;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the cache prewarmer.
  */
 #[Group('PreWarm')]
+#[RunTestsInSeparateProcesses]
 class PreWarmerTest extends KernelTestBase {
 
   /**

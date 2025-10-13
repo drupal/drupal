@@ -20,6 +20,7 @@ use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 
 /**
@@ -27,6 +28,7 @@ use Prophecy\Argument;
  */
 #[CoversClass(OEmbed::class)]
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class OEmbedSourceTest extends MediaKernelTestBase {
 
   /**

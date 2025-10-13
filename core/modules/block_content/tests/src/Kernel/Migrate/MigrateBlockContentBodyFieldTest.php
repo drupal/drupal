@@ -10,11 +10,13 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Attaches a body field to the block type.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class MigrateBlockContentBodyFieldTest extends MigrateDrupal7TestBase {
 
   /**

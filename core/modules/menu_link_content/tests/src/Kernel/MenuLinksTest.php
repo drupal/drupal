@@ -13,11 +13,13 @@ use Drupal\menu_link_content\Plugin\Menu\MenuLinkContent as MenuLinkContentPlugi
 use Drupal\system\Entity\Menu;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handling of menu links hierarchies.
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuLinksTest extends KernelTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\file\Kernel\Validation;
 
 use Drupal\file_test\FileTestHelper;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file validator.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileValidatorTest extends FileValidatorTestBase {
 
   /**

@@ -11,6 +11,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node row plugin.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\node\Plugin\views\row\NodeRow
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class RowPluginTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;

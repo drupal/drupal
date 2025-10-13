@@ -17,11 +17,13 @@ use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the field plugin base integration with the entity system.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class FieldEntityTest extends ViewsKernelTestBase {
 
   use CommentTestTrait;

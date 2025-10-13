@@ -7,11 +7,13 @@ namespace Drupal\Tests\field\Kernel;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Update field storage and fields during config change method invocation.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldImportChangeTest extends FieldKernelTestBase {
 
   /**

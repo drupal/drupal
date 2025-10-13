@@ -9,11 +9,13 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the EntityExists process plugin.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class EntityExistsTest extends KernelTestBase {
 
   /**

@@ -8,12 +8,14 @@ use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Extension\ThemeExtensionList.
  */
 #[CoversClass(ThemeExtensionList::class)]
 #[Group('Extension')]
+#[RunTestsInSeparateProcesses]
 class ThemeExtensionListTest extends KernelTestBase {
 
   /**

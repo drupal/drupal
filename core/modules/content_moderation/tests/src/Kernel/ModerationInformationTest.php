@@ -13,12 +13,14 @@ use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\content_moderation\ModerationInformation.
  */
 #[CoversClass(ModerationInformation::class)]
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ModerationInformationTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

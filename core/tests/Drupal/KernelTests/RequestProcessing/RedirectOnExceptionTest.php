@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\RequestProcessing;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Tests redirects on exception pages.
  */
 #[Group('request_processing')]
+#[RunTestsInSeparateProcesses]
 class RedirectOnExceptionTest extends KernelTestBase {
 
   /**

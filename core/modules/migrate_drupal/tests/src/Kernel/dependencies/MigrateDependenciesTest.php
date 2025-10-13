@@ -7,11 +7,13 @@ namespace Drupal\Tests\migrate_drupal\Kernel\dependencies;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ensure the consistency among the dependencies for migrate.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class MigrateDependenciesTest extends MigrateDrupal6TestBase {
 
   /**

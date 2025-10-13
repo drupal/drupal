@@ -15,11 +15,13 @@ use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installing and uninstalling of themes.
  */
 #[Group('Extension')]
+#[RunTestsInSeparateProcesses]
 class ThemeInstallerTest extends KernelTestBase {
 
   /**

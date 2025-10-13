@@ -9,6 +9,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\navigation\NavigationContentLinks.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\navigation\NavigationContentLinks
  */
 #[Group('navigation')]
+#[RunTestsInSeparateProcesses]
 class NavigationContentLinksTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

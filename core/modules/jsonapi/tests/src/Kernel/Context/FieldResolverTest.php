@@ -13,6 +13,7 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\jsonapi\Context\FieldResolver.
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(FieldResolver::class)]
 #[Group('jsonapi')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class FieldResolverTest extends JsonapiKernelTestBase {
 
   /**

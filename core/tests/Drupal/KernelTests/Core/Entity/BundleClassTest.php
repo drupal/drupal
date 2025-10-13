@@ -17,11 +17,13 @@ use Drupal\entity_test_bundle_class\Entity\SharedEntityTestBundleClassA;
 use Drupal\entity_test_bundle_class\Entity\SharedEntityTestBundleClassB;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity bundle classes.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class BundleClassTest extends EntityKernelTestBase {
 
   /**

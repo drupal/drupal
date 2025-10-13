@@ -9,6 +9,7 @@ use Drupal\search\Entity\SearchPage;
 use Drupal\search\Plugin\Derivative\SearchLocalTask;
 use Drupal\search\SearchPageRepository;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation of search_page entities.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('search')]
 #[Group('config')]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class SearchPageValidationTest extends ConfigEntityValidationTestBase {
 
   /**

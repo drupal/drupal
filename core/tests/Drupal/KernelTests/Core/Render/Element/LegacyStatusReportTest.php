@@ -8,12 +8,14 @@ use Drupal\Core\Render\Element\StatusReport;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the status report element legacy methods.
  */
 #[Group('Render')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class LegacyStatusReportTest extends KernelTestBase {
 
   /**

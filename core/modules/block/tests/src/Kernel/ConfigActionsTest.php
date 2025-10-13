@@ -16,6 +16,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -24,6 +25,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 #[Group('block')]
 #[CoversClass(PlaceBlock::class)]
 #[CoversClass(PlaceBlockDeriver::class)]
+#[RunTestsInSeparateProcesses]
 class ConfigActionsTest extends KernelTestBase {
 
   use BlockCreationTrait;

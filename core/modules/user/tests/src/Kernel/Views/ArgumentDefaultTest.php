@@ -9,11 +9,13 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests views user argument default plugin.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class ArgumentDefaultTest extends KernelTestBase {
 
   use UserCreationTrait;

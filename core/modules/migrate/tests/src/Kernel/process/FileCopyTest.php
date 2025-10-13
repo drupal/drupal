@@ -15,12 +15,14 @@ use GuzzleHttp\Client;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file_copy process plugin.
  */
 #[CoversClass(FileCopy::class)]
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class FileCopyTest extends FileTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\menu_ui\Kernel\Migrate;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of menu_ui settings.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MigrateMenuSettingsTest extends MigrateDrupal7TestBase {
 
   /**

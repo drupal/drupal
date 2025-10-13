@@ -10,6 +10,7 @@ use Drupal\Core\Validation\ConstraintFactory;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\Constraint;
 
 /**
@@ -17,6 +18,7 @@ use Symfony\Component\Validator\Constraint;
  */
 #[CoversClass(ConstraintFactory::class)]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class ConstraintFactoryTest extends KernelTestBase {
 
   /**

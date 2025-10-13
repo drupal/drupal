@@ -15,6 +15,7 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * The test class for version negotiators.
@@ -23,6 +24,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(VersionNegotiator::class)]
 #[Group('jsonapi')]
+#[RunTestsInSeparateProcesses]
 class VersionNegotiatorTest extends JsonapiKernelTestBase {
 
   /**

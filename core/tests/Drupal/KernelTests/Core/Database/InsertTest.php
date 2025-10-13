@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the insert builder.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class InsertTest extends DatabaseTestBase {
 
   /**

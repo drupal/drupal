@@ -8,11 +8,13 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests importing of config with language overrides.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class OverriddenConfigImportTest extends KernelTestBase {
 
   /**

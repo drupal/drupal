@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ExcludedModulesEventSubscriber.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ExcludedModulesEventSubscriberTest extends KernelTestBase {
 
   /**

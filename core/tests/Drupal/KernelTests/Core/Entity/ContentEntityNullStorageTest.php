@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ContentEntityNullStorage entity query support.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\Entity\Query\Null\Query
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class ContentEntityNullStorageTest extends KernelTestBase {
 
   /**

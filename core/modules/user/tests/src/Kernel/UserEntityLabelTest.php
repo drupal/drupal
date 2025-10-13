@@ -8,11 +8,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the label callback.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserEntityLabelTest extends KernelTestBase {
 
   use UserCreationTrait;

@@ -8,12 +8,14 @@ use Drupal\Core\Locale\CountryManager;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Country Manager functionality.
  */
 #[Group('CountryManager')]
 #[CoversClass(CountryManager::class)]
+#[RunTestsInSeparateProcesses]
 class CountryManagerTest extends KernelTestBase {
 
   /**

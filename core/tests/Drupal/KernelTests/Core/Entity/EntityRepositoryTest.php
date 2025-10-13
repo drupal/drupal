@@ -11,12 +11,14 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity repository.
  */
 #[CoversClass(EntityRepository::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityRepositoryTest extends KernelTestBase {
 
   use UserCreationTrait;

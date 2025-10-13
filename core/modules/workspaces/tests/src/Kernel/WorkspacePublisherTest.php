@@ -20,6 +20,7 @@ use Drupal\workspaces\WorkspacePublisher;
 use Drupal\workspaces\WorkspacePublisherInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -27,6 +28,7 @@ use Psr\Log\LoggerInterface;
  */
 #[CoversClass(WorkspacePublisher::class)]
 #[Group('workspaces')]
+#[RunTestsInSeparateProcesses]
 class WorkspacePublisherTest extends KernelTestBase {
 
   use NodeCreationTrait;

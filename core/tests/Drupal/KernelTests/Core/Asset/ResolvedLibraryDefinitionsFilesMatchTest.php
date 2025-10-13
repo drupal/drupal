@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the asset files for all core libraries exist.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  */
 #[Group('Asset')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
 
   /**

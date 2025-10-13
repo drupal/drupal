@@ -11,12 +11,14 @@ use Drupal\entity_test\Entity\EntityTestNoBundleWithLabel;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the getBundleEntity() method.
  */
 #[CoversClass(ContentEntityBase::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityBundleEntityTest extends EntityKernelTestBase {
 
   /**

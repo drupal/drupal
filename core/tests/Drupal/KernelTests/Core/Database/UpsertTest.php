@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Upsert query builder.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class UpsertTest extends DatabaseTestBase {
 
   /**

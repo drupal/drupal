@@ -7,11 +7,13 @@ namespace Drupal\Tests\block\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that a new default theme gets blocks.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class NewDefaultThemeBlocksTest extends KernelTestBase {
 
   use BlockCreationTrait;

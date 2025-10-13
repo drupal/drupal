@@ -7,6 +7,7 @@ namespace Drupal\Tests\views\Kernel;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the template retrieval of views.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views_test_data\Plugin\views\style\StyleTemplateTest
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewsTemplateTest extends ViewsKernelTestBase {
 
   /**

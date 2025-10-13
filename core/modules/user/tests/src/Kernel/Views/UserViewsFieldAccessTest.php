@@ -8,11 +8,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests base field access in Views for the user entity.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
   /**

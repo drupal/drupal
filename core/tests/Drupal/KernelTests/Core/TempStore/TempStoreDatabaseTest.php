@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the temporary object storage system.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\TempStore\SharedTempStore
  */
 #[Group('TempStore')]
+#[RunTestsInSeparateProcesses]
 class TempStoreDatabaseTest extends KernelTestBase {
 
   /**

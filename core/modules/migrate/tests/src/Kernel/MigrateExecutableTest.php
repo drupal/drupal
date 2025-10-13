@@ -6,11 +6,13 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the MigrateExecutable class.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateExecutableTest extends MigrateTestBase {
 
   /**

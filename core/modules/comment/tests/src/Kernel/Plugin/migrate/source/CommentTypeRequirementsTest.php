@@ -8,12 +8,14 @@ use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests check requirements for comment type source plugin.
  */
 #[Group('comment')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class CommentTypeRequirementsTest extends MigrateDrupal7TestBase {
 
   /**

@@ -8,12 +8,14 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests PrepareModulesEntityUninstallForm.
  */
 #[Group('Module')]
+#[RunTestsInSeparateProcesses]
 class PrepareModulesEntityUninstallFormTest extends KernelTestBase {
 
   use UserCreationTrait;

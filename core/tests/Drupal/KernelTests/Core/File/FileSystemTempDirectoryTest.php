@@ -9,12 +9,14 @@ use Drupal\Core\File\FileSystem;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for getTempDirectory on FileSystem.
  */
 #[CoversClass(\Drupal\Core\File\FileSystem::class)]
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class FileSystemTempDirectoryTest extends KernelTestBase {
 
   /**

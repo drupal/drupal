@@ -17,6 +17,7 @@ use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Provides some integration tests for the Field handler.
@@ -25,6 +26,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('views')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class FieldFieldTest extends ViewsKernelTestBase {
 
   use UserCreationTrait;

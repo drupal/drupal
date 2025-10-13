@@ -8,12 +8,14 @@ use Drupal\filter\Plugin\migrate\source\d7\FilterFormat;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D7 filter format source plugin.
  */
 #[CoversClass(FilterFormat::class)]
 #[Group('filter')]
+#[RunTestsInSeparateProcesses]
 class FilterFormatTest extends MigrateSqlSourceTestBase {
 
   /**

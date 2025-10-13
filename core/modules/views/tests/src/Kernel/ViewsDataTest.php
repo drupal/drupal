@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the service views.views_data.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ViewsDataTest extends ViewsKernelTestBase {
 
   /**

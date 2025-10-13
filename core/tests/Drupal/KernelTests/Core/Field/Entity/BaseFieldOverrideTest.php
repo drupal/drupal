@@ -12,12 +12,14 @@ use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Field\Entity\BaseFieldOverride.
  */
 #[CoversClass(BaseFieldOverride::class)]
 #[Group('Field')]
+#[RunTestsInSeparateProcesses]
 class BaseFieldOverrideTest extends KernelTestBase {
 
   /**

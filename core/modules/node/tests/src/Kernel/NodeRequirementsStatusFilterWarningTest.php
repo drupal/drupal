@@ -9,11 +9,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests redundant status filter warnings raised by node_requirements().
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeRequirementsStatusFilterWarningTest extends KernelTestBase {
 
   use UserCreationTrait;

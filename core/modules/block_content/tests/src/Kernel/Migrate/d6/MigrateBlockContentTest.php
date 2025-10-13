@@ -7,11 +7,13 @@ namespace Drupal\Tests\block_content\Kernel\Migrate\d6;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Upgrade content blocks.
  */
 #[Group('migrate_drupal_6')]
+#[RunTestsInSeparateProcesses]
 class MigrateBlockContentTest extends MigrateDrupal6TestBase {
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\Tests\image\Kernel;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests config import for Image styles.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageImportTest extends KernelTestBase {
 
   /**

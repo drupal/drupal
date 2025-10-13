@@ -12,12 +12,14 @@ use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Traits\InstalledPackagesListTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\fixture_manipulator\FixtureManipulator.
  */
 #[CoversClass(FixtureManipulator::class)]
 #[Group('package_manager')]
+#[RunTestsInSeparateProcesses]
 class FixtureManipulatorTest extends PackageManagerKernelTestBase {
 
   use InstalledPackagesListTrait;

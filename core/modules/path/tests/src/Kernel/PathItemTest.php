@@ -9,12 +9,14 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore furchtbar
 /**
  * Tests loading and storing data using PathItem.
  */
 #[Group('path')]
+#[RunTestsInSeparateProcesses]
 class PathItemTest extends KernelTestBase {
 
   /**

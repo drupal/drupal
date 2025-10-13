@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handling case sensitive collation.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class CaseSensitivityTest extends DatabaseTestBase {
 
   /**

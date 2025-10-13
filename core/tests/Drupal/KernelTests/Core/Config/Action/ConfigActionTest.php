@@ -14,11 +14,13 @@ use Drupal\Core\Config\Action\EntityMethodException;
 use Drupal\KernelTests\KernelTestBase;
 // cspell:ignore inflector
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the config action system.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigActionTest extends KernelTestBase {
 
   /**

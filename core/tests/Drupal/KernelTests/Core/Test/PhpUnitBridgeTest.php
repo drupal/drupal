@@ -8,12 +8,14 @@ use Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test how kernel tests interact with deprecation errors.
  */
 #[Group('Test')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class PhpUnitBridgeTest extends KernelTestBase {
 
   /**

@@ -14,6 +14,7 @@ use Drupal\media\Plugin\Validation\Constraint\OEmbedResourceConstraintValidator;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -22,6 +23,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 #[CoversClass(OEmbedResourceConstraintValidator::class)]
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;

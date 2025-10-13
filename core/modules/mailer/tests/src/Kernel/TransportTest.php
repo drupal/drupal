@@ -12,6 +12,7 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Mailer\Transport\NullTransport;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
@@ -22,6 +23,7 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
  */
 #[CoversClass(TransportServiceFactory::class)]
 #[Group('mailer')]
+#[RunTestsInSeparateProcesses]
 class TransportTest extends KernelTestBase {
 
   /**

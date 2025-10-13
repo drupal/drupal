@@ -8,11 +8,13 @@ use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests check requirements for comment entity translation source plugin.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBase {
 
   /**

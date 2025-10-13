@@ -10,6 +10,7 @@ use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installation of configuration objects in installation functionality.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\Config\ConfigInstaller
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class ConfigInstallTest extends KernelTestBase {
 
   /**

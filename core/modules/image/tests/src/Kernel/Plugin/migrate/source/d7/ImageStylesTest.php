@@ -8,6 +8,7 @@ use Drupal\image\Plugin\migrate\source\d7\ImageStyles;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore ieid isid
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(ImageStyles::class)]
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageStylesTest extends MigrateSqlSourceTestBase {
 
   /**

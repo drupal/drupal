@@ -16,11 +16,13 @@ use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use Drupal\Tests\migrate_drupal\Traits\CreateMigrationsTrait;
 use Drupal\user\Plugin\migrate\destination\UserData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that all migrations are tagged as either content or configuration.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class DestinationCategoryTest extends MigrateDrupalTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

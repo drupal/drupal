@@ -9,12 +9,14 @@ use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\content_moderation\ContentModerationStateAccessControlHandler.
  */
 #[CoversClass(ContentModerationStateAccessControlHandler::class)]
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class ContentModerationStateAccessControlHandlerTest extends KernelTestBase {
 
   /**

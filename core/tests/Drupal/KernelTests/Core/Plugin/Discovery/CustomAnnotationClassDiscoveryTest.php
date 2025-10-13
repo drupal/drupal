@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Plugin\Discovery;
 
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that a custom annotation class is used.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\plugin_test\Plugin\Annotation\PluginExample
  */
 #[Group('Plugin')]
+#[RunTestsInSeparateProcesses]
 class CustomAnnotationClassDiscoveryTest extends DiscoveryTestBase {
 
   /**

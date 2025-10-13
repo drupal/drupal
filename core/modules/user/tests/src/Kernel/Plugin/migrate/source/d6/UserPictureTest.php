@@ -8,12 +8,14 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use Drupal\user\Plugin\migrate\source\d6\UserPicture;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the d6_user_picture source plugin.
  */
 #[CoversClass(UserPicture::class)]
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserPictureTest extends MigrateSqlSourceTestBase {
 
   /**

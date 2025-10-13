@@ -6,11 +6,13 @@ namespace Drupal\Tests\breakpoint\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests discovery of breakpoints provided by themes and modules.
  */
 #[Group('breakpoint')]
+#[RunTestsInSeparateProcesses]
 class BreakpointDiscoveryTest extends KernelTestBase {
 
   /**

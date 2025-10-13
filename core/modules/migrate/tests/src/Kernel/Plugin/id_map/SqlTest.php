@@ -11,12 +11,14 @@ use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate\Unit\TestSqlIdMap;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests that the migrate map table is created.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class SqlTest extends MigrateTestBase {
 
   /**

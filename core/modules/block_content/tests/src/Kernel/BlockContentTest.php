@@ -13,11 +13,13 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block content.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentTest extends KernelTestBase {
 
   use UserCreationTrait;

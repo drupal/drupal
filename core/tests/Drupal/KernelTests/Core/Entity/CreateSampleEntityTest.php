@@ -11,12 +11,14 @@ use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ContentEntityStorageBase::createWithSampleValues method.
  */
 #[CoversClass(ContentEntityStorageBase::class)]
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class CreateSampleEntityTest extends KernelTestBase {
 
   /**

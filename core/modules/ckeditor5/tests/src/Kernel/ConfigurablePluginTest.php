@@ -7,6 +7,7 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests configurable plugins.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('ckeditor5')]
+#[RunTestsInSeparateProcesses]
 class ConfigurablePluginTest extends KernelTestBase {
 
   /**

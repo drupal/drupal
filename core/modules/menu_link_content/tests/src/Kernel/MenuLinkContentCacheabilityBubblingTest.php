@@ -14,6 +14,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -25,6 +26,7 @@ use Symfony\Component\Routing\Route;
  * This for outbound path/route processing.
  */
 #[Group('menu_link_content')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
 
   use UserCreationTrait;

@@ -8,11 +8,13 @@ use Drupal\node\NodeInterface;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node revision migrations.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;

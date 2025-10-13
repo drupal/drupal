@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 include_once \DRUPAL_ROOT . '/core/includes/install.inc';
 
@@ -19,6 +20,7 @@ include_once \DRUPAL_ROOT . '/core/includes/install.inc';
 #[CoversClass(RequirementSeverity::class)]
 #[Group('extension')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class LegacyRequirementSeverityTest extends KernelTestBase {
 
   /**

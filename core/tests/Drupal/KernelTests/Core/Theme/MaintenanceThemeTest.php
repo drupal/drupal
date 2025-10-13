@@ -6,11 +6,13 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests themes and base themes are correctly loaded.
  */
 #[Group('Installer')]
+#[RunTestsInSeparateProcesses]
 class MaintenanceThemeTest extends KernelTestBase {
 
   /**

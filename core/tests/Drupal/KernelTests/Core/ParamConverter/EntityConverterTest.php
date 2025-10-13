@@ -11,12 +11,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity param converter.
  */
 #[CoversClass(EntityConverter::class)]
 #[Group('ParamConverter')]
+#[RunTestsInSeparateProcesses]
 class EntityConverterTest extends KernelTestBase {
 
   use UserCreationTrait;

@@ -10,11 +10,13 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ComponentPluginManager;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the correct rendering of components.
  */
 #[Group('sdc')]
+#[RunTestsInSeparateProcesses]
 class ComponentRenderTest extends ComponentKernelTestBase {
 
   use StringTranslationTrait;

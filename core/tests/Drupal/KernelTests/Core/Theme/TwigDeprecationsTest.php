@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests deprecating variables passed to twig templates.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  */
 #[Group('Twig')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class TwigDeprecationsTest extends KernelTestBase {
 
   /**

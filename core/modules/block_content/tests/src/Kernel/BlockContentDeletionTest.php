@@ -10,11 +10,13 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that deleting a block clears the cached definitions.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class BlockContentDeletionTest extends KernelTestBase {
 
   use BlockCreationTrait;

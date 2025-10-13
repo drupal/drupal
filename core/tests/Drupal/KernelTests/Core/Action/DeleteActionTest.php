@@ -10,11 +10,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Action;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Delete Action.
  */
 #[Group('Action')]
+#[RunTestsInSeparateProcesses]
 class DeleteActionTest extends KernelTestBase {
 
   /**

@@ -13,12 +13,14 @@ use Drupal\TestTools\Random;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests query batching.
  */
 #[Group('migrate')]
 #[CoversClass(\Drupal\migrate_query_batch_test\Plugin\migrate\source\QueryBatchTest::class)]
+#[RunTestsInSeparateProcesses]
 class QueryBatchTest extends KernelTestBase {
 
   /**

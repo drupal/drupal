@@ -8,6 +8,7 @@ use Drupal\Core\Condition\ConditionManager;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * Tests the Response Status Condition, provided by the system module.
  */
 #[Group('Plugin')]
+#[RunTestsInSeparateProcesses]
 class ResponseStatusTest extends KernelTestBase {
 
   /**

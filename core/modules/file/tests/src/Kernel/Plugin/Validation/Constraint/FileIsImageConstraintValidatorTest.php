@@ -10,12 +10,14 @@ use Drupal\file\Plugin\Validation\Constraint\FileIsImageConstraintValidator;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the FileIsImageConstraintValidator.
  */
 #[CoversClass(FileIsImageConstraintValidator::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileIsImageConstraintValidatorTest extends FileValidatorTestBase {
 
   /**

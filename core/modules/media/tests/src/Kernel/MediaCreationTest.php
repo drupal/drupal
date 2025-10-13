@@ -11,11 +11,13 @@ use Drupal\media\MediaTypeInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests creation of media types and media items.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaCreationTest extends MediaKernelTestBase {
 
   /**

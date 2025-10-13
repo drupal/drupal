@@ -7,11 +7,13 @@ namespace Drupal\Tests\media\Kernel;
 use Drupal\content_translation\ContentTranslationHandler;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests multilingual fields logic.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaTranslationTest extends MediaKernelTestBase {
 
   /**

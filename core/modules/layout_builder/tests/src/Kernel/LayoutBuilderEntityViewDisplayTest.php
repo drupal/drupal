@@ -9,12 +9,14 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay.
  */
 #[CoversClass(LayoutBuilderEntityViewDisplay::class)]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
 
   /**

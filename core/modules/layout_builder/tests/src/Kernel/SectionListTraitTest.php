@@ -9,12 +9,14 @@ use Drupal\layout_builder\SectionListInterface;
 use Drupal\layout_builder\SectionListTrait;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\layout_builder\SectionListTrait.
  */
 #[CoversTrait(SectionListTrait::class)]
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class SectionListTraitTest extends SectionListTestBase {
 
   /**

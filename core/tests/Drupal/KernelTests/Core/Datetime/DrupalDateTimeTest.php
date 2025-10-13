@@ -8,11 +8,13 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests DrupalDateTime functionality.
  */
 #[Group('Datetime')]
+#[RunTestsInSeparateProcesses]
 class DrupalDateTimeTest extends KernelTestBase {
 
   use UserCreationTrait;

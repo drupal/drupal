@@ -9,11 +9,12 @@ use Drupal\Core\Hook\HookCollectorKeyValueWritePass;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\module_handler_test_all1\Hook\ModuleHandlerTestAll1Hooks;
+use Drupal\user_hooks_test\Hook\UserHooksTest;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use Drupal\module_handler_test_all1\Hook\ModuleHandlerTestAll1Hooks;
-use Drupal\user_hooks_test\Hook\UserHooksTest;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -21,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 #[CoversClass(HookCollectorPass::class)]
 #[Group('Hook')]
+#[RunTestsInSeparateProcesses]
 class HookCollectorPassTest extends KernelTestBase {
 
   /**

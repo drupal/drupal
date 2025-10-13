@@ -8,6 +8,7 @@ use Drupal\Core\Updater\Updater;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests InfoParser class and exception.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  */
 #[Group('Extension')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class UpdaterTest extends KernelTestBase {
 
   /**

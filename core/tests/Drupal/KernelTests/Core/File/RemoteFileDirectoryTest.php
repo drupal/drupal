@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\File;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests operations dealing with directories.
  */
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class RemoteFileDirectoryTest extends DirectoryTest {
 
   /**

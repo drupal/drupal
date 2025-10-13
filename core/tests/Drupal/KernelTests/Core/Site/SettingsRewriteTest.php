@@ -8,11 +8,13 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Site\SettingsEditor;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the SettingsEditor::rewrite() function.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class SettingsRewriteTest extends KernelTestBase {
 
   /**

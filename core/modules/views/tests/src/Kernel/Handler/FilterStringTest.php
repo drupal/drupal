@@ -8,12 +8,14 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\StringFilter handler.
  */
 #[Group('views')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class FilterStringTest extends ViewsKernelTestBase {
 
   /**

@@ -10,11 +10,13 @@ use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Menu;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the menu_delete hook.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuDeleteTest extends KernelTestBase {
 
   /**

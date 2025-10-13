@@ -9,12 +9,14 @@ use Drupal\workflow_type_test\Plugin\WorkflowType\ComplexTestType;
 use Drupal\workflows\Entity\Workflow;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Workflow entity tests that require modules or storage.
  */
 #[CoversClass(ComplexTestType::class)]
 #[Group('workflows')]
+#[RunTestsInSeparateProcesses]
 class ComplexWorkflowTypeTest extends KernelTestBase {
 
   /**

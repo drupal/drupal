@@ -9,6 +9,7 @@ use Drupal\path_alias\AliasManagerInterface;
 use Drupal\path_alias\Entity\PathAlias;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 
 /**
@@ -16,6 +17,7 @@ use Prophecy\Argument;
  */
 #[CoversClass(PathAlias::class)]
 #[Group('path_alias')]
+#[RunTestsInSeparateProcesses]
 class PathHooksTest extends KernelTestBase {
 
   /**

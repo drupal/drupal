@@ -11,11 +11,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests access to managed files.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileManagedAccessTest extends KernelTestBase {
 
   use UserCreationTrait;

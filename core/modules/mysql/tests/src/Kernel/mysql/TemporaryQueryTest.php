@@ -6,11 +6,13 @@ namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\KernelTests\Core\Database\TemporaryQueryTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the temporary query functionality.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class TemporaryQueryTest extends TemporaryQueryTestBase {
 
   /**

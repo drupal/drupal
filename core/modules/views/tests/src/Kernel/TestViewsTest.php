@@ -16,11 +16,13 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\views\Tests\ViewTestData;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that test views provided by all modules match schema.
  */
 #[Group('config')]
+#[RunTestsInSeparateProcesses]
 class TestViewsTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;

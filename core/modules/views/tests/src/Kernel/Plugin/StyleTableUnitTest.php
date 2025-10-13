@@ -7,6 +7,7 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @see \Drupal\views\Plugin\views\style\Table
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class StyleTableUnitTest extends PluginKernelTestBase {
 
   /**

@@ -15,12 +15,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests entity method config actions.
  */
 #[Group('Recipe')]
+#[RunTestsInSeparateProcesses]
 class EntityMethodConfigActionsTest extends KernelTestBase {
 
   use BlockCreationTrait;

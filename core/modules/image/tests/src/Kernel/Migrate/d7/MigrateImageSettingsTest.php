@@ -6,11 +6,13 @@ namespace Drupal\Tests\image\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of Image variables to configuration.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class MigrateImageSettingsTest extends MigrateDrupal7TestBase {
 
   /**

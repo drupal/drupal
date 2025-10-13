@@ -11,11 +11,13 @@ use Drupal\system\Entity\Menu;
 use Drupal\system\MenuInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests SystemMenuBlock.
  */
 #[Group('menu_ui')]
+#[RunTestsInSeparateProcesses]
 class MenuBlockTest extends KernelTestBase {
 
   use UserCreationTrait;

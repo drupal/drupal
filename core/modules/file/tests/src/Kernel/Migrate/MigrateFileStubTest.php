@@ -7,11 +7,13 @@ namespace Drupal\Tests\file\Kernel\Migrate;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test stub creation for file entities.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class MigrateFileStubTest extends MigrateDrupalTestBase {
 
   use StubTestTrait;

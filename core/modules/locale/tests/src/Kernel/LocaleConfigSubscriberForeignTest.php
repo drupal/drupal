@@ -8,11 +8,13 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests default configuration handling with a foreign default language.
  */
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
 
   /**

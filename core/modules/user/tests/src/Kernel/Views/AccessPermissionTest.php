@@ -11,6 +11,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests views perm access plugin.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\user\Plugin\views\access\Permission
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class AccessPermissionTest extends KernelTestBase {
 
   use UserCreationTrait;

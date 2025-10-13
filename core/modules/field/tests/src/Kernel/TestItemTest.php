@@ -11,11 +11,13 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the new entity API for the test field type.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class TestItemTest extends FieldKernelTestBase {
 
   /**

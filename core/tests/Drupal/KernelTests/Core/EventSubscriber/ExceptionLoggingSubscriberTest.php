@@ -9,6 +9,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Tests that HTTP exceptions are logged correctly.
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
   /**

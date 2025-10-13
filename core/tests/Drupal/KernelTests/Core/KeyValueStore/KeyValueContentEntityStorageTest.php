@@ -9,11 +9,13 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\entity_test\Entity\EntityTestLabel;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests KeyValueEntityStorage for content entities.
  */
 #[Group('KeyValueStore')]
+#[RunTestsInSeparateProcesses]
 class KeyValueContentEntityStorageTest extends KernelTestBase {
 
   /**

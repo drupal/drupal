@@ -10,11 +10,13 @@ use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests with node access enabled.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessTest extends KernelTestBase {
 
   use NodeCreationTrait;

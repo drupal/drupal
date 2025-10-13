@@ -13,6 +13,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity reference relationship data.
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Hook\ViewsViewsHooks::fieldViewsData()
  */
 #[Group('entity_reference')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

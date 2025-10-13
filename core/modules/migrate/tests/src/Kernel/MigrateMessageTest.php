@@ -12,11 +12,13 @@ use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests whether idmap messages are sent to message interface when requested.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterface {
 
   /**

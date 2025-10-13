@@ -8,11 +8,13 @@ namespace Drupal\KernelTests\Core\File;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests protection against SA-CORE-2024-006 File Delete Gadget Chain.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileDeleteGadgetChainTest extends KernelTestBase {
 
   /**

@@ -8,12 +8,14 @@ use Drupal\Core\File\MimeType\MimeTypeMapInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests deprecated file features.
  */
 #[IgnoreDeprecations]
 #[Group('File')]
+#[RunTestsInSeparateProcesses]
 class LegacyMimeTypeTest extends KernelTestBase {
 
   /**

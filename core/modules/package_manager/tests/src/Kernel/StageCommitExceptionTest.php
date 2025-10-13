@@ -18,6 +18,7 @@ use PhpTuf\ComposerStager\API\Precondition\Service\PreconditionInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\package_manager\SandboxManagerBase.
@@ -27,6 +28,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(SandboxManagerBase::class)]
 #[Group('package_manager')]
 #[CoversClass(PackageManagerUninstallValidator::class)]
+#[RunTestsInSeparateProcesses]
 class StageCommitExceptionTest extends PackageManagerKernelTestBase {
 
   /**

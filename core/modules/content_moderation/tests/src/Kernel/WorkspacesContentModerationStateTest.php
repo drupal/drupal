@@ -15,6 +15,7 @@ use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\WorkflowInterface;
 use Drupal\workspaces\WorkspacePublishException;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that Workspaces and Content Moderation work together properly.
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('content_moderation')]
 #[Group('workspaces')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
 
   use ContentModerationTestTrait {

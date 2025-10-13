@@ -8,11 +8,13 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\ShortcutInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test shortcut menu links migration to Shortcut entities.
  */
 #[Group('shortcut')]
+#[RunTestsInSeparateProcesses]
 class MigrateShortcutTest extends MigrateDrupal7TestBase {
 
   /**

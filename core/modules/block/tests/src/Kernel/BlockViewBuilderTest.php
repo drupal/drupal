@@ -11,11 +11,13 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block view builder.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockViewBuilderTest extends KernelTestBase {
 
   /**

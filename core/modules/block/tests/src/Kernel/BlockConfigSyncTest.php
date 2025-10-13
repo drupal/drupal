@@ -10,12 +10,14 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests that blocks are not created during config sync.
  */
 #[Group('block')]
+#[RunTestsInSeparateProcesses]
 class BlockConfigSyncTest extends KernelTestBase {
 
   /**

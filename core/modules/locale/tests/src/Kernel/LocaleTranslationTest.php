@@ -8,12 +8,14 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\locale\LocaleTranslation;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\locale\LocaleTranslation.
  */
 #[CoversClass(LocaleTranslation::class)]
 #[Group('locale')]
+#[RunTestsInSeparateProcesses]
 class LocaleTranslationTest extends KernelTestBase {
 
   /**

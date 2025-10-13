@@ -8,6 +8,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migrating non-Drupal translated content.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * tnid property on the source.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class MigrateExternalTranslatedTest extends MigrateTestBase {
 
   /**

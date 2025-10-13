@@ -11,6 +11,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\PhpStorage\MockPhpStorage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the PHP storage factory.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\PhpStorage\PhpStorageFactory
  */
 #[Group('PhpStorage')]
+#[RunTestsInSeparateProcesses]
 class PhpStorageFactoryTest extends KernelTestBase {
 
   /**

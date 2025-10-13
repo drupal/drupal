@@ -7,11 +7,13 @@ namespace Drupal\Tests\dblog\Kernel;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the DbLogController class.
  */
 #[Group('dblog')]
+#[RunTestsInSeparateProcesses]
 class DbLogControllerTest extends KernelTestBase {
 
   /**

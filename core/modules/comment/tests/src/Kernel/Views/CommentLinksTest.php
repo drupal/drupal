@@ -13,11 +13,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the comment link field handlers.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentLinksTest extends CommentViewsKernelTestBase {
 
   /**

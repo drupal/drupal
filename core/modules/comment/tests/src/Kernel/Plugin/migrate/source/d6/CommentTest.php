@@ -8,12 +8,14 @@ use Drupal\comment\Plugin\migrate\source\d6\Comment;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D6 comment source plugin.
  */
 #[CoversClass(Comment::class)]
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentTest extends MigrateSqlSourceTestBase {
 
   /**

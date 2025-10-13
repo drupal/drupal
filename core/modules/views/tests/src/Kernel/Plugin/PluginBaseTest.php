@@ -9,11 +9,13 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Plugin\views\PluginBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the PluginBase class.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class PluginBaseTest extends KernelTestBase {
 
   /**

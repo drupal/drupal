@@ -8,11 +8,13 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Map Data Normalizer.
  */
 #[Group('TypedData')]
+#[RunTestsInSeparateProcesses]
 class MapDataNormalizerTest extends KernelTestBase {
 
   /**

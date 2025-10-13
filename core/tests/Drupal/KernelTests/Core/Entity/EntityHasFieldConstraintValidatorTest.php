@@ -9,12 +9,14 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Entity Has Field Constraint Validator.
  */
 #[Group('Entity')]
 #[CoversClass(EntityHasFieldConstraintValidator::class)]
+#[RunTestsInSeparateProcesses]
 class EntityHasFieldConstraintValidatorTest extends EntityKernelTestBase {
 
   /**

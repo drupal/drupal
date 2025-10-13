@@ -7,11 +7,13 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests of the core database system.
  */
 #[Group('Database')]
+#[RunTestsInSeparateProcesses]
 class ConnectionTest extends DatabaseTestBase {
 
   /**

@@ -9,12 +9,14 @@ use Drupal\Core\Database\Connection;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Ban Ip.
  */
 #[Group('ban')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class BanIpTest extends KernelTestBase {
 
   /**

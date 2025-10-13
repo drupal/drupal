@@ -10,11 +10,13 @@ use Drupal\migrate\Plugin\migrate\source\ContentEntity;
 use Drupal\migrate\Plugin\MigrationInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the constructor of the entity content source plugin.
  */
 #[Group('migrate')]
+#[RunTestsInSeparateProcesses]
 class ContentEntityConstructorTest extends KernelTestBase {
 
   /**

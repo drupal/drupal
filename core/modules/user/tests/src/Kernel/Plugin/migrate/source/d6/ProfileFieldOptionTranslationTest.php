@@ -8,6 +8,7 @@ use Drupal\Tests\user\Kernel\Plugin\migrate\source\ProfileFieldTest;
 use Drupal\user\Plugin\migrate\source\d6\ProfileFieldOptionTranslation;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore objectid
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(ProfileFieldOptionTranslation::class)]
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class ProfileFieldOptionTranslationTest extends ProfileFieldTest {
 
   /**

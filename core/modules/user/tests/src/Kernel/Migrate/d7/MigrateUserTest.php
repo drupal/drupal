@@ -10,11 +10,13 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Users migration.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class MigrateUserTest extends MigrateDrupal7TestBase {
 
   /**

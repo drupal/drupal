@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
+use Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint;
+use Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraintValidator;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
-use Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint;
-use Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraintValidator;
 
 /**
  * Tests the ConfigExists constraint validator.
@@ -19,6 +20,7 @@ use Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraintValida
 #[CoversClass(ConfigExistsConstraintValidator::class)]
 #[Group('config')]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class ConfigExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

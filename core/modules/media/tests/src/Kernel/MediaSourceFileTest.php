@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Kernel;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file media source.
  */
 #[Group('media')]
+#[RunTestsInSeparateProcesses]
 class MediaSourceFileTest extends MediaKernelTestBase {
 
   /**

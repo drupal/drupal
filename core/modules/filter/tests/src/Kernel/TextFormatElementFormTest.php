@@ -11,11 +11,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests PathElement validation and conversion functionality.
  */
 #[Group('Form')]
+#[RunTestsInSeparateProcesses]
 class TextFormatElementFormTest extends KernelTestBase implements FormInterface {
 
   /**

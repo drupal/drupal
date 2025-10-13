@@ -12,6 +12,7 @@ use Drupal\Core\Session\UserSession;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the menu link tree.
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\Core\Menu\MenuLinkTree
  */
 #[Group('Menu')]
+#[RunTestsInSeparateProcesses]
 class MenuLinkTreeTest extends KernelTestBase {
 
   /**

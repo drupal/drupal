@@ -10,6 +10,7 @@ use Drupal\package_manager\StatusCheckTrait;
 use Drupal\package_manager\ValidationResult;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Status Check Trait.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('package_manager')]
 #[CoversTrait(StatusCheckTrait::class)]
+#[RunTestsInSeparateProcesses]
 class StatusCheckTraitTest extends PackageManagerKernelTestBase {
 
   use StatusCheckTrait;

@@ -10,6 +10,7 @@ use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore basefield
 /**
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\Group;
  * for the Field Storage API.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class FieldSqlStorageTest extends EntityKernelTestBase {
 
   /**

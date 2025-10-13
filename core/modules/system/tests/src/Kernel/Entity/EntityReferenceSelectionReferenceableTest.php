@@ -11,6 +11,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore xyabz
 /**
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('entity_reference')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;

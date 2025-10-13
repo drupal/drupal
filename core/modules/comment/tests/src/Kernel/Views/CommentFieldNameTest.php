@@ -16,11 +16,13 @@ use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the comment field name field.
  */
 #[Group('comment')]
+#[RunTestsInSeparateProcesses]
 class CommentFieldNameTest extends KernelTestBase {
 
   use CommentTestTrait;

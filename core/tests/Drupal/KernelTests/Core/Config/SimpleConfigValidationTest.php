@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Config;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\TestWith;
  */
 #[Group('config')]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class SimpleConfigValidationTest extends KernelTestBase {
 
   /**

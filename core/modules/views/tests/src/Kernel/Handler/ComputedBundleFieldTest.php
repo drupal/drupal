@@ -10,6 +10,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Provides some integration tests for computed bundle fields.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\field\EntityField
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class ComputedBundleFieldTest extends ViewsKernelTestBase {
 
   /**

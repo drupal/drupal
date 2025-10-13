@@ -6,11 +6,13 @@ namespace Drupal\Tests\node\Kernel;
 
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests basic node_access functionality.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeAccessTest extends NodeAccessTestBase {
 
   /**

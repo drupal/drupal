@@ -13,12 +13,14 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem.
  */
 #[CoversClass(PasswordItem::class)]
 #[Group('Field')]
+#[RunTestsInSeparateProcesses]
 class PasswordItemTest extends FieldKernelTestBase {
 
   /**

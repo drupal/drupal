@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\File;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  * Tests URL transform to relative.
  */
 #[Group('Utility')]
+#[RunTestsInSeparateProcesses]
 class UrlTransformRelativeTest extends KernelTestBase {
 
   /**

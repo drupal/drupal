@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that user.mail default settings are parsed correctly.
  */
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserMailDefaultsTest extends KernelTestBase {
 
   /**

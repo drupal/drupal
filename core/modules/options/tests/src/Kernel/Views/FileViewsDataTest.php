@@ -9,11 +9,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests file views data.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileViewsDataTest extends ViewsKernelTestBase {
 
   /**

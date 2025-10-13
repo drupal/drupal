@@ -13,11 +13,13 @@ use Drupal\filter\Render\FilteredMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests text_summary() with different strings and lengths.
  */
 #[Group('text')]
+#[RunTestsInSeparateProcesses]
 class TextSummaryTest extends KernelTestBase {
 
   use UserCreationTrait;

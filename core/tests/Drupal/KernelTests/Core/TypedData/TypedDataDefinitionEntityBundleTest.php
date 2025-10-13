@@ -9,11 +9,13 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests data type metadata for entity bundles.
  */
 #[Group('TypedData')]
+#[RunTestsInSeparateProcesses]
 class TypedDataDefinitionEntityBundleTest extends KernelTestBase {
 
   /**

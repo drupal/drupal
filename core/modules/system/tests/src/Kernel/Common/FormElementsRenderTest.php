@@ -7,11 +7,13 @@ namespace Drupal\Tests\system\Kernel\Common;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Performs integration tests on \Drupal::service('renderer')->render().
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class FormElementsRenderTest extends KernelTestBase {
 
   /**

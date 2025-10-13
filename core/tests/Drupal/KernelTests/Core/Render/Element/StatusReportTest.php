@@ -9,6 +9,7 @@ use Drupal\Core\Render\Element\StatusReport;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 include_once \DRUPAL_ROOT . '/core/includes/install.inc';
 
@@ -17,6 +18,7 @@ include_once \DRUPAL_ROOT . '/core/includes/install.inc';
  */
 #[Group('Render')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class StatusReportTest extends KernelTestBase {
 
   /**

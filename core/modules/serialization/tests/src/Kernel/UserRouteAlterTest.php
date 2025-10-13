@@ -6,11 +6,13 @@ namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the user routes can be altered.
  */
 #[Group('serialization')]
+#[RunTestsInSeparateProcesses]
 class UserRouteAlterTest extends KernelTestBase {
 
   /**

@@ -6,11 +6,13 @@ namespace Drupal\Tests\search\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of Search variables to configuration.
  */
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class MigrateSearchSettingsTest extends MigrateDrupal7TestBase {
 
   /**

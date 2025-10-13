@@ -7,12 +7,14 @@ namespace Drupal\Tests\migrate_drupal_ui\Kernel;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests source_module selection.
  */
 #[Group('migrate_drupal_ui')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class SourceModuleTest extends MigrateDrupalTestBase {
 
   /**

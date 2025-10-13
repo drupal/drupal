@@ -8,12 +8,14 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\VariableTranslation;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the variable source plugin.
  */
 #[CoversClass(VariableTranslation::class)]
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class VariableTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

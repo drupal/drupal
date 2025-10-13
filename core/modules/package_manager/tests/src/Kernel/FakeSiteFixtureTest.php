@@ -8,6 +8,7 @@ use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\PathLocator;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Process\Process;
 
 /**
@@ -16,6 +17,7 @@ use Symfony\Component\Process\Process;
  * @internal
  */
 #[Group('package_manager')]
+#[RunTestsInSeparateProcesses]
 class FakeSiteFixtureTest extends PackageManagerKernelTestBase {
 
   /**

@@ -10,11 +10,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the state field formatter.
  */
 #[Group('content_moderation')]
+#[RunTestsInSeparateProcesses]
 class StateFormatterTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

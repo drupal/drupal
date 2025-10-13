@@ -13,12 +13,14 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\EntityViewTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests static callbacks returns and form submission with datetime elements.
  */
 #[CoversClass(Datetime::class)]
 #[Group('Datetime')]
+#[RunTestsInSeparateProcesses]
 class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterface {
 
   use EntityViewTrait;

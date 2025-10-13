@@ -10,11 +10,13 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\user\AccountSettingsForm;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests migration of user settings.
  */
 #[Group('migrate_drupal_7')]
+#[RunTestsInSeparateProcesses]
 class MigrateUserSettingsTest extends MigrateDrupal7TestBase {
 
   use SchemaCheckTestTrait;

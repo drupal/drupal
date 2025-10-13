@@ -8,11 +8,13 @@ use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Migrate Node Taxonomy.
  */
 #[Group('taxonomy')]
+#[RunTestsInSeparateProcesses]
 class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
   /**

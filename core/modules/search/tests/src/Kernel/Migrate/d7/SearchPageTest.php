@@ -8,12 +8,14 @@ use Drupal\search\Plugin\migrate\source\d7\SearchPage;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests D7 search page source plugin.
  */
 #[CoversClass(SearchPage::class)]
 #[Group('search')]
+#[RunTestsInSeparateProcesses]
 class SearchPageTest extends MigrateSqlSourceTestBase {
 
   /**

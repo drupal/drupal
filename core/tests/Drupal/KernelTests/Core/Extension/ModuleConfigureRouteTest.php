@@ -9,12 +9,14 @@ use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the configure route for core modules.
  */
 #[Group('Module')]
 #[Group('#slow')]
+#[RunTestsInSeparateProcesses]
 class ModuleConfigureRouteTest extends KernelTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;

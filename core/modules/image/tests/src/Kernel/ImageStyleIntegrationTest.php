@@ -12,11 +12,13 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the integration of ImageStyle with the core.
  */
 #[Group('image')]
+#[RunTestsInSeparateProcesses]
 class ImageStyleIntegrationTest extends KernelTestBase {
 
   /**

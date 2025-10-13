@@ -10,11 +10,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for field formatters.
  */
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldFormatterTest extends KernelTestBase {
 
   /**

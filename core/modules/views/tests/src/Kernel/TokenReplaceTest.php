@@ -8,11 +8,13 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests core view token replacement.
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class TokenReplaceTest extends ViewsKernelTestBase {
 
   /**

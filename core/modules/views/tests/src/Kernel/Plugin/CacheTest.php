@@ -11,6 +11,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests pluggable caching for views.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see views_plugin_cache
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class CacheTest extends ViewsKernelTestBase {
 
   /**

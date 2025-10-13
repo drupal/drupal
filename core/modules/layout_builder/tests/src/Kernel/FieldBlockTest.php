@@ -21,6 +21,7 @@ use Drupal\layout_builder\Plugin\Block\FieldBlock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 use Prophecy\Promise\PromiseInterface;
 use Prophecy\Promise\ReturnPromise;
@@ -34,6 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 #[CoversClass(FieldBlock::class)]
 #[Group('Field')]
+#[RunTestsInSeparateProcesses]
 class FieldBlockTest extends EntityKernelTestBase {
 
   /**

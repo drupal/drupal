@@ -11,6 +11,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the generic entity area handler.
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\area\Entity
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class AreaEntityTest extends ViewsKernelTestBase {
 
   use BlockCreationTrait;

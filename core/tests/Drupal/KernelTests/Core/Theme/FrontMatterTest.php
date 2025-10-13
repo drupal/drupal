@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Component\FrontMatter\FrontMatterTest as ComponentFrontMatterTest;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\Definition;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
@@ -18,6 +19,7 @@ use Twig\Loader\FilesystemLoader;
  * Tests Twig front matter support.
  */
 #[Group('Twig')]
+#[RunTestsInSeparateProcesses]
 class FrontMatterTest extends KernelTestBase {
 
   /**

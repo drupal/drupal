@@ -11,11 +11,13 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests using entity fields of the text summary field type.
  */
 #[Group('text')]
+#[RunTestsInSeparateProcesses]
 class TextWithSummaryItemTest extends FieldKernelTestBase {
 
   /**

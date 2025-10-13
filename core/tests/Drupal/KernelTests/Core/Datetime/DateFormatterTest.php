@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore marzo
 /**
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(DateFormatter::class)]
 #[Group('Common')]
+#[RunTestsInSeparateProcesses]
 class DateFormatterTest extends KernelTestBase {
 
   /**

@@ -7,11 +7,13 @@ namespace Drupal\Tests\node\Kernel\Config;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Change content types during config create method invocation.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class NodeImportChangeTest extends KernelTestBase {
 
   /**

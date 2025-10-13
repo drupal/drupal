@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ThemeEngineExtensionList;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore nyan
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(ThemeEngineExtensionList::class)]
 #[Group('Extension')]
+#[RunTestsInSeparateProcesses]
 class ThemeEngineExtensionListTest extends KernelTestBase {
 
   /**

@@ -13,12 +13,14 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Create field entities by attaching fields to entities.
  */
 #[CoversClass(FieldConfigBase::class)]
 #[Group('field')]
+#[RunTestsInSeparateProcesses]
 class FieldCrudTest extends FieldKernelTestBase {
 
   /**

@@ -8,12 +8,14 @@ use Drupal\file\Plugin\Validation\Constraint\FileSizeLimitConstraintValidator;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the FileSizeLimitConstraintValidator.
  */
 #[CoversClass(FileSizeLimitConstraintValidator::class)]
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class FileSizeLimitConstraintValidatorTest extends FileValidatorTestBase {
 
   /**

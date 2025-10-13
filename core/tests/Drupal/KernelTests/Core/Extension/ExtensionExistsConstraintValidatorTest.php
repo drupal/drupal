@@ -10,6 +10,7 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ExtensionExists constraint validator.
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Validation')]
 #[CoversClass(ExtensionExistsConstraint::class)]
 #[CoversClass(ExtensionExistsConstraintValidator::class)]
+#[RunTestsInSeparateProcesses]
 class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

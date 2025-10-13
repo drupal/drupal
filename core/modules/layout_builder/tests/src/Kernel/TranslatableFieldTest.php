@@ -14,11 +14,13 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Layout Builder with a translatable layout field.
  */
 #[Group('layout_builder')]
+#[RunTestsInSeparateProcesses]
 class TranslatableFieldTest extends KernelTestBase {
 
   /**

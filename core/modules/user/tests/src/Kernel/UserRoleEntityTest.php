@@ -10,6 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 /**
@@ -17,6 +18,7 @@ use Symfony\Component\ErrorHandler\BufferingLogger;
  */
 #[CoversClass(Role::class)]
 #[Group('user')]
+#[RunTestsInSeparateProcesses]
 class UserRoleEntityTest extends KernelTestBase {
 
   /**

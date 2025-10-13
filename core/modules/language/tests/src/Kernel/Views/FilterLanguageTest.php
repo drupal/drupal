@@ -6,6 +6,7 @@ namespace Drupal\Tests\language\Kernel\Views;
 
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the filter language handler.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\language\Plugin\views\filter\Language
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class FilterLanguageTest extends LanguageTestBase {
 
   /**

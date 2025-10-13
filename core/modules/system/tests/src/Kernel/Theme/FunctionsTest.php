@@ -12,11 +12,13 @@ use Drupal\Core\Session\UserSession;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for common theme functions.
  */
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class FunctionsTest extends KernelTestBase {
 
   /**

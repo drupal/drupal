@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Process\Process;
 
 /**
@@ -27,6 +28,7 @@ use Symfony\Component\Process\Process;
 #[Group('Test')]
 #[Group('#slow')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class PhpUnitTestDiscoveryTest extends KernelTestBase {
 
   private const TEST_LIST_MISMATCH_MESSAGE =

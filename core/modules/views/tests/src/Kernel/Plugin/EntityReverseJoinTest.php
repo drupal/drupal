@@ -7,6 +7,7 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\join\JoinTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the EntityReverse join plugin.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views\Plugin\views\relationship\EntityReverse
  */
 #[Group('views')]
+#[RunTestsInSeparateProcesses]
 class EntityReverseJoinTest extends RelationshipJoinTestBase {
 
   /**

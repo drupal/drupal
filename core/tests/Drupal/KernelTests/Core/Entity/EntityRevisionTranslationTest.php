@@ -10,11 +10,13 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\entity_test\EntityTestTypesFilter;
 use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests proper revision propagation of entities.
  */
 #[Group('Entity')]
+#[RunTestsInSeparateProcesses]
 class EntityRevisionTranslationTest extends EntityKernelTestBase {
 
   /**

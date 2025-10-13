@@ -16,6 +16,7 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 
 /**
@@ -26,6 +27,7 @@ use Prophecy\Argument;
 #[CoversClass(Filter::class)]
 #[Group('jsonapi')]
 #[Group('jsonapi_query')]
+#[RunTestsInSeparateProcesses]
 class FilterTest extends JsonapiKernelTestBase {
 
   use ImageFieldCreationTrait;

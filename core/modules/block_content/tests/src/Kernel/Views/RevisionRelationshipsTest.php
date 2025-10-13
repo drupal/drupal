@@ -11,11 +11,13 @@ use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the integration of block_content_revision table.
  */
 #[Group('block_content')]
+#[RunTestsInSeparateProcesses]
 class RevisionRelationshipsTest extends KernelTestBase {
 
   use ViewResultAssertionTrait;

@@ -8,11 +8,13 @@ use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the effectiveness of hook_runtime_requirements().
  */
 #[Group('system')]
+#[RunTestsInSeparateProcesses]
 class RunTimeRequirementsTest extends KernelTestBase {
 
   use StringTranslationTrait;

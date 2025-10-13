@@ -9,12 +9,14 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 /**
  * Tests PluginNotFoundException.
  */
 #[Group('language')]
+#[RunTestsInSeparateProcesses]
 class LanguageNegotiatorPluginTest extends KernelTestBase {
 
   /**

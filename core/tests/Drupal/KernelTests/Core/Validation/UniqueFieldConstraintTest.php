@@ -13,12 +13,14 @@ use Drupal\TestTools\Random;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the unique field value validation constraint.
  */
 #[CoversClass(UniqueFieldValueValidator::class)]
 #[Group('Validation')]
+#[RunTestsInSeparateProcesses]
 class UniqueFieldConstraintTest extends KernelTestBase {
 
   /**

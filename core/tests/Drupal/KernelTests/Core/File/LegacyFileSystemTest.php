@@ -9,6 +9,7 @@ use Drupal\Core\File\FileSystemInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the legacy file system functions.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[CoversClass(FileSystem::class)]
 #[Group('file')]
 #[IgnoreDeprecations]
+#[RunTestsInSeparateProcesses]
 class LegacyFileSystemTest extends FileTestBase {
 
   /**

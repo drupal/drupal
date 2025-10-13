@@ -10,12 +10,14 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 
 /**
  * Tests Entity Content Base.
  */
 #[Group('migrate_drupal')]
+#[RunTestsInSeparateProcesses]
 class EntityContentBaseTest extends MigrateDrupal6TestBase {
 
   /**

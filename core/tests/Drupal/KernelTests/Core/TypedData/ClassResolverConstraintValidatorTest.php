@@ -11,12 +11,14 @@ use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests ClassResolver validation constraint with both valid and invalid values.
  */
 #[Group('Validation')]
 #[CoversClass(ClassResolverConstraintValidator::class)]
+#[RunTestsInSeparateProcesses]
 class ClassResolverConstraintValidatorTest extends KernelTestBase {
 
   /**

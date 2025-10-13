@@ -12,6 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\navigation\Plugin\ConfigAction\AddNavigationBlock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 #[Group('navigation')]
 #[Group('Recipe')]
 #[CoversClass(AddNavigationBlock::class)]
+#[RunTestsInSeparateProcesses]
 class AddNavigationBlockConfigActionTest extends KernelTestBase {
 
   use RecipeTestTrait;
