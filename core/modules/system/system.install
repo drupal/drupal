@@ -9,36 +9,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Update\EquivalentUpdate;
 
-// cspell:ignore quickedit
-
-/**
- * An array of machine names of modules that were removed from Drupal core.
- */
-const DRUPAL_CORE_REMOVED_MODULE_LIST = [
-  'action' => 'Action UI',
-  'book' => 'Book',
-  'aggregator' => 'Aggregator',
-  'ckeditor' => 'CKEditor',
-  'color' => 'Color',
-  'forum' => 'Forum',
-  'hal' => 'HAL',
-  'quickedit' => 'Quick Edit',
-  'rdf' => 'RDF',
-  'statistics' => 'Statistics',
-  'tour' => 'Tour',
-  'tracker' => 'Tracker',
-];
-
-/**
- * An array of machine names of themes that were removed from Drupal core.
- */
-const DRUPAL_CORE_REMOVED_THEME_LIST = [
-  'bartik' => 'Bartik',
-  'classy' => 'Classy',
-  'seven' => 'Seven',
-  'stable' => 'Stable',
-];
-
 /**
  * Implements hook_install().
  */

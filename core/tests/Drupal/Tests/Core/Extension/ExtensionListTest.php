@@ -249,7 +249,7 @@ class ExtensionListTest extends UnitTestCase {
   }
 
   /**
-   * DataProvider for testCheckIncompatibility().
+   * Data provider for testCheckIncompatibility().
    */
   public static function providerCheckIncompatibility() {
     return [
