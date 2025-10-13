@@ -139,7 +139,7 @@ interface StatementInterface extends \Traversable {
    * associative arrays. For some reason \PDOStatement does not have a
    * corresponding array helper method, so one is added.
    *
-   * @return array|bool
+   * @return array|false
    *   An associative array, or FALSE if there is no next row.
    */
   public function fetchAssoc();

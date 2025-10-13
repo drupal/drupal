@@ -98,7 +98,7 @@ class MigrateStub implements MigrateStubInterface {
    * @param array $default_values
    *   (optional) An array of values to include in the stub.
    *
-   * @return array|bool
+   * @return array|false
    *   An array of destination ids for the stub.
    *
    * @throws \Drupal\migrate\MigrateException

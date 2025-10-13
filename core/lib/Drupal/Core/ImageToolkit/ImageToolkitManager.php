@@ -55,7 +55,7 @@ class ImageToolkitManager extends DefaultPluginManager {
   /**
    * Gets the default image toolkit ID.
    *
-   * @return string|bool
+   * @return string|false
    *   ID of the default toolkit, or FALSE on error.
    */
   public function getDefaultToolkitId() {

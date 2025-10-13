@@ -414,7 +414,7 @@ abstract class FileTransfer {
    *
    * It does this by moving up the tree until it finds itself
    *
-   * @return string|bool
+   * @return string|false
    *   If successful, the chroot path for this connection, otherwise FALSE.
    */
   public function findChroot() {

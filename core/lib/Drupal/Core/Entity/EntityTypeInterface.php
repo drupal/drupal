@@ -385,7 +385,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * with more complex permissions can extend this class to do their own access
    * checks.
    *
-   * @return string|bool
+   * @return string|false
    *   The name of the administrative permission. Defaults to FALSE, if the
    *   permission does not exist.
    */
@@ -447,7 +447,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @param string $key
    *   The link type.
    *
-   * @return string|bool
+   * @return string|false
    *   The path for this link, or FALSE if it doesn't exist.
    */
   public function getLinkTemplate($key);

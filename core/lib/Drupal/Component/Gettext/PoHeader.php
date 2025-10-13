@@ -183,7 +183,7 @@ class PoHeader {
    * @param string $plural_forms
    *   The Plural-Forms entry value.
    *
-   * @return array|bool
+   * @return array|false
    *   An indexed array of parsed plural formula data. Containing:
    *   - 'nplurals': The number of plural forms defined by the plural formula.
    *   - 'plurals': Array of plural positions keyed by plural value.
@@ -271,7 +271,7 @@ class PoHeader {
    * @param string $string
    *   A string containing the arithmetic formula.
    *
-   * @return array|bool
+   * @return array|false
    *   A stack of values and operations to be evaluated. False if the formula
    *   could not be parsed.
    */

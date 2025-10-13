@@ -39,7 +39,7 @@ class ExposedFormCache {
    * @param string $display_id
    *   The current view display name.
    *
-   * @return array|bool
+   * @return array|false
    *   The form structure, if any, otherwise FALSE.
    */
   public function getForm($view_id, $display_id) {

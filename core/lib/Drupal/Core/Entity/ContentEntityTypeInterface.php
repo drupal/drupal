@@ -28,7 +28,7 @@ interface ContentEntityTypeInterface extends EntityTypeInterface {
    * @param string $key
    *   The name of the entity revision metadata key to return.
    *
-   * @return string|bool
+   * @return string|false
    *   The entity revision metadata key, or FALSE if it does not exist.
    *
    * @see self::getRevisionMetadataKeys()

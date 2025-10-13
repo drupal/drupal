@@ -78,7 +78,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    * @param string $uri
    *   Optional URI.
    *
-   * @return string|bool
+   * @return string|false
    *   Returns a string representing a location suitable for writing of a file,
    *   or FALSE if unable to write to the file such as with read-only streams.
    */
@@ -107,7 +107,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    *   (optional) The stream wrapper URI to be converted to a canonical
    *   absolute path. This may point to a directory or another type of file.
    *
-   * @return string|bool
+   * @return string|false
    *   If $uri is not set, returns the canonical absolute path of the URI
    *   previously set by the
    *   Drupal\Core\StreamWrapper\StreamWrapperInterface::setUri() function.

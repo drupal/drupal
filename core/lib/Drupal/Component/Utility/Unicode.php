@@ -146,7 +146,7 @@ EOD;
    *   The data possibly containing a BOM. This can be the entire contents of
    *   a file, or just a fragment containing at least the first five bytes.
    *
-   * @return string|bool
+   * @return string|false
    *   The name of the encoding, or FALSE if no byte order mark was present.
    */
   public static function encodingFromBOM($data) {
@@ -181,7 +181,7 @@ EOD;
    * @param string $encoding
    *   The encoding that the data is in.
    *
-   * @return string|bool
+   * @return string|false
    *   Converted data or FALSE.
    */
   public static function convertToUtf8($data, $encoding) {

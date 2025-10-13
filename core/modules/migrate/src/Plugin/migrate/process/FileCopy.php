@@ -169,7 +169,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    *   (optional) FileExists::Replace (default) or
    *   FileExists::Rename.
    *
-   * @return string|bool
+   * @return string|false
    *   File destination on success, FALSE on failure.
    */
   protected function writeFile($source, $destination, FileExists|int $fileExists = FileExists::Replace) {

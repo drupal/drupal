@@ -1272,7 +1272,7 @@ abstract class Connection {
    *   (optional) Provides a data type hint for drivers that have alternate
    *   quoting styles. Defaults to \PDO::PARAM_STR.
    *
-   * @return string|bool
+   * @return string|false
    *   A quoted string that is theoretically safe to pass into an SQL statement.
    *   Returns FALSE if the driver does not support quoting in this way.
    *

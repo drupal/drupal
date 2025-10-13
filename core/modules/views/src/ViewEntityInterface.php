@@ -60,7 +60,7 @@ interface ViewEntityInterface extends ConfigEntityInterface {
    *   (optional) The ID to use, e.g., 'default', 'page_1', 'block_2'. Defaults
    *   to NULL.
    *
-   * @return string|bool
+   * @return string|false
    *   The key to the display in $view->display, or FALSE if no plugin ID was
    *   provided.
    */

@@ -19,7 +19,7 @@ interface ControllerResolverInterface extends BaseControllerResolverInterface {
    *   The controller attribute like in
    *   $request->attributes->get(RouteObjectInterface::CONTROLLER_NAME).
    *
-   * @return mixed|bool
+   * @return mixed|false
    *   A PHP callable representing the Controller, or false if this resolver is
    *   not able to determine the controller
    *

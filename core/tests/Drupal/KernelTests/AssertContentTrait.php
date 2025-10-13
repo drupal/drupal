@@ -201,7 +201,7 @@ trait AssertContentTrait {
    *   placeholders in the query. The values may be either strings or numeric
    *   values.
    *
-   * @return \SimpleXMLElement[]|bool
+   * @return \SimpleXMLElement[]|false
    *   The return value of the xpath search or FALSE on failure. For details on
    *   the xpath string format and return values see the SimpleXML
    *   documentation.

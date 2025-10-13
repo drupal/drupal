@@ -325,7 +325,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration.
    *
-   * @return string|bool
+   * @return string|false
    *   A string representation of the Drupal version, or FALSE.
    *
    * @throws \InvalidArgumentException

@@ -47,7 +47,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
   /**
    * Returns the machine-readable permission name for the text format.
    *
-   * @return string|bool
+   * @return string|false
    *   The machine-readable permission name, or FALSE if the text format is
    *   malformed or is the fallback format (which is available to all users).
    */

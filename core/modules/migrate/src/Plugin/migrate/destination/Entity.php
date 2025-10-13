@@ -234,7 +234,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    * @param string $key
    *   The name of the entity key to return.
    *
-   * @return string|bool
+   * @return string|false
    *   The entity key, or FALSE if it does not exist.
    *
    * @see \Drupal\Core\Entity\EntityTypeInterface::getKeys()

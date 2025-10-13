@@ -84,7 +84,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object with destination query set.
-   * @param string|bool $expected
+   * @param string|false $expected
    *   The expected target URL or FALSE.
    *
    * @legacy-covers ::checkRedirectUrl

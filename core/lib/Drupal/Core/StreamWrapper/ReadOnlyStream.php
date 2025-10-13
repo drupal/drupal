@@ -100,7 +100,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    *   absolute path. This may point to a directory or another type of file.
    *
    * phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
-   * @return string|bool
+   * @return string|false
    *   If $uri is not set, returns the canonical absolute path of the URI
    *   previously set by the
    *   Drupal\Core\StreamWrapper\StreamWrapperInterface::setUri() function.

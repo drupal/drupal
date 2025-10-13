@@ -80,7 +80,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
   /**
    * Gets the default language values.
    *
-   * @return array|bool
+   * @return array|false
    *   Returns the default language values for the language configured in
    *   system.site:default_langcode if the corresponding configuration entity
    *   exists, otherwise FALSE.

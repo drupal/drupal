@@ -121,7 +121,7 @@ interface StreamWrapperManagerInterface {
    * @param string $scheme
    *   If the stream was "public://target", "public" would be the scheme.
    *
-   * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
+   * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|false
    *   Returns a new stream wrapper object appropriate for the given $scheme.
    *   For example, for the public scheme a stream wrapper object
    *   (Drupal\Core\StreamWrapper\PublicStream).
@@ -138,7 +138,7 @@ interface StreamWrapperManagerInterface {
    * @param string $uri
    *   A stream, referenced as "scheme://target".
    *
-   * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
+   * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|false
    *   Returns a new stream wrapper object appropriate for the given URI or
    *   FALSE if no registered handler could be found. For example, a URI of
    *   "private://example.txt" would return a new private stream wrapper object
@@ -152,7 +152,7 @@ interface StreamWrapperManagerInterface {
    * @param string $scheme
    *   Stream scheme.
    *
-   * @return string|bool
+   * @return string|false
    *   Return string if a scheme has a registered handler, or FALSE.
    */
   public function getClass($scheme);
@@ -175,7 +175,7 @@ interface StreamWrapperManagerInterface {
    * @param string $uri
    *   A stream, referenced as "scheme://target" or "data:target".
    *
-   * @return string|bool
+   * @return string|false
    *   A string containing the target (path), or FALSE if none.
    *   For example, the URI "public://sample/test.txt" would return
    *   "sample/test.txt".
@@ -207,7 +207,7 @@ interface StreamWrapperManagerInterface {
    * @param string $uri
    *   A stream, referenced as "scheme://target" or "data:target".
    *
-   * @return string|bool
+   * @return string|false
    *   A string containing the name of the scheme, or FALSE if none. For
    *   example, the URI "public://example.txt" would return "public".
    *

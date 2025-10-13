@@ -148,7 +148,7 @@ class PathValidator implements PathValidatorInterface {
    *   If FALSE then skip access check and check only whether the path is
    *   valid.
    *
-   * @return array|bool
+   * @return array|false
    *   An array of request attributes or FALSE if an exception was thrown.
    */
   protected function getPathAttributes($path, Request $request, $access_check) {

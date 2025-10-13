@@ -767,7 +767,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @param string $module
    *   The name of the module.
    *
-   * @return \Drupal\Core\Extension\Extension|bool
+   * @return \Drupal\Core\Extension\Extension|false
    *   Returns an Extension object if the module is found, FALSE otherwise.
    */
   protected function moduleData($module) {

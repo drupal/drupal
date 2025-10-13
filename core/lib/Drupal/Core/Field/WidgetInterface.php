@@ -120,7 +120,7 @@ interface WidgetInterface extends WidgetBaseInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return array|bool
+   * @return array|false
    *   The element on which the error should be flagged, or FALSE to completely
    *   ignore the violation (use with care!).
    */

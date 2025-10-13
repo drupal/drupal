@@ -240,7 +240,7 @@ class FileTransferAuthorizeForm extends FormBase {
    * @param array $settings
    *   Array of settings for the FileTransfer.
    *
-   * @return \Drupal\Core\FileTransfer\FileTransfer|bool
+   * @return \Drupal\Core\FileTransfer\FileTransfer|false
    *   An instantiated FileTransfer object for the requested method and
    *   settings, or FALSE if there was an error finding or instantiating it.
    */

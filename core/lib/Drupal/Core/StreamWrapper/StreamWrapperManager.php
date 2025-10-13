@@ -131,7 +131,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
    * @param string $uri
    *   The URI of the stream.
    *
-   * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
+   * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|false
    *   A stream wrapper object, or false if the scheme is not available.
    */
   protected function getWrapper($scheme, $uri) {
