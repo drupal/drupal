@@ -61,6 +61,10 @@ class HistoryHooks {
    */
   #[Hook('node_view_alter')]
   public function nodeViewAlter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display): void {
+    if (\Drupal::moduleHandler()->moduleExists('comment')) {
+      $build['#attributes']['data-history-node-id'] = $node->id();
+    }
+
     if ($node->isNew() || isset($node->in_preview)) {
       return;
     }

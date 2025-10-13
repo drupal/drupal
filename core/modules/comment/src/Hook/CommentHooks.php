@@ -198,16 +198,6 @@ class CommentHooks {
   }
 
   /**
-   * Implements hook_ENTITY_TYPE_view_alter() for node entities.
-   */
-  #[Hook('node_view_alter')]
-  public function nodeViewAlter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display): void {
-    if (\Drupal::moduleHandler()->moduleExists('history')) {
-      $build['#attributes']['data-history-node-id'] = $node->id();
-    }
-  }
-
-  /**
    * Implements hook_field_info_entity_type_ui_definitions_alter().
    */
   #[Hook('field_info_entity_type_ui_definitions_alter')]
