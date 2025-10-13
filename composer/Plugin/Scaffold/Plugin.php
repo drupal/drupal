@@ -159,7 +159,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface, Capable {
     // Get the configured vendor directory.
     $vendor_dir = $event->getComposer()->getConfig()->get('vendor-dir');
 
-    // We need the root_package package so we can add our classmaps to its loader.
+    // We need the root_package package so we can add our classmaps to its
+    // loader.
     $package = $event->getComposer()->getPackage();
     // We need the local repository so that we can query and see if it's likely
     // that our files are present there.

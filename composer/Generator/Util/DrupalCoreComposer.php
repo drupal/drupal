@@ -3,7 +3,7 @@
 namespace Drupal\Composer\Generator\Util;
 
 /**
- * Utilities for accessing composer.json data from drupal/drupal and drupal/core.
+ * Utilities for working with drupal composer.json files and data.
  *
  * Some data is stored in the root composer.json file, while others is found
  * in the core/composer.json file.

@@ -64,14 +64,14 @@ trait RevisionLogEntityTrait {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionCreationTime().
+   * {@inheritdoc}
    */
   public function getRevisionCreationTime() {
     return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_created')}->value;
   }
 
   /**
-   * Implements \Drupal\Core\Entity\RevisionLogInterface::setRevisionCreationTime().
+   * {@inheritdoc}
    */
   public function setRevisionCreationTime($timestamp) {
     $this->{$this->getEntityType()->getRevisionMetadataKey('revision_created')}->value = $timestamp;
@@ -109,14 +109,14 @@ trait RevisionLogEntityTrait {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionLogMessage().
+   * {@inheritdoc}
    */
   public function getRevisionLogMessage() {
     return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_log_message')}->value;
   }
 
   /**
-   * Implements \Drupal\Core\Entity\RevisionLogInterface::setRevisionLogMessage().
+   * {@inheritdoc}
    */
   public function setRevisionLogMessage($revision_log_message) {
     $this->{$this->getEntityType()->getRevisionMetadataKey('revision_log_message')}->value = $revision_log_message;

@@ -26,8 +26,8 @@ class DrupalInstalledTemplate {
   public static function getCode(PackageInterface $root_package, InstalledRepositoryInterface $repository): string {
     // Write out a hash of the version information to a file so we can use it.
     $versions = array_reduce($repository->getPackages(), fn (string $carry, PackageInterface $package) => $carry . $package->getUniqueName() . '-' . $package->getSourceReference() . '|', '');
-    // Add the root_package package version info so custom code changes and root_package
-    // package version changes result in the hash changing.
+    // Add the root_package package version info so custom code changes and
+    // root_package package version changes result in the hash changing.
     $versions .= $root_package->getUniqueName() . '-' . $root_package->getSourceReference();
     $version_hash = hash('xxh3', $versions);
     return <<<EOF
