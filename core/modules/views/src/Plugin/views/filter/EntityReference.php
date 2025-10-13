@@ -360,14 +360,13 @@ class EntityReference extends ManyToOne {
    */
   public function submitExtraOptionsForm($form, FormStateInterface $form_state): void {
     $sub_handler = $form_state->getValue('options')['sub_handler'];
-
-    // Ensure that only the select sub handler option is saved.
+    // Unset sub handler settings that are not selected so they are not saved.
+    // ConfigHandlerExtra::submitForm will set the selected sub handler's
+    // settings.
     foreach (array_keys($this->getSubHandlerOptions()) as $sub_handler_option) {
-      if ($sub_handler_option == $sub_handler) {
-        $this->options['sub_handler_settings'] = $this->options[static::SUBFORM_PREFIX . $sub_handler_option];
-      }
-      if (isset($this->options[static::SUBFORM_PREFIX . $sub_handler_option])) {
-        unset($this->options[static::SUBFORM_PREFIX . $sub_handler_option]);
+      $subform_key = static::SUBFORM_PREFIX . $sub_handler_option;
+      if ($sub_handler_option !== $sub_handler && isset($this->options[$subform_key])) {
+        unset($this->options[$subform_key]);
       }
     }
   }
