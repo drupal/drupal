@@ -23,6 +23,10 @@ revert all revisions:
 delete all revisions:
   title: 'Delete all revisions'
   description: 'To delete a revision, you also need permission to delete the content item.'
+rebuild node access permissions:
+  title: 'Rebuild content access permissions'
+  description: 'Trigger a content access permission rebuild. This can be a potentially long and disruptive process.'
+  restrict access: true
 
 permission_callbacks:
   - \Drupal\node\NodePermissions::nodeTypePermissions

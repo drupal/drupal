@@ -8,6 +8,7 @@
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\node\NodeTypeInterface;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_removed_post_updates().
@@ -44,4 +45,17 @@ function node_post_update_create_promote_base_field_overrides(&$sandbox = []): v
       }
       return $changed;
     });
+}
+
+/**
+ * Grants a new permission for rebuilding node access permissions.
+ */
+function node_post_update_add_rebuild_permission_to_roles(?array &$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (RoleInterface $role): bool {
+    if ($role->isAdmin() || !$role->hasPermission('administer nodes')) {
+      return FALSE;
+    }
+    $role->grantPermission('rebuild node access permissions');
+    return TRUE;
+  });
 }
