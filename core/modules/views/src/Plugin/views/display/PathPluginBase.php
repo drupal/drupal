@@ -11,7 +11,6 @@ use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Url;
 use Drupal\views\Views;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
@@ -57,19 +56,6 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     $this->routeProvider = $route_provider;
     $this->state = $state;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('router.route_provider'),
-      $container->get('state')
-    );
   }
 
   /**

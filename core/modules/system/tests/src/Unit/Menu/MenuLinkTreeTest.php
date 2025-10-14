@@ -180,12 +180,12 @@ class MenuLinkTreeTest extends UnitTestCase {
     $cache_defaults = ['cache_max_age' => Cache::PERMANENT, 'cache_tags' => []];
     $links_scenarios = [
       [
-        MenuLinkMock::create([
+        MenuLinkMock::createMock([
           'id' => 'test.example1',
           'route_name' => 'example1',
           'title' => 'Example 1',
         ]),
-        MenuLinkMock::create([
+        MenuLinkMock::createMock([
           'id' => 'test.example2',
           'route_name' => 'example1',
           'title' => 'Example 2',
@@ -193,13 +193,13 @@ class MenuLinkTreeTest extends UnitTestCase {
         ]),
       ],
       [
-        MenuLinkMock::create([
+        MenuLinkMock::createMock([
           'id' => 'test.example1',
           'route_name' => 'example1',
           'title' => 'Example 1',
           'metadata' => ['cache_contexts' => ['foo']] + $cache_defaults,
         ]),
-        MenuLinkMock::create([
+        MenuLinkMock::createMock([
           'id' => 'test.example2',
           'route_name' => 'example1',
           'title' => 'Example 2',
@@ -267,17 +267,17 @@ class MenuLinkTreeTest extends UnitTestCase {
         ];
 
         // Multi-level tree.
-        $multi_level_root_a = MenuLinkMock::create([
+        $multi_level_root_a = MenuLinkMock::createMock([
           'id' => 'test.root_a',
           'route_name' => 'root_a',
           'title' => 'Root A',
         ]);
-        $multi_level_root_b = MenuLinkMock::create([
+        $multi_level_root_b = MenuLinkMock::createMock([
           'id' => 'test.root_b',
           'route_name' => 'root_b',
           'title' => 'Root B',
         ]);
-        $multi_level_parent_c = MenuLinkMock::create([
+        $multi_level_parent_c = MenuLinkMock::createMock([
           'id' => 'test.parent_c',
           'route_name' => 'parent_c',
           'title' => 'Parent C',

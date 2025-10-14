@@ -104,14 +104,14 @@ class MenuLinkTreeTest extends KernelTestBase {
     // With link 6 being the only external link.
 
     $links = [
-      1 => MenuLinkMock::create(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '']),
-      2 => MenuLinkMock::create(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'bar', 'parent' => 'test.example1', 'route_parameters' => ['foo' => 'bar']]),
-      3 => MenuLinkMock::create(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'baz', 'parent' => 'test.example2', 'route_parameters' => ['baz' => 'qux']]),
-      4 => MenuLinkMock::create(['id' => 'test.example4', 'route_name' => 'example4', 'title' => 'qux', 'parent' => 'test.example3']),
-      5 => MenuLinkMock::create(['id' => 'test.example5', 'route_name' => 'example5', 'title' => 'title5', 'parent' => '']),
-      6 => MenuLinkMock::create(['id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'bar_bar', 'parent' => '']),
-      7 => MenuLinkMock::create(['id' => 'test.example7', 'route_name' => 'example7', 'title' => 'title7', 'parent' => '']),
-      8 => MenuLinkMock::create(['id' => 'test.example8', 'route_name' => 'example8', 'title' => 'title8', 'parent' => '']),
+      1 => MenuLinkMock::createMock(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '']),
+      2 => MenuLinkMock::createMock(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'bar', 'parent' => 'test.example1', 'route_parameters' => ['foo' => 'bar']]),
+      3 => MenuLinkMock::createMock(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'baz', 'parent' => 'test.example2', 'route_parameters' => ['baz' => 'qux']]),
+      4 => MenuLinkMock::createMock(['id' => 'test.example4', 'route_name' => 'example4', 'title' => 'qux', 'parent' => 'test.example3']),
+      5 => MenuLinkMock::createMock(['id' => 'test.example5', 'route_name' => 'example5', 'title' => 'title5', 'parent' => '']),
+      6 => MenuLinkMock::createMock(['id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'bar_bar', 'parent' => '']),
+      7 => MenuLinkMock::createMock(['id' => 'test.example7', 'route_name' => 'example7', 'title' => 'title7', 'parent' => '']),
+      8 => MenuLinkMock::createMock(['id' => 'test.example8', 'route_name' => 'example8', 'title' => 'title8', 'parent' => '']),
     ];
     foreach ($links as $instance) {
       $this->menuLinkManager->addDefinition($instance->getPluginId(), $instance->getPluginDefinition());
@@ -144,8 +144,8 @@ class MenuLinkTreeTest extends KernelTestBase {
   public function testUserLoginAndUserLogoutLinks(): void {
     $account_switcher = $this->container->get('account_switcher');
 
-    $login_menu_link = MenuLinkMock::create(['id' => 'user_login_example', 'route_name' => 'user.login']);
-    $logout_menu_link = MenuLinkMock::create(['id' => 'user_logout_example', 'route_name' => 'user.logout']);
+    $login_menu_link = MenuLinkMock::createMock(['id' => 'user_login_example', 'route_name' => 'user.login']);
+    $logout_menu_link = MenuLinkMock::createMock(['id' => 'user_logout_example', 'route_name' => 'user.logout']);
 
     $this->menuLinkManager->addDefinition($login_menu_link->getPluginId(), $login_menu_link->getPluginDefinition());
     $this->menuLinkManager->addDefinition($logout_menu_link->getPluginId(), $logout_menu_link->getPluginDefinition());

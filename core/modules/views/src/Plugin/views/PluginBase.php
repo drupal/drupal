@@ -13,7 +13,6 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for any views plugin types.
@@ -125,13 +124,6 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->definition = $plugin_definition + $configuration;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition);
   }
 
   /**

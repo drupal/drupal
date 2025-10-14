@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsDisplay;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The plugin that handles an EntityReference display.
@@ -71,18 +70,6 @@ class EntityReference extends DisplayPluginBase {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $connection) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->connection = $connection;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('database')
-    );
   }
 
   /**

@@ -138,14 +138,14 @@ class SystemMenuBlockTest extends KernelTestBase {
     // - 8
     // With link 6 being the only external link.
     $links = [
-      1 => MenuLinkMock::create([
+      1 => MenuLinkMock::createMock([
         'id' => 'test.example1',
         'route_name' => 'example1',
         'title' => 'foo',
         'parent' => '',
         'weight' => 0,
       ]),
-      2 => MenuLinkMock::create([
+      2 => MenuLinkMock::createMock([
         'id' => 'test.example2',
         'route_name' => 'example2',
         'title' => 'bar',
@@ -153,21 +153,21 @@ class SystemMenuBlockTest extends KernelTestBase {
         'route_parameters' => ['foo' => 'bar'],
         'weight' => 1,
       ]),
-      3 => MenuLinkMock::create([
+      3 => MenuLinkMock::createMock([
         'id' => 'test.example3',
         'route_name' => 'example3',
         'title' => 'baz',
         'parent' => 'test.example2',
         'weight' => 2,
       ]),
-      4 => MenuLinkMock::create([
+      4 => MenuLinkMock::createMock([
         'id' => 'test.example4',
         'route_name' => 'example4',
         'title' => 'qux',
         'parent' => 'test.example3',
         'weight' => 3,
       ]),
-      5 => MenuLinkMock::create([
+      5 => MenuLinkMock::createMock([
         'id' => 'test.example5',
         'route_name' => 'example5',
         'title' => 'title5',
@@ -175,7 +175,7 @@ class SystemMenuBlockTest extends KernelTestBase {
         'expanded' => TRUE,
         'weight' => 4,
       ]),
-      6 => MenuLinkMock::create([
+      6 => MenuLinkMock::createMock([
         'id' => 'test.example6',
         'route_name' => '',
         'url' => 'https://www.drupal.org/',
@@ -183,14 +183,14 @@ class SystemMenuBlockTest extends KernelTestBase {
         'parent' => '',
         'weight' => 5,
       ]),
-      7 => MenuLinkMock::create([
+      7 => MenuLinkMock::createMock([
         'id' => 'test.example7',
         'route_name' => 'example7',
         'title' => 'title7',
         'parent' => 'test.example5',
         'weight' => 6,
       ]),
-      8 => MenuLinkMock::create([
+      8 => MenuLinkMock::createMock([
         'id' => 'test.example8',
         'route_name' => 'example8',
         'title' => 'title8',

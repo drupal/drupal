@@ -31,6 +31,7 @@ services:
     arguments: ['@cache.bootstrap', '@lock', '@entity_type.manager']
     tags:
       - { name: needs_destruction }
+  Drupal\block_content\BlockContentUuidLookup: '@block_content.uuid_lookup'
   block_content.bc_subscriber:
     class: Drupal\block_content\Routing\RouteSubscriber
     arguments: ['@entity_type.manager', '@module_handler']

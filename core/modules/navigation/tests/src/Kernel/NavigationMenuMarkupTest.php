@@ -119,9 +119,9 @@ class NavigationMenuMarkupTest extends KernelTestBase {
     //   - 3
     // phpcs:disable
     $links = [
-      1 => MenuLinkMock::create(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'title 1', 'parent' => '', 'weight' => 0]),
-      2 => MenuLinkMock::create(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'Another title', 'parent' => '', 'route_parameters' => ['foo' => 'bar'], 'weight' => 1]),
-      3 => MenuLinkMock::create(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'Nested menu link', 'parent' => 'test.example2', 'weight' => 2]),
+      1 => MenuLinkMock::createMock(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'title 1', 'parent' => '', 'weight' => 0]),
+      2 => MenuLinkMock::createMock(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'Another title', 'parent' => '', 'route_parameters' => ['foo' => 'bar'], 'weight' => 1]),
+      3 => MenuLinkMock::createMock(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'Nested menu link', 'parent' => 'test.example2', 'weight' => 2]),
     ];
     // phpcs:enable
     foreach ($links as $instance) {

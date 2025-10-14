@@ -2,9 +2,7 @@
 
 namespace Drupal\Core\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
 
 /**
  * Defines a trait for automatically wiring dependencies from the container.
@@ -13,6 +11,8 @@ use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
  * that will be instantiated multiple times.
  */
 trait AutowireTrait {
+
+  use AutowiredInstanceTrait;
 
   /**
    * Instantiates a new instance of the implementing class using autowiring.
@@ -23,29 +23,7 @@ trait AutowireTrait {
    * @return static
    */
   public static function create(ContainerInterface $container) {
-    $args = [];
-
-    if (method_exists(static::class, '__construct')) {
-      $constructor = new \ReflectionMethod(static::class, '__construct');
-      foreach ($constructor->getParameters() as $parameter) {
-        $service = ltrim((string) $parameter->getType(), '?');
-        foreach ($parameter->getAttributes(Autowire::class) as $attribute) {
-          $service = (string) $attribute->newInstance()->value;
-        }
-
-        if (!$container->has($service)) {
-          if ($parameter->allowsNull()) {
-            $args[] = NULL;
-            continue;
-          }
-          throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": argument "$%s" of method "%s::_construct()", you should configure its value explicitly.', $service, $parameter->getName(), static::class));
-        }
-
-        $args[] = $container->get($service);
-      }
-    }
-
-    return new static(...$args);
+    return static::createInstanceAutowired($container);
   }
 
 }

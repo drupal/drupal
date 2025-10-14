@@ -126,8 +126,8 @@ class MenuActiveTrailTest extends UnitTestCase {
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $mock_route);
     $request->attributes->set('_raw_variables', new InputBag([]));
 
-    $link_1 = MenuLinkMock::create(['id' => 'baby_llama_link_1', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'mama_llama_link']);
-    $link_2 = MenuLinkMock::create(['id' => 'baby_llama_link_2', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'papa_llama_link']);
+    $link_1 = MenuLinkMock::createMock(['id' => 'baby_llama_link_1', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'mama_llama_link']);
+    $link_2 = MenuLinkMock::createMock(['id' => 'baby_llama_link_2', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'papa_llama_link']);
 
     // @see \Drupal\Core\Menu\MenuLinkManagerInterface::getParentIds()
     $link_1_parent_ids = ['baby_llama_link_1', 'mama_llama_link', ''];
@@ -197,7 +197,7 @@ class MenuActiveTrailTest extends UnitTestCase {
       ->willReturn(TRUE);
 
     // Make 'link_1' route to have no links and the '<front>' route to have a link.
-    $home_link = MenuLinkMock::create(['id' => 'home_link', 'route_name' => 'home_link', 'title' => 'Home', 'parent' => NULL]);
+    $home_link = MenuLinkMock::createMock(['id' => 'home_link', 'route_name' => 'home_link', 'title' => 'Home', 'parent' => NULL]);
     $this->menuLinkManager
       ->method('loadLinksByRoute')
       ->willReturnCallback(function ($route_name) use ($home_link) {
