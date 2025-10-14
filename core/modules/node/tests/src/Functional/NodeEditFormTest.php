@@ -115,7 +115,8 @@ class NodeEditFormTest extends NodeTestBase {
     ]);
     $this->drupalLogin($second_web_user);
     // Edit the same node, creating a new revision.
-    $this->drupalGet("node/" . $node->id() . "/edit");
+    $node_edit_url = $node->toUrl('edit-form');
+    $this->drupalGet($node_edit_url);
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
@@ -136,12 +137,12 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertNotSame($first_node_version->getRevisionUser()->id(), $second_node_version->getRevisionUser()->id(), 'Each revision has a distinct user.');
 
     // Check if the node revision checkbox is rendered on node edit form.
-    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->drupalGet($node_edit_url);
     $this->assertSession()->fieldExists('edit-revision', NULL);
 
     // Check that details form element opens when there are errors on child
     // elements.
-    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->drupalGet($node_edit_url);
     $edit = [];
     // This invalid date will trigger an error.
     $edit['created[0][value][date]'] = $this->randomMachineName(8);
@@ -156,11 +157,22 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Edit the same node, save it and verify it's unpublished after unchecking
     // the 'Published' boolean_checkbox and clicking 'Save'.
-    $this->drupalGet("node/" . $node->id() . "/edit");
+    $this->drupalGet($node_edit_url);
     $edit = ['status[value]' => FALSE];
     $this->submitForm($edit, 'Save');
     $node = $this->nodeStorage->load($node->id());
     $this->assertFalse($node->isPublished(), 'Node is unpublished');
+
+    // Login as a user that can access the published checkbox.
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer node published status',
+      'edit any page content',
+    ]));
+    $this->drupalGet($node_edit_url);
+    $this->assertSession()->fieldExists('status[value]');
+    $this->submitForm(['status[value]' => TRUE], 'Save');
+    $node = $this->nodeStorage->load($node->id());
+    $this->assertTrue($node->isPublished());
   }
 
   /**

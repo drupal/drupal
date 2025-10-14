@@ -27,6 +27,10 @@ rebuild node access permissions:
   title: 'Rebuild content access permissions'
   description: 'Trigger a content access permission rebuild. This can be a potentially long and disruptive process.'
   restrict access: true
+administer node published status:
+  title: 'Administer node published status'
+  description: 'Edit the published status of a node across all content types.'
+  restrict access: true
 
 permission_callbacks:
   - \Drupal\node\NodePermissions::nodeTypePermissions

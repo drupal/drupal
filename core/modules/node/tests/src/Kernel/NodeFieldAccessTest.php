@@ -43,10 +43,9 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
   protected $readOnlyFields = ['changed', 'revision_uid', 'revision_timestamp'];
 
   /**
-   * Tests permissions on nodes status field.
+   * Tests permissions on nodes administrative fields.
    */
   public function testAccessToAdministrativeFields(): void {
-
     // Create the page node type with revisions disabled.
     $page = NodeType::create([
       'type' => 'page',
@@ -79,6 +78,13 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
       'edit any page content',
       'delete any page content',
       'access content',
+    ]);
+    $page_publisher_user = $this->createUser([
+      'create page content',
+      'edit any page content',
+      'delete any page content',
+      'access content',
+      'administer node published status',
     ]);
 
     // An unprivileged user.
@@ -116,7 +122,6 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
     $node3->save();
 
     foreach ($this->administrativeFields as $field) {
-
       // Checks on view operations.
       foreach ($test_users as $account) {
         $may_view = $node1->{$field}->access('view', $account);
@@ -134,7 +139,7 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
       $this->assertFalse($may_update, 'Users with permission "edit any page content" is not allowed to the field ' . $field . '.');
       $may_update = $node2->{$field}->access('edit', $page_unrelated_user);
       $this->assertFalse($may_update, 'Users not having permission "edit any page content" is not allowed to the field ' . $field . '.');
-      $may_update = $node1->{$field}->access('edit', $content_admin_user) && $node3->status->access('edit', $content_admin_user);
+      $may_update = $node1->{$field}->access('edit', $content_admin_user) && $node3->{$field}->access('edit', $content_admin_user);
       $this->assertTrue($may_update, 'Users with permission "administer nodes" may edit ' . $field . ' fields on all nodes.');
     }
 
@@ -151,6 +156,10 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
         $this->assertFalse($may_view, "No user is not allowed to edit the field $field.");
       }
     }
+
+    // Check the status field can be edited by users with the "administer node
+    // status" permission.
+    $this->assertTrue($node3->status->access('edit', $page_publisher_user));
 
     // Check the revision_log field on node 1 which has revisions disabled.
     $may_update = $node1->revision_log->access('edit', $content_admin_user);
