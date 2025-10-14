@@ -5,6 +5,7 @@ namespace Drupal\Core\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Htmx\HtmxRequestInfoTrait;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -44,6 +45,7 @@ use Drupal\Core\Messenger\MessengerTrait;
 abstract class FormBase implements FormInterface, ContainerInjectionInterface {
 
   use DependencySerializationTrait;
+  use HtmxRequestInfoTrait;
   use LoggerChannelTrait;
   use MessengerTrait;
   use RedirectDestinationTrait;
