@@ -11,11 +11,13 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node token replacement for text_with_summary.
  */
 #[Group('node')]
+#[RunTestsInSeparateProcesses]
 class TextWithSummaryTokenReplaceTest extends TokenReplaceKernelTestBase {
 
   use ContentTypeCreationTrait;
