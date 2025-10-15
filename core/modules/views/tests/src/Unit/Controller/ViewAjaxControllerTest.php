@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Controller;
 
+use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\CallableResolver;
+use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\Controller\ViewAjaxController;
@@ -72,6 +75,13 @@ class ViewAjaxControllerTest extends UnitTestCase {
   protected $renderer;
 
   /**
+   * The path validator service.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $pathValidator;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -98,8 +108,22 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->redirectDestination = $this->createMock('\Drupal\Core\Routing\RedirectDestinationInterface');
+    $this->pathValidator = $this->createMock(PathValidatorInterface::class);
+    $this->pathValidator->expects($this->any())
+      ->method('getUrlIfValid')
+      /*
+       * Use a callback because container is not initialized yet
+       * so we can't generate a URL object right now.
+       */
+      ->willReturnCallback(function () {
+        return Url::fromUserInput('/foo');
+      });
+    $unroutedUrlAssembler = $this->createMock(UnroutedUrlAssemblerInterface::class);
+    $unroutedUrlAssembler->expects($this->any())
+      ->method('assemble')
+      ->willReturn('/foo');
 
-    $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath, $this->redirectDestination);
+    $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath, $this->redirectDestination, $this->pathValidator);
 
     $element_info_manager = $this->createMock('\Drupal\Core\Render\ElementInfoManagerInterface');
     $element_info_manager->expects($this->any())
@@ -124,7 +148,11 @@ class ViewAjaxControllerTest extends UnitTestCase {
     );
     $container = new ContainerBuilder();
     $container->set('renderer', $this->renderer);
+    $container->set('path.validator', $this->pathValidator);
+    $container->set('unrouted_url_assembler', $unroutedUrlAssembler);
     \Drupal::setContainer($container);
+    // Not initialized in Unit tests.
+    $GLOBALS['base_path'] = '/';
   }
 
   /**
@@ -212,7 +240,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $this->assertSame($response->getView(), $executable);
 
-    $this->assertViewResultCommand($response);
+    $this->assertViewResultCommand($response, 1);
 
     // Test that the ajax controller for Views contains the
     // Drupal Settings.
@@ -249,7 +277,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $this->assertSame($response->getView(), $executable);
 
-    $this->assertViewResultCommand($response);
+    $this->assertViewResultCommand($response, 1);
   }
 
   /**
@@ -287,7 +315,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $response = $this->viewAjaxController->ajaxView($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
-    $this->assertViewResultCommand($response);
+    $this->assertViewResultCommand($response, 1);
   }
 
   /**
@@ -308,7 +336,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $response = $this->viewAjaxController->ajaxView($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
-    $this->assertViewResultCommand($response);
+    $this->assertViewResultCommand($response, 1);
   }
 
   /**
@@ -328,7 +356,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $response = $this->viewAjaxController->ajaxView($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
-    $this->assertViewResultCommand($response);
+    $this->assertViewResultCommand($response, 1);
   }
 
   /**
@@ -367,7 +395,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->assertEquals('scrollTop', $commands[0]['command']);
     $this->assertEquals('.js-view-dom-id-' . $dom_id, $commands[0]['selector']);
 
-    $this->assertViewResultCommand($response, 1);
+    $this->assertViewResultCommand($response, 2);
   }
 
   /**

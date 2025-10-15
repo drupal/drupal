@@ -63,6 +63,12 @@
   Drupal.views.ajaxView = function (settings) {
     const selector = `.js-view-dom-id-${settings.view_dom_id}`;
     this.$view = $(selector);
+    this.$exposed_form = $(
+      `form#views-exposed-form-${settings.view_name.replace(
+        /_/g,
+        '-',
+      )}-${settings.view_display_id.replace(/_/g, '-')}`,
+    );
 
     // Retrieve the path to use for views' ajax.
     let ajaxPath = drupalSettings.views.ajax_path;
@@ -77,12 +83,26 @@
     let queryString = window.location.search || '';
     if (queryString !== '') {
       // Remove the question mark and Drupal path component if any.
-      queryString = queryString
-        .slice(1)
-        .replace(/q=[^&]+&?|page=[^&]+&?|&?render=[^&]+/, '');
+      queryString = queryString.slice(1);
+
+      // Remove current exposed filters.
+      const params = decodeURI(queryString)
+        .split('&')
+        .filter((param) => {
+          const [name, value] = param.split('=');
+          return (
+            this.$exposed_form.find(`input[name="${name}"]`).length === 0 &&
+            /*
+            Submitting filters should reset paging and sorting
+            because that is what happens without AJAX.
+             */
+            !['page', 'reset', 'sort', 'order', 'q', 'render'].includes(name)
+          );
+        });
+      queryString = encodeURI(params.join('&'));
+      // If there is a '?' in ajaxPath, clean URL are on and & should be
+      // used to add parameters.
       if (queryString !== '') {
-        // If there is a '?' in ajaxPath, clean URL are on and & should be
-        // used to add parameters.
         queryString = (ajaxPath.includes('?') ? '&' : '?') + queryString;
       }
     }
@@ -100,12 +120,6 @@
     this.settings = settings;
 
     // Add the ajax to exposed forms.
-    this.$exposed_form = $(
-      `form#views-exposed-form-${settings.view_name.replace(
-        /_/g,
-        '-',
-      )}-${settings.view_display_id.replace(/_/g, '-')}`,
-    );
     once('exposed-form', this.$exposed_form).forEach(
       this.attachExposedFormAjax.bind(this),
     );
@@ -206,5 +220,22 @@
       httpMethod: 'GET',
     });
     this.pagerAjax = Drupal.ajax(selfSettings);
+  };
+
+  /**
+   * Sets the browser URL ajax command.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   A {@link Drupal.ajax} object.
+   * @param {object} response
+   *   Ajax response.
+   * @param {string} response.url
+   *   URL to be set.
+   */
+  Drupal.AjaxCommands.prototype.setBrowserUrl = (ajax, response) => {
+    // Do not change browser URL if we are in a dialog wrapper.
+    if (ajax.element && !ajax.element.closest('.ui-dialog-content')) {
+      window.history.replaceState(null, '', response.url);
+    }
   };
 })(jQuery, Drupal, drupalSettings);
