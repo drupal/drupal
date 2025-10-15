@@ -7,6 +7,7 @@ namespace Drupal\Tests\views\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the update view mode when removing system.rss.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see system_post_update_delete_rss_config()
  */
 #[Group('update')]
+#[RunTestsInSeparateProcesses]
 class RssDefaultRowViewModeUpdateTest extends UpdatePathTestBase {
 
   /**

@@ -7,6 +7,7 @@ namespace Drupal\Tests\block_content\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the removal of the empty listing plugin.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see block_content_post_update_remove_block_content_listing_empty()
  */
 #[Group('Update')]
+#[RunTestsInSeparateProcesses]
 class BlockContentRemoveListingEmptyUpdateTest extends UpdatePathTestBase {
 
   /**

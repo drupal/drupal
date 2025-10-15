@@ -8,11 +8,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node_storage_body_field deprecated module.
  */
 #[Group('node_storage_body_field')]
+#[RunTestsInSeparateProcesses]
 class NodeStorageBodyFieldTest extends BrowserTestBase {
 
   /**

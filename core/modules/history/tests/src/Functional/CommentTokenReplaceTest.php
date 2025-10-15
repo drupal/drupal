@@ -11,11 +11,13 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\comment\Functional\CommentTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment token replacement.
  */
 #[Group('history')]
+#[RunTestsInSeparateProcesses]
 class CommentTokenReplaceTest extends CommentTestBase {
 
   /**

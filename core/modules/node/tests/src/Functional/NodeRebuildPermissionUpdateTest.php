@@ -6,12 +6,16 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * @covers node_post_update_add_rebuild_permission_to_roles
+ * Tests node rebuild permission update.
  */
 #[Group('node')]
+#[CoversFunction('node_post_update_add_rebuild_permission_to_roles')]
+#[RunTestsInSeparateProcesses]
 class NodeRebuildPermissionUpdateTest extends UpdatePathTestBase {
 
   /**

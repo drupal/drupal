@@ -11,11 +11,13 @@ use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests CSS classes on comments.
  */
 #[Group('history')]
+#[RunTestsInSeparateProcesses]
 class CommentCSSTest extends CommentTestBase {
 
   use GeneratePermutationsTrait;

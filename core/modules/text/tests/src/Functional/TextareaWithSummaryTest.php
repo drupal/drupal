@@ -6,11 +6,13 @@ namespace Drupal\Tests\text\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the functionality of the text_textarea_with_summary widget.
  */
 #[Group('text')]
+#[RunTestsInSeparateProcesses]
 class TextareaWithSummaryTest extends BrowserTestBase {
 
   /**
