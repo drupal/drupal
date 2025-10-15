@@ -8,3 +8,9 @@ services:
   field.uninstall_validator:
     class: Drupal\field\FieldUninstallValidator
     arguments: ['@entity_type.manager', '@string_translation', '@plugin.manager.field.field_type']
+  cache.field_config_memory:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
+    factory: ['@cache_factory', 'get']
+    arguments: [field_config_memory]
