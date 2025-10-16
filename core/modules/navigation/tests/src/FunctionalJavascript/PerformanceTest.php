@@ -94,9 +94,9 @@ class PerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 13,
       'ScriptCount' => 3,
-      'ScriptBytes' => 167569,
+      'ScriptBytes' => 140083,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 45450,
+      'StylesheetBytes' => 44024,
     ];
     $this->assertMetrics($expected, $performance_data);
 

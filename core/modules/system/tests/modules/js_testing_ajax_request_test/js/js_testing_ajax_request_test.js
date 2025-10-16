@@ -20,4 +20,13 @@ window.drupalCumulativeXhrCount = 0;
     htmx.on('htmx:beforeSend', increment);
     htmx.on('htmx:afterRequest', decrement);
   }
+  // Catch calls to native fetch().
+  const oldFetch = window.fetch;
+  window.fetch = function newFetch(resource, options) {
+    increment();
+    return oldFetch(resource, options).then((res) => {
+      decrement();
+      return res;
+    });
+  };
 })(jQuery, window.htmx);

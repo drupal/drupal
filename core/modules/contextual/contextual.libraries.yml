@@ -12,7 +12,6 @@ drupal.contextual-links:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/drupal.ajax
     - core/drupalSettings
     - core/once
     - core/drupal.touchevents-test

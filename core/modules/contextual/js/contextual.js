@@ -180,13 +180,19 @@
       // Perform an AJAX request to let the server render the contextual links
       // for each of the placeholders.
       if (uncachedIDs.length > 0) {
-        $.ajax({
-          url: Drupal.url('contextual/render'),
-          type: 'POST',
-          data: { 'ids[]': uncachedIDs, 'tokens[]': uncachedTokens },
-          dataType: 'json',
-          success(results) {
-            Object.entries(results).forEach(([contextualID, html]) => {
+        const data = new URLSearchParams();
+        uncachedIDs.forEach((id) => data.append('ids[]', id));
+        uncachedTokens.forEach((id) => data.append('tokens[]', id));
+
+        const req = new Request(Drupal.url('contextual/render'), {
+          method: 'POST',
+          body: data,
+        });
+
+        fetch(req)
+          .then((res) => res.json())
+          .then((json) =>
+            Object.entries(json).forEach(([contextualID, html]) => {
               // Store the metadata.
               storage.setItem(`Drupal.contextual.${contextualID}`, html);
               // If the rendered contextual links are empty, then the current
@@ -207,9 +213,9 @@
                   initContextual($placeholders.eq(i), html);
                 }
               }
-            });
-          },
-        });
+            }),
+          )
+          .catch((error) => console.warn(error));
       }
     },
   };
@@ -532,6 +538,6 @@
    * @listens event:drupalContextualLinkAdded
    */
   $(document).on('drupalContextualLinkAdded', (event, data) => {
-    Drupal.ajax.bindAjaxLinks(data.$el[0]);
+    Drupal.ajax?.bindAjaxLinks(data.$el[0]);
   });
 })(jQuery, Drupal, drupalSettings, window.JSON, window.sessionStorage);

@@ -85,7 +85,7 @@ JS;
     window.drupalCumulativeXhrCount,
     window.performance
       .getEntries()
-      .filter(entry => entry.initiatorType === 'xmlhttprequest')
+      .filter(({initiatorType}) => initiatorType === 'xmlhttprequest' || initiatorType === 'fetch')
       .length,
     window.performance.timeOrigin
   ];
