@@ -25,11 +25,11 @@ final class InputConfigurator {
   private array $data = [];
 
   /**
-   * The collected input values.
+   * The collected input values, or NULL if none have been collected yet.
    *
-   * @var mixed[]
+   * @var mixed[]|null
    */
-  private array $values = [];
+  private ?array $values = NULL;
 
   /**
    * @param array<string, array<string, mixed>> $definitions
@@ -96,7 +96,7 @@ final class InputConfigurator {
    *   The collected input values, keyed by name.
    */
   public function getValues(): array {
-    return $this->values;
+    return $this->values ?? [];
   }
 
   /**
@@ -131,23 +131,20 @@ final class InputConfigurator {
    * @throws \Symfony\Component\Validator\Exception\ValidationFailedException
    *   Thrown if any of the collected values violate their validation
    *   constraints.
-   * @throws \LogicException
-   *   Thrown if input values have already been collected for this recipe.
    */
   public function collectAll(InputCollectorInterface $collector, array &$processed = []): void {
     // Don't bother collecting values for a recipe we've already seen.
-    if (in_array($this->prefix, $processed, TRUE)) {
+    if (in_array($this->prefix, $processed, TRUE) || is_array($this->values)) {
       return;
     }
-    if ($this->values) {
-      throw new \LogicException('Input values cannot be changed once they have been set.');
-    }
+
     // First, collect values for the recipe's dependencies.
     /** @var \Drupal\Core\Recipe\Recipe $dependency */
     foreach ($this->dependencies->recipes as $dependency) {
       $dependency->input->collectAll($collector, $processed);
     }
 
+    $this->values = [];
     foreach ($this->data as $key => $data) {
       $definition = $data->getDataDefinition();
 

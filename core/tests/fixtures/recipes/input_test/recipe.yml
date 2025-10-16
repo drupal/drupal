@@ -1,10 +1,8 @@
 name: Input Test
 recipes:
   # Depend on another recipe in order to prove that we can collect input
-  # from recipes that depend on other recipes.
-  - no_extensions
-install:
-  - node
+  # from dependent recipes as well.
+  - create_node_type
 input:
   owner:
     data_type: string
@@ -29,17 +27,8 @@ input:
     default:
       source: value
       value: false
-  node_type:
-    data_type: string
-    description: 'The ID of a node type to create'
-    default:
-      source: value
-      value: 'test'
 config:
   actions:
-    node.type.${node_type}:
-      createIfNotExists:
-        name: Test Content Type
     system.site:
       simpleConfigUpdate:
         name: "${owner}'s Turf"

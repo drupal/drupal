@@ -1,0 +1,15 @@
+name: Create node type
+install:
+  - node
+input:
+  node_type:
+    data_type: string
+    description: 'The ID of a node type to create'
+    default:
+      source: value
+      value: 'test'
+config:
+  actions:
+    node.type.${node_type}:
+      createIfNotExists:
+        name: Test Content Type
