@@ -107,8 +107,8 @@
  * module_name.links.action.yml file (in the top-level directory for your
  * module):
  * @code
- * node.add_page:
- *   route_name: node.add_page
+ * entity.node.add_page:
+ *   route_name: entity.node.add_page
  *   title: 'Add content'
  *   appears_on:
  *     - system.admin_content
@@ -317,11 +317,11 @@ function hook_menu_links_discovered_alter(&$links) {
 function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
 
   // Add a tab linking to node/add to all pages.
-  $data['tabs'][0]['node.add_page'] = [
+  $data['tabs'][0]['entity.node.add_page'] = [
     '#theme' => 'menu_local_task',
     '#link' => [
       'title' => t('Example tab'),
-      'url' => Url::fromRoute('node.add_page'),
+      'url' => Url::fromRoute('entity.node.add_page'),
       'localized_options' => [
         'attributes' => [
           'title' => t('Add content'),

@@ -14,30 +14,6 @@ entity.node.delete_multiple_form:
   requirements:
     _entity_delete_multiple_access: 'node'
 
-node.add_page:
-  path: '/node/add'
-  defaults:
-    _title: 'Add content'
-    _controller: '\Drupal\node\Controller\NodeController::addPage'
-  options:
-    _node_operation_route: TRUE
-  requirements:
-    _entity_create_any_access: 'node'
-
-node.add:
-  path: '/node/add/{node_type}'
-  defaults:
-    _entity_form: 'node.default'
-    _title_callback: '\Drupal\node\Controller\NodeController::addPageTitle'
-  requirements:
-    _entity_create_access: 'node:{node_type}'
-  options:
-    _node_operation_route: TRUE
-    parameters:
-      node_type:
-        type: entity:node_type
-        with_config_overrides: TRUE
-
 entity.node.preview:
   path: '/node/preview/{node_preview}/{view_mode_id}'
   defaults:
@@ -164,3 +140,11 @@ node.configure_rebuild_confirm:
     _form: '\Drupal\node\Form\RebuildPermissionsForm'
   requirements:
     _permission: 'rebuild node access permissions'
+
+# @todo remove these aliases as well as overrides in NodeRouteProvider
+# https://www.drupal.org/project/drupal/issues/3506653 is done.
+# @see https://www.drupal.org/project/drupal/issues/3540865
+entity.node.add_page:
+  alias: 'node.add_page'
+entity.node.add_form:
+  alias: 'node.add'

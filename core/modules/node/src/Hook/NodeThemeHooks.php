@@ -230,7 +230,7 @@ class NodeThemeHooks {
       foreach ($variables['content'] as $type) {
         $variables['types'][$type->id()] = [
           'type' => $type->id(),
-          'add_link' => Link::fromTextAndUrl($type->label(), Url::fromRoute('node.add', ['node_type' => $type->id()]))->toString(),
+          'add_link' => Link::fromTextAndUrl($type->label(), Url::fromRoute('entity.node.add_form', ['node_type' => $type->id()]))->toString(),
           'description' => [
             '#markup' => $type->getDescription(),
           ],

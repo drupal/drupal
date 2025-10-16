@@ -70,7 +70,7 @@ class NavigationContentLinksTest extends KernelTestBase {
 
     // Assert that the "Create" link is added to the menu.
     $this->assertArrayHasKey('navigation.create', $links);
-    $this->assertEquals('node.add_page', $links['navigation.create']['route_name']);
+    $this->assertEquals('entity.node.add_page', $links['navigation.create']['route_name']);
     $this->assertEquals('Create', $links['navigation.create']['title']);
 
     // Assert that the "Content" link is added to the menu.
@@ -80,17 +80,17 @@ class NavigationContentLinksTest extends KernelTestBase {
 
     // Assert that the "Article" submenu link is added to the menu.
     $this->assertArrayHasKey('navigation.content.node_type.article', $links);
-    $this->assertEquals('node.add', $links['navigation.content.node_type.article']['route_name']);
+    $this->assertEquals('entity.node.add_form', $links['navigation.content.node_type.article']['route_name']);
     $this->assertEquals('article', $links['navigation.content.node_type.article']['title']);
 
     // Assert that the "Blog" submenu link is added to the menu.
     $this->assertArrayHasKey('navigation.content.node_type.blog', $links);
-    $this->assertEquals('node.add', $links['navigation.content.node_type.blog']['route_name']);
+    $this->assertEquals('entity.node.add_form', $links['navigation.content.node_type.blog']['route_name']);
     $this->assertEquals('blog', $links['navigation.content.node_type.blog']['title']);
 
     // Assert that the "Landing Page" submenu link is added to the menu.
     $this->assertArrayHasKey('navigation.content.node_type.landing_page', $links);
-    $this->assertEquals('node.add', $links['navigation.content.node_type.landing_page']['route_name']);
+    $this->assertEquals('entity.node.add_form', $links['navigation.content.node_type.landing_page']['route_name']);
     $this->assertEquals('landing_page', $links['navigation.content.node_type.landing_page']['title']);
 
     // Assert that the "Create User" submenu link is added to the menu.

@@ -4,7 +4,7 @@ node.type_add:
   appears_on:
     - entity.node_type.collection
 node.add_page:
-  route_name: node.add_page
+  route_name: entity.node.add_page
   title: 'Add content'
   appears_on:
     - system.admin_content

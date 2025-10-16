@@ -63,9 +63,11 @@ use Drupal\user\EntityOwnerTrait;
   ],
   links: [
     'canonical' => '/node/{node}',
+    'add-page' => '/node/add',
+    'add-form' => '/node/add/{node_type}',
+    'edit-form' => '/node/{node}/edit',
     'delete-form' => '/node/{node}/delete',
     'delete-multiple-form' => '/admin/content/node/delete',
-    'edit-form' => '/node/{node}/edit',
     'version-history' => '/node/{node}/revisions',
     'revision' => '/node/{node}/revisions/{node_revision}/view',
     'create' => '/node',

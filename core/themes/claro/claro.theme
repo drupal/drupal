@@ -147,7 +147,7 @@ function claro_preprocess_node_add_list(&$variables): void {
       $label = $type->label();
       $description = $type->getDescription();
       $type_id = $type->id();
-      $add_url = Url::fromRoute('node.add', ['node_type' => $type_id]);
+      $add_url = Url::fromRoute('entity.node.add_form', ['node_type' => $type_id]);
       $variables['bundles'][$type_id] = [
         'label' => $label,
         'add_link' => Link::fromTextAndUrl($label, $add_url),

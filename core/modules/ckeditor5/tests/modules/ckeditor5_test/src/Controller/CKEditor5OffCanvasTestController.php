@@ -21,7 +21,7 @@ class CKEditor5OffCanvasTestController {
     $build['link'] = [
       '#type' => 'link',
       '#title' => 'Add Node',
-      '#url' => Url::fromRoute('node.add', ['node_type' => 'page']),
+      '#url' => Url::fromRoute('entity.node.add_form', ['node_type' => 'page']),
       '#attributes' => [
         'class' => ['use-ajax'],
         'data-dialog-type' => 'dialog',

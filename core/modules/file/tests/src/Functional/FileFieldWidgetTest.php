@@ -584,7 +584,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Attach a file to a node.
     $edit['files[' . $field_name . '_0]'] = $this->container->get('file_system')->realpath($test_file->getFileUri());
-    $this->drupalGet(Url::fromRoute('node.add', ['node_type' => $type_name]));
+    $this->drupalGet(Url::fromRoute('entity.node.add_form', ['node_type' => $type_name]));
     $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 

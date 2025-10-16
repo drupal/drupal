@@ -5,4 +5,4 @@ entity.node_type.collection:
   route_name: entity.node_type.collection
 node.add_page:
   title: 'Add content'
-  route_name: node.add_page
+  route_name: entity.node.add_page

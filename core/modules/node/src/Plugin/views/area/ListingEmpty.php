@@ -63,11 +63,11 @@ class ListingEmpty extends AreaPluginBase {
         '#theme' => 'links',
         '#links' => [
           [
-            'url' => Url::fromRoute('node.add_page'),
+            'url' => Url::fromRoute('entity.node.add_page'),
             'title' => $this->t('Add content'),
           ],
         ],
-        '#access' => $this->accessManager->checkNamedRoute('node.add_page', [], $account),
+        '#access' => $this->accessManager->checkNamedRoute('entity.node.add_page', [], $account),
       ];
       return $element;
     }

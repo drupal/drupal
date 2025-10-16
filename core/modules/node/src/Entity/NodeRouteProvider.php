@@ -3,47 +3,81 @@
 namespace Drupal\node\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
+use Drupal\node\Controller\NodeController;
+use Drupal\node\Controller\NodeViewController;
 
 /**
  * Provides routes for nodes.
  */
-class NodeRouteProvider implements EntityRouteProviderInterface {
+class NodeRouteProvider extends DefaultHtmlRouteProvider {
 
   /**
    * {@inheritdoc}
    */
   public function getRoutes(EntityTypeInterface $entity_type) {
-    $route_collection = new RouteCollection();
-    $route = (new Route('/node/{node}'))
-      ->addDefaults([
-        '_controller' => '\Drupal\node\Controller\NodeViewController::view',
-        '_title_callback' => '\Drupal\node\Controller\NodeViewController::title',
-      ])
-      ->setRequirement('node', '\d+')
-      ->setRequirement('_entity_access', 'node.view');
-    $route_collection->add('entity.node.canonical', $route);
+    $routes = parent::getRoutes($entity_type);
+    // Rename the entity.node.add_form and entity.node.add_page routes to keep
+    // BC.
+    // @todo remove this and use an alias instead when https://www.drupal.org/project/drupal/issues/3506653 is done.
+    $addPageRoute = $routes->get('entity.node.add_page');
+    $routes->remove('entity.node.add_page');
+    $routes->add('node.add_page', $addPageRoute);
 
-    $route = (new Route('/node/{node}/delete'))
-      ->addDefaults([
-        '_entity_form' => 'node.delete',
-        '_title' => 'Delete',
-      ])
-      ->setRequirement('node', '\d+')
-      ->setRequirement('_entity_access', 'node.delete')
-      ->setOption('_node_operation_route', TRUE);
-    $route_collection->add('entity.node.delete_form', $route);
+    $addFormRoute = $routes->get('entity.node.add_form');
+    $routes->remove('entity.node.add_form');
+    $routes->add('node.add', $addFormRoute);
+    return $routes;
+  }
 
-    $route = (new Route('/node/{node}/edit'))
-      ->setDefault('_entity_form', 'node.edit')
-      ->setRequirement('_entity_access', 'node.update')
-      ->setRequirement('node', '\d+')
-      ->setOption('_node_operation_route', TRUE);
-    $route_collection->add('entity.node.edit_form', $route);
+  /**
+   * {@inheritdoc}
+   */
+  protected function getAddPageRoute(EntityTypeInterface $entity_type) {
+    if ($route = parent::getAddPageRoute($entity_type)) {
+      return $route
+        ->setDefault('_controller', NodeController::class . '::addPage')
+        ->setDefault('_title', 'Add content')
+        ->setOption('_node_operation_route', TRUE);
+    }
+  }
 
-    return $route_collection;
+  /**
+   * {@inheritdoc}
+   */
+  protected function getAddFormRoute(EntityTypeInterface $entity_type) {
+    if ($route = parent::getAddFormRoute($entity_type)) {
+      return $route
+        ->setDefault('_title_callback', NodeController::class . '::addPageTitle')
+        ->setOption('_node_operation_route', TRUE);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getCanonicalRoute(EntityTypeInterface $entity_type) {
+    if ($route = parent::getCanonicalRoute($entity_type)) {
+      return $route->setDefault('_controller', NodeViewController::class . '::view');
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditFormRoute(EntityTypeInterface $entity_type) {
+    if ($route = parent::getEditFormRoute($entity_type)) {
+      return $route->setOption('_node_operation_route', TRUE);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDeleteFormRoute(EntityTypeInterface $entity_type) {
+    if ($route = parent::getDeleteFormRoute($entity_type)) {
+      return $route->setOption('_node_operation_route', TRUE);
+    }
   }
 
 }

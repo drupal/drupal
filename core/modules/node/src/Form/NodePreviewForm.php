@@ -86,7 +86,7 @@ class NodePreviewForm extends FormBase {
     $form['backlink'] = [
       '#type' => 'link',
       '#title' => $this->t('Back to content editing'),
-      '#url' => $node->isNew() ? Url::fromRoute('node.add', ['node_type' => $node->bundle()]) : $node->toUrl('edit-form'),
+      '#url' => $node->isNew() ? Url::fromRoute('entity.node.add_form', ['node_type' => $node->bundle()]) : $node->toUrl('edit-form'),
       '#options' => ['attributes' => ['class' => ['node-preview-backlink']]] + $query_options,
     ];
 
