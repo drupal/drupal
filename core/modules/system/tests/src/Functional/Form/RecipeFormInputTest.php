@@ -29,8 +29,9 @@ class RecipeFormInputTest extends BrowserTestBase {
     $this->drupalGet('/form-test/recipe-input');
 
     $assert_session = $this->assertSession();
-    // There should only be two nested input elements on the page: the two
-    // defined by the input_test recipe.
+    // There should only be two nested input elements on the page: the one
+    // defined by the input_test recipe and the other defined by its dependency,
+    // the create_node_type recipe.
     $assert_session->elementsCount('css', 'input[name*="["]', 2);
     // The default value and description should be visible.
     $assert_session->fieldValueEquals('input_test[owner]', 'Dries Buytaert');
