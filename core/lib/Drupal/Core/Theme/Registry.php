@@ -590,6 +590,7 @@ class Registry implements DestructableInterface {
 
         // Load the includes, as they may contain preprocess functions.
         if (isset($info['includes'])) {
+          @trigger_error('Providing includes for theme hook ' . $hook . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3549500', E_USER_DEPRECATED);
           foreach ($info['includes'] as $include_file) {
             include_once $this->root . '/' . $include_file;
           }
@@ -604,6 +605,7 @@ class Registry implements DestructableInterface {
           $include_file .= '/' . $info['file'];
           include_once $this->root . '/' . $include_file;
           $result[$hook]['includes'][] = $include_file;
+          @trigger_error('Providing a file for theme hook ' . $hook . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3549500', E_USER_DEPRECATED);
         }
 
         // Provide a default naming convention for 'template' based on the
@@ -635,7 +637,11 @@ class Registry implements DestructableInterface {
             // Add template_preprocess_HOOK function, if no initial preprocess
             // callback is defined.
             if (empty($info['initial preprocess']) && function_exists('template_preprocess_' . $hook)) {
-              // @todo trigger deprecation in https://www.drupal.org/project/drupal/issues/3513595.
+              if (!isset($info['deprecated'])) {
+                // Do not trigger a deprecation if the whole definition is
+                // deprecated.
+                @trigger_error('Providing template_preprocess_' . $hook . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
+              }
               $info['preprocess functions'][] = 'template_preprocess_' . $hook;
             }
             $info['preprocess functions'] = array_merge($info['preprocess functions'], $this->collectModulePreprocess($cache, 'preprocess_' . $hook));

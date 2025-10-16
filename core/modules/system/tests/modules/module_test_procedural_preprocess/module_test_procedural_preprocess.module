@@ -7,6 +7,23 @@
 
 declare(strict_types=1);
 
+/**
+ * Implements hook_theme().
+ */
+function module_test_procedural_preprocess_theme(): array {
+  $path = \Drupal::service('extension.list.module')->getPath('module_test_procedural_preprocess');
+  return [
+    'module_test_procedural_preprocess_theme' => [
+      'file' => 'module_test_procedural_preprocess.theme.inc',
+    ],
+    'module_test_procedural_preprocess_includes' => [
+      'includes' => [
+        $path . '/module_test_procedural_preprocess.additional.inc',
+      ],
+    ],
+  ];
+}
+
 function template_preprocess_test($arg): mixed {
   return $arg;
 }

@@ -17,8 +17,14 @@ use Drupal\field_ui\FieldUI;
  *   An associative array containing:
  *   - elements: An associative array containing a Form API structure to be
  *     rendered as a table.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
+ *   template_preprocess functions are registered directly in hook_theme().
+ *
+ * @see https://www.drupal.org/node/3533060
  */
 function template_preprocess_field_ui_table(&$variables): void {
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3533060', E_USER_DEPRECATED);
   \Drupal::service(ThemePreprocess::class)->preprocessTable($variables);
 }
 

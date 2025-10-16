@@ -4,6 +4,7 @@ namespace Drupal\field_ui\Hook;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Theme\ThemePreprocess;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
@@ -89,6 +90,7 @@ class FieldUiHooks {
           'responsive' => TRUE,
           'empty' => '',
         ],
+        'initial preprocess' => ThemePreprocess::class . ':preprocessTable',
       ],
       // Provide a dedicated template for new storage options as their styling
       // is quite different from a typical form element, so it works best to not

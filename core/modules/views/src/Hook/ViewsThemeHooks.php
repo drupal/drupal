@@ -121,6 +121,7 @@ class ViewsThemeHooks {
         'rows' => NULL,
         'title' => NULL,
       ],
+      'initial preprocess' => static::class . ':preprocessViewsViewGrouping',
     ];
     // Only display, pager, row, and style plugins can provide theme hooks.
     $plugin_types = ['display', 'pager', 'row', 'style', 'exposed_form'];

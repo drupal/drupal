@@ -1047,3 +1047,45 @@ function drupal_common_theme(): array {
   @trigger_error('drupal_common_theme() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Theme\ThemeCommonElements::commonElements() instead. See https://www.drupal.org/node/3488470', E_USER_DEPRECATED);
   return ThemeCommonElements::commonElements();
 }
+
+/**
+ * Prepares variables for authorize.php operation report templates.
+ *
+ * This report displays the results of an operation run via authorize.php.
+ *
+ * Default template: authorize-report.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - messages: An array of result messages.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3522119
+ */
+function template_preprocess_authorize_report(&$variables): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3522119', E_USER_DEPRECATED);
+  $messages = [];
+  if (!empty($variables['messages'])) {
+    foreach ($variables['messages'] as $heading => $logs) {
+      $items = [];
+      foreach ($logs as $number => $log_message) {
+        if ($number === '#abort') {
+          continue;
+        }
+        $class = 'authorize-results__' . ($log_message['success'] ? 'success' : 'failure');
+        $items[] = [
+          '#wrapper_attributes' => ['class' => [$class]],
+          '#markup' => $log_message['message'],
+        ];
+      }
+      $messages[] = [
+        '#theme' => 'item_list',
+        '#items' => $items,
+        '#title' => $heading,
+      ];
+    }
+  }
+  $variables['messages'] = $messages;
+}
