@@ -118,20 +118,25 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
     assert(array_key_exists(static::BUNDLE_PLACEHOLDER, $replacements));
 
     if (is_string($data)) {
-      $data = str_replace(array_keys($replacements), $replacements, $data);
+      return str_replace(array_keys($replacements), $replacements, $data);
     }
-    elseif (is_array($data)) {
-      foreach ($data as $old_key => $value) {
-        $value = static::replacePlaceholders($value, $replacements);
 
-        // Only replace the `%bundle` placeholder in array keys.
+    if (!is_array($data)) {
+      return $data;
+    }
+
+    foreach ($data as $old_key => $value) {
+      $value = static::replacePlaceholders($value, $replacements);
+
+      // Only replace the `%bundle` placeholder in array keys.
+      // Non-string keys cannot contain placeholders.
+      if (is_string($old_key)) {
         $new_key = str_replace(static::BUNDLE_PLACEHOLDER, $replacements[static::BUNDLE_PLACEHOLDER], $old_key);
-        if ($old_key !== $new_key) {
-          unset($data[$old_key]);
-        }
+        unset($data[$old_key]);
         $data[$new_key] = $value;
       }
     }
+
     return $data;
   }
 
