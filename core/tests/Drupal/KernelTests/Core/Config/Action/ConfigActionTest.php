@@ -129,6 +129,15 @@ class ConfigActionTest extends KernelTestBase {
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame([['a', 'b', 'c'], ['a']], $config_test_entity->getArrayProperty());
 
+    // Ensure that we can affect an optional config entity that actually exists.
+    $manager->applyAction(
+      'entity_method:config_test.dynamic:setArray',
+      '?config_test.dynamic.dotted.default',
+      ['x', 'y', 'z'],
+    );
+    $config_test_entity = $storage->load('dotted.default');
+    $this->assertSame(['x', 'y', 'z'], $config_test_entity->getArrayProperty());
+
     $config_test_entity->delete();
     try {
       $manager->applyAction('entity_method:config_test.dynamic:setProtectedProperty', 'config_test.dynamic.dotted.default', 'Test value');
@@ -136,6 +145,20 @@ class ConfigActionTest extends KernelTestBase {
     }
     catch (ConfigActionException $e) {
       $this->assertSame('Entity config_test.dynamic.dotted.default does not exist', $e->getMessage());
+    }
+
+    // Do the same with the optional modifier in the name does not throw an exception.
+    $manager->applyAction('entity_method:config_test.dynamic:setProtectedProperty', '?config_test.dynamic.dotted.default', 'Test value');
+    // The configuration also didn't get created with and without the modifier.
+    $this->assertNull($storage->load('config_test.dynamic.dotted.default'));
+    $this->assertNull($storage->load('?config_test.dynamic.dotted.default'));
+
+    try {
+      $manager->applyAction('entity_method:config_test.dynamic:setProtectedProperty', '?config_test.dynamic.*.default', 'Test value');
+      $this->fail('Expected exception not thrown');
+    }
+    catch (ConfigActionException $e) {
+      $this->assertSame("The '?config_test.dynamic.*.default' configuration name is optional because it starts with a question mark, and therefore cannot contain wildcards.", $e->getMessage());
     }
 
     // Test custom and default admin labels.

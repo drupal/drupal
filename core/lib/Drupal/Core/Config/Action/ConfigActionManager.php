@@ -131,6 +131,18 @@ class ConfigActionManager extends DefaultPluginManager {
    * @see \Drupal\Core\Config\Action\ConfigActionManager::getConfigNamesMatchingExpression()
    */
   public function applyAction(string $action_id, string $configName, mixed $data): void {
+    if (str_starts_with($configName, '?')) {
+      if (str_contains($configName, '*')) {
+        throw new ConfigActionException("The '$configName' configuration name is optional because it starts with a question mark, and therefore cannot contain wildcards.");
+      }
+      $configName = trim($configName, '?');
+      if (!$this->configStorage->exists($configName)) {
+        // The config action is optional and the config doesn't exist.
+        // So there is nothing to do.
+        return;
+      }
+    }
+
     if (!$this->hasDefinition($action_id)) {
       // Get the full plugin ID from the shorthand map, if it is available.
       $entity_type = $this->configManager->getEntityTypeIdByName($configName);
