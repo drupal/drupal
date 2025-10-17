@@ -3,7 +3,6 @@
 namespace Drupal\Core\Render\MainContent;
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\AlertCommand;
 use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Render\ElementInfoManagerInterface;
@@ -48,20 +47,6 @@ class AjaxRenderer implements MainContentRendererInterface {
    */
   public function renderResponse(array $main_content, Request $request, RouteMatchInterface $route_match) {
     $response = new AjaxResponse();
-
-    if (isset($main_content['#type']) && ($main_content['#type'] == 'ajax')) {
-      // Complex Ajax callbacks can return a result that contains an error
-      // message or a specific set of commands to send to the browser.
-      $main_content += $this->elementInfoManager->getInfo('ajax');
-      $error = $main_content['#error'];
-      if (!empty($error)) {
-        // Fall back to some default message otherwise use the specific one.
-        if (!is_string($error)) {
-          $error = 'An error occurred while handling the request: The server received invalid input.';
-        }
-        $response->addCommand(new AlertCommand($error));
-      }
-    }
 
     $html = $this->renderer->renderRoot($main_content);
     $response->setAttachments($main_content['#attached']);
