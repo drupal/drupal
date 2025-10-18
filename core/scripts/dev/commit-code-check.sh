@@ -39,6 +39,7 @@ while test $# -gt 0; do
       echo "--branch BRANCH           creates list of files to check by comparing against a branch"
       echo "--cached                  checks staged files"
       echo "--drupalci                a special mode for DrupalCI"
+      echo "--memory-unlimited        bypass PHP memory limit for PHPStan and PHPCS"
       echo " "
       echo "Example usage: sh ./core/scripts/dev/commit-code-check.sh --branch 9.2.x"
       exit 0
@@ -70,9 +71,11 @@ while test $# -gt 0; do
 done
 
 memory_limit=""
+phpcs_memory_limit=""
 
 if [[ "$MEMORY_UNLIMITED" == "1" ]]; then
   memory_limit="--memory-limit=-1"
+  phpcs_memory_limit="-d memory_limit=-1"
 fi
 
 # Set up variables to make colored output simple. Color output is disabled on
@@ -272,7 +275,7 @@ printf "\n"
 # Run PHPCS on all files on DrupalCI or when phpcs files are changed.
 if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
   # Test all files with phpcs rules.
-  vendor/bin/phpcs -ps --parallel="$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+  vendor/bin/phpcs $phpcs_memory_limit -ps --parallel="$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
   PHPCS=$?
   if [ "$PHPCS" -ne "0" ]; then
     # If there are failures set the status to a number other than 0.
@@ -397,7 +400,7 @@ for FILE in $FILES; do
   ############################################################################
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]] && [[ "$DRUPALCI" == "0" ]]; then
     # Test files with phpcs rules.
-    vendor/bin/phpcs "$TOP_LEVEL/$FILE" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+    vendor/bin/phpcs $phpcs_memory_limit "$TOP_LEVEL/$FILE" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
     PHPCS=$?
     if [ "$PHPCS" -ne "0" ]; then
       # If there are failures set the status to a number other than 0.
