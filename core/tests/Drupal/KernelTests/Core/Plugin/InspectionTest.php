@@ -12,11 +12,6 @@ namespace Drupal\KernelTests\Core\Plugin;
 class InspectionTest extends PluginTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['node', 'user'];
-
-  /**
    * Tests getPluginId() and getPluginDefinition().
    */
   public function testInspection(): void {

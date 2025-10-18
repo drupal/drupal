@@ -14,11 +14,6 @@ use Drupal\Component\Plugin\Exception\ExceptionInterface;
 class FactoryTest extends PluginTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['node', 'user'];
-
-  /**
    * Tests that DefaultFactory can create a plugin instance.
    */
   public function testDefaultFactory(): void {

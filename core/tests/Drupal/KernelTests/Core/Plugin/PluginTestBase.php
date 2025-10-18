@@ -20,7 +20,11 @@ abstract class PluginTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['plugin_test'];
+  protected static $modules = [
+    'plugin_test',
+    'user',
+    'node',
+  ];
 
   /**
    * The test plugin manager used by Plugin API unit tests.
