@@ -15,11 +15,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class InspectionTest extends PluginTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['node', 'user'];
-
-  /**
    * Tests getPluginId() and getPluginDefinition().
    */
   public function testInspection(): void {
