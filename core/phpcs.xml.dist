@@ -252,6 +252,7 @@
   <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
     <properties>
       <property name="forbiddenAnnotations" type="array">
+        <element value="@encode"/>
         <element value="@inheritDoc"/>
         <element value="@inheritdoc"/>
         <element value="@returns"/>
