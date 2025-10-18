@@ -258,7 +258,7 @@
     // Initialize the specified columns (for example, weight or parent columns)
     // to show or hide according to user preference. This aids accessibility
     // so that, e.g., screen reader users can choose to enter weight values and
-    // manipulate form elements directly, rather than using drag-and-drop..
+    // manipulate form elements directly, rather than using drag-and-drop.
     self.initColumns();
 
     // Add event bindings to the document. The self variable is passed along

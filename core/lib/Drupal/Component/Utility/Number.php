@@ -66,7 +66,7 @@ class Number {
    * 00, 01, 02, ..., 0y, 0z,
    * 110, 111, ... , 1zy, 1zz,
    * 2100, 2101, ..., 2zzy, 2zzz,
-   * 31000, 31001, ...
+   * 31000, 31001, and so on.
    *
    * @param int $i
    *   The integer value to convert.

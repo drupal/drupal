@@ -263,6 +263,7 @@
     <properties>
        <property name="forbiddenCommentPatterns" type="array">
          <element value="/@inheritDoc/"/>
+         <element value="/(?&lt;!\.)\.\.(?!\.)$/"/>
        </property>
     </properties>
   </rule>

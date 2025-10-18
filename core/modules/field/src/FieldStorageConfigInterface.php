@@ -133,7 +133,7 @@ interface FieldStorageConfigInterface extends ConfigEntityInterface, FieldStorag
   public function getIndexes();
 
   /**
-   * Sets the custom storage indexes for the field data storage..
+   * Sets the custom storage indexes for the field data storage.
    *
    * @param array $indexes
    *   The array of custom indexes.

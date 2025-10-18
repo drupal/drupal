@@ -583,7 +583,7 @@ class ContactSitewideTest extends BrowserTestBase {
    *   The message that will be displayed to a user upon completing the contact
    *   form.
    * @param string $redirect
-   *   The path where user will be redirect after this form has been submitted..
+   *   The path where user will be redirect after this form has been submitted.
    */
   public function updateContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $redirect = '/'): void {
     $edit = [];

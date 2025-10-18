@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests UI of aggregate functionality..
+ * Tests UI of aggregate functionality.
  */
 #[Group('views_ui')]
 #[RunTestsInSeparateProcesses]

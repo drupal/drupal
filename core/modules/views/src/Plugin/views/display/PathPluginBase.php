@@ -253,7 +253,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    *   TRUE, when the view should override the given route.
    */
   protected function overrideAppliesPathAndMethod($view_path, Route $view_route, Route $route) {
-    // Find all paths which match the path of the current display..
+    // Find all paths which match the path of the current display.
     $route_path = RouteCompiler::getPathWithoutDefaults($route);
     $route_path = RouteCompiler::getPatternOutline($route_path);
 

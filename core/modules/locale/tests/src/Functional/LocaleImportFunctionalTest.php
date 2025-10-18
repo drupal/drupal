@@ -123,7 +123,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     $this->assertSession()->pageTextContains("2 translation strings were skipped because of disallowed or malformed HTML. See the log for details.");
 
-    // Check empty files import with a user that cannot access site reports..
+    // Check empty files import with a user that cannot access site reports.
     $this->drupalLogin($this->adminUser);
     // Try importing a zero byte sized .po file.
     $this->importPoFile($this->getEmptyPoFile(), [

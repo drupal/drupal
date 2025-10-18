@@ -556,7 +556,7 @@ class PagerTest extends ViewTestBase {
 
     // Go to the second page so we see both previous and next buttons.
     $this->drupalGet('nl/admin/content', ['query' => ['page' => 1]]);
-    // Translation mapping..
+    // Translation mapping.
     $labels = [
       '« First' => '« Eerste',
       '‹ Previous' => '‹ Vorige',

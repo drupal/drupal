@@ -7,7 +7,7 @@ namespace Drupal\Tests\Core\Plugin\Discovery;
 use Drupal\Component\Plugin\Derivative\DeriverInterface;
 
 /**
- * Defines test derivative discovery using an object..
+ * Defines test derivative discovery using an object.
  */
 class TestDerivativeDiscoveryWithObject implements DeriverInterface {
 

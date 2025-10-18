@@ -195,7 +195,7 @@ class ElementTest extends BrowserTestBase {
   }
 
   /**
-   * Tests a form with an autocomplete setting..
+   * Tests a form with an autocomplete setting.
    */
   protected function testFormAutocomplete(): void {
     $this->drupalGet('form-test/autocomplete');

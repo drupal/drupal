@@ -129,7 +129,7 @@ abstract class FormElementBase extends RenderElementBase implements FormElementI
   }
 
   /**
-   * Render API callback: Handles the #pattern form element property..
+   * Render API callback: Handles the #pattern form element property.
    *
    * This function is assigned as a #element_validate callback.
    *

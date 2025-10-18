@@ -484,7 +484,7 @@ abstract class StylePluginBase extends PluginBase {
    *   Each set contains the following associative array:
    *   - group: The group content.
    *   - level: The hierarchical level of the grouping.
-   *   - rows: The result rows to be rendered in this group..
+   *   - rows: The result rows to be rendered in this group.
    *
    * @return array
    *   Render array of grouping sets.

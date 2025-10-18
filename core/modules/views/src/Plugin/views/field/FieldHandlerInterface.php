@@ -59,7 +59,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
   public function elementLabelType($none_supported = FALSE, $default_empty = FALSE);
 
   /**
-   * Returns a wrapper HTML element for the field..
+   * Returns a wrapper HTML element for the field.
    *
    * @param bool $none_supported
    *   (optional) Whether or not this HTML element is supported. Defaults to

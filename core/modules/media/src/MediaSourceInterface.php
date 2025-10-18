@@ -29,7 +29,7 @@ use Drupal\Core\Plugin\PluginFormInterface;
  * - SoundCloud: handles SoundCloud audio,
  * - Instagram: handles Instagram posts,
  * - Twitter: handles tweets,
- * - ...
+ * - and so on.
  *
  * Their responsibilities are:
  * - Defining how media is represented (stored). Media sources are not
@@ -86,7 +86,7 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurableIn
    * - location
    * - permalink
    * - licensing information
-   * - ...
+   * - and so on.
    *
    * This method should list all metadata attributes that a media source MAY
    * offer. In other words: it is possible that a particular media item does

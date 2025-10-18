@@ -110,7 +110,7 @@ class HtmxUtilitiesTest extends UnitTestCase {
   }
 
   /**
-   * Test ::applyTo with attribute key..
+   * Test ::applyTo with attribute key.
    */
   public function testApplyToWithKey(): void {
     $render = [];

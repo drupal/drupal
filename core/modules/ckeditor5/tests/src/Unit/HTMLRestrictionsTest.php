@@ -996,7 +996,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'expected_union' => 'b',
     ];
 
-    // Basic cases: attributes..
+    // Basic cases: attributes.
     yield 'set + set with empty intersection' => [
       'a' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
       'b' => new HTMLRestrictions(['b' => ['href' => TRUE]]),

@@ -23,7 +23,7 @@ class FileStorage implements PhpStorageInterface {
    *   An associative array, containing at least these two keys:
    *   - directory: The directory where the files should be stored.
    *   - bin: The storage bin. Multiple storage objects can be instantiated with
-   *     the same configuration, but for different bins..
+   *     the same configuration, but for different bins.
    */
   public function __construct(array $configuration) {
     $this->directory = $configuration['directory'] . '/' . $configuration['bin'];

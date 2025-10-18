@@ -618,7 +618,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     // Verify that a test radio button has a "None" choice.
     $this->assertSession()->elementExists('xpath', '//div[@id="edit-card-1"]//input[@value="_none"]');
-    // Verify that a test radio button has a "N/A" choice..
+    // Verify that a test radio button has a "N/A" choice.
     $this->assertSession()->elementExists('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]');
     $this->assertSession()->elementTextEquals('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]', "N/A");
 

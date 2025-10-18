@@ -20,7 +20,7 @@ interface StackedRouteMatchInterface extends RouteMatchInterface {
   public function getCurrentRouteMatch();
 
   /**
-   * Gets the master route match..
+   * Gets the master route match.
    *
    * @return \Drupal\Core\Routing\RouteMatchInterface
    *   The route match object for the master route.

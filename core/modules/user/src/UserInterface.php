@@ -134,7 +134,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
   public function getCreatedTime();
 
   /**
-   * Sets the UNIX timestamp when the user last accessed the site..
+   * Sets the UNIX timestamp when the user last accessed the site.
    *
    * @param int $timestamp
    *   Timestamp of the last access.
