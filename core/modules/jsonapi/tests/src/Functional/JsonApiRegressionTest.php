@@ -61,7 +61,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'node',
       'page',
       'field_comment',
-      NULL,
+      'Comment',
       'comment',
       'default',
       [
@@ -191,7 +191,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'node',
       'journal_article',
       'field_issue',
-      NULL,
+      'Issue',
       'node',
       'default',
       [
@@ -205,7 +205,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'node',
       'journal_article',
       'field_mentioned_in',
-      NULL,
+      'Mentioned in',
       'node',
       'default',
       [
@@ -394,7 +394,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'taxonomy_term',
       'tags',
       $internal_relationship_field_name,
-      NULL,
+      'Type',
       'user'
     );
     $this->rebuildAll();

@@ -42,7 +42,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
       'entity_test',
       'bar',
       'spotlight',
-      NULL,
+      'Spotlight',
       static::$entityTypeId,
       'default',
       [

@@ -127,7 +127,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
       'node',
       'folder',
       'field_parent_folder',
-      NULL,
+      'Parent folder',
       'node',
       'default',
       [
