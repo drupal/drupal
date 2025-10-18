@@ -94,7 +94,7 @@ class JsonApiPatchRegressionTest extends JsonApiFunctionalTestBase {
       'node',
       'page',
       'field_test',
-      NULL,
+      'Test',
       'user',
       'default',
       [
@@ -146,7 +146,7 @@ class JsonApiPatchRegressionTest extends JsonApiFunctionalTestBase {
       'node',
       'journal_article',
       'field_issue',
-      NULL,
+      'Issue',
       'node',
       'default',
       [
