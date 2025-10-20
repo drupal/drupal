@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 /**
  * Tests the LinkAccessConstraintValidator validator.
@@ -55,13 +56,20 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
       ->willReturn($mayLinkAnyPage);
 
     $context = $this->createMock(ExecutionContextInterface::class);
+
+    $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
+    $constraintViolationBuilder->method('atPath')
+      ->with('uri')
+      ->willReturn($constraintViolationBuilder);
+
     if ($valid) {
       $context->expects($this->never())
-        ->method('addViolation');
+        ->method('buildViolation');
     }
     else {
       $context->expects($this->once())
-        ->method('addViolation');
+        ->method('buildViolation')
+        ->willReturn($constraintViolationBuilder);
     }
 
     $constraint = new LinkAccessConstraint();

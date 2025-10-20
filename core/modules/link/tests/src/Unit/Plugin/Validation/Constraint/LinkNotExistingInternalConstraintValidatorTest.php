@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 /**
  * Tests Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraintValidator.
@@ -38,7 +39,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
 
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->never())
-      ->method('addViolation');
+      ->method('buildViolation');
 
     $this->validate($link, $context);
   }
@@ -65,7 +66,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
 
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->never())
-      ->method('addViolation');
+      ->method('buildViolation');
 
     $this->validate($link, $context);
   }
@@ -90,9 +91,14 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
       ->method('getUrl')
       ->willReturn($url);
 
+    $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
+    $constraintViolationBuilder->method('atPath')
+      ->with('uri')
+      ->willReturn($constraintViolationBuilder);
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->once())
-      ->method('addViolation');
+      ->method('buildViolation')
+      ->willReturn($constraintViolationBuilder);
 
     $this->validate($link, $context);
   }
@@ -111,7 +117,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
 
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->never())
-      ->method('addViolation');
+      ->method('buildViolation');
 
     $this->validate($link, $context);
   }

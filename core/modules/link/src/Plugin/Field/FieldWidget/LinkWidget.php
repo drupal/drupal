@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\link\LinkItemInterface;
 use Drupal\link\LinkTitleVisibility;
 use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -461,6 +462,16 @@ class LinkWidget extends WidgetBase {
       }
     }
     parent::flagErrors($items, $violations, $form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
+    $element = parent::errorElement($element, $violation, $form, $form_state);
+
+    $property_path_array = explode('.', $violation->getPropertyPath());
+    return ($element === FALSE) ? FALSE : $element[$property_path_array[1]];
   }
 
 }

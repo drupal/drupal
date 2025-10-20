@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 /**
  * Tests Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraintValidator.
@@ -36,13 +37,19 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
       ->willReturn(Url::fromUri($url));
     $context = $this->createMock(ExecutionContextInterface::class);
 
+    $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
+    $constraintViolationBuilder->method('atPath')
+      ->with('uri')
+      ->willReturn($constraintViolationBuilder);
+
     if ($valid) {
       $context->expects($this->never())
-        ->method('addViolation');
+        ->method('buildViolation');
     }
     else {
       $context->expects($this->once())
-        ->method('addViolation');
+        ->method('buildViolation')
+        ->willReturn($constraintViolationBuilder);
     }
 
     // Setup some more allowed protocols.
@@ -87,7 +94,7 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
 
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->never())
-      ->method('addViolation');
+      ->method('buildViolation');
 
     $constraint = new LinkExternalProtocolsConstraint();
 
@@ -109,7 +116,7 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
 
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->never())
-      ->method('addViolation');
+      ->method('buildViolation');
 
     $constraint = new LinkExternalProtocolsConstraint();
 
