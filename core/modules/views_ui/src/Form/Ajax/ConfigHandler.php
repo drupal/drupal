@@ -194,6 +194,9 @@ class ConfigHandler extends ViewsFormBase {
     $form_state->get('handler')->validateOptionsForm($form['options'], $form_state);
 
     if ($form_state->getErrors()) {
+      // Trigger a form rerender so error messages are displayed correctly in
+      // the AJAX modal.
+      // @see \Drupal\views_ui\Form\Ajax\ViewsFormBase::ajaxFormWrapper()
       $form_state->set('rerender', TRUE);
     }
   }
