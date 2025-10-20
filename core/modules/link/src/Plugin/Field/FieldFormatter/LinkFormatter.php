@@ -245,7 +245,7 @@ class LinkFormatter extends FormatterBase {
     }
 
     $settings = $this->getSettings();
-    $options = $item->options;
+    $options = $item->options ?? [];
     $options += $url->getOptions();
 
     // Add optional 'rel' attribute to link options.

@@ -265,4 +265,21 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
     ];
   }
 
+  /**
+   * Tests that links with NULL options are rendered correctly.
+   */
+  public function testNullLinkOptions(): void {
+    $entity = EntityTest::create();
+    $entity->field_test->setValue([
+      'uri' => 'https://www.example.com',
+      'options' => NULL,
+    ]);
+
+    $render_array = $entity->field_test->view([
+      ['label' => 'hidden', 'settings' => []],
+    ]);
+    $output = (string) \Drupal::service('renderer')->renderRoot($render_array);
+    $this->assertStringContainsString('<div><a href="https://www.example.com">https://www.example.com</a></div>', $output);
+  }
+
 }
