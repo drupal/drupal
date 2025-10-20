@@ -17,6 +17,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'id' => 'id',
     'bundle' => 'type',
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_default_access',
 )]
 class EntityTestDefaultAccess extends EntityTest {

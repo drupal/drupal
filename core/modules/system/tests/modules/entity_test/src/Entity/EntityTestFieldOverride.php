@@ -19,6 +19,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
     'uuid' => 'uuid',
     'bundle' => 'type',
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_field_override',
 )]
 class EntityTestFieldOverride extends EntityTest {

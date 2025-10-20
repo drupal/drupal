@@ -41,6 +41,7 @@ use Drupal\views\EntityViewsData;
     'edit-form' => '/entity_test_mul_default_value/manage/{entity_test_mul_default_value}',
     'delete-form' => '/entity_test/delete/entity_test_mul_default_value/{entity_test_mul_default_value}',
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_mul_default_value',
   data_table: 'entity_test_mul_default_value_property_data',
   translatable: TRUE,

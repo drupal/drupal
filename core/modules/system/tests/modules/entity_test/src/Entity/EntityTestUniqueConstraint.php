@@ -31,6 +31,7 @@ use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
     ],
     'translation' => ContentTranslationHandler::class,
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_unique_constraint',
   data_table: 'entity_test_unique_constraint_data',
 )]

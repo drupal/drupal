@@ -49,6 +49,7 @@ use Drupal\views\EntityViewsData;
     'edit-form' => '/entity_test_mulrev_changed/manage/{entity_test_mulrev_changed}/edit',
     'revision' => '/entity_test_mulrev_changed/{entity_test_mulrev_changed}/revision/{entity_test_mulrev_changed_revision}/view',
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_mulrev_changed',
   data_table: 'entity_test_mulrev_changed_property',
   revision_table: 'entity_test_mulrev_changed_revision',

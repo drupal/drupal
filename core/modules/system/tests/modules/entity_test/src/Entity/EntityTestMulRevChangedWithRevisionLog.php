@@ -24,6 +24,7 @@ use Drupal\Core\Entity\RevisionLogInterface;
     'label' => 'name',
     'langcode' => 'langcode',
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_mulrev_changed_revlog',
   revision_table: 'entity_test_mulrev_changed_revlog_revision',
   revision_metadata_keys: [

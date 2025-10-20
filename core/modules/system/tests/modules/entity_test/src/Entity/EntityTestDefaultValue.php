@@ -23,6 +23,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'bundle' => 'type',
     'langcode' => 'langcode',
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_default_value',
 )]
 class EntityTestDefaultValue extends EntityTest {

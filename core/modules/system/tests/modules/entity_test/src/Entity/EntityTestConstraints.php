@@ -24,6 +24,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'bundle' => 'type',
     'label' => 'name',
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_constraints',
   constraints: [
     'NotNull' => [],

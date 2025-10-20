@@ -27,6 +27,7 @@ use Drupal\entity_test\EntityTestViewBuilderOverriddenView;
     'access' => EntityTestAccessControlHandler::class,
     'view_builder' => EntityTestViewBuilderOverriddenView::class,
   ],
+  admin_permission: 'administer entity_test content',
   base_table: 'entity_test_view_builder',
 )]
 class EntityTestViewBuilder extends EntityTest {
