@@ -20,9 +20,11 @@ class LayoutBuilderTestPluginHooks {
     unset($definitions['help_block']);
     // Explicitly remove the "Sticky at top of lists field_block".
     $disallowed_fields = ['sticky'];
-    // Remove "Changed" field if this is the first section.
+    // Remove "Changed" field and the hidden_type inline block if this is the
+    // first section.
     if ($extra['delta'] === 0) {
       $disallowed_fields[] = 'changed';
+      unset($definitions['inline_block:hidden_type']);
     }
     foreach ($definitions as $plugin_id => $definition) {
       // Field block IDs are in the form 'field_block:{entity}:{bundle}:{name}',

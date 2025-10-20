@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Functional;
 
+use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Core\Url;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
@@ -83,23 +86,41 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Tests altering block definitions in the choose block controller.
+   *
+   * @see \Drupal\layout_builder_test\Hook\LayoutBuilderTestHooks::pluginFilterBlockLayoutBuilderAlter
    */
   public function testLayoutBuilderChooseBlocksAlter(): void {
-    // See layout_builder_test_plugin_filter_block__layout_builder_alter().
+    \Drupal::service('module_installer')->install(['block_content']);
+
     $assert_session = $this->assertSession();
+
+    // Create 2 block content types so the inline block list displays.
+    BlockContentType::create([
+      'id' => 'not_hidden_type',
+      'label' => 'I can be added to all sections',
+    ])->save();
+    BlockContentType::create([
+      'id' => 'hidden_type',
+      'label' => 'I cannot be added to the first section',
+    ])->save();
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
       'administer node display',
       'administer node fields',
+      'create and edit custom blocks',
     ]));
 
-    // From the manage display page, go to manage the layout.
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
+    // Enable layout builder and go to manage the layout.
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->save();
+    $manageLayoutUrl = Url::fromRoute('layout_builder.defaults.node.view', [
+      'node_type' => 'bundle_with_section_field',
+      'view_mode_name' => 'default',
+    ]);
+    $this->drupalGet($manageLayoutUrl);
 
     // Add a new block.
     $this->clickLink('Add block');
@@ -121,9 +142,13 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
     // Verify that Changed block is not present on first section.
     $assert_session->linkNotExists('Changed');
 
+    // Verify the inline block list is also filtered.
+    $this->clickLink('Create content block');
+    $assert_session->linkExists('I can be added to all sections');
+    $assert_session->linkNotExists('I cannot be added to the first section');
+
     // Go back to Manage layout.
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
-    $this->clickLink('Manage layout');
+    $this->drupalGet($manageLayoutUrl);
 
     // Add a new section.
     $this->clickLink('Add section', 1);
@@ -136,6 +161,10 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
 
     // Verify that Changed block is present on second section.
     $assert_session->linkExists('Changed');
+    // Verify the inline block type is present on the second section.
+    $this->clickLink('Create content block');
+    $assert_session->linkExists('I can be added to all sections');
+    $assert_session->linkExists('I cannot be added to the first section');
   }
 
   /**

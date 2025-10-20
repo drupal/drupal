@@ -175,6 +175,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
   public function inlineBlockList(SectionStorageInterface $section_storage, int $delta, $region) {
     $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getPopulatedContexts($section_storage), [
       'section_storage' => $section_storage,
+      'delta' => $delta,
       'region' => $region,
       'list' => 'inline_blocks',
     ]);
