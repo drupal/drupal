@@ -28,6 +28,13 @@ abstract class TopBarItemBase extends PluginBase implements TopBarItemPluginInte
   /**
    * {@inheritdoc}
    */
+  public function weight(): int {
+    return $this->pluginDefinition['weight'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   abstract public function build(): array;
 
 }

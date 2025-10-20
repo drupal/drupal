@@ -25,12 +25,15 @@ final class TopBarItem extends Plugin {
    *   (optional) The human-readable name of the top bar item.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
+   * @param int $weight
+   *   (optional) The weight of the top bar item.
    */
   public function __construct(
     public readonly string $id,
     public readonly TopBarRegion $region,
     public readonly ?TranslatableMarkup $label = NULL,
     public readonly ?string $deriver = NULL,
+    public readonly int $weight = 0,
   ) {}
 
 }

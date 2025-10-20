@@ -42,4 +42,18 @@ final class TopBarItemManager extends DefaultPluginManager implements TopBarItem
     return $instances;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefinitions(): array {
+    $definitions = parent::getDefinitions();
+
+    // Sort definitions by weight.
+    uasort($definitions, function (array $a, array $b) {
+      return ($a['weight'] ?? 0) <=> ($b['weight'] ?? 0);
+    });
+
+    return $definitions;
+  }
+
 }

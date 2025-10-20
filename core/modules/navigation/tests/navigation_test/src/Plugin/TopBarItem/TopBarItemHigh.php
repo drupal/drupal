@@ -10,22 +10,22 @@ use Drupal\navigation\TopBarItemBase;
 use Drupal\navigation\TopBarRegion;
 
 /**
- * Provides a top bar item plugin for testing the top bar.
+ * Provides a top bar item plugin for testing the top bar item weight.
  */
 #[TopBarItem(
-  id: 'test_item',
-  region: TopBarRegion::Actions,
-  label: new TranslatableMarkup('Test Item'),
-  weight: 0,
+  id: 'test_item_high',
+  region: TopBarRegion::Context,
+  label: new TranslatableMarkup('High Weight'),
+  weight: 10,
 )]
-class TopBarItemInstantiation extends TopBarItemBase {
+class TopBarItemHigh extends TopBarItemBase {
 
   /**
    * {@inheritdoc}
    */
   public function build(): array {
     return [
-      '#markup' => 'Top Bar Item',
+      '#markup' => '<span class="top-bar__title" data-plugin-id="test_item_high">High Weight</span>',
     ];
   }
 

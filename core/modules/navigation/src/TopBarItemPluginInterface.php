@@ -26,6 +26,14 @@ interface TopBarItemPluginInterface {
   public function region(): TopBarRegion;
 
   /**
+   * Returns the plugin weight.
+   *
+   * @return int
+   *   The plugin weight.
+   */
+  public function weight(): int;
+
+  /**
    * Builds and returns the renderable array for this top bar item plugin.
    *
    * If a top bar item should not be rendered because it has no content, then

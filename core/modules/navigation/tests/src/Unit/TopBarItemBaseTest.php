@@ -24,17 +24,20 @@ class TopBarItemBaseTest extends UnitTestCase {
    *
    * @legacy-covers ::label
    * @legacy-covers ::region
+   * @legacy-covers ::weight
    */
   public function testTopBarItemBase(): void {
     $definition = [
       'label' => new TranslatableMarkup('label'),
       'region' => TopBarRegion::Tools,
+      'weight' => 0,
     ];
 
     $top_bar_item_base = new TopBarItemInstantiation([], 'test_top_bar_item_base', $definition);
 
     $this->assertEquals($definition['label'], $top_bar_item_base->label());
     $this->assertEquals($definition['region'], $top_bar_item_base->region());
+    $this->assertEquals($definition['weight'], $top_bar_item_base->weight());
   }
 
 }

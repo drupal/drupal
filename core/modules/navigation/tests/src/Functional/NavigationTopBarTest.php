@@ -28,6 +28,7 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
     'node',
     'layout_builder',
     'test_page_test',
+    'navigation_test',
   ];
 
   /**
@@ -159,6 +160,41 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
 
     // Ensure that the displayed links match the expected order.
     $this->assertSame($expected_order, $displayed_links, 'Local tasks are displayed in the correct order based on their weights.');
+  }
+
+  /**
+   * Tests the plugin weights in the top bar.
+   */
+  public function testTopBarPluginWeights(): void {
+
+    $this->drupalGet($this->node->toUrl());
+
+    // Select only the test plugins by their known data-plugin-id attributes.
+    $selectors = [
+      '[data-plugin-id="test_item_low"]',
+      '[data-plugin-id="test_item_zero"]',
+      '[data-plugin-id="test_item_high"]',
+    ];
+    $elements = [];
+
+    foreach ($selectors as $selector) {
+      $element = $this->getSession()->getPage()->find('css', $selector);
+      if ($element) {
+        $elements[] = $element;
+      }
+    }
+
+    // Capture text values in the order they appear in the DOM.
+    $labels = array_map(fn($element) => trim($element->getText()), $elements);
+
+    // Expected order based on weights: low (-10), zero (0), high (10).
+    $expected = [
+      'Low Weight',
+      'Zero Weight',
+      'High Weight',
+    ];
+
+    $this->assertSame($expected, $labels, 'Top bar test plugins are rendered in the correct order.');
   }
 
 }
