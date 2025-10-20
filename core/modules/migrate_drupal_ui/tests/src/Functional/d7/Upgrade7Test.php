@@ -26,6 +26,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected static $modules = [
     'config_translation',
+    'contact',
     'content_translation',
     'datetime_range',
     'language',
@@ -87,7 +88,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       // Module 'language' comes with 'en', 'und', 'zxx'. Migration adds 'is'
       // and 'fr'.
       'configurable_language' => 5,
-      'contact_form' => 3,
+      'contact_form' => 2,
       'contact_message' => 0,
       'editor' => 2,
       'field_config' => 90,

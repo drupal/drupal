@@ -6,7 +6,6 @@ recipes:
   - basic_shortcuts
   - article_comment
   - article_tags
-  - feedback_contact_form
   - article_content_type
   - page_content_type
   - basic_html_format_editor

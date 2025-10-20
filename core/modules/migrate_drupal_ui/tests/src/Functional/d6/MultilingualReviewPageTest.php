@@ -63,7 +63,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'CCK translation',
       'Calendar Signup',
       'Comment',
-      'Contact',
       'Content',
       'Content Copy',
       'Content Multigroup',
@@ -145,6 +144,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Color',
+      'Contact',
       'Devel',
       'Devel generate',
       'Devel node access',

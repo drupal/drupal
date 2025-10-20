@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Core\Recipe;
 
-use Drupal\contact\Entity\ContactForm;
 use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\standard\Traits\StandardTestTrait;
@@ -74,15 +73,6 @@ class StandardRecipeInstallTest extends InstallerTestBase {
       'title[0][value]' => 'Home',
       'link[0][uri]' => '<front>',
     ], 'Save');
-
-    // Standard expects to set the contact form's recipient email to the
-    // system's email address, but our feedback_contact_form recipe hard-codes
-    // it to another value.
-    // @todo This can be removed after https://drupal.org/i/3303126, which
-    //   should make it possible for a recipe to reuse an already-set config
-    //   value.
-    ContactForm::load('feedback')?->setRecipients(['simpletest@example.com'])
-      ->save();
 
     // Standard ships two shortcuts; ensure they exist.
     $this->assertCount(2, Shortcut::loadMultiple());

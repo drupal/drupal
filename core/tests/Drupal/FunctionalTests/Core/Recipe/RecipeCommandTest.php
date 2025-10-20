@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Core\Recipe;
 
-use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Recipe\RecipeCommand;
 use Drupal\Tests\BrowserTestBase;
@@ -124,36 +123,33 @@ class RecipeCommandTest extends BrowserTestBase {
   }
 
   public function testPassInput(): void {
-    $dir = $this->getDrupalRoot() . '/core/recipes/feedback_contact_form';
+    $dir = $this->getDrupalRoot() . '/core/tests/fixtures/recipes/input_test';
     $this->applyRecipe($dir, options: [
-      '--input=feedback_contact_form.recipient=hello@good.bye',
+      '--input=input_test.owner=Test Owner',
     ]);
-    $this->assertSame(['hello@good.bye'], ContactForm::load('feedback')?->getRecipients());
+    $this->assertSame("Test Owner's Turf", $this->config('system.site')->get('name'));
   }
 
   public function testPassInvalidInput(): void {
-    $dir = $this->getDrupalRoot() . '/core/recipes/feedback_contact_form';
+    $dir = $this->getDrupalRoot() . '/core/tests/fixtures/recipes/input_test';
     $process = $this->applyRecipe($dir, 1, options: [
-      '--input=feedback_contact_form.recipient=nobody',
+      '--input=input_test.owner=hack',
     ]);
-    $this->assertStringContainsString('This value is not a valid email address.', $process->getErrorOutput());
+    $this->assertStringContainsString("I don't think you should be owning sites.", $process->getErrorOutput());
   }
 
   public function testDefaultInputValueFromConfig(): void {
-    $this->config('system.site')
-      ->set('mail', 'goodbye@hello.net')
-      ->save();
-
-    $this->applyRecipe($this->getDrupalRoot() . '/core/recipes/feedback_contact_form');
-    $this->assertSame(['goodbye@hello.net'], ContactForm::load('feedback')?->getRecipients());
+    // Test that default values are used when no input is provided
+    $this->applyRecipe($this->getDrupalRoot() . '/core/tests/fixtures/recipes/input_test');
+    $this->assertSame("Dries Buytaert's Turf", $this->config('system.site')->get('name'));
   }
 
   public function testListInputs(): void {
     $root = $this->getDrupalRoot();
 
-    $output = $this->applyRecipe($root . '/core/recipes/feedback_contact_form', command: 'recipe:info')->getOutput();
-    $this->assertStringContainsString('feedback_contact_form.recipient', $output);
-    $this->assertStringContainsString('The email address that should receive submissions from the feedback form.', $output);
+    $output = $this->applyRecipe($root . '/core/tests/fixtures/recipes/input_test', command: 'recipe:info')->getOutput();
+    $this->assertStringContainsString('input_test.owner', $output);
+    $this->assertStringContainsString('The name of the site owner.', $output);
 
     $output = $this->applyRecipe($root . '/core/recipes/page_content_type', command: 'recipe:info')->getOutput();
     $this->assertStringContainsString('This recipe does not accept any input.', $output);

@@ -1,7 +1,1 @@
-definitions:
-  contact__site_page:
-    menu_name: footer
-    parent: ''
-    weight: 0
-    expanded: false
-    enabled: true
+definitions: {}

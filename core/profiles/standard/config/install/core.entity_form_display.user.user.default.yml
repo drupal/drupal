@@ -15,9 +15,6 @@ content:
   account:
     weight: -10
     region: content
-  contact:
-    weight: 5
-    region: content
   language:
     weight: 0
     region: content
