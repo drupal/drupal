@@ -93,12 +93,12 @@ class MigrationLookupTest extends MigrationLookupTestCase {
       [
         MigrateSkipRowException::class,
         'Oh noes!',
-        "Migration lookup for destination '' attempted to create a stub using migration destination_migration, which resulted in a row skip, with message 'Oh noes!'",
+        "Migration lookup for value '1' and destination '' attempted to create a stub using migration destination_migration, which resulted in a row skip, with message 'Oh noes!'",
       ],
       [
         MigrateSkipRowException::class,
         '',
-        "Migration lookup for destination '' attempted to create a stub using migration destination_migration, which resulted in a row skip",
+        "Migration lookup for value '1' and destination '' attempted to create a stub using migration destination_migration, which resulted in a row skip",
       ],
     ];
   }
