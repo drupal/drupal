@@ -46,12 +46,12 @@ class SystemHooks {
         $output .= '<dt>' . $this->t('Managing modules') . '</dt>';
         $output .= '<dd>' . $this->t('Users with appropriate permission can install and uninstall modules from the <a href=":modules">Extend page</a>. Depending on which distribution or installation profile you choose when you install your site, several modules are installed and others are provided but not installed. Each module provides a discrete set of features; modules may be installed or uninstalled depending on the needs of the site. Many additional modules contributed by members of the Drupal community are available for download from the <a href=":drupal-modules">Drupal.org module page</a>. Note that uninstalling a module is a destructive action: when you uninstall a module, you will permanently lose all data connected to the module.', [
           ':modules' => Url::fromRoute('system.modules_list')->toString(),
-          ':drupal-modules' => 'https://www.drupal.org/project/modules',
+          ':drupal-modules' => 'https://www.drupal.org/project/project_module',
         ]) . '</dd>';
         $output .= '<dt>' . $this->t('Managing themes') . '</dt>';
         $output .= '<dd>' . $this->t('Users with appropriate permission can install and uninstall themes on the <a href=":themes">Appearance page</a>. Themes determine the design and presentation of your site. Depending on which distribution or installation profile you choose when you install your site, a default theme is installed, and possibly a different theme for administration pages. Other themes are provided but not installed, and additional contributed themes are available at the <a href=":drupal-themes">Drupal.org theme page</a>.', [
           ':themes' => Url::fromRoute('system.themes_page')->toString(),
-          ':drupal-themes' => 'https://www.drupal.org/project/themes',
+          ':drupal-themes' => 'https://www.drupal.org/project/project_theme',
         ]) . '</dd>';
         $output .= '<dt>' . $this->t('Disabling drag-and-drop functionality') . '</dt>';
         $output .= '<dd>' . $this->t('The default drag-and-drop user interface for ordering tables in the administrative interface presents a challenge for some users, including users of screen readers and other assistive technology. The drag-and-drop interface can be disabled in a table by clicking a link labeled "Show row weights" above the table. The replacement interface allows users to order the table by choosing numerical weights instead of dragging table rows.') . '</dd>';
@@ -105,7 +105,7 @@ class SystemHooks {
         return '<p>' . $this->t('This page shows you all available administration tasks for each module.') . '</p>';
 
       case 'system.themes_page':
-        $output = '<p>' . $this->t('Set and configure the default theme for your website.  Alternative <a href=":themes">themes</a> are available.', [':themes' => 'https://www.drupal.org/project/themes']) . '</p>';
+        $output = '<p>' . $this->t('Set and configure the default theme for your website.  Alternative <a href=":themes">themes</a> are available.', [':themes' => 'https://www.drupal.org/project/project_theme']) . '</p>';
         if (\Drupal::moduleHandler()->moduleExists('block')) {
           $output .= '<p>' . $this->t('You can place blocks for each theme on the <a href=":blocks">block layout</a> page.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
         }
@@ -120,7 +120,7 @@ class SystemHooks {
         return '<p>' . $this->t('Control default display settings for your site, across all themes. Use theme-specific settings to override these defaults.') . '</p>';
 
       case 'system.modules_list':
-        $output = '<p>' . $this->t('Add <a href=":modules">contributed modules</a> to extend your site\'s functionality.', [':modules' => 'https://www.drupal.org/project/modules']) . '</p>';
+        $output = '<p>' . $this->t('Add <a href=":modules">contributed modules</a> to extend your site\'s functionality.', [':modules' => 'https://www.drupal.org/project/project_module']) . '</p>';
         if (!\Drupal::moduleHandler()->moduleExists('update')) {
           $output .= '<p>' . $this->t('Regularly review available updates and update as required to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time a module is updated. Install the <a href=":update-status">Update Status module</a> to see a report of available releases for Drupal Core and contributed modules and themes.', [
             ':update-php' => Url::fromRoute('system.db_update')->toString(),

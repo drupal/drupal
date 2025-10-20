@@ -105,7 +105,7 @@ class FieldHooks {
         $output .= '<dt>' . $this->t('Enabling field types, widgets, and formatters') . '</dt>';
         $output .= '<dd>' . $this->t('The Field module provides the infrastructure for fields; the field types, formatters, and widgets are provided by Drupal core or additional modules. Some of the modules are required; the optional modules can be installed from the <a href=":modules">Extend administration page</a>. Additional fields, formatters, and widgets may be provided by contributed modules, which you can find in the <a href=":contrib">contributed module section of Drupal.org</a>.', [
           ':modules' => Url::fromRoute('system.modules_list')->toString(),
-          ':contrib' => 'https://www.drupal.org/project/modules',
+          ':contrib' => 'https://www.drupal.org/project/project_module',
         ]) . '</dd>';
         $output .= '<h2>' . $this->t('Field, widget, and formatter information') . '</h2>';
         // Make a list of all widget, formatter, and field modules currently
