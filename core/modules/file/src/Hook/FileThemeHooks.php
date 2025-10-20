@@ -153,7 +153,7 @@ class FileThemeHooks {
       }
     }
 
-    if (isset($upload_validators['FileSizeLimit'])) {
+    if (isset($upload_validators['FileSizeLimit']) && $upload_validators['FileSizeLimit']['fileLimit'] > 0) {
       $descriptions[] = $this->t('@size limit.', ['@size' => ByteSizeMarkup::create($upload_validators['FileSizeLimit']['fileLimit'])]);
     }
 
