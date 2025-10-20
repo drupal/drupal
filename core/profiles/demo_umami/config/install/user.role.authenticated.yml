@@ -4,7 +4,6 @@ dependencies:
   config:
     - filter.format.basic_html
   module:
-    - contact
     - filter
     - media
     - search
@@ -17,7 +16,6 @@ is_admin: false
 permissions:
   - 'access content'
   - 'access shortcuts'
-  - 'access site-wide contact form'
   - 'search content'
   - 'use text format basic_html'
   - 'view media'

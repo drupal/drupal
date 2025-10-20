@@ -10,7 +10,6 @@ global:
       css/components/blocks/search/search.css: {}
       css/components/blocks/search/search-results.css: {}
       css/components/blocks/articles-aside/articles-aside.css: {}
-      css/components/forms/contact.css: {}
       css/components/forms/form.css: { weight: -10 }
       css/components/forms/content-moderation.css: {}
       css/components/content/node.css: {}

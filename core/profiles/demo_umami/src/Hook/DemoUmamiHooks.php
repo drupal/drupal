@@ -2,7 +2,6 @@
 
 namespace Drupal\demo_umami\Hook;
 
-use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -74,7 +73,7 @@ class DemoUmamiHooks {
   }
 
   /**
-   * Submission handler to sync the contact.form.feedback recipient.
+   * Submission handler for the site configuration form.
    *
    * @param array $form
    *   Form array.
@@ -82,9 +81,6 @@ class DemoUmamiHooks {
    *   The current form state.
    */
   public function installConfigureSubmit(array $form, FormStateInterface $form_state): void {
-    $site_mail = $form_state->getValue('site_mail');
-    ContactForm::load('feedback')->setRecipients([$site_mail])->trustData()->save();
-
     $password = $form_state->getValue('account')['pass'];
     $this->setUserPasswords($password);
   }
