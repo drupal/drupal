@@ -6,11 +6,13 @@ namespace Drupal\Tests\file\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the output of the file upload help.
  */
 #[Group('file')]
+#[RunTestsInSeparateProcesses]
 class UploadHelpTest extends KernelTestBase {
 
   /**

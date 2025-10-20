@@ -7,6 +7,7 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\views_ui\Traits\FilterEntityReferenceTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ConfigHandlerExtra form.
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @see \Drupal\views_ui\Form\Ajax\ConfigHandlerExtra
  */
 #[Group('views_ui')]
+#[RunTestsInSeparateProcesses]
 final class ConfigHandlerExtraFormTest extends WebDriverTestBase {
 
   use FilterEntityReferenceTrait;
