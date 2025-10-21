@@ -7,10 +7,13 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\RemovableDependentPluginInterface;
+use Drupal\Core\Plugin\RemovableDependentPluginReturn;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
@@ -41,7 +44,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
     "allowed_media_types" => [],
   ],
 )]
-class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
+class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface, RemovableDependentPluginInterface {
 
   /**
    * The entity repository.
@@ -526,6 +529,40 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       }
     }
     return $dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onCollectionDependencyRemoval(array $dependencies): RemovableDependentPluginReturn {
+    $status = RemovableDependentPluginReturn::Unchanged;
+    if (!isset($dependencies['config'])) {
+      return $status;
+    }
+
+    // If view modes for media are deleted, remove the view mode from the plugin
+    // settings and return that the plugin settings have changed.
+    foreach ($dependencies['config'] as $config) {
+      if (($config instanceof EntityViewModeInterface) && str_starts_with($config->id(), 'media.')) {
+        $view_mode_id = substr_replace($config->id(), '', 0, 6);
+        if (isset($this->settings['allowed_view_modes'][$view_mode_id])) {
+          unset($this->settings['allowed_view_modes'][$view_mode_id]);
+          $status = RemovableDependentPluginReturn::Changed;
+        }
+
+        // If the default embed view mode is set to a view mode being deleted,
+        // change the default embed view mode to the default entity display
+        // mode, and make sure that default is in the allowed view modes.
+        if ($this->settings['default_view_mode'] === $view_mode_id) {
+          $this->settings['default_view_mode'] = EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE;
+          $this->settings['allowed_view_modes'] += [EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE => EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE];
+          ksort($this->settings['allowed_view_modes']);
+          $status = RemovableDependentPluginReturn::Changed;
+        }
+      }
+    }
+
+    return $status;
   }
 
 }

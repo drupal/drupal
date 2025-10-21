@@ -31,6 +31,7 @@ interface DependentPluginInterface {
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
    * @see \Drupal\Core\Entity\EntityInterface::getConfigDependencyName()
+   * @see \Drupal\Core\Plugin\RemovableDependentPluginInterface
    */
   public function calculateDependencies();
 

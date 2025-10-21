@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Config\Entity;
 
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
@@ -13,6 +14,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\DefaultLazyPluginCollection;
+use Drupal\Core\Plugin\RemovableDependentPluginReturn;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections;
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
@@ -22,6 +24,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
 
 /**
@@ -340,6 +343,152 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
         ],
       ],
     ];
+  }
+
+  /**
+   * Test dependency removal on entities with plugin collections.
+   *
+   * @legacy-covers ::onDependencyRemoval
+   */
+  #[DataProvider('providerOnDependencyRemovalWithPluginCollections')]
+  public function testOnDependencyRemovalWithPluginCollections(
+    RemovableDependentPluginReturn $on_dependency_removal_status,
+    array $dependencies_after_removal,
+    bool $expectation,
+  ): void {
+    $dependencies = ['config' => ['bar', 'baz']];
+    // Create an entity with a plugin to test.
+    $instance = $this->getMockBuilder('Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin')
+      ->setConstructorArgs([[], $this->randomMachineName(), ['provider' => 'foo']])
+      ->onlyMethods(['calculateDependencies', 'onCollectionDependencyRemoval'])
+      ->getMock();
+
+    // Make sure the plugin's onCollectionDependencyRemoval() method is invoked
+    // from $entity->onDependencyRemoval().
+    $instance
+      ->expects($this->exactly(1))
+      ->method('onCollectionDependencyRemoval')
+      ->willReturnCallback(
+        static fn (array $dependencies): RemovableDependentPluginReturn => $on_dependency_removal_status
+      );
+
+    // The calculateDependencies() method will be called before and after
+    // onCollectionDependencyRemoval(), so determine what
+    // calculateDependencies() should return based on when the call is made.
+    $before_on_dependency_removal = TRUE;
+
+    // If the plugin should be removed from the collection, then
+    // the plugin's calculateDependencies() should be called only once, when the
+    // entity's dependencies are calculated before the call to
+    // $entity->onDependencyRemoval(). Otherwise, if the plugin is not removed,
+    // the plugin's calculateDependencies() should be called before and after
+    // $entity->onDependencyRemoval().
+    $instance
+      ->expects($on_dependency_removal_status == RemovableDependentPluginReturn::Remove ? $this->once() : $this->exactly(2))
+      ->method('calculateDependencies')
+      ->willReturnCallback(static function () use (&$before_on_dependency_removal, $dependencies, $dependencies_after_removal): array {
+        return $before_on_dependency_removal ? $dependencies : $dependencies_after_removal;
+      });
+
+    // Confirm the calculated entity dependencies before removing dependencies.
+    $entity = $this->getMockEntityWithPluginCollection($instance);
+    $collections = $entity->getPluginCollections();
+    $collection = reset($collections);
+    $this->assertEquals(1, count($collection));
+    $entity->calculateDependencies();
+    $calculated_dependencies = $entity->getDependencies();
+    $this->assertEquals($dependencies, $calculated_dependencies);
+
+    // Confirm the calculated entity dependencies after removing dependencies.
+    $before_on_dependency_removal = FALSE;
+    $changed = $entity->onDependencyRemoval($dependencies);
+    $entity->calculateDependencies();
+    $recalculated_dependencies = $entity->getDependencies();
+    // If the plugin has been removed from the collection, then the collection
+    // should be empty. Otherwise, there should be one plugin instance in the
+    // collection.
+    $this->assertEquals($on_dependency_removal_status == RemovableDependentPluginReturn::Remove ? 0 : 1, count($collection));
+    $this->assertEquals($dependencies_after_removal, $recalculated_dependencies);
+    $this->assertEquals($expectation, $changed);
+  }
+
+  /**
+   * Data provider for testOnDependencyRemovalWithPluginCollections.
+   */
+  public static function providerOnDependencyRemovalWithPluginCollections(): array {
+    return [
+      // The plugin fixes all the dependencies.
+      [
+        // Plugin ::onCollectionDependencyRemoval() return.
+        RemovableDependentPluginReturn::Changed,
+        // Expected dependencies after ::onCollectionDependencyRemoval().
+        [],
+        // Expected return for ConfigEntityInterface::onDependencyRemoval().
+        TRUE,
+      ],
+      // The plugin is removed from the collection.
+      [
+        // Plugin ::onCollectionDependencyRemoval() return.
+        RemovableDependentPluginReturn::Remove,
+        // Expected dependencies after ::onCollectionDependencyRemoval().
+        [],
+        // Expected return for ConfigEntityInterface::onDependencyRemoval().
+        TRUE,
+      ],
+      // The plugin does not fix any dependencies.
+      [
+        // Plugin ::onCollectionDependencyRemoval() return.
+        RemovableDependentPluginReturn::Unchanged,
+        // Expected dependencies after ::onCollectionDependencyRemoval().
+        ['config' => ['bar', 'baz']],
+        // Expected return for ConfigEntityInterface::onDependencyRemoval().
+        FALSE,
+      ],
+      // The plugin partially fixes dependencies.
+      [
+        // Plugin ::onCollectionDependencyRemoval() return.
+        RemovableDependentPluginReturn::Changed,
+        // Expected dependencies after ::onCollectionDependencyRemoval().
+        ['config' => ['bar']],
+        // Expected return for ConfigEntityInterface::onDependencyRemoval().
+        TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * Get a mock entity with a plugin collection.
+   *
+   * @param \Drupal\Component\Plugin\PluginBase $plugin
+   *   A plugin the entity will have a collection containing.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityBase|\PHPUnit\Framework\MockObject\MockObject
+   *   A mock entity with a plugin collection containing the given plugin.
+   */
+  protected function getMockEntityWithPluginCollection(PluginBase $plugin): ConfigEntityBase|MockObject {
+    $values = [];
+    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections')
+      ->setConstructorArgs([$values, $this->entityTypeId])
+      ->onlyMethods(['getPluginCollections'])
+      ->getMock();
+
+    // Create a plugin collection to contain the instance.
+    $pluginCollection = $this->getMockBuilder('\Drupal\Core\Plugin\DefaultLazyPluginCollection')
+      ->disableOriginalConstructor()
+      ->onlyMethods(['get'])
+      ->getMock();
+    $pluginCollection->expects($this->atLeastOnce())
+      ->method('get')
+      ->with($plugin->getPluginId())
+      ->willReturn($plugin);
+    $pluginCollection->addInstanceId($plugin->getPluginId());
+
+    // Return the mocked plugin collection.
+    $entity->expects($this->atLeastOnce())
+      ->method('getPluginCollections')
+      ->willReturn([$pluginCollection]);
+
+    return $entity;
   }
 
   /**
