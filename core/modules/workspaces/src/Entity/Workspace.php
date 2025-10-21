@@ -16,6 +16,9 @@ use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
 use Drupal\workspaces\Form\WorkspaceActivateForm;
 use Drupal\workspaces\Form\WorkspaceDeleteForm;
 use Drupal\workspaces\Form\WorkspaceForm;
+use Drupal\workspaces\Provider\DefaultWorkspaceProvider;
+use Drupal\workspaces\Provider\WorkspaceProviderCollector;
+use Drupal\workspaces\Provider\WorkspaceProviderInterface;
 use Drupal\workspaces\WorkspaceAccessControlHandler;
 use Drupal\workspaces\WorkspaceInterface;
 use Drupal\workspaces\WorkspaceListBuilder;
@@ -122,6 +125,16 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
         'weight' => 10,
       ]);
 
+    $fields['provider'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('Provider'))
+      ->setDescription(new TranslatableMarkup('The workspace provider.'))
+      ->setSetting('max_length', 128)
+      ->setRequired(TRUE)
+      ->setReadOnly(TRUE)
+      ->setDefaultValue(DefaultWorkspaceProvider::getId())
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('view', FALSE);
+
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(new TranslatableMarkup('Changed'))
       ->setDescription(new TranslatableMarkup('The time that the workspace was last edited.'))
@@ -160,6 +173,15 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
    */
   public function hasParent() {
     return !$this->get('parent')->isEmpty();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProvider(): WorkspaceProviderInterface {
+    /** @var \Drupal\workspaces\Provider\WorkspaceProviderCollector $provider_collector */
+    $provider_collector = \Drupal::service(WorkspaceProviderCollector::class);
+    return $provider_collector->getProvider($this->get('provider')->value);
   }
 
   /**

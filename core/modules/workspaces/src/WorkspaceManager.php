@@ -62,7 +62,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * {@inheritdoc}
    */
   public function hasActiveWorkspace() {
-    return $this->getActiveWorkspace() !== FALSE;
+    return $this->getActiveWorkspace() !== NULL;
   }
 
   /**
@@ -99,7 +99,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
       $this->activeWorkspace = $active_workspace ?? FALSE;
     }
 
-    return $this->activeWorkspace;
+    return $this->activeWorkspace ?: NULL;
   }
 
   /**

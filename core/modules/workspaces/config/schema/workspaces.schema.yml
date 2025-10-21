@@ -1,0 +1,8 @@
+# Schema for the 'default:workspace' selection handler settings.
+entity_reference_selection.default:workspace:
+  type: entity_reference_selection.default
+  label: 'Workspace selection handler settings'
+  mapping:
+    provider:
+      type: string
+      label: 'The workspace provider to filter by.'

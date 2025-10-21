@@ -8,9 +8,11 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserInterface;
+use Drupal\workspaces\Provider\DefaultWorkspaceProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -83,12 +85,26 @@ class WorkspaceListBuilder extends EntityListBuilder {
   public function load() {
     // Get all the workspace entities and sort them in tree order.
     $workspace_tree = $this->workspaceRepository->loadTree();
-    $entities = array_replace($workspace_tree, $this->storage->loadMultiple());
+    $loaded = $this->storage->loadMultiple($this->getEntityIds());
+
+    // Filter the tree to only include loaded entities, then replaces those tree
+    // items with the actual loaded entity objects.
+    $entities = array_replace(array_intersect_key($workspace_tree, $loaded), $loaded);
     foreach ($entities as $id => $entity) {
       $entity->_depth = $workspace_tree[$id]['depth'];
     }
 
     return $entities;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntityListQuery(): QueryInterface {
+    $query = parent::getEntityListQuery();
+    // Ensure that only workspaces using the default provider are listed.
+    $query->condition('provider', DefaultWorkspaceProvider::getId());
+    return $query;
   }
 
   /**

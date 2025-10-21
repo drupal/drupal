@@ -17,6 +17,9 @@ default:
   parent:
     -
       target_id: test_workspace
+  provider:
+    -
+      value: default
   created:
     -
       value: 1751154834

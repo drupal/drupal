@@ -8,6 +8,9 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\workspaces\Provider\DefaultWorkspaceProvider;
 use Drupal\workspaces\WorkspaceAssociation;
 
 /**
@@ -304,4 +307,20 @@ function workspaces_update_11302(): void {
     $transaction->rollBack();
     throw $e;
   }
+}
+
+/**
+ * Add the workspace provider field.
+ */
+function workspaces_update_11303(): void {
+  $entity_definition_update = \Drupal::entityDefinitionUpdateManager();
+
+  $storage_definition = BaseFieldDefinition::create('string')
+    ->setLabel(new TranslatableMarkup('Provider'))
+    ->setSetting('max_length', 128)
+    ->setRequired(TRUE)
+    ->setReadOnly(TRUE)
+    ->setDefaultValue(DefaultWorkspaceProvider::getId())
+    ->setInitialValue(DefaultWorkspaceProvider::getId());
+  $entity_definition_update->installFieldStorageDefinition('provider', 'workspace', 'workspaces', $storage_definition);
 }

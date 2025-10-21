@@ -7,6 +7,7 @@ use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\workspaces\Provider\DefaultWorkspaceProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,6 +47,7 @@ class WorkspaceSelection extends DefaultSelection {
         'field' => 'label',
         'direction' => 'asc',
       ],
+      'provider' => DefaultWorkspaceProvider::getId(),
     ] + parent::defaultConfiguration();
   }
 
@@ -70,7 +72,15 @@ class WorkspaceSelection extends DefaultSelection {
     // Get all the workspace entities and sort them in tree order.
     $storage = $this->entityTypeManager->getStorage('workspace');
     $workspace_tree = $this->workspaceRepository->loadTree();
-    $entities = array_replace($workspace_tree, $storage->loadMultiple());
+
+    // Load only workspaces that use the default provider.
+    $ids = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('provider', $this->getConfiguration()['provider'])
+      ->execute();
+    $loaded = $storage->loadMultiple($ids);
+
+    $entities = array_replace(array_intersect_key($workspace_tree, $loaded), $loaded);
 
     // If we need to restrict the list of workspaces by searching only a part of
     // their label ($match) or by a number of results ($limit), the workspace

@@ -29,6 +29,7 @@ class WorkspaceAccessTest extends KernelTestBase {
     'system',
     'workspaces',
     'workspace_access_test',
+    'workspaces_test',
   ];
 
   /**
@@ -249,6 +250,45 @@ class WorkspaceAccessTest extends KernelTestBase {
     $this->assertTrue($switcher_block->access($admin_permission_user));
     $this->assertFalse($switcher_block->access($access_content_user));
     $this->assertFalse($switcher_block->access($no_permission_user));
+  }
+
+  /**
+   * Tests that workspaces with non-default providers are not referenceable.
+   *
+   * @legacy-covers \Drupal\workspaces\Plugin\EntityReferenceSelection\WorkspaceSelection::getReferenceableEntities
+   */
+  public function testWorkspaceSelectionFiltersByProvider(): void {
+    $admin_permission_user = $this->createUser(['administer workspaces']);
+    $this->setCurrentUser($admin_permission_user);
+
+    // Create a couple of workspaces with the default provider, and one with the
+    // test provider.
+    Workspace::create([
+      'id' => 'default1',
+      'label' => 'Default Workspace 1',
+    ])->save();
+    Workspace::create([
+      'id' => 'default2',
+      'label' => 'Default Workspace 2',
+    ])->save();
+    Workspace::create([
+      'id' => 'test_provider_workspace',
+      'label' => 'Test Provider Workspace',
+      'provider' => 'test',
+    ])->save();
+
+    /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $selection_handler */
+    $selection_handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance([
+      'target_type' => 'workspace',
+      'handler' => 'default',
+    ]);
+
+    $referenceable = $selection_handler->getReferenceableEntities();
+
+    // Verify that only relevant workspaces are referenceable.
+    $this->assertArrayHasKey('default1', $referenceable['workspace']);
+    $this->assertArrayHasKey('default2', $referenceable['workspace']);
+    $this->assertArrayNotHasKey('test_provider_workspace', $referenceable['workspace']);
   }
 
 }

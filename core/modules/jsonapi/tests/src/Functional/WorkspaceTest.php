@@ -144,6 +144,7 @@ class WorkspaceTest extends ResourceTestBase {
           'created' => '1973-11-29T21:33:09+00:00',
           'changed' => (new \DateTime())->setTimestamp($this->entity->getChangedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
           'label' => 'Campaign',
+          'provider' => 'default',
           'drupal_internal__id' => 'campaign',
           'drupal_internal__revision_id' => 1,
         ],

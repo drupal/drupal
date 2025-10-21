@@ -861,7 +861,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     // Check that the 'stage' workspace was not persisted by the workspace
     // manager.
-    $this->assertFalse($this->workspaceManager->getActiveWorkspace());
+    $this->assertNull($this->workspaceManager->getActiveWorkspace());
   }
 
   /**

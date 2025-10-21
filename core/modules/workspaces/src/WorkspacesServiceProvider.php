@@ -5,6 +5,7 @@ namespace Drupal\workspaces;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
 use Drupal\Core\Update\UpdateKernel;
+use Drupal\workspaces\Provider\WorkspaceProviderInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -27,6 +28,9 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
         ->setPublic(FALSE)
         ->setDecoratedService('pgsql.entity.query.sql', NULL, 50);
     }
+
+    $container->registerForAutoconfiguration(WorkspaceProviderInterface::class)
+      ->addTag('workspace_provider');
   }
 
   /**

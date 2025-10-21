@@ -18,8 +18,8 @@ interface WorkspaceManagerInterface {
   /**
    * Gets the active workspace.
    *
-   * @return \Drupal\workspaces\WorkspaceInterface
-   *   The active workspace entity object.
+   * @return \Drupal\workspaces\WorkspaceInterface|null
+   *   The active workspace entity, or NULL if there's no active workspace.
    */
   public function getActiveWorkspace();
 

@@ -31,6 +31,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
     'toolbar',
     'workspaces',
     'workspaces_ui',
+    'workspaces_test',
   ];
 
   /**
@@ -139,6 +140,26 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
     $this->drupalGet($node->toUrl());
     $this->assertSession()->elementExists('css', '.workspaces-toolbar-tab');
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
+  }
+
+  /**
+   * Tests workspaces with non-default providers in the switcher form.
+   */
+  public function testSwitcherFormFiltersByProvider(): void {
+    // Create a workspace that uses the test provider.
+    Workspace::create([
+      'id' => 'test_provider_workspace',
+      'label' => 'Test Provider Workspace',
+      'provider' => 'test',
+    ])->save();
+
+    $this->drupalGet('<front>');
+    $assert_session = $this->assertSession();
+
+    // Check that only relevant workspaces are shown.
+    $assert_session->pageTextContains('Vultures');
+    $assert_session->pageTextContains('Gravity');
+    $assert_session->pageTextNotContains('Test Provider Workspace');
   }
 
 }

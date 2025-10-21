@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\workspaces\Entity\Workspace;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -307,9 +308,19 @@ class WorkspaceTest extends BrowserTestBase {
     $this->drupalLogin($this->editor1);
     $this->createWorkspaceThroughUi('Summer event', 'summer_event');
 
+    // Create a workspace with the test provider.
+    Workspace::create([
+      'id' => 'test_provider_workspace',
+      'label' => 'Test Provider Workspace',
+      'provider' => 'test',
+    ])->save();
+
     // Check that Live is the current active workspace.
     $this->drupalGet('/admin/config/workflow/workspaces');
     $this->assertSession()->statusCodeEquals(200);
+
+    // Verify that workspaces using non-default providers are not listed.
+    $assert_session->pageTextNotContains('Test Provider Workspace');
 
     $active_workspace_row = $page->find('css', '.active-workspace');
     $this->assertTrue($active_workspace_row->hasClass('active-workspace--default'));

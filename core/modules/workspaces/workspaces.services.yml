@@ -29,6 +29,11 @@ services:
     arguments: ['@entity_type.manager', '@cache.default']
   Drupal\workspaces\WorkspaceRepositoryInterface: '@workspaces.repository'
 
+  Drupal\workspaces\Provider\WorkspaceProviderCollector:
+    autowire: true
+  Drupal\workspaces\Provider\DefaultWorkspaceProvider:
+    autowire: true
+
   workspaces.negotiator.session:
     class: Drupal\workspaces\Negotiator\SessionWorkspaceNegotiator
     arguments: ['@current_user', '@session', '@entity_type.manager']

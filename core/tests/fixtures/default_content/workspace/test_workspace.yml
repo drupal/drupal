@@ -12,6 +12,9 @@ default:
   label:
     -
       value: 'Test Workspace'
+  provider:
+    -
+      value: default
   created:
     -
       value: 1751154825
