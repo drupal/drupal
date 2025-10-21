@@ -63,6 +63,9 @@ class ValidSequenceKeysConstraint extends Composite implements ContainerFactoryP
     return ['constraints'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getCompositeOption(): string {
     return 'constraints';
   }

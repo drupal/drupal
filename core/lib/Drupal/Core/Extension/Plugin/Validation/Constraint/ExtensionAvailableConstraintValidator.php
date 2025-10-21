@@ -59,6 +59,9 @@ class ExtensionAvailableConstraintValidator extends ConstraintValidator implemen
   ) {
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('extension.list.module'),

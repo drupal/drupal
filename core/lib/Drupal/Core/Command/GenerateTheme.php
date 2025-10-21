@@ -66,6 +66,9 @@ class GenerateTheme extends Command {
       ->addUsage('custom_theme --name "Custom Theme" --starterkit mystarterkit');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function initialize(InputInterface $input, OutputInterface $output): void {
     if ($input->getOption('name') === NULL) {
       $input->setOption('name', $input->getArgument('machine-name'));
@@ -235,10 +238,16 @@ class GenerateTheme extends Command {
     return $theme;
   }
 
+  /**
+   * Returns a Symfony file finder.
+   */
   private static function createFilesFinder(string $dir): Finder {
     return (new Finder)->in($dir)->files();
   }
 
+  /**
+   * Loads the Starter Kit configuration.
+   */
   private static function loadStarterKitConfig(
     Extension $theme,
     string $version,
@@ -297,6 +306,9 @@ class GenerateTheme extends Command {
     return $starterkit_config;
   }
 
+  /**
+   * Gets the Starter Kit version string.
+   */
   private static function getStarterKitVersion(
     Extension $theme,
     SymfonyStyle $io,
@@ -352,6 +364,9 @@ class GenerateTheme extends Command {
     return $source_version;
   }
 
+  /**
+   * Returns the possible file name patterns.
+   */
   private static function namePatterns(string $machine_name, string $label): array {
     return [
       'machine_name' => $machine_name,

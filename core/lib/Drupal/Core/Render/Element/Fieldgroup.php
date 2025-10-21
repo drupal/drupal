@@ -32,6 +32,9 @@ class Fieldgroup extends Fieldset {
     @trigger_error('The ' . __CLASS__ . ' element is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . Fieldset::class . ' instead. See https://www.drupal.org/node/3515272', E_USER_DEPRECATED);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getInfo() {
     $info = parent::getInfo();
     $info['#attributes']['class'] = ['fieldgroup'];

@@ -710,6 +710,9 @@ class ModuleHandler implements ModuleHandlerInterface {
     return \Drupal::service('extension.list.module')->getName($module);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function writeCache() {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no need to call this method so there is no replacement. See https://www.drupal.org/node/3442349', E_USER_DEPRECATED);
   }
