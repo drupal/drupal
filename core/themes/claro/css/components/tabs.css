@@ -172,6 +172,15 @@
   box-shadow: none;
 }
 
+.tabs__trigger .hamburger-icon,
+.tabs__trigger .close-icon {
+  line-height: normal;
+}
+
+.tabs__trigger .close-icon {
+  display: none;
+}
+
 .position-container {
   position: relative;
 }

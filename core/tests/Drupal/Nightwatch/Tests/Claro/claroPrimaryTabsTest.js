@@ -3,6 +3,8 @@ const primaryTabsWrapper = '[data-drupal-nav-tabs]';
 const activeTab = '.tabs__tab.is-active';
 const inactiveTab = '.tabs__tab:not(.is-active)';
 const mobileToggle = `${activeTab} .tabs__trigger`;
+const hamburgerIcon = `${mobileToggle} .hamburger-icon`;
+const closeIcon = `${mobileToggle} .close-icon`;
 
 module.exports = {
   '@tags': ['core', 'claro'],
@@ -40,12 +42,24 @@ module.exports = {
       .assert.visible(activeTab)
       .assert.not.visible(inactiveTab)
       .assert.visible(mobileToggle)
+      .assert.visible(hamburgerIcon)
+      .assert.not.visible(closeIcon)
       .assert.attributeEquals(mobileToggle, 'aria-expanded', 'false')
+      .assert.attributeEquals(hamburgerIcon, 'aria-hidden', 'false')
+      .assert.attributeEquals(closeIcon, 'aria-hidden', 'true')
       .click(mobileToggle)
       .waitForElementVisible(inactiveTab)
       .assert.attributeEquals(mobileToggle, 'aria-expanded', 'true')
+      .assert.not.visible(hamburgerIcon)
+      .assert.visible(closeIcon)
+      .assert.attributeEquals(hamburgerIcon, 'aria-hidden', 'true')
+      .assert.attributeEquals(closeIcon, 'aria-hidden', 'false')
       .click(mobileToggle)
       .waitForElementNotVisible(inactiveTab)
-      .assert.attributeEquals(mobileToggle, 'aria-expanded', 'false');
+      .assert.attributeEquals(mobileToggle, 'aria-expanded', 'false')
+      .assert.visible(hamburgerIcon)
+      .assert.not.visible(closeIcon)
+      .assert.attributeEquals(hamburgerIcon, 'aria-hidden', 'false')
+      .assert.attributeEquals(closeIcon, 'aria-hidden', 'true');
   },
 };

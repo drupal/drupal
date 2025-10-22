@@ -13,7 +13,12 @@
 
     const openMenu = () => {
       $target.toggleClass('is-open');
-      $target.find('button').attr('aria-expanded', $target.hasClass('is-open'));
+      const isOpen = $target.hasClass('is-open');
+
+      $target.find('button').attr('aria-expanded', isOpen);
+
+      $tab.find('.hamburger-icon').toggle(!isOpen).attr('aria-hidden', isOpen);
+      $tab.find('.close-icon').toggle(isOpen).attr('aria-hidden', !isOpen);
     };
 
     const toggleOrder = (reset) => {
