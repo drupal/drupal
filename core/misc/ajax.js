@@ -57,21 +57,21 @@
 
       // This class means to submit the form to the action using Ajax.
       once('ajax', '.use-ajax-submit').forEach((el) => {
-        const elementSettings = {};
-
-        // Ajax submits specified in this manner automatically submit to the
-        // normal form action.
-        elementSettings.url = $(el.form).attr('action');
-        // Form submit button clicks need to tell the form what was clicked so
-        // it gets passed in the POST request.
-        elementSettings.setClick = true;
-        // Form buttons use the 'click' event rather than mousedown.
-        elementSettings.event = 'click';
-        // Clicked form buttons look better with the throbber than the progress
-        // bar.
-        elementSettings.progress = { type: 'throbber' };
-        elementSettings.base = el.id;
-        elementSettings.element = el;
+        const elementSettings = {
+          // Ajax submits specified in this manner automatically submit to the
+          // normal form action.
+          url: $(el.form).attr('action'),
+          // Form submit button clicks need to tell the form what was clicked so
+          // it gets passed in the POST request.
+          setClick: true,
+          // Form buttons use the 'click' event rather than mousedown.
+          event: 'click',
+          // Clicked form buttons look better with the throbber than the progress
+          // bar.
+          progress: { type: 'throbber' },
+          base: el.id,
+          element: el,
+        };
 
         Drupal.ajax(elementSettings);
       });
