@@ -36,6 +36,7 @@ class IconPackManagerTest extends UnitTestCase {
   public static function providerIconPackLibraryName(): array {
     return [
       'valid name with underscore' => ['my_theme/my_library', TRUE],
+      'valid name with dot' => ['my_theme/my.library', TRUE],
       'valid name with hyphen' => ['my_theme/my-library', TRUE],
       'valid name with hyphen and numbers' => ['my_theme/my-long-library_with_mixed-hyphens123', TRUE],
       'invalid theme name case 1' => ['my-theme/my-library', FALSE],
@@ -98,7 +99,7 @@ class IconPackManagerTest extends UnitTestCase {
     }
     catch (\Exception $e) {
       if (!$is_valid) {
-        $this->assertSame('icon_test:foo Error in definition `foo`:[library] Does not match the regex pattern ^\w+/[A-Za-z]+[\w-]*$', $e->getMessage());
+        $this->assertSame('icon_test:foo Error in definition `foo`:[library] Does not match the regex pattern ^\w+/[A-Za-z]+[\w\.-]*$', $e->getMessage());
         $this->assertInstanceOf(IconPackConfigErrorException::class, $e);
       }
     }
