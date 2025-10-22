@@ -42,6 +42,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   public function __construct(
     protected RequestStack $requestStack,
     protected EntityTypeManagerInterface $entityTypeManager,
+    #[Autowire(service: 'entity.memory_cache')]
     protected MemoryCacheInterface $entityMemoryCache,
     protected AccountProxyInterface $currentUser,
     protected StateInterface $state,

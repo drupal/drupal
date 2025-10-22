@@ -79,9 +79,10 @@ services:
   Drupal\system\ModuleAdminLinksHelper: '@system.module_admin_links_helper'
   system.module_admin_links_helper:
     class: Drupal\system\ModuleAdminLinksHelper
-    arguments: ['@menu.link_tree', '@system.module_admin_links_memory_cache']
+    arguments: ['@menu.link_tree', '@cache.memory']
   system.module_admin_links_memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
     arguments: ['@datetime.time']
+    deprecated: The "%service_id%" service is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Inject "cache.memory" instead. See https://www.drupal.org/node/3047289
   system.access_route_alter_subscriber:
     class: Drupal\system\EventSubscriber\AccessRouteAlterSubscriber

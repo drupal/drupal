@@ -532,9 +532,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       ->addArgument(new Reference('request_stack'));
     $container
       ->register('lock', 'Drupal\Core\Lock\NullLockBackend');
-    $container
-      ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory')
-      ->addArgument(new Reference('datetime.time'));
+
+    // Explicitly configure all cache bins to use the memory backend.
+    foreach (array_keys($container->findTaggedServiceIds('cache.bin')) as $id) {
+      $definition = $container->getDefinition($id);
+      $tags = $definition->getTags();
+      $tags['cache.bin'][0]['default_backend'] = 'cache.backend.memory';
+      $definition->setTags($tags);
+    }
 
     // Disable the super user access policy so that we are sure our tests check
     // for the right permissions.

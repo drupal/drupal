@@ -29,7 +29,7 @@ class FieldHooks {
   use StringTranslationTrait;
 
   public function __construct(
-    #[Autowire(service: 'cache.field_config_memory')]
+    #[Autowire(service: 'cache.memory')]
     protected readonly CacheBackendInterface $memoryCache,
   ) {
 
