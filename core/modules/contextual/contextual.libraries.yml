@@ -9,6 +9,11 @@ drupal.contextual-links:
     theme:
       css/contextual.theme.css: {}
       css/contextual.icons.theme.css: {}
+  drupalSettings:
+    # These placeholder values will be set by
+    # \Drupal\contextual\Element\ContextualLinksPlaceholder::preRenderPlaceholder().
+    contextual:
+      theme: null
   dependencies:
     - core/jquery
     - core/drupal

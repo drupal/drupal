@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contextual\Kernel;
 
+use Drupal\contextual\Element\ContextualLinksPlaceholder;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -19,7 +20,7 @@ class ContextualUnitTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['contextual'];
+  protected static $modules = ['system', 'contextual'];
 
   /**
    * Provides test cases for both test functions.
@@ -40,6 +41,7 @@ class ContextualUnitTest extends KernelTestBase {
         ],
       ],
       'node:node=14031991:langcode=en',
+      'olivero',
     ];
 
     $tests['one group, multiple dynamic path arguments, no metadata'] = [
@@ -54,6 +56,7 @@ class ContextualUnitTest extends KernelTestBase {
         ],
       ],
       'foo:0=bar&key=baz&1=qux:langcode=en',
+      'claro',
     ];
 
     $tests['one group, one dynamic path argument, metadata'] = [
@@ -70,6 +73,7 @@ class ContextualUnitTest extends KernelTestBase {
         ],
       ],
       'views_ui_edit:view=frontpage:location=page&display=page_1&langcode=en',
+      'olivero',
     ];
 
     $tests['multiple groups, multiple dynamic path arguments'] = [
@@ -94,6 +98,7 @@ class ContextualUnitTest extends KernelTestBase {
         ],
       ],
       'node:node=14031991:langcode=en|foo:0=bar&key=baz&1=qux:langcode=en|edge:0=20011988:langcode=en',
+      'claro',
     ];
 
     return $tests;
@@ -127,6 +132,38 @@ class ContextualUnitTest extends KernelTestBase {
   #[DataProvider('contextualLinksDataProvider')]
   public function testContextualIdToLinks(array $links, string $id): void {
     $this->assertSame($links, _contextual_id_to_links($id));
+  }
+
+  /**
+   * Tests the placeholder of contextual links in a specific theme.
+   *
+   * @param array $links
+   *   The #contextual_links property value array.
+   * @param string $id
+   *   The serialized representation of the passed links.
+   * @param string $theme
+   *   The name of the theme the placeholder should pass to the controller.
+   *
+   * @legacy-covers \Drupal\contextual\Element\ContextualLinksPlaceholder::preRenderPlaceholder
+   */
+  #[DataProvider('contextualLinksDataProvider')]
+  public function testThemePlaceholder(array $links, string $id, string $theme): void {
+    \Drupal::service('theme_installer')->install([$theme]);
+    \Drupal::configFactory()->getEditable('system.theme')
+      ->set('default', $theme)
+      ->save();
+
+    $element = [
+      '#type' => 'contextual_links_placeholder',
+      '#id' => $id,
+      '#pre_render' => [
+        ['Drupal\contextual\Element\ContextualLinksPlaceholder', 'preRenderPlaceholder'],
+      ],
+      '#defaults_loaded' => TRUE,
+    ];
+    $output = ContextualLinksPlaceholder::preRenderPlaceholder($element);
+
+    $this->assertEquals($theme, $output['#attached']['drupalSettings']['contextual']['theme']);
   }
 
 }

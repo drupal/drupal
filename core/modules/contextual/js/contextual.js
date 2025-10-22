@@ -156,7 +156,9 @@
       const uncachedIDs = [];
       const uncachedTokens = [];
       ids.forEach((contextualID) => {
-        const html = storage.getItem(`Drupal.contextual.${contextualID.id}`);
+        const html = storage.getItem(
+          `Drupal.contextual.${contextualID.id}.${drupalSettings.contextual.theme}`,
+        );
         if (html?.length) {
           // Initialize after the current execution cycle, to make the AJAX
           // request for retrieving the uncached contextual links as soon as
@@ -184,7 +186,8 @@
         uncachedIDs.forEach((id) => data.append('ids[]', id));
         uncachedTokens.forEach((id) => data.append('tokens[]', id));
 
-        const req = new Request(Drupal.url('contextual/render'), {
+        const controllerUrl = `contextual/render?theme=${drupalSettings.contextual.theme}`;
+        const req = new Request(Drupal.url(controllerUrl), {
           method: 'POST',
           body: data,
         });
@@ -194,7 +197,10 @@
           .then((json) =>
             Object.entries(json).forEach(([contextualID, html]) => {
               // Store the metadata.
-              storage.setItem(`Drupal.contextual.${contextualID}`, html);
+              storage.setItem(
+                `Drupal.contextual.${contextualID}.${drupalSettings.contextual.theme}`,
+                html,
+              );
               // If the rendered contextual links are empty, then the current
               // user does not have permission to access the associated links:
               // don't render anything.
