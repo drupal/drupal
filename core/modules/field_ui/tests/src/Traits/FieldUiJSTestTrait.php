@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Traits;
 
-use Behat\Mink\Exception\ElementNotFoundException;
-
 /**
  * Provides common functionality for the Field UI tests that depend on JS.
  */
@@ -27,8 +25,6 @@ trait FieldUiJSTestTrait {
    * @param bool $save_settings
    *   (optional) Parameter for conditional execution of second and third step
    *   (Saving the storage settings and field settings). Defaults to 'TRUE'.
-   *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function fieldUIAddNewFieldJS(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field', bool $save_settings = TRUE): void {
     $this->getSession()->resizeWindow(1200, 800);
@@ -44,31 +40,26 @@ trait FieldUiJSTestTrait {
     }
 
     // First step: 'Add field' page.
-    $session = $this->getSession();
-
-    $page = $session->getPage();
-    $assert_session = $this->assertSession();
-
-    try {
-      /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
-      $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
-      $field_definitions = $field_type_plugin_manager->getUiDefinitions();
-      $field_type_label = (string) $field_definitions[$field_type]['label'];
-      $this->getSession()->getPage()->clickLink($field_type_label);
-      $this->assertSession()->assertWaitOnAjaxRequest();
-
-      if ($this->getSession()->getPage()->hasField('field_options_wrapper')) {
-        $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);
-      }
-    }
-    // If the element could not be found then it is probably in a group.
-    catch (ElementNotFoundException) {
-      // Call the helper function to confirm it is in a group.
-      $field_group = $this->getFieldFromGroup($field_type);
+    $field_group = $this->getFieldFromGroup($field_type);
+    if ($field_group !== 'General') {
+      // The field type is in a group. Select the group and then the field type.
       $this->clickLink($field_group);
       $this->assertSession()->assertWaitOnAjaxRequest();
       $this->assertSession()->fieldExists('field_options_wrapper')->selectOption($field_type);
     }
+    else {
+      // The field type is not in a group. Select the field type directly.
+      /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager */
+      $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+      $field_definitions = $field_type_plugin_manager->getUiDefinitions();
+      $field_type_label = (string) $field_definitions[$field_type]['label'];
+      $this->clickLink($field_type_label);
+      $this->assertSession()->assertWaitOnAjaxRequest();
+    }
+
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
     $field_label = $page->findField('label');
     $this->assertTrue($field_label->isVisible());
     $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
