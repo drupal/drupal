@@ -21,7 +21,6 @@ class CKEditor5StylesheetsTest extends KernelTestBase {
    */
   protected static $modules = [
     'system',
-    'user',
     'ckeditor5',
     'editor',
     'filter',

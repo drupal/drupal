@@ -29,7 +29,6 @@ class FilterBooleanOperatorGroupTest extends ViewsKernelTestBase {
     'field',
     'text',
     'node',
-    'user',
     'views_test_config',
   ];
 

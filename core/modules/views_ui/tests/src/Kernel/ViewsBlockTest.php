@@ -29,7 +29,6 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     'block',
     'block_test_views',
     'views_ui',
-    'user',
   ];
 
   /**

@@ -35,7 +35,6 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   protected static $modules = [
     'entity_test',
     'entity_test_update',
-    'user',
     'text',
   ];
 

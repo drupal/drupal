@@ -47,7 +47,6 @@ class HandlerAllTest extends ViewsKernelTestBase {
     'options',
     'taxonomy',
     'text',
-    'user',
   ];
 
   /**

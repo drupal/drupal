@@ -23,7 +23,6 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
    */
   protected static $modules = [
     'language',
-    'user',
     'field',
     'text',
     'filter',

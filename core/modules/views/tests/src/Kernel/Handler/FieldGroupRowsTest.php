@@ -32,7 +32,6 @@ class FieldGroupRowsTest extends ViewsKernelTestBase {
     'filter',
     'node',
     'text',
-    'user',
   ];
 
   /**

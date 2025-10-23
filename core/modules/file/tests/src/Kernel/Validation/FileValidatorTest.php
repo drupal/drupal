@@ -22,7 +22,6 @@ class FileValidatorTest extends FileValidatorTestBase {
     'file',
     'file_test',
     'file_validator_test',
-    'user',
   ];
 
   /**

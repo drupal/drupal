@@ -28,7 +28,6 @@ class ViewsConfigDependenciesIntegrationTest extends ViewsKernelTestBase {
     'file',
     'image',
     'entity_test',
-    'user',
     'text',
   ];
 

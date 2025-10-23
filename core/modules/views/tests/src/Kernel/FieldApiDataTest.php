@@ -30,7 +30,6 @@ class FieldApiDataTest extends ViewsKernelTestBase {
     'filter',
     'language',
     'node',
-    'user',
   ];
 
   /**

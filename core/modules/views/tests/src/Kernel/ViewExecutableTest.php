@@ -45,7 +45,6 @@ class ViewExecutableTest extends ViewsKernelTestBase {
   protected static $modules = [
     'node',
     'comment',
-    'user',
     'filter',
     'field',
     'text',

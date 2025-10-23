@@ -32,7 +32,6 @@ class EntitySerializationTest extends NormalizerTestBase {
     'entity_test',
     'text',
     'filter',
-    'user',
     'entity_serialization_test',
   ];
 

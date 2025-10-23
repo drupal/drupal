@@ -27,7 +27,6 @@ class ArgumentUidRevisionTest extends ViewsKernelTestBase {
     'node',
     'field',
     'text',
-    'user',
     'node_test_views',
   ];
 

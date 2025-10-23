@@ -42,7 +42,6 @@ class RowPluginTest extends ViewsKernelTestBase {
     'node',
     'node_test_views',
     'text',
-    'user',
   ];
 
   /**

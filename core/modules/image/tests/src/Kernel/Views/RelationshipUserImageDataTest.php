@@ -29,7 +29,6 @@ class RelationshipUserImageDataTest extends ViewsKernelTestBase {
     'field',
     'image',
     'image_test_views',
-    'user',
   ];
 
   /**

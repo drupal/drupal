@@ -26,7 +26,6 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
     'file',
     'views',
     'entity_test',
-    'user',
     'field',
   ];
 

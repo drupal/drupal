@@ -32,7 +32,6 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     'filter',
     'text',
     'node',
-    'user',
     'language',
     'views_test_language',
   ];

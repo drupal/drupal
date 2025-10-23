@@ -44,7 +44,6 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'user',
     'field',
     'entity_test',
     'views',

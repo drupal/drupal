@@ -39,7 +39,6 @@ class QueryGroupByTest extends ViewsKernelTestBase {
   protected static $modules = [
     'entity_test',
     'field',
-    'user',
     'language',
   ];
 

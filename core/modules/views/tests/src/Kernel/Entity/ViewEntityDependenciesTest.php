@@ -41,7 +41,6 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
   protected static $modules = [
     'node',
     'comment',
-    'user',
     'field',
     'text',
     'search',

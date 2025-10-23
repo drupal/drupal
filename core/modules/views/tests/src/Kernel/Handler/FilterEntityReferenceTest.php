@@ -39,7 +39,6 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
    */
   protected static $modules = [
     'node',
-    'user',
     'field',
     'text',
     'filter',

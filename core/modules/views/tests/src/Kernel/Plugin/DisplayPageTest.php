@@ -40,7 +40,6 @@ class DisplayPageTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'user',
     'field',
     'views_test_data',
   ];

@@ -36,7 +36,6 @@ class PathPluginTest extends ViewsKernelTestBase {
   protected static $modules = [
     'node',
     'node_test_views',
-    'user',
   ];
 
   /**

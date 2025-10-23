@@ -28,7 +28,6 @@ class NidArgumentTest extends ViewsKernelTestBase {
     'field',
     'text',
     'node_test_config',
-    'user',
     'node_test_views',
   ];
 

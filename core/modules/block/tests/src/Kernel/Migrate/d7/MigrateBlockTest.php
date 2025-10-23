@@ -31,7 +31,6 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     'text',
     'filter',
     'path_alias',
-    'user',
   ];
 
   /**
