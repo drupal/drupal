@@ -107,7 +107,7 @@ class TwigEnvironment extends Environment {
    */
   public function compileSource(Source $source): string {
     // Note: always use \Drupal\Core\Serialization\Yaml here instead of the
-    // "serializer.yaml" service. This allows the core serializer to utilize
+    // "serialization.yaml" service. This allows the core serializer to utilize
     // core related functionality which isn't available as the standalone
     // component based serializer.
     $frontMatter = FrontMatter::create($source->getCode(), Yaml::class);
@@ -170,7 +170,7 @@ class TwigEnvironment extends Environment {
     $source = $loader->getSourceContext($name);
 
     // Note: always use \Drupal\Core\Serialization\Yaml here instead of the
-    // "serializer.yaml" service. This allows the core serializer to utilize
+    // "serialization.yaml" service. This allows the core serializer to utilize
     // core related functionality which isn't available as the standalone
     // component based serializer.
     try {

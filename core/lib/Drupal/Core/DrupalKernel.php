@@ -45,7 +45,7 @@ use Symfony\Component\HttpKernel\TerminableInterface;
  * also deals with the registration of service providers. It allows registered
  * service providers to add their services to the container. Core provides the
  * CoreServiceProvider, which, in addition to registering any core services that
- * cannot be registered in the core.services.yaml file, adds any compiler passes
+ * cannot be registered in the core.services.yml file, adds any compiler passes
  * needed by core, e.g. for processing tagged services. Each module can add its
  * own service provider, i.e. a class implementing
  * Drupal\Core\DependencyInjection\ServiceProvider, to register services to the

@@ -73,9 +73,9 @@ class HelpTopicTwigLoader extends FilesystemLoader {
     $contents = file_get_contents($path);
     try {
       // Note: always use \Drupal\Core\Serialization\Yaml here instead of the
-      // "serializer.yaml" service. This allows the core serializer to utilize
-      // core related functionality which isn't available as the standalone
-      // component based serializer.
+      // "serialization.yaml" service. This allows the core serializer to
+      // utilize core related functionality which isn't available as the
+      // standalone component based serializer.
       $front_matter = new FrontMatter($contents, Yaml::class);
 
       // Reconstruct the content if there is front matter data detected. Prepend
