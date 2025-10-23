@@ -57,6 +57,8 @@ services:
   workspaces.workspace_subscriber:
     class: Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
     arguments: ['@router.route_provider', '@workspaces.manager']
+  Drupal\workspaces\EventSubscriber\WorkspaceSwitchSubscriber:
+    autowire: true
 
   cache_context.workspace:
     class: Drupal\workspaces\WorkspaceCacheContext

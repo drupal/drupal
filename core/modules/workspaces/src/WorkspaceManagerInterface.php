@@ -73,6 +73,11 @@ interface WorkspaceManagerInterface {
 
   /**
    * Deletes the revisions associated with deleted workspaces.
+   *
+   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3553582
    */
   public function purgeDeletedWorkspacesBatch();
 

@@ -2,27 +2,23 @@
 
 namespace Drupal\workspaces;
 
-use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\Core\Site\Settings;
-use Drupal\Core\State\StateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\workspaces\Event\WorkspaceSwitchEvent;
+use Drupal\workspaces\Hook\WorkspacesHooks;
 use Drupal\workspaces\Negotiator\WorkspaceNegotiatorInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides the workspace manager.
  *
  * @property iterable $negotiators
+ * @property \Closure $entityTypeManager
+ * @property \Closure $eventDispatcher
  */
 class WorkspaceManager implements WorkspaceManagerInterface {
-
-  use StringTranslationTrait;
 
   /**
    * The current active workspace.
@@ -41,21 +37,24 @@ class WorkspaceManager implements WorkspaceManagerInterface {
 
   public function __construct(
     protected RequestStack $requestStack,
-    protected EntityTypeManagerInterface $entityTypeManager,
-    #[Autowire(service: 'entity.memory_cache')]
-    protected MemoryCacheInterface $entityMemoryCache,
-    protected AccountProxyInterface $currentUser,
-    protected StateInterface $state,
-    #[Autowire(service: 'logger.channel.workspaces')]
-    protected LoggerInterface $logger,
     #[AutowireIterator(tag: 'workspace_negotiator')]
     protected $negotiators,
-    protected WorkspaceAssociationInterface $workspaceAssociation,
-    protected WorkspaceInformationInterface $workspaceInfo,
+    #[AutowireServiceClosure('entity_type.manager')]
+    protected $entityTypeManager,
+    #[AutowireServiceClosure('event_dispatcher')]
+    protected $eventDispatcher,
   ) {
-    if ($negotiators instanceof ClassResolverInterface) {
-      @trigger_error('Passing the \'class_resolver\' service as the 7th argument to ' . __METHOD__ . ' is deprecated in drupal:11.3.0 and is unsupported in drupal:12.0.0. Use autowiring for the \'workspaces.manager\' service instead. See https://www.drupal.org/node/3532939', E_USER_DEPRECATED);
+    if (!$negotiators instanceof \IteratorAggregate) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $negotiators argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3532939', E_USER_DEPRECATED);
       $this->negotiators = $this->collectedNegotiators;
+    }
+    if (!$entityTypeManager instanceof \Closure) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3532939', E_USER_DEPRECATED);
+      $this->eventDispatcher = new ServiceClosureArgument(new Reference('entity_type.manager'));
+    }
+    if (!$eventDispatcher instanceof \Closure) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $eventDispatcher argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3532939', E_USER_DEPRECATED);
+      $this->eventDispatcher = new ServiceClosureArgument(new Reference('event_dispatcher'));
     }
   }
 
@@ -77,7 +76,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
         if ($negotiator->applies($request)) {
           if ($workspace_id = $negotiator->getActiveWorkspaceId($request)) {
             /** @var \Drupal\workspaces\WorkspaceInterface $negotiated_workspace */
-            $negotiated_workspace = $this->entityTypeManager
+            $negotiated_workspace = ($this->entityTypeManager)()
               ->getStorage('workspace')
               ->load($workspace_id);
           }
@@ -153,27 +152,14 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     // If the current user doesn't have access to view the workspace, they
     // shouldn't be allowed to switch to it, except in CLI processes.
     if ($workspace && PHP_SAPI !== 'cli' && !$workspace->access('view')) {
-      $this->logger->error('Denied access to view workspace %workspace_label for user %uid', [
-        '%workspace_label' => $workspace->label(),
-        '%uid' => $this->currentUser->id(),
-      ]);
       throw new WorkspaceAccessException('The user does not have permission to view that workspace.');
     }
 
+    $previous_workspace = $this->activeWorkspace ?: NULL;
     $this->activeWorkspace = $workspace ?: FALSE;
 
-    // Clear the static entity cache for the supported entity types.
-    $cache_tags_to_invalidate = [];
-    foreach (array_keys($this->workspaceInfo->getSupportedEntityTypes()) as $entity_type_id) {
-      $cache_tags_to_invalidate[] = 'entity.memory_cache:' . $entity_type_id;
-    }
-    $this->entityMemoryCache->invalidateTags($cache_tags_to_invalidate);
-
-    // Clear the static cache for path aliases. We can't inject the path alias
-    // manager service because it would create a circular dependency.
-    if (\Drupal::hasService('path_alias.manager')) {
-      \Drupal::service('path_alias.manager')->cacheClear();
-    }
+    $event = new WorkspaceSwitchEvent($this->activeWorkspace ?: NULL, $previous_workspace);
+    ($this->eventDispatcher)()->dispatch($event);
   }
 
   /**
@@ -181,7 +167,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    */
   public function executeInWorkspace($workspace_id, callable $function) {
     /** @var \Drupal\workspaces\WorkspaceInterface $workspace */
-    $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
+    $workspace = ($this->entityTypeManager)()->getStorage('workspace')->load($workspace_id);
 
     if (!$workspace) {
       throw new \InvalidArgumentException('The ' . $workspace_id . ' workspace does not exist.');
@@ -229,74 +215,8 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * {@inheritdoc}
    */
   public function purgeDeletedWorkspacesBatch() {
-    $deleted_workspace_ids = $this->state->get('workspace.deleted', []);
-
-    // Bail out early if there are no workspaces to purge.
-    if (empty($deleted_workspace_ids)) {
-      return;
-    }
-
-    $batch_size = Settings::get('entity_update_batch_size', 50);
-
-    // Get the first deleted workspace from the list and delete the revisions
-    // associated with it, along with the workspace association records.
-    $workspace_id = reset($deleted_workspace_ids);
-
-    $all_associated_revisions = [];
-    foreach (array_keys($this->workspaceInfo->getSupportedEntityTypes()) as $entity_type_id) {
-      $all_associated_revisions[$entity_type_id] = $this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id);
-    }
-    $all_associated_revisions = array_filter($all_associated_revisions);
-
-    $count = 1;
-    foreach ($all_associated_revisions as $entity_type_id => $associated_revisions) {
-      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $associated_entity_storage */
-      $associated_entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
-
-      // Sort the associated revisions in reverse ID order, so we can delete the
-      // most recent revisions first.
-      krsort($associated_revisions);
-
-      // Get a list of default revisions tracked by the given workspace, because
-      // they need to be handled differently than pending revisions.
-      $initial_revision_ids = $this->workspaceAssociation->getAssociatedInitialRevisions($workspace_id, $entity_type_id);
-
-      foreach (array_keys($associated_revisions) as $revision_id) {
-        if ($count > $batch_size) {
-          continue 2;
-        }
-
-        // If the workspace is tracking the entity's default revision (i.e. the
-        // entity was created inside that workspace), we need to delete the
-        // whole entity after all of its pending revisions are gone.
-        if (isset($initial_revision_ids[$revision_id])) {
-          $associated_entity_storage->delete([$associated_entity_storage->load($initial_revision_ids[$revision_id])]);
-        }
-        else {
-          // Delete the associated entity revision.
-          $associated_entity_storage->deleteRevision($revision_id);
-        }
-        $count++;
-      }
-    }
-
-    // The purging operation above might have taken a long time, so we need to
-    // request a fresh list of tracked entities. If it is empty, we can go ahead
-    // and remove the deleted workspace ID entry from state.
-    $has_associated_revisions = FALSE;
-    foreach (array_keys($this->workspaceInfo->getSupportedEntityTypes()) as $entity_type_id) {
-      if (!empty($this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id))) {
-        $has_associated_revisions = TRUE;
-        break;
-      }
-    }
-    if (!$has_associated_revisions) {
-      unset($deleted_workspace_ids[$workspace_id]);
-      $this->state->set('workspace.deleted', $deleted_workspace_ids);
-
-      // Delete any possible leftover association entries.
-      $this->workspaceAssociation->deleteAssociations($workspace_id);
-    }
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3553582', E_USER_DEPRECATED);
+    \Drupal::service(WorkspacesHooks::class)->cron();
   }
 
   /**

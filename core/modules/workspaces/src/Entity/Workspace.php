@@ -16,6 +16,7 @@ use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
 use Drupal\workspaces\Form\WorkspaceActivateForm;
 use Drupal\workspaces\Form\WorkspaceDeleteForm;
 use Drupal\workspaces\Form\WorkspaceForm;
+use Drupal\workspaces\Hook\WorkspacesHooks;
 use Drupal\workspaces\Provider\DefaultWorkspaceProvider;
 use Drupal\workspaces\Provider\WorkspaceProviderCollector;
 use Drupal\workspaces\Provider\WorkspaceProviderInterface;
@@ -208,25 +209,39 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
 
     /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
     $workspace_manager = \Drupal::service('workspaces.manager');
+    /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
+    $workspace_association = \Drupal::service('workspaces.association');
+
+    // Gather the list of deleted workspace IDs, since the passed-in array is
+    // not required to be keyed by them.
+    $workspaces_ids = array_map(fn($entity) => $entity->id(), $entities);
+
     // Disable the currently active workspace if it has been deleted.
     if ($workspace_manager->hasActiveWorkspace()
-      && in_array($workspace_manager->getActiveWorkspace()->id(), array_keys($entities), TRUE)) {
+      && in_array($workspace_manager->getActiveWorkspace()->id(), $workspaces_ids, TRUE)
+    ) {
       $workspace_manager->switchToLive();
     }
 
-    // Ensure that workspace batch purging does not happen inside a workspace.
-    $workspace_manager->executeOutsideWorkspace(function () use ($workspace_manager, $entities) {
-      // Add the IDs of the deleted workspaces to the list of workspaces that
-      // will be purged on cron.
+    // Non-empty workspaces will have to go through the revision purging process
+    // from \Drupal\workspaces\Hook\WorkspacesHooks::cron().
+    $workspace_ids_to_purge = [];
+    foreach ($workspaces_ids as $workspace_id) {
+      if ($workspace_association->getTrackedEntities($workspace_id)) {
+        $workspace_ids_to_purge[$workspace_id] = $workspace_id;
+      }
+    }
+    if ($workspace_ids_to_purge) {
       $state = \Drupal::state();
       $deleted_workspace_ids = $state->get('workspace.deleted', []);
-      $deleted_workspace_ids += array_combine(array_keys($entities), array_keys($entities));
-      $state->set('workspace.deleted', $deleted_workspace_ids);
+      $state->set('workspace.deleted', $deleted_workspace_ids + $workspace_ids_to_purge);
 
-      // Trigger a batch purge to allow empty workspaces to be deleted
-      // immediately.
-      $workspace_manager->purgeDeletedWorkspacesBatch();
-    });
+      // Trigger a batch purge to allow workspaces with few revisions to be
+      // deleted immediately.
+      // @todo This is temporary until batch purging is converted to use queues.
+      // @see https://www.drupal.org/i/3553654
+      \Drupal::service(WorkspacesHooks::class)->cron();
+    }
   }
 
 }
