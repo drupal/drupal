@@ -175,21 +175,6 @@ td.is-active {
  * This ignores the filter format select of the textarea editor.
  */
 
-td > .form-item {
-  display: flex;
-  align-items: center;
-}
-
-td > .form-item > .form-item__prefix {
-  margin-inline-end: var(--space-xs);
-  white-space: nowrap;
-}
-
-td > .form-item > .form-item__suffix {
-  margin-inline-start: var(--space-xs);
-  white-space: nowrap;
-}
-
 td > .form-item > .form-element,
 td > .ajax-new-content > .form-item > .form-element,
 td > .form-item > .claro-autocomplete,
