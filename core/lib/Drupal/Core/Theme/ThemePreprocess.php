@@ -5,6 +5,7 @@ namespace Drupal\Core\Theme;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Path\CurrentPathStack;
@@ -35,6 +36,7 @@ class ThemePreprocess {
     protected RendererInterface $renderer,
     protected RouteMatchInterface $routeMatch,
     protected ThemeManagerInterface $themeManager,
+    protected ThemeSettingsProvider $themeSettingsProvider,
   ) {
   }
 
@@ -380,7 +382,7 @@ class ThemePreprocess {
     // Maintenance page and install page need branding info in variables because
     // there is no blocks.
     $site_config = $this->configFactory->get('system.site');
-    $variables['logo'] = theme_get_setting('logo.url');
+    $variables['logo'] = $this->themeSettingsProvider->getSetting('logo.url');
     $variables['site_name'] = $site_config->get('name');
     $variables['site_slogan'] = $site_config->get('slogan');
 

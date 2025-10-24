@@ -1344,7 +1344,7 @@ services:
     arguments: ['@router.route_provider']
   bare_html_page_renderer:
     class: Drupal\Core\Render\BareHtmlPageRenderer
-    arguments: ['@renderer', '@html_response.attachments_processor']
+    arguments: ['@renderer', '@html_response.attachments_processor', '@Drupal\Core\Extension\ThemeSettingsProvider']
     lazy: true
   Drupal\Core\Render\BareHtmlPageRendererInterface: '@bare_html_page_renderer'
   private_key:
@@ -2003,3 +2003,5 @@ services:
       ]
     tags:
       - { name: needs_destruction }
+  Drupal\Core\Extension\ThemeSettingsProvider:
+    autowire: true

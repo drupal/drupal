@@ -6,6 +6,7 @@ use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -24,27 +25,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Stores the configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Creates a SystemBrandingBlock instance.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected ConfigFactoryInterface $configFactory,
+    protected ?ThemeSettingsProvider $themeSettingsProvider = NULL,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->configFactory = $config_factory;
+    if ($themeSettingsProvider === NULL) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $themeSettingsProvider argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3035289', E_USER_DEPRECATED);
+      $this->themeSettingsProvider = \Drupal::service(ThemeSettingsProvider::class);
+    }
   }
 
   /**
@@ -55,7 +49,8 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get(ThemeSettingsProvider::class),
     );
   }
 
@@ -153,7 +148,7 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $build['site_logo'] = [
       '#theme' => 'image',
-      '#uri' => theme_get_setting('logo.url'),
+      '#uri' => $this->themeSettingsProvider->getSetting('logo.url'),
       '#alt' => $this->t('Home'),
       '#access' => $this->configuration['use_site_logo'],
     ];

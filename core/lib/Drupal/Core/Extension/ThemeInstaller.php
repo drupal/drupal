@@ -154,10 +154,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
         ->set("theme.$key", 0)
         ->save(TRUE);
 
-      // Reset theme settings.
-      $theme_settings = &drupal_static('theme_get_setting');
-      unset($theme_settings[$key]);
-
       // Reset theme listing.
       $this->themeHandler->reset();
 
@@ -214,10 +210,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
     foreach ($theme_list as $key) {
       // The value is not used; the weight is ignored for themes currently.
       $extension_config->clear("theme.$key");
-
-      // Reset theme settings.
-      $theme_settings = &drupal_static('theme_get_setting');
-      unset($theme_settings[$key]);
 
       // Remove all configuration belonging to the theme.
       $this->configManager->uninstall('theme', $key);

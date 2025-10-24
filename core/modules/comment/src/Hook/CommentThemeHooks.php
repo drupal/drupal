@@ -4,6 +4,7 @@ namespace Drupal\comment\Hook;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
@@ -22,6 +23,7 @@ class CommentThemeHooks {
     protected DateFormatterInterface $dateFormatter,
     protected RendererInterface $renderer,
     protected EntityTypeManagerInterface $entityTypeManager,
+    protected ThemeSettingsProvider $themeSettingsProvider,
   ) {
 
   }
@@ -98,7 +100,7 @@ class CommentThemeHooks {
         $variables['changed'] = $this->dateFormatter->format($comment->getChangedTime());
       }
 
-      if (theme_get_setting('features.comment_user_picture')) {
+      if ($this->themeSettingsProvider->getSetting('features.comment_user_picture')) {
         // To change user picture settings (for instance, image style), edit the
         // 'compact' view mode on the User entity.
         $variables['user_picture'] = $this->entityTypeManager

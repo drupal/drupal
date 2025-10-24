@@ -11,7 +11,7 @@ use Drupal\Core\Config\ConfigBase;
  * settings are calculated based on various site settings and are therefore
  * not persisted.
  *
- * @see theme_get_setting()
+ * @see \Drupal\Core\Extension\ThemeSettingsProvider::getSetting()
  */
 class ThemeSettings extends ConfigBase {
 

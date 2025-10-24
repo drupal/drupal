@@ -4,6 +4,7 @@ namespace Drupal\user\Hook;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessibleInterface;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
@@ -20,6 +21,7 @@ class UserThemeHooks {
 
   public function __construct(
     protected AccountInterface $currentUser,
+    protected ThemeSettingsProvider $themeSettingsProvider,
   ) {
 
   }
@@ -84,7 +86,7 @@ class UserThemeHooks {
     $variables['extra'] = '';
     $variables['uid'] = $account->id();
     if (empty($variables['uid'])) {
-      if (theme_get_setting('features.comment_user_verification')) {
+      if ($this->themeSettingsProvider->getSetting('features.comment_user_verification')) {
         $variables['extra'] = ' (' . $this->t('not verified') . ')';
       }
     }

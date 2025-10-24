@@ -5,6 +5,7 @@
  * Functions to support theming in the Olivero theme.
  */
 
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\olivero\OliveroPreRender;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,12 +19,14 @@ use Drupal\user\UserInterface;
  * Adds body classes if certain regions have content.
  */
 function olivero_preprocess_html(&$variables): void {
-  if (theme_get_setting('mobile_menu_all_widths') === 1) {
+  /** @var \Drupal\Core\Extension\ThemeSettingsProvider $theme_settings_provider */
+  $theme_settings_provider = \Drupal::service(ThemeSettingsProvider::class);
+  if ($theme_settings_provider->getSetting('mobile_menu_all_widths') === 1) {
     $variables['attributes']['class'][] = 'is-always-mobile-nav';
   }
 
   // Convert custom hex to hsl so we can use the hue value.
-  $brand_color_hex = theme_get_setting('base_primary_color') ?? '#1b9ae4';
+  $brand_color_hex = $theme_settings_provider->getSetting('base_primary_color') ?? '#1b9ae4';
   [$h, $s, $l] = _olivero_hex_to_hsl($brand_color_hex);
 
   $variables['html_attributes']->setAttribute('style', "--color--primary-hue:$h;--color--primary-saturation:$s%;--color--primary-lightness:$l");
@@ -148,7 +151,7 @@ function olivero_preprocess_block(&$variables): void {
   }
 
   if ($variables['plugin_id'] === 'system_branding_block') {
-    $site_branding_color = theme_get_setting('site_branding_bg_color');
+    $site_branding_color = \Drupal::service(ThemeSettingsProvider::class)->getSetting('site_branding_bg_color');
     if ($site_branding_color && $site_branding_color !== 'default') {
       $variables['attributes']['class'][] = 'site-branding--bg-' . $site_branding_color;
     }

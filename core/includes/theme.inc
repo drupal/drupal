@@ -9,6 +9,7 @@
  */
 
 use Drupal\Core\Datetime\DatePreprocess;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Field\FieldPreprocess;
 use Drupal\Core\Pager\PagerPreprocess;
 use Drupal\Core\Breadcrumb\BreadcrumbPreprocess;
@@ -16,10 +17,8 @@ use Drupal\Core\Menu\MenuPreprocess;
 use Drupal\Core\Theme\ImagePreprocess;
 use Drupal\Core\Theme\ThemePreprocess;
 use Drupal\Core\Config\Config;
-use Drupal\Core\Config\StorageException;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Theme\ThemeCommonElements;
-use Drupal\Core\Theme\ThemeSettings;
 
 /**
  * @defgroup content_flags Content markers
@@ -67,16 +66,15 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
 /**
  * Returns an array of default theme features.
  *
- * @see \Drupal\Core\Extension\ThemeExtensionList::$defaults
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\Core\Extension\ThemeSettingsProvider::DEFAULT_THEME_FEATURES
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3554127
  */
 function _system_default_theme_features() {
-  return [
-    'favicon',
-    'logo',
-    'node_user_picture',
-    'comment_user_picture',
-    'comment_user_verification',
-  ];
+  @trigger_error('_system_default_theme_features() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal\Core\Extension\ThemeSettingsProvider::DEFAULT_THEME_FEATURES instead. See https://www.drupal.org/node/3554127', E_USER_DEPRECATED);
+  return ThemeSettingsProvider::DEFAULT_THEME_FEATURES;
 }
 
 /**
@@ -203,81 +201,16 @@ function drupal_find_theme_templates($cache, $extension, $path): array {
  *
  * @return mixed
  *   The value of the requested setting, NULL if the setting does not exist.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service('Drupal\Core\Extension\ThemeSettingsProvider')->getSetting()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3035289
  */
 function theme_get_setting($setting_name, $theme = NULL) {
-  /** @var \Drupal\Core\Theme\ThemeSettings[] $cache */
-  $cache = &drupal_static(__FUNCTION__, []);
-
-  // If no key is given, use the current theme if we can determine it.
-  if (!isset($theme)) {
-    $theme = \Drupal::theme()->getActiveTheme()->getName();
-  }
-
-  if (empty($cache[$theme])) {
-    // Create a theme settings object.
-    $cache[$theme] = new ThemeSettings($theme);
-    // Get the global settings from configuration.
-    $cache[$theme]->setData(\Drupal::config('system.theme.global')->get());
-
-    // Get the values for the theme-specific settings from the .info.yml files
-    // of the theme and all its base themes.
-    $themes = \Drupal::service('theme_handler')->listInfo();
-    if (isset($themes[$theme])) {
-      $theme_object = $themes[$theme];
-
-      // Retrieve configured theme-specific settings, if any.
-      try {
-        if ($theme_settings = \Drupal::config($theme . '.settings')->get()) {
-          $cache[$theme]->merge($theme_settings);
-        }
-      }
-      catch (StorageException) {
-      }
-
-      // If the theme does not support a particular feature, override the global
-      // setting and set the value to NULL.
-      if (!empty($theme_object->info['features'])) {
-        foreach (_system_default_theme_features() as $feature) {
-          if (!in_array($feature, $theme_object->info['features'])) {
-            $cache[$theme]->set('features.' . $feature, NULL);
-          }
-        }
-      }
-
-      /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
-      $file_url_generator = \Drupal::service('file_url_generator');
-
-      // Generate the path to the logo image.
-      if ($cache[$theme]->get('logo.use_default')) {
-        $logo = \Drupal::service('theme.initialization')->getActiveThemeByName($theme)->getLogo();
-        $cache[$theme]->set('logo.url', $file_url_generator->generateString($logo));
-      }
-      elseif ($logo_path = $cache[$theme]->get('logo.path')) {
-        $cache[$theme]->set('logo.url', $file_url_generator->generateString($logo_path));
-      }
-
-      // Generate the path to the favicon.
-      if ($cache[$theme]->get('features.favicon')) {
-        $favicon_path = $cache[$theme]->get('favicon.path');
-        if ($cache[$theme]->get('favicon.use_default')) {
-          if (file_exists($favicon = $theme_object->getPath() . '/favicon.ico')) {
-            $cache[$theme]->set('favicon.url', $file_url_generator->generateString($favicon));
-          }
-          else {
-            $cache[$theme]->set('favicon.url', $file_url_generator->generateString('core/misc/favicon.ico'));
-          }
-        }
-        elseif ($favicon_path) {
-          $cache[$theme]->set('favicon.url', $file_url_generator->generateString($favicon_path));
-        }
-        else {
-          $cache[$theme]->set('features.favicon', FALSE);
-        }
-      }
-    }
-  }
-
-  return $cache[$theme]->get($setting_name);
+  @trigger_error('theme_get_setting() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'\Drupal\Core\Extension\ThemeSettingsProvider\')->getSetting() instead. See https://www.drupal.org/node/3035289', E_USER_DEPRECATED);
+  return \Drupal::service(ThemeSettingsProvider::class)->getSetting($setting_name, $theme);
 }
 
 /**

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 
 /**
  * Default bare HTML page renderer.
@@ -30,10 +31,20 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
    *   The renderer service.
    * @param \Drupal\Core\Render\AttachmentsResponseProcessorInterface $html_response_attachments_processor
    *   The HTML response attachments processor service.
+   * @param \Drupal\Core\Extension\ThemeSettingsProvider|null $themeSettingsProvider
+   *   The theme settings provider service.
    */
-  public function __construct(RendererInterface $renderer, AttachmentsResponseProcessorInterface $html_response_attachments_processor) {
+  public function __construct(
+    RendererInterface $renderer,
+    AttachmentsResponseProcessorInterface $html_response_attachments_processor,
+    protected ?ThemeSettingsProvider $themeSettingsProvider,
+  ) {
     $this->renderer = $renderer;
     $this->htmlResponseAttachmentsProcessor = $html_response_attachments_processor;
+    if ($themeSettingsProvider === NULL) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $themeSettingsProvider argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3035289', E_USER_DEPRECATED);
+      $this->themeSettingsProvider = \Drupal::service(ThemeSettingsProvider::class);
+    }
   }
 
   /**
@@ -102,9 +113,9 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
     }
 
     // Attach favicon.
-    if (theme_get_setting('features.favicon')) {
-      $favicon = theme_get_setting('favicon.url');
-      $type = theme_get_setting('favicon.mimetype');
+    if ($this->themeSettingsProvider->getSetting('features.favicon')) {
+      $favicon = $this->themeSettingsProvider->getSetting('favicon.url');
+      $type = $this->themeSettingsProvider->getSetting('favicon.mimetype');
       $page['#attached']['html_head_link'][][] = [
         'rel' => 'icon',
         'href' => UrlHelper::stripDangerousProtocols($favicon),

@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 
@@ -14,10 +15,12 @@ use Drupal\file\Entity\File;
  * Implements hook_form_system_theme_settings_alter().
  */
 function test_theme_settings_form_system_theme_settings_alter(&$form, FormStateInterface $form_state): void {
+  /** @var \Drupal\Core\Extension\ThemeSettingsProvider $theme_settings_provider */
+  $theme_settings_provider = \Drupal::service(ThemeSettingsProvider::class);
   $form['custom_logo'] = [
     '#type' => 'managed_file',
     '#title' => t('Secondary logo.'),
-    '#default_value' => theme_get_setting('custom_logo'),
+    '#default_value' => $theme_settings_provider->getSetting('custom_logo'),
     '#progress_indicator' => 'bar',
     '#progress_message'   => t('Processing...'),
     '#upload_location' => 'public://test',
@@ -30,7 +33,7 @@ function test_theme_settings_form_system_theme_settings_alter(&$form, FormStateI
     '#type' => 'managed_file',
     '#title' => t('Multiple file field with all file extensions'),
     '#multiple' => TRUE,
-    '#default_value' => theme_get_setting('multi_file'),
+    '#default_value' => $theme_settings_provider->getSetting('multi_file'),
     '#upload_location' => 'public://test',
     '#upload_validators'  => [
       'FileExtension' => [],

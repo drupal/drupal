@@ -4,6 +4,7 @@ namespace Drupal\shortcut\Hook;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Url;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -12,7 +13,12 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * Hook implementations for shortcut.
  */
 class ShortcutThemeHooks {
+
   use StringTranslationTrait;
+
+  public function __construct(
+    protected readonly ThemeSettingsProvider $themeSettingsProvider,
+  ) {}
 
   /**
    * Implements hook_preprocess_HOOK() for block templates.
@@ -33,7 +39,7 @@ class ShortcutThemeHooks {
     // shortcuts, the feature is enabled for the current theme and if the
     // page's actual content is being shown (for example, we do not want to
     // display it on "access denied" or "page not found" pages).
-    if (shortcut_set_edit_access()->isAllowed() && theme_get_setting('third_party_settings.shortcut.module_link') && !\Drupal::request()->attributes->has('exception')) {
+    if (shortcut_set_edit_access()->isAllowed() && $this->themeSettingsProvider->getSetting('third_party_settings.shortcut.module_link') && !\Drupal::request()->attributes->has('exception')) {
       $link = Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath();
       $route_match = \Drupal::routeMatch();
       // Replicate template_preprocess_html()'s processing to get the title in

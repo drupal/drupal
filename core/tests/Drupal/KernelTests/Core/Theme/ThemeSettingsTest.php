@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -51,7 +52,7 @@ class ThemeSettingsTest extends KernelTestBase {
     $path = $this->availableThemes[$name]->getPath();
     $this->assertFileExists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
     $this->container->get('theme_installer')->install([$name]);
-    $this->assertSame('only', theme_get_setting('base', $name));
+    $this->assertSame('only', \Drupal::service(ThemeSettingsProvider::class)->getSetting('base', $name));
   }
 
   /**
@@ -62,7 +63,7 @@ class ThemeSettingsTest extends KernelTestBase {
     $path = $this->availableThemes[$name]->getPath();
     $this->assertFileDoesNotExist("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
     $this->container->get('theme_installer')->install([$name]);
-    $this->assertNotNull(theme_get_setting('features.favicon', $name));
+    $this->assertNotNull(\Drupal::service(ThemeSettingsProvider::class)->getSetting('features.favicon', $name));
   }
 
   /**
@@ -75,13 +76,12 @@ class ThemeSettingsTest extends KernelTestBase {
     /** @var \Drupal\Core\Extension\ThemeHandler $theme_handler */
     $theme_handler = $this->container->get('theme_handler');
     $theme = $theme_handler->getTheme('stark');
-
     // Tests default behavior.
     $expected = '/' . $theme->getPath() . '/logo.svg';
-    $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
+    $this->assertEquals($expected, \Drupal::service(ThemeSettingsProvider::class)->getSetting('logo.url', 'stark'));
 
     $config = $this->config('stark.settings');
-    drupal_static_reset('theme_get_setting');
+    \Drupal::service('cache.memory')->invalidateTags(['config:stark.settings']);
 
     $values = [
       'default_logo' => FALSE,
@@ -93,7 +93,7 @@ class ThemeSettingsTest extends KernelTestBase {
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
     $file_url_generator = \Drupal::service('file_url_generator');
     $expected = $file_url_generator->generateString('public://logo_with_scheme.png');
-    $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
+    $this->assertEquals($expected, \Drupal::service(ThemeSettingsProvider::class)->getSetting('logo.url', 'stark'));
 
     $values = [
       'default_logo' => FALSE,
@@ -101,11 +101,11 @@ class ThemeSettingsTest extends KernelTestBase {
     ];
     theme_settings_convert_to_config($values, $config)->save();
 
-    drupal_static_reset('theme_get_setting');
+    \Drupal::service('cache.memory')->invalidateTags(['config:stark.settings']);
 
     // Tests relative path.
     $expected = '/' . $theme->getPath() . '/logo_relative_path.gif';
-    $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
+    $this->assertEquals($expected, \Drupal::service(ThemeSettingsProvider::class)->getSetting('logo.url', 'stark'));
 
     $theme_installer->install(['test_theme']);
     \Drupal::configFactory()
@@ -114,11 +114,9 @@ class ThemeSettingsTest extends KernelTestBase {
       ->save();
     $theme = $theme_handler->getTheme('test_theme');
 
-    drupal_static_reset('theme_get_setting');
-
     // Tests logo set in test_theme.info.yml.
     $expected = '/' . $theme->getPath() . '/images/logo2.svg';
-    $this->assertEquals($expected, theme_get_setting('logo.url', 'test_theme'));
+    $this->assertEquals($expected, \Drupal::service(ThemeSettingsProvider::class)->getSetting('logo.url', 'test_theme'));
   }
 
 }
