@@ -189,4 +189,13 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertNull(Vocabulary::load($vid), 'Vocabulary not found.');
   }
 
+  /**
+   * Tests that the overview form is overridable in hook_entity_type_alter().
+   */
+  public function testOverviewOverride(): void {
+    \Drupal::service('module_installer')->install(['taxonomy_overview_override_test']);
+    $this->drupalGet($this->vocabulary->toUrl('overview-form'));
+    $this->assertSession()->pageTextContains('No unicorns here, only llamas');
+  }
+
 }

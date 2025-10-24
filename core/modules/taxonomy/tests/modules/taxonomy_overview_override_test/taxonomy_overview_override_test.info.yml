@@ -1,0 +1,6 @@
+name: 'Taxonomy Overview Override Test'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:taxonomy

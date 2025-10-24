@@ -65,7 +65,7 @@ class VocabularyRouteProvider extends AdminHtmlRouteProvider {
   protected function getOverviewPageRoute(EntityTypeInterface $entity_type) {
     $route = new Route('/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview');
     $route->setDefault('_title_callback', '\Drupal\Core\Entity\Controller\EntityController::title');
-    $route->setDefault('_form', 'Drupal\taxonomy\Form\OverviewTerms');
+    $route->setDefault('_entity_form', 'taxonomy_vocabulary.overview');
     $route->setRequirement('_entity_access', 'taxonomy_vocabulary.access taxonomy overview');
     $route->setOption('_admin_route', TRUE);
     $route->setOption('parameters', [
