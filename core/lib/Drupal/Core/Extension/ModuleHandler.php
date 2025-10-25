@@ -763,7 +763,9 @@ class ModuleHandler implements ModuleHandlerInterface {
           // Remove implementations from "other" modules.
           // This is relevant on the update page, when only the implementations
           // from system module should be used.
-          if (isset($this->moduleList[$module])) {
+          // 'core' is a special protected module name. This is used by the test
+          // system to allow kernel tests to implement hooks.
+          if (isset($this->moduleList[$module]) || $module === 'core') {
             $listeners[] = $this->callableResolver->getCallableFromDefinition($identifier);
             $modules[] = $module;
           }
