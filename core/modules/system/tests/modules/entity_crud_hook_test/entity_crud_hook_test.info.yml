@@ -1,5 +1,0 @@
-name: 'Entity CRUD Hooks Test'
-type: module
-description: 'Support module for CRUD hook tests.'
-package: Testing
-version: VERSION
