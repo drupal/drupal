@@ -5,7 +5,9 @@ namespace Drupal\language\Plugin\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\CacheOptionalInterface;
 use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -23,7 +25,7 @@ use Drupal\language\Plugin\Derivative\LanguageBlock as LanguageBlockDeriver;
   category: new TranslatableMarkup("System"),
   deriver: LanguageBlockDeriver::class
 )]
-class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface, CacheOptionalInterface {
 
   /**
    * The language manager.
@@ -101,6 +103,11 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
     }
     $links = $this->languageManager->getLanguageSwitchLinks($type, $url);
 
+    // In any render cache items wrapping this block, account for variations
+    // by user access to each switcher link, the current path and query
+    // arguments, and language negotiation.
+    $cache_metadata = BubbleableMetadata::createFromRenderArray($build)
+      ->addCacheContexts(['url.path', 'url.query_args', 'url.site', 'languages:' . $type]);
     if (isset($links->links)) {
       $build = [
         '#theme' => 'links__language_block',
@@ -112,17 +119,23 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
         ],
         '#set_active_class' => TRUE,
       ];
+
+      foreach ($links->links as $link) {
+        if ($link['url'] instanceof Url) {
+          $cache_metadata->addCacheableDependency($link['url']->access(NULL, TRUE));
+        }
+      }
     }
+    $cache_metadata->applyTo($build);
+
     return $build;
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Make cacheable in https://www.drupal.org/node/2232375.
    */
-  public function getCacheMaxAge() {
-    return 0;
+  public function createPlaceholder(): bool {
+    return TRUE;
   }
 
 }
