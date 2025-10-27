@@ -38,6 +38,7 @@
     <include-pattern>core/*/Functional/*</include-pattern>
     <include-pattern>core/lib/*</include-pattern>
     <include-pattern>core/modules/*/tests/modules/*</include-pattern>
+    <include-pattern>core/modules/*/Plugin/*</include-pattern>
   </rule>
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
   <rule ref="Drupal.Classes.ClassDeclaration"/>

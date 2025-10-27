@@ -97,7 +97,10 @@ class ViewsBlock implements ContainerDeriverInterface {
               // definitions get cached, so use TranslatableMarkup() instead of
               // $this->t() to avoid double escaping when $admin_label is
               // rendered during requests that use the cached definition.
-              $admin_label = new TranslatableMarkup('@view: @display', ['@view' => $view->label(), '@display' => $display->display['display_title']]);
+              $admin_label = new TranslatableMarkup('@view: @display', [
+                '@view' => $view->label(),
+                '@display' => $display->display['display_title'],
+              ]);
             }
           }
 

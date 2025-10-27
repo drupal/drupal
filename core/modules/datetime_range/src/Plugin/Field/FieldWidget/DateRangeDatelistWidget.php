@@ -99,7 +99,11 @@ class DateRangeDatelistWidget extends DateRangeWidgetBase {
       '#type' => 'select',
       '#title' => $this->t('Date part order'),
       '#default_value' => $this->getSetting('date_order'),
-      '#options' => ['MDY' => $this->t('Month/Day/Year'), 'DMY' => $this->t('Day/Month/Year'), 'YMD' => $this->t('Year/Month/Day')],
+      '#options' => [
+        'MDY' => $this->t('Month/Day/Year'),
+        'DMY' => $this->t('Day/Month/Year'),
+        'YMD' => $this->t('Year/Month/Day'),
+      ],
     ];
 
     if ($this->getFieldSetting('datetime_type') == DateRangeItem::DATETIME_TYPE_DATETIME) {

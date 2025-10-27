@@ -80,7 +80,10 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       // This gets rid of migrations with explicit providers set if one of the
       // providers do not exist before we try to use a potentially non-existing
       // deriver. This is a rare case.
-      $filtered_discovery = new ProviderFilterDecorator($only_with_source_discovery, [$this->moduleHandler, 'moduleExists']);
+      $filtered_discovery = new ProviderFilterDecorator($only_with_source_discovery, [
+        $this->moduleHandler,
+        'moduleExists',
+      ]);
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($filtered_discovery);
     }
     return $this->discovery;

@@ -313,7 +313,12 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
 
         // If this is not one of the entity base tables, skip it.
         $entity_type = \Drupal::entityTypeManager()->getDefinition($table_data['table']['entity type']);
-        $entity_base_tables = [$entity_type->getBaseTable(), $entity_type->getDataTable(), $entity_type->getRevisionTable(), $entity_type->getRevisionDataTable()];
+        $entity_base_tables = [
+          $entity_type->getBaseTable(),
+          $entity_type->getDataTable(),
+          $entity_type->getRevisionTable(),
+          $entity_type->getRevisionDataTable(),
+        ];
         if (!in_array($relationship->definition['base'], $entity_base_tables)) {
           continue;
         }

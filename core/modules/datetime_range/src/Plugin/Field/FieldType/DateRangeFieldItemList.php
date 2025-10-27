@@ -78,7 +78,8 @@ class DateRangeFieldItemList extends DateTimeFieldItemList {
    * {@inheritdoc}
    */
   public function defaultValuesFormSubmit(array $element, array &$form, FormStateInterface $form_state) {
-    if ($form_state->getValue(['default_value_input', 'default_date_type']) || $form_state->getValue(['default_value_input', 'default_end_date_type'])) {
+    if ($form_state->getValue(['default_value_input', 'default_date_type'])
+      || $form_state->getValue(['default_value_input', 'default_end_date_type'])) {
       if ($form_state->getValue(['default_value_input', 'default_date_type']) == static::DEFAULT_VALUE_NOW) {
         $form_state->setValueForElement($element['default_date'], static::DEFAULT_VALUE_NOW);
       }

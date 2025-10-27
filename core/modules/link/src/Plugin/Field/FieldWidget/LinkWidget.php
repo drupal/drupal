@@ -163,7 +163,11 @@ class LinkWidget extends WidgetBase {
     if ($element['uri']['#value'] !== '' && $element['title']['#value'] === '') {
       // We expect the field name placeholder value to be wrapped in $this->t()
       // here, so it won't be escaped again as it's already marked safe.
-      $form_state->setError($element['title'], new TranslatableMarkup('@title field is required if there is @uri input.', ['@title' => $element['title']['#title'], '@uri' => $element['uri']['#title']]));
+      $form_state->setError($element['title'],
+        new TranslatableMarkup('@title field is required if there is @uri input.', [
+          '@title' => $element['title']['#title'],
+          '@uri' => $element['uri']['#title'],
+        ]));
     }
   }
 
@@ -174,7 +178,10 @@ class LinkWidget extends WidgetBase {
    */
   public static function validateTitleNoLink(&$element, FormStateInterface $form_state, $form) {
     if ($element['uri']['#value'] === '' && $element['title']['#value'] !== '') {
-      $form_state->setError($element['uri'], new TranslatableMarkup('The @uri field is required when the @title field is specified.', ['@title' => $element['title']['#title'], '@uri' => $element['uri']['#title']]));
+      $form_state->setError($element['uri'], new TranslatableMarkup('The @uri field is required when the @title field is specified.', [
+        '@title' => $element['title']['#title'],
+        '@uri' => $element['uri']['#title'],
+      ]));
     }
   }
 
@@ -232,12 +239,23 @@ class LinkWidget extends WidgetBase {
     // element prefix and description.
     if (!$this->supportsExternalLinks()) {
       $element['uri']['#field_prefix'] = rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/');
-      $element['uri']['#description'] = $this->t('This must be an internal path such as %add-node. You can also start typing the title of a piece of content to select it. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%add-node' => '/node/add', '%front' => '<front>', '%nolink' => '<nolink>', '%button' => '<button>']);
+      $element['uri']['#description'] = $this->t('This must be an internal path such as %add-node. You can also start typing the title of a piece of content to select it. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', [
+        '%add-node' => '/node/add',
+        '%front' => '<front>',
+        '%nolink' => '<nolink>',
+        '%button' => '<button>',
+      ]);
     }
     // If the field is configured to allow both internal and external links,
     // show a useful description.
     elseif ($this->supportsExternalLinks() && $this->supportsInternalLinks()) {
-      $element['uri']['#description'] = $this->t('Start typing the title of a piece of content to select it. You can also enter an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%front' => '<front>', '%add-node' => '/node/add', '%url' => 'https://example.com', '%nolink' => '<nolink>', '%button' => '<button>']);
+      $element['uri']['#description'] = $this->t('Start typing the title of a piece of content to select it. You can also enter an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', [
+        '%front' => '<front>',
+        '%add-node' => '/node/add',
+        '%url' => 'https://example.com',
+        '%nolink' => '<nolink>',
+        '%button' => '<button>',
+      ]);
     }
     // If the field is configured to allow only external links, show a useful
     // description.

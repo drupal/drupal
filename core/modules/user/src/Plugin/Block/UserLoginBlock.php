@@ -164,7 +164,8 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
   public static function renderPlaceholderFormAction() {
     return [
       '#type' => 'markup',
-      '#markup' => UrlHelper::filterBadProtocol(Url::fromRoute('<current>', [], ['query' => \Drupal::destination()->getAsArray(), 'external' => FALSE])->toString()),
+      '#markup' => UrlHelper::filterBadProtocol(
+        Url::fromRoute('<current>', [], ['query' => \Drupal::destination()->getAsArray(), 'external' => FALSE])->toString()),
       '#cache' => ['contexts' => ['url.path', 'url.query_args']],
     ];
   }

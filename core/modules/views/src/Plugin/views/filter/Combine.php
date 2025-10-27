@@ -119,7 +119,11 @@ class Combine extends StringFilter {
         if (!isset($fields[$id])) {
           // Combined field filter only works with fields that are in the field
           // settings.
-          $errors[] = $this->t('Field %field set in %filter is not set in display %display.', ['%field' => $id, '%filter' => $this->adminLabel(), '%display' => $this->displayHandler->display['display_title']]);
+          $errors[] = $this->t('Field %field set in %filter is not set in display %display.', [
+            '%field' => $id,
+            '%filter' => $this->adminLabel(),
+            '%display' => $this->displayHandler->display['display_title'],
+          ]);
           break;
         }
         elseif (!$fields[$id]->clickSortable()) {
@@ -127,12 +131,18 @@ class Combine extends StringFilter {
           // is not click sortable we can assume it is not a simple field.
           // @todo change this check to isComputed. See
           // https://www.drupal.org/node/2349465
-          $errors[] = $this->t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', ['%field' => $fields[$id]->adminLabel(), '%filter' => $this->adminLabel()]);
+          $errors[] = $this->t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', [
+            '%field' => $fields[$id]->adminLabel(),
+            '%filter' => $this->adminLabel(),
+          ]);
         }
       }
     }
     else {
-      $errors[] = $this->t('%display: %filter can only be used on displays that use fields. Set the style or row format for that display to one using fields to use the combine field filter.', ['%display' => $this->displayHandler->display['display_title'], '%filter' => $this->adminLabel()]);
+      $errors[] = $this->t('%display: %filter can only be used on displays that use fields. Set the style or row format for that display to one using fields to use the combine field filter.', [
+        '%display' => $this->displayHandler->display['display_title'],
+        '%filter' => $this->adminLabel(),
+      ]);
     }
     return $errors;
   }

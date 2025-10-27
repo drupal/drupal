@@ -23,7 +23,12 @@ class ScaleImageEffect extends ResizeImageEffect {
    */
   public function applyEffect(ImageInterface $image) {
     if (!$image->scale($this->configuration['width'], $this->configuration['height'], $this->configuration['upscale'])) {
-      $this->logger->error('Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
+      $this->logger->error('Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', [
+        '%toolkit' => $image->getToolkitId(),
+        '%path' => $image->getSource(),
+        '%mimetype' => $image->getMimeType(),
+        '%dimensions' => $image->getWidth() . 'x' . $image->getHeight(),
+      ]);
       return FALSE;
     }
     return TRUE;

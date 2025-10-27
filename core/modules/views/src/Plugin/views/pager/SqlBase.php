@@ -261,7 +261,8 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     }
 
     // Make sure that the items_per_page is part of the expose settings.
-    if (!$form_state->isValueEmpty(['pager_options', 'expose', 'items_per_page']) && !$form_state->isValueEmpty(['pager_options', 'items_per_page'])) {
+    if (!$form_state->isValueEmpty(['pager_options', 'expose', 'items_per_page'])
+      && !$form_state->isValueEmpty(['pager_options', 'items_per_page'])) {
       $items_per_page = $form_state->getValue(['pager_options', 'items_per_page']);
       if (array_search($items_per_page, $options) === FALSE) {
         $form_state->setErrorByName('pager_options][expose][items_per_page_options', $this->t("The <em>Exposed items per page</em> field's options must include the value from the <em>Items per page</em> field (@items_per_page).",
