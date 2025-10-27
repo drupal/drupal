@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Drupal 8, create the respective your_theme.breakpoints.yml file at
  * the root of the theme.
  *
- * @see https://www.drupal.org/docs/8/theming-drupal-8/working-with-breakpoints-in-drupal-8
+ * @see https://www.drupal.org/docs/develop/theming-drupal/working-with-breakpoints-in-drupal
  *
  * @MigrateSource(
  *   id = "d7_responsive_image_styles",
