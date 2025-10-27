@@ -9,6 +9,7 @@ use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -28,27 +29,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The Plugin Block Manager.
-   *
-   * @var \Drupal\Core\Block\BlockManagerInterface
-   */
-  protected $blockManager;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The Drupal account to use for checking for access to block.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
    * The block content entity.
    *
    * @var \Drupal\block_content\BlockContentInterface
@@ -56,67 +36,25 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   protected $blockContent;
 
   /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
-   * The block content UUID lookup service.
-   *
-   * @var \Drupal\block_content\BlockContentUuidLookup
-   */
-  protected $uuidLookup;
-
-  /**
-   * The entity display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
    * Constructs a new BlockContentBlock.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
-   *   The Plugin Block Manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The account for which view access should be checked.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The URL generator.
-   * @param \Drupal\block_content\BlockContentUuidLookup $uuid_lookup
-   *   The block content UUID lookup service.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
-   *   The entity display repository.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    BlockManagerInterface $block_manager,
-    EntityTypeManagerInterface $entity_type_manager,
-    AccountInterface $account,
-    UrlGeneratorInterface $url_generator,
-    BlockContentUuidLookup $uuid_lookup,
-    EntityDisplayRepositoryInterface $entity_display_repository,
+    protected BlockManagerInterface $blockManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected AccountInterface $account,
+    protected UrlGeneratorInterface $urlGenerator,
+    protected BlockContentUuidLookup $uuidLookup,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+    protected ?EntityRepositoryInterface $entityRepository = NULL,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->blockManager = $block_manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->account = $account;
-    $this->urlGenerator = $url_generator;
-    $this->uuidLookup = $uuid_lookup;
-    $this->entityDisplayRepository = $entity_display_repository;
+    if (!$this->entityRepository instanceof EntityRepositoryInterface) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $entityRepository argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3175985', E_USER_DEPRECATED);
+      $this->entityRepository = \Drupal::service(EntityRepositoryInterface::class);
+    }
   }
 
   /**
@@ -206,7 +144,8 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
         $this->blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
       }
     }
-    return $this->blockContent;
+    /** @var \Drupal\block_content\BlockContentInterface|null */
+    return $this->entityRepository->getTranslationFromContext($this->blockContent);
   }
 
 }
