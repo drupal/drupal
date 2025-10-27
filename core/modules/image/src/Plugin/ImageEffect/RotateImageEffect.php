@@ -30,7 +30,12 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
     }
 
     if (!$image->rotate($this->configuration['degrees'], $this->configuration['bgcolor'])) {
-      $this->logger->error('Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
+      $this->logger->error('Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', [
+        '%toolkit' => $image->getToolkitId(),
+        '%path' => $image->getSource(),
+        '%mimetype' => $image->getMimeType(),
+        '%dimensions' => $image->getWidth() . 'x' . $image->getHeight(),
+      ]);
       return FALSE;
     }
     return TRUE;

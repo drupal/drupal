@@ -153,7 +153,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_types as $entity_type_id => $entity_type) {
-      if (in_array($this->base_table, [$entity_type->getBaseTable(), $entity_type->getDataTable(), $entity_type->getRevisionTable(), $entity_type->getRevisionDataTable()], TRUE)) {
+      if (in_array($this->base_table, [
+        $entity_type->getBaseTable(),
+        $entity_type->getDataTable(),
+        $entity_type->getRevisionTable(),
+        $entity_type->getRevisionDataTable(),
+      ], TRUE)) {
         $this->entityType = $entity_type;
         $this->entityTypeId = $entity_type_id;
       }
@@ -421,7 +426,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         '#options' => $style_options,
       ];
       $style_form = &$form['displays']['block']['options']['style'];
-      $style_form['style_plugin']['#default_value'] = static::getSelected($form_state, ['block', 'style', 'style_plugin'], 'default', $style_form['style_plugin']);
+      $style_form['style_plugin']['#default_value'] = static::getSelected($form_state, [
+        'block',
+        'style',
+        'style_plugin',
+      ], 'default', $style_form['style_plugin']);
       // Changing this dropdown updates $form['displays']['block']['options']
       // via AJAX.
       views_ui_add_ajax_trigger($style_form, 'style_plugin', ['displays', 'block', 'options']);

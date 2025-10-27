@@ -388,10 +388,23 @@ class FilterHtml extends FilterBase {
     $output .= '<p>' . $this->t('This site allows HTML content. While learning all of HTML may feel intimidating, learning how to use a very small number of the most basic HTML "tags" is very easy. This table provides examples for each tag that is enabled on this site.') . '</p>';
     $output .= '<p>' . $this->t('For more information see the <a href=":html-specifications">HTML Living Standard</a> or use your favorite search engine to find other sites that explain HTML.', [':html-specifications' => 'https://html.spec.whatwg.org/']) . '</p>';
     $tips = [
-      'a' => [$this->t('Anchors are used to make links to other pages.'), '<a href="' . $base_url . '">' . Html::escape(\Drupal::config('system.site')->get('name')) . '</a>'],
-      'br' => [$this->t('By default line break tags are automatically added, so use this tag to add additional ones. Use of this tag is different because it is not used with an open/close pair like all the others. Use the extra " /" inside the tag to maintain XHTML 1.0 compatibility'), $this->t('Text with <br />line break')],
-      'p' => [$this->t('By default paragraph tags are automatically added, so use this tag to add additional ones.'), '<p>' . $this->t('Paragraph one.') . '</p> <p>' . $this->t('Paragraph two.') . '</p>'],
-      'strong' => [$this->t('Strong', [], ['context' => 'Font weight']), '<strong>' . $this->t('Strong', [], ['context' => 'Font weight']) . '</strong>'],
+      'a' => [
+        $this->t('Anchors are used to make links to other pages.'),
+        '<a href="' . $base_url . '">' . Html::escape(\Drupal::config('system.site')
+          ->get('name')) . '</a>',
+      ],
+      'br' => [
+        $this->t('By default line break tags are automatically added, so use this tag to add additional ones. Use of this tag is different because it is not used with an open/close pair like all the others. Use the extra " /" inside the tag to maintain XHTML 1.0 compatibility'),
+        $this->t('Text with <br />line break'),
+      ],
+      'p' => [
+        $this->t('By default paragraph tags are automatically added, so use this tag to add additional ones.'),
+        '<p>' . $this->t('Paragraph one.') . '</p> <p>' . $this->t('Paragraph two.') . '</p>',
+      ],
+      'strong' => [
+        $this->t('Strong', [], ['context' => 'Font weight']),
+        '<strong>' . $this->t('Strong', [], ['context' => 'Font weight']) . '</strong>',
+      ],
       'em' => [$this->t('Emphasized'), '<em>' . $this->t('Emphasized') . '</em>'],
       'cite' => [$this->t('Cited'), '<cite>' . $this->t('Cited') . '</cite>'],
       'code' => [$this->t('Coded text used to show programming source code'), '<code>' . $this->t('Coded') . '</code>'],
@@ -406,18 +419,30 @@ class FilterHtml extends FilterBase {
       'blockquote' => [$this->t('Block quoted'), '<blockquote>' . $this->t('Block quoted') . '</blockquote>'],
       'q' => [$this->t('Quoted inline'), '<q>' . $this->t('Quoted inline') . '</q>'],
       // Assumes and describes tr, td, th.
-      'table' => [$this->t('Table'), '<table> <tr><th>' . $this->t('Table header') . '</th></tr> <tr><td>' . $this->t('Table cell') . '</td></tr> </table>'],
+      'table' => [
+        $this->t('Table'),
+        '<table> <tr><th>' . $this->t('Table header') . '</th></tr> <tr><td>' . $this->t('Table cell') . '</td></tr> </table>',
+      ],
       'tr' => NULL,
       'td' => NULL,
       'th' => NULL,
       'del' => [$this->t('Deleted'), '<del>' . $this->t('Deleted') . '</del>'],
       'ins' => [$this->t('Inserted'), '<ins>' . $this->t('Inserted') . '</ins>'],
        // Assumes and describes li.
-      'ol' => [$this->t('Ordered list - use the &lt;li&gt; to begin each list item'), '<ol> <li>' . $this->t('First item') . '</li> <li>' . $this->t('Second item') . '</li> </ol>'],
-      'ul' => [$this->t('Unordered list - use the &lt;li&gt; to begin each list item'), '<ul> <li>' . $this->t('First item') . '</li> <li>' . $this->t('Second item') . '</li> </ul>'],
+      'ol' => [
+        $this->t('Ordered list - use the &lt;li&gt; to begin each list item'),
+        '<ol> <li>' . $this->t('First item') . '</li> <li>' . $this->t('Second item') . '</li> </ol>',
+      ],
+      'ul' => [
+        $this->t('Unordered list - use the &lt;li&gt; to begin each list item'),
+        '<ul> <li>' . $this->t('First item') . '</li> <li>' . $this->t('Second item') . '</li> </ul>',
+      ],
       'li' => NULL,
       // Assumes and describes dt and dd.
-      'dl' => [$this->t('Definition lists are similar to other HTML lists. &lt;dl&gt; begins the definition list, &lt;dt&gt; begins the definition term and &lt;dd&gt; begins the definition description.'), '<dl> <dt>' . $this->t('First term') . '</dt> <dd>' . $this->t('First definition') . '</dd> <dt>' . $this->t('Second term') . '</dt> <dd>' . $this->t('Second definition') . '</dd> </dl>'],
+      'dl' => [
+        $this->t('Definition lists are similar to other HTML lists. &lt;dl&gt; begins the definition list, &lt;dt&gt; begins the definition term and &lt;dd&gt; begins the definition description.'),
+        '<dl> <dt>' . $this->t('First term') . '</dt> <dd>' . $this->t('First definition') . '</dd> <dt>' . $this->t('Second term') . '</dt> <dd>' . $this->t('Second definition') . '</dd> </dl>',
+      ],
       'dt' => NULL,
       'dd' => NULL,
       'h1' => [$this->t('Heading'), '<h1>' . $this->t('Title') . '</h1>'],
@@ -450,7 +475,11 @@ class FilterHtml extends FilterBase {
       }
       else {
         $rows[] = [
-          ['data' => $this->t('No help provided for tag %tag.', ['%tag' => $tag]), 'class' => ['description'], 'colspan' => 3],
+          [
+            'data' => $this->t('No help provided for tag %tag.', ['%tag' => $tag]),
+            'class' => ['description'],
+            'colspan' => 3,
+          ],
         ];
       }
     }

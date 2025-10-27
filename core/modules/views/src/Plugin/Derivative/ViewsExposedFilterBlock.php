@@ -88,7 +88,10 @@ class ViewsExposedFilterBlock implements ContainerDeriverInterface {
           // Add a block definition for the block.
           if ($display->usesExposedFormInBlock()) {
             $delta = $view->id() . '-' . $display->display['id'];
-            $desc = $this->t('Exposed form: @view-@display_id', ['@view' => $view->id(), '@display_id' => $display->display['id']]);
+            $desc = $this->t('Exposed form: @view-@display_id', [
+              '@view' => $view->id(),
+              '@display_id' => $display->display['id'],
+            ]);
             $this->derivatives[$delta] = [
               'admin_label' => $desc,
               'config_dependencies' => [

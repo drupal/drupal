@@ -1003,7 +1003,13 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     // Add the number of nodes counter.
     $distinct = ($this->view->display_handler->getOption('distinct') && empty($this->query->no_distinct));
 
-    $count_alias = $this->query->addField($this->view->storage->get('base_table'), $this->view->storage->get('base_field'), 'num_records', ['count' => TRUE, 'distinct' => $distinct]);
+    $count_alias = $this->query->addField($this->view->storage->get('base_table'),
+      $this->view->storage->get('base_field'),
+      'num_records',
+      [
+        'count' => TRUE,
+        'distinct' => $distinct,
+      ]);
     $this->query->addGroupBy($this->name_alias);
 
     if ($count_field) {

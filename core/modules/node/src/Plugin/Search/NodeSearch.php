@@ -62,7 +62,14 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     'type' => ['column' => 'n.type'],
     'language' => ['column' => 'i.langcode'],
     'author' => ['column' => 'n.uid'],
-    'term' => ['column' => 'ti.tid', 'join' => ['table' => 'taxonomy_index', 'alias' => 'ti', 'condition' => 'n.nid = ti.nid']],
+    'term' => [
+      'column' => 'ti.tid',
+      'join' => [
+        'table' => 'taxonomy_index',
+        'alias' => 'ti',
+        'condition' => 'n.nid = ti.nid',
+      ],
+    ],
   ];
 
   /**

@@ -175,7 +175,10 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     }
     catch (\Exception $e) {
       $build = [];
-      $this->logger->warning('The field "%field" failed to render with the error of "%error".', ['%field' => $this->fieldName, '%error' => $e->getMessage()]);
+      $this->logger->warning('The field "%field" failed to render with the error of "%error".', [
+        '%field' => $this->fieldName,
+        '%error' => $e->getMessage(),
+      ]);
     }
     CacheableMetadata::createFromRenderArray($build)->addCacheableDependency($this)->applyTo($build);
     return $build;

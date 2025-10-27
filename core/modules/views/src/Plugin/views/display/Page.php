@@ -421,7 +421,11 @@ class Page extends PathPluginBase {
           '#suffix' => '</div>',
           '#title' => $this->t('Parent menu link'),
           '#type' => 'radios',
-          '#options' => ['none' => $this->t('Already exists'), 'normal' => $this->t('Normal menu link'), 'tab' => $this->t('Menu tab')],
+          '#options' => [
+            'none' => $this->t('Already exists'),
+            'normal' => $this->t('Normal menu link'),
+            'tab' => $this->t('Menu tab'),
+          ],
           '#default_value' => $tab_options['type'],
         ];
         $form['tab_options']['title'] = [
