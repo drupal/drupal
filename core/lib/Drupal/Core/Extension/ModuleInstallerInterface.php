@@ -91,7 +91,7 @@ interface ModuleInstallerInterface {
    * @param string[] $module_list
    *   An array of module names.
    *
-   * @return string[]
+   * @return string[][]
    *   An array of reasons the module can not be uninstalled, empty if it can.
    */
   public function validateUninstall(array $module_list);

@@ -39,7 +39,7 @@ class QueryTest extends QueryPluginBase {
   /**
    * An array of stdClasses.
    *
-   * @var \stdClass[]
+   * @var array<array<string, mixed>>
    */
   protected $allItems = [];
 

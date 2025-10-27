@@ -173,7 +173,7 @@ class FieldResolver {
    *   (internal) Used to track recursion depth in order to generate better
    *   exception messages.
    *
-   * @return string[]
+   * @return string[][]
    *   The resolved internal include paths.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
