@@ -34,7 +34,7 @@ use Drupal\Core\Extension\ThemeSettingsProvider;
  * 8 themes.
  *
  * For further information on theming in Drupal 8 see
- * https://www.drupal.org/docs/8/theming
+ * https://www.drupal.org/docs/develop/theming-drupal
  *
  * For further Twig documentation see
  * https://twig.symfony.com/doc/1.x/templates.html
@@ -230,7 +230,7 @@ use Drupal\Core\Extension\ThemeSettingsProvider;
  * same, which gives users fewer user interface patterns to learn.
  *
  * For further information on the Theme and Render APIs, see:
- * - https://www.drupal.org/docs/8/theming
+ * - https://www.drupal.org/docs/develop/theming-drupal
  * - https://www.drupal.org/developing/api/8/render
  * - @link themeable Theme system overview @endlink.
  *

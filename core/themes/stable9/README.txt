@@ -15,4 +15,4 @@ ABOUT DRUPAL THEMING
 --------------------
 
 For more information, see Drupal.org's theming guide.
-https://www.drupal.org/docs/8/theming
+https://www.drupal.org/docs/develop/theming-drupal
