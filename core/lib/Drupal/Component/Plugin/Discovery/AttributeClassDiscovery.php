@@ -323,7 +323,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   /**
    * Whether the plugin definition has missing dependencies.
    *
-   * @param array<class-string> $dependencies
+   * @param array<string, array<class-string>> $dependencies
    *   An array of dependencies' class names or namespaces, keyed by type.
    *
    * @return bool

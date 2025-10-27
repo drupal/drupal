@@ -31,7 +31,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
   /**
    * Assert the logged migrate messages.
    *
-   * @param string[][] $role_data
+   * @param array{string, array{'rid': int, 'valid': string[], 'invalid': string[]}} $role_data
    *   An array of role data keyed by the destination role id. The role data
    *   contains the source role id, an array of valid permissions and an array
    *   of invalid permissions.
@@ -279,7 +279,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    *   A list of modules to install.
    * @param string[] $migrations
    *   A list of migrations to execute.
-   * @param string[][] $role_data
+   * @param array{string, array{'rid': int, 'valid': string[], 'invalid': string[]}} $role_data
    *   An array of role data keyed by the destination role id. The role data
    *   contains the source role id, an array of valid permissions and an array
    *   of invalid permissions.

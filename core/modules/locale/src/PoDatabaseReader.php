@@ -37,7 +37,7 @@ class PoDatabaseReader implements PoReaderInterface {
   /**
    * Store the result of the query so it can be iterated later.
    *
-   * @var resource
+   * @var array
    */
   private $result;
 
