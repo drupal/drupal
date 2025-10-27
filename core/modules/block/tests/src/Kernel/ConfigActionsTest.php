@@ -48,7 +48,7 @@ class ConfigActionsTest extends KernelTestBase {
     $this->container->get(ThemeInstallerInterface::class)->install([
       'olivero',
       'claro',
-      'umami',
+      'block_test_theme',
     ]);
     $this->config('system.theme')
       ->set('default', 'olivero')
@@ -160,8 +160,8 @@ class ConfigActionsTest extends KernelTestBase {
    * Tests placing a block in the default theme's region.
    */
   public function testPlaceBlockInDefaultRegion(): void {
-    $this->config('system.theme')->set('default', 'umami')->save();
-    $this->testPlaceBlockInDynamicRegion('placeBlockInDefaultTheme', 'umami', 'content');
+    $this->config('system.theme')->set('default', 'block_test_theme')->save();
+    $this->testPlaceBlockInDynamicRegion('placeBlockInDefaultTheme', 'block_test_theme', 'content');
   }
 
   /**

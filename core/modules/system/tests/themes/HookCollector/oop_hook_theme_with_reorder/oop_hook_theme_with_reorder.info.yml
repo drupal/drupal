@@ -1,0 +1,5 @@
+name: 'OOP hook test theme with reorder attribute'
+type: theme
+description: 'Test theme for OOP hooks.'
+version: VERSION
+base theme: false

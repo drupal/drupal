@@ -72,6 +72,42 @@ interface ThemeManagerInterface {
   public function setActiveTheme(ActiveTheme $active_theme);
 
   /**
+   * Invokes a hook in a particular theme.
+   *
+   * @param string $theme_key
+   *   The name of the theme (without the .theme extension).
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param array $args
+   *   Arguments to pass to the hook implementation.
+   *
+   * @return mixed
+   *   The return value of the hook implementation.
+   */
+  public function invoke(string $theme_key, string $hook, array $args = []);
+
+  /**
+   * Executes a callback for each implementation of a hook for a theme.
+   *
+   * It will detect the currently active theme and invoke the given hook for
+   * the active theme and all of its base themes in reverse order.
+   *
+   * The callback is passed two arguments, a closure which executes a hook
+   * implementation and the machine name of the current theme.
+   * Note that this is executed for just a single theme and its base themes.
+   *
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param callable(callable, string): mixed $callback
+   *   A callable that invokes a hook implementation. Such that
+   *   $callback is callable(callable, string): mixed.
+   *   Arguments:
+   *    - Closure to a hook implementation.
+   *    - Implementation theme machine name.
+   */
+  public function invokeAllWith(string $hook, callable $callback): void;
+
+  /**
    * Passes alterable variables to specific $theme_TYPE_alter() implementations.
    *
    * Executes an alter hook on the current theme. It also invokes alter hooks

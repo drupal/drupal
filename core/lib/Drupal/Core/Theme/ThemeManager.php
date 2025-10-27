@@ -3,9 +3,11 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Utility\CallableResolver;
@@ -14,13 +16,6 @@ use Drupal\Core\Utility\CallableResolver;
  * Provides the default implementation of a theme manager.
  */
 class ThemeManager implements ThemeManagerInterface {
-
-  /**
-   * The theme negotiator.
-   *
-   * @var \Drupal\Core\Theme\ThemeNegotiatorInterface
-   */
-  protected $themeNegotiator;
 
   /**
    * The theme registry used to render an output.
@@ -37,27 +32,6 @@ class ThemeManager implements ThemeManagerInterface {
   protected $activeTheme;
 
   /**
-   * The theme initialization.
-   *
-   * @var \Drupal\Core\Theme\ThemeInitializationInterface
-   */
-  protected $themeInitialization;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Default variables.
    *
    * @var array|null
@@ -65,24 +39,36 @@ class ThemeManager implements ThemeManagerInterface {
   protected ?array $defaultVariables = NULL;
 
   /**
-   * Constructs a new ThemeManager object.
+   * Raw list of hook implementations by theme name.
    *
-   * @param string $root
-   *   The app root.
-   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
-   *   The theme negotiator.
-   * @param \Drupal\Core\Theme\ThemeInitializationInterface $theme_initialization
-   *   The theme initialization.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
-   *   The callable resolver.
+   * @var array<string, array<string, array<string, string>>>|null
    */
-  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler, protected CallableResolver $callableResolver) {
-    $this->root = $root;
-    $this->themeNegotiator = $theme_negotiator;
-    $this->themeInitialization = $theme_initialization;
-    $this->moduleHandler = $module_handler;
+  protected ?array $allHookImplementations = NULL;
+
+  /**
+   * Raw list of hook callables by theme and hook name.
+   *
+   * @var array<string, array<string, array<string, callable>>>|null
+   */
+  protected ?array $themeHookImplementations = NULL;
+
+  public function __construct(
+    protected string $root,
+    protected ThemeNegotiatorInterface $themeNegotiator,
+    protected ThemeInitializationInterface $themeInitialization,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected CallableResolver $callableResolver,
+    protected ?KeyValueFactoryInterface $keyValueFactory = NULL,
+    protected ?CacheBackendInterface $cache = NULL,
+  ) {
+    if ($this->keyValueFactory === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $keyValueFactory argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3551652', E_USER_DEPRECATED);
+      $this->keyValueFactory = \Drupal::service('keyvalue');
+    }
+    if ($this->cache === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $cache argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3551652', E_USER_DEPRECATED);
+      $this->cache = \Drupal::service('cache.bootstrap');
+    }
   }
 
   /**
@@ -302,11 +288,23 @@ class ThemeManager implements ThemeManagerInterface {
       // This is for backwards compatibility and may represent OOP
       // implementations as well.
       if (is_string($preprocessor_function) && isset($invoke_map[$preprocessor_function])) {
-        // Invoke module preprocess functions.
-        $this->moduleHandler->invoke(... $invoke_map[$preprocessor_function], args: [&$variables, $hook, $info]);
+        // The invoke map has either a module or a theme key.
+        if (isset($invoke_map[$preprocessor_function]['module'])) {
+          // Invoke module preprocess functions.
+          $handler = $this->moduleHandler;
+          $name = $invoke_map[$preprocessor_function]['module'];
+          $invoke_hook = $invoke_map[$preprocessor_function]['hook'];
+        }
+        else {
+          // Invoke theme preprocess functions.
+          $handler = $this;
+          $name = $invoke_map[$preprocessor_function]['theme'];
+          $invoke_hook = $invoke_map[$preprocessor_function]['hook'];
+        }
+        $handler->invoke($name, $invoke_hook, [&$variables, $hook, $info]);
       }
       // Invoke preprocess callbacks that are not in the invoke map, such as
-      // those from themes or an alter hook.
+      // those from an alter hook.
       elseif (is_callable($preprocessor_function)) {
         call_user_func_array($preprocessor_function, [&$variables, $hook, $info]);
       }
@@ -486,6 +484,34 @@ class ThemeManager implements ThemeManagerInterface {
 
   /**
    * {@inheritdoc}
+   */
+  public function invokeAllWith(string $hook, callable $callback): void {
+    $active_theme = $this->getActiveTheme();
+    $theme_keys = $this->getThemeChain($active_theme);
+
+    foreach ($theme_keys as $theme_key) {
+      $listeners = $this->getImplementationsForTheme($theme_key, $hook);
+      foreach ($listeners as $listener) {
+        $callback($listener, $theme_key);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function invoke(string $theme, string $hook, array $args = []) {
+    $listeners = $this->getImplementationsForTheme($theme, $hook);
+    if ($listeners) {
+      if (count($listeners) > 1) {
+        throw new \LogicException("Theme $theme should not implement $hook more than once");
+      }
+      return reset($listeners)(... $args);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @todo Should we cache some of these information?
    */
@@ -505,27 +531,71 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    $theme_keys = array_reverse(array_keys($theme->getBaseThemeExtensions()));
-    $theme_keys[] = $theme->getName();
-    $functions = [];
+    $theme_keys = $this->getThemeChain($theme);
+    $listeners = [];
+    $base_hook = $type . '_alter';
     foreach ($theme_keys as $theme_key) {
-      $function = $theme_key . '_' . $type . '_alter';
-      if (function_exists($function)) {
-        $functions[] = $function;
-      }
+      $listeners = array_merge($listeners, $this->getImplementationsForTheme($theme_key, $base_hook));
       if (isset($extra_types)) {
         foreach ($extra_types as $extra_type) {
-          $function = $theme_key . '_' . $extra_type . '_alter';
-          if (function_exists($function)) {
-            $functions[] = $function;
-          }
+          $hook = $extra_type . '_alter';
+          $listeners = array_merge($listeners, $this->getImplementationsForTheme($theme_key, $hook));
         }
       }
     }
 
-    foreach ($functions as $function) {
-      $function($data, $context1, $context2);
+    $listeners = array_filter($listeners);
+    foreach ($listeners as $callback) {
+      $callback($data, $context1, $context2);
     }
+  }
+
+  /**
+   * Gets a hook implementation list for a specific hook.
+   *
+   * @param string $theme_key
+   *   The theme machine name.
+   * @param string $hook
+   *   The hook name.
+   *
+   * @return array
+   *   Array with hook implementations.
+   */
+  protected function getImplementationsForTheme(string $theme_key, string $hook): array {
+    if (!isset($this->allHookImplementations)) {
+      if ($cache = $this->cache->get('theme_hook_data')) {
+        $this->allHookImplementations = $cache->data;
+      }
+      else {
+        $this->allHookImplementations = $this->keyValueFactory->get('hook_data')->get('theme_hook_list') ?? [];
+        $this->cache->set('theme_hook_data', $this->allHookImplementations);
+      }
+    }
+
+    if (!isset($this->themeHookImplementations[$theme_key][$hook])) {
+      $listeners = [];
+      foreach ($this->allHookImplementations[$theme_key][$hook] ?? [] as $identifier) {
+        $listeners[] = $this->callableResolver->getCallableFromDefinition($identifier);
+      }
+      $this->themeHookImplementations[$theme_key][$hook] = $listeners;
+    }
+
+    return $this->themeHookImplementations[$theme_key][$hook];
+  }
+
+  /**
+   * Gets theme and base themes in reverse order.
+   *
+   * @param \Drupal\Core\Theme\ActiveTheme $active_theme
+   *   A manually specified theme.
+   *
+   * @return list<string>
+   *   The list of theme keys with the active theme last.
+   */
+  protected function getThemeChain(ActiveTheme $active_theme): array {
+    $theme_keys = array_reverse(array_keys($active_theme->getBaseThemeExtensions()));
+    $theme_keys[] = $active_theme->getName();
+    return $theme_keys;
   }
 
   /**

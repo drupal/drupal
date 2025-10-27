@@ -149,6 +149,9 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
     $set_default = $args[1] ?? FALSE;
     $themes = $this->themeList->getList();
     $config = $this->configFactory()->getEditable('system.theme');
+    // Unset the messenger to make sure that we'll get the service from the
+    // new container.
+    $this->messenger = NULL;
     try {
       if ($this->themeInstaller->install([$theme])) {
         if ($set_default) {

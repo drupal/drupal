@@ -165,8 +165,15 @@ class RegistryTest extends UnitTestCase {
       ->method('getActiveTheme')
       ->willReturnOnConsecutiveCalls($test_theme, $test_stable);
 
-    // Include the theme file so that hook_theme can be called.
-    include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
+    // Set up a mock theme hook list for the test_stable theme. This does
+    // not actually need to exist for this test.
+    $this->keyValueFactory->get('hook_data')->set('theme_hook_list', [
+      'test_stable' => [
+        'preprocess_theme_test_render_element' => [
+          'Drupal\test_stable\Hook\TestStableHooks::preprocessThemeTestRenderElement',
+        ],
+      ],
+    ]);
     $themeTestTheme = new ThemeTestHooks();
     $this->moduleHandler->expects($this->exactly(2))
       ->method('invoke')
@@ -207,7 +214,11 @@ class RegistryTest extends UnitTestCase {
     // preprocess function worked.
     $other_registry = $this->registry->get();
     $this->assertNotSame($registry, $other_registry);
-    $this->assertContains('test_stable_preprocess_theme_test_render_element', $other_registry['theme_test_render_element']['preprocess functions']);
+    // The "function" is just a map to the invoke map which contains the theme
+    // and hook name.
+    $function = 'test_stable_preprocess_theme_test_render_element';
+    $this->assertContains($function, $other_registry['theme_test_render_element']['preprocess functions']);
+    $this->assertEquals(['theme' => 'test_stable', 'hook' => 'preprocess_theme_test_render_element'], $other_registry['preprocess invokes'][$function]);
   }
 
   /**

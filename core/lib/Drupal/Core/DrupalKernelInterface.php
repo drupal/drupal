@@ -116,6 +116,17 @@ interface DrupalKernelInterface extends HttpKernelInterface {
   public function updateModules(array $module_list, array $module_filenames = []);
 
   /**
+   * Updates the kernel's list of themes to the new list.
+   *
+   * The kernel needs to update its list and container to match the new
+   * list.
+   *
+   * array<string, \Drupal\Core\Extension\Extension> $register_themes
+   *   List of theme extensions, keyed by theme name.
+   */
+  public function updateThemes(array $register_themes = []): void;
+
+  /**
    * Force a container rebuild.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface
