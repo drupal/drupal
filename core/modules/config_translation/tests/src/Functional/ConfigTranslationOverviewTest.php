@@ -28,7 +28,6 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     'config_test',
     'config_translation',
     'config_translation_test',
-    'contact',
     'contextual',
     'entity_test_operation',
     'field_ui',
@@ -65,8 +64,6 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       'translate configuration',
       'administer languages',
       'administer site configuration',
-      'administer contact forms',
-      'access site-wide contact form',
       'access contextual links',
       'administer views',
     ];
