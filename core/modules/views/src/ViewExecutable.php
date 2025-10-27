@@ -1531,9 +1531,8 @@ class ViewExecutable {
 
     // @todo In the long run, it would be great to execute a view without
     //   the theme system at all. See https://www.drupal.org/node/2322623.
-    $active_theme = \Drupal::theme()->getActiveTheme();
-    $themes = array_reverse(array_keys($active_theme->getBaseThemeExtensions()));
-    $themes[] = $active_theme->getName();
+    /** @var \Drupal\Core\Theme\ThemeManager $theme_manager */
+    $theme_manager = \Drupal::theme();
 
     // Check for already-cached output.
     /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
@@ -1585,12 +1584,9 @@ class ViewExecutable {
     $module_handler->invokeAll('views_pre_render', [$this]);
 
     // Let the themes play too, because prerender is a very themey thing.
-    foreach ($themes as $theme_name) {
-      $function = $theme_name . '_views_pre_render';
-      if (function_exists($function)) {
-        $function($this);
-      }
-    }
+    $theme_manager->invokeAllWith('views_pre_render', function (callable $hook_listener, string $theme) {
+      $hook_listener($this);
+    });
 
     $this->display_handler->output = $this->display_handler->render();
 
@@ -1602,12 +1598,10 @@ class ViewExecutable {
     $module_handler->invokeAll('views_post_render', [$this, &$this->display_handler->output, $cache]);
 
     // Let the themes play too, because post render is a very themey thing.
-    foreach ($themes as $theme_name) {
-      $function = $theme_name . '_views_post_render';
-      if (function_exists($function)) {
-        $function($this, $this->display_handler->output, $cache);
-      }
-    }
+    $theme_manager->invokeAllWith('views_post_render', function (callable $hook_listener, string $theme) use ($cache) {
+      $display_output = &$this->display_handler->output;
+      $hook_listener($this, $display_output, $cache);
+    });
 
     return $this->display_handler->output;
   }

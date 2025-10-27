@@ -155,7 +155,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     // Install the block_test.module, so that its default config is installed.
     $this->installConfig(['block_test']);
 
-    $entities = $this->controller->loadMultiple();
+    $entities = Block::loadMultiple();
     $entity = reset($entities);
     $this->assertEquals('test_block', $entity->id(), 'The default test block was loaded.');
   }

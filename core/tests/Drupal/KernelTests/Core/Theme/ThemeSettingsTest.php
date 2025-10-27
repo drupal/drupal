@@ -112,6 +112,7 @@ class ThemeSettingsTest extends KernelTestBase {
       ->getEditable('system.theme')
       ->set('default', 'test_theme')
       ->save();
+    $theme_handler = $this->container->get('theme_handler');
     $theme = $theme_handler->getTheme('test_theme');
 
     // Tests logo set in test_theme.info.yml.

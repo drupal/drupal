@@ -105,6 +105,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     // Assert that drupalSettings cannot be overridden and throws an exception.
     try {
+      $this->libraryDiscovery = $this->container->get('library.discovery');
       $this->libraryDiscovery->getLibraryByName('core', 'drupal.ajax');
       $this->fail('Throw Exception when trying to override drupalSettings');
     }
@@ -123,6 +124,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     // Assert that improperly formed asset "specs" throw an exception.
     try {
+      $this->libraryDiscovery = $this->container->get('library.discovery');
       $this->libraryDiscovery->getLibraryByName('core', 'drupal.dialog');
       $this->fail('Throw Exception when specifying invalid override');
     }
@@ -231,6 +233,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     // exception should be thrown.
     $this->activateTheme('test_theme_libraries_extend');
     try {
+      $this->libraryDiscovery = $this->container->get('library.discovery');
       $this->libraryDiscovery->getLibraryByName('core', 'drupal.dialog');
       $this->fail('Throw Exception when specifying non-existent libraries-extend.');
     }
@@ -263,6 +266,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->expectDeprecation('The "theme_test/deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->expectDeprecation('The "theme_test/another_deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->activateTheme('test_theme_with_deprecated_libraries');
+    $this->libraryDiscovery = $this->container->get('library.discovery');
     $this->libraryDiscovery->getLibraryByName('theme_test', 'moved_to');
     $this->libraryDiscovery->getLibraryByName('theme_test', 'deprecated_library');
     $this->libraryDiscovery->getLibraryByName('theme_test', 'another_deprecated_library');
@@ -312,7 +316,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     if (!isset($message)) {
       $message = sprintf('Asset %s found in library "%s/%s"', $asset, $extension, $library_name);
     }
-    $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
+    $library = $this->container->get('library.discovery')->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
         return;
@@ -341,7 +345,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     if (!isset($message)) {
       $message = sprintf('Asset %s not found in library "%s/%s"', $asset, $extension, $library_name);
     }
-    $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
+    $library = $this->container->get('library.discovery')->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
         $this->fail($message);

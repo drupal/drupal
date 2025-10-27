@@ -318,7 +318,7 @@ class ThemeTest extends BrowserTestBase {
     foreach ($valid_hex_codes as $valid_hex) {
       $this->submitForm(['base_primary_color' => $valid_hex], 'Save configuration');
       $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
-      $this->assertSame($valid_hex, $this->config('olivero.settings')->get('base_primary_color'));
+      $this->assertSame($valid_hex, \Drupal::service('config.factory')->getEditable('olivero.settings')->get('base_primary_color'));
     }
   }
 

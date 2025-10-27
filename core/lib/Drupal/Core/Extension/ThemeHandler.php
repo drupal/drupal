@@ -89,11 +89,6 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function addTheme(Extension $theme) {
-    // Register the namespaces of installed themes.
-    // @todo Implement proper theme registration
-    // https://www.drupal.org/project/drupal/issues/2941757
-    \Drupal::service('class_loader')->addPsr4('Drupal\\' . $theme->getName() . '\\', $this->root . '/' . $theme->getPath() . '/src');
-
     if (!empty($theme->info['libraries'])) {
       foreach ($theme->info['libraries'] as $library => $name) {
         $theme->libraries[$library] = $name;

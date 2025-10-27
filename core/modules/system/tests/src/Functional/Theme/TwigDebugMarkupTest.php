@@ -30,8 +30,6 @@ class TwigDebugMarkupTest extends BrowserTestBase {
    * Tests debug markup added to Twig template output.
    */
   public function testTwigDebugMarkup(): void {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
     $extension = twig_extension();
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
@@ -52,7 +50,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $node = $this->drupalCreateNode();
     $builder = \Drupal::entityTypeManager()->getViewBuilder('node');
     $build = $builder->view($node);
-    $output = (string) $renderer->renderRoot($build);
+    $output = (string) $this->container->get('renderer')->renderRoot($build);
     $this->assertStringContainsString('<!-- THEME DEBUG -->', $output, 'Twig debug markup found in theme output when debug is enabled.');
     $this->assertStringContainsString("THEME HOOK: 'node'", $output, 'Theme call information found.');
     $this->assertStringContainsString('▪️ node--1--full' . $extension . PHP_EOL . '   ✅ node--1' . $extension . PHP_EOL . '   ▪️ node--page--full' . $extension . PHP_EOL . '   ▪️ node--page' . $extension . PHP_EOL . '   ▪️ node--full' . $extension . PHP_EOL . '   ▪️ node' . $extension, $output, 'Suggested template files found in order and node ID specific template shown as current template.');
@@ -65,7 +63,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     // debug markup are correct.
     $node2 = $this->drupalCreateNode();
     $build = $builder->view($node2);
-    $output = (string) $renderer->renderRoot($build);
+    $output = (string) $this->container->get('renderer')->renderRoot($build);
     $this->assertStringContainsString('▪️ node--2--full' . $extension . PHP_EOL . '   ▪️ node--2' . $extension . PHP_EOL . '   ▪️ node--page--full' . $extension . PHP_EOL . '   ▪️ node--page' . $extension . PHP_EOL . '   ▪️ node--full' . $extension . PHP_EOL . '   ✅ node' . $extension, $output, 'Suggested template files found in order and base template shown as current template.');
 
     // Create another node and make sure the template suggestions shown in the
@@ -73,7 +71,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $node3 = $this->drupalCreateNode();
     $build = ['#theme' => 'node__foo__bar'];
     $build += $builder->view($node3);
-    $output = (string) $renderer->renderRoot($build);
+    $output = (string) $this->container->get('renderer')->renderRoot($build);
     $this->assertStringContainsString("THEME HOOK: 'node__foo__bar'", $output, 'Theme call information found.');
     $this->assertStringContainsString('▪️ node--foo--bar' . $extension . PHP_EOL . '   ▪️ node--foo' . $extension . PHP_EOL . '   ▪️ node--&lt;script type=&quot;text/javascript&quot;&gt;alert(&#039;yo&#039;);&lt;/script&gt;' . $extension . PHP_EOL . '   ▪️ node--3--full' . $extension . PHP_EOL . '   ▪️ node--3' . $extension . PHP_EOL . '   ▪️ node--page--full' . $extension . PHP_EOL . '   ▪️ node--page' . $extension . PHP_EOL . '   ▪️ node--full' . $extension . PHP_EOL . '   ✅ node' . $extension, $output, 'Suggested template files found in order and base template shown as current template.');
 
@@ -85,7 +83,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->resetAll();
 
     $build = $builder->view($node);
-    $output = (string) $renderer->renderRoot($build);
+    $output = (string) $this->container->get('renderer')->renderRoot($build);
     $this->assertStringNotContainsString('<!-- THEME DEBUG -->', $output, 'Twig debug markup not found in theme output when debug is disabled.');
   }
 
