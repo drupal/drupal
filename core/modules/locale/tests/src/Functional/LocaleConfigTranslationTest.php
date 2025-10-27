@@ -27,7 +27,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['locale', 'contact', 'contact_test'];
+  protected static $modules = ['locale'];
 
   /**
    * {@inheritdoc}
@@ -61,8 +61,6 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'access administration pages',
       'translate interface',
       'administer modules',
-      'access site-wide contact form',
-      'administer contact forms',
       'administer site configuration',
     ]);
     $this->drupalLogin($admin_user);
@@ -212,10 +210,16 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $override = \Drupal::languageManager()->getLanguageConfigOverride('xx', 'image.style.medium');
     $this->assertTrue($override->isNew(), 'Translated configuration for image module removed.');
 
-    // Translate default category using the UI so configuration is refreshed.
-    $category_label = $this->randomMachineName(20);
+    // Translate a provided config entity using the UI so configuration is
+    // refreshed. We don't have many to select from that are provided by
+    // core modules, so we have to use language entities. The required
+    // criteria from the test below are:
+    // a) It is a default config entity provided by a module.
+    // b) It uses upcasting on any route, which is what we want to test.
+    $untranslated_label = 'English';
+    $translated_label = $this->randomMachineName(20);
     $search = [
-      'string' => 'Website feedback',
+      'string' => $untranslated_label,
       'langcode' => $this->langcode,
       'translation' => 'all',
     ];
@@ -224,7 +228,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
-      $lid => $category_label,
+      $lid => $translated_label,
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($edit, 'Save translations');
@@ -232,12 +236,12 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     // Check if this category displayed in this language will use the
     // translation. This test ensures the entity loaded from the request
     // upcasting will already work.
-    $this->drupalGet($this->langcode . '/contact/feedback');
-    $this->assertSession()->pageTextContains($category_label);
+    $this->drupalGet($this->langcode . '/admin/config/regional/language');
+    $this->assertSession()->pageTextContains($translated_label);
 
     // Check if the UI does not show the translated String.
-    $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->assertSession()->fieldValueEquals('edit-label', 'Website feedback');
+    $this->drupalGet('admin/config/regional/language/edit/en');
+    $this->assertSession()->fieldValueEquals('edit-label', $untranslated_label);
   }
 
   /**
