@@ -3,7 +3,6 @@
 namespace Drupal\Core\Test;
 
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,18 +28,6 @@ class TestRunnerKernel extends DrupalKernel {
     // always have to rebuild its container, and potentially avoid isolation
     // issues against the tests.
     parent::__construct($environment, $class_loader, FALSE, $app_root);
-
-    // Prime the module list and corresponding Extension objects.
-    // @todo Remove System module. Needed because
-    //   \Drupal\Core\Datetime\DateFormatter has a (needless) dependency on the
-    //   'date_format' entity, so calls to DateFormatter::format() and
-    //   DateFormatter::formatInterval() cause a plugin not found exception.
-    $this->moduleList = [
-      'system' => 0,
-    ];
-    $this->moduleData = [
-      'system' => new Extension($this->root, 'module', 'core/modules/system/system.info.yml', 'system.module'),
-    ];
   }
 
   /**
@@ -67,6 +54,11 @@ class TestRunnerKernel extends DrupalKernel {
 
     // In addition, ensure that PHP errors are not hidden away in logs.
     ini_set('display_errors', TRUE);
+
+    // This container is never going to be dumped and therefore it needs a
+    // rebuild. Setting this flag avoids trying to load the container from
+    // cache.
+    $this->containerNeedsRebuild = TRUE;
 
     parent::boot();
 
