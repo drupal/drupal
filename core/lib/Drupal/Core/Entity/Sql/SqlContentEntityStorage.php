@@ -1311,8 +1311,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
 
       // When updating an existing revision, keep the existing records if the
-      // field values did not change.
-      if (!$entity->isNewRevision() && $original && !$this->hasFieldValueChanged($field_definition, $entity, $original)) {
+      // field values did not change or if we're not re-saving a pending
+      // revision as the default one.
+      if (!$entity->isNewRevision()
+        && $original
+        && $entity->isDefaultRevision() === $original->isDefaultRevision()
+        && !$this->hasFieldValueChanged($field_definition, $entity, $original)
+      ) {
         continue;
       }
 

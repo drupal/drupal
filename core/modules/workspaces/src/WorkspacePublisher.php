@@ -56,11 +56,13 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
         foreach ($tracked_entities as $entity_type_id => $revision_difference) {
           $entity_revisions = $this->entityTypeManager->getStorage($entity_type_id)
             ->loadMultipleRevisions(array_keys($revision_difference));
-          $default_revisions = $this->entityTypeManager->getStorage($entity_type_id)
-            ->loadMultiple(array_values($revision_difference));
 
           /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
           foreach ($entity_revisions as $entity) {
+            // We might be saving a lot of entities during workspace publishing,
+            // so we set the original entity manually for performance.
+            $entity->setOriginal(clone $entity);
+
             // When pushing workspace-specific revisions to the default
             // workspace (Live), we simply need to mark them as default
             // revisions.
@@ -71,7 +73,6 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
             $field_name = $entity->getEntityType()->getRevisionMetadataKey('workspace');
             $entity->{$field_name}->target_id = NULL;
 
-            $entity->setOriginal($default_revisions[$entity->id()]);
             $entity->save();
             $counter++;
 
