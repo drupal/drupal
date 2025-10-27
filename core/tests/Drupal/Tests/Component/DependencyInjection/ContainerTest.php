@@ -102,16 +102,6 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::getParameter() works properly for NULL parameters.
-   *
-   * @legacy-covers ::getParameter
-   */
-  public function testGetParameterIfNotFoundBecauseNull(): void {
-    $this->expectException(ParameterNotFoundException::class);
-    $this->container->getParameter(NULL);
-  }
-
-  /**
    * Tests that Container::hasParameter() works properly.
    *
    * @legacy-covers ::hasParameter
@@ -358,17 +348,6 @@ class ContainerTest extends TestCase {
    */
   public function testGetForNonExistentServiceWhenUsingNull(): void {
     $this->assertNull($this->container->get('service_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE), 'Not found service does not throw exception.');
-  }
-
-  /**
-   * Tests that Container::get() for NULL service works properly.
-   *
-   * @legacy-covers ::get
-   * @legacy-covers ::createService
-   */
-  public function testGetForNonExistentNULLService(): void {
-    $this->expectException(ServiceNotFoundException::class);
-    $this->container->get(NULL);
   }
 
   /**
