@@ -143,7 +143,7 @@ final class RootComposer {
   }
 
   /**
-   * Checks that the composer content and root package match.
+   * Checks that the composer content exists in the root package.
    *
    * @param string $composer_content
    *   The root composer content.
@@ -155,7 +155,8 @@ final class RootComposer {
    */
   private static function checkRootPackage(string $composer_content, RootPackageInterface $root_package): bool {
     $composer = JsonFile::parseJson($composer_content);
-    return empty(array_diff_key($root_package->getRequires(), $composer['require'] ?? [])) && empty(array_diff_key($root_package->getDevRequires(), $composer['require-dev'] ?? []));
+    return empty(array_diff_key($composer['require'] ?? [], $root_package->getRequires()))
+      && empty(array_diff_key($composer['require-dev'] ?? [], $root_package->getDevRequires()));
   }
 
 }
