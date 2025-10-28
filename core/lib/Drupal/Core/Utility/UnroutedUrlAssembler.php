@@ -73,6 +73,10 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
    * {@inheritdoc}
    */
   protected function buildExternalUrl($uri, array $options = [], $collect_bubbleable_metadata = FALSE) {
+    // Early return so external URLs are not altered unnecessarily.
+    if (empty($options['query']) && empty($options['fragment']) && !isset($options['https'])) {
+      return $collect_bubbleable_metadata ? (new GeneratedUrl())->setGeneratedUrl($uri) : $uri;
+    }
     $this->addOptionDefaults($options);
     // Split off the query & fragment.
     $parsed = UrlHelper::parse($uri);
