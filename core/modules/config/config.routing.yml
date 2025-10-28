@@ -58,7 +58,7 @@ config.export_single:
   defaults:
     _title: 'Single export'
     _form: '\Drupal\config\Form\ConfigSingleExportForm'
-    config_type: NULL
-    config_name: NULL
+    config_type: ''
+    config_name: ''
   requirements:
     _permission: 'export configuration'
