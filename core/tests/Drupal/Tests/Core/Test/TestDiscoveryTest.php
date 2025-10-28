@@ -13,7 +13,6 @@ use Drupal\Core\Test\Exception\MissingGroupException;
 use Drupal\Core\Test\PhpUnitTestDiscovery;
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\Tests\UnitTestCase;
-use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -45,11 +44,6 @@ class TestDiscoveryTest extends UnitTestCase {
       // In case the test class was converted to attributes already, we need to
       // get the data from PHPUnit discovery instead.
       $configurationFilePath = $this->root . \DIRECTORY_SEPARATOR . 'core';
-      // @todo once PHPUnit 10 is no longer used, remove the condition.
-      // @see https://www.drupal.org/project/drupal/issues/3497116
-      if (RunnerVersion::getMajor() < 11) {
-        $configurationFilePath .= \DIRECTORY_SEPARATOR . '.phpunit-10.xml';
-      }
       $phpUnitTestDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath($configurationFilePath);
       $classes = $phpUnitTestDiscovery->getTestClasses(NULL, [$expected['type']]);
       $info = $classes[$expected['group']][$classname];

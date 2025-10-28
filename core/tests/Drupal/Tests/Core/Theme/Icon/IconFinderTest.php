@@ -770,7 +770,7 @@ class IconFinderTest extends UnitTestCase {
   public function testExtractIconIdFromFilenameWarning(): void {
     $method = new \ReflectionMethod(IconFinder::class, 'extractIconIdFromFilename');
 
-    // PHPUnit 10 cannot expect warnings, so we have to catch them ourselves.
+    // PHPUnit cannot expect warnings, so we have to catch them ourselves.
     // Thanks to: Drupal\Tests\Component\PhpStorage\FileStorageTest.
     $messages = [];
     set_error_handler(function (int $errno, string $errstr) use (&$messages): void {

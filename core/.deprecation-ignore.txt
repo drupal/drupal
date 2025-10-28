@@ -2,11 +2,11 @@
 # deprecated code.
 # See https://www.drupal.org/node/3285162 for more details.
 
-# @todo Remove when we no longer support PHPUnit 10.
+# @todo Remove when we no longer support PHPUnit 11.
 %The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.* You should not extend it from "Drupal\\[^"]+"%
+%The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered final.* You should not extend it from "Drupal\\[^"]+"%
 
 # Internal code that we cannot avoid extending.
-%The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered final.* You should not extend it from "Drupal\\[^"]+"%
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
 
 # Skip some dependencies' DebugClassLoader forward compatibility warnings, in
