@@ -704,4 +704,24 @@ class TermTest extends TaxonomyTestBase {
     $this->assertSession()->assertEscaped($term->label());
   }
 
+  /**
+   * Tests the order of primary tabs on the term edit page.
+   */
+  public function testPrimaryTabsOrder(): void {
+    $term = $this->createTerm($this->vocabulary);
+    $this->drupalGet($term->toUrl('edit-form'));
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Getting primary tab items.
+    $tab_links = $this->xpath('//h2[text()[contains(.,"Primary tabs")]]/following-sibling::ul[1]/li/a');
+    $labels = array_map(fn($link) => $link->getText(), $tab_links);
+    $edit_index = array_search('Edit', $labels);
+    $delete_index = array_search('Delete', $labels);
+
+    // Check that "Edit" comes before "Delete".
+    $this->assertIsInt($edit_index, '"Edit" tab found');
+    $this->assertIsInt($delete_index, '"Delete" tab found');
+    $this->assertLessThan($delete_index, $edit_index, '"Edit" tab appears before "Delete" tab');
+  }
+
 }
