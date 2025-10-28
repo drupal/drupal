@@ -1,0 +1,154 @@
+<?php
+// phpcs:ignoreFile
+
+/**
+ * @file
+ *
+ * This class is a near-copy of Doctrine\Common\Annotations\DocLexer, which is
+ * part of the Doctrine project: <http://www.doctrine-project.org>. It was
+ * copied from version 2.0.2.
+ *
+ * Original copyright:
+ *
+ * Copyright (c) 2006-2013 Doctrine Project
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ */
+
+namespace Drupal\Component\Annotation\Doctrine;
+
+use Doctrine\Common\Lexer\AbstractLexer;
+
+use function ctype_alpha;
+use function is_numeric;
+use function str_replace;
+use function stripos;
+use function strlen;
+use function strpos;
+use function strtolower;
+use function substr;
+
+/**
+ * Simple lexer for docblock annotations.
+ *
+ * @template-extends AbstractLexer<DocLexer::T_*, string>
+ */
+final class DocLexer extends AbstractLexer
+{
+    public const T_NONE    = 1;
+    public const T_INTEGER = 2;
+    public const T_STRING  = 3;
+    public const T_FLOAT   = 4;
+
+    // All tokens that are also identifiers should be >= 100
+    public const T_IDENTIFIER          = 100;
+    public const T_AT                  = 101;
+    public const T_CLOSE_CURLY_BRACES  = 102;
+    public const T_CLOSE_PARENTHESIS   = 103;
+    public const T_COMMA               = 104;
+    public const T_EQUALS              = 105;
+    public const T_FALSE               = 106;
+    public const T_NAMESPACE_SEPARATOR = 107;
+    public const T_OPEN_CURLY_BRACES   = 108;
+    public const T_OPEN_PARENTHESIS    = 109;
+    public const T_TRUE                = 110;
+    public const T_NULL                = 111;
+    public const T_COLON               = 112;
+    public const T_MINUS               = 113;
+
+    /** @var array<string, self::T*> */
+    protected $noCase = [
+        '@'  => self::T_AT,
+        ','  => self::T_COMMA,
+        '('  => self::T_OPEN_PARENTHESIS,
+        ')'  => self::T_CLOSE_PARENTHESIS,
+        '{'  => self::T_OPEN_CURLY_BRACES,
+        '}'  => self::T_CLOSE_CURLY_BRACES,
+        '='  => self::T_EQUALS,
+        ':'  => self::T_COLON,
+        '-'  => self::T_MINUS,
+        '\\' => self::T_NAMESPACE_SEPARATOR,
+    ];
+
+    /** @var array<string, self::T*> */
+    protected $withCase = [
+        'true'  => self::T_TRUE,
+        'false' => self::T_FALSE,
+        'null'  => self::T_NULL,
+    ];
+
+    /**
+     * Whether the next token starts immediately, or if there were
+     * non-captured symbols before that
+     */
+    public function nextTokenIsAdjacent(): bool
+    {
+        return $this->token === null
+            || ($this->lookahead !== null
+                && ($this->lookahead->position - $this->token->position) === strlen($this->token->value));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getCatchablePatterns(): array
+    {
+        return [
+            '[a-z_\\\][a-z0-9_\:\\\]*[a-z_][a-z0-9_]*',
+            '(?:[+-]?[0-9]+(?:[\.][0-9]+)*)(?:[eE][+-]?[0-9]+)?',
+            '"(?:""|[^"])*+"',
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getNonCatchablePatterns(): array
+    {
+        return ['\s+', '\*+', '(.)'];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getType(&$value): int
+    {
+        $type = self::T_NONE;
+
+        if ($value[0] === '"') {
+            $value = str_replace('""', '"', substr($value, 1, strlen($value) - 2));
+
+            return self::T_STRING;
+        }
+
+        if (isset($this->noCase[$value])) {
+            return $this->noCase[$value];
+        }
+
+        if ($value[0] === '_' || $value[0] === '\\' || ctype_alpha($value[0])) {
+            return self::T_IDENTIFIER;
+        }
+
+        $lowerValue = strtolower($value);
+
+        if (isset($this->withCase[$lowerValue])) {
+            return $this->withCase[$lowerValue];
+        }
+
+        // Checking numeric value
+        if (is_numeric($value)) {
+            return strpos($value, '.') !== false || stripos($value, 'e') !== false
+                ? self::T_FLOAT : self::T_INTEGER;
+        }
+
+        return $type;
+    }
+}

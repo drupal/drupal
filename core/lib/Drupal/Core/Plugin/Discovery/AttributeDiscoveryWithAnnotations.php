@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Plugin\Discovery;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Drupal\Component\Annotation\AnnotationInterface;
+use Drupal\Component\Annotation\Doctrine\AnnotationRegistry;
 use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
