@@ -13,9 +13,8 @@ use PHPUnit\Framework\Attributes\Before;
  *
  * This code works in coordination with DeprecationHandler.
  *
- * This trait is a replacement for symfony/phpunit-bridge that is not
- * supporting PHPUnit 10. In the future this extension might be dropped if
- * PHPUnit will support all deprecation management needs.
+ * In the future this extension might be dropped if PHPUnit adds support for
+ * ignoring a specified list of deprecations.
  *
  * @see \Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler
  *

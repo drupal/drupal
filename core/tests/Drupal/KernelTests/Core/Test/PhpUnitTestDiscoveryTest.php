@@ -6,7 +6,6 @@ namespace Drupal\KernelTests\Core\Test;
 
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -80,11 +79,6 @@ class PhpUnitTestDiscoveryTest extends KernelTestBase {
 
     // Location of PHPUnit configuration file.
     $configurationFilePath = $this->root . \DIRECTORY_SEPARATOR . 'core';
-    // @todo once PHPUnit 10 is no longer used, remove the condition.
-    // @see https://www.drupal.org/project/drupal/issues/3497116
-    if (RunnerVersion::getMajor() < 11) {
-      $configurationFilePath .= \DIRECTORY_SEPARATOR . '.phpunit-10.xml';
-    }
 
     // PHPUnit's test discovery - via CLI execution.
     $process = new Process([
@@ -107,16 +101,8 @@ class PhpUnitTestDiscoveryTest extends KernelTestBase {
     $phpUnitXmlList = new \DOMDocument();
     $phpUnitXmlList->loadXML(file_get_contents($this->xmlOutputFile));
     $phpUnitClientList = [];
-    // Try PHPUnit 10 format first.
-    // @todo remove once PHPUnit 10 is no longer used.
-    foreach ($phpUnitXmlList->getElementsByTagName('testCaseClass') as $node) {
+    foreach ($phpUnitXmlList->getElementsByTagName('testClass') as $node) {
       $phpUnitClientList[] = $node->getAttribute('name');
-    }
-    // If empty, try PHPUnit 11+ format.
-    if (empty($phpUnitClientList)) {
-      foreach ($phpUnitXmlList->getElementsByTagName('testClass') as $node) {
-        $phpUnitClientList[] = $node->getAttribute('name');
-      }
     }
     asort($phpUnitClientList);
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
-use Drupal\TestTools\PhpUnitCompatibility\PhpUnit10\TestCompatibilityTrait;
+use Drupal\TestTools\PhpUnitCompatibility\PhpUnit11\TestCompatibilityTrait;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 
 // In order to manage different method signatures between PHPUnit versions, we

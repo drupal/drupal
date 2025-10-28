@@ -164,7 +164,7 @@ mb_language('uni');
 date_default_timezone_set('Australia/Sydney');
 
 // Bootstrap the DeprecationHandler extension and the DebugClassloader to report
-// deprecations in PHPUnit 10+.
+// deprecations.
 if ($deprecationBridgeConfiguration = DeprecationHandler::getConfiguration()) {
   DeprecationHandler::init($deprecationBridgeConfiguration['ignoreFile'] ?? NULL);
 
