@@ -11,6 +11,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\workspaces\WorkspaceInformationInterface;
+use Drupal\workspaces\WorkspaceManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
@@ -21,6 +22,7 @@ class WorkspacesTestHooks {
   public function __construct(
     #[Autowire(service: 'keyvalue')]
     protected readonly KeyValueFactoryInterface $keyValueFactory,
+    protected readonly WorkspaceManagerInterface $workspaceManager,
     protected readonly WorkspaceInformationInterface $workspaceInformation,
   ) {}
 
@@ -60,9 +62,7 @@ class WorkspacesTestHooks {
    */
   #[Hook('entity_test_mulrevpub_translation_create')]
   public function entityTranslationCreate(): void {
-    /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
-    $workspace_manager = \Drupal::service('workspaces.manager');
-    $this->keyValueFactory->get('ws_test')->set('workspace_was_active', $workspace_manager->hasActiveWorkspace());
+    $this->keyValueFactory->get('ws_test')->set('workspace_was_active', $this->workspaceManager->hasActiveWorkspace());
   }
 
   /**
@@ -111,6 +111,16 @@ class WorkspacesTestHooks {
   #[Hook('entity_update')]
   public function entityUpdate(EntityInterface $entity): void {
     $this->incrementHookCount('hook_entity_update', $entity);
+  }
+
+  /**
+   * Implements hook_cron().
+   */
+  #[Hook('cron')]
+  public function cron(): void {
+    // Record the active workspace ID (or FALSE if no workspace is active).
+    $active_workspace_id = $this->workspaceManager->getActiveWorkspace()?->id() ?? FALSE;
+    $this->keyValueFactory->get('ws_test')->set('cron_active_workspace', $active_workspace_id);
   }
 
   /**

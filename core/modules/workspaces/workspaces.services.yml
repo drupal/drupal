@@ -106,3 +106,9 @@ services:
     public: false
     arguments: ['@.inner', '@workspaces.manager', '@workspaces.information', '@typed_data_manager']
   Drupal\workspaces\Controller\WorkspacesHtmlEntityFormController: '@workspaces.controller.entity_form'
+
+  Drupal\workspaces\WorkspacesCron:
+    decorates: cron
+    decoration_priority: -100
+    autowire: true
+    public: false
