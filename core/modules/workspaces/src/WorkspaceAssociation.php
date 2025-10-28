@@ -11,6 +11,7 @@ use Drupal\Core\Utility\Error;
 use Drupal\workspaces\Event\WorkspacePostPublishEvent;
 use Drupal\workspaces\Event\WorkspacePublishEvent;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -48,7 +49,18 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    */
   protected array $associatedInitialRevisions = [];
 
-  public function __construct(protected Connection $database, protected EntityTypeManagerInterface $entityTypeManager, protected WorkspaceRepositoryInterface $workspaceRepository, protected LoggerInterface $logger) {
+  public function __construct(
+    protected Connection $database,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected WorkspaceRepositoryInterface $workspaceRepository,
+    #[Autowire(service: 'logger.channel.workspaces')]
+    protected LoggerInterface $logger,
+    protected ?WorkspaceManagerInterface $workspaceManager = NULL,
+  ) {
+    if (!$workspaceManager) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $workspaceManager argument is deprecated in drupal:11.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3550942', E_USER_DEPRECATED);
+      $this->workspaceManager = \Drupal::service('workspaces.manager');
+    }
   }
 
   /**
@@ -321,6 +333,99 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     // Return workspace IDs sorted in tree order.
     $tree = $this->workspaceRepository->loadTree();
     return array_keys(array_intersect_key($tree, array_flip($result)));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function moveTrackedEntities(string $source_workspace_id, string $target_workspace_id, ?string $entity_type_id = NULL, ?array $entity_ids = NULL): void {
+    // Validate input parameters.
+    if ($source_workspace_id === $target_workspace_id) {
+      throw new \InvalidArgumentException('Source and target workspace IDs cannot be the same.');
+    }
+
+    if ($entity_type_id === NULL && $entity_ids !== NULL) {
+      throw new \InvalidArgumentException('Entity type ID must be provided when entity IDs are specified.');
+    }
+
+    // Validate that both workspaces are top-level, and don't have children.
+    $workspace_tree = $this->workspaceRepository->loadTree();
+    if (!isset($workspace_tree[$source_workspace_id])
+      || !isset($workspace_tree[$target_workspace_id])
+      || $workspace_tree[$source_workspace_id]['depth'] !== 0
+      || $workspace_tree[$target_workspace_id]['depth'] !== 0
+      || !empty($workspace_tree[$source_workspace_id]['descendants'])
+      || !empty($workspace_tree[$target_workspace_id]['descendants'])
+    ) {
+      throw new \DomainException('Both the source and target must be valid top-level workspaces.');
+    }
+
+    $transaction = $this->database->startTransaction();
+    try {
+      // Update the workspace revision metadata field if needed.
+      $this->workspaceManager->executeOutsideWorkspace(function () use ($source_workspace_id, $target_workspace_id, $entity_type_id, $entity_ids) {
+        // Gather a list of revision IDs that have to be moved.
+        if ($entity_type_id) {
+          $affected_revision_ids[$entity_type_id] = $this->getAssociatedRevisions($source_workspace_id, $entity_type_id, $entity_ids);
+        }
+        else {
+          $this->loadAssociatedRevisions($source_workspace_id);
+          $affected_revision_ids = $this->associatedRevisions[$source_workspace_id];
+        }
+
+        foreach ($affected_revision_ids as $entity_type_id => $entity_ids) {
+          $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+
+          // Move the revisions if they have the revision metadata field.
+          if ($field_name = $entity_type->getRevisionMetadataKey('workspace')) {
+            $affected_revisions = $this->entityTypeManager->getStorage($entity_type_id)
+              ->loadMultipleRevisions(array_keys($entity_ids));
+
+            foreach ($affected_revisions as $revision) {
+              $revision->{$field_name}->target_id = $target_workspace_id;
+              $revision->setNewRevision(FALSE);
+              $revision->setSyncing(TRUE);
+              $revision->save();
+            }
+          }
+        }
+      });
+
+      // Update the main association table.
+      $update_query = $this->database->update(static::TABLE)
+        ->fields(['workspace' => $target_workspace_id])
+        ->condition('workspace', $source_workspace_id);
+
+      if ($entity_type_id) {
+        $update_query->condition('target_entity_type_id', $entity_type_id);
+        if ($entity_ids) {
+          $update_query->condition(static::getIdField($entity_type_id), $entity_ids, 'IN');
+        }
+      }
+      $update_query->execute();
+
+      // Update the revision association table.
+      $update_revision_query = $this->database->update(static::REVISION_TABLE)
+        ->fields(['workspace' => $target_workspace_id])
+        ->condition('workspace', $source_workspace_id);
+
+      if ($entity_type_id) {
+        $update_revision_query->condition('target_entity_type_id', $entity_type_id);
+        if ($entity_ids) {
+          $update_revision_query->condition(static::getIdField($entity_type_id), $entity_ids, 'IN');
+        }
+      }
+      $update_revision_query->execute();
+
+      // Clear the cached associations.
+      $this->associatedRevisions = $this->associatedInitialRevisions = [];
+    }
+    catch (\Exception $e) {
+      $transaction->rollBack();
+      Error::logException($this->logger, $e);
+      throw $e;
+    }
+    unset($transaction);
   }
 
   /**
