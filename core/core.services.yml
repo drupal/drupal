@@ -13,6 +13,11 @@ parameters:
   core.moved_classes:
     'Drupal\Core\StringTranslation\TranslationWrapper':
       class: 'Drupal\Core\StringTranslation\TranslatableMarkup'
+    'Doctrine\Common\Annotations\AnnotationException':
+      class: 'Drupal\Component\Annotation\Doctrine\AnnotationException'
+      deprecation_version: drupal:11.3.0
+      removed_version: drupal:12.0.0
+      change_record: https://www.drupal.org/node/3551049
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100

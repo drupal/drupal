@@ -445,13 +445,12 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "f4d047688c36e7b0e10edd8f6ec9ffc376654271"
+                "reference": "2290cfa603f6363f954f1053d3ef68fc13c69860"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
                 "composer-runtime-api": "^2.1",
                 "composer/semver": "^3.3",
-                "doctrine/annotations": "^2.0",
                 "doctrine/lexer": "^2 || ^3",
                 "drupal/core-composer-scaffold": "self.version",
                 "egulias/email-validator": "^3.2.1|^4.0",

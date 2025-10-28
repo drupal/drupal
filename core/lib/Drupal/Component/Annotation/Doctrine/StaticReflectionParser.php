@@ -27,7 +27,6 @@
 
 namespace Drupal\Component\Annotation\Doctrine;
 
-use Doctrine\Common\Annotations\TokenParser;
 use ReflectionException;
 use const T_CLASS;
 use const T_DOC_COMMENT;

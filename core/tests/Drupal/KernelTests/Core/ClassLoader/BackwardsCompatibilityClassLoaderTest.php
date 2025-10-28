@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\ClassLoader;
 
+use Doctrine\Common\Annotations\AnnotationException as DoctrineAnnotationException;
+use Drupal\Component\Annotation\Doctrine\AnnotationException;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\ClassLoader\BackwardsCompatibilityClassLoader;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -47,6 +49,18 @@ class BackwardsCompatibilityClassLoaderTest extends KernelTestBase {
     // @phpstan-ignore class.notFound
     $object = new Foo();
     $this->assertInstanceOf(Random::class, $object);
+  }
+
+  /**
+   * Tests that the BC layer for Doctrine's AnnotationException works.
+   */
+  #[IgnoreDeprecations]
+  public function testDoctrineException(): void {
+    // @phpstan-ignore class.notFound
+    $this->expectException(DoctrineAnnotationException::class);
+    $this->expectExceptionMessage('[Syntax Error] test');
+    $this->expectDeprecation('Class Doctrine\Common\Annotations\AnnotationException is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0, use Drupal\Component\Annotation\Doctrine\AnnotationException instead. See https://www.drupal.org/node/3551049');
+    throw AnnotationException::syntaxError('test');
   }
 
 }
