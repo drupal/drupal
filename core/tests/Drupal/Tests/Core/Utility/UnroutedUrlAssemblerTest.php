@@ -11,6 +11,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -209,6 +210,21 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     $expected_generated_url->setGeneratedUrl('/test-other-uri')
       ->setCacheContexts(['some-cache-context']);
     $this->assertEquals($expected_generated_url, $result);
+  }
+
+  /**
+   * Tests external URLs are only processed if necessary.
+   */
+  #[TestWith(['http://example.org', 'http://example.org'])]
+  #[TestWith(['http://example.org?flag', 'http://example.org?flag'])]
+  #[TestWith(['http://example.org?flag=', 'http://example.org?flag='])]
+  #[TestWith(['http://example.org?flag=', 'http://example.org?flag', ['query' => ['flag' => '']]])]
+  #[TestWith(['http://example.org?tag=one&tag=two', 'http://example.org?tag=one&tag=two'])]
+  #[TestWith(['http://example.org?tag%5B0%5D=three', 'http://example.org?tag=one&tag=two', ['query' => ['tag' => ['three']]]])]
+  public function testAssembleExternalUrls(string $expected, string $uri, array $options = []): void {
+    $this->setupRequestStack(FALSE);
+    $result = $this->unroutedUrlAssembler->assemble($uri, $options);
+    $this->assertEquals($expected, $result);
   }
 
   /**
