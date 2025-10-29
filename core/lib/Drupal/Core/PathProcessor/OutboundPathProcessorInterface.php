@@ -37,10 +37,6 @@ interface OutboundPathProcessorInterface {
    *     dependent URL requires so.
    *   - 'route': The route object for the given path. It will be set by
    *     \Drupal\Core\Routing\UrlGenerator::generateFromRoute().
-   *   - 'route_name': The name of the route for the given path. It will be set
-   *     by \Drupal\Core\Routing\UrlGenerator::generateFromRoute().
-   *   - 'route_parameters': An array of route parameters for the given path. It
-   *     will be set by \Drupal\Core\Routing\UrlGenerator::generateFromRoute().
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HttpRequest object representing the current request.
    * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
