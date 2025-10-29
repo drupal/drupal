@@ -121,7 +121,10 @@ class User extends ContentEntityBase implements UserInterface {
     }
 
     $config = \Drupal::config('system.date');
-    if ($config->get('timezone.user.configurable') && !$this->getTimeZone() && !$config->get('timezone.user.default')) {
+    if (
+      $config->get('timezone.user.configurable') && !$this->getTimeZone() &&
+      $config->get('timezone.user.default') == UserInterface::TIMEZONE_DEFAULT
+    ) {
       $this->set('timezone', $config->get('timezone.default'));
     }
   }
