@@ -226,61 +226,6 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests adding a module.
-   *
-   * @legacy-covers ::addModule
-   * @legacy-covers ::add
-   */
-  #[IgnoreDeprecations]
-  public function testAddModule(): void {
-    $this->expectDeprecation('Drupal\Core\Extension\ModuleHandler::addModule() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3491200');
-    $module_handler = $this->getMockBuilder(ModuleHandler::class)
-      ->setConstructorArgs([
-        $this->root,
-        [],
-        new KeyValueMemoryFactory(),
-        $this->createMock(CallableResolver::class),
-        new NullBackend('bootstrap'),
-      ])
-      ->onlyMethods(['resetImplementations'])
-      ->getMock();
-
-    // Ensure we reset implementations when settings a new modules list.
-    $module_handler->expects($this->once())->method('resetImplementations');
-
-    $module_handler->addModule('module_handler_test', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test');
-    $this->assertTrue($module_handler->moduleExists('module_handler_test'));
-  }
-
-  /**
-   * Tests adding a profile.
-   *
-   * @legacy-covers ::addProfile
-   * @legacy-covers ::add
-   */
-  #[IgnoreDeprecations]
-  public function testAddProfile(): void {
-    $this->expectDeprecation('Drupal\Core\Extension\ModuleHandler::addProfile() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3491200');
-    $module_handler = $this->getMockBuilder(ModuleHandler::class)
-      ->setConstructorArgs([
-        $this->root,
-        [],
-        new KeyValueMemoryFactory(),
-        $this->createMock(CallableResolver::class),
-        new NullBackend('bootstrap'),
-      ])
-      ->onlyMethods(['resetImplementations'])
-      ->getMock();
-
-    // Ensure we reset implementations when settings a new modules list.
-    $module_handler->expects($this->once())->method('resetImplementations');
-
-    // @todo this should probably fail since its a module not a profile.
-    $module_handler->addProfile('module_handler_test', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test');
-    $this->assertTrue($module_handler->moduleExists('module_handler_test'));
-  }
-
-  /**
    * Tests module exists returns correct module status.
    *
    * @legacy-covers ::moduleExists
