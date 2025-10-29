@@ -323,9 +323,7 @@ class LinkWidget extends WidgetBase {
     // more advanced field widgets.
     $element['attributes'] = [
       '#type' => 'value',
-      '#tree' => TRUE,
       '#value' => !empty($items[$delta]->options['attributes']) ? $items[$delta]->options['attributes'] : [],
-      '#attributes' => ['class' => ['link-field-widget-attributes']],
     ];
 
     // If cardinality is 1, ensure a proper label is output for the field.
