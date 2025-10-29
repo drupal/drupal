@@ -135,6 +135,7 @@ field.formatter.settings.file_video:
     playsinline:
       type: boolean
       label: 'Plays inline'
+      requiredKey: false
     width:
       type: integer
       label: 'Width'

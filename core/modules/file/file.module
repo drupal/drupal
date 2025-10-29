@@ -19,7 +19,6 @@ use Drupal\file\Element\ManagedFile;
 use Drupal\file\FileInterface;
 use Drupal\file\Hook\FileFormHooks;
 use Drupal\file\Hook\FileThemeHooks;
-use Drupal\file\Plugin\Field\FieldFormatter\FileVideoFormatter;
 use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\file\Upload\FormUploadedFile;
 
@@ -551,13 +550,4 @@ function file_field_find_file_reference_column(FieldDefinitionInterface $field) 
 function file_system_settings_submit(array &$form, FormStateInterface $form_state): void {
   @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\file\Hook\FileHooks::settingsSubmit() instead. See https://www.drupal.org/node/3534099', E_USER_DEPRECATED);
   \Drupal::service(FileFormHooks::class)->settingsSubmit($form, $form_state);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function file_file_video_presave(FileVideoFormatter $formatter): void {
-  if ($formatter->getSetting('playsinline') === NULL) {
-    $formatter->setSetting('playsinline', FALSE);
-  }
 }
