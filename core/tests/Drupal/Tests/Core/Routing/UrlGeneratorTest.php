@@ -562,4 +562,30 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->assertEquals($expected_bubbleable_metadata, BubbleableMetadata::createFromObject($generated_url));
   }
 
+  /**
+   * @covers \Drupal\Core\Routing\UrlGenerator::generateFromRoute
+   */
+  public function testGenerateWithRouteNameInOptions(): void {
+    $path_processor = $this->createMock(OutboundPathProcessorInterface::class);
+
+    $path_processor->expects($this->atLeastOnce())
+      ->method('processOutbound')
+      ->willReturnCallback(function ($path, &$options = []) {
+        // Assert that 'route_name' exists in options and is the expected value.
+        $this->assertArrayHasKey('route_name', $options);
+        $this->assertEquals('test_1', $options['route_name']);
+
+        // Assert that 'route_parameters' exists in options and
+        // is the expected value.
+        $this->assertArrayHasKey('route_parameters', $options);
+        $this->assertEquals(['node' => 1], $options['route_parameters']);
+        return $path;
+      });
+
+    $this->processorManager->addOutbound($path_processor);
+
+    $options = [];
+    $this->assertGenerateFromRoute('test_1', ['node' => 1], $options, '/hello/world?node=1', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+  }
+
 }
