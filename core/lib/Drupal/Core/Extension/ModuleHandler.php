@@ -8,7 +8,6 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Hook\Attribute\LegacyHook;
-use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Core\Hook\ImplementationList;
 use Drupal\Core\Hook\OrderOperation\OrderOperation;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
@@ -210,16 +209,14 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function addModule($name, $path) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3491200', E_USER_DEPRECATED);
-    $this->add('module', $name, $path);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. This method does nothing. There is no direct replacement. See https://www.drupal.org/node/3491200', E_USER_DEPRECATED);
   }
 
   /**
    * {@inheritdoc}
    */
   public function addProfile($name, $path) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3491200', E_USER_DEPRECATED);
-    $this->add('profile', $name, $path);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. This method does nothing. There is no direct replacement. See https://www.drupal.org/node/3491200', E_USER_DEPRECATED);
   }
 
   /**
@@ -232,36 +229,12 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @param string $path
    *   The module path; e.g., 'core/modules/node'.
    *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
+   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0.
    * There is no direct replacement.
    * @see https://www.drupal.org/node/3491200
    */
   protected function add($type, $name, $path) {
-    $pathname = "$path/$name.info.yml";
-    $php_file_path = $this->root . "/$path/$name.$type";
-    if ($filename = file_exists($php_file_path) ? "$name.$type" : NULL) {
-      include_once $php_file_path;
-    }
-    $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
-    $this->resetImplementations();
-    $hook_collector = HookCollectorPass::collectAllHookImplementations([$name => ['pathname' => $pathname]]);
-    // A module freshly added will not be registered on the container yet.
-    // Load all includes so the legacy section of invoke can handle hooks in
-    // includes.
-    $hook_collector->loadAllIncludes();
-    // Register procedural implementations.
-    foreach ($hook_collector->getAddableImplementations() as $hook => $functions_by_module) {
-      $list = $this->hookImplementationLists[$hook] ?? NULL;
-      $listeners = $list?->listeners ?? [];
-      $modules = $list?->modules ?? [];
-      foreach ($functions_by_module as $module => $function) {
-        $listeners[] = $function;
-        $modules[] = $module;
-      }
-      if ($listeners) {
-        $this->hookImplementationLists[$hook] = new ImplementationList($listeners, $modules);
-      }
-    }
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. This method does nothing. There is no direct replacement. See https://www.drupal.org/node/3491200', E_USER_DEPRECATED);
   }
 
   /**

@@ -612,39 +612,6 @@ class HookCollectorPass implements CompilerPassInterface {
   }
 
   /**
-   * Returns implementations suitable for adding in ModuleHandler::add().
-   *
-   * This contains only procedural implementations, because the services for OOP
-   * implementations might not be available at this point.
-   *
-   * This method is only to be used by ModuleHandler::add().
-   *
-   * @return array<string, array<string, callable-string>>
-   *   Procedural implementations, as functions keyed by hook and module.
-   *
-   * @todo Remove when ModuleHandler::add() is removed in Drupal 12.0.0.
-   *
-   * @internal
-   */
-  public function getAddableImplementations(): array {
-    $implementationsByHook = $this->getFilteredImplementations();
-
-    // List of modules implementing hooks with the implementation details.
-    $implementations = [];
-    foreach ($implementationsByHook as $hook => $hookImplementations) {
-      foreach ($this->modules as $module) {
-        foreach (array_keys($hookImplementations, $module, TRUE) as $identifier) {
-          if (!str_contains($identifier, '::')) {
-            $implementations[$hook][$module] = $identifier;
-          }
-        }
-      }
-    }
-
-    return $implementations;
-  }
-
-  /**
    * Checks for hooks which can't be supported in classes.
    *
    * @param \Drupal\Core\Hook\Attribute\Hook $hookAttribute
