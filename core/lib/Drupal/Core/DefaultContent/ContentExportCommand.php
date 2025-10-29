@@ -147,19 +147,16 @@ final class ContentExportCommand extends Command {
    *   A generator that yields content entities.
    */
   private function loadEntities(ContentEntityStorageInterface $storage, string|int|null $entity_id, array $bundles = []): iterable {
-    $query = $storage->getQuery()
-      ->accessCheck(FALSE);
+    $values = [];
 
     $entity_type = $storage->getEntityType();
     if ($bundles) {
-      $query->condition($entity_type->getKey('bundle'), $bundles, 'IN');
+      $values[$entity_type->getKey('bundle')] = $bundles;
     }
     if ($entity_id) {
-      $query->condition($entity_type->getKey('id'), $entity_id);
+      $values[$entity_type->getKey('id')] = $entity_id;
     }
-    foreach ($query->execute() as $id) {
-      yield $storage->load($id);
-    }
+    return $storage->loadByProperties($values);
   }
 
 }
