@@ -18,7 +18,8 @@
     },
     "autoload-dev": {
         "files": [
-            "fixtures/abstract-test-classes.php"
+            "fixtures/abstract-test-classes.php",
+            "fixtures/test-methods-with-metadata.php"
         ]
     },
     "require": {}

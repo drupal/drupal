@@ -17,6 +17,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use Prophecy\Argument;
 
 /**
@@ -354,16 +355,17 @@ class ConfigTargetTest extends UnitTestCase {
   }
 
   /**
-   * @testWith ["this string was returned by toConfig", "The toConfig callable returned a string, but it must be an array with a key-value pair for each of the targeted property paths."]
-   *           [true, "The toConfig callable returned a boolean, but it must be an array with a key-value pair for each of the targeted property paths."]
-   *           [42, "The toConfig callable returned a integer, but it must be an array with a key-value pair for each of the targeted property paths."]
-   *           [[], "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."]
-   *           [{"yar": 42}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."]
-   *           [{"FIRST": 42, "SECOND": 1337}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."]
-   *           [{"second": 42}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first."]
-   *           [{"first": 42}, "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: second."]
-   *           [{"first": 42, "second": 1337, "yar": "har"}, "The toConfig callable returned an array that contains key-value pairs that do not match targeted property paths: yar."]
+   * Tests set value multi target to config return value.
    */
+  #[TestWith(["this string was returned by toConfig", "The toConfig callable returned a string, but it must be an array with a key-value pair for each of the targeted property paths."])]
+  #[TestWith([TRUE, "The toConfig callable returned a boolean, but it must be an array with a key-value pair for each of the targeted property paths."])]
+  #[TestWith([42, "The toConfig callable returned a integer, but it must be an array with a key-value pair for each of the targeted property paths."])]
+  #[TestWith([[], "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."])]
+  #[TestWith([["yar" => 42], "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."])]
+  #[TestWith([["FIRST" => 42, "SECOND" => 1337], "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first, second."])]
+  #[TestWith([["second" => 42], "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: first."])]
+  #[TestWith([["first" => 42], "The toConfig callable returned an array that is missing key-value pairs for the following targeted property paths: second."])]
+  #[TestWith([["first" => 42, "second" => 1337, "yar" => "har"], "The toConfig callable returned an array that contains key-value pairs that do not match targeted property paths: yar."])]
   public function testSetValueMultiTargetToConfigReturnValue(mixed $toConfigReturnValue, string $expected_exception_message): void {
     $config_target = new ConfigTarget(
       'foo.settings',
