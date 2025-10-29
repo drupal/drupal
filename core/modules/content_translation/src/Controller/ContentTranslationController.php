@@ -395,6 +395,7 @@ class ContentTranslationController extends ControllerBase {
 
     // @todo Exploit the upcoming hook_entity_prepare() when available.
     // See https://www.drupal.org/node/1810394.
+    $entity = clone $entity;
     $this->prepareTranslation($entity, $source, $target);
 
     // @todo Provide a way to figure out the default form operation in
