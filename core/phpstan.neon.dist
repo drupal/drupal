@@ -57,6 +57,7 @@ parameters:
 rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
   - Drupal\PHPStan\Rules\NoClassMetadataOnAbstractTestClasses
+  - Drupal\PHPStan\Rules\TestClassMethodMetadata
   - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
   - PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
   # The rule below can be removed when we increase level to 2.
