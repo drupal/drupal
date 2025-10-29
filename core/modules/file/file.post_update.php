@@ -5,8 +5,6 @@
  * Post update functions for File.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -22,20 +20,14 @@ function file_removed_post_updates(): array {
 
 /**
  * Adds a value for the 'playsinline' setting of the 'file_video' formatter.
+ *
+ * @deprecated in drupal:12.3.0 and is removed from drupal:13.0.0. This was
+ *   rolled back due to a bug in the implementation and is now a no-op function
+ *   and is kept only to prevent errors when updating.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3533291
  */
 function file_post_update_add_playsinline(array &$sandbox = []): ?TranslatableMarkup {
-  /** @var \Drupal\Core\Config\Entity\ConfigEntityUpdater $config_entity_updater */
-  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
-  return $config_entity_updater->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $display) {
-    $needs_update = FALSE;
-    $components = $display->getComponents();
-    foreach ($components as $name => $component) {
-      if (isset($component['type']) && $component['type'] === 'file_video') {
-        $needs_update = TRUE;
-        $component['settings']['playsinline'] = FALSE;
-        $display->setComponent($name, $component);
-      }
-    }
-    return $needs_update;
-  });
+  // No-op.
+  return NULL;
 }
