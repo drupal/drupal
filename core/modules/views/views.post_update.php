@@ -122,3 +122,10 @@ function views_post_update_block_items_per_page(?array &$sandbox = NULL): void {
       return FALSE;
     });
 }
+
+/**
+ * Clear cache to add new date default arguments.
+ */
+function views_post_update_add_date_default_arguments(): void {
+  // Empty update to cause a cache rebuild so that schema additions are read.
+}
