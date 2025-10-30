@@ -4,6 +4,7 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EmailValidator;
 
@@ -21,6 +22,7 @@ class EmailConstraint extends Email {
   /**
    * {@inheritdoc}
    */
+  #[HasNamedArguments]
   public function __construct(...$args) {
     $this->mode = static::VALIDATION_MODE_STRICT;
     parent::__construct(...$args);

@@ -4,6 +4,7 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraints\Count;
 
 /**
@@ -21,6 +22,7 @@ class CountConstraint extends Count {
   /**
    * {@inheritdoc}
    */
+  #[HasNamedArguments]
   public function __construct(...$args) {
     $this->minMessage = 'This collection should contain %limit element or more.|This collection should contain %limit elements or more.';
     $this->maxMessage = 'This collection should contain %limit element or less.|This collection should contain %limit elements or less.';
