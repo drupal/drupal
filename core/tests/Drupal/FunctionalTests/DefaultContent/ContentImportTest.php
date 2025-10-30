@@ -309,6 +309,10 @@ class ContentImportTest extends BrowserTestBase {
     $term = $entity_repository->loadEntityByUuid('taxonomy_term', '9dfe4733-1347-4566-9340-27a9b22a1f64');
     $this->assertInstanceOf(TermInterface::class, $term);
     $this->assertSame('Default Content', $term->parent->entity?->label());
+
+    // When importing files that have URIs like `public://foo.png`, the `public`
+    // part should not have been treated as a directory name.
+    $this->assertDirectoryDoesNotExist($this->getDrupalRoot() . '/public:');
   }
 
   /**
