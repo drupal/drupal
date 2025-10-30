@@ -184,8 +184,11 @@ final class Importer implements LoggerAwareInterface {
       }
     }
 
+    $scheme = parse_url($destination, PHP_URL_SCHEME);
     $target_directory = dirname($destination);
-    $this->fileSystem->prepareDirectory($target_directory, FileSystemInterface::CREATE_DIRECTORY);
+    if (!isset($scheme) || rtrim($target_directory, ':') !== $scheme) {
+      $this->fileSystem->prepareDirectory($target_directory, FileSystemInterface::CREATE_DIRECTORY);
+    }
     if ($copy_file) {
       $uri = $this->fileSystem->copy($source, $destination);
       $entity->setFileUri($uri);

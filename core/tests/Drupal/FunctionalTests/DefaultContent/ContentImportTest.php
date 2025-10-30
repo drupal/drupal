@@ -326,6 +326,10 @@ class ContentImportTest extends BrowserTestBase {
     $workspaces = Workspace::loadMultiple();
     $this->assertArrayHasKey('test_workspace', $workspaces);
     $this->assertSame('test_workspace', $workspaces['inner_test']?->parent->entity->id());
+
+    // When importing files that have URIs like `public://foo.png`, the `public`
+    // part should not have been treated as a directory name.
+    $this->assertDirectoryDoesNotExist($this->getDrupalRoot() . '/public:');
   }
 
   /**
