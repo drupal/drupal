@@ -38,6 +38,16 @@ test_htmx.attachments.replace:
   requirements:
     _permission: 'access content'
 
+test_htmx.attachments.route_option:
+  path: '/htmx-test-attachments/route-option'
+  defaults:
+    _title: 'Using _htmx_route option'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::replace'
+  requirements:
+    _permission: 'access content'
+  options:
+    _htmx_route: TRUE
+
 test_htmx.attachments.ajax:
   path: '/htmx-test-attachments/ajax'
   defaults:

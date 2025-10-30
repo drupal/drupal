@@ -1286,7 +1286,10 @@ services:
   psr_response_view_subscriber:
     class: Drupal\Core\EventSubscriber\PsrResponseSubscriber
     arguments: ['@psr7.http_foundation_factory']
-
+  # HTMX content view subscriber runs before main_content_view subscriber.
+  htmx_content_view_subscriber:
+    class: Drupal\Core\EventSubscriber\HtmxContentViewSubscriber
+    autowire: true
   # Main content view subscriber plus the renderers it uses.
   main_content_view_subscriber:
     class: Drupal\Core\EventSubscriber\MainContentViewSubscriber
