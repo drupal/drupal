@@ -143,8 +143,8 @@ final class ProjectRelease {
       new Type('string'),
       new NotBlank(),
     ];
-    $collection_constraint = new Collection([
-      'fields' => [
+    $collection_constraint = new Collection(
+      fields: [
         'version' => $not_blank_constraints,
         'date' => new Optional([new Type('numeric')]),
         'core_compatible' => new Optional([new Type('boolean')]),
@@ -161,8 +161,8 @@ final class ProjectRelease {
           ]),
         ]),
       ],
-      'allowExtraFields' => TRUE,
-    ]);
+      allowExtraFields: TRUE,
+    );
     $violations = Validation::createValidator()->validate($data, $collection_constraint);
     if (count($violations)) {
       foreach ($violations as $violation) {

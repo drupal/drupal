@@ -120,22 +120,22 @@ final class SecurityAdvisory {
    */
   protected static function validateAdvisoryData(array $data): void {
     $not_blank_constraints = [
-      new Type(['type' => 'string']),
+      new Type('string'),
       new NotBlank(),
     ];
-    $collection_constraint = new Collection([
-      'fields' => [
+    $collection_constraint = new Collection(
+      fields: [
         'title' => $not_blank_constraints,
         'project' => $not_blank_constraints,
         'type' => $not_blank_constraints,
         'link' => $not_blank_constraints,
-        'is_psa' => new Choice(['choices' => [1, '1', 0, '0', TRUE, FALSE]]),
-        'insecure' => new Type(['type' => 'array']),
+        'is_psa' => new Choice(choices: [1, '1', 0, '0', TRUE, FALSE]),
+        'insecure' => new Type('array'),
       ],
       // Allow unknown fields, in the case that new fields are added to JSON
       // feed validation should still pass.
-      'allowExtraFields' => TRUE,
-    ]);
+      allowExtraFields: TRUE,
+    );
     $violations = Validation::createValidator()->validate($data, $collection_constraint);
     if ($violations->count()) {
       foreach ($violations as $violation) {

@@ -28,7 +28,8 @@ block.block.*:
       label: 'Region'
       constraints:
         NotBlank: []
-        Callback: ['\Drupal\block\Entity\Block', validateRegion]
+        Callback:
+          callback: ['\Drupal\block\Entity\Block', validateRegion]
     weight:
       type: weight
       label: 'Weight'
