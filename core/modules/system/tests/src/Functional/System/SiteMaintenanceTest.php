@@ -25,7 +25,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node'];
+  protected static $modules = ['node', 'dblog'];
 
   /**
    * {@inheritdoc}
@@ -65,6 +65,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'administer site configuration',
       'access site in maintenance mode',
+      'access site reports',
     ]);
     $this->drupalLogin($this->adminUser);
   }
@@ -104,6 +105,11 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($admin_message);
     $this->assertSession()->linkExists('Go online.');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('system.site_maintenance_mode')->toString());
+
+    // Verify that the change to maintenance mode is logged.
+    $this->drupalGet(Url::fromRoute('dblog.overview'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContainsOnce('Maintenance mode enabled.');
 
     // Logout and verify that offline message is displayed.
     $this->drupalLogout();
@@ -178,6 +184,28 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('');
     $this->assertEquals('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
+
+    $this->drupalLogin($this->adminUser);
+
+    // Re-save the form with maintenance mode on to ensure another log message is
+    // not added.
+    $edit = [
+      'maintenance_mode' => 1,
+    ];
+    $this->drupalGet('admin/config/development/maintenance');
+    $this->submitForm($edit, 'Save configuration');
+    $this->drupalGet(Url::fromRoute('dblog.overview'));
+    $this->assertSession()->pageTextContainsOnce('Maintenance mode enabled.');
+    $this->assertSession()->pageTextNotContains('Maintenance mode disabled.');
+
+    // Turn off maintenance mode.
+    $edit = [
+      'maintenance_mode' => 0,
+    ];
+    $this->drupalGet('admin/config/development/maintenance');
+    $this->submitForm($edit, 'Save configuration');
+    $this->drupalGet(Url::fromRoute('dblog.overview'));
+    $this->assertSession()->pageTextContainsOnce('Maintenance mode disabled.');
   }
 
   /**
