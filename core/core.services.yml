@@ -409,6 +409,8 @@ services:
       - { name: service_collector, tag: 'config.factory.override', call: addOverride }
     arguments: ['@config.storage', '@event_dispatcher', '@config.typed']
   Drupal\Core\Config\ConfigFactoryInterface: '@config.factory'
+  Drupal\Core\Config\ConfigImporterFactory:
+    autowire: true
   config.importer_subscriber:
     class: Drupal\Core\Config\Importer\FinalMissingContentSubscriber
   config.installer:

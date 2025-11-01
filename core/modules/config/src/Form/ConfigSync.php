@@ -4,24 +4,15 @@ namespace Drupal\config\Form;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigImporterException;
-use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\ConfigImporterFactory;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\ImportStorageTransformer;
-use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\Core\Extension\ModuleExtensionList;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\ModuleInstallerInterface;
-use Drupal\Core\Extension\ThemeExtensionList;
-use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,44 +31,20 @@ class ConfigSync extends FormBase {
    *   The target storage.
    * @param \Drupal\Core\Config\StorageInterface $snapshotStorage
    *   The snapshot storage.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock object.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
-   *   Event dispatcher.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
-   *   Configuration manager.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
-   *   The typed configuration manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler.
-   * @param \Drupal\Core\Extension\ModuleInstallerInterface $moduleInstaller
-   *   The module installer.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
-   *   The theme handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
-   *   The module extension list.
    * @param \Drupal\Core\Config\ImportStorageTransformer $importTransformer
    *   The import transformer service.
-   * @param \Drupal\Core\Extension\ThemeExtensionList $themeExtensionList
-   *   The theme extension list.
+   * @param \Drupal\Core\Config\ConfigImporterFactory $configImporterFactory
+   *   The config importer factory.
    */
   public function __construct(
     protected StorageInterface $syncStorage,
     protected StorageInterface $activeStorage,
     protected StorageInterface $snapshotStorage,
-    protected LockBackendInterface $lock,
-    protected EventDispatcherInterface $eventDispatcher,
-    protected ConfigManagerInterface $configManager,
-    protected TypedConfigManagerInterface $typedConfigManager,
-    protected ModuleHandlerInterface $moduleHandler,
-    protected ModuleInstallerInterface $moduleInstaller,
-    protected ThemeHandlerInterface $themeHandler,
     protected RendererInterface $renderer,
-    protected ModuleExtensionList $moduleExtensionList,
     protected ImportStorageTransformer $importTransformer,
-    protected ThemeExtensionList $themeExtensionList,
+    protected ConfigImporterFactory $configImporterFactory,
   ) {
   }
 
@@ -89,17 +56,9 @@ class ConfigSync extends FormBase {
       $container->get('config.storage.sync'),
       $container->get('config.storage'),
       $container->get('config.storage.snapshot'),
-      $container->get('lock.persistent'),
-      $container->get('event_dispatcher'),
-      $container->get('config.manager'),
-      $container->get('config.typed'),
-      $container->get('module_handler'),
-      $container->get('module_installer'),
-      $container->get('theme_handler'),
       $container->get('renderer'),
-      $container->get('extension.list.module'),
       $container->get('config.import_transformer'),
-      $container->get('extension.list.theme')
+      $container->get(ConfigImporterFactory::class),
     );
   }
 
@@ -262,19 +221,7 @@ class ConfigSync extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config_importer = new ConfigImporter(
-      $form_state->get('storage_comparer'),
-      $this->eventDispatcher,
-      $this->configManager,
-      $this->lock,
-      $this->typedConfigManager,
-      $this->moduleHandler,
-      $this->moduleInstaller,
-      $this->themeHandler,
-      $this->getStringTranslation(),
-      $this->moduleExtensionList,
-      $this->themeExtensionList
-    );
+    $config_importer = $this->configImporterFactory->get($form_state->get('storage_comparer'));
     if ($config_importer->alreadyImporting()) {
       $this->messenger()->addStatus($this->t('Another request may be synchronizing configuration already.'));
     }
