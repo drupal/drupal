@@ -573,8 +573,12 @@ class Registry implements DestructableInterface {
       $result = $this->themeManager->invoke($name, 'theme', $args);
     }
     else {
+      // @todo Simplify in Drupal 12 in https://www.drupal.org/project/drupal/issues/3555931
       $function = $name . '_theme';
-      if (function_exists($function)) {
+      if (in_array($type, ['theme_engine', 'base_theme_engine'], TRUE) && $theme_engine = $this->themeManager->getThemeEngine($name)) {
+        $function = [$theme_engine, 'theme'];
+      }
+      if (is_callable($function)) {
         $result = $function(... $args);
       }
     }
@@ -667,11 +671,13 @@ class Registry implements DestructableInterface {
             $prefixes[] = $theme;
 
             foreach ($prefixes as $prefix) {
-              if (function_exists($prefix . '_preprocess')) {
-                $info['preprocess functions'][] = $prefix . '_preprocess';
-              }
-              if (function_exists($prefix . '_preprocess_' . $hook)) {
-                $info['preprocess functions'][] = $prefix . '_preprocess_' . $hook;
+              foreach ([$prefix . '_preprocess', $prefix . '_preprocess_' . $hook] as $function) {
+                if (function_exists($function)) {
+                  if ($prefix !== $theme) {
+                    @trigger_error(sprintf('Providing %s() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3547356', $function), E_USER_DEPRECATED);
+                  }
+                  $info['preprocess functions'][] = $function;
+                }
               }
             }
           }

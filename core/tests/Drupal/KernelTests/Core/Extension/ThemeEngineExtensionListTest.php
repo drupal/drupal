@@ -28,7 +28,7 @@ class ThemeEngineExtensionListTest extends KernelTestBase {
     // Confirm that all theme engines are available.
     $theme_engines = \Drupal::service('extension.list.theme_engine')->getList();
     $this->assertArrayHasKey('twig', $theme_engines);
-    $this->assertArrayHasKey('nyan_cat', $theme_engines);
+    $this->assertArrayHasKey('test_theme_engine', $theme_engines);
     $this->assertCount(2, $theme_engines);
   }
 

@@ -350,6 +350,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       // Call engine-specific settings.
       $function = $themes[$theme]->prefix . '_engine_settings';
       if (function_exists($function)) {
+        @trigger_error('The theme-engine-specific settings function ' . $function . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Implement hook_form_system_theme_settings_alter() in a module instead. See https://www.drupal.org/node/3547356', E_USER_DEPRECATED);
         $form['engine_specific'] = [
           '#type' => 'details',
           '#title' => $this->t('Theme-engine-specific settings'),

@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * A test theme engine.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_theme().
+ */
+function test_theme_engine_theme($existing, $type, $theme, $path): array {
+  return drupal_find_theme_templates($existing, '.test.html', $path);
+}
+
+/**
+ * Implements hook_extension().
+ */
+function test_theme_engine_extension(): string {
+  return '.test.html';
+}
+
+/**
+ * Implements hook_render_template().
+ */
+function test_theme_engine_render_template($template_file): string {
+  return file_get_contents(\Drupal::root() . '/' . $template_file);
+}

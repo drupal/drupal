@@ -11,6 +11,10 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Utility\CallableResolver;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\ContainerInterface as SymfonyContainerInterface;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -53,12 +57,16 @@ class ThemeManager implements ThemeManagerInterface {
   protected ?array $themeHookImplementations = NULL;
 
   public function __construct(
+    #[Autowire(param: 'app.root')]
     protected string $root,
     protected ThemeNegotiatorInterface $themeNegotiator,
     protected ThemeInitializationInterface $themeInitialization,
     protected ModuleHandlerInterface $moduleHandler,
     protected CallableResolver $callableResolver,
+    #[AutowireLocator('theme_engine', 'engine_name')]
+    protected ContainerInterface $themeEngines,
     protected ?KeyValueFactoryInterface $keyValueFactory = NULL,
+    #[Autowire(service: 'cache.bootstrap')]
     protected ?CacheBackendInterface $cache = NULL,
   ) {
     if ($this->keyValueFactory === NULL) {
@@ -360,22 +368,29 @@ class ThemeManager implements ThemeManagerInterface {
       \Drupal::service('renderer')->render($preprocess_bubbleable);
     }
 
-    // Generate the output using a template.
-    $render_function = 'twig_render_template';
-    $extension = '.html.twig';
-
-    // The theme engine may use a different extension and a different
-    // renderer.
-    $theme_engine = $active_theme->getEngine();
-    if (isset($theme_engine)) {
-      if ($info['type'] != 'module') {
-        if (function_exists($theme_engine . '_render_template')) {
-          $render_function = $theme_engine . '_render_template';
-        }
-        $extension_function = $theme_engine . '_extension';
-        if (function_exists($extension_function)) {
-          $extension = $extension_function();
-        }
+    // Module provided templates must use the Twig engine.
+    if ($info['type'] != 'module') {
+      $theme_engine = $active_theme->getEngine();
+    }
+    else {
+      $theme_engine = 'twig';
+    }
+    if ($theme_engine_service = $this->getThemeEngine($theme_engine)) {
+      $render_function = [$theme_engine_service, 'renderTemplate'];
+      $extension = '';
+    }
+    else {
+      // @todo Remove in Drupal 12 in https://www.drupal.org/project/drupal/issues/3555931
+      $render_function = $theme_engine . '_render_template';
+      if (!function_exists($render_function)) {
+        $render_function = 'twig_render_template';
+      }
+      $extension_function = $theme_engine . '_extension';
+      if (function_exists($extension_function)) {
+        $extension = $extension_function();
+      }
+      else {
+        $extension = '.html.twig';
       }
     }
 
@@ -639,6 +654,13 @@ class ThemeManager implements ThemeManagerInterface {
       $this->defaultVariables['directory'] = $this->getActiveTheme()->getPath();
     }
     return $this->defaultVariables;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThemeEngine(string $name): ?ThemeEngineInterface {
+    return $this->themeEngines->get($name, SymfonyContainerInterface::NULL_ON_INVALID_REFERENCE);
   }
 
 }

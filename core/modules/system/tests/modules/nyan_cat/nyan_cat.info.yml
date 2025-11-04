@@ -1,0 +1,5 @@
+# cspell:ignore nyan
+type: module
+name: Nyan cat
+version: VERSION
+package: Core

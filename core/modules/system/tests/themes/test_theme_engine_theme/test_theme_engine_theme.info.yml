@@ -1,0 +1,6 @@
+name: 'Test theme for the test theme engine'
+type: theme
+description: 'Theme for testing theme engines'
+version: VERSION
+engine: test_theme_engine
+base theme: false

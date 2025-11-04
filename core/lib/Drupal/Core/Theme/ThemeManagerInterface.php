@@ -185,4 +185,15 @@ interface ThemeManagerInterface {
    */
   public function alterForTheme(ActiveTheme $theme, $type, &$data, &$context1 = NULL, &$context2 = NULL);
 
+  /**
+   * Returns the theme engine if it exists.
+   *
+   * @param string $name
+   *   The name of the theme engine.
+   *
+   * @return \Drupal\Core\Theme\ThemeEngineInterface|null
+   *   The theme engine or NULL.
+   */
+  public function getThemeEngine(string $name): ?ThemeEngineInterface;
+
 }

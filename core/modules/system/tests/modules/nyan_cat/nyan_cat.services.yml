@@ -1,0 +1,6 @@
+# cspell:ignore nyan nyancat
+services:
+  theme_engine.nyan_cat:
+    class: Drupal\nyan_cat\NyanCatThemeEngine
+    tags:
+      - { name: theme_engine, engine_name: nyan_cat }

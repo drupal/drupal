@@ -19,7 +19,7 @@ class EngineNyanCatTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['theme_test'];
+  protected static $modules = ['theme_test', 'nyan_cat'];
 
   /**
    * {@inheritdoc}

@@ -7,6 +7,7 @@ namespace Drupal\Tests\filter\Kernel;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Template\TwigThemeEngine;
 use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterPluginCollection;
@@ -516,8 +517,7 @@ class FilterKernelTest extends KernelTestBase {
       'directory' => '',
       'children' => 'Test two',
     ];
-    include_once $this->root . '/core/themes/engines/twig/twig.engine';
-    $render = (string) twig_render_template('container.html.twig', $variables);
+    $render = (string) \Drupal::service(TwigThemeEngine::class)->renderTemplate('container', $variables);
     $render = trim($render);
 
     // Render text before applying the auto paragraph filter.
