@@ -8,8 +8,8 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.3.0",
-        "symfony/dependency-injection": "^7.3",
-        "symfony/event-dispatcher": "^7.3",
+        "symfony/dependency-injection": "^7.4@beta",
+        "symfony/event-dispatcher": "^7.4@beta",
         "symfony/event-dispatcher-contracts": "v3.6.0"
     },
     "autoload": {
