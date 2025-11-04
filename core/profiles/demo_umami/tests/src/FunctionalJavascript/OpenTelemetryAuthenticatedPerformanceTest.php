@@ -25,9 +25,21 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
   protected $profile = 'demo_umami';
 
   /**
+   * Logs authenticated tracing data.
+   */
+  public function testAuthenticatedPerformance(): void {
+    // Replace toolbar with navigation and uninstall history to avoid AJAX
+    // requests while recording performance data.
+    \Drupal::service('module_installer')->uninstall(['toolbar', 'history']);
+    \Drupal::service('module_installer')->install(['navigation']);
+    $this->doTestFrontPageAuthenticatedWarmCache();
+    $this->doTestNodePageAdministrator();
+  }
+
+  /**
    * Logs front page tracing data with an authenticated user and warm cache.
    */
-  public function testFrontPageAuthenticatedWarmCache(): void {
+  protected function doTestFrontPageAuthenticatedWarmCache(): void {
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $this->drupalGet('<front>');
@@ -74,8 +86,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
   /**
    * Logs node page performance with an administrator.
    */
-  public function testNodePageAdministrator(): void {
-
+  protected function doTestNodePageAdministrator(): void {
     // Create a user with most important admin permissions, but not access to
     // contextual links. This is because contextual module makes an AJAX request
     // dependent on the content of browser local storage, which can make
@@ -87,56 +98,57 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
       'administer site configuration',
       'administer modules',
       'administer themes',
+      'access site reports',
       'administer users',
-      'access toolbar',
+      'access navigation',
       'administer shortcuts',
       'administer media',
       'access files overview',
       'administer blocks',
       'administer block content',
       'administer taxonomy',
-      'access site reports',
       'administer menu',
-      'access announcements',
     ]);
+
     $this->drupalLogin($user);
-    // This is a very heavy request so allow extra time for asset, image
-    // derivative requests and post response tasks to finish.
-    sleep(5);
+
+    // Ensure the asset cache warming request happens with empty caches,
+    // otherwise the unique combination of assets for the performance request
+    // may not have been created yet.
+    $this->clearCaches();
 
     $this->drupalGet('node/1');
-    sleep(2);
+    sleep(1);
     $this->drupalGet('node/1');
     sleep(1);
 
     $this->clearCaches();
-
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     }, 'administratorNodePage');
 
     $expected = [
-      'QueryCount' => 446,
-      'CacheGetCount' => 547,
+      'QueryCount' => 435,
+      'CacheGetCount' => 484,
       'CacheGetCountByBin' => [
-        'config' => 201,
-        'bootstrap' => 28,
-        'discovery' => 112,
-        'data' => 70,
-        'dynamic_page_cache' => 2,
-        'default' => 43,
-        'entity' => 24,
+        'config' => 174,
+        'bootstrap' => 16,
+        'discovery' => 107,
+        'data' => 67,
+        'entity' => 25,
+        'dynamic_page_cache' => 1,
+        'default' => 31,
         'render' => 39,
-        'menu' => 28,
+        'menu' => 24,
       ],
-      'CacheSetCount' => 455,
+      'CacheSetCount' => 467,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 48,
+      'CacheTagLookupQueryCount' => 51,
       'ScriptCount' => 3,
-      'ScriptBytes' => 249750,
-      'StylesheetCount' => 6,
-      'StylesheetBytes' => 101000,
+      'ScriptBytes' => 198000,
+      'StylesheetCount' => 8,
+      'StylesheetBytes' => 77250,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
