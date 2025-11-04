@@ -55,3 +55,14 @@
 # Drupal 13.
 %The "cache.backend.memory" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use cache.backend.memory.memory instead. See https://www.drupal.org/node/3546856%
 %The "cache.static" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use the cache.memory bin instead. See https://www.drupal.org/node/3546856%
+
+# Symfony 7.4.
+%Since symfony/browser-kit 7.4: Method "Symfony\\Component\\BrowserKit\\AbstractBrowser::useHtml5Parser\(\)" is deprecated. Symfony 8 will unconditionally use the native HTML5 parser.%
+%Since symfony/console 7.4: The "Symfony\\Component\\Console\\Application::add\(\)" method is deprecated and will be removed in Symfony 8.0, use "Symfony\\Component\\Console\\Application::addCommand\(\)" instead.%
+%Since symfony/dependency-injection 7.4: Service id "Drupal\\Core\\ExampleClass" looks like a FQCN but no corresponding class or interface exists.%
+%Since symfony/dom-crawler 7.4: Disabling HTML5 parsing is deprecated. Symfony 8 will unconditionally use the native HTML5 parser.%
+%Since symfony/http-foundation 7.4: Request::get\(\) is deprecated, use properties -.*attributes, query or request directly instead.%
+%Since symfony/validator 7.4: Passing an array of options to configure the "Drupal\\Core\\[^"]+" constraint is deprecated, use named arguments instead.%
+%Since symfony/validator 7.4: Support for evaluating options in the base Constraint class is deprecated. Initialize properties in the constructor of Drupal\\(Core|ckeditor5|file)\\[^ ]+ instead.%
+%Since symfony/validator 7.4: Support for passing the choices as the first argument to Drupal\\Core\\[^ ]+ is deprecated.%
+%Since symfony/validator 7.4: Support for passing the choices as the first argument to Symfony\\Component\\Validator\\Constraints\\Choice is deprecated.%

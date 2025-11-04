@@ -198,12 +198,11 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $doc->strictErrorChecking = TRUE;
     $doc->validateOnParse = FALSE;
     libxml_use_internal_errors(TRUE);
+    libxml_clear_errors();
     if (!$doc->loadXML('<html><body>' . $body . '</body></html>')) {
       foreach (libxml_get_errors() as $error) {
         $this->fail('Topic ' . $id . ' fails HTML validation: ' . $error->message);
       }
-
-      libxml_clear_errors();
     }
 
     // Check for headings hierarchy.
