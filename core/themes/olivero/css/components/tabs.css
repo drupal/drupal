@@ -27,9 +27,8 @@
   margin-inline-start: 0; /* Override [dir] attribute in base <ul> in compiled CSS. */
   padding: 0;
   list-style: none;
-}
-@media (min-width: 43.75rem) {
-  .tabs {
+
+  @media (min-width: 43.75rem) {
     flex-direction: row;
     flex-wrap: wrap;
   }
@@ -38,29 +37,31 @@
   display: none;
   margin: 0;
   margin-block-end: calc(-1 * var(--tabs-border-width));
-}
-.tabs__tab.is-active {
-  display: flex;
-}
-/* Show tabs when JavaScript disabled. */
-html:not(.js) .tabs__tab {
-  display: flex;
-}
-/* Show tabs when tabs-expanded class is present. */
-.tabs.is-expanded .tabs__tab {
-  display: flex;
-}
-/* Secondary tabs will always be expanded. */
-.tabs--secondary .tabs__tab {
-  display: block;
-}
-@media (min-width: 43.75rem) {
-  .tabs--secondary .tabs__tab {
+
+  &.is-active {
     display: flex;
   }
-}
-@media (min-width: 43.75rem) {
-  .tabs__tab {
+
+  /* Show tabs when JavaScript disabled. */
+  html:not(.js) & {
+    display: flex;
+  }
+
+  /* Show tabs when tabs-expanded class is present. */
+  .tabs.is-expanded & {
+    display: flex;
+  }
+
+  /* Secondary tabs will always be expanded. */
+  .tabs--secondary & {
+    display: block;
+
+    @media (min-width: 43.75rem) {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 43.75rem) {
     display: flex;
     margin-block-end: 0;
     margin-inline-start: calc(-1 * var(--tabs-border-width));
@@ -81,48 +82,51 @@ html:not(.js) .tabs__tab {
   border: var(--tabs-border-width) solid var(--tabs-border-color);
   background-color: var(--tabs-background-color);
   font-size: var(--tabs-font-size);
-}
-.tabs__link:hover {
-  color: var(--tabs-text-color-active);
-  background-color: var(--tabs-background-color-hover);
-}
-.tabs__link:focus {
-  position: relative;
-  outline: solid 3px var(--tabs-highlight-color);
-  outline-offset: -3px;
-}
-.tabs__link.is-active {
-  position: relative; /* Anchor ::after pseudo-element. */
-  color: var(--tabs-text-color-active);
-  font-weight: 600;
 
-  /*
+  &:hover {
+    color: var(--tabs-text-color-active);
+    background-color: var(--tabs-background-color-hover);
+  }
+
+  &:focus {
+    position: relative;
+    outline: solid 3px var(--tabs-highlight-color);
+    outline-offset: -3px;
+  }
+
+  &.is-active {
+    position: relative; /* Anchor ::after pseudo-element. */
+    color: var(--tabs-text-color-active);
+    font-weight: 600;
+
+    /*
      * We use ::after pseudo-element in place of border so edges do not appear
      * diagonally cut off due to other edges with transparent borders.
      */
-}
-.tabs__link.is-active::after {
-  position: absolute;
-  inset-block-start: calc(-1 * var(--tabs-border-width));
-  inset-inline-start: calc(-1 * var(--tabs-border-width));
-  height: calc(100% + var(--tabs-border-width) * 2);
-  content: "";
-  border-inline-start: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
-}
-@media (min-width: 43.75rem) {
-  .tabs__link.is-active::after {
-    inset-block: auto calc(-1 * var(--tabs-border-width));
-    width: calc(100% + 2 * var(--tabs-border-width));
-    height: 0;
-    border-block-start: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
-    border-inline-start: 0;
+    &::after {
+      position: absolute;
+      inset-block-start: calc(-1 * var(--tabs-border-width));
+      inset-inline-start: calc(-1 * var(--tabs-border-width));
+      height: calc(100% + var(--tabs-border-width) * 2);
+      content: "";
+      border-inline-start: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
+
+      @media (min-width: 43.75rem) {
+        inset-block: auto calc(-1 * var(--tabs-border-width));
+        width: calc(100% + 2 * var(--tabs-border-width));
+        height: 0;
+        border-block-start: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
+        border-inline-start: 0;
+      }
+    }
   }
-}
-/* No regular borders or background color for secondary tab links. */
-@media (min-width: 43.75rem) {
-  .tabs--secondary .tabs__link {
-    border-color: transparent;
-    background-color: transparent;
+
+  /* No regular borders or background color for secondary tab links. */
+  .tabs--secondary & {
+    @media (min-width: 43.75rem) {
+      border-color: transparent;
+      background-color: transparent;
+    }
   }
 }
 /* Button that opens and closes primary tabs at narrow viewports. */
@@ -136,21 +140,23 @@ html:not(.js) .tabs__tab {
   cursor: pointer;
   border: solid var(--tabs-border-width) var(--tabs-border-color);
   background-color: var(--tabs-background-color);
-}
-.tabs__trigger:hover {
-  background-color: var(--tabs-background-color-hover);
-}
-.tabs__trigger:focus {
-  position: relative;
-  border-color: var(--tabs-highlight-color);
-  outline: none;
-}
-/* Button will not work when JavaScript is disabled, so we hide it. */
-html:not(.js) .tabs__trigger {
-  display: none;
-}
-@media (min-width: 43.75rem) {
-  .tabs__trigger {
+
+  &:hover {
+    background-color: var(--tabs-background-color-hover);
+  }
+
+  &:focus {
+    position: relative;
+    border-color: var(--tabs-highlight-color);
+    outline: none;
+  }
+
+  /* Button will not work when JavaScript is disabled, so we hide it. */
+  html:not(.js) & {
+    display: none;
+  }
+
+  @media (min-width: 43.75rem) {
     display: none;
   }
 }
@@ -160,35 +166,42 @@ html:not(.js) .tabs__trigger {
   width: var(--sp);
   height: 0.625rem;
   margin-block-start: calc(-2 * var(--tabs-border-width));
-}
-.tabs__trigger-icon > span {
-  position: absolute;
-  inset-inline-start: 0;
-  display: block;
-  width: 100%;
-  transition:
-    transform var(--tabs-transition-duration),
-    opacity var(--tabs-transition-duration),
-    top var(--tabs-transition-duration);
-  border-block-start: solid 2px var(--tabs-highlight-color);
-}
-:is(.tabs__trigger-icon > span):nth-child(1) {
-  inset-block-start: 0;
-}
-.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span):nth-child(1) {
-  inset-block-start: calc(50% + 1px);
-  transform: rotate(45deg);
-}
-:is(.tabs__trigger-icon > span):nth-child(2) {
-  inset-block-start: calc(50% + 1px);
-}
-.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span):nth-child(2) {
-  opacity: 0;
-}
-:is(.tabs__trigger-icon > span):nth-child(3) {
-  inset-block-start: calc(100% + 2px);
-}
-.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span):nth-child(3) {
-  inset-block-start: calc(50% + 1px);
-  transform: rotate(-45deg);
+
+  & > span {
+    position: absolute;
+    inset-inline-start: 0;
+    display: block;
+    width: 100%;
+    transition:
+      transform var(--tabs-transition-duration),
+      opacity var(--tabs-transition-duration),
+      top var(--tabs-transition-duration);
+    border-block-start: solid 2px var(--tabs-highlight-color);
+
+    &:nth-child(1) {
+      inset-block-start: 0;
+
+      .tabs__trigger[aria-expanded="true"] & {
+        inset-block-start: calc(50% + 1px);
+        transform: rotate(45deg);
+      }
+    }
+
+    &:nth-child(2) {
+      inset-block-start: calc(50% + 1px);
+
+      .tabs__trigger[aria-expanded="true"] & {
+        opacity: 0;
+      }
+    }
+
+    &:nth-child(3) {
+      inset-block-start: calc(100% + 2px);
+
+      .tabs__trigger[aria-expanded="true"] & {
+        inset-block-start: calc(50% + 1px);
+        transform: rotate(-45deg);
+      }
+    }
+  }
 }

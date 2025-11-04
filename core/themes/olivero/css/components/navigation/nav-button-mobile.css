@@ -27,18 +27,16 @@
   border: none;
   background: transparent;
   appearance: none;
-}
 
-.mobile-nav-button:focus {
-  outline: solid 2px var(--color--primary-40);
-}
+  &:focus {
+    outline: solid 2px var(--color--primary-40);
+  }
 
-.mobile-nav-button:active {
-  color: inherit; /* Override Safari's default UA styles. */
-}
+  &:active {
+    color: inherit; /* Override Safari's default UA styles. */
+  }
 
-@media (min-width: 31.25rem) {
-  .mobile-nav-button {
+  @media (min-width: 31.25rem) {
     display: inline-flex;
     width: auto;
     padding-inline-start: var(--sp);
@@ -55,10 +53,8 @@
   width: 1px;
   height: 1px;
   word-wrap: normal;
-}
 
-@media (min-width: 31.25rem) {
-  .mobile-nav-button__label {
+  @media (min-width: 31.25rem) {
     position: static;
     overflow: visible;
     clip: auto;
@@ -77,36 +73,36 @@
   width: var(--sp2);
   height: 0;
   border-top: solid 3px var(--color--primary-50);
-}
 
-.mobile-nav-button__icon::before,
-.mobile-nav-button__icon::after {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  width: 100%;
-  height: 0;
-  content: "";
-  transition: transform 0.2s;
-  border-top: solid 3px var(--color--primary-50);
-}
+  &::before,
+  &::after {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: 100%;
+    height: 0;
+    content: "";
+    transition: transform 0.2s;
+    border-top: solid 3px var(--color--primary-50);
+  }
 
-.mobile-nav-button__icon::before {
-  transform: translateY(-0.6875rem);
-}
+  &::before {
+    transform: translateY(-0.6875rem);
+  }
 
-.mobile-nav-button__icon::after {
-  transform: translateY(0.3125rem);
+  &::after {
+    transform: translateY(0.3125rem);
+  }
 }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {
   border-top-color: transparent;
-}
 
-:is(.mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon)::before {
-  transform: translateY(-0.1875rem) rotate(-45deg);
-}
+  &::before {
+    transform: translateY(-0.1875rem) rotate(-45deg);
+  }
 
-:is(.mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon)::after {
-  transform: translateY(-0.1875rem) rotate(45deg);
+  &::after {
+    transform: translateY(-0.1875rem) rotate(45deg);
+  }
 }

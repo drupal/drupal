@@ -12,16 +12,12 @@
 
 .layout {
   margin-block-end: var(--sp);
-}
 
-@media (min-width: 43.75rem) {
-  .layout {
+  @media (min-width: 43.75rem) {
     margin-block-end: var(--sp2);
   }
-}
 
-@media (min-width: 62.5rem) {
-  .layout {
+  @media (min-width: 62.5rem) {
     margin-block-end: var(--sp3);
   }
 }

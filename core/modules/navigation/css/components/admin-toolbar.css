@@ -16,26 +16,27 @@
 body {
   --admin-toolbar-sidebar-width: calc(4.5 * var(--admin-toolbar-rem));
   --admin-toolbar-sidebar-header: calc(3.5 * var(--admin-toolbar-rem));
-}
-[data-admin-toolbar="expanded"] body {
-  --admin-toolbar-sidebar-width: 80vw;
-}
-@media (min-width: 35rem) {
-  [data-admin-toolbar="expanded"] body {
-    --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
+
+  [data-admin-toolbar="expanded"] & {
+    --admin-toolbar-sidebar-width: 80vw;
+
+    @media (min-width: 35rem) {
+      --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
+    }
   }
 }
 /* We apply transitions after page load to avoid shifts. */
-[data-admin-toolbar-transitions] .admin-toolbar {
-  transition: transform var(--admin-toolbar-transition);
-}
-@media (min-width: 64rem) {
-  [data-admin-toolbar-transitions] .admin-toolbar {
-    transition: width var(--admin-toolbar-transition);
-  }
+[data-admin-toolbar-transitions] {
+  .admin-toolbar {
+    transition: transform var(--admin-toolbar-transition);
 
-  :is([data-admin-toolbar-transitions] .admin-toolbar) ~ .dialog-off-canvas-main-canvas {
-    transition: margin-inline-start var(--admin-toolbar-transition);
+    @media (min-width: 64rem) {
+      transition: width var(--admin-toolbar-transition);
+
+      ~ .dialog-off-canvas-main-canvas {
+        transition: margin-inline-start var(--admin-toolbar-transition);
+      }
+    }
   }
 }
 /**
@@ -47,9 +48,8 @@ body {
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__displace-placeholder {
+
+  @media (min-width: 64rem) {
     width: var(--admin-toolbar-sidebar-width);
   }
 }
@@ -68,37 +68,37 @@ body {
   background-color: var(--admin-toolbar-color-white);
   font-family: var(--admin-toolbar-font-family);
   inline-size: calc(var(--admin-toolbar-sidebar-width) + 1px);
-}
-[dir="rtl"] .admin-toolbar {
-  right: 0;
-  transform: translateX(100%);
-}
-@media (min-width: 64rem) {
-  [dir="rtl"] .admin-toolbar {
-    transform: none;
-  }
-}
-@media (min-width: 64rem) {
-  .admin-toolbar ~ .dialog-off-canvas-main-canvas {
-    margin-inline-start: var(--drupal-displace-offset-left, var(--admin-toolbar-sidebar-width));
+
+  [dir="rtl"] & {
+    right: 0;
+    transform: translateX(100%);
+
+    @media (min-width: 64rem) {
+      transform: none;
+    }
   }
 
-  [dir="rtl"] :is(.admin-toolbar ~ .dialog-off-canvas-main-canvas) {
-    margin-inline-start: var(--drupal-displace-offset-right, var(--admin-toolbar-sidebar-width));
+  & ~ .dialog-off-canvas-main-canvas {
+    @media (min-width: 64rem) {
+      margin-inline-start: var(--drupal-displace-offset-left, var(--admin-toolbar-sidebar-width));
+
+      [dir="rtl"] & {
+        margin-inline-start: var(--drupal-displace-offset-right, var(--admin-toolbar-sidebar-width));
+      }
+    }
   }
-}
-[data-admin-toolbar="expanded"] .admin-toolbar {
-  transform: none;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar {
+
+  [data-admin-toolbar="expanded"] & {
+    transform: none;
+  }
+
+  @media (min-width: 64rem) {
     block-size: calc(100vh - var(--drupal-displace-offset-top, 0px));
     transform: none;
     inset-block-start: 0;
   }
-}
-@media only screen and (max-height: 18.75rem) {
-  .admin-toolbar {
+
+  @media only screen and (max-height: 18.75rem) {
     min-height: 20rem;
   }
 }
@@ -106,29 +106,29 @@ body {
   display: none;
   flex-grow: 0;
 }
-.admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__back-button {
-  display: flex;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__back-button {
-    display: none;
+.admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) {
+  .admin-toolbar__back-button {
+    display: flex;
+
+    @media (min-width: 64rem) {
+      display: none;
+    }
   }
-}
-.admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__logo {
-  display: none;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__logo {
-    display: inline-flex;
+
+  .admin-toolbar__logo {
+    display: none;
+
+    @media (min-width: 64rem) {
+      display: inline-flex;
+    }
   }
 }
 .admin-toolbar__close-button {
   flex-grow: 0;
   justify-self: end;
   margin-inline-start: auto;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__close-button {
+
+  @media (min-width: 64rem) {
     display: none;
   }
 }
@@ -144,12 +144,12 @@ body {
   border: 1px solid var(--admin-toolbar-color-gray-300);
   border-radius: 50%;
   background-color: transparent;
-}
-.admin-toolbar__expand-button:hover {
-  color: var(--admin-toolbar-color-gray-990);
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__expand-button {
+
+  &:hover {
+    color: var(--admin-toolbar-color-gray-990);
+  }
+
+  @media (min-width: 64rem) {
     display: flex;
   }
 }
@@ -162,18 +162,22 @@ body {
     opacity var(--admin-toolbar-transition),
     rotate var(--admin-toolbar-transition);
   opacity: 0;
-}
-[data-admin-toolbar-transitions] .admin-toolbar__expand-button-chevron {
-  opacity: 1;
-}
-[dir="rtl"] .admin-toolbar__expand-button-chevron {
-  rotate: 180deg;
-}
-.admin-toolbar__expand-button[aria-expanded="true"] .admin-toolbar__expand-button-chevron {
-  rotate: 180deg;
-}
-[dir="rtl"] :is(.admin-toolbar__expand-button[aria-expanded="true"] .admin-toolbar__expand-button-chevron) {
-  rotate: 0deg;
+
+  [data-admin-toolbar-transitions] & {
+    opacity: 1;
+  }
+
+  [dir="rtl"] & {
+    rotate: 180deg;
+  }
+
+  .admin-toolbar__expand-button[aria-expanded="true"] & {
+    rotate: 180deg;
+
+    [dir="rtl"] & {
+      rotate: 0deg;
+    }
+  }
 }
 .admin-toolbar__header {
   position: sticky;
@@ -185,22 +189,22 @@ body {
   margin-block-start: calc(var(--admin-toolbar-sidebar-header) * -1);
   padding-block-start: var(--admin-toolbar-space-16);
   background-color: var(--admin-toolbar-color-white);
-}
-.admin-toolbar__header + .toolbar-block {
-  margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__header + .toolbar-block {
-    margin-block-start: 0;
+
+  & + .toolbar-block {
+    margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
+
+    @media (min-width: 64rem) {
+      margin-block-start: 0;
+    }
   }
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__header:not(:has(.admin-toolbar__logo)) {
-    display: none;
+
+  &:not(:has(.admin-toolbar__logo)) {
+    @media (min-width: 64rem) {
+      display: none;
+    }
   }
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__header {
+
+  @media (min-width: 64rem) {
     position: static;
     align-items: start;
     margin-block-start: revert;
@@ -215,13 +219,15 @@ body {
   display: inline-flex;
   overflow: hidden;
   border-radius: var(--admin-toolbar-space-8);
-}
-.admin-toolbar__logo:hover {
-  background-color: transparent;
-}
-.admin-toolbar__logo img {
-  display: block;
-  max-width: var(--admin-toolbar-space-40);
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  & img {
+    display: block;
+    max-width: var(--admin-toolbar-space-40);
+  }
 }
 /**
  * Scroll wrapper for Mobile.
@@ -239,9 +245,8 @@ body {
   background-size:
     100% 2.5rem,
     100% 1rem;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__scroll-wrapper {
+
+  @media (min-width: 64rem) {
     display: contents;
     overflow-y: unset;
     background: none;
@@ -257,9 +262,8 @@ body {
   padding-block: var(--admin-toolbar-sidebar-header) var(--admin-toolbar-space-16);
   padding-inline: var(--admin-toolbar-space-16);
   border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__content {
+
+  @media (min-width: 64rem) {
     display: flex;
     overflow-x: hidden;
     overflow-y: auto;
@@ -293,12 +297,14 @@ body {
   padding: var(--admin-toolbar-space-16);
   border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
   border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
-}
-:is(.admin-toolbar__footer > .toolbar-block):last-of-type {
-  margin-block-end: var(--admin-toolbar-space-12);
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__footer {
+
+  & > .toolbar-block {
+    &:last-of-type {
+      margin-block-end: var(--admin-toolbar-space-12);
+    }
+  }
+
+  @media (min-width: 64rem) {
     --admin-toolbar-z-index-footer: -1;
 
     position: sticky;
@@ -311,14 +317,16 @@ body {
  */
 .admin-toolbar__toggle {
   display: none;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar__toggle {
+
+  @media (min-width: 64rem) {
     display: flex;
   }
 }
-[data-admin-toolbar="expanded"] :is([data-drupal-tooltip]:hover + .admin-toolbar__tooltip, [data-drupal-tooltip]:focus + .admin-toolbar__tooltip) {
-  display: none;
+[data-drupal-tooltip]:hover + .admin-toolbar__tooltip,
+[data-drupal-tooltip]:focus + .admin-toolbar__tooltip {
+  [data-admin-toolbar="expanded"] & {
+    display: none;
+  }
 }
 /**
  * Element is used to overlay the content when Toolbar is expanded in smaller devices.
@@ -333,12 +341,12 @@ body {
   width: 100vw;
   height: 100vh;
   background-color: rgb(0, 0, 0, 0.14);
-}
-:where([data-admin-toolbar="expanded"]) .admin-toolbar-overlay {
-  display: block;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar-overlay {
+
+  :where([data-admin-toolbar="expanded"]) & {
+    display: block;
+  }
+
+  @media (min-width: 64rem) {
     display: none;
   }
 }

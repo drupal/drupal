@@ -13,10 +13,12 @@
   --safe-triangle-submenu-end-x: var(--admin-toolbar-sidebar-width);
   /* TODO: Replace with calculated value of popover content height. */
   --safe-triangle-submenu-end-y: 66vh;
-}
 
-[data-has-safe-triangle]:hover [data-safe-triangle] {
-  display: block;
+  &:hover {
+    [data-safe-triangle] {
+      display: block;
+    }
+  }
 }
 
 [data-safe-triangle] {

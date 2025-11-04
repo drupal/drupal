@@ -16,12 +16,12 @@
   padding-inline-start: 0;
   padding-inline-end: 0;
   list-style: none;
-}
 
-.links.inline > * {
-  display: inline;
-}
+  & > * {
+    display: inline;
 
-:is(.links.inline > *):not(:last-child) {
-  padding-inline-end: 1em;
+    &:not(:last-child) {
+      padding-inline-end: 1em;
+    }
+  }
 }

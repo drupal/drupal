@@ -14,28 +14,28 @@
   position: relative; /* stack above left social bar */
   color: var(--color--gray-65);
   background: linear-gradient(180deg, var(--color--gray-5) 0%, var(--color--gray-10) 100%);
-}
 
-.site-footer .menu {
-  margin-inline-start: 0;
-  list-style: none;
-}
+  & .menu {
+    margin-inline-start: 0;
+    list-style: none;
 
-:is(.site-footer .menu) ul {
-  margin-inline-start: var(--sp);
-}
+    & ul {
+      margin-inline-start: var(--sp);
+    }
 
-:is(.site-footer .menu) li {
-  margin-block-end: var(--sp0-5);
-}
+    & li {
+      margin-block-end: var(--sp0-5);
+    }
+  }
 
-.site-footer a {
-  color: inherit;
-}
+  & a {
+    color: inherit;
 
-:is(.site-footer a):hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
+    &:hover {
+      -webkit-text-decoration: none;
+      text-decoration: none;
+    }
+  }
 }
 
 @media (min-width: 75rem) {

@@ -16,14 +16,12 @@
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-neutral-soft);
-}
 
-.feed-icon:hover {
-  color: var(--color--primary-50);
-}
+  &:hover {
+    color: var(--color--primary-50);
+  }
 
-@media (max-width: 75rem) {
-  .feed-icon {
+  @media (max-width: 75rem) {
     flex-direction: row-reverse;
     justify-content: flex-end;
   }
@@ -47,15 +45,13 @@
   color: var(--color--white);
   border-radius: 2px;
   background-color: var(--color--primary-50);
-}
 
-.feed-icon__icon svg {
-  vertical-align: top;
-  fill: currentColor;
-}
+  & svg {
+    vertical-align: top;
+    fill: currentColor;
+  }
 
-@media (max-width: 75rem) {
-  .feed-icon__icon {
+  @media (max-width: 75rem) {
     margin-inline: 0 var(--sp0-5);
   }
 }

@@ -111,10 +111,8 @@
 
 .olivero-details__wrapper {
   margin: var(--sp1);
-}
 
-@media (min-width: 62.5rem) {
-  .olivero-details__wrapper {
+  @media (min-width: 62.5rem) {
     margin-block-start: var(--sp1-5);
     margin-block-end: var(--sp1-5);
     margin-inline-start: var(--sp2);

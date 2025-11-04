@@ -14,36 +14,38 @@
   letter-spacing: 0.02em;
   font-size: 0.875rem;
   line-height: var(--sp);
+
+  & a {
+    -webkit-text-decoration: underline;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      -webkit-text-decoration: none;
+      text-decoration: none;
+    }
+  }
+
+  & .drupal-logo {
+    display: inline-block;
+    margin-block-start: calc(-1 * var(--sp) / 4);
+    margin-inline-start: calc(var(--sp) / 4);
+  }
+
+  & svg {
+    width: 0.875rem; /* 14 */
+    height: 1.1875rem; /* 19 */
+    vertical-align: top;
+    fill: currentColor;
+  }
 }
 
-.block-system-powered-by-block a {
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-}
+.site-footer .block-system-powered-by-block {
+  & a {
+    color: var(--color--white);
+  }
 
-:is(.block-system-powered-by-block a):hover,
-:is(.block-system-powered-by-block a):focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.block-system-powered-by-block .drupal-logo {
-  display: inline-block;
-  margin-block-start: calc(-1 * var(--sp) / 4);
-  margin-inline-start: calc(var(--sp) / 4);
-}
-
-.block-system-powered-by-block svg {
-  width: 0.875rem; /* 14 */
-  height: 1.1875rem; /* 19 */
-  vertical-align: top;
-  fill: currentColor;
-}
-
-:is(.site-footer .block-system-powered-by-block) a {
-  color: var(--color--white);
-}
-
-:is(.site-footer .block-system-powered-by-block) svg path {
-  fill: var(--color--white);
+  & svg path {
+    fill: var(--color--white);
+  }
 }

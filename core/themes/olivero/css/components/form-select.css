@@ -30,62 +30,55 @@ select {
   font-family: inherit;
   font-size: inherit;
   appearance: none;
-}
 
-select:focus {
-  border: solid 2px var(--color--primary-50);
-  outline: solid 2px var(--color--primary-50);
-}
+  &:focus {
+    border: solid 2px var(--color--primary-50);
+    outline: solid 2px var(--color--primary-50);
 
-@supports (outline-style: double) {
-  select:focus {
-    border-width: 1px;
-    outline-width: 6px;
-    outline-style: double;
-    outline-offset: -1px;
+    @supports (outline-style: double) {
+      border-width: 1px;
+      outline-width: 6px;
+      outline-style: double;
+      outline-offset: -1px;
+    }
   }
-}
 
-select[disabled] {
-  color: var(--color--gray-60);
-  background-color: var(--color--gray-100);
-}
+  &[disabled] {
+    color: var(--color--gray-60);
+    background-color: var(--color--gray-100);
+  }
 
-select.error {
-  border: solid 2px var(--color--red);
-}
+  &.error {
+    border: solid 2px var(--color--red);
 
-select.error:focus {
-  outline-color: var(--color--red);
-}
+    &:focus {
+      outline-color: var(--color--red);
+    }
+  }
 
-select[multiple] {
-  height: auto;
-  padding: var(--sp0-5);
-  background-image: none;
-  line-height: 1; /* Needed by non-Chromium based MS Edge browsers. */
-}
+  &[multiple] {
+    height: auto;
+    padding: var(--sp0-5);
+    background-image: none;
+    line-height: 1; /* Needed by non-Chromium based MS Edge browsers. */
 
-select[multiple] option {
-  padding: var(--sp0-5);
-}
+    & option {
+      padding: var(--sp0-5);
+    }
+  }
 
-select.form-element--small {
-  height: var(--sp2-5);
-}
+  &.form-element--small {
+    height: var(--sp2-5);
+  }
 
-/* Necessary to show chevron in forced colors mode in modern browsers. */
-
-@media (forced-colors: active) {
-  select {
+  /* Necessary to show chevron in forced colors mode in modern browsers. */
+  @media (forced-colors: active) {
     padding-inline-end: var(--sp);
     background-image: none;
     appearance: auto; /* Default <select> appearance value for modern browsers. */
 
     /* Lets browser set <select> appearance to whatever the browser's default is. */
-  }
-  @supports (appearance: revert) {
-    select {
+    @supports (appearance: revert) {
       appearance: revert;
     }
   }

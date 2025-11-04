@@ -139,10 +139,10 @@
 
 .card__content-item {
   margin-block: 0 var(--space-m);
-}
 
-.card__content-item:last-child {
-  margin-block-end: 0;
+  &:last-child {
+    margin-block-end: 0;
+  }
 }
 
 /**
@@ -157,8 +157,8 @@
 .card__footer .action-links {
   margin-block: 0;
   text-align: right; /* LTR */
-}
 
-[dir="rtl"] :is(.card__footer .action-links) {
-  text-align: left;
+  [dir="rtl"] & {
+    text-align: left;
+  }
 }

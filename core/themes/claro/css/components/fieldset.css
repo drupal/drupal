@@ -69,14 +69,13 @@
   display: block;
   padding: var(--space-m);
   line-height: var(--space-m);
-}
+  &.is-disabled {
+    color: var(--input--disabled-fg-color);
+  }
 
-.fieldset__label.is-disabled {
-  color: var(--input--disabled-fg-color);
-}
-
-.fieldset__label.has-error {
-  color: var(--input--error-color);
+  &.has-error {
+    color: var(--input--error-color);
+  }
 }
 
 .fieldset__label--group {
@@ -101,10 +100,9 @@
   color: var(--input-fg-color--description);
   font-size: var(--font-size-xs); /* ~13px */
   line-height: calc(17rem / 16); /* 17px */
-}
-
-.fieldset__description.is-disabled {
-  color: var(--input--disabled-fg-color);
+  &.is-disabled {
+    color: var(--input--disabled-fg-color);
+  }
 }
 
 /* Error message (Inline form errors). */
@@ -123,10 +121,9 @@
   /**
    * Remove the extra padding of container-inline wrapper if it's used inside a fieldset
    */
-}
-
-.fieldset__wrapper > .container-inline {
-  padding: 0;
+  & > .container-inline {
+    padding: 0;
+  }
 }
 
 @media screen and (min-width: 48em) {

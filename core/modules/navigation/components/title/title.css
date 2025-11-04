@@ -16,11 +16,13 @@
 .toolbar-title--xs {
   font-size: var(--admin-toolbar-font-size-heading-xs);
 }
-.toolbar-title--ellipsis .toolbar-title__label {
-  overflow: hidden;
-  max-width: var(--toolbar--title-max-width);
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.toolbar-title--ellipsis {
+  .toolbar-title__label {
+    overflow: hidden;
+    max-width: var(--toolbar--title-max-width);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 .toolbar-title:has(.toolbar-title__icon) {
   display: flex;

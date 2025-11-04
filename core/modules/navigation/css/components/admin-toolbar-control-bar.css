@@ -15,17 +15,15 @@
   border-bottom: 1px solid var(--admin-toolbar-color-gray-100);
   background-color: white;
   font-family: var(--admin-toolbar-font-family);
-}
-@media (min-width: 64rem) {
-  .admin-toolbar-control-bar {
+
+  @media (min-width: 64rem) {
     display: none;
   }
 }
 .admin-toolbar-control-bar__burger {
   align-self: start;
-}
-@media (min-width: 64rem) {
-  .admin-toolbar-control-bar__burger {
+
+  @media (min-width: 64rem) {
     display: none;
   }
 }

@@ -42,11 +42,13 @@
   list-style: circle;
 }
 
-ul.links li,
-ul.inline li {
-  padding-inline-end: var(--item-list-spacing-m);
-}
+ul {
+  &.links li,
+  &.inline li {
+    padding-inline-end: var(--item-list-spacing-m);
+  }
 
-ul.inline li {
-  display: inline;
+  &.inline li {
+    display: inline;
+  }
 }

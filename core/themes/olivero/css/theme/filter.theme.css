@@ -43,10 +43,9 @@
    * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
    * @see https://github.com/csstools/postcss-plugins/issues/632
    */
-}
-
-.filter-help:dir(rtl) {
-  float: left;
+  &:dir(rtl) {
+    float: left;
+  }
 }
 
 /**

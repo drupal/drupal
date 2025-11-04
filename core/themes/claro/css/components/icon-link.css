@@ -28,27 +28,29 @@
   border: 1px solid var(--icon-link-border-color);
   border-radius: 50%;
   background-color: var(--icon-link-bg-color);
+
+  &:hover {
+    border-color: var(--icon-link--hover-border-color);
+    background-color: var(--icon-link--hover-bg-color);
+  }
+
+  &:focus {
+    box-shadow:
+      0 0 0 1.5px var(--color-white),
+      0 0 0 3.5px var(--color-focus);
+  }
+
+  &:active,
+  .open > & {
+    border-color: var(--icon-link--active-border-color);
+    background-color: var(--icon-link--active-bg-color);
+  }
 }
 
-.icon-link:hover {
-  border-color: var(--icon-link--hover-border-color);
-  background-color: var(--icon-link--hover-bg-color);
-}
-
-.icon-link:focus {
-  box-shadow:
-    0 0 0 1.5px var(--color-white),
-    0 0 0 3.5px var(--color-focus);
-}
-
-.icon-link:active,
-.open > .icon-link {
-  border-color: var(--icon-link--active-border-color);
-  background-color: var(--icon-link--active-bg-color);
-}
-
-.icon-link--small:focus {
-  box-shadow:
-    0 0 0 1px var(--color-white),
-    0 0 0 3px var(--color-focus);
+.icon-link--small {
+  &:focus {
+    box-shadow:
+      0 0 0 1px var(--color-white),
+      0 0 0 3px var(--color-focus);
+  }
 }

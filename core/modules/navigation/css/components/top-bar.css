@@ -17,9 +17,8 @@
   font-family: var(--admin-toolbar-font-family);
   padding-inline: var(--admin-toolbar-space-4);
   padding-block: var(--admin-toolbar-space-4);
-}
-@media (min-width: 64rem) {
-  .top-bar {
+
+  @media (min-width: 64rem) {
     block-size: var(--admin-toolbar-top-bar-height);
     position: fixed;
     inset-block-start: 0;
@@ -30,27 +29,27 @@
     box-shadow:
       0 0 40px 0 var(--admin-toolbar-color-shadow-6),
       0 4px 4px 0 var(--admin-toolbar-color-shadow-8);
-  }
 
-  [dir="rtl"] .top-bar {
-    padding-inline: calc(var(--drupal-displace-offset-right, var(--admin-toolbar-sidebar-width)) + var(--admin-toolbar-space-32)) var(--admin-toolbar-space-32);
+    [dir="rtl"] & {
+      padding-inline: calc(var(--drupal-displace-offset-right, var(--admin-toolbar-sidebar-width)) + var(--admin-toolbar-space-32)) var(--admin-toolbar-space-32);
+    }
   }
 }
 .top-bar:has(.top-bar__tools:not(:empty), .top-bar__context:not(:empty), .top-bar__actions:not(:empty)) {
   display: block;
-}
-@media (min-width: 64rem) {
-  .top-bar:has(.top-bar__tools:not(:empty), .top-bar__context:not(:empty), .top-bar__actions:not(:empty)) ~ .dialog-off-canvas-main-canvas {
-    margin-block-start: var(--admin-toolbar-top-bar-height);
+
+  ~ .dialog-off-canvas-main-canvas {
+    @media (min-width: 64rem) {
+      margin-block-start: var(--admin-toolbar-top-bar-height);
+    }
   }
 }
 .top-bar__actions {
   display: flex;
   justify-content: end;
   gap: 0.5rem;
-}
-@media (min-width: 64rem) {
-  .top-bar__actions {
+
+  @media (min-width: 64rem) {
     justify-content: end;
     gap: var(--admin-toolbar-space-4);
   }
@@ -65,9 +64,8 @@
 }
 .top-bar__controls {
   display: none;
-}
-@media (min-width: 64rem) {
-  .top-bar__controls {
+
+  @media (min-width: 64rem) {
     display: flex;
     gap: var(--admin-toolbar-space-8);
   }

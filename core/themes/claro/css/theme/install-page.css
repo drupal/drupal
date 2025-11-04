@@ -16,36 +16,36 @@
 .install-page {
   min-height: 100%;
   background-color: var(--color-gray-100);
-}
 
-.install-page h1,
-.install-page h2 {
-  font-size: var(--font-size-h3);
-}
+  & h1,
+  & h2 {
+    font-size: var(--font-size-h3);
+  }
 
-.install-page h3 {
-  font-size: var(--font-size-h4);
-}
+  & h3 {
+    font-size: var(--font-size-h4);
+  }
 
-.install-page .site-name {
-  margin-top: var(--space-s);
-  color: var(--color-gray);
-  font-size: var(--font-size-xl);
-}
+  & .site-name {
+    margin-top: var(--space-s);
+    color: var(--color-gray);
+    font-size: var(--font-size-xl);
+  }
 
-.install-page .title {
-  margin-top: 0;
-  font-size: var(--font-size-h3);
-}
+  & .title {
+    margin-top: 0;
+    font-size: var(--font-size-h3);
+  }
 
-.install-page .content {
-  color: var(--color-gray);
-}
+  & .content {
+    color: var(--color-gray);
+  }
 
-.install-page .site-name,
-.install-page .title,
-.install-page .content {
-  max-width: 34rem;
+  & .site-name,
+  & .title,
+  & .content {
+    max-width: 34rem;
+  }
 }
 
 /**

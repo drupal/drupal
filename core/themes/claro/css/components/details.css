@@ -56,11 +56,10 @@
    * element constrains the width. This can happen when toggling the
    * "lazy-load" option within an image field.
    */
-}
-
-td .claro-details {
-  width: min-content;
-  min-width: 100%;
+  td & {
+    width: min-content;
+    min-width: 100%;
+  }
 }
 
 .claro-details--accordion-item,
@@ -152,10 +151,10 @@ td .claro-details {
   text-align: center;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath d='M5.21 1.314L3.79 2.723l5.302 5.353-5.303 5.354 1.422 1.408 6.697-6.762z' fill='%23545560'/%3e%3c/svg%3e");
   background-size: contain;
-}
 
-[dir="rtl"] :is(.claro-details__summary::before) {
-  transform: rotate(-270deg);
+  [dir="rtl"] & {
+    transform: rotate(-270deg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -175,10 +174,10 @@ td .claro-details {
     border-block-start: 0.125rem solid;
     border-inline-end: 0.125rem solid;
     background: none;
-  }
 
-  [dir="rtl"] :is(.claro-details__summary::before) {
-    transform: rotate(-225deg);
+    [dir="rtl"] & {
+      transform: rotate(-225deg);
+    }
   }
 }
 
@@ -326,10 +325,10 @@ td .claro-details {
   border: var(--details-summary-focus-border-size) solid var(--color-absolutezero);
   border-width: 0 0 0 var(--details-summary-focus-border-size); /* LTR */
   box-shadow: none;
-}
 
-[dir="rtl"] :is([open] > .claro-details__summary--accordion:not(:focus, :active)::after, [open] > .claro-details__summary--accordion-item:not(:focus, :active)::after, [open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after) {
-  border-width: 0 var(--details-summary-focus-border-size) 0 0;
+  [dir="rtl"] & {
+    border-width: 0 var(--details-summary-focus-border-size) 0 0;
+  }
 }
 
 .claro-details__summary:focus::after,

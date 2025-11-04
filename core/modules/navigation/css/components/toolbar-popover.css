@@ -34,14 +34,14 @@
   inset-inline-start: 0;
   /* Hide the drop-shadow on the left side. */
   clip-path: inset(0 -10rem 0 0);
-}
-[dir="rtl"] [data-toolbar-popover-wrapper] {
-  /* Hide the drop-shadow on the right side. */
-  clip-path: inset(0 0 0 -10rem);
-  transform: translateX(0);
-}
-@media (min-width: 64rem) {
-  [data-toolbar-popover-wrapper] {
+
+  [dir="rtl"] & {
+    /* Hide the drop-shadow on the right side. */
+    clip-path: inset(0 0 0 -10rem);
+    transform: translateX(0);
+  }
+
+  @media (min-width: 64rem) {
     --admin-toolbar-z-index-popover: var(--drupal-admin-z-index-popover, -1);
 
     block-size: calc(100vh - var(--drupal-displace-offset-top, 0px));
@@ -59,19 +59,19 @@
 [data-toolbar-popover-control][aria-expanded="true"] + [data-toolbar-popover-wrapper] {
   transform: translateX(0);
   opacity: 1;
-}
-@media (min-width: 64rem) {
-  [data-toolbar-popover-control][aria-expanded="true"] + [data-toolbar-popover-wrapper] {
-    transform: translateX(var(--admin-toolbar-sidebar-width));
-  }
 
-  [dir="rtl"] :is([data-toolbar-popover-control][aria-expanded="true"] + [data-toolbar-popover-wrapper]) {
-    transform: translateX(calc(var(--admin-toolbar-sidebar-width) * -1));
+  @media (min-width: 64rem) {
+    transform: translateX(var(--admin-toolbar-sidebar-width));
+
+    [dir="rtl"] & {
+      transform: translateX(calc(var(--admin-toolbar-sidebar-width) * -1));
+    }
   }
 }
 [data-admin-toolbar="collapsed"] [data-toolbar-popover-wrapper] {
   transform: translateX(calc((16 * var(--admin-toolbar-rem) * -1) + var(--drupal-displace-offset-left, var(--admin-toolbar-space-72))));
-}
-[dir="rtl"] :is([data-admin-toolbar="collapsed"] [data-toolbar-popover-wrapper]) {
-  transform: translateX(calc((16 * var(--admin-toolbar-rem)) + var(--drupal-displace-offset-right, var(--admin-toolbar-space-72))));
+
+  [dir="rtl"] & {
+    transform: translateX(calc((16 * var(--admin-toolbar-rem)) + var(--drupal-displace-offset-right, var(--admin-toolbar-space-72))));
+  }
 }
