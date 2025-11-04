@@ -103,7 +103,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
     $this->requestMatcher = $this->createMock('\Symfony\Component\Routing\Matcher\RequestMatcherInterface');
 
-    $config_factory = $this->getConfigFactoryStub(['system.site' => ['front' => 'test_frontpage']]);
+    $config_factory = $this->getConfigFactoryStub(['system.site' => ['page' => ['front' => 'test_frontpage']]]);
 
     $this->pathProcessor = $this->createMock('\Drupal\Core\PathProcessor\InboundPathProcessorInterface');
     $this->context = $this->createMock('\Drupal\Core\Routing\RequestContext');
