@@ -761,6 +761,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     $field = new FieldPluginBaseTestField($this->configuration, $this->pluginId, $this->pluginDefinition);
     $field->init($this->executable, $this->display, $options);
     $field->setLinkGenerator($this->linkGenerator);
+    $field->view->row_index = 0;
     return $field;
   }
 
