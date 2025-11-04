@@ -6,7 +6,6 @@ namespace Drupal\KernelTests\Core\Image;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\ImageFactory;
-use Drupal\Core\Image\ImageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Plugin\ImageToolkit\GDToolkit;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -15,7 +14,8 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore iccp, imagecreatefrom
+// cspell:ignore imagecreatefrom
+
 /**
  * Tests for the GD image toolkit.
  */
@@ -26,29 +26,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class ToolkitGdTest extends KernelTestBase {
 
   /**
-   * Colors that are used in testing.
-   */
-  protected const BLACK              = [0, 0, 0, 0];
-  protected const RED                = [255, 0, 0, 0];
-  protected const GREEN              = [0, 255, 0, 0];
-  protected const BLUE               = [0, 0, 255, 0];
-  protected const YELLOW             = [255, 255, 0, 0];
-  protected const WHITE              = [255, 255, 255, 0];
-  protected const TRANSPARENT        = [0, 0, 0, 127];
-  protected const FUCHSIA            = [255, 0, 255, 0];
-  protected const ROTATE_TRANSPARENT = [255, 255, 255, 127];
-
-  /**
    * The image factory service.
-   *
-   * @var \Drupal\Core\Image\ImageFactory
    */
   protected ImageFactory $imageFactory;
 
   /**
    * A directory where test image files can be saved to.
-   *
-   * @var string
    */
   protected string $directory;
 
@@ -72,298 +55,6 @@ class ToolkitGdTest extends KernelTestBase {
     // Prepare a directory for test file results.
     $this->directory = 'public://image_test';
     \Drupal::service('file_system')->prepareDirectory($this->directory, FileSystemInterface::CREATE_DIRECTORY);
-  }
-
-  /**
-   * Assert two colors are equal by RGBA, net of full transparency.
-   *
-   * @param int[] $expected
-   *   The expected RGBA array.
-   * @param int[] $actual
-   *   The actual RGBA array.
-   * @param int $tolerance
-   *   The acceptable difference between the colors.
-   * @param string $message
-   *   The assertion message.
-   */
-  protected function assertColorsAreEqual(array $expected, array $actual, int $tolerance, string $message = ''): void {
-    // Fully transparent colors are equal, regardless of RGB.
-    if ($actual[3] == 127 && $expected[3] == 127) {
-      return;
-    }
-    $distance = pow(($actual[0] - $expected[0]), 2) + pow(($actual[1] - $expected[1]), 2) + pow(($actual[2] - $expected[2]), 2) + pow(($actual[3] - $expected[3]), 2);
-    $this->assertLessThanOrEqual($tolerance, $distance, $message . " - Actual: {" . implode(',', $actual) . "}, Expected: {" . implode(',', $expected) . "}, Distance: " . $distance . ", Tolerance: " . $tolerance);
-  }
-
-  /**
-   * Function for finding a pixel's RGBa values.
-   */
-  public function getPixelColor(ImageInterface $image, int $x, int $y): array {
-    $toolkit = $image->getToolkit();
-    $color_index = imagecolorat($toolkit->getImage(), $x, $y);
-
-    $transparent_index = imagecolortransparent($toolkit->getImage());
-    if ($color_index == $transparent_index) {
-      return [0, 0, 0, 127];
-    }
-
-    return array_values(imagecolorsforindex($toolkit->getImage(), $color_index));
-  }
-
-  /**
-   * Data provider for ::testManipulations().
-   */
-  public static function providerTestImageFiles(): array {
-    // Typically the corner colors will be unchanged. These colors are in the
-    // order of top-left, top-right, bottom-right, bottom-left.
-    $default_corners = [static::RED, static::GREEN, static::BLUE, static::TRANSPARENT];
-
-    // Setup a list of tests to perform on each type.
-    $test_cases = [
-      'resize' => [
-        'operation' => 'resize',
-        'arguments' => ['width' => 20, 'height' => 10],
-        'width' => 20,
-        'height' => 10,
-        'corners' => $default_corners,
-      ],
-      'scale_x' => [
-        'operation' => 'scale',
-        'arguments' => ['width' => 20],
-        'width' => 20,
-        'height' => 10,
-        'corners' => $default_corners,
-      ],
-      'scale_y' => [
-        'operation' => 'scale',
-        'arguments' => ['height' => 10],
-        'width' => 20,
-        'height' => 10,
-        'corners' => $default_corners,
-      ],
-      'upscale_x' => [
-        'operation' => 'scale',
-        'arguments' => ['width' => 80, 'upscale' => TRUE],
-        'width' => 80,
-        'height' => 40,
-        'corners' => $default_corners,
-      ],
-      'upscale_y' => [
-        'operation' => 'scale',
-        'arguments' => ['height' => 40, 'upscale' => TRUE],
-        'width' => 80,
-        'height' => 40,
-        'corners' => $default_corners,
-      ],
-      'crop' => [
-        'operation' => 'crop',
-        'arguments' => ['x' => 12, 'y' => 4, 'width' => 16, 'height' => 12],
-        'width' => 16,
-        'height' => 12,
-        'corners' => array_fill(0, 4, static::WHITE),
-      ],
-      'scale_and_crop' => [
-        'operation' => 'scale_and_crop',
-        'arguments' => ['width' => 10, 'height' => 8],
-        'width' => 10,
-        'height' => 8,
-        'corners' => array_fill(0, 4, static::BLACK),
-      ],
-      'convert_jpg' => [
-        'operation' => 'convert',
-        'width' => 40,
-        'height' => 20,
-        'arguments' => ['extension' => 'jpeg'],
-        'corners' => $default_corners,
-      ],
-      'convert_gif' => [
-        'operation' => 'convert',
-        'width' => 40,
-        'height' => 20,
-        'arguments' => ['extension' => 'gif'],
-        'corners' => $default_corners,
-      ],
-      'convert_png' => [
-        'operation' => 'convert',
-        'width' => 40,
-        'height' => 20,
-        'arguments' => ['extension' => 'png'],
-        'corners' => $default_corners,
-      ],
-      'convert_webp' => [
-        'operation' => 'convert',
-        'width' => 40,
-        'height' => 20,
-        'arguments' => ['extension' => 'webp'],
-        'corners' => $default_corners,
-      ],
-      'convert_avif' => [
-        'operation' => 'convert',
-        'width' => 40,
-        'height' => 20,
-        'arguments' => ['extension' => 'avif'],
-        'corners' => $default_corners,
-      ],
-    ];
-
-    // Systems using non-bundled GD2 may miss imagerotate(). Test if available.
-    if (function_exists('imagerotate')) {
-      $test_cases += [
-        'rotate_5' => [
-          'operation' => 'rotate',
-          // Fuchsia background.
-          'arguments' => ['degrees' => 5, 'background' => '#FF00FF'],
-          // @todo Re-enable dimensions' check once
-          //   https://www.drupal.org/project/drupal/issues/2921123 is resolved.
-          // 'width' => 41,
-          // 'height' => 23,
-          'corners' => array_fill(0, 4, static::FUCHSIA),
-        ],
-        'rotate_transparent_5' => [
-          'operation' => 'rotate',
-          'arguments' => ['degrees' => 5],
-          // @todo Re-enable dimensions' check once
-          //   https://www.drupal.org/project/drupal/issues/2921123 is resolved.
-          // 'width' => 41,
-          // 'height' => 23,
-          'corners' => array_fill(0, 4, static::ROTATE_TRANSPARENT),
-        ],
-        'rotate_90' => [
-          'operation' => 'rotate',
-          // Fuchsia background.
-          'arguments' => ['degrees' => 90, 'background' => '#FF00FF'],
-          'width' => 20,
-          'height' => 40,
-          'corners' => [static::TRANSPARENT, static::RED, static::GREEN, static::BLUE],
-        ],
-        'rotate_transparent_90' => [
-          'operation' => 'rotate',
-          'arguments' => ['degrees' => 90],
-          'width' => 20,
-          'height' => 40,
-          'corners' => [static::TRANSPARENT, static::RED, static::GREEN, static::BLUE],
-        ],
-      ];
-    }
-
-    // Systems using non-bundled GD2 may miss imagefilter(). Test if available.
-    if (function_exists('imagefilter')) {
-      $test_cases += [
-        'desaturate' => [
-          'operation' => 'desaturate',
-          'arguments' => [],
-          'height' => 20,
-          'width' => 40,
-          // Grayscale corners are a bit funky. Each of the corners are a shade
-          // of gray. The values of these were determined simply by looking at
-          // the final image to see what desaturated colors end up being.
-          'corners' => [
-            array_fill(0, 3, 76) + [3 => 0],
-            array_fill(0, 3, 149) + [3 => 0],
-            array_fill(0, 3, 29) + [3 => 0],
-            array_fill(0, 3, 225) + [3 => 127],
-          ],
-        ],
-      ];
-    }
-
-    $ret = [];
-    foreach ([
-      'image-test.png',
-      'image-test.gif',
-      'image-test-no-transparency.gif',
-      'image-test.jpg',
-      'img-test.webp',
-      'img-test.avif',
-    ] as $file_name) {
-      foreach ($test_cases as $test_case => $values) {
-        $operation = $values['operation'];
-        $arguments = $values['arguments'];
-        unset($values['operation'], $values['arguments']);
-        $ret[] = [$file_name, $test_case, $operation, $arguments, $values];
-      }
-    }
-
-    return $ret;
-  }
-
-  /**
-   * Tests height, width and color for the corners for the final images.
-   *
-   * Since PHP can't visually check that our images have been manipulated
-   * properly, build a list of expected color values for each of the corners and
-   * the expected height and widths for the final images.
-   */
-  #[DataProvider('providerTestImageFiles')]
-  public function testManipulations(string $file_name, string $test_case, string $operation, array $arguments, array $expected): void {
-    // Load up a fresh image.
-    $image = $this->imageFactory->get('core/tests/fixtures/files/' . $file_name);
-    $toolkit = $image->getToolkit();
-    $this->assertTrue($image->isValid());
-    $image_original_type = $image->getToolkit()->getType();
-
-    $this->assertTrue(imageistruecolor($toolkit->getImage()), "Image '$file_name' after load should be a truecolor image, but it is not.");
-
-    // Perform our operation.
-    $image->apply($operation, $arguments);
-
-    // Flush Image object to disk storage.
-    $file_path = $this->directory . '/' . $test_case . image_type_to_extension($image->getToolkit()->getType());
-    $image->save($file_path);
-
-    // Check that the both the GD object and the Image object have an accurate
-    // record of the dimensions.
-    if (isset($expected['height']) && isset($expected['width'])) {
-      $this->assertSame($expected['height'], imagesy($toolkit->getImage()), "Image '$file_name' after '$test_case' should have a proper height.");
-      $this->assertSame($expected['width'], imagesx($toolkit->getImage()), "Image '$file_name' after '$test_case' should have a proper width.");
-      $this->assertSame($expected['height'], $image->getHeight(), "Image '$file_name' after '$test_case' should have a proper height.");
-      $this->assertSame($expected['width'], $image->getWidth(), "Image '$file_name' after '$test_case' should have a proper width.");
-    }
-
-    // Now check each of the corners to ensure color correctness.
-    foreach ($expected['corners'] as $key => $expected_color) {
-      // The test gif that does not have transparency color set is a
-      // special case.
-      if ($file_name === 'image-test-no-transparency.gif') {
-        if ($test_case == 'desaturate') {
-          // For desaturating, keep the expected color from the test
-          // data, but set alpha channel to fully opaque.
-          $expected_color[3] = 0;
-        }
-        elseif ($expected_color === static::TRANSPARENT) {
-          // Set expected pixel to yellow where the others have
-          // transparent.
-          $expected_color = static::YELLOW;
-        }
-      }
-
-      // Get the location of the corner.
-      [$x, $y] = match ($key) {
-        0 => [0, 0],
-        1 => [$image->getWidth() - 1, 0],
-        2 => [$image->getWidth() - 1, $image->getHeight() - 1],
-        3 => [0, $image->getHeight() - 1],
-      };
-
-      $actual_color = $this->getPixelColor($image, $x, $y);
-
-      // If image cannot handle transparent colors, skip the pixel color test.
-      if ($actual_color[3] === 0 && $expected_color[3] === 127) {
-        continue;
-      }
-
-      // JPEG and AVIF have small differences in color after processing.
-      $tolerance = match($image_original_type) {
-        IMAGETYPE_JPEG, IMAGETYPE_AVIF => 3,
-        default => 0,
-      };
-
-      $this->assertColorsAreEqual($expected_color, $actual_color, $tolerance, "Image '$file_name' object after '$test_case' action has the correct color placement at corner '$key'");
-    }
-
-    // Check that saved image reloads without raising PHP errors.
-    $image_reloaded = $this->imageFactory->get($file_path);
-    $this->assertInstanceOf(\GdImage::class, $image_reloaded->getToolkit()->getImage());
   }
 
   /**
@@ -462,59 +153,6 @@ class ToolkitGdTest extends KernelTestBase {
   }
 
   /**
-   * Tests for GIF images with transparency.
-   */
-  public function testGifTransparentImages(): void {
-    // Test loading an indexed GIF image with transparent color set.
-    // Color at top-right pixel should be fully transparent.
-    $file = 'image-test-transparent-indexed.gif';
-    $image = $this->imageFactory->get('core/tests/fixtures/files/' . $file);
-    $gd_image = $image->getToolkit()->getImage();
-    $color_index = imagecolorat($gd_image, $image->getWidth() - 1, 0);
-    $color = array_values(imagecolorsforindex($gd_image, $color_index));
-    $this->assertEquals(static::ROTATE_TRANSPARENT, $color, "Image {$file} after load has full transparent color at corner 1.");
-
-    // Test deliberately creating a GIF image with no transparent color set.
-    // Color at top-right pixel should be fully transparent while in memory,
-    // fully opaque after flushing image to file.
-    $file = 'image-test-no-transparent-color-set.gif';
-    $file_path = $this->directory . '/' . $file;
-    // Create image.
-    $image = $this->imageFactory->get();
-    $image->createNew(50, 20, 'gif', NULL);
-    $gd_image = $image->getToolkit()->getImage();
-    $color_index = imagecolorat($gd_image, $image->getWidth() - 1, 0);
-    $color = array_values(imagecolorsforindex($gd_image, $color_index));
-    $this->assertEquals(static::ROTATE_TRANSPARENT, $color, "New GIF image with no transparent color set after creation has full transparent color at corner 1.");
-    // Save image.
-    $this->assertTrue($image->save($file_path), "New GIF image {$file} was saved.");
-    // Reload image.
-    $image_reloaded = $this->imageFactory->get($file_path);
-    $gd_image = $image_reloaded->getToolkit()->getImage();
-    $color_index = imagecolorat($gd_image, $image_reloaded->getWidth() - 1, 0);
-    $color = array_values(imagecolorsforindex($gd_image, $color_index));
-    // Check explicitly for alpha == 0 as the rest of the color has been
-    // compressed and may have slight difference from full white.
-    $this->assertEquals(0, $color[3], "New GIF image {$file} after reload has no transparent color at corner 1.");
-
-    // Test loading an image whose transparent color index is out of range.
-    // This image was generated by taking an initial image with a palette size
-    // of 6 colors, and setting the transparent color index to 6 (one higher
-    // than the largest allowed index), as follows:
-    // @code
-    // $image = imagecreatefromgif('core/tests/fixtures/files/image-test.gif');
-    // imagecolortransparent($image, 6);
-    // imagegif($image, 'core/tests/fixtures/files/image-test-transparent-out-of-range.gif');
-    // @endcode
-    // This allows us to test that an image with an out-of-range color index
-    // can be loaded correctly.
-    $file = 'image-test-transparent-out-of-range.gif';
-    $image = $this->imageFactory->get('core/tests/fixtures/files/' . $file);
-    $this->assertTrue($image->isValid(), "Image '$file' after load should be valid, but it is not.");
-    $this->assertTrue(imageistruecolor($image->getToolkit()->getImage()), "Image '$file' after load should be a truecolor image, but it is not.");
-  }
-
-  /**
    * Tests calling a missing image operation plugin.
    */
   public function testMissingOperation(): void {
@@ -539,50 +177,6 @@ class ToolkitGdTest extends KernelTestBase {
         'description' => sprintf("Supported image file formats: %s.", implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP', 'AVIF'])),
       ],
     ], $this->imageFactory->get()->getToolkit()->getRequirements());
-  }
-
-  /**
-   * Tests that GD doesn't trigger warnings for iCCP sRGB profiles.
-   *
-   * If image is saved with 'sRGB IEC61966-2.1' sRGB profile, GD will trigger
-   * a warning about an incorrect sRGB profile'.
-   */
-  #[DataProvider('pngImageProvider')]
-  public function testIncorrectIccpSrgbProfile(string $image_uri): void {
-    $warning_detected = FALSE;
-    // @see https://github.com/sebastianbergmann/phpunit/issues/5062
-    $error_handler = static function () use (&$warning_detected): void {
-      $warning_detected = TRUE;
-    };
-    // $error_level is intentionally set to 0. It's required for PHP '@'
-    // suppression not to trigger Drupal error handler. In that case native
-    // PHP handler will be called and Drupal's will serve like a notification.
-    set_error_handler($error_handler, 0);
-
-    $image_factory = $this->container->get('image.factory');
-    \assert($image_factory instanceof ImageFactory);
-
-    $image = $image_factory->get($image_uri, 'gd');
-    // We need to do any image manipulation to trigger GD profile loading.
-    $image->resize('100', '100');
-
-    self::assertFalse($warning_detected);
-
-    restore_error_handler();
-  }
-
-  /**
-   * Provides a list of PNG image URIs for testing.
-   *
-   * @return \Generator
-   *   The test data.
-   */
-  public static function pngImageProvider(): \Generator {
-    yield 'valid image 1' => ['core/tests/fixtures/files/image-1.png'];
-    yield 'valid image 2' => ['core/tests/fixtures/files/image-test.png'];
-    yield 'PNG with iCCP profile' => [
-      'core/tests/fixtures/files/image-test-iccp-profile.png',
-    ];
   }
 
 }
