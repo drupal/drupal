@@ -8,7 +8,7 @@ use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
@@ -16,7 +16,7 @@ use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
-use Drupal\Tests\Core\Entity\StubEntityBase;
+use Drupal\Tests\Core\Entity\StubRevisionableEntity;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -1100,7 +1100,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->setUpEntityStorage();
 
     $entity = $this->entityStorage->create();
-    $this->assertInstanceOf(EntityInterface::class, $entity);
+    $this->assertInstanceOf(ContentEntityInterface::class, $entity);
     $this->assertTrue($entity->isNew());
   }
 
@@ -1183,13 +1183,16 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $key = 'values:' . $this->entityTypeId . ':1';
     $id = 1;
-    $entity = $this->getMockBuilder(StubEntityBase::class)
+    $entity = $this->getMockBuilder(StubRevisionableEntity::class)
       ->disableOriginalConstructor()
-      ->onlyMethods(['id'])
+      ->onlyMethods(['id', 'isDefaultRevision'])
       ->getMock();
     $entity->expects($this->any())
       ->method('id')
       ->willReturn($id);
+    $entity->expects($this->any())
+      ->method('isDefaultRevision')
+      ->willReturn(TRUE);
 
     $this->entityType->expects($this->atLeastOnce())
       ->method('isPersistentlyCacheable')
@@ -1222,13 +1225,16 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->setUpModuleHandlerNoImplementations();
 
     $id = 1;
-    $entity = $this->getMockBuilder(StubEntityBase::class)
+    $entity = $this->getMockBuilder(StubRevisionableEntity::class)
       ->disableOriginalConstructor()
-      ->onlyMethods(['id'])
+      ->onlyMethods(['id', 'isDefaultRevision'])
       ->getMock();
     $entity->expects($this->any())
       ->method('id')
       ->willReturn($id);
+    $entity->expects($this->any())
+      ->method('isDefaultRevision')
+      ->willReturn(TRUE);
 
     $this->entityType->expects($this->any())
       ->method('isPersistentlyCacheable')
@@ -1277,13 +1283,17 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->setUpModuleHandlerNoImplementations();
 
     $id = 1;
-    $entity = $this->getMockBuilder(StubEntityBase::class)
+    $entity = $this->getMockBuilder(StubRevisionableEntity::class)
       ->disableOriginalConstructor()
-      ->onlyMethods(['id'])
+      ->onlyMethods(['id', 'isDefaultRevision'])
       ->getMock();
     $entity->expects($this->any())
       ->method('id')
       ->willReturn($id);
+
+    $entity->expects($this->any())
+      ->method('isDefaultRevision')
+      ->willReturn(TRUE);
 
     $this->entityType->expects($this->any())
       ->method('isPersistentlyCacheable')

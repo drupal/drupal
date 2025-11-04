@@ -90,8 +90,16 @@ class ModerationStateFieldItemList extends FieldItemList {
       return NULL;
     }
 
+    // As this method is expected to always retrieve the current state as is
+    // in the storage, it has to retrieve the entity by bypassing the static
+    // entity cache, because the content moderation state entity might be
+    // changed there. This could happen by loading and editing the content
+    // moderation state entity in its default revision and then saving it,
+    // during which process content moderation will check if the default
+    // revision of the moderated entity is published by retrieving its
+    // moderation state entity here.
     /** @var \Drupal\content_moderation\Entity\ContentModerationStateInterface $content_moderation_state */
-    $content_moderation_state = $content_moderation_storage->loadRevision(key($revisions));
+    $content_moderation_state = $content_moderation_storage->loadRevisionUnchanged(key($revisions));
     if ($entity->getEntityType()->hasKey('langcode')) {
       $langcode = $entity->language()->getId();
       if (!$content_moderation_state->hasTranslation($langcode)) {

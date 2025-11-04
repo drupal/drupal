@@ -7,6 +7,8 @@ namespace Drupal\entity_test\Hook;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
@@ -32,6 +34,13 @@ use Drupal\entity_test\Entity\EntityTest;
 class EntityTestHooks {
 
   use StringTranslationTrait;
+
+  public function __construct(
+    protected KeyValueFactoryInterface $keyValueStoreFactory,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
+
+  }
 
   /**
    * Implements hook_entity_type_alter().
@@ -749,6 +758,26 @@ class EntityTestHooks {
     if (str_contains($duplicate->label(), 'UUID CRUD test entity') && $duplicate->hasField('name')) {
       $duplicate->set('name', 'prefix ' . $duplicate->label());
     }
+  }
+
+  /**
+   * Implements hook_entity_preload().
+   *
+   * Loads non-default revision when loading an entity.
+   */
+  #[Hook('entity_preload')]
+  public function entityPreload(array $ids, string $entity_type_id): array {
+    $entities = [];
+    $key_value_store = $this->keyValueStoreFactory->get('entity_test_preload_entities');
+    if ($revisions_load = $key_value_store->get($entity_type_id)) {
+      foreach ($revisions_load as $id => $revision_id) {
+        $revisions = $this->entityTypeManager
+          ->getStorage($entity_type_id)
+          ->loadMultipleRevisions([$revision_id]);
+        $entities[$id] = $revisions[$revision_id];
+      }
+    }
+    return $entities;
   }
 
   /**
