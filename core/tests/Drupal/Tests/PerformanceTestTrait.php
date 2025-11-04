@@ -342,10 +342,11 @@ trait PerformanceTestTrait {
       // Therefore, continue collecting performance data until all of the
       // following are true, or until 30 seconds has passed:
       // - a largestContentfulPaint::candidate event has been fired
+      //   (only if an OTEL_COLLECTOR is set)
       // - all network requests have received a response
       // - no new performance log events have been recorded since the last
       //   iteration.
-      if ($lcp_count && empty($performance_log) && ($request_count === $response_count)) {
+      if (($lcp_count || !getenv('OTEL_COLLECTOR')) && empty($performance_log) && ($request_count === $response_count)) {
         break;
       }
       sleep(1);
