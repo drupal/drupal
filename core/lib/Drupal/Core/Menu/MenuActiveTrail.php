@@ -109,6 +109,9 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
    * @see \Drupal\Core\Cache\CacheCollector
    */
   public function getActiveTrailIds($menu_name) {
+    // A NULL menu name correlates to cache entry keyed by an empty string. See
+    // ::doGetActiveTrailIds().
+    $menu_name = $menu_name ?? '';
     return $this->get($menu_name);
   }
 
