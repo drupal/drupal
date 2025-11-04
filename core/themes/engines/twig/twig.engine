@@ -14,6 +14,7 @@ use Twig\Error\RuntimeError;
  * Implements hook_theme().
  */
 function twig_theme($existing, $type, $theme, $path): array {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use TwigThemeEngine instead. See https://www.drupal.org/node/3547356', E_USER_DEPRECATED);
   return drupal_find_theme_templates($existing, '.html.twig', $path);
 }
 
@@ -21,6 +22,7 @@ function twig_theme($existing, $type, $theme, $path): array {
  * Implements hook_extension().
  */
 function twig_extension(): string {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use TwigThemeEngine instead. See https://www.drupal.org/node/3547356', E_USER_DEPRECATED);
   return '.html.twig';
 }
 
@@ -28,6 +30,7 @@ function twig_extension(): string {
  * Implements hook_render_template().
  */
 function twig_render_template($template_file, array $variables): string|MarkupInterface {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use TwigThemeEngine instead. See https://www.drupal.org/node/3547356', E_USER_DEPRECATED);
   /** @var \Twig\Environment $twig_service */
   $twig_service = \Drupal::service('twig');
   try {
