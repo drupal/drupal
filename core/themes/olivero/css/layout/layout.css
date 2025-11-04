@@ -18,10 +18,9 @@
   /* This fixes an issue where if the toolbar is open in vertical mode, and
    * the mobile navigation is open, the "close" button gets pushed outside of
    * the viewport. */
-}
-
-body.is-fixed .container {
-  width: calc(100% - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
+  body.is-fixed & {
+    width: calc(100% - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
+  }
 }
 
 .page-wrapper {
@@ -41,16 +40,16 @@ body.is-fixed .container {
 
 /* Contains the social sidebar, and the primary content area. */
 
-@media (min-width: 75rem) {
-  .layout-main {
+.layout-main {
+  @media (min-width: 75rem) {
     display: flex;
     flex-direction: row-reverse;
     flex-wrap: wrap;
   }
 }
 
-@media (min-width: 75rem) {
-  .main-content {
+.main-content {
+  @media (min-width: 75rem) {
     width: calc(100% - var(--content-left));
     margin-inline-end: auto;
   }
@@ -58,10 +57,8 @@ body.is-fixed .container {
 
 .main-content__container {
   padding-block-start: var(--sp3);
-}
 
-@media (min-width: 43.75rem) {
-  .main-content__container {
+  @media (min-width: 43.75rem) {
     padding-block-start: var(--sp5);
   }
 }

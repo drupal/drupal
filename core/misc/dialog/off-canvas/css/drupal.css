@@ -13,23 +13,25 @@
  * @internal
  */
 
-#drupal-off-canvas-wrapper .panel {
-  padding: 0.3125rem 0.3125rem 0.9375rem;
-}
+#drupal-off-canvas-wrapper {
+  & .panel {
+    padding: 0.3125rem 0.3125rem 0.9375rem;
+  }
 
-#drupal-off-canvas-wrapper .panel__description {
-  margin: 0 0 0.1875rem;
-  padding: 2px 0 0.1875rem 0;
-}
+  & .panel__description {
+    margin: 0 0 0.1875rem;
+    padding: 2px 0 0.1875rem 0;
+  }
 
-#drupal-off-canvas-wrapper .compact-link {
-  margin: 0 0 0.625rem 0;
-}
+  & .compact-link {
+    margin: 0 0 0.625rem 0;
+  }
 
-#drupal-off-canvas-wrapper small .admin-link::before {
-  content: " [";
-}
+  & small .admin-link::before {
+    content: " [";
+  }
 
-#drupal-off-canvas-wrapper small .admin-link::after {
-  content: "]";
+  & small .admin-link::after {
+    content: "]";
+  }
 }

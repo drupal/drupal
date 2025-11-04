@@ -14,10 +14,12 @@
  * Add search page select/submit.
  */
 
-.search-admin-settings .container-inline {
-  margin-block-end: 1em;
-}
+.search-admin-settings {
+  & .container-inline {
+    margin-block-end: 1em;
+  }
 
-.search-admin-settings label[for="edit-search-type"] {
-  display: block;
+  & label[for="edit-search-type"] {
+    display: block;
+  }
 }

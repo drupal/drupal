@@ -30,16 +30,15 @@
   color: var(--color--white);
   outline: solid 1px transparent;
   background-color: var(--color--gray-5);
-}
 
-.messages * {
-  color: inherit;
-}
+  & * {
+    color: inherit;
+  }
 
-/* Additional specificity to override contrib modules. */
-
-.messages.messages-list__item {
-  background-image: none;
+  /* Additional specificity to override contrib modules. */
+  &.messages-list__item {
+    background-image: none;
+  }
 }
 
 .messages__list {
@@ -67,10 +66,10 @@
 .messages__header {
   flex-shrink: 0;
   margin-inline-end: var(--sp1);
-}
 
-.messages__header.no-icon {
-  margin-inline-end: 0;
+  &.no-icon {
+    margin-inline-end: 0;
+  }
 }
 
 .messages__content {
@@ -97,36 +96,38 @@
   border: 0;
   background: none;
   appearance: none;
-}
 
-.messages__close::before,
-.messages__close::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  width: 2.0625rem;
-  height: 0;
-  content: "";
-  border-top: solid 2px var(--color--gray-60);
-}
+  &::before,
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 2.0625rem;
+    height: 0;
+    content: "";
+    border-top: solid 2px var(--color--gray-60);
+  }
 
-.messages__close::before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
+  &::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
 
-.messages__close::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
+  &::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
 
-.messages__close:hover::before,
-.messages__close:hover::after {
-  border-color: var(--color--white);
-}
+  &:hover {
+    &::before,
+    &::after {
+      border-color: var(--color--white);
+    }
+  }
 
-.messages__close:focus {
-  outline: 2px solid var(--color--primary-60);
-  outline-offset: 2px;
+  &:focus {
+    outline: 2px solid var(--color--primary-60);
+    outline-offset: 2px;
+  }
 }
 
 .messages__icon svg {

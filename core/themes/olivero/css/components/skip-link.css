@@ -24,16 +24,16 @@
   color: var(--color--white);
   outline: 0;
   background-color: var(--color--gray-5);
-}
 
-.skip-link:hover {
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  color: var(--color--white);
-}
+  &:hover {
+    -webkit-text-decoration: underline;
+    text-decoration: underline;
+    color: var(--color--white);
+  }
 
-.skip-link::after {
-  content: "\0020	➔";
+  &::after {
+    content: "\0020	➔";
+  }
 }
 
 .skip-link.focusable:focus {

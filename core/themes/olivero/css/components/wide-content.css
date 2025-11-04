@@ -19,18 +19,14 @@
   margin-block-end: var(--sp2);
   margin-inline-start: 0;
   margin-inline-end: 0;
-}
 
-@media (min-width: 43.75rem) {
-  .wide-content {
+  @media (min-width: 43.75rem) {
     width: calc(var(--grid-col-count) * var(--grid-col-width) + var(--grid-gap-count) * var(--grid-gap));
     margin-block: var(--sp2) var(--sp4);
     margin-inline-start: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
-}
 
-@media (min-width: 62.5rem) {
-  .wide-content {
+  @media (min-width: 62.5rem) {
     width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
     margin-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
   }
@@ -38,14 +34,12 @@
 
 /* Ensure that image doesn't overlap sidebar. */
 
-@media (min-width: 62.5rem) {
-  .sidebar-grid .wide-content {
+.sidebar-grid .wide-content {
+  @media (min-width: 62.5rem) {
     width: calc(9 * var(--grid-col-width) + 8 * var(--grid-gap));
   }
-}
 
-@media (min-width: 81.25rem) {
-  .sidebar-grid .wide-content {
+  @media (min-width: 81.25rem) {
     width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
   }
 }

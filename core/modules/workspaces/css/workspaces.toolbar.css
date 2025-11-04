@@ -32,10 +32,9 @@
    * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
    * @see https://github.com/csstools/postcss-plugins/issues/632
    */
-}
-
-:is(.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab):dir(rtl) {
-  float: left;
+  &:dir(rtl) {
+    float: left;
+  }
 }
 
 @media (min-width: 16.5rem) {
@@ -50,9 +49,9 @@
      * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
      * @see https://github.com/csstools/postcss-plugins/issues/632
      */
-  }
-  :is(.toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab):dir(rtl) {
-    float: left;
+    &:dir(rtl) {
+      float: left;
+    }
   }
 }
 
@@ -63,11 +62,11 @@
   margin: 0;
   text-align: start;
   color: inherit;
-}
 
-.toolbar-oriented :is(.toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item) {
-  width: auto;
-  text-align: initial;
+  .toolbar-oriented & {
+    width: auto;
+    text-align: initial;
+  }
 }
 
 .toolbar .toolbar-icon-workspace::before {

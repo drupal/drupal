@@ -13,23 +13,23 @@
 
 [data-drupal-admin-styles] {
   box-sizing: border-box;
-}
 
-[data-drupal-admin-styles] *:focus {
-  outline: var(--admin-toolbar-size-focus) solid var(--admin-toolbar-color-focus);
+  *:focus {
+    outline: var(--admin-toolbar-size-focus) solid var(--admin-toolbar-color-focus);
+  }
 }
 
 :where([data-drupal-admin-styles] :not(svg *)) {
   all: revert;
   box-sizing: border-box;
-}
 
-:where([data-drupal-admin-styles] :not(svg *)) button {
-  font-family: inherit;
-}
+  button {
+    font-family: inherit;
+  }
 
-:where([data-drupal-admin-styles] :not(svg *))::after,
-:where([data-drupal-admin-styles] :not(svg *))::before {
-  all: revert;
-  box-sizing: border-box;
+  &::after,
+  &::before {
+    all: revert;
+    box-sizing: border-box;
+  }
 }

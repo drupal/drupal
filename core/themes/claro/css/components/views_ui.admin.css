@@ -16,16 +16,20 @@
   white-space: pre-wrap;
 }
 
-.views-display-deleted > details > summary,
-.views-display-deleted .details-wrapper > .views-ui-display-tab-bucket > *,
-.views-display-deleted .views-display-columns {
-  opacity: 0.25;
+.views-display-deleted {
+  & > details > summary,
+  & .details-wrapper > .views-ui-display-tab-bucket > *,
+  & .views-display-columns {
+    opacity: 0.25;
+  }
 }
 
-.views-display-disabled > details > summary,
-.views-display-disabled .details-wrapper > .views-ui-display-tab-bucket > *,
-.views-display-disabled .views-display-columns {
-  opacity: 0.5;
+.views-display-disabled {
+  & > details > summary,
+  & .details-wrapper > .views-ui-display-tab-bucket > *,
+  & .views-display-columns {
+    opacity: 0.5;
+  }
 }
 
 .views-display-tab .details-wrapper > .views-ui-display-tab-bucket .actions {
@@ -45,30 +49,36 @@
 
 @media screen and (min-width: 60rem) {
   /* 960px */
-  .views-display-columns > * {
-    float: left; /* LTR */
-    width: 32%;
-    margin-block-end: 0;
-    margin-inline-start: 2%;
-  }
-  .views-display-columns > *:first-child {
-    margin-inline-start: 0;
-  }
-  :is([dir="rtl"] .views-display-columns) > * {
-    float: right;
+  .views-display-columns {
+    & > * {
+      float: left; /* LTR */
+      width: 32%;
+      margin-block-end: 0;
+      margin-inline-start: 2%;
+    }
+    & > *:first-child {
+      margin-inline-start: 0;
+    }
+
+    [dir="rtl"] & {
+      & > * {
+        float: right;
+      }
+    }
   }
 }
 
-.views-ui-dialog .scroll {
-  overflow: auto;
-  padding: 1em;
-}
+.views-ui-dialog {
+  & .scroll {
+    overflow: auto;
+    padding: 1em;
+  }
 
-/* Don't let the messages overwhelm the modal */
-
-.views-ui-dialog .views-messages {
-  overflow: auto;
-  max-height: 12.5rem;
+  /* Don't let the messages overwhelm the modal */
+  & .views-messages {
+    overflow: auto;
+    max-height: 12.5rem;
+  }
 }
 
 .form-item--options-value-all {
@@ -79,10 +89,14 @@
   display: none;
 }
 
-html.js .js-only {
-  display: inherit;
-}
+html.js {
+  & .js-only {
+    display: inherit;
+  }
 
-.js-only:is(html.js span) {
-  display: inline;
+  & span {
+    &.js-only {
+      display: inline;
+    }
+  }
 }

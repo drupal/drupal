@@ -14,18 +14,18 @@
   display: grid;
   gap: var(--grid-gap);
   grid-template-columns: var(--layout-threecol-grid);
-}
 
-.layout--threecol-section > .layout__region--first {
-  grid-column: var(--layout-threecol-grid__first);
-}
+  & > .layout__region--first {
+    grid-column: var(--layout-threecol-grid__first);
+  }
 
-.layout--threecol-section > .layout__region--second {
-  grid-column: var(--layout-threecol-grid__second);
-}
+  & > .layout__region--second {
+    grid-column: var(--layout-threecol-grid__second);
+  }
 
-.layout--threecol-section > .layout__region--third {
-  grid-column: var(--layout-threecol-grid__third);
+  & > .layout__region--third {
+    grid-column: var(--layout-threecol-grid__third);
+  }
 }
 
 @media (min-width: 62.5rem) {

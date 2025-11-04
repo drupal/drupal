@@ -21,30 +21,30 @@
  * The root element of the file/image widget.
  */
 
-.form-managed-file.no-upload {
-  display: inline-flex;
-  flex-direction: column;
-  max-width: 100%;
-}
+.form-managed-file {
+  &.no-upload {
+    display: inline-flex;
+    flex-direction: column;
+    max-width: 100%;
+  }
 
-.form-managed-file.has-value.is-multiple {
-  display: block;
-}
+  &.has-value.is-multiple {
+    display: block;
+  }
 
-/**
+  /**
    * Modify component defaults for file/image widgets.
    */
 
-/**
+  /**
    * File component style overrides for managed file widgets.
    */
-
-.form-managed-file .file {
-  word-break: break-all;
-}
-
-.form-managed-file .file__size {
-  word-break: normal;
+  & .file {
+    word-break: break-all;
+  }
+  & .file__size {
+    word-break: normal;
+  }
 }
 
 /**
@@ -67,36 +67,34 @@
   flex-wrap: wrap;
   align-items: flex-start;
   margin-block-start: var(--space-m); /* Bottom margin will be added by the child elements: because of we use flex display here, our margins won't collapse. */
-}
 
-.form-managed-file__meta .form-element {
-  width: 100%;
-}
-
-/**
-   * Limiting the width of form items inside the meta element.
-   */
-
-.form-managed-file__meta .form-item {
-  max-width: var(--file-widget-form-item-max-width);
-  margin-block: 0 var(--space-m); /* Top margin is added by the parent element */
+  & .form-element {
+    width: 100%;
+  }
 
   /**
+   * Limiting the width of form items inside the meta element.
+   */
+  & .form-item {
+    max-width: var(--file-widget-form-item-max-width);
+    margin-block: 0 var(--space-m); /* Top margin is added by the parent element */
+
+    /**
     * Reduce the bottom margin of the last 'meta' form-item for field multiple
     * tables.
     */
-}
+    &:last-child {
+      margin-block-end: var(--space-xs);
+    }
+  }
 
-:is(.form-managed-file__meta .form-item):last-child {
-  margin-block-end: var(--space-xs);
-}
-
-.draggable .form-managed-file.has-value .form-managed-file__meta {
-  /**
+  .draggable .form-managed-file.has-value & {
+    /**
      * In tables, this should be inline-flex. This is needed to make this element be
      * pushed to a new line, to the bottom of the drag handle.
      */
-  display: inline-flex;
+    display: inline-flex;
+  }
 }
 
 /**
@@ -109,20 +107,19 @@
   flex: 0 0 auto;
   max-width: 100%;
   margin-block-end: var(--space-m);
-}
 
-.form-managed-file.has-meta .form-managed-file__image-preview {
-  /* Add some 'end' margin if there are other meta inputs. */
-  margin-inline-end: var(--space-m);
-}
+  .form-managed-file.has-meta & {
+    /* Add some 'end' margin if there are other meta inputs. */
+    margin-inline-end: var(--space-m);
+  }
 
-/**
+  /**
    * If this is rendered inside a file multiple table and there are no alt or
    * title, we have to reduce the amount of the bottom margin.
    */
-
-td .form-managed-file.no-meta .form-managed-file__image-preview {
-  margin-block-end: var(--space-xs);
+  td .form-managed-file.no-meta & {
+    margin-block-end: var(--space-xs);
+  }
 }
 
 /**
@@ -156,43 +153,40 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
   display: inline-flex;
   align-items: center;
   max-width: 100%;
-}
 
-.form-managed-file__main .file {
-  flex: 1 1 auto;
-  margin-block: var(--space-xs);
-  margin-inline: 0 var(--space-m);
-}
+  & .file {
+    flex: 1 1 auto;
+    margin-block: var(--space-xs);
+    margin-inline: 0 var(--space-m);
+  }
 
-/* The file upload input. */
+  /* The file upload input. */
+  & .form-element--api-file {
+    flex: 1 1 auto;
+  }
 
-.form-managed-file__main .form-element--api-file {
-  flex: 1 1 auto;
-}
-
-/**
+  /**
    * Remove the default button margins and prevent shrinking or growing buttons.
    * This applies both on the 'no-js' upload button and the remove button. The
    * weight of this ruleset has been increase for this to take effect on RTL.
    */
+  & .button.button {
+    flex: 0 0 auto;
+    margin: 0;
+  }
 
-.form-managed-file__main .button.button {
-  flex: 0 0 auto;
-  margin: 0;
-}
+  /* Add some bottom margin for single widgets if no meta is present. */
+  .form-managed-file.is-single.has-value &:last-child {
+    margin-block-end: var(--space-m);
+  }
 
-/* Add some bottom margin for single widgets if no meta is present. */
-
-.form-managed-file.is-single.has-value .form-managed-file__main:last-child {
-  margin-block-end: var(--space-m);
-}
-
-.draggable .form-managed-file.has-value .form-managed-file__main {
-  /**
+  .draggable .form-managed-file.has-value & {
+    /**
      * Inside (draggable) tables, this should be flex-displayed. This keeps even
      * long file names in the same visual line where the drag handle is.
      */
-  display: flex;
+    display: flex;
+  }
 }
 
 /**

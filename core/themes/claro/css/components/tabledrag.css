@@ -30,11 +30,10 @@ body.drag-y {
   /**
   * Reduce the spacing of draggable table cells.
   */
-}
-
-.draggable-table td:first-child ~ td,
-.draggable-table th:first-child ~ th {
-  padding-inline-start: 0;
+  & td:first-child ~ td,
+  & th:first-child ~ th {
+    padding-inline-start: 0;
+  }
 }
 
 /* The block region's title row in table. */
@@ -47,11 +46,11 @@ body.drag-y {
 
 .region-message {
   color: var(--color-gray-600);
-}
 
-.region-message.region-populated {
-  /* If the region is populated, we shouldn't display the empty message. */
-  display: none;
+  &.region-populated {
+    /* If the region is populated, we shouldn't display the empty message. */
+    display: none;
+  }
 }
 
 /**
@@ -63,20 +62,21 @@ body.drag-y {
   border-bottom: none;
 }
 
-/* Don't display the abbreviation of 'add-new' table rows. */
+.tabledrag-changed {
+  /* Don't display the abbreviation of 'add-new' table rows. */
+  .add-new & {
+    display: none;
+  }
 
-.add-new .tabledrag-changed {
-  display: none;
-}
+  .draggable & {
+    position: relative;
+    inset-inline-start: calc(var(--space-xs) * -1);
+  }
 
-.draggable .tabledrag-changed {
-  position: relative;
-  inset-inline-start: calc(var(--space-xs) * -1);
-}
-
-.tabledrag-cell--only-drag .tabledrag-changed {
-  width: var(--space-l);
-  min-width: var(--space-l);
+  .tabledrag-cell--only-drag & {
+    width: var(--space-l);
+    min-width: var(--space-l);
+  }
 }
 
 /**
@@ -111,25 +111,23 @@ body.drag-y {
   cursor: move;
   text-align: center;
   vertical-align: text-top;
-}
 
-.tabledrag-handle::after {
-  display: inline-block;
-  width: var(--tabledrag-handle-icon-size);
-  height: var(--tabledrag-handle-icon-size);
-  margin-inline-start: calc(var(--space-m) * -1);
-  padding: var(--space-xs) var(--space-m);
-  content: "";
-  transition: transform 0.1s ease-in-out 0s;
-  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 16 16'%3e%3cpath fill='%23000f33' d='M14.103 5.476a.5.5 0 00-.701-.053.526.526 0 00-.082.713l1.1 1.346H8.512V1.62l1.32 1.113a.501.501 0 00.732-.054.528.528 0 00-.085-.744L8.328.119a.5.5 0 00-.647 0L5.529 1.935a.527.527 0 00-.085.744.504.504 0 00.732.054l1.32-1.113v5.862H1.588L2.68 6.136a.526.526 0 00-.1-.68.5.5 0 00-.675.02L.117 7.67a.525.525 0 000 .66l1.788 2.194a.5.5 0 00.702.053.526.526 0 00.081-.713l-1.1-1.346h5.908v5.862l-1.32-1.113a.501.501 0 00-.698.082.526.526 0 00.051.716l2.152 1.817v-.001a.5.5 0 00.647 0l2.151-1.816a.526.526 0 00.052-.716.501.501 0 00-.699-.082l-1.32 1.113V8.518h5.908l-1.091 1.346a.527.527 0 00.022.776.504.504 0 00.752-.116l1.78-2.194a.527.527 0 000-.66z'/%3e%3c/svg%3e") no-repeat center;
-}
+  &::after {
+    display: inline-block;
+    width: var(--tabledrag-handle-icon-size);
+    height: var(--tabledrag-handle-icon-size);
+    margin-inline-start: calc(var(--space-m) * -1);
+    padding: var(--space-xs) var(--space-m);
+    content: "";
+    transition: transform 0.1s ease-in-out 0s;
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 16 16'%3e%3cpath fill='%23000f33' d='M14.103 5.476a.5.5 0 00-.701-.053.526.526 0 00-.082.713l1.1 1.346H8.512V1.62l1.32 1.113a.501.501 0 00.732-.054.528.528 0 00-.085-.744L8.328.119a.5.5 0 00-.647 0L5.529 1.935a.527.527 0 00-.085.744.504.504 0 00.732.054l1.32-1.113v5.862H1.588L2.68 6.136a.526.526 0 00-.1-.68.5.5 0 00-.675.02L.117 7.67a.525.525 0 000 .66l1.788 2.194a.5.5 0 00.702.053.526.526 0 00.081-.713l-1.1-1.346h5.908v5.862l-1.32-1.113a.501.501 0 00-.698.082.526.526 0 00.051.716l2.152 1.817v-.001a.5.5 0 00.647 0l2.151-1.816a.526.526 0 00.052-.716.501.501 0 00-.699-.082l-1.32 1.113V8.518h5.908l-1.091 1.346a.527.527 0 00.022.776.504.504 0 00.752-.116l1.78-2.194a.527.527 0 000-.66z'/%3e%3c/svg%3e") no-repeat center;
 
-@media (forced-colors: active) {
-  .tabledrag-handle::after {
-    background: linktext;
-    mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 16 16'%3e%3cpath fill='%23000f33' d='M14.103 5.476a.5.5 0 00-.701-.053.526.526 0 00-.082.713l1.1 1.346H8.512V1.62l1.32 1.113a.501.501 0 00.732-.054.528.528 0 00-.085-.744L8.328.119a.5.5 0 00-.647 0L5.529 1.935a.527.527 0 00-.085.744.504.504 0 00.732.054l1.32-1.113v5.862H1.588L2.68 6.136a.526.526 0 00-.1-.68.5.5 0 00-.675.02L.117 7.67a.525.525 0 000 .66l1.788 2.194a.5.5 0 00.702.053.526.526 0 00.081-.713l-1.1-1.346h5.908v5.862l-1.32-1.113a.501.501 0 00-.698.082.526.526 0 00.051.716l2.152 1.817v-.001a.5.5 0 00.647 0l2.151-1.816a.526.526 0 00.052-.716.501.501 0 00-.699-.082l-1.32 1.113V8.518h5.908l-1.091 1.346a.527.527 0 00.022.776.504.504 0 00.752-.116l1.78-2.194a.527.527 0 000-.66z'/%3e%3c/svg%3e");
-    mask-repeat: no-repeat;
-    mask-position: center;
+    @media (forced-colors: active) {
+      background: linktext;
+      mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 16 16'%3e%3cpath fill='%23000f33' d='M14.103 5.476a.5.5 0 00-.701-.053.526.526 0 00-.082.713l1.1 1.346H8.512V1.62l1.32 1.113a.501.501 0 00.732-.054.528.528 0 00-.085-.744L8.328.119a.5.5 0 00-.647 0L5.529 1.935a.527.527 0 00-.085.744.504.504 0 00.732.054l1.32-1.113v5.862H1.588L2.68 6.136a.526.526 0 00-.1-.68.5.5 0 00-.675.02L.117 7.67a.525.525 0 000 .66l1.788 2.194a.5.5 0 00.702.053.526.526 0 00.081-.713l-1.1-1.346h5.908v5.862l-1.32-1.113a.501.501 0 00-.698.082.526.526 0 00.051.716l2.152 1.817v-.001a.5.5 0 00.647 0l2.151-1.816a.526.526 0 00.052-.716.501.501 0 00-.699-.082l-1.32 1.113V8.518h5.908l-1.091 1.346a.527.527 0 00.022.776.504.504 0 00.752-.116l1.78-2.194a.527.527 0 000-.66z'/%3e%3c/svg%3e");
+      mask-repeat: no-repeat;
+      mask-position: center;
+    }
   }
 }
 
@@ -157,28 +155,30 @@ body.drag-y {
 .tabledrag-handle:focus {
   outline: none !important;
   box-shadow: none !important;
-}
 
-.tabledrag-handle:focus::before {
-  display: block;
-  width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
-  height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
-  margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
-  content: "";
-  border-radius: var(--base-border-radius);
-  outline: var(--outline-size) dotted transparent;
-  box-shadow: 0 0 0 var(--focus-border-size) var(--color-focus);
+  &::before {
+    display: block;
+    width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
+    height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
+    margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
+    content: "";
+    border-radius: var(--base-border-radius);
+    outline: var(--outline-size) dotted transparent;
+    box-shadow: 0 0 0 var(--focus-border-size) var(--color-focus);
+  }
 }
 
 /* Disabled tabledrag handle. */
 
-.tabledrag-disabled .tabledrag-handle {
-  cursor: default;
-  opacity: 0.4;
-}
+.tabledrag-disabled {
+  & .tabledrag-handle {
+    cursor: default;
+    opacity: 0.4;
 
-.tabledrag-handle:is(.tabledrag-disabled .tabledrag-handle)::before {
-  content: none;
+    &.tabledrag-handle::before {
+      content: none;
+    }
+  }
 }
 
 /**
@@ -189,12 +189,14 @@ body.drag-y {
  * Increase handle size.
  */
 
-.touchevents .tabledrag-handle::after {
-  padding-block: var(--space-s);
-}
+.touchevents {
+  & .tabledrag-handle::after {
+    padding-block: var(--space-s);
+  }
 
-.touchevents .draggable .menu-item__link {
-  padding-block: var(--space-xs);
+  & .draggable .menu-item__link {
+    padding-block: var(--space-xs);
+  }
 }
 
 /**
@@ -205,10 +207,9 @@ body.drag-y {
   text-align: end;
 
   /* Hide nested weight toggles as they are redundant. */
-}
-
-.draggable-table .tabledrag-toggle-weight-wrapper {
-  display: none;
+  .draggable-table & {
+    display: none;
+  }
 }
 
 /**
@@ -235,27 +236,27 @@ body.drag-y {
   display: flex;
   align-items: center;
   height: 100%;
-}
 
-.tabledrag-cell-content > * {
-  display: table-cell;
-  vertical-align: middle;
-}
+  & > * {
+    display: table-cell;
+    vertical-align: middle;
+  }
 
-.tabledrag-cell-content .tree {
-  flex-grow: 1;
-}
+  & .tree {
+    flex-grow: 1;
+  }
 
-.tabledrag-cell-content .tabledrag-handle::after {
-  vertical-align: middle;
+  & .tabledrag-handle::after {
+    vertical-align: middle;
+  }
 }
 
 .tabledrag-cell-content__item {
   padding-inline-end: var(--space-xs);
-}
 
-.tabledrag-cell-content__item:empty {
-  display: none;
+  &:empty {
+    display: none;
+  }
 }
 
 /**
@@ -270,20 +271,20 @@ body.drag-y {
   height: 1.5625rem;
   background: none !important;
   line-height: 0;
-}
 
-.tabledrag-cell-content .indentation {
-  /* Fixes Safari bug (16.1 at least) where table rows are overly large when
+  .tabledrag-cell-content & {
+    /* Fixes Safari bug (16.1 at least) where table rows are overly large when
       using indentation (e.g. re-ordering menu items. */
-  display: inline-flex;
-  float: none;
-  overflow: hidden;
-  flex-direction: column;
-  height: 100%;
-}
+    display: inline-flex;
+    float: none;
+    overflow: hidden;
+    flex-direction: column;
+    height: 100%;
+  }
 
-[dir="rtl"] .indentation {
-  float: right;
+  [dir="rtl"] & {
+    float: right;
+  }
 }
 
 /**
@@ -305,50 +306,58 @@ body.drag-y {
 
 /* LTR tree child. */
 
-:is(.tree-child path):not(.tree__item-child-ltr) {
-  display: none;
-}
+.tree-child path {
+  &:not(.tree__item-child-ltr) {
+    display: none;
+  }
 
-.tree__item-child-ltr:is(.tree-child path) {
-  display: block;
+  &.tree__item-child-ltr {
+    display: block;
+  }
 }
 
 /* RTL tree child. */
 
-:is([dir="rtl"] .tree-child path):not(.tree__item-child-rtl) {
-  display: none;
-}
+[dir="rtl"] {
+  & .tree-child path {
+    &:not(.tree__item-child-rtl) {
+      display: none;
+    }
+    &.tree__item-child-rtl {
+      display: block;
+    }
+  }
 
-.tree__item-child-rtl:is([dir="rtl"] .tree-child path) {
-  display: block;
-}
-
-/* Last RTL tree child. */
-
-:is([dir="rtl"] .tree-child-last path):not(.tree__item-child-last-rtl) {
-  display: none;
-}
-
-.tree__item-child-last-rtl:is([dir="rtl"] .tree-child-last path) {
-  display: block;
+  /* Last RTL tree child. */
+  & .tree-child-last path {
+    &:not(.tree__item-child-last-rtl) {
+      display: none;
+    }
+    &.tree__item-child-last-rtl {
+      display: block;
+    }
+  }
 }
 
 /* Last LTR tree child. */
 
-:is(.tree-child-last path):not(.tree__item-child-last-ltr) {
-  display: none;
-}
-
-.tree__item-child-last-ltr:is(.tree-child-last path) {
-  display: block;
+.tree-child-last path {
+  &:not(.tree__item-child-last-ltr) {
+    display: none;
+  }
+  &.tree__item-child-last-ltr {
+    display: block;
+  }
 }
 
 /* Horizontal line. */
 
-:is(.tree-child-horizontal path):not(.tree__item-horizontal) {
-  display: none;
-}
+.tree-child-horizontal path {
+  &:not(.tree__item-horizontal) {
+    display: none;
+  }
 
-.tree__item-horizontal:is(.tree-child-horizontal path) {
-  display: block;
+  &.tree__item-horizontal {
+    display: block;
+  }
 }

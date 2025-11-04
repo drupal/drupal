@@ -44,28 +44,28 @@ tr .form-item,
   font-size: var(--font-size-s); /* ~14px */
   font-weight: bold;
   line-height: var(--line-height-form-label);
-}
 
-.form-item__label[for] {
-  cursor: pointer;
-}
+  &[for] {
+    cursor: pointer;
+  }
 
-.form-item__label.option {
-  display: inline;
-  font-weight: normal;
-}
+  &.option {
+    display: inline;
+    font-weight: normal;
+  }
 
-.form-item__label.has-error {
-  color: var(--input--error-color);
-}
+  &.has-error {
+    color: var(--input--error-color);
+  }
 
-.form-item__label.option.has-error {
-  color: inherit;
-}
+  &.option.has-error {
+    color: inherit;
+  }
 
-.form-item__label.is-disabled {
-  cursor: default; /* @todo ...or auto? */
-  color: var(--input--disabled-fg-color);
+  &.is-disabled {
+    cursor: default; /* @todo ...or auto? */
+    color: var(--input--disabled-fg-color);
+  }
 }
 
 /* Multiple selectors used to ensure styling even if modules override markup. */
@@ -98,10 +98,10 @@ tr .form-item,
   color: var(--input-fg-color--description);
   font-size: var(--font-size-xs); /* ~13px */
   line-height: calc(17rem / 16); /* 17px */
-}
 
-.form-item__description.is-disabled {
-  color: var(--input--disabled-fg-color);
+  &.is-disabled {
+    color: var(--input--disabled-fg-color);
+  }
 }
 
 /**
@@ -140,21 +140,21 @@ tr .form-item,
   flex-wrap: wrap;
   align-items: flex-start;
   margin-block: var(--space-xs);
-}
 
-:is(.form-actions, .field-actions) .form-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs) 0;
-}
+  & .form-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) 0;
+  }
 
-:is(.form-actions, .field-actions) .button,
-:is(.form-actions, .field-actions) .action-link {
-  margin-block: var(--space-xs);
-}
+  & .button,
+  & .action-link {
+    margin-block: var(--space-xs);
+  }
 
-:is(.form-actions, .field-actions) .ajax-progress--throbber {
-  align-self: center;
+  & .ajax-progress--throbber {
+    align-self: center;
+  }
 }
 
 .form-actions > .form-wrapper {
@@ -188,32 +188,32 @@ tr .form-item,
   flex-wrap: wrap;
   align-items: center;
   max-width: 100%;
-}
 
-.form-item--editor-format .form-item__label,
-.form-item--editor-format .form-item__prefix,
-.form-item--editor-format .form-item__suffix,
-.form-item--editor-format .form-element--editor-format {
-  min-width: 1px;
-}
+  & .form-item__label,
+  & .form-item__prefix,
+  & .form-item__suffix,
+  & .form-element--editor-format {
+    min-width: 1px;
+  }
 
-.form-item--editor-format .form-item__label,
-.form-item--editor-format .form-item__prefix,
-.form-item--editor-format .form-item__suffix,
-.form-item--editor-format .form-element--editor-format {
-  min-width: 1px;
-}
+  & .form-item__label,
+  & .form-item__prefix,
+  & .form-item__suffix,
+  & .form-element--editor-format {
+    min-width: 1px;
+  }
 
-.form-item--editor-format .form-item__label,
-.form-item--editor-format .form-item__prefix,
-.form-item--editor-format .form-item__suffix {
-  margin-inline-end: var(--space-xs);
-}
+  & .form-item__label,
+  & .form-item__prefix,
+  & .form-item__suffix {
+    margin-inline-end: var(--space-xs);
+  }
 
-.form-item--editor-format .form-item__description,
-.form-item--editor-format .form-item__error-message {
-  flex: 0 1 100%;
-  min-width: 1px;
+  & .form-item__description,
+  & .form-item__error-message {
+    flex: 0 1 100%;
+    min-width: 1px;
+  }
 }
 
 /**

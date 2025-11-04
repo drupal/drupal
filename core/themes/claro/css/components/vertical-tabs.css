@@ -35,10 +35,10 @@
   padding-block-start: var(--vertical-tabs-menu-item-shadow-extraspace);
   list-style: none;
   color: var(--color-text);
-}
 
-[dir="rtl"] .vertical-tabs__menu {
-  float: right;
+  [dir="rtl"] & {
+    float: right;
+  }
 }
 
 /**
@@ -128,43 +128,42 @@
   border-start-end-radius: 0;
   border-end-end-radius: 0;
   border-end-start-radius: var(--vertical-tabs-border-radius);
-}
 
-.vertical-tabs__menu-link:focus {
-  z-index: 4; /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  box-shadow: none;
-}
+  &:focus {
+    z-index: 4; /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    box-shadow: none;
 
-.vertical-tabs__menu-link:focus::after {
-  position: absolute;
-  inset: 0;
-  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
-  content: "";
-  pointer-events: none;
-  border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
-  border-radius: var(--vertical-tabs-border-radius);
-}
+    &::after {
+      position: absolute;
+      inset: 0;
+      margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
+      content: "";
+      pointer-events: none;
+      border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
+      border-radius: var(--vertical-tabs-border-radius);
+    }
+  }
 
-.vertical-tabs__menu-link:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: var(--color-absolutezero);
-}
+  &:hover {
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    color: var(--color-absolutezero);
+    &::before {
+      background: var(--color-bgblue-hover);
+    }
+  }
 
-.vertical-tabs__menu-link:hover::before {
-  background: var(--color-bgblue-hover);
-}
-
-.vertical-tabs__menu-link::before {
-  position: absolute;
-  z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
-  inset-block: calc(var(--vertical-tabs-border-size) * -1);
-  inset-inline: calc(var(--vertical-tabs-menu-link--active-border-size) * -1) 0;
-  content: "";
-  pointer-events: none;
-  background-clip: padding-box;
+  &::before {
+    position: absolute;
+    z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
+    inset-block: calc(var(--vertical-tabs-border-size) * -1);
+    inset-inline: calc(var(--vertical-tabs-menu-link--active-border-size) * -1) 0;
+    content: "";
+    pointer-events: none;
+    background-clip: padding-box;
+  }
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
@@ -188,10 +187,8 @@
   border-start-end-radius: 0;
   border-end-end-radius: 0;
   border-end-start-radius: var(--base-border-radius);
-}
 
-@media (forced-colors: active) {
-  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+  @media (forced-colors: active) {
     border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid canvastext;
   }
 }
@@ -237,21 +234,21 @@
   z-index: 1; /* The wrapper of the details of the vertical tabs should be on a higher level than the vertical tabs menu */
   inset-block-start: -1px;
   margin-block: 0;
-}
 
-.vertical-tabs__panes::after {
-  display: block; /* This clearfix makes the pane wrapper at least as tall as the menu. */
-  clear: both;
-  content: "";
+  &::after {
+    display: block; /* This clearfix makes the pane wrapper at least as tall as the menu. */
+    clear: both;
+    content: "";
+  }
 }
 
 .vertical-tabs .vertical-tabs__panes {
   margin-inline-start: var(--vertical-tabs-menu-width);
   border-top-left-radius: 0;
-}
 
-[dir="rtl"] :is(.vertical-tabs .vertical-tabs__panes) {
-  border-top-left-radius: var(--vertical-tabs-border-radius);
+  [dir="rtl"] & {
+    border-top-left-radius: var(--vertical-tabs-border-radius);
+  }
 }
 
 /**
@@ -265,30 +262,30 @@
   /* Render on top of the border of vertical-tabs__items. */
   margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-border-size) * -1) 0;
   border-radius: 0;
-}
 
-.vertical-tabs__item.first {
-  border-top-left-radius: var(--details-accordion-border-size-radius);
-  border-top-right-radius: var(--details-accordion-border-size-radius);
-}
+  &.first {
+    border-top-left-radius: var(--details-accordion-border-size-radius);
+    border-top-right-radius: var(--details-accordion-border-size-radius);
+  }
 
-.vertical-tabs__item.last {
-  margin-bottom: calc(var(--vertical-tabs-border-size) * -1);
-  border-bottom-right-radius: var(--details-accordion-border-size-radius);
-  border-bottom-left-radius: var(--details-accordion-border-size-radius);
+  &.last {
+    margin-bottom: calc(var(--vertical-tabs-border-size) * -1);
+    border-bottom-right-radius: var(--details-accordion-border-size-radius);
+    border-bottom-left-radius: var(--details-accordion-border-size-radius);
+  }
 }
 
 .js .vertical-tabs .vertical-tabs__item {
   overflow: hidden;
   margin: 0;
   border: 0;
-}
 
-.first:is(.js .vertical-tabs .vertical-tabs__item),
-.last:is(.js .vertical-tabs .vertical-tabs__item) {
-  border-radius: 0;
-}
+  &.first,
+  &.last {
+    border-radius: 0;
+  }
 
-:is(.js .vertical-tabs .vertical-tabs__item) > summary {
-  display: none;
+  & > summary {
+    display: none;
+  }
 }

@@ -214,14 +214,14 @@ pre {
 
 details {
   line-height: var(--details-line-height);
-}
 
-details summary {
-  padding: 0.95em 1.45em;
-}
+  & summary {
+    padding: 0.95em 1.45em;
 
-:is(details summary):focus {
-  outline: none;
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 img {

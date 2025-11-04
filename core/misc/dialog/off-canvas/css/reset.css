@@ -17,11 +17,11 @@
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   line-height: 1.4;
-}
 
-:is(#drupal-off-canvas-wrapper *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *, .ui-resizable-handle)))::after,
-:is(#drupal-off-canvas-wrapper *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *, .ui-resizable-handle)))::before {
-  all: revert;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
+  &::after,
+  &::before {
+    all: revert;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
 }

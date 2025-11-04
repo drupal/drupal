@@ -14,14 +14,14 @@
   display: grid;
   gap: var(--grid-gap);
   grid-template-columns: var(--layout-twocol-grid);
-}
 
-.layout--twocol-section > .layout__region--first {
-  grid-column: var(--layout-twocol-grid__first);
-}
+  & > .layout__region--first {
+    grid-column: var(--layout-twocol-grid__first);
+  }
 
-.layout--twocol-section > .layout__region--second {
-  grid-column: var(--layout-twocol-grid__second);
+  & > .layout__region--second {
+    grid-column: var(--layout-twocol-grid__second);
+  }
 }
 
 @media (min-width: 43.75rem) {

@@ -38,10 +38,12 @@
   column-width: var(--views-grid-item--min-width);
   column-count: var(--views-grid--column-count);
   column-gap: var(--views-grid--layout-gap);
-}
 
-:is(.views-view-grid--vertical .views-view-grid__item) > * {
-  padding-block-end: var(--views-grid--layout-gap);
-  page-break-inside: avoid;
-  break-inside: avoid;
+  & .views-view-grid__item {
+    & > * {
+      padding-block-end: var(--views-grid--layout-gap);
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
 }

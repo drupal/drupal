@@ -24,46 +24,46 @@
   --off-canvas-details-summary-background-color-hover: #222;
   --off-canvas-details-summary-text-color: #eee;
   --off-canvas-details-summary-text-color-hover: #fff;
-}
 
-#drupal-off-canvas-wrapper details {
-  margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
-  padding: 0 var(--off-canvas-padding);
-  color: var(--off-canvas-details-text-color);
-  border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width);
-  background: var(--off-canvas-details-background-color);
-}
+  & details {
+    margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
+    padding: 0 var(--off-canvas-padding);
+    color: var(--off-canvas-details-text-color);
+    border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width);
+    background: var(--off-canvas-details-background-color);
 
-:is(#drupal-off-canvas-wrapper details) + details {
-  margin-top: calc(-1 * var(--off-canvas-details-border-width));
-}
+    & + details {
+      margin-top: calc(-1 * var(--off-canvas-details-border-width));
+    }
+  }
 
-#drupal-off-canvas-wrapper summary {
-  margin: 0 calc(-1 * var(--off-canvas-padding));
-  padding: var(--off-canvas-details-summary-padding);
-  color: var(--off-canvas-details-summary-text-color);
-  border: var(--off-canvas-details-summary-border);
-  background-color: var(--off-canvas-details-summary-background-color);
-  font-size: var(--off-canvas-details-summary-font-size);
-}
+  & summary {
+    margin: 0 calc(-1 * var(--off-canvas-padding));
+    padding: var(--off-canvas-details-summary-padding);
+    color: var(--off-canvas-details-summary-text-color);
+    border: var(--off-canvas-details-summary-border);
+    background-color: var(--off-canvas-details-summary-background-color);
+    font-size: var(--off-canvas-details-summary-font-size);
 
-:is(#drupal-off-canvas-wrapper summary):hover {
-  color: var(--off-canvas-details-summary-text-color-hover);
-  background-color: var(--off-canvas-details-summary-background-color-hover);
-}
+    &:hover {
+      color: var(--off-canvas-details-summary-text-color-hover);
+      background-color: var(--off-canvas-details-summary-background-color-hover);
+    }
 
-:is(#drupal-off-canvas-wrapper summary):focus {
-  outline-offset: -4px; /* Ensure focus doesn't get cut off. */
-}
+    &:focus {
+      outline-offset: -4px; /* Ensure focus doesn't get cut off. */
+    }
 
-:is(#drupal-off-canvas-wrapper summary) a {
-  color: var(--off-canvas-details-text-color);
-}
+    & a {
+      color: var(--off-canvas-details-text-color);
 
-:is(:is(#drupal-off-canvas-wrapper summary) a):hover {
-  color: var(--off-canvas-details-summary-text-color-hover);
-}
+      &:hover {
+        color: var(--off-canvas-details-summary-text-color-hover);
+      }
+    }
+  }
 
-#drupal-off-canvas-wrapper .details-wrapper {
-  padding: var(--off-canvas-vertical-spacing-unit) 0;
+  & .details-wrapper {
+    padding: var(--off-canvas-vertical-spacing-unit) 0;
+  }
 }

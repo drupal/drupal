@@ -12,10 +12,10 @@
 
 .block-page-title-block {
   margin-block-end: var(--space-s);
-}
 
-.block-page-title-block:last-child {
-  margin-block-end: var(--space-l);
+  &:last-child {
+    margin-block-end: var(--space-l);
+  }
 }
 
 .page-title {
@@ -23,13 +23,13 @@
   margin: 0;
   font-size: var(--font-size-h1);
   -webkit-font-smoothing: antialiased;
-}
 
-.region-header > .page-title {
-  /**
+  .region-header > & {
+    /**
      * In this case page title is not rendered as a block ¯\_(ツ)_/¯.
      *
      * @see Drupal\system\Controller\BatchController::batchPage()
      */
-  margin-block: var(--breadcrumb-height) var(--space-l);
+    margin-block: var(--breadcrumb-height) var(--space-l);
+  }
 }

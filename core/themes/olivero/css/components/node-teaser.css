@@ -10,28 +10,28 @@
  * Node Teaser specific styles.
  */
 
-.node--view-mode-teaser .node__meta {
-  margin-block-end: var(--sp);
-}
+.node--view-mode-teaser {
+  & .node__meta {
+    margin-block-end: var(--sp);
 
-:is(.node--view-mode-teaser .node__meta) a {
-  color: var(--color-text-primary-medium);
-  font-weight: bold;
-}
+    & a {
+      color: var(--color-text-primary-medium);
+      font-weight: bold;
+    }
+  }
 
-.node--view-mode-teaser .field--tag-ref {
-  margin-block-start: var(--sp1);
-  margin-block-end: 0;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-  padding-block: 0;
-  padding-inline-start: 0;
-  padding-inline-end: 0;
-  background-color: transparent;
-}
+  & .field--tag-ref {
+    margin-block-start: var(--sp1);
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+    background-color: transparent;
 
-@media (min-width: 62.5rem) {
-  .node--view-mode-teaser .field--tag-ref {
-    margin-block-start: var(--sp2);
+    @media (min-width: 62.5rem) {
+      margin-block-start: var(--sp2);
+    }
   }
 }

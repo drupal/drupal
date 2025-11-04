@@ -33,43 +33,34 @@
   border-block-start: solid var(--color--white) calc(var(--sp3) + var(--drupal-displace-offset-top, 0px));
   background-color: var(--color--white);
   box-shadow: 0 0 72px rgb(0, 0, 0, 0.1);
-}
 
-.header-nav.is-active {
-  visibility: visible;
-  transform: translateX(calc(-100% - var(--drupal-displace-offset-right, 0px))); /* LTR */
-}
+  &.is-active {
+    visibility: visible;
+    transform: translateX(calc(-100% - var(--drupal-displace-offset-right, 0px))); /* LTR */
 
-.header-nav.is-active:dir(rtl) {
-  transform: translateX(calc(100% + var(--drupal-displace-offset-left, 0px)));
-}
+    &:dir(rtl) {
+      transform: translateX(calc(100% + var(--drupal-displace-offset-left, 0px)));
+    }
+  }
 
-@media (min-width: 31.25rem) {
-  .header-nav {
+  @media (min-width: 31.25rem) {
     border-top-width: calc(var(--sp5) + var(--drupal-displace-offset-top, 0px));
   }
-}
 
-@media (min-width: 43.75rem) {
-  .header-nav {
+  @media (min-width: 43.75rem) {
     padding-block-end: var(--sp3);
     padding-inline-start: var(--sp3);
     border-top-width: calc(var(--sp7) + var(--drupal-displace-offset-top, 0px));
   }
-}
 
-@media (min-width: 62.5rem) {
-  .header-nav {
+  @media (min-width: 62.5rem) {
     grid-column: 5 / 14;
   }
-}
 
-/*
+  /*
    * Ensure top border has the same color as the background when in forced colors.
    */
-
-@media (forced-colors: active) {
-  .header-nav {
+  @media (forced-colors: active) {
     border-top-color: canvas;
   }
 }
@@ -85,8 +76,8 @@ html.js .header-nav {
     transform 0.2s;
 }
 
-@media (min-width: 75rem) {
-  body:not(.is-always-mobile-nav) .header-nav {
+body:not(.is-always-mobile-nav) .header-nav {
+  @media (min-width: 75rem) {
     position: static;
     display: flex;
     visibility: visible;
@@ -107,22 +98,22 @@ html.js .header-nav {
   }
 }
 
-@media (min-width: 75rem) {
-  body.is-always-mobile-nav .header-nav {
-    overflow: auto;
-    max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
-    padding-inline-end: var(--sp);
-    transition:
-      transform 0.2s,
-      visibility 0.2s;
-    border-top-width: calc(var(--drupal-displace-offset-top, 0px) + var(--sp11));
-  }
-}
+body.is-always-mobile-nav {
+  & .header-nav {
+    @media (min-width: 75rem) {
+      overflow: auto;
+      max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
+      padding-inline-end: var(--sp);
+      transition:
+        transform 0.2s,
+        visibility 0.2s;
+      border-top-width: calc(var(--drupal-displace-offset-top, 0px) + var(--sp11));
+    }
 
-@media (min-width: 90rem) {
-  body.is-always-mobile-nav .header-nav {
-    max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width) + var(--grid-gap)))));
-    padding-inline-end: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
+    @media (min-width: 90rem) {
+      max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width) + var(--grid-gap)))));
+      padding-inline-end: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
+    }
   }
 }
 
@@ -136,14 +127,12 @@ html.js .header-nav {
   height: 100vh;
   opacity: 0.2;
   background: var(--color--gray-5);
-}
 
-.is-overlay-active .header-nav-overlay {
-  display: block;
-}
+  .is-overlay-active & {
+    display: block;
+  }
 
-@media (forced-colors: active) {
-  .header-nav-overlay {
+  @media (forced-colors: active) {
     background: canvastext;
   }
 }

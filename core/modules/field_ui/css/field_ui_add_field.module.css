@@ -32,17 +32,14 @@
   display: grid;
   gap: 0.75rem 1.25rem;
   margin-block: 0.625rem;
-}
 
-@media (min-width: 45rem) {
-  .add-field-container,
-  .group-field-options {
+  @media (min-width: 45rem) {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 75rem) {
-  .add-field-container {
+.add-field-container {
+  @media (min-width: 75rem) {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -59,10 +56,9 @@
   border: 1px solid #919297;
   gap: 0.75rem;
   border-radius: 0.25rem;
-}
-
-.field-option:hover {
-  color: unset;
+  &:hover {
+    color: unset;
+  }
 }
 
 .group-field-options {
@@ -79,15 +75,15 @@
   margin: 0;
   column-gap: 1.25rem;
   padding-block: 0.25rem;
-}
 
-.field-option__item > *:not(input) {
-  grid-column: 1;
-}
+  > *:not(input) {
+    grid-column: 1;
+  }
 
-.field-option__item > input {
-  grid-row: 1 / -1;
-  grid-column: 2;
+  > input {
+    grid-row: 1 / -1;
+    grid-column: 2;
+  }
 }
 
 .field-option__thumb {
@@ -102,56 +98,49 @@
   padding-inline-end: 2rem;
   border: 1px solid #d3d4d9;
   border-radius: 0.25rem;
-}
 
-.subfield-option .field-option-radio {
-  margin-inline-end: 0.4375rem;
-}
+  .field-option-radio {
+    margin-inline-end: 0.4375rem;
+  }
 
-.subfield-option .item-list ul {
-  margin-inline: 0;
-}
-
-.subfield-option .item-list {
-  padding-left: 1.4rem;
+  .item-list ul {
+    margin-inline: 0;
+  }
+  .item-list {
+    padding-left: 1.4rem;
+  }
 }
 
 .field-option,
 .subfield-option {
   cursor: pointer;
-}
-
-.focus:is(.field-option, .subfield-option) {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 2px;
-}
-
-.hover:is(.field-option, .subfield-option) {
-  border-color: var(--color-gray);
-  box-shadow:
-    inset 0 0 0 1px var(--color-gray),
-    var(--details-box-shadow);
-}
-
-:is(.field-option, .subfield-option):not(.selected, .error):hover .form-boolean {
-  border-color: var(--input-fg-color);
-  box-shadow: inset 0 0 0 1px var(--input-fg-color);
-}
-
-.selected:is(.field-option, .subfield-option) {
-  border-color: var(--color-blue);
-  box-shadow:
-    inset 0 0 0 2px var(--color-blue),
-    var(--details-box-shadow);
-}
-
-.error:is(.field-option, .subfield-option) {
-  border-color: var(--color-red);
-  box-shadow:
-    inset 0 0 0 1px var(--color-red),
-    var(--details-box-shadow);
-}
-
-:is(.field-option, .subfield-option) .form-item__label.has-error {
-  color: currentColor;
+  &.focus {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  &.hover {
+    border-color: var(--color-gray);
+    box-shadow:
+      inset 0 0 0 1px var(--color-gray),
+      var(--details-box-shadow);
+  }
+  &:not(.selected, .error):hover .form-boolean {
+    border-color: var(--input-fg-color);
+    box-shadow: inset 0 0 0 1px var(--input-fg-color);
+  }
+  &.selected {
+    border-color: var(--color-blue);
+    box-shadow:
+      inset 0 0 0 2px var(--color-blue),
+      var(--details-box-shadow);
+  }
+  &.error {
+    border-color: var(--color-red);
+    box-shadow:
+      inset 0 0 0 1px var(--color-red),
+      var(--details-box-shadow);
+  }
+  & .form-item__label.has-error {
+    color: currentColor;
+  }
 }

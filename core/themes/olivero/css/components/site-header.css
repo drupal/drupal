@@ -17,10 +17,8 @@
    * contextual links.
    */
   z-index: 101;
-}
 
-@media (min-width: 75rem) {
-  .site-header {
+  @media (min-width: 75rem) {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */
     min-height: var(--site-header-height-wide);
     border-block-end: solid 1px transparent; /* Will show in Windows high contrast mode. */
@@ -40,20 +38,24 @@
   display: flex;
   align-items: flex-end;
   transition: all 0.5s;
-}
 
-@media (min-width: 75rem) {
-  .site-header__fixable.is-fixed:not(.is-expanded) {
-    pointer-events: none;
+  &.is-fixed {
+    @media (min-width: 75rem) {
+      &:not(.is-expanded) {
+        pointer-events: none;
+      }
+    }
   }
 }
 
 @media (min-width: 75rem) {
-  body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed {
-    position: fixed;
-    z-index: 102; /* Appear above body content that is position: relative */
-    inset-block-start: calc(var(--drupal-displace-offset-top, 0px) - var(--sp4));
-    max-width: var(--max-bg-color);
+  body:not(.is-always-mobile-nav) {
+    & .site-header__fixable.is-fixed {
+      position: fixed;
+      z-index: 102; /* Appear above body content that is position: relative */
+      inset-block-start: calc(var(--drupal-displace-offset-top, 0px) - var(--sp4));
+      max-width: var(--max-bg-color);
+    }
   }
 }
 
@@ -70,8 +72,8 @@
  * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
  */
 
-@media (min-width: 75rem) {
-  html.js body:not(.is-always-mobile-nav) .site-header__inner {
+html.js body:not(.is-always-mobile-nav) .site-header__inner {
+  @media (min-width: 75rem) {
     transition:
       opacity 0.3s,
       transform 0.3s,
@@ -79,29 +81,29 @@
   }
 }
 
-@media (min-width: 75rem) {
-  .site-header__fixable.is-expanded .site-header__inner {
+.site-header__fixable.is-expanded .site-header__inner {
+  @media (min-width: 75rem) {
     box-shadow: -36px 1px 36px rgb(0, 0, 0, 0.08); /* LTR */
   }
 }
 
-@media (min-width: 75rem) {
-  [dir="rtl"] .site-header__fixable.is-expanded .site-header__inner {
+[dir="rtl"] .site-header__fixable.is-expanded .site-header__inner {
+  @media (min-width: 75rem) {
     box-shadow: 36px 1px 36px rgb(0, 0, 0, 0.08);
   }
 }
 
 /* Hide the desktop nav when it's fixed and not active. */
 
-@media (min-width: 75rem) {
-  body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
+body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
+  @media (min-width: 75rem) {
     transform: translateX(-101%); /* LTR */
     opacity: 0;
   }
 }
 
-@media (min-width: 75rem) {
-  [dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
+[dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
+  @media (min-width: 75rem) {
     transform: translateX(101%);
   }
 }

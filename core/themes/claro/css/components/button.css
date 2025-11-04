@@ -50,57 +50,58 @@
   line-height: 1rem;
   appearance: none;
   -webkit-font-smoothing: antialiased; /* 2 */
-}
 
-.button:not(:focus) {
-  box-shadow: 0 1px 2px rgb(0, 0, 0, 0.25);
-}
+  &:not(:focus) {
+    box-shadow: 0 1px 2px rgb(0, 0, 0, 0.25);
+  }
 
-.button:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: var(--button-fg-color);
-  background-color: var(--button--hover-bg-color);
-}
+  &:hover {
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    color: var(--button-fg-color);
+    background-color: var(--button--hover-bg-color);
+  }
 
-.button:focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
+  &:focus {
+    -webkit-text-decoration: none;
+    text-decoration: none;
+  }
 
-.button:active {
-  background-color: var(--button--active-bg-color);
+  &:active {
+    background-color: var(--button--active-bg-color);
+  }
 }
 
 /* Common styles for small buttons. */
 
-.no-touchevents .button--small {
-  margin-block: var(--space-s);
-  margin-inline: 0 var(--space-xs);
-  padding: calc(var(--space-xs) - 1px) calc(var(--space-m) - 1px); /* 1 */
-  font-size: var(--font-size-xs);
-}
+.no-touchevents {
+  & .button--small {
+    margin-block: var(--space-s);
+    margin-inline: 0 var(--space-xs);
+    padding: calc(var(--space-xs) - 1px) calc(var(--space-m) - 1px); /* 1 */
+    font-size: var(--font-size-xs);
+  }
 
-/* Common styles for extra small buttons. */
-
-.no-touchevents .button--extrasmall {
-  margin-block: var(--space-xs);
-  margin-inline: 0 var(--space-xs);
-  padding: calc(calc(var(--space-xs) / 2) - 1px) calc(var(--space-s) - 1px); /* 1 */
-  font-size: var(--font-size-xs);
+  /* Common styles for extra small buttons. */
+  & .button--extrasmall {
+    margin-block: var(--space-xs);
+    margin-inline: 0 var(--space-xs);
+    padding: calc(calc(var(--space-xs) / 2) - 1px) calc(var(--space-s) - 1px); /* 1 */
+    font-size: var(--font-size-xs);
+  }
 }
 
 /* Styles for action link buttons. */
 
 .button--action {
   margin: 0;
-}
 
-.button--action::before {
-  margin-inline: -0.25em 0;
-  padding-inline: 0 0.25em;
-  content: "+";
-  font-weight: 900;
+  &::before {
+    margin-inline: -0.25em 0;
+    padding-inline: 0 0.25em;
+    content: "+";
+    font-weight: 900;
+  }
 }
 
 /* Primary button style.s */
@@ -108,11 +109,11 @@
 .button--primary {
   color: var(--button-fg-color--primary);
   background-color: var(--button-bg-color--primary);
-}
 
-.button--primary:is(:hover, :active) {
-  color: var(--button-fg-color--primary);
-  background-color: var(--button--hover-bg-color--primary);
+  &:is(:hover, :active) {
+    color: var(--button-fg-color--primary);
+    background-color: var(--button--hover-bg-color--primary);
+  }
 }
 
 /* Danger button styles */
@@ -120,11 +121,11 @@
 .button--danger {
   color: var(--button-fg-color--danger);
   background-color: var(--button-bg-color--danger);
-}
 
-.button--danger:is(:hover, :active) {
-  color: var(--button-fg-color--danger);
-  background-color: var(--button--hover-bg-color--danger);
+  &:is(:hover, :active) {
+    color: var(--button-fg-color--danger);
+    background-color: var(--button--hover-bg-color--danger);
+  }
 }
 
 /**
@@ -133,17 +134,18 @@
  * Overrides every definitions before, including variants.
  */
 
-.button:is(:disabled, .is-disabled) {
-  color: var(--button--disabled-fg-color);
-  background-color: var(--button--disabled-bg-color);
-}
+.button {
+  &:is(:disabled, .is-disabled) {
+    color: var(--button--disabled-fg-color);
+    background-color: var(--button--disabled-bg-color);
+  }
 
-/* Make disabled <link> behave like a [disabled] <input> or <button>. */
-
-.button.is-disabled {
-  -webkit-user-select: none;
-  user-select: none;
-  pointer-events: none;
+  /* Make disabled <link> behave like a [disabled] <input> or <button>. */
+  &.is-disabled {
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
 }
 
 /**

@@ -16,12 +16,14 @@
   padding-inline-start: 0;
   padding-inline-end: 0;
   list-style: none;
-}
-.action-links li {
-  display: inline-block;
-}
-:is(.action-links li) a {
-  color: var(--color-text-primary-medium);
+
+  & li {
+    display: inline-block;
+
+    & a {
+      color: var(--color-text-primary-medium);
+    }
+  }
 }
 .action-links-item {
   display: inline-block;

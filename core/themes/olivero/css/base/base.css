@@ -32,12 +32,12 @@ body {
   background-color: var(--color--gray-100);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='50' height='84' viewBox='0 0 50 84'%3e  %3cpath opacity='0.05' fill='%230e6ba6' d='M25,61.7C25,68.5,19.4,74,12.5,74S0,68.5,0,61.7c0-5.7,3.9-9.6,7.4-12.9c2.3-2.2,4.5-4.4,5.1-6.8c0.7,2.4,2.8,4.6,5.1,6.8C21.1,52.2,25,56,25,61.7z M42.6,6.8c-2.3-2.2-4.5-4.4-5.1-6.8c-0.7,2.4-2.9,4.6-5.1,6.8C28.9,10.2,25,14,25,19.7C25,26.5,30.6,32,37.5,32S50,26.5,50,19.7C50,14,46.1,10.2,42.6,6.8z'/%3e%3c/svg%3e");
   background-position: top left; /* LTR */
-}
 
-body.is-fixed {
-  position: fixed;
-  overflow: hidden;
-  width: 100%;
+  &.is-fixed {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+  }
 }
 
 [dir="rtl"] body {
@@ -46,15 +46,15 @@ body.is-fixed {
 
 a {
   color: var(--color-text-primary-medium);
-}
 
-a:hover {
-  color: var(--color--primary-50);
-}
+  &:hover {
+    color: var(--color--primary-50);
+  }
 
-a:focus {
-  outline: solid 2px currentColor;
-  outline-offset: 2px;
+  &:focus {
+    outline: solid 2px currentColor;
+    outline-offset: 2px;
+  }
 }
 
 button {
@@ -77,10 +77,8 @@ h1 {
   letter-spacing: -0.01em;
   font-size: 1.75rem;
   line-height: var(--sp2);
-}
 
-@media (min-width: 43.75rem) {
-  h1 {
+  @media (min-width: 43.75rem) {
     font-size: 3.75rem;
     line-height: var(--sp4);
   }
@@ -90,10 +88,8 @@ h2 {
   letter-spacing: -0.01em;
   font-size: 1.5rem;
   line-height: var(--sp2);
-}
 
-@media (min-width: 43.75rem) {
-  h2 {
+  @media (min-width: 43.75rem) {
     font-size: 2.25rem;
     line-height: var(--sp3);
   }
@@ -102,10 +98,8 @@ h2 {
 h3 {
   font-size: 1.25rem;
   line-height: var(--sp1-5);
-}
 
-@media (min-width: 43.75rem) {
-  h3 {
+  @media (min-width: 43.75rem) {
     font-size: 1.5rem;
     line-height: var(--sp2);
   }
@@ -136,15 +130,8 @@ h6 {
   color: var(--color-text-neutral-loud);
   font-family: var(--font-sans);
   font-weight: bold;
-}
 
-@media (min-width: 43.75rem) {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  @media (min-width: 43.75rem) {
     margin-block: var(--sp2);
   }
 }

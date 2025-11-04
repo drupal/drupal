@@ -23,14 +23,12 @@
   font-size: var(--font-size-s);
   font-weight: 600;
   line-height: 1.6;
-}
 
-.field--tags__label::after {
-  content: ":";
-}
+  &::after {
+    content: ":";
+  }
 
-@media (min-width: 43.75rem) {
-  .field--tags__label {
+  @media (min-width: 43.75rem) {
     line-height: 2;
   }
 }
@@ -79,11 +77,13 @@
   line-height: 1.5;
 }
 
-.node--view-mode-full .field--tags {
-  margin-block-start: var(--sp4);
-  margin-block-end: var(--sp4);
-  padding-block: var(--sp1-5);
-  padding-inline-start: var(--sp2);
-  padding-inline-end: var(--sp2);
-  background-color: var(--color--gray-100);
+.node--view-mode-full {
+  & .field--tags {
+    margin-block-start: var(--sp4);
+    margin-block-end: var(--sp4);
+    padding-block: var(--sp1-5);
+    padding-inline-start: var(--sp2);
+    padding-inline-end: var(--sp2);
+    background-color: var(--color--gray-100);
+  }
 }

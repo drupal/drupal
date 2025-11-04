@@ -30,10 +30,9 @@
    * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
    * @see https://github.com/csstools/postcss-plugins/issues/632
    */
-}
-
-:is(.field--label-inline .field__label, .field--label-inline .field__items):dir(rtl) {
-  float: right;
+  &:dir(rtl) {
+    float: right;
+  }
 }
 
 .field--label-inline .field__label,

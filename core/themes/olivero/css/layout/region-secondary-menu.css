@@ -14,20 +14,22 @@
   display: flex;
   margin-block-start: var(--sp2);
   margin-block-end: var(--sp2);
-}
 
-.region--secondary-menu > * {
-  margin-block-end: 0;
-}
-
-@media (min-width: 75rem) {
-  body:not(.is-always-mobile-nav) .region--secondary-menu {
-    justify-content: flex-end;
-    margin: 0;
-
-    /* If the secondary nav is the first item within the header, it does not need left separator. */
+  & > * {
+    margin-block-end: 0;
   }
-  :is(body:not(.is-always-mobile-nav) .region--secondary-menu):first-child .secondary-nav::before {
-    content: none;
+}
+
+body:not(.is-always-mobile-nav) {
+  @media (min-width: 75rem) {
+    & .region--secondary-menu {
+      justify-content: flex-end;
+      margin: 0;
+
+      /* If the secondary nav is the first item within the header, it does not need left separator. */
+      &:first-child .secondary-nav::before {
+        content: none;
+      }
+    }
   }
 }

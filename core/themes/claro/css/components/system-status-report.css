@@ -63,17 +63,19 @@
   display: block;
 }
 
-.claro-details__wrapper.claro-details__wrapper--system-status-report {
-  margin: 0;
+.claro-details__wrapper {
+  &.claro-details__wrapper--system-status-report {
+    margin: 0;
+  }
 }
 
 .system-status-report__row {
   display: flex;
   border-bottom: 1px solid var(--system-admin-status-report-border-color);
-}
 
-.system-status-report__row:last-of-type {
-  border-bottom: none;
+  &:last-of-type {
+    border-bottom: none;
+  }
 }
 
 .system-status-report__requirements-group {
@@ -87,11 +89,11 @@
   border: 0;
   border-radius: 0;
   background-color: transparent;
-}
 
-.system-status-report__entry h3 {
-  margin-block: 0.625rem;
-  font-size: 1.231em;
+  & h3 {
+    margin-block: 0.625rem;
+    font-size: 1.231em;
+  }
 }
 
 .system-status-report__entry--error {
@@ -102,10 +104,12 @@
   background-color: transparent;
 }
 
-.system-status-report .claro-details {
-  border: none;
-  border-block-end: var(--details-border-size) solid var(--details-border-color);
-  box-shadow: none;
+.system-status-report {
+  & .claro-details {
+    border: none;
+    border-block-end: var(--details-border-size) solid var(--details-border-color);
+    box-shadow: none;
+  }
 }
 
 .system-status-report__status-title {
@@ -182,12 +186,12 @@
   .system-status-report__status-title {
     width: 18rem;
     cursor: default;
-  }
 
-  .system-status-report__status-title:hover,
-  .system-status-report__status-title:focus {
-    -webkit-text-decoration: none;
-    text-decoration: none;
+    &:hover,
+    &:focus {
+      -webkit-text-decoration: none;
+      text-decoration: none;
+    }
   }
 
   html.js .system-status-report__status-title::-webkit-details-marker {

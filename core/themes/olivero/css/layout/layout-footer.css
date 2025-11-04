@@ -22,32 +22,28 @@
 
 .site-footer__inner {
   padding-block: var(--sp2);
-}
 
-@media (min-width: 75rem) {
-  .site-footer__inner {
+  @media (min-width: 75rem) {
     padding-block: var(--sp4) var(--sp13);
   }
 }
 
-:is(.region--footer_top__inner, .region--footer_bottom__inner) > * {
-  margin-block-end: var(--sp2);
-}
+.region--footer_top__inner,
+.region--footer_bottom__inner {
+  & > * {
+    margin-block-end: var(--sp2);
 
-@media (min-width: 43.75rem) {
-  :is(.region--footer_top__inner, .region--footer_bottom__inner) > * {
-    flex: 1;
-    margin-block-end: 0;
+    @media (min-width: 43.75rem) {
+      flex: 1;
+      margin-block-end: 0;
+
+      &:not(:last-child) {
+        margin-inline-end: var(--sp2);
+      }
+    }
   }
 
-  :is(:is(.region--footer_top__inner, .region--footer_bottom__inner) > *):not(:last-child) {
-    margin-inline-end: var(--sp2);
-  }
-}
-
-@media (min-width: 43.75rem) {
-  .region--footer_top__inner,
-  .region--footer_bottom__inner {
+  @media (min-width: 43.75rem) {
     display: flex;
     flex-wrap: wrap;
   }
