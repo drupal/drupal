@@ -11,10 +11,9 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Utility\CallableResolver;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
-use Symfony\Component\DependencyInjection\ContainerInterface as SymfonyContainerInterface;
+use Symfony\Contracts\Service\ServiceCollectionInterface;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -64,7 +63,7 @@ class ThemeManager implements ThemeManagerInterface {
     protected ModuleHandlerInterface $moduleHandler,
     protected CallableResolver $callableResolver,
     #[AutowireLocator('theme_engine', 'engine_name')]
-    protected ContainerInterface $themeEngines,
+    protected ServiceCollectionInterface $themeEngines,
     protected ?KeyValueFactoryInterface $keyValueFactory = NULL,
     #[Autowire(service: 'cache.bootstrap')]
     protected ?CacheBackendInterface $cache = NULL,
@@ -660,7 +659,7 @@ class ThemeManager implements ThemeManagerInterface {
    * {@inheritdoc}
    */
   public function getThemeEngine(string $name): ?ThemeEngineInterface {
-    return $this->themeEngines->get($name, SymfonyContainerInterface::NULL_ON_INVALID_REFERENCE);
+    return $this->themeEngines->has($name) ? $this->themeEngines->get($name) : NULL;
   }
 
 }
