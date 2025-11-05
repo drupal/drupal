@@ -162,19 +162,22 @@ class ComponentElement extends RenderElementBase {
    *   The render element.
    */
   private function mergeElementAttributesToPropAttributes(array &$element): void {
+    // Prepare #props attributes to be both mergeable and renderable.
+    $prop_attributes = $element['#props']['attributes'] ?? [];
+    $prop_attributes = is_array($prop_attributes) ? new Attribute($prop_attributes) : $prop_attributes;
+
     if (!isset($element['#attributes'])) {
+      $element['#props']['attributes'] = $prop_attributes;
       return;
     }
 
     // If attributes value is an array, convert it to an Attribute object as
-    // \Drupal\Core\Template\Atribute::merge() expects an Attribute object.
+    // \Drupal\Core\Template\Attribute::merge() expects an Attribute object.
     $element_attributes = is_array($element['#attributes']) ? new Attribute($element['#attributes']) : $element['#attributes'];
 
     // Merge ['#attributes'] with the ['#props']['attributes']. So that #props
     // attributes take precedence.
-    $element['#props']['attributes'] = empty($element['#props']['attributes'])
-      ? $element_attributes
-      : $element_attributes->merge($element['#props']['attributes']);
+    $element['#props']['attributes'] = $element_attributes->merge($prop_attributes);
   }
 
   /**
