@@ -374,6 +374,8 @@ default:
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_DB: "mysql-8"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
 
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
