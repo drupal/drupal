@@ -215,6 +215,11 @@ final class Importer implements LoggerAwareInterface {
       throw new ImportException('The uuid metadata must be specified.');
     }
 
+    // Allow third-party code to modify the entity data before the entity is
+    // created.
+    $event = new PreEntityImportEvent($data);
+    $data = ['_meta' => $event->metadata] + $this->eventDispatcher->dispatch($event)->data;
+
     $is_root = FALSE;
     // @see ::loadEntityDependency()
     if ($this->dependencies === NULL && !empty($data['_meta']['depends'])) {

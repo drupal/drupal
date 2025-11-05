@@ -1,0 +1,21 @@
+_meta:
+  version: '1.0'
+  entity_type: entity_test
+  uuid: fedcba98-7654-3210-fedc-ba9876543210
+  bundle: entity_test
+  default_langcode: en
+  depends:
+    01234567-89ab-cdef-0123-456789abcdef: entity_test
+default:
+  name:
+    -
+      value: 'Test Entity with Dependencies'
+  created:
+    -
+      value: 1711638800
+  user_id:
+    -
+      target_id: 1
+  langcode:
+    -
+      value: en
