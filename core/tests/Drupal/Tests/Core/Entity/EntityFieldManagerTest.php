@@ -619,7 +619,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $this->entityType, 'base_field_override' => $override_entity_type]);
 
     $storage = $this->prophesize(EntityStorageInterface::class);
-    $storage->loadMultiple(Argument::type('array'))->willReturn([]);
+    $storage->loadMultiple()->willReturn([]);
 
     // By default, make the storage entity class lookup return the
     // EntityTypeManagerTestEntity class.
