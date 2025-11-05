@@ -138,11 +138,20 @@ class Query extends QueryBase implements QueryInterface {
     if ($this->latestRevision && $revision_field) {
       // Fetch all latest revision ids in a sub-query.
       $revision_subquery = $this->connection->select($base_table, 'subquery_base_table');
-      $revision_subquery->addExpression("MAX(subquery_base_table.$revision_field)");
-      $revision_subquery->where("base_table.$id_field = subquery_base_table.$id_field");
+      $revision_subquery->fields('subquery_base_table', [$id_field]);
+      $revision_subquery->addExpression("MAX(subquery_base_table.$revision_field)", 'maximum_revision_id');
+      $revision_subquery->groupBy("subquery_base_table.$id_field");
+
+      // Optimize the query if the query is only looking for a single entity.
+      // This improves the performance of
+      // \Drupal\Core\Entity\ContentEntityStorageBase::getLatestRevisionId().
+      $conditions = $this->condition->conditions();
+      if (count($conditions) === 1 && isset($conditions[0]['field']) && $conditions[0]['field'] === $id_field) {
+        $revision_subquery->condition($id_field, $conditions[0]['value'], $conditions[0]['operator']);
+      }
 
       // Restrict results only to latest ids.
-      $this->sqlQuery->condition("base_table.$revision_field", $revision_subquery, 'IN');
+      $this->sqlQuery->innerJoin($revision_subquery, 'sq_base_table', "base_table.$id_field = sq_base_table.$id_field AND base_table.$revision_field = sq_base_table.maximum_revision_id");
     }
 
     if (is_null($this->accessCheck)) {
