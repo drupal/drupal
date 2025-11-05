@@ -617,7 +617,7 @@ abstract class BrowserTestBase extends TestCase {
    *   The configuration object with original configuration data.
    */
   protected function config($name) {
-    return $this->container->get('config.factory')->getEditable($name);
+    return \Drupal::configFactory()->getEditable($name);
   }
 
   /**
