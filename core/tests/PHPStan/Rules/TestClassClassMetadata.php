@@ -15,13 +15,13 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Ensures abstract test base classes do not carry metadata.
+ * Rules class-level PHPUnit test metadata in test classes.
  *
  * @implements Rule<\PHPStan\Node\InClassNode>
  *
  * @internal
  */
-final class NoClassMetadataOnAbstractTestClasses implements Rule {
+final class TestClassClassMetadata implements Rule {
 
   /**
    * PHPUnit metadata annotations.
@@ -44,6 +44,7 @@ final class NoClassMetadataOnAbstractTestClasses implements Rule {
     '@doesNotPerformAssertions',
     '@group',
     '@large',
+    '@legacy-covers',
     '@medium',
     '@postCondition',
     '@preCondition',
@@ -77,9 +78,16 @@ final class NoClassMetadataOnAbstractTestClasses implements Rule {
   public function processNode(Node $node, Scope $scope): array {
     $class = $node->getClassReflection();
 
-    if ($class->isSubclassOfClass($this->reflectionProvider->getClass(TestCase::class)) && $class->isAbstract()) {
-      $fails = [];
+    // We only process PHPUnit test classes here.
+    if (!$class->isSubclassOfClass($this->reflectionProvider->getClass(TestCase::class))) {
+      return [];
+    }
 
+    $fails = [];
+
+    if ($class->isAbstract()) {
+      // Abstract test classes (i.e. base test classes) should not have any
+      // metadata on the class definition, neither attributes nor annotations.
       foreach ($class->getAttributes() as $attribute) {
         if (str_starts_with($attribute->getName(), 'PHPUnit\\Framework\\Attributes\\')) {
           $fails[] = RuleErrorBuilder::message("Abstract test class {$class->getName()} must not add attribute {$attribute->getName()}.")
@@ -102,11 +110,26 @@ final class NoClassMetadataOnAbstractTestClasses implements Rule {
           }
         }
       }
-
-      return $fails;
+    }
+    else {
+      // Concrete test classes should no longer have PHPUnit metadata
+      // annotations.
+      $resolvedPhpDoc = $class->getResolvedPhpDoc();
+      if ($resolvedPhpDoc) {
+        foreach ($resolvedPhpDoc->getPhpDocNodes() as $phpDocNode) {
+          foreach ($phpDocNode->getTags() as $tag) {
+            if (in_array($tag->name, $this->annotationTargets, TRUE)) {
+              $fails[] = RuleErrorBuilder::message("Test class {$class->getName()} must not add annotation {$tag->name}.")
+                ->identifier('testClass.metadataForbidden')
+                ->line($node->getStartLine())
+                ->build();
+            }
+          }
+        }
+      }
     }
 
-    return [];
+    return $fails;
   }
 
 }

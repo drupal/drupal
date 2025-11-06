@@ -37,3 +37,9 @@ class ConcreteWithAnnotationTest extends TestCase {
 #[RunTestsInSeparateProcesses]
 class ConcreteWithAttributeTest extends TestCase {
 }
+
+class ConcreteTest extends TestCase {
+}
+
+class NotATestClass {
+}

@@ -6,23 +6,23 @@ namespace Drupal\PHPStan\Tests;
 
 // cspell:ignore analyse
 
-use Drupal\PHPStan\Rules\NoClassMetadataOnAbstractTestClasses;
+use Drupal\PHPStan\Rules\TestClassClassMetadata;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
 /**
- * Tests NoClassMetadataOnAbstractTestClasses rule.
+ * Tests TestClassClassMetadata rule.
  *
- * @extends RuleTestCase<NoClassMetadataOnAbstractTestClasses>
+ * @extends RuleTestCase<TestClassClassMetadata>
  */
-class NoClassMetadataOnAbstractTestClassesTest extends RuleTestCase {
+class TestClassClassMetadataTest extends RuleTestCase {
 
   /**
    * {@inheritdoc}
    */
   protected function getRule(): Rule {
-    return new NoClassMetadataOnAbstractTestClasses(
+    return new TestClassClassMetadata(
       self::getContainer()->getByType(ReflectionProvider::class),
     );
   }
@@ -32,7 +32,7 @@ class NoClassMetadataOnAbstractTestClassesTest extends RuleTestCase {
    */
   public function testRule(): void {
     $this->analyse(
-      [__DIR__ . '/../fixtures/abstract-test-classes.php'],
+      [__DIR__ . '/../fixtures/test-classes-with-metadata.php'],
       [
         [
           'Abstract test class Drupal\Tests\Core\Foo\BarTest must not add attribute PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses.',
@@ -45,6 +45,10 @@ class NoClassMetadataOnAbstractTestClassesTest extends RuleTestCase {
         [
           'Abstract test class Drupal\Tests\Core\Foo\BarTest must not add annotation @coversNothing.',
           16,
+        ],
+        [
+          'Test class Drupal\Tests\Core\Foo\ConcreteWithAnnotationTest must not add annotation @group.',
+          34,
         ],
       ]
     );

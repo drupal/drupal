@@ -16,12 +16,14 @@ use Drupal\package_manager\Event\SandboxEvent;
 use Drupal\package_manager\EventSubscriber\DirectWriteSubscriber;
 use Drupal\package_manager\Exception\SandboxEventException;
 use Drupal\package_manager\PathLocator;
+use Drupal\package_manager\SandboxManagerBase;
 use Drupal\package_manager\StatusCheckTrait;
 use Drupal\package_manager\ValidationResult;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
@@ -30,12 +32,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests Direct Write.
- *
- * @legacy-covers \Drupal\package_manager\SandboxManagerBase::isDirectWrite
  */
 #[Group('package_manager')]
 #[CoversClass(DirectWriteSubscriber::class)]
 #[CoversClass(DirectWritePreconditionBypass::class)]
+#[CoversMethod(SandboxManagerBase::class, 'isDirectWrite')]
 #[RunTestsInSeparateProcesses]
 class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
 
