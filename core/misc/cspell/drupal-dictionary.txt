@@ -3,6 +3,7 @@ autoplay
 bartik
 bubbleable
 buytaert
+buytaert's
 daterange
 dbtng
 dependee
@@ -41,6 +42,7 @@ revpub
 simpletest
 sitename
 tempstore
+tempstore's
 umami
 unpromote
 unsticky

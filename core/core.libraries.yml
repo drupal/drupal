@@ -842,10 +842,10 @@ htmx:
 
 internal.floating-ui:
   remote: https://github.com/floating-ui/floating-ui
-  version: "1.7.0"
+  version: "1.7.4"
   license:
     name: MIT
-    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.7.0/LICENSE
+    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.7.4/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }
@@ -921,10 +921,10 @@ sortable:
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "6.2.0"
+  version: "6.3.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.2.0/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.3.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
