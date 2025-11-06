@@ -56,9 +56,9 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 345,
-      'CacheSetCount' => 405,
+      'CacheSetCount' => 361,
       'CacheDeleteCount' => 0,
-      'CacheTagLookupQueryCount' => 45,
+      'CacheTagLookupQueryCount' => 26,
       'CacheTagInvalidationCount' => 0,
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
@@ -118,11 +118,11 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 110,
-      'CacheGetCount' => 214,
+      'CacheGetCount' => 208,
       'CacheSetCount' => 64,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 25,
+      'CacheTagLookupQueryCount' => 22,
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
@@ -250,13 +250,13 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 91,
-      'CacheGetCount' => 206,
+      'CacheGetCount' => 200,
       'CacheGetCountByBin' => [
         'page' => 1,
         'config' => 66,
         'bootstrap' => 12,
         'discovery' => 67,
-        'data' => 12,
+        'data' => 6,
         'entity' => 21,
         'dynamic_page_cache' => 1,
         'render' => 21,
@@ -266,7 +266,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 42,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 25,
+      'CacheTagLookupQueryCount' => 22,
       'CacheTagGroupedLookups' => [
         [
           'entity_types',
@@ -279,9 +279,8 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
           'local_task',
           'library_info',
         ],
-        ['config:views.view.related_recipes'],
         ['config:core.extension', 'views_data'],
-        ['node:10', 'node:3', 'node:6', 'node:7', 'node_list'],
+        ['config:views.view.related_recipes', 'node:10', 'node:3', 'node:6', 'node:7', 'node_list'],
         ['breakpoints'],
         [
           'config:core.entity_view_display.media.image.responsive_3x2',
@@ -311,7 +310,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
           'taxonomy_term:22',
           'taxonomy_term:31',
         ],
-        ['config:views.view.recipe_collections'],
         [
           'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
           'block_view',
@@ -355,6 +353,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
           'file:37',
           'media:19',
           'config:system.menu.main',
+          'config:views.view.recipe_collections',
           'taxonomy_term:1',
           'taxonomy_term:10',
           'taxonomy_term:11',
@@ -372,7 +371,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
           'taxonomy_term:9',
           'taxonomy_term_list',
         ],
-        ['config:views.view.recipes'],
         ['node:1:revisions'],
         ['content_moderation_state:1:revisions'],
         ['config:workflows.workflow.editorial'],
