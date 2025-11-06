@@ -128,7 +128,7 @@ field.widget.settings.text_textarea:
       type: integer
       label: 'Rows'
     placeholder:
-      type: label
+      type: text
       label: 'Placeholder'
 
 field.widget.settings.text_textarea_with_summary:
