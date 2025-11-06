@@ -10,6 +10,7 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Hook\LayoutBuilderHooks;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,10 +20,9 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Tests Entity View Alter.
- *
- * @legacy-covers \Drupal\layout_builder\Hook\LayoutBuilderHooks::entityViewAlter
  */
 #[Group('layout_builder')]
+#[CoversMethod(LayoutBuilderHooks::class, 'entityViewAlter')]
 #[RunTestsInSeparateProcesses]
 class EntityViewAlterTest extends KernelTestBase {
 
