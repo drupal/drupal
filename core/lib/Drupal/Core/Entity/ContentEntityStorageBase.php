@@ -47,6 +47,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   protected $cacheBackend;
 
   /**
+   * Stores the latest revision IDs for entities.
+   *
+   * @var array
+   */
+  protected $latestRevisionIds = [];
+
+  /**
    * Constructs a ContentEntityStorageBase object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
