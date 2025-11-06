@@ -268,7 +268,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ])
       ->shouldBeCalled();
     $config_object->save(FALSE)->shouldBeCalled();
-    $config_object->get()->willReturn([]);
+    $config_object->get()->willReturn([
+      'id' => 'foo',
+      'uuid' => 'bar',
+      'dependencies' => [],
+      'langcode' => 'hu',
+      'status' => TRUE,
+    ])->shouldBeCalled();
 
     $this->cacheTagsInvalidator->invalidateTags([$this->entityTypeId . '_list'])
       ->shouldBeCalled();
@@ -323,7 +329,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ])
       ->shouldBeCalled();
     $config_object->save(FALSE)->shouldBeCalled();
-    $config_object->get()->willReturn([]);
+    $config_object->get()->willReturn([
+      'id' => 'foo',
+      'uuid' => 'bar',
+      'dependencies' => [],
+      'langcode' => 'hu',
+      'status' => TRUE,
+    ])->shouldBeCalled();
 
     $this->cacheTagsInvalidator->invalidateTags([$this->entityTypeId . '_list'])
       ->shouldBeCalled();
@@ -380,7 +392,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->shouldBeCalled();
     $config_object->save(FALSE)
       ->shouldBeCalled();
-    $config_object->get()->willReturn([]);
+    $config_object->get()->willReturn([
+      'id' => 'bar',
+      'uuid' => 'bar',
+      'dependencies' => [],
+      'langcode' => 'hu',
+      'status' => TRUE,
+    ])->shouldBeCalled();
 
     $this->cacheTagsInvalidator->invalidateTags([$this->entityTypeId . '_list'])
       ->shouldBeCalled();
@@ -481,7 +499,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $immutable_config_object->isNew()->willReturn(TRUE);
 
     $config_object = $this->prophesize(Config::class);
-    $config_object->get()->willReturn([]);
+    $config_object->get()->willReturn([
+      'id' => 'foo',
+      'uuid' => NULL,
+      'dependencies' => [],
+      'langcode' => 'en',
+      'status' => TRUE,
+    ])->shouldBeCalled();
     $config_object
       ->setData([
         'id' => 'foo',
