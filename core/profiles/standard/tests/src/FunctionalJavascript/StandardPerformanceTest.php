@@ -137,11 +137,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 41,
-      'CacheGetCount' => 100,
+      'CacheGetCount' => 97,
       'CacheGetCountByBin' => [
         'page' => 1,
         'config' => 20,
-        'data' => 8,
+        'data' => 5,
         'discovery' => 37,
         'bootstrap' => 10,
         'dynamic_page_cache' => 1,
@@ -153,7 +153,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 45,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 16,
+      'CacheTagLookupQueryCount' => 15,
       'CacheTagGroupedLookups' => [
         [
           'route_match',
@@ -166,9 +166,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
           'local_task',
           'library_info',
         ],
-        ['config:views.view.frontpage'],
         ['config:core.extension', 'views_data'],
-        ['node:1', 'node_list'],
+        ['config:views.view.frontpage', 'node:1', 'node_list'],
         ['rendered', 'user:0', 'user_view'],
         ['config:filter.format.restricted_html', 'node_view'],
         [
@@ -360,11 +359,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 3,
-      'CacheGetCount' => 70,
+      'CacheGetCount' => 67,
       'CacheGetCountByBin' => [
         'page' => 1,
         'config' => 11,
-        'data' => 8,
+        'data' => 5,
         'discovery' => 21,
         'bootstrap' => 8,
         'dynamic_page_cache' => 2,
@@ -599,11 +598,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 18,
-      'CacheGetCount' => 107,
+      'CacheGetCount' => 104,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 20,
+      'CacheTagLookupQueryCount' => 19,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
