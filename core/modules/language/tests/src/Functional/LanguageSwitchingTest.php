@@ -89,16 +89,15 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->doTestLanguageBlockAnonymous($block->label());
     $this->doTestLanguageBlock404($block->label(), 'system/404');
 
-    // Test 404s with big_pipe where the behavior is different for logged-in
-    // users.
+    // Confirm that enabling big_pipe doesn't change the behavior of the block.
+    // Note that this is the case because the language switcher block deny lists
+    // the big_pipe placeholder strategy, otherwise it would be subject to the
+    // bug described in https://www.drupal.org/project/drupal/issues/3349201
     \Drupal::service('module_installer')->install(['big_pipe']);
     $this->rebuildAll();
     $this->doTestLanguageBlock404($block->label(), 'system/404');
     $this->drupalLogin($this->drupalCreateUser());
-    // @todo This is testing the current behavior with the big_pipe module
-    //   enabled. This behavior is a bug will be fixed in
-    //   https://www.drupal.org/project/drupal/issues/3349201.
-    $this->doTestLanguageBlock404($block->label(), '<front>');
+    $this->doTestLanguageBlock404($block->label(), 'system/404');
   }
 
   /**
