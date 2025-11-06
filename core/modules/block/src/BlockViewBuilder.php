@@ -13,6 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\block\Entity\Block;
+use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
@@ -74,6 +75,16 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
       // dynamic page cache.
       if (!$plugin instanceof CacheOptionalInterface) {
         $build[$entity_id]['#cache']['keys'] = ['entity_view', 'block', $entity->id()];
+      }
+      else {
+        // When a block implements CacheOptionalInterface, it will be excluded
+        // from the dynamic render cache. Since it is also cheap to render,
+        // prevent it being placeholdered by BigPipe. This avoids loading
+        // BigPipe's JavaScript if this block is the only placeholder on the
+        // page, which is likely to be the case on dynamic page cache hits.
+        $build[$entity_id]['#placeholder_strategy_denylist'] = [
+          BigPipeStrategy::class => TRUE,
+        ];
       }
 
       // Allow altering of cacheability metadata or setting #create_placeholder.
