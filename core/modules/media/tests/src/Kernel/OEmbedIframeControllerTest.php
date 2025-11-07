@@ -33,7 +33,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    * Data provider for testBadHashParameter().
    *
    * @return array
-   *   An array of test cases.OffCanvasDialogTest.php
+   *   An array of test cases.
    */
   public static function providerBadHashParameter() {
     return [
