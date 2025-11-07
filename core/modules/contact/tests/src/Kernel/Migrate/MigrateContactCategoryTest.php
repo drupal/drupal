@@ -31,6 +31,13 @@ class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
   }
 
   /**
+   * Gets the path to the fixture file.
+   */
+  protected function getFixtureFilePath():string {
+    return __DIR__ . '/../../../fixtures/drupal6.php';
+  }
+
+  /**
    * Performs various assertions on a single contact form entity.
    *
    * @param string $id

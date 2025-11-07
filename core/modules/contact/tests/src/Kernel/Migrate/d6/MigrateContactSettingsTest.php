@@ -32,6 +32,13 @@ class MigrateContactSettingsTest extends MigrateDrupal6TestBase {
   }
 
   /**
+   * Gets the path to the fixture file.
+   */
+  protected function getFixtureFilePath():string {
+    return __DIR__ . '/../../../../fixtures/drupal6.php';
+  }
+
+  /**
    * Tests migration of contact variables to contact.settings.yml.
    */
   public function testContactSettings(): void {
