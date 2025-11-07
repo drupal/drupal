@@ -28,8 +28,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * Services for procedural implementation of hooks are also registered.
  *
- * Finally, a hook_implementations_map container parameter is added. This
- * contains a mapping from [hook,class,method] to the module name.
+ * Finally, a temporary .hook_data container parameter is added. This
+ * contains:
+ *  - hook_list a mapping from [hook,class,method] to the module name.
+ *  - preprocess_for_suggestions preprocess hooks with double underscores.
+ *  - includes files that contain hooks that are not defined by hook_hook_info
+ *    or in .module files
+ *  - group_includes files identified by hook_hook_info
+ *  - packed_order_operations ordering rules for runtime evaluation
+ *
+ * The parameter hook_data is processed in HookCollectorKeyValueWritePass and
+ * removed automatically.
  *
  * @internal
  */
