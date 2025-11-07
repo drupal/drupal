@@ -133,7 +133,7 @@ function claro_preprocess_menu_local_task__views_ui(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for node_add_list.
+ * Implements hook_preprocess_HOOK() for node_add_list.
  *
  * Makes node_add_list variables compatible with entity_add_list.
  */
@@ -161,7 +161,7 @@ function claro_preprocess_node_add_list(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for block_content_add_list.
+ * Implements hook_preprocess_HOOK() for block_content_add_list.
  *
  * Makes block_content_add_list variables compatible with entity_add_list.
  *
@@ -199,7 +199,7 @@ function claro_preprocess_block_content_add_list(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for entity_add_list.
+ * Implements hook_preprocess_HOOK() for entity_add_list.
  */
 function claro_preprocess_entity_add_list(&$variables): void {
   // Remove description if empty.
@@ -225,7 +225,7 @@ function claro_preprocess_block(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for admin_block.
+ * Implements hook_preprocess_HOOK() for admin_block.
  */
 function claro_preprocess_admin_block(&$variables): void {
   if (!empty($variables['block']['content'])) {
@@ -234,7 +234,7 @@ function claro_preprocess_admin_block(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for admin_block.
+ * Implements hook_preprocess_HOOK() for admin_block_content.
  */
 function claro_preprocess_admin_block_content(&$variables): void {
   foreach ($variables['content'] as &$item) {
@@ -851,7 +851,7 @@ function claro_preprocess_form_element(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for input.
+ * Implements hook_preprocess_HOOK() for input.
  */
 function claro_preprocess_input(&$variables): void {
   if (
@@ -898,7 +898,7 @@ function claro_preprocess_input(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for select.
+ * Implements hook_preprocess_HOOK() for select.
  */
 function claro_preprocess_select(&$variables): void {
   if (!empty($variables['element']['#title_display']) && $variables['element']['#title_display'] === 'attribute' && !empty((string) $variables['element']['#title'])) {
@@ -916,7 +916,7 @@ function claro_preprocess_select(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for datetime_wrapper.
+ * Implements hook_preprocess_HOOK() for datetime_wrapper.
  */
 function claro_preprocess_datetime_wrapper(&$variables): void {
   if (!empty($variables['element']['#errors'])) {
@@ -933,7 +933,7 @@ function claro_preprocess_datetime_wrapper(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for fieldset.
+ * Implements hook_preprocess_HOOK() for fieldset.
  */
 function claro_preprocess_fieldset(&$variables): void {
   $element = $variables['element'];
@@ -1032,14 +1032,14 @@ function claro_preprocess_form_element__password(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for filter_tips.
+ * Implements hook_preprocess_HOOK() for filter_tips.
  */
 function claro_preprocess_filter_tips(&$variables): void {
   $variables['#attached']['library'][] = 'filter/drupal.filter';
 }
 
 /**
- * Implements template_preprocess_HOOK() for table.
+ * Implements hook_preprocess_HOOK() for table.
  */
 function claro_preprocess_table(&$variables): void {
   // Adding table sort indicator CSS class for inactive sort link.
@@ -1083,14 +1083,14 @@ function claro_preprocess_table(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_HOOK() for field_ui_table.
+ * Implements hook_preprocess_HOOK() for field_ui_table.
  */
 function claro_preprocess_field_ui_table(&$variables): void {
   claro_preprocess_table($variables);
 }
 
 /**
- * Implements template_preprocess_HOOK() for views_view_table.
+ * Implements hook_preprocess_HOOK() for views_view_table.
  *
  * @todo Revisit after https://www.drupal.org/node/3025726 or
  *   https://www.drupal.org/node/1973418 is in.
@@ -1355,7 +1355,7 @@ function _claro_preprocess_file_and_image_widget(array &$variables): void {
 }
 
 /**
- * Implements hook_preprocess_views_view_fields().
+ * Implements hook_preprocess_HOOK() for views_view_fields__media_library.
  *
  * This targets each rendered media item in the grid display of the media
  * library's modal dialog.
@@ -1369,7 +1369,7 @@ function claro_preprocess_views_view_fields__media_library(array &$variables): v
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for media_library_add_form.
  */
 function claro_form_media_library_add_form_alter(array &$form, FormStateInterface $form_state): void {
   $form['#attributes']['class'][] = 'media-library-add-form';
@@ -1390,7 +1390,7 @@ function claro_form_media_library_add_form_alter(array &$form, FormStateInterfac
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for media_library_add_form_upload.
  */
 function claro_form_media_library_add_form_upload_alter(array &$form, FormStateInterface $form_state): void {
   $form['#attributes']['class'][] = 'media-library-add-form--upload';
@@ -1405,7 +1405,7 @@ function claro_form_media_library_add_form_upload_alter(array &$form, FormStateI
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for media_library_add_form_oembed.
  */
 function claro_form_media_library_add_form_oembed_alter(array &$form, FormStateInterface $form_state): void {
   $form['#attributes']['class'][] = 'media-library-add-form--oembed';
@@ -1420,7 +1420,7 @@ function claro_form_media_library_add_form_oembed_alter(array &$form, FormStateI
 }
 
 /**
- * Implements hook_preprocess_item_list__media_library_add_form_media_list().
+ * Implements hook_preprocess_HOOK() for item_list__media_library_add_form_media_list.
  *
  * This targets each new, unsaved media item added to the media library, before
  * they are saved.
@@ -1447,7 +1447,7 @@ function claro_preprocess_item_list__media_library_add_form_media_list(array &$v
 }
 
 /**
- * Implements hook_preprocess_media_library_item__widget().
+ * Implements hook_preprocess_HOOK() for media_library_item__widget.
  *
  * This targets each media item selected in an entity reference field.
  */
@@ -1457,7 +1457,7 @@ function claro_preprocess_media_library_item__widget(array &$variables): void {
 }
 
 /**
- * Implements hook_preprocess_media_library_item__small().
+ * Implements hook_preprocess_HOOK() for media_library_item__small.
  *
  * This targets each pre-selected media item selected when adding new media in
  * the modal media library dialog.
@@ -1467,6 +1467,8 @@ function claro_preprocess_media_library_item__small(array &$variables): void {
 }
 
 /**
+ * Implements hook_preprocess_HOOK() for fieldset__media_library_widget.
+ *
  * @todo Remove this when https://www.drupal.org/project/drupal/issues/2999549
  *   lands.
  *
@@ -1538,7 +1540,7 @@ function claro_views_pre_render(ViewExecutable $view): void {
 }
 
 /**
- * Implements hook_preprocess_links__media_library_menu().
+ * Implements hook_preprocess_HOOK() for links__media_library_menu.
  *
  * This targets the menu of available media types in the media library's modal
  * dialog.
@@ -1555,7 +1557,9 @@ function claro_preprocess_links__media_library_menu(array &$variables): void {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for the Views UI rearrange filter form.
+ * Implements hook_preprocess_HOOK() for views_ui_rearrange_filter_form.
+ *
+ * Views UI rearrange filter form.
  */
 function claro_preprocess_views_ui_rearrange_filter_form(array &$variables): void {
   foreach ($variables['table']['#rows'] as &$row) {
@@ -1665,7 +1669,7 @@ function claro_form_views_ui_add_handler_form_alter(array &$form, FormStateInter
 }
 
 /**
- * Implements hook_preprocess_toolbar().
+ * Implements hook_preprocess_HOOK() for toolbar.
  *
  * This is also called by system_preprocess_toolbar() in instances where Claro
  * is the admin theme but not the active theme.
@@ -1737,7 +1741,7 @@ function claro_form_user_admin_permissions_alter(&$form, FormStateInterface $for
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for node_preview_form_select.
  */
 function claro_form_node_preview_form_select_alter(array &$form, FormStateInterface $form_state): void {
   if (isset($form['backlink'])) {
