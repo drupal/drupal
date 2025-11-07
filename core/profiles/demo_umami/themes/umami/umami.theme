@@ -13,7 +13,7 @@ use Drupal\views\Form\ViewsForm;
 use Drupal\Core\Render\Element;
 
 /**
- * Implements hook_preprocess_HOOK() for HTML document templates.
+ * Implements hook_preprocess_HOOK() for html.
  *
  * Adds body classes if certain regions have content.
  */
@@ -29,7 +29,7 @@ function umami_preprocess_html(&$variables): void {
 }
 
 /**
- * Implements hook_preprocess_field().
+ * Implements hook_preprocess_HOOK() for field.
  */
 function umami_preprocess_field(&$variables, $hook): void {
   $element = $variables['element'];
@@ -49,7 +49,7 @@ function umami_preprocess_field(&$variables, $hook): void {
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK() for block.
  */
 function umami_preprocess_block(&$variables): void {
   $variables['title_attributes']['class'][] = 'block__title';
@@ -70,7 +70,7 @@ function umami_theme_suggestions_block_alter(array &$suggestions, array $variabl
 }
 
 /**
- * Implements hook_umami_preprocess_block__bundle__banner_block().
+ * Implements hook_preprocess_HOOK() for block--bundle--banner-block.
  */
 function umami_preprocess_block__bundle__banner_block(&$variables): void {
   if (isset($variables['content']['field_content_link'])) {
@@ -83,7 +83,7 @@ function umami_preprocess_block__bundle__banner_block(&$variables): void {
 }
 
 /**
- * Implements hook_umami_preprocess_block__bundle__footer_promo_block().
+ * Implements hook_preprocess_HOOK() for block bundle footer promo.
  */
 function umami_preprocess_block__bundle__footer_promo_block(&$variables): void {
   if (isset($variables['content']['field_content_link'])) {
@@ -94,7 +94,7 @@ function umami_preprocess_block__bundle__footer_promo_block(&$variables): void {
 }
 
 /**
- * Implements hook_preprocess_breadcrumb().
+ * Implements hook_preprocess_HOOK() for breadcrumb.
  */
 function umami_preprocess_breadcrumb(&$variables): void {
   // We are creating a variable for the Current Page Title, to allow us to print
@@ -119,21 +119,21 @@ function umami_preprocess_breadcrumb(&$variables): void {
 }
 
 /**
- * Implements hook_preprocess_menu_local_task().
+ * Implements hook_preprocess_HOOK() for menu-local-task.
  */
 function umami_preprocess_menu_local_task(&$variables): void {
   $variables['link']['#options']['attributes']['class'][] = 'tabs__link';
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for search_block_form.
  */
 function umami_form_search_block_form_alter(&$form, FormStateInterface $form_state): void {
   $form['keys']['#attributes']['placeholder'] = t('Search by keyword, ingredient, dish');
 }
 
 /**
- * Implements hook_preprocess_links__media_library_menu().
+ * Implements hook_preprocess_HOOK() for links--media-library-menu.
  *
  * This targets the menu of available media types in the media library's modal
  * dialog.
@@ -161,7 +161,7 @@ function umami_form_alter(array &$form, FormStateInterface $form_state, $form_id
 }
 
 /**
- * Implements hook_preprocess_image_widget().
+ * Implements hook_preprocess_HOOK() for image-widget.
  *
  * @todo Revisit in https://drupal.org/node/3117430
  */
@@ -173,7 +173,7 @@ function umami_preprocess_image_widget(&$variables): void {
 }
 
 /**
- * Implements template_preprocess_links().
+ * Implements hook_preprocess_HOOK() for links.
  *
  * This makes it so array keys of #links items are added as a class. This
  * functionality was removed in Drupal 8.1, but still necessary in some
