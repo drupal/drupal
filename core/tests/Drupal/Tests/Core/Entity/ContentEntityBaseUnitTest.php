@@ -148,6 +148,15 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
         'id' => 'id',
         'uuid' => 'uuid',
       ]);
+    $this->entityType
+      ->method('getKey')
+      ->willReturnMap([
+        ['default_langcode', 'default_langcode'],
+        ['id', 'id'],
+        ['langcode', 'langcode'],
+        ['revision', 'revision_id'],
+        ['uuid', 'uuid'],
+      ]);
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())
@@ -241,10 +250,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->method('hasKey')
       ->with('revision')
       ->willReturnOnConsecutiveCalls(FALSE, TRUE, TRUE, TRUE);
-    $this->entityType->expects($this->exactly(2))
-      ->method('getKey')
-      ->with('revision')
-      ->willReturn('revision_id');
 
     $field_item_list = $this->getMockBuilder('\Drupal\Core\Field\FieldItemList')
       ->disableOriginalConstructor()
