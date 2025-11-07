@@ -71,6 +71,8 @@ display:
           text: Translate
           plugin_id: content_translation_link
           entity_type: user
+          output_url_as_text: false
+          absolute: false
       filters:
         uid_raw:
           id: uid_raw
