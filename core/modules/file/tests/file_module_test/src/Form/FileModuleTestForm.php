@@ -34,7 +34,7 @@ class FileModuleTestForm extends FormBase {
    *   (optional) If the form should use #extended. Defaults to TRUE.
    * @param bool $multiple
    *   (optional) If the form should use #multiple. Defaults to FALSE.
-   * @param array $default_fids
+   * @param string $default_fids
    *   (optional) Any default file IDs to use.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $tree = TRUE, $extended = TRUE, $multiple = FALSE, $default_fids = NULL) {

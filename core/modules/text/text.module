@@ -23,7 +23,7 @@ use Drupal\filter\Entity\FilterFormat;
  *   treat newlines embedded in $text as line breaks. If the htmlcorrector
  *   filter is present, it will be run on the generated summary (if different
  *   from the incoming $text).
- * @param string|null $size
+ * @param int|numeric-string|null $size
  *   The desired character length of the summary. If omitted, the default value
  *   will be used. Ignored if the special delimiter is present in $text.
  *

@@ -10,7 +10,7 @@ class MemoryStorage implements StorageInterface {
   /**
    * The configuration, an object shared by reference across collections.
    *
-   * @var \ArrayAccess
+   * @var \ArrayObject
    */
   protected $config;
 

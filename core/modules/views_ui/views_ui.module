@@ -15,7 +15,7 @@ use Drupal\views_ui\Hook\ViewsUiThemeHooks;
  * @todo Refactor this function to use much stuff of
  *    views_ui_edit_form_get_bucket.
  *
- * @param string $title
+ * @param bool $title
  *   Add a bolded title of this section.
  *
  * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no

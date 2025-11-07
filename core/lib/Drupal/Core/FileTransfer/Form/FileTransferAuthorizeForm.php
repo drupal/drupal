@@ -316,7 +316,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * Runs the operation specified in 'authorize_operation' session property.
    *
-   * @param array $filetransfer
+   * @param \Drupal\Core\FileTransfer\FileTransfer|false $filetransfer
    *   The FileTransfer object to use for running the operation.
    *
    * @return \Symfony\Component\HttpFoundation\Response|null

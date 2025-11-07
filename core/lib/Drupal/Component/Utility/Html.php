@@ -272,7 +272,7 @@ class Html {
    * Use \Drupal\Component\Utility\Html::serialize() to serialize this
    * \DOMDocument back to a string.
    *
-   * @param string $html
+   * @param string|\Stringable $html
    *   The partial HTML snippet to load. Invalid markup will be corrected on
    *   import.
    *
