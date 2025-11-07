@@ -48,7 +48,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * An array of instantiated plugins used in this display.
    *
-   * @var \Drupal\views\Plugin\views\ViewsPluginInterface[]
+   * @var \Drupal\views\Plugin\views\ViewsPluginInterface[][]
    */
   protected $plugins = [];
 

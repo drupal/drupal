@@ -177,7 +177,7 @@ class Htmx {
    *
    * @param string $id
    *   The HTMX attribute id.
-   * @param array{string, string} $value
+   * @param array<string, string|int|bool> $value
    *   The attribute values.
    */
   protected function createJsonAttribute(string $id, array $value): void {

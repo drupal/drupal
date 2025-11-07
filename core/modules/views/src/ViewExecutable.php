@@ -291,7 +291,7 @@ class ViewExecutable {
   /**
    * Allow to override the used database which is used for this query.
    *
-   * @var bool
+   * @var string|null
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $base_database = NULL;

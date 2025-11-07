@@ -363,7 +363,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
   /**
    * Assert the plugin states.
    *
-   * @param string[] $states
+   * @param string[][] $states
    *   The states which should appear in the filter.
    *
    * @internal
