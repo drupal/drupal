@@ -37,7 +37,7 @@ use Drupal\Core\Extension\ThemeSettingsProvider;
  * https://www.drupal.org/docs/develop/theming-drupal
  *
  * For further Twig documentation see
- * https://twig.symfony.com/doc/1.x/templates.html
+ * https://twig.symfony.com/doc/3.x/templates.html
  *
  * @section sec_theme_hooks Theme Hooks
  * The theme system is invoked in \Drupal\Core\Render\Renderer::doRender() by
