@@ -1081,6 +1081,15 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->atLeastOnce())
       ->method('getKeys')
       ->willReturn(['id' => 'id']);
+    $this->entityType
+      ->method('getKey')
+      ->willReturnMap([
+        ['default_langcode', 'default_langcode'],
+        ['id', 'id'],
+        ['langcode', 'langcode'],
+        ['revision', 'revision_id'],
+        ['uuid', 'uuid'],
+      ]);
 
     // ContentEntityStorageBase iterates over the entity which calls this method
     // internally in ContentEntityBase::getProperties().
