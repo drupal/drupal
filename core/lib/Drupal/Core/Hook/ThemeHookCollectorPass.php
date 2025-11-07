@@ -23,8 +23,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * where either the class itself or the methods have a #[Hook] attribute.
  * These classes are automatically registered as autowired services.
  *
- * Finally, a .theme_hook_data container parameter is added. This
- * contains a mapping from [hook,class,method] to the theme name.
+ * Finally, a temporary .theme_hook_data container parameter is added. This
+ * contains:
+ *  - theme_hook_list a mapping from theme to [hook,class,method].
+ *  - theme_preprocess_for_suggestions preprocess hooks with double underscores.
+ *
+ * The parameter theme_hook_data is processed in HookCollectorKeyValueWritePass
+ * and removed automatically.
  *
  * @internal
  */
