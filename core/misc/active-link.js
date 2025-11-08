@@ -40,10 +40,18 @@
       // Add language filtering.
       selectors = [].concat(
         // Links without any hreflang attributes (most of them).
-        originalSelectors.map((selector) => `${selector}:not([hreflang])`),
-        // Links with hreflang equals to the current language.
         originalSelectors.map(
-          (selector) => `${selector}[hreflang="${path.currentLanguage}"]`,
+          (selector) =>
+            `${selector}:not([data-drupal-language]):not([hreflang])`,
+        ),
+        // Links li with data-drupal-language equals to the current language.
+        originalSelectors.map(
+          (selector) =>
+            `li${selector}[data-drupal-language="${path.currentLanguage}"]`,
+        ),
+        // Links a with hreflang equals to the current language.
+        originalSelectors.map(
+          (selector) => `a${selector}[hreflang="${path.currentLanguage}"]`,
         ),
       );
 
