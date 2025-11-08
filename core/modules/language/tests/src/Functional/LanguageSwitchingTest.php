@@ -123,7 +123,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $labels = [];
     foreach ($language_switchers as $list_item) {
       $list_items[] = [
-        'hreflang' => $list_item->getAttribute('hreflang'),
+        'data-drupal-language' => $list_item->getAttribute('data-drupal-language'),
         'data-drupal-link-system-path' => $list_item->getAttribute('data-drupal-link-system-path'),
       ];
 
@@ -137,11 +137,11 @@ class LanguageSwitchingTest extends BrowserTestBase {
     }
     $expected_list_items = [
       0 => [
-        'hreflang' => 'en',
+        'data-drupal-language' => 'en',
         'data-drupal-link-system-path' => '<front>',
       ],
       1 => [
-        'hreflang' => 'fr',
+        'data-drupal-language' => 'fr',
         'data-drupal-link-system-path' => '<front>',
       ],
     ];
@@ -183,7 +183,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $labels = [];
     foreach ($language_switchers as $list_item) {
       $list_items[] = [
-        'hreflang' => $list_item->getAttribute('hreflang'),
+        'data-drupal-language' => $list_item->getAttribute('data-drupal-language'),
         'data-drupal-link-system-path' => $list_item->getAttribute('data-drupal-link-system-path'),
       ];
 
@@ -195,8 +195,8 @@ class LanguageSwitchingTest extends BrowserTestBase {
       $labels[] = $link->getText();
     }
     $expected_list_items = [
-      0 => ['hreflang' => 'en', 'data-drupal-link-system-path' => 'user/2'],
-      1 => ['hreflang' => 'fr', 'data-drupal-link-system-path' => 'user/2'],
+      0 => ['data-drupal-language' => 'en', 'data-drupal-link-system-path' => 'user/2'],
+      1 => ['data-drupal-language' => 'fr', 'data-drupal-link-system-path' => 'user/2'],
     ];
     $this->assertSame($expected_list_items, $list_items, 'The list items have the correct attributes that will allow the drupal.active-link library to mark them as active.');
     $expected_anchors = [
@@ -239,7 +239,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     ];
     $labels = [];
     foreach ($language_switchers as $list_item) {
-      $langcode = $list_item->getAttribute('hreflang');
+      $langcode = $list_item->getAttribute('data-drupal-language');
       if ($list_item->hasClass('is-active')) {
         $links['active'][] = $langcode;
       }
@@ -284,7 +284,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $labels = [];
     foreach ($language_switchers as $list_item) {
       $list_items[] = [
-        'hreflang' => $list_item->getAttribute('hreflang'),
+        'data-drupal-language' => $list_item->getAttribute('data-drupal-language'),
         'data-drupal-link-system-path' => $list_item->getAttribute('data-drupal-link-system-path'),
       ];
 
@@ -296,8 +296,8 @@ class LanguageSwitchingTest extends BrowserTestBase {
       $labels[] = $link->getText();
     }
     $expected_list_items = [
-      0 => ['hreflang' => 'en', 'data-drupal-link-system-path' => $system_path],
-      1 => ['hreflang' => 'fr', 'data-drupal-link-system-path' => $system_path],
+      0 => ['data-drupal-language' => 'en', 'data-drupal-link-system-path' => $system_path],
+      1 => ['data-drupal-language' => 'fr', 'data-drupal-link-system-path' => $system_path],
     ];
     $this->assertSame($expected_list_items, $list_items, 'The list items have the correct attributes that will allow the drupal.active-link library to mark them as active.');
     $expected_anchors = [

@@ -186,7 +186,7 @@ class ThemePreprocess {
             $link_element['#options']['set_active_class'] = TRUE;
 
             if (!empty($link['language'])) {
-              $li_attributes['hreflang'] = $link['language']->getId();
+              $li_attributes['data-drupal-language'] = $link['language']->getId();
             }
 
             // Add a "data-drupal-link-query" attribute to let the
