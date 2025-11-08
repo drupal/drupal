@@ -37,6 +37,7 @@ final class TestClassClassMetadata implements Rule {
     '@before',
     '@beforeClass',
     '@covers',
+    '@coversClass',
     '@coversDefaultClass',
     '@coversNothing',
     '@dataProvider',

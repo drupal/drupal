@@ -6,6 +6,7 @@ namespace Drupal\Tests\jsonapi\Kernel\ResourceType;
 
 use Drupal\Core\Database\Database;
 use Drupal\jsonapi\ResourceType\ResourceType;
+use Drupal\jsonapi\ResourceType\ResourceTypeRepository;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -16,11 +17,10 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests Drupal\jsonapi\ResourceType\ResourceType.
  *
- * @coversClass \Drupal\jsonapi\ResourceType\ResourceTypeRepository
- *
  * @internal
  */
 #[CoversClass(ResourceType::class)]
+#[CoversClass(ResourceTypeRepository::class)]
 #[Group('jsonapi')]
 #[RunTestsInSeparateProcesses]
 class RelatedResourceTypesTest extends JsonapiKernelTestBase {
