@@ -7,22 +7,23 @@ namespace Drupal\Tests\jsonapi\Kernel\Serializer;
 use Drupal\Core\Render\Markup;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
+use Drupal\jsonapi\Serializer\Serializer;
 use Drupal\jsonapi_test_data_type\TraversableObject;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JSON:API serializer.
  *
- * @coversClass \Drupal\jsonapi\Serializer\Serializer
- *
  * @internal
  */
 #[Group('jsonapi')]
+#[CoversClass(Serializer::class)]
 #[RunTestsInSeparateProcesses]
 class SerializerTest extends JsonapiKernelTestBase {
 

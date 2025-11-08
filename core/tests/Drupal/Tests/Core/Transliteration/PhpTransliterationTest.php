@@ -7,15 +7,15 @@ namespace Drupal\Tests\Core\Transliteration;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Transliteration\PhpTransliteration;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Transliteration component functionality.
- *
- * @coversClass \Drupal\Core\Transliteration\PhpTransliteration
  */
 #[Group('Transliteration')]
+#[CoversClass(PhpTransliteration::class)]
 class PhpTransliterationTest extends UnitTestCase {
 
   /**

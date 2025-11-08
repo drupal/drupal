@@ -1150,15 +1150,13 @@
  *     subdirectory)
  *
  * Some notes about writing PHP test classes:
- * - The class needs a phpDoc comment block with a description and
- *   @group annotation, which gives information about the test.
- * - For unit tests, this comment block should also have @coversDefaultClass
- *   annotation.
+ * - The class needs a phpDoc comment block with a description of the test, and
+ *   a #[Group(...)] attribute, which gives information about the test.
+ * - For unit tests, this comment block should also have a #[CoversClass(...)]
+ *   attribute.
  * - When writing tests, put the test code into public methods, each covering a
  *   logical subset of the functionality that is being tested.
- * - The test methods must have names starting with 'test'. For unit tests, the
- *   test methods need to have a phpDoc block with @covers annotation telling
- *   which class method they are testing.
+ * - The test methods must have names starting with 'test'.
  * - In some cases, you may need to write a test module to support your test;
  *   put such modules under the your_module/tests/modules directory.
  *
