@@ -735,12 +735,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   }
 
   /**
-   * Verifies assertions catch invalid CSS declarations.
-   *
-   * @dataProvider providerTestCssAssert
-   */
-
-  /**
    * Verify an assertion fails if CSS declarations have non-existent categories.
    *
    * @param string $extension

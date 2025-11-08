@@ -96,8 +96,8 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
   public function testTimestampFormatterWithTimeDiff(): void {
     $this->drupalGet($this->entity->toUrl());
 
-    // Unit testing Drupal.timeDiff.format(). Not using @dataProvider mechanism
-    // here in order to avoid installing the site for each case.
+    // Unit testing Drupal.timeDiff.format(). Not using the data provider
+    // mechanism here in order to avoid reinstalling the site for each case.
     foreach ($this->getFormatDiffTestCases() as $case) {
       $from = \DateTime::createFromFormat(\DateTimeInterface::RFC3339, $case['from'])->getTimestamp();
       $to = \DateTime::createFromFormat(\DateTimeInterface::RFC3339, $case['to'])->getTimestamp();
@@ -112,8 +112,9 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
       $this->assertJsCondition("Drupal.timeDiff.format($diff, $options).formatted === '$expected_formatted_value'");
     }
 
-    // Unit testing Drupal.timeDiff.refreshInterval(). Not using @dataProvider
-    // mechanism here in order to avoid reinstalling the site for each case.
+    // Unit testing Drupal.timeDiff.refreshInterval(). Not using the data
+    // provider mechanism here in order to avoid reinstalling the site for each
+    // case.
     foreach ($this->getRefreshIntervalTestCases() as $case) {
       $interval = json_encode($case['time_diff']);
       $this->assertJsCondition("Drupal.timeDiff.refreshInterval($interval, {$case['configured_refresh_interval']}, {$case['granularity']}) === {$case['computed_refresh_interval']}");
