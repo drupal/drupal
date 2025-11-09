@@ -42,7 +42,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     'comment',
     'entity_test',
     'language',
-    'locale',
   ];
 
   /**

@@ -22,7 +22,6 @@ class NodeImportChangeTest extends KernelTestBase {
   protected static $modules = [
     'node',
     'field',
-    'text',
     'system',
     'node_test_config',
     'user',

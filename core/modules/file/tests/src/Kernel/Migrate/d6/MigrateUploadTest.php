@@ -22,7 +22,6 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
    */
   protected static $modules = [
     'language',
-    'content_translation',
     'menu_ui',
   ];
 

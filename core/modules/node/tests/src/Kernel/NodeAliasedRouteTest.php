@@ -22,7 +22,6 @@ class NodeAliasedRouteTest extends KernelTestBase {
   protected static $modules = [
     'node',
     'user',
-    'system',
   ];
 
   /**

@@ -36,7 +36,6 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     'user',
     'system',
     'language',
-    'content_translation',
     'workflows',
   ];
 

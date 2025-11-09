@@ -21,7 +21,6 @@ class BlockContentRevisionsTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'block',
     'block_content',
     'user',
   ];

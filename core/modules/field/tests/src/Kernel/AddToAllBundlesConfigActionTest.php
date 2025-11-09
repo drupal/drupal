@@ -40,7 +40,6 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
     'field',
     'entity_test',
     'entity_test_with_storage',
-    'system',
     'text',
     'user',
   ];

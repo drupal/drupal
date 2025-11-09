@@ -23,8 +23,6 @@ class EntityDefaultLanguageTest extends KernelTestBase {
   protected static $modules = [
     'language',
     'node',
-    'field',
-    'text',
     'user',
   ];
 

@@ -32,7 +32,6 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   protected static $modules = [
     'entity_test',
     'field',
-    'file',
     'jsonapi_test_field_aliasing',
     'jsonapi_test_field_filter_access',
     'serialization',

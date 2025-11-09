@@ -21,7 +21,6 @@ class MigrateTermNodeCompleteTest extends MigrateDrupal6TestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'content_translation',
     'language',
     'menu_ui',
     'taxonomy',

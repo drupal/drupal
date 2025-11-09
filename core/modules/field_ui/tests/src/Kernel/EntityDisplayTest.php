@@ -31,7 +31,6 @@ class EntityDisplayTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'field_ui',
     'field',
     'entity_test',
     'user',

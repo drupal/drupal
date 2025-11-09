@@ -29,7 +29,6 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
     'field',
     'node',
     'text',
-    'filter',
   ];
 
   /**

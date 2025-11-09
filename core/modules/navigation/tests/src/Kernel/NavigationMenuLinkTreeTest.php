@@ -30,9 +30,7 @@ class NavigationMenuLinkTreeTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'field',
     'layout_builder',
-    'layout_discovery',
     'link',
     'menu_link_content',
     'menu_test',

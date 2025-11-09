@@ -23,11 +23,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
   protected static $modules = [
     'block',
     'views',
-    'comment',
-    'menu_ui',
     'block_content',
-    'taxonomy',
-    'node',
     'path_alias',
   ];
 

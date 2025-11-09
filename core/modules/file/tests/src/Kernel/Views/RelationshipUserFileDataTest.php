@@ -34,7 +34,6 @@ class RelationshipUserFileDataTest extends ViewsKernelTestBase {
     'field',
     'file',
     'file_test_views',
-    'views',
   ];
 
   /**

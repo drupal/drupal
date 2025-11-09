@@ -26,7 +26,6 @@ class InlineBlockUsageTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'layout_discovery',
     'layout_builder',
     'entity_test',
     'user',

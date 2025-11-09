@@ -26,7 +26,6 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     'content_translation',
     'datetime',
     'datetime_range',
-    'filter',
     'image',
     'language',
     'link',

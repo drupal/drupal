@@ -28,7 +28,6 @@ class PathItemTest extends KernelTestBase {
     'node',
     'user',
     'language',
-    'content_translation',
   ];
 
   /**

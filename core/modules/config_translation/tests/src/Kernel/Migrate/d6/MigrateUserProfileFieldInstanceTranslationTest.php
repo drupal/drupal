@@ -20,9 +20,7 @@ class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestB
    */
   protected static $modules = [
     'config_translation',
-    'locale',
     'language',
-    'field',
   ];
 
   /**

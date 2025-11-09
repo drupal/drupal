@@ -25,9 +25,7 @@ class AccountTakeoverGadgetChainTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'field',
     'node',
-    'text',
     'user',
     'system',
     'views',

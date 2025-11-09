@@ -33,7 +33,6 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
     'workflow_type_test',
     'entity_test',
     'language',
-    'content_translation',
   ];
 
   /**

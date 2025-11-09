@@ -99,8 +99,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     'user',
     // For being able to test media_embed + Media button in CKE5.
     'media',
-    'media_library',
-    'views',
     'help',
     'editor_test',
     'ckeditor_test',

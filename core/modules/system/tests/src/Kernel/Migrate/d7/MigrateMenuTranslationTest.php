@@ -23,7 +23,6 @@ class MigrateMenuTranslationTest extends MigrateDrupal7TestBase {
     'config_translation',
     'language',
     'locale',
-    'menu_link_content',
   ];
 
   /**

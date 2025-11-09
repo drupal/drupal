@@ -30,7 +30,6 @@ class MailTest extends KernelTestBase {
    */
   protected static $modules = [
     'file',
-    'image',
     'mail_cancel_test',
     'mail_html_test',
     'system',

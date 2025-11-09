@@ -28,7 +28,6 @@ class RawStringFormatterTest extends KernelTestBase {
     'field', 'text',
     'entity_test',
     'system',
-    'filter',
     'user',
   ];
 

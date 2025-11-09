@@ -19,10 +19,7 @@ class TaxonomyTermFilterDepthTest extends TaxonomyTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'taxonomy',
     'taxonomy_test_views',
-    'views',
-    'node',
   ];
 
   /**

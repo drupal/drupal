@@ -34,7 +34,6 @@ class MediaLibraryWidgetTest extends KernelTestBase {
   protected static $modules = [
     'media',
     'media_library',
-    'field',
     'file',
     'filter',
     'image',

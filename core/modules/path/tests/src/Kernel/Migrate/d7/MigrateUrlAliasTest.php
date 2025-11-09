@@ -18,7 +18,6 @@ class MigrateUrlAliasTest extends MigrateUrlAliasTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'path_alias',
     'content_translation',
   ];
 

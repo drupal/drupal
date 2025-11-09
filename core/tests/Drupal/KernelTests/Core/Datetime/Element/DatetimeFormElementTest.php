@@ -35,13 +35,6 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
-    'datetime',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUp(): void {
     parent::setUp();
 

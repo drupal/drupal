@@ -25,7 +25,6 @@ class BooleanFormatterTest extends KernelTestBase {
    */
   protected static $modules = [
     'field',
-    'text',
     'entity_test',
     'user',
     'system',

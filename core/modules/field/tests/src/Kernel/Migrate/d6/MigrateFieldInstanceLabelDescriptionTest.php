@@ -24,11 +24,8 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase im
    */
   protected static $modules = [
     'config_translation',
-    'locale',
     'language',
     'menu_ui',
-    'node',
-    'field',
   ];
 
   /**

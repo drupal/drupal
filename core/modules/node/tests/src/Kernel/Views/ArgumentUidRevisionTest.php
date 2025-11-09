@@ -26,7 +26,6 @@ class ArgumentUidRevisionTest extends ViewsKernelTestBase {
   protected static $modules = [
     'node',
     'field',
-    'text',
     'node_test_views',
   ];
 

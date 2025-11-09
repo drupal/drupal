@@ -26,7 +26,6 @@ class ContentEntityConstructorTest extends KernelTestBase {
    */
   protected static $modules = [
     'migrate',
-    'migrate_drupal',
     'node',
     'user',
   ];

@@ -23,7 +23,6 @@ class EntityTranslationSettingsTest extends MigrateSqlSourceTestBase {
    */
   protected static $modules = [
     'content_translation',
-    'language',
     'migrate_drupal',
   ];
 

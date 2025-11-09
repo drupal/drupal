@@ -35,7 +35,6 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
     'user',
     'filter',
     'filter_test',
-    'editor',
   ];
 
   /**

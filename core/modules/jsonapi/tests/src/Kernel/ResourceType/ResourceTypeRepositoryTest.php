@@ -28,7 +28,6 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'file',
     'field',
     'node',
     'serialization',

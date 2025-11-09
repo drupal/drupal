@@ -32,7 +32,6 @@ class DefaultRevisionStateTest extends KernelTestBase {
     'user',
     'language',
     'content_translation',
-    'text',
     'workflows',
   ];
 

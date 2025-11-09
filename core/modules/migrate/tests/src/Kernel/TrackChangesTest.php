@@ -20,7 +20,6 @@ class TrackChangesTest extends MigrateTestBase {
   protected static $modules = [
     'user',
     'taxonomy',
-    'migrate',
     'migrate_track_changes_test',
     'text',
   ];

@@ -24,7 +24,6 @@ class ArgumentDefaultTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'node',
     'system',
     'user',
     'user_test_views',

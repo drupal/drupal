@@ -26,7 +26,6 @@ class MigrateLanguageContentCommentSettingsNoEntityTranslationTest extends Migra
     'comment',
     'content_translation',
     'language',
-    'node',
     'text',
   ];
 

@@ -22,7 +22,6 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
    */
   protected static $modules = [
     'link',
-    'field',
     'shortcut',
     'menu_link_content',
   ];

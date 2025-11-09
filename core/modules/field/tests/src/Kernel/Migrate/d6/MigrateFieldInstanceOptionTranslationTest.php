@@ -21,7 +21,6 @@ class MigrateFieldInstanceOptionTranslationTest extends MigrateDrupal6TestBase {
   protected static $modules = [
     'config_translation',
     'language',
-    'locale',
     'menu_ui',
   ];
 

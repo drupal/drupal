@@ -50,7 +50,6 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   protected static $modules = [
     'node',
     'field',
-    'jsonapi',
     'serialization',
     'system',
     'user',

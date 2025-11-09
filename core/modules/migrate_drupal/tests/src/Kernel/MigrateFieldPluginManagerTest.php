@@ -33,10 +33,6 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
    */
   protected static $modules = [
     'datetime',
-    'field',
-    'migrate_drupal',
-    'options',
-    'file',
     'image',
     'text',
     'link',

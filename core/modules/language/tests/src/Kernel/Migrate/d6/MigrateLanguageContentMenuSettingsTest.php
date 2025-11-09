@@ -23,7 +23,6 @@ class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal6TestBase {
    */
   protected static $modules = [
     'language',
-    'content_translation',
     'menu_link_content',
   ];
 

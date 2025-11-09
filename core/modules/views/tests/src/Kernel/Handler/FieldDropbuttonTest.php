@@ -38,7 +38,6 @@ class FieldDropbuttonTest extends ViewsKernelTestBase {
     'field',
     'text',
     'filter',
-    'views',
   ];
 
   /**

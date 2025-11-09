@@ -26,7 +26,6 @@ class MigrateMenuLinkLocalizedTest extends MigrateNodeTestBase {
   protected static $modules = [
     'content_translation',
     'language',
-    'link',
     'menu_link_content',
     'menu_ui',
   ];

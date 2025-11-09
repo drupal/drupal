@@ -27,7 +27,6 @@ class FilterBooleanOperatorGroupTest extends ViewsKernelTestBase {
    */
   protected static $modules = [
     'field',
-    'text',
     'node',
     'views_test_config',
   ];

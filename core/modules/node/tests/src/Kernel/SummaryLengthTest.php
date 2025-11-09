@@ -42,7 +42,6 @@ class SummaryLengthTest extends KernelTestBase {
    */
   protected static $modules = [
     'node',
-    'datetime',
     'user',
     'system',
     'filter',

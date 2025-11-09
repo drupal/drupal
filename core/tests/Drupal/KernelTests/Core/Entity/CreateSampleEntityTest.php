@@ -33,7 +33,6 @@ class CreateSampleEntityTest extends KernelTestBase {
    */
   protected static $modules = [
     'path_alias',
-    'field',
     'filter',
     'text',
     'file',

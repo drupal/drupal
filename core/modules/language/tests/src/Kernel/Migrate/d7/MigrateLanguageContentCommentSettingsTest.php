@@ -23,7 +23,6 @@ class MigrateLanguageContentCommentSettingsTest extends MigrateDrupal7TestBase {
     'comment',
     'content_translation',
     'language',
-    'node',
     'text',
   ];
 

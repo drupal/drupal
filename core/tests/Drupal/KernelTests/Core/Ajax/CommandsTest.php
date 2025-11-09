@@ -27,7 +27,6 @@ class CommandsTest extends KernelTestBase {
    */
   protected static $modules = [
     'system',
-    'node',
     'ajax_test',
     'ajax_forms_test',
   ];

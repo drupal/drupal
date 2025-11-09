@@ -46,10 +46,8 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     'comment',
     'file',
     'taxonomy',
-    'text',
     'filter',
     'views',
-    'field',
   ];
 
   /**

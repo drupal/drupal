@@ -35,7 +35,6 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'block',
     'block_content',
     'system',
     'user',
