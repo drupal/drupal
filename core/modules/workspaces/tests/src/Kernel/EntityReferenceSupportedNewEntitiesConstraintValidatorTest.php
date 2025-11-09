@@ -32,7 +32,6 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
   protected static $modules = [
     'system',
     'user',
-    'workspaces',
     'entity_test',
   ];
 

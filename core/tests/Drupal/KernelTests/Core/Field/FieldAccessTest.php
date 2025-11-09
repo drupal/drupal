@@ -27,7 +27,6 @@ class FieldAccessTest extends KernelTestBase {
     'entity_test',
     'field',
     'text',
-    'filter',
     'user',
   ];
 

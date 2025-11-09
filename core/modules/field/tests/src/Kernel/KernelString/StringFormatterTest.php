@@ -30,10 +30,8 @@ class StringFormatterTest extends KernelTestBase {
    */
   protected static $modules = [
     'field',
-    'text',
     'entity_test',
     'system',
-    'filter',
     'user',
   ];
 

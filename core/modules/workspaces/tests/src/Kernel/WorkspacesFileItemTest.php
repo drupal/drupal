@@ -30,7 +30,6 @@ class WorkspacesFileItemTest extends FileItemTest {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'file',
     'workspaces',
     'workspaces_test',
   ];

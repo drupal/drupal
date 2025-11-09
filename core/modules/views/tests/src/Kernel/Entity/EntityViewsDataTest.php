@@ -54,9 +54,7 @@ class EntityViewsDataTest extends KernelTestBase {
    */
   protected static $modules = [
     'user',
-    'field',
     'text',
-    'filter',
   ];
 
   /**

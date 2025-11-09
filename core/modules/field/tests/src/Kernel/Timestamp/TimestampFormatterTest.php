@@ -26,7 +26,6 @@ class TimestampFormatterTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'field',
-    'text',
     'entity_test',
     'user',
   ];

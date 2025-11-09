@@ -54,7 +54,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'jsonapi',
     'field',
     'node',
     'serialization',
@@ -63,7 +62,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
     'text',
     'filter',
     'user',
-    'file',
     'image',
     'jsonapi_test_normalizers_kernel',
     'jsonapi_test_resource_type_building',

@@ -35,7 +35,6 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
     'user',
     'node',
     'field',
-    'text',
     'config_test',
   ];
 

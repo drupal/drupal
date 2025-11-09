@@ -34,7 +34,6 @@ class EntityDeriverTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'field',
     'user',
     'node',
     'comment',

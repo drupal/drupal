@@ -23,7 +23,6 @@ class FieldBlockDeriverTest extends EntityKernelTestBase {
    */
   protected static $modules = [
     'layout_builder',
-    'layout_discovery',
   ];
 
   /**

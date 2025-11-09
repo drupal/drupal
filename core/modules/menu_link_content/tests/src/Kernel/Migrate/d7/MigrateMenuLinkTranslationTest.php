@@ -26,7 +26,6 @@ class MigrateMenuLinkTranslationTest extends MigrateDrupal7TestBase {
     'language',
     'link',
     'menu_link_content',
-    'menu_ui',
   ];
 
   /**

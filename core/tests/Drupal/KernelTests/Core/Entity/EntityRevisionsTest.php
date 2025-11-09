@@ -25,7 +25,6 @@ class EntityRevisionsTest extends EntityKernelTestBase {
   protected static $modules = [
     'entity_test',
     'language',
-    'content_translation',
   ];
 
   /**

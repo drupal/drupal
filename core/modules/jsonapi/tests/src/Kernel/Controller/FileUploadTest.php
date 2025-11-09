@@ -29,7 +29,6 @@ class FileUploadTest extends JsonapiKernelTestBase {
   protected static $modules = [
     'node',
     'field',
-    'jsonapi',
     'serialization',
     'system',
     'user',

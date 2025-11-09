@@ -21,7 +21,6 @@ class UninstallKernelTest extends KernelTestBase {
    */
   protected static $modules = [
     'user',
-    'field',
     'file',
     'image',
     'media',

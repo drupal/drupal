@@ -21,10 +21,8 @@ class MigrateTermNodeTranslationTest extends MigrateDrupal6TestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'config_translation',
     'content_translation',
     'language',
-    'locale',
     'menu_ui',
     'taxonomy',
   ];

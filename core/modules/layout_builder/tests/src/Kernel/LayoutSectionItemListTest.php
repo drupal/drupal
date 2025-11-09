@@ -24,14 +24,6 @@ class LayoutSectionItemListTest extends SectionListTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
-    'field',
-    'text',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getSectionList(array $section_data) {
     $this->installEntitySchema('entity_test_base_field_display');
     LayoutBuilderEntityViewDisplay::create([

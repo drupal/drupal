@@ -25,7 +25,6 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
   protected static $modules = [
     'comment',
     'datetime',
-    'file',
     'image',
     'link',
     'node',

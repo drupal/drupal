@@ -27,7 +27,6 @@ class RestPermissionsTest extends KernelTestBase {
     'rest',
     'dblog',
     'serialization',
-    'basic_auth',
     'user',
   ];
 

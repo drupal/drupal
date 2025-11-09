@@ -23,7 +23,6 @@ class FieldInstanceLabelDescriptionTranslationTest extends MigrateSqlSourceTestB
    * {@inheritdoc}
    */
   protected static $modules = [
-    'config_translation',
     'migrate_drupal',
     'field',
   ];

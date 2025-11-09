@@ -21,9 +21,7 @@ class HighWaterTest extends MigrateTestBase {
   protected static $modules = [
     'user',
     'node',
-    'migrate',
     'migrate_high_water_test',
-    'field',
   ];
 
   /**

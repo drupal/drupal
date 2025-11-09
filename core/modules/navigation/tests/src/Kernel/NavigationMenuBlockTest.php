@@ -44,7 +44,6 @@ class NavigationMenuBlockTest extends KernelTestBase {
     'navigation',
     'menu_test',
     'menu_link_content',
-    'field',
     'block',
     'user',
     'link',

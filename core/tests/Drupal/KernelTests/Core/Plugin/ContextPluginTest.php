@@ -27,9 +27,6 @@ class ContextPluginTest extends KernelTestBase {
   protected static $modules = [
     'user',
     'node',
-    'field',
-    'filter',
-    'text',
   ];
 
   /**

@@ -41,9 +41,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
    */
   protected static $modules = [
     'field',
-    'file',
     'image',
-    'jsonapi',
     'node',
     'serialization',
     'system',

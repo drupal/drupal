@@ -29,7 +29,6 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
     'content_moderation',
     'user',
     'system',
-    'text',
     'workflows',
   ];
 

@@ -19,14 +19,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class LayoutBuilderBreadcrumbAlterTest extends EntityKernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'layout_builder',
-    'layout_discovery',
-  ];
-
-  /**
    * Check that there are no errors when alter called with null route match.
    */
   public function testBreadcrumbAlterNullRouteMatch(): void {

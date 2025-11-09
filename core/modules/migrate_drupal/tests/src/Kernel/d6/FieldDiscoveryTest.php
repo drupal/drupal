@@ -29,16 +29,9 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'menu_ui',
     'comment',
-    'datetime',
-    'file',
-    'image',
-    'link',
-    'node',
+    'menu_ui',
     'taxonomy',
-    'telephone',
-    'text',
   ];
 
   /**

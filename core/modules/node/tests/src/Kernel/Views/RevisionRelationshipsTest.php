@@ -27,7 +27,6 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
     'node',
     'node_test_views',
     'language',
-    'content_translation',
   ];
 
   /**

@@ -27,7 +27,6 @@ class NodeRequirementsStatusFilterWarningTest extends KernelTestBase {
     'system',
     'user',
     'node',
-    'text',
     'field',
     'views',
   ];

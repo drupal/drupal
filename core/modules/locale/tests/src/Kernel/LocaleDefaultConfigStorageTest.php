@@ -22,7 +22,6 @@ class LocaleDefaultConfigStorageTest extends KernelTestBase {
    */
   protected static $modules = [
     'language',
-    'locale',
     'locale_test',
     'locale_test_translate',
   ];

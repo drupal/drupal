@@ -22,12 +22,9 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
   protected static $modules = [
     'block',
     'block_content',
-    'config',
     'config_override_test',
-    'field',
     'path_alias',
     'system',
-    'text',
     'user',
   ];
 

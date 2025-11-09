@@ -24,11 +24,9 @@ class FieldFormatterTest extends KernelTestBase {
    */
   protected static $modules = [
     'field',
-    'text',
     'entity_test',
     'field_test',
     'system',
-    'filter',
     'user',
   ];
 

@@ -29,7 +29,6 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     'system',
     'filter',
     'editor',
-    'field',
     'file',
     'user',
   ];

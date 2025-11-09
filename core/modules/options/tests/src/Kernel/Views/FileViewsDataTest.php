@@ -23,7 +23,6 @@ class FileViewsDataTest extends ViewsKernelTestBase {
    */
   protected static $modules = [
     'file',
-    'views',
     'entity_test',
     'field',
   ];

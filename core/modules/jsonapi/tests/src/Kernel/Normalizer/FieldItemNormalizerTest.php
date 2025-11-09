@@ -28,7 +28,6 @@ class FieldItemNormalizerTest extends JsonapiKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'file',
     'user',
     'link',
     'entity_test',

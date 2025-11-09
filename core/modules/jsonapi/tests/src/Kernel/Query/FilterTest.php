@@ -37,9 +37,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   protected static $modules = [
     'field',
-    'file',
     'image',
-    'jsonapi',
     'node',
     'serialization',
     'text',

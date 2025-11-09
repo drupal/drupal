@@ -23,7 +23,6 @@ class BlockContentPermissionsTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'block',
     'block_content',
     'block_content_test',
     'user',

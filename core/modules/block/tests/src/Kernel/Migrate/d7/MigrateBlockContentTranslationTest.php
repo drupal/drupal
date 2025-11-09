@@ -20,18 +20,11 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal7TestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'node',
     'text',
     'block',
-    'comment',
-    'filter',
-    'views',
     'block_content',
-    'config_translation',
     'language',
-    'locale',
     'path_alias',
-    'taxonomy',
   ];
 
   /**

@@ -52,10 +52,8 @@ class ContentModerationStateTest extends KernelTestBase {
     'user',
     'system',
     'language',
-    'content_translation',
     'text',
     'workflows',
-    'path_alias',
     'taxonomy',
   ];
 

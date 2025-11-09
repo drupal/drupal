@@ -24,9 +24,7 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
     'comment',
     'user',
     'field',
-    'field_ui',
     'entity_test',
-    'text',
   ];
 
   /**

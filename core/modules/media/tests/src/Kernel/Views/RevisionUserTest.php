@@ -32,7 +32,6 @@ class RevisionUserTest extends ViewsKernelTestBase {
     'media',
     'media_test_views',
     'media_test_source',
-    'views',
     'image',
     'field',
     'file',

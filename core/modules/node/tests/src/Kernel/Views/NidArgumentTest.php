@@ -26,7 +26,6 @@ class NidArgumentTest extends ViewsKernelTestBase {
   protected static $modules = [
     'node',
     'field',
-    'text',
     'node_test_config',
     'node_test_views',
   ];

@@ -37,7 +37,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     'layout_builder',
     'layout_builder_defaults_test',
     'entity_test',
-    'field',
     'user',
   ];
 

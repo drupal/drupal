@@ -22,7 +22,6 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
   protected static $modules = [
     'language',
     'config_test',
-    'field',
   ];
 
   /**

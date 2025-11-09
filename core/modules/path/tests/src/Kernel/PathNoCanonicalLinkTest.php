@@ -21,7 +21,6 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'path',
     'content_translation_test',
     'language',
     'entity_test',

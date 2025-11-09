@@ -23,7 +23,6 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
    */
   protected static $modules = [
     'entity_test',
-    'field',
     'field_test',
     'user',
     'system',

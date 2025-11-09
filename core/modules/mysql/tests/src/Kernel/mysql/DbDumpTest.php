@@ -30,7 +30,6 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'config',
     'dblog',
     'menu_link_content',
     'link',

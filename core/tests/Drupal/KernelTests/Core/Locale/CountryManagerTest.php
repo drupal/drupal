@@ -22,8 +22,6 @@ class CountryManagerTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'language',
-    'locale',
     'locale_test',
   ];
 

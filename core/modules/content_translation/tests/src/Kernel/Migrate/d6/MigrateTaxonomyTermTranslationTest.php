@@ -24,7 +24,6 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
     'content_translation',
     'language',
     'menu_ui',
-    'node',
     'taxonomy',
   ];
 

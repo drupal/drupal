@@ -27,7 +27,6 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
     'user',
     'language',
     'node',
-    'field',
     'migrate_external_translated_test',
   ];
 
