@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
-use Symfony\Component\Validator\Constraints\Composite;
+use Symfony\Component\Validator\Constraints\Existence;
 
 /**
  * Checks that all the keys of a sequence match the specified constraints.
@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints\Composite;
   label: new TranslatableMarkup('Valid sequence keys', [], ['context' => 'Validation']),
   type: ['sequence']
 )]
-class ValidSequenceKeysConstraint extends Composite implements ContainerFactoryPluginInterface {
+class ValidSequenceKeysConstraint extends Existence implements ContainerFactoryPluginInterface {
 
   /**
    * The error message if a sequence key is invalid.
@@ -36,38 +36,10 @@ class ValidSequenceKeysConstraint extends Composite implements ContainerFactoryP
     $constraints = $configuration['constraints'];
     $constraint_instances = [];
     foreach ($constraints as $constraint_name => $constraint_options) {
-      $constraint_instances[$constraint_name] = $constraint_manager->create($constraint_name, $constraint_options);
+      $constraint_instances[] = $constraint_manager->create($constraint_name, $constraint_options);
     }
 
-    return new static(['constraints' => $constraint_instances], [SymfonyConstraint::DEFAULT_GROUP]);
-  }
-
-  /**
-   * Constraint IDs + options specified that are to be applied to sequence keys.
-   *
-   * @var \Symfony\Component\Validator\Constraint[]
-   */
-  public array $constraints;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDefaultOption(): ?string {
-    return 'constraints';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRequiredOptions(): array {
-    return ['constraints'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getCompositeOption(): string {
-    return 'constraints';
+    return new static($constraint_instances, [SymfonyConstraint::DEFAULT_GROUP]);
   }
 
 }
