@@ -658,7 +658,7 @@ class MediaSourceTest extends MediaKernelTestBase {
    */
   protected function createMediaTypeViaForm($source_plugin_id, $field_name): void {
     /** @var \Drupal\media\MediaTypeInterface $type */
-    $type = MediaType::create(['source' => $source_plugin_id]);
+    $type = MediaType::create(['source' => $source_plugin_id, 'id' => 'test_media_type']);
 
     $form = $this->container->get('entity_type.manager')
       ->getFormObject('media_type', 'add')
