@@ -188,6 +188,20 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
   /**
    * {@inheritdoc}
    */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE): void {
+    parent::postSave($storage, $update);
+
+    // When a new workspace has been saved, we need to copy all the associations
+    // of its parent.
+    if (!$update && $this->hasParent()) {
+      \Drupal::service('workspaces.tracker')->initializeWorkspace($this);
+    }
+    \Drupal::service('workspaces.repository')->resetCache();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     parent::preDelete($storage, $entities);
 
@@ -209,8 +223,8 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
 
     /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
     $workspace_manager = \Drupal::service('workspaces.manager');
-    /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     // Gather the list of deleted workspace IDs, since the passed-in array is
     // not required to be keyed by them.
@@ -227,7 +241,7 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
     // from \Drupal\workspaces\Hook\WorkspacesHooks::cron().
     $workspace_ids_to_purge = [];
     foreach ($workspaces_ids as $workspace_id) {
-      if ($workspace_association->getTrackedEntities($workspace_id)) {
+      if ($workspace_tracker->getTrackedEntities($workspace_id)) {
         $workspace_ids_to_purge[$workspace_id] = $workspace_id;
       }
     }

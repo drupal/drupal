@@ -29,7 +29,7 @@ class WorkspaceInformation implements WorkspaceInformationInterface {
 
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-    protected readonly WorkspaceAssociationInterface $workspaceAssociation,
+    protected readonly WorkspaceTrackerInterface $workspaceTracker,
   ) {}
 
   /**
@@ -113,7 +113,7 @@ class WorkspaceInformation implements WorkspaceInformationInterface {
    * {@inheritdoc}
    */
   public function isEntityDeletable(EntityInterface $entity, WorkspaceInterface $workspace): bool {
-    $initial_revisions = $this->workspaceAssociation->getAssociatedInitialRevisions($workspace->id(), $entity->getEntityTypeId());
+    $initial_revisions = $this->workspaceTracker->getTrackedInitialRevisions($workspace->id(), $entity->getEntityTypeId());
 
     return in_array($entity->id(), $initial_revisions, TRUE);
   }

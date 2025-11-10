@@ -15,7 +15,7 @@ use Drupal\Core\Hook\Attribute\ReorderHook;
 use Drupal\Core\Hook\Order\Order;
 use Drupal\Core\Hook\Order\OrderBefore;
 use Drupal\content_moderation\Hook\ContentModerationHooks;
-use Drupal\workspaces\WorkspaceAssociationInterface;
+use Drupal\workspaces\WorkspaceTrackerInterface;
 use Drupal\workspaces\WorkspaceInformationInterface;
 use Drupal\workspaces\WorkspaceManagerInterface;
 use Drupal\workspaces\WorkspaceRepositoryInterface;
@@ -28,7 +28,7 @@ class EntityOperations {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected WorkspaceManagerInterface $workspaceManager,
-    protected WorkspaceAssociationInterface $workspaceAssociation,
+    protected WorkspaceTrackerInterface $workspaceTracker,
     protected WorkspaceInformationInterface $workspaceInfo,
     protected WorkspaceRepositoryInterface $workspaceRepository,
   ) {}
@@ -68,11 +68,6 @@ class EntityOperations {
    */
   #[Hook('entity_insert', order: Order::Last)]
   public function entityInsert(EntityInterface $entity): void {
-    if ($entity->getEntityTypeId() === 'workspace') {
-      $this->workspaceAssociation->workspaceInsert($entity);
-      $this->workspaceRepository->resetCache();
-    }
-
     if ($this->workspaceInfo->isEntityIgnored($entity) || !$this->workspaceInfo->isEntitySupported($entity)) {
       return;
     }
@@ -85,10 +80,6 @@ class EntityOperations {
    */
   #[Hook('entity_update')]
   public function entityUpdate(EntityInterface $entity): void {
-    if ($entity->getEntityTypeId() === 'workspace') {
-      $this->workspaceRepository->resetCache();
-    }
-
     if ($this->workspaceInfo->isEntityIgnored($entity) || !$this->workspaceInfo->isEntitySupported($entity)) {
       return;
     }
@@ -136,7 +127,7 @@ class EntityOperations {
       return;
     }
 
-    $this->workspaceAssociation->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()]);
+    $this->workspaceTracker->deleteTrackedEntities(NULL, $entity->getEntityTypeId(), [$entity->id()]);
 
     $this->workspaceManager->getActiveWorkspace()?->getProvider()->entityDelete($entity);
   }
@@ -150,7 +141,7 @@ class EntityOperations {
       return;
     }
 
-    $this->workspaceAssociation->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()], [$entity->getRevisionId()]);
+    $this->workspaceTracker->deleteTrackedEntities(NULL, $entity->getEntityTypeId(), [$entity->id()], [$entity->getRevisionId()]);
 
     $this->workspaceManager->getActiveWorkspace()?->getProvider()->entityRevisionDelete($entity);
   }
@@ -166,7 +157,7 @@ class EntityOperations {
     }
 
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
-    $tracked_entities = $this->workspaceAssociation->getTrackedEntities($active_workspace->id());
+    $tracked_entities = $this->workspaceTracker->getTrackedEntities($active_workspace->id());
 
     if (!isset($tracked_entities[$entity_type->id()])) {
       return;

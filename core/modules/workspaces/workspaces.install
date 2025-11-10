@@ -11,7 +11,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\workspaces\Provider\DefaultWorkspaceProvider;
-use Drupal\workspaces\WorkspaceAssociation;
+use Drupal\workspaces\WorkspaceTracker;
 
 /**
  * Implements hook_schema().
@@ -261,7 +261,7 @@ function workspaces_update_11302(): void {
         $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
 
         // Determine which ID field to use based on entity type.
-        $uses_numeric_id = (WorkspaceAssociation::getIdField($entity_type_id) === 'target_entity_id');
+        $uses_numeric_id = (WorkspaceTracker::getIdField($entity_type_id) === 'target_entity_id');
 
         // Collect entity IDs for querying revisions.
         $id_field_name = $uses_numeric_id ? 'target_entity_id' : 'target_entity_id_string';

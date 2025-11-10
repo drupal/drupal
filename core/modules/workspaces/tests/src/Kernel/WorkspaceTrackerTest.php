@@ -8,19 +8,19 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
-use Drupal\workspaces\WorkspaceAssociation;
+use Drupal\workspaces\WorkspaceTracker;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests workspace associations.
+ * Tests workspace tracker.
  */
-#[CoversClass(WorkspaceAssociation::class)]
+#[CoversClass(WorkspaceTracker::class)]
 #[Group('workspaces')]
 #[RunTestsInSeparateProcesses]
-class WorkspaceAssociationTest extends KernelTestBase {
+class WorkspaceTrackerTest extends KernelTestBase {
 
   use UserCreationTrait;
   use WorkspaceTestTrait;
@@ -215,15 +215,15 @@ class WorkspaceAssociationTest extends KernelTestBase {
       $this->createEntity($entity_type_id, ['name' => "Test entity {$i}"]);
     }
 
-    /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_association */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     // The default behavior uses a pager with 50 items per page.
-    $tracked_items = $workspace_association->getTrackedEntitiesForListing($this->workspaces['stage']->id());
+    $tracked_items = $workspace_tracker->getTrackedEntitiesForListing($this->workspaces['stage']->id());
     $this->assertEquals(50, count($tracked_items[$entity_type_id]));
 
     // Verifies that all items are returned, not broken into pages.
-    $tracked_items_no_pager = $workspace_association->getTrackedEntitiesForListing($this->workspaces['stage']->id(), NULL, FALSE);
+    $tracked_items_no_pager = $workspace_tracker->getTrackedEntitiesForListing($this->workspaces['stage']->id(), NULL, FALSE);
     $this->assertEquals(51, count($tracked_items_no_pager[$entity_type_id]));
   }
 
@@ -241,20 +241,21 @@ class WorkspaceAssociationTest extends KernelTestBase {
    *   entities that were created in the specified workspace.
    */
   protected function assertWorkspaceAssociations($entity_type_id, array $expected_latest_revisions, array $expected_all_revisions, array $expected_initial_revisions): void {
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
     foreach ($expected_latest_revisions as $workspace_id => $expected_tracked_revision_ids) {
-      $tracked_entities = $workspace_association->getTrackedEntities($workspace_id, $entity_type_id);
+      $tracked_entities = $workspace_tracker->getTrackedEntities($workspace_id, $entity_type_id);
       $tracked_revision_ids = $tracked_entities[$entity_type_id] ?? [];
       $this->assertEquals($expected_tracked_revision_ids, array_keys($tracked_revision_ids));
     }
 
     foreach ($expected_all_revisions as $workspace_id => $expected_all_revision_ids) {
-      $all_associated_revisions = $workspace_association->getAssociatedRevisions($workspace_id, $entity_type_id);
+      $all_associated_revisions = $workspace_tracker->getAllTrackedRevisions($workspace_id, $entity_type_id);
       $this->assertEquals($expected_all_revision_ids, array_keys($all_associated_revisions));
     }
 
     foreach ($expected_initial_revisions as $workspace_id => $expected_initial_revision_ids) {
-      $initial_revisions = $workspace_association->getAssociatedInitialRevisions($workspace_id, $entity_type_id);
+      $initial_revisions = $workspace_tracker->getTrackedInitialRevisions($workspace_id, $entity_type_id);
       $this->assertEquals($expected_initial_revision_ids, array_keys($initial_revisions));
     }
   }
@@ -266,7 +267,8 @@ class WorkspaceAssociationTest extends KernelTestBase {
    */
   public function testMoveTrackedEntitiesWithMultipleRevisions(): void {
     $entity_type_id = 'entity_test_mulrevpub';
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     // Get the workspace field name for later assertions.
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
@@ -282,15 +284,15 @@ class WorkspaceAssociationTest extends KernelTestBase {
     $entity->setName('Updated name 2');
     $entity->save();
 
-    $preview_revisions = $workspace_association->getAssociatedRevisions('preview', $entity_type_id);
+    $preview_revisions = $workspace_tracker->getAllTrackedRevisions('preview', $entity_type_id);
 
     // Move the entity to 'qa'.
-    $workspace_association->moveTrackedEntities('preview', 'qa', $entity_type_id, [$entity->id()]);
+    $workspace_tracker->moveTrackedEntities('preview', 'qa', $entity_type_id, [$entity->id()]);
 
     // Verify all revisions have been moved.
-    $this->assertEmpty($workspace_association->getAssociatedRevisions('preview', $entity_type_id));
+    $this->assertEmpty($workspace_tracker->getAllTrackedRevisions('preview', $entity_type_id));
 
-    $qa_revisions = $workspace_association->getAssociatedRevisions('qa', $entity_type_id);
+    $qa_revisions = $workspace_tracker->getAllTrackedRevisions('qa', $entity_type_id);
     $this->assertEquals($preview_revisions, $qa_revisions);
 
     // Verify the workspace field was updated on all revisions.
@@ -307,7 +309,8 @@ class WorkspaceAssociationTest extends KernelTestBase {
   public function testMoveTrackedEntitiesOfSpecificType(): void {
     $entity_type_id = 'entity_test_mulrevpub';
     $entity_type_id_string = 'entity_test_mulrevpub_string_id';
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     // Get the workspace field name for later assertions.
     $entity_type_string_id = $this->entityTypeManager->getDefinition($entity_type_id_string);
@@ -323,17 +326,17 @@ class WorkspaceAssociationTest extends KernelTestBase {
     $entity_string_2 = $this->createEntity($entity_type_id_string, ['id' => 'str_2', 'name' => 'String entity 2']);
 
     // Move only the integer ID entities to 'qa'.
-    $workspace_association->moveTrackedEntities('preview', 'qa', $entity_type_id);
+    $workspace_tracker->moveTrackedEntities('preview', 'qa', $entity_type_id);
 
     // Verify integer ID entities were moved.
-    $this->assertEmpty($workspace_association->getTrackedEntities('preview', $entity_type_id)[$entity_type_id] ?? []);
-    $this->assertCount(2, $workspace_association->getTrackedEntities('qa', $entity_type_id)[$entity_type_id]);
+    $this->assertEmpty($workspace_tracker->getTrackedEntities('preview', $entity_type_id)[$entity_type_id] ?? []);
+    $this->assertCount(2, $workspace_tracker->getTrackedEntities('qa', $entity_type_id)[$entity_type_id]);
 
     // Verify string ID entities remain in 'preview'.
-    $this->assertCount(2, $workspace_association->getTrackedEntities('preview', $entity_type_id_string)[$entity_type_id_string]);
-    $this->assertEmpty($workspace_association->getTrackedEntities('qa', $entity_type_id_string)[$entity_type_id_string] ?? []);
+    $this->assertCount(2, $workspace_tracker->getTrackedEntities('preview', $entity_type_id_string)[$entity_type_id_string]);
+    $this->assertEmpty($workspace_tracker->getTrackedEntities('qa', $entity_type_id_string)[$entity_type_id_string] ?? []);
 
-    $preview_string_entities = $workspace_association->getTrackedEntities('preview', $entity_type_id_string);
+    $preview_string_entities = $workspace_tracker->getTrackedEntities('preview', $entity_type_id_string);
     $this->assertContains($entity_string_1->id(), $preview_string_entities[$entity_type_id_string] ?? []);
     $this->assertContains($entity_string_2->id(), $preview_string_entities[$entity_type_id_string] ?? []);
 
@@ -350,7 +353,8 @@ class WorkspaceAssociationTest extends KernelTestBase {
   public function testMoveAllTrackedEntities(): void {
     $entity_type_id = 'entity_test_mulrevpub';
     $entity_type_id_string = 'entity_test_mulrevpub_string_id';
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     // Create entities of different types in 'preview'.
     $this->switchToWorkspace('preview');
@@ -358,12 +362,12 @@ class WorkspaceAssociationTest extends KernelTestBase {
     $this->createEntity($entity_type_id_string, ['id' => 'str_test', 'name' => 'String entity']);
 
     // Move all entities from 'preview' to 'qa'.
-    $workspace_association->moveTrackedEntities('preview', 'qa');
+    $workspace_tracker->moveTrackedEntities('preview', 'qa');
 
-    $this->assertEmpty($workspace_association->getTrackedEntities('preview', $entity_type_id)[$entity_type_id] ?? []);
-    $this->assertEmpty($workspace_association->getTrackedEntities('preview', $entity_type_id_string)[$entity_type_id_string] ?? []);
-    $this->assertCount(1, $workspace_association->getTrackedEntities('qa', $entity_type_id)[$entity_type_id]);
-    $this->assertCount(1, $workspace_association->getTrackedEntities('qa', $entity_type_id_string)[$entity_type_id_string]);
+    $this->assertEmpty($workspace_tracker->getTrackedEntities('preview', $entity_type_id)[$entity_type_id] ?? []);
+    $this->assertEmpty($workspace_tracker->getTrackedEntities('preview', $entity_type_id_string)[$entity_type_id_string] ?? []);
+    $this->assertCount(1, $workspace_tracker->getTrackedEntities('qa', $entity_type_id)[$entity_type_id]);
+    $this->assertCount(1, $workspace_tracker->getTrackedEntities('qa', $entity_type_id_string)[$entity_type_id_string]);
   }
 
   /**
@@ -380,12 +384,13 @@ class WorkspaceAssociationTest extends KernelTestBase {
     string $exception_class,
     string $exception_message,
   ): void {
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     $this->expectException($exception_class);
     $this->expectExceptionMessage($exception_message);
 
-    $workspace_association->moveTrackedEntities($source_workspace_id, $target_workspace_id, $entity_type_id, $entity_ids);
+    $workspace_tracker->moveTrackedEntities($source_workspace_id, $target_workspace_id, $entity_type_id, $entity_ids);
   }
 
   /**

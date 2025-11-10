@@ -4,7 +4,7 @@ namespace Drupal\workspaces\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\workspaces\WorkspaceAssociationInterface;
+use Drupal\workspaces\WorkspaceTrackerInterface;
 use Drupal\workspaces\WorkspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
@@ -20,7 +20,7 @@ class EntityWorkspaceConflictConstraintValidator extends ConstraintValidator imp
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly WorkspaceManagerInterface $workspaceManager,
-    protected readonly WorkspaceAssociationInterface $workspaceAssociation,
+    protected readonly WorkspaceTrackerInterface $workspaceTracker,
   ) {}
 
   /**
@@ -30,7 +30,7 @@ class EntityWorkspaceConflictConstraintValidator extends ConstraintValidator imp
     return new static(
       $container->get('entity_type.manager'),
       $container->get('workspaces.manager'),
-      $container->get('workspaces.association'),
+      $container->get('workspaces.tracker'),
     );
   }
 
@@ -44,7 +44,7 @@ class EntityWorkspaceConflictConstraintValidator extends ConstraintValidator imp
 
       // If the entity is tracked in a workspace, it can only be edited in
       // that workspace or one of its descendants.
-      if ($tracking_workspace_ids = $this->workspaceAssociation->getEntityTrackingWorkspaceIds($entity, TRUE)) {
+      if ($tracking_workspace_ids = $this->workspaceTracker->getEntityTrackingWorkspaceIds($entity, TRUE)) {
         if (!$active_workspace || !in_array($active_workspace->id(), $tracking_workspace_ids, TRUE)) {
           $first_tracking_workspace_id = reset($tracking_workspace_ids);
           $workspace = $this->entityTypeManager->getStorage('workspace')

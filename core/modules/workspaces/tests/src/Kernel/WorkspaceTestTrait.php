@@ -113,10 +113,10 @@ trait WorkspaceTestTrait {
    *   The ID of the entity type that is being tested.
    */
   protected function assertWorkspaceAssociation(array $expected, $entity_type_id): void {
-    /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_association */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
     foreach ($expected as $workspace_id => $expected_tracked_revision_ids) {
-      $tracked_entities = $workspace_association->getTrackedEntities($workspace_id, $entity_type_id);
+      $tracked_entities = $workspace_tracker->getTrackedEntities($workspace_id, $entity_type_id);
       $tracked_revision_ids = $tracked_entities[$entity_type_id] ?? [];
       $this->assertEquals($expected_tracked_revision_ids, array_keys($tracked_revision_ids));
     }

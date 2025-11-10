@@ -22,11 +22,11 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
   protected $entityTypeManager;
 
   /**
-   * The workspace association service.
+   * The workspace tracker service.
    *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
+   * @var \Drupal\workspaces\WorkspaceTrackerInterface
    */
-  protected $workspaceAssociation;
+  protected $workspaceTracker;
 
   /**
    * The date formatter service.
@@ -53,7 +53,7 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     $instance = parent::createInstance($container, $entity_type);
     $instance->entityTypeManager = $container->get('entity_type.manager');
-    $instance->workspaceAssociation = $container->get('workspaces.association');
+    $instance->workspaceTracker = $container->get('workspaces.tracker');
     $instance->dateFormatter = $container->get('date.formatter');
     $instance->bundleInfo = $container->get('entity_type.bundle.info');
     return $instance;
@@ -77,7 +77,7 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
       // Display the number of entities changed in the workspace regardless of
       // how many of them are listed on each page.
       $changes_count = [];
-      $all_tracked_entities = $this->workspaceAssociation->getTrackedEntities($entity->id());
+      $all_tracked_entities = $this->workspaceTracker->getTrackedEntities($entity->id());
       foreach ($all_tracked_entities as $entity_type_id => $tracked_entity_ids) {
         $changes_count[$entity_type_id] = $this->entityTypeManager->getDefinition($entity_type_id)->getCountLabel(count($tracked_entity_ids));
       }
@@ -93,7 +93,7 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
         '#empty' => $this->t('This workspace has no changes.'),
       ];
 
-      $paged_tracked_entities = $this->workspaceAssociation->getTrackedEntitiesForListing($entity->id(), $build_id, $this->limit);
+      $paged_tracked_entities = $this->workspaceTracker->getTrackedEntitiesForListing($entity->id(), $build_id, $this->limit);
       foreach ($paged_tracked_entities as $entity_type_id => $tracked_entities) {
         $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         if ($this->entityTypeManager->hasHandler($entity_type_id, 'list_builder')) {

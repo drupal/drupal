@@ -4,7 +4,7 @@ namespace Drupal\workspaces\EntityQuery;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\workspaces\WorkspaceAssociation;
+use Drupal\workspaces\WorkspaceTracker;
 use Drupal\workspaces\WorkspaceInformationInterface;
 use Drupal\workspaces\WorkspaceManagerInterface;
 
@@ -85,7 +85,7 @@ trait QueryTrait {
       // can properly include live content along with a possible workspace
       // revision.
       $id_field = $this->entityType->getKey('id');
-      $target_id_field = WorkspaceAssociation::getIdField($this->entityTypeId);
+      $target_id_field = WorkspaceTracker::getIdField($this->entityTypeId);
       $this->sqlQuery->leftJoin('workspace_association', 'workspace_association', "[%alias].[target_entity_type_id] = '{$this->entityTypeId}' AND [%alias].[$target_id_field] = [base_table].[$id_field] AND [%alias].[workspace] = '{$active_workspace->id()}'");
     }
 

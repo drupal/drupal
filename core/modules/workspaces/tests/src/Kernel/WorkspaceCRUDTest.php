@@ -95,8 +95,8 @@ class WorkspaceCRUDTest extends KernelTestBase {
     ]);
     $this->setCurrentUser($admin);
 
-    /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
-    $workspace_association = \Drupal::service('workspaces.association');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     // Create a workspace with a very small number of associated node revisions.
     $workspace_1 = Workspace::create([
@@ -110,7 +110,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $workspace_1_node_2 = $this->createNode(['status' => FALSE]);
 
     // Check that the workspace tracks the initial revisions for both nodes.
-    $initial_revisions = $workspace_association->getAssociatedInitialRevisions($workspace_1->id(), 'node');
+    $initial_revisions = $workspace_tracker->getTrackedInitialRevisions($workspace_1->id(), 'node');
     $this->assertCount(2, $initial_revisions);
 
     for ($i = 0; $i < 4; $i++) {
@@ -122,12 +122,12 @@ class WorkspaceCRUDTest extends KernelTestBase {
     }
 
     // The workspace should now track 2 nodes.
-    $tracked_entities = $workspace_association->getTrackedEntities($workspace_1->id());
+    $tracked_entities = $workspace_tracker->getTrackedEntities($workspace_1->id());
     $this->assertCount(2, $tracked_entities['node']);
 
     // Since all the revisions were created inside a workspace, including the
     // default one, 'workspace_1' should be tracking all 10 revisions.
-    $associated_revisions = $workspace_association->getAssociatedRevisions($workspace_1->id(), 'node');
+    $associated_revisions = $workspace_tracker->getAllTrackedRevisions($workspace_1->id(), 'node');
     $this->assertCount(10, $associated_revisions);
 
     // Check that we are allowed to delete the workspace.
@@ -138,11 +138,11 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $workspace_1->delete();
 
     // There are no more tracked entities in 'workspace_1'.
-    $tracked_entities = $workspace_association->getTrackedEntities($workspace_1->id());
+    $tracked_entities = $workspace_tracker->getTrackedEntities($workspace_1->id());
     $this->assertEmpty($tracked_entities);
 
     // There are no more revisions associated with 'workspace_1'.
-    $associated_revisions = $workspace_association->getAssociatedRevisions($workspace_1->id(), 'node');
+    $associated_revisions = $workspace_tracker->getAllTrackedRevisions($workspace_1->id(), 'node');
     $this->assertCount(0, $associated_revisions);
 
     // Create another workspace, this time with a larger number of associated
@@ -161,17 +161,17 @@ class WorkspaceCRUDTest extends KernelTestBase {
     }
 
     // Now there is one entity tracked in 'workspace_2'.
-    $tracked_entities = $workspace_association->getTrackedEntities($workspace_2->id());
+    $tracked_entities = $workspace_tracker->getTrackedEntities($workspace_2->id());
     $this->assertCount(1, $tracked_entities['node']);
 
     // All 60 are associated with 'workspace_2'.
-    $associated_revisions = $workspace_association->getAssociatedRevisions($workspace_2->id(), 'node', [$workspace_2_node_1->id()]);
+    $associated_revisions = $workspace_tracker->getAllTrackedRevisions($workspace_2->id(), 'node', [$workspace_2_node_1->id()]);
     $this->assertCount(60, $associated_revisions);
 
     // Delete the workspace and check that we still have 10 revision left to
     // delete.
     $workspace_2->delete();
-    $associated_revisions = $workspace_association->getAssociatedRevisions($workspace_2->id(), 'node', [$workspace_2_node_1->id()]);
+    $associated_revisions = $workspace_tracker->getAllTrackedRevisions($workspace_2->id(), 'node', [$workspace_2_node_1->id()]);
     $this->assertCount(10, $associated_revisions);
 
     $workspace_deleted = \Drupal::state()->get('workspace.deleted');
@@ -196,9 +196,9 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $this->assertEmpty($node_storage->loadMultipleRevisions(array_keys($associated_revisions)));
 
     // 'workspace_2 'is empty now.
-    $associated_revisions = $workspace_association->getAssociatedRevisions($workspace_2->id(), 'node', [$workspace_2_node_1->id()]);
+    $associated_revisions = $workspace_tracker->getAllTrackedRevisions($workspace_2->id(), 'node', [$workspace_2_node_1->id()]);
     $this->assertCount(0, $associated_revisions);
-    $tracked_entities = $workspace_association->getTrackedEntities($workspace_2->id());
+    $tracked_entities = $workspace_tracker->getTrackedEntities($workspace_2->id());
     $this->assertCount(0, $tracked_entities);
 
     $workspace_deleted = \Drupal::state()->get('workspace.deleted');

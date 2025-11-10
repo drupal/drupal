@@ -6,7 +6,7 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\Query\Sql\Tables as BaseTables;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\workspaces\WorkspaceAssociation;
+use Drupal\workspaces\WorkspaceTracker;
 
 /**
  * Alters entity queries to use a workspace revision instead of the default one.
@@ -119,7 +119,7 @@ class Tables extends BaseTables {
 
     $active_workspace_id = $this->sqlQuery->getMetaData('active_workspace_id');
     if ($active_workspace_id && $this->workspaceInfo->isEntityTypeSupported($entity_type)) {
-      $this->addWorkspaceAssociationJoin($entity_type->id(), $next_base_table_alias, $active_workspace_id);
+      $this->addWorkspaceTrackerJoin($entity_type->id(), $next_base_table_alias, $active_workspace_id);
     }
 
     return $next_base_table_alias;
@@ -141,11 +141,11 @@ class Tables extends BaseTables {
    * @return string
    *   The alias of the joined table.
    */
-  public function addWorkspaceAssociationJoin($entity_type_id, $base_table_alias, $active_workspace_id) {
+  public function addWorkspaceTrackerJoin($entity_type_id, $base_table_alias, $active_workspace_id) {
     if (!isset($this->contentWorkspaceTables[$base_table_alias])) {
       $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
       $id_field = $entity_type->getKey('id');
-      $target_id_field = WorkspaceAssociation::getIdField($entity_type_id);
+      $target_id_field = WorkspaceTracker::getIdField($entity_type_id);
 
       // LEFT join the Workspace association entity's table so we can properly
       // include live content along with a possible workspace-specific revision.

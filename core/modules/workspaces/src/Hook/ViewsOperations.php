@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewsData;
-use Drupal\workspaces\WorkspaceAssociation;
+use Drupal\workspaces\WorkspaceTracker;
 use Drupal\workspaces\WorkspaceInformationInterface;
 use Drupal\workspaces\WorkspaceManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -234,7 +234,7 @@ class ViewsOperations {
     // Construct the join.
     $definition = [
       'table' => 'workspace_association',
-      'field' => WorkspaceAssociation::getIdField($entity_type_id),
+      'field' => WorkspaceTracker::getIdField($entity_type_id),
       'left_table' => $relationship,
       'left_field' => $table_data['table']['base']['field'],
       'extra' => [
