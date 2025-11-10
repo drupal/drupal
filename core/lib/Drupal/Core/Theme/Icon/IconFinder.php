@@ -310,7 +310,7 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
         'icon_id' => $icon_id,
         'source' => $this->fileUrlGenerator->generateString(str_replace($this->appRoot, '', $file_absolute_path)),
         'absolute_path' => $file_absolute_path,
-        'group' => self::extractGroupFromPath($file->getPath(), $group_position),
+        'group' => $group_position === NULL ? NULL : self::extractGroupFromPath($file->getPath(), $group_position),
       ];
     }
 
@@ -342,13 +342,13 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
    *
    * @param string $path
    *   The file path.
-   * @param int|null $group_position
-   *   The position of the group in the path, or null if not applicable.
+   * @param int $group_position
+   *   The position of the group in the path.
    *
    * @return string|null
    *   The extracted group, or null if not found.
    */
-  private static function extractGroupFromPath(string $path, ?int $group_position): ?string {
+  private static function extractGroupFromPath(string $path, int $group_position): ?string {
     $parts = explode('/', trim($path, '/'));
     return $parts[$group_position] ?? NULL;
   }
