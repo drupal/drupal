@@ -34,6 +34,7 @@ class MemoryBackendTest extends UnitTestCase {
     $request_mock = $this->getMockBuilder(Request::class)
       ->onlyMethods(['getClientIp'])
       ->getMock();
+    $request_mock->method('getClientIp')->willReturn('127.0.0.1');
     $request->push($request_mock);
     $this->flood = new MemoryBackend($request);
   }
