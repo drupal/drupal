@@ -1,0 +1,3 @@
+services:
+  Drupal\batch_test\BatchInjectionCallbacks:
+    autowire: true

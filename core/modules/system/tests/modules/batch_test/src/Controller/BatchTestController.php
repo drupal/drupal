@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\batch_test\Controller;
 
+use Drupal\batch_test\BatchInjectionCallbacks;
 use Drupal\batch_test\BatchTestCallbacks;
 use Drupal\batch_test\BatchTestDefinitions;
 use Drupal\batch_test\BatchTestHelper;
@@ -89,11 +90,10 @@ class BatchTestController {
    */
   public function testFinishRedirect() {
     $batch_test_definitions = new BatchTestDefinitions();
-    $batch_test_callbacks = new BatchTestCallbacks();
     $batch_test_helper = new BatchTestHelper();
     $batch_test_helper->stack(NULL, TRUE);
     $batch = $batch_test_definitions->batch1();
-    $batch['finished'] = [$batch_test_callbacks, 'finished1Finished'];
+    $batch['finished'] = BatchTestCallbacks::class . ':finished1Finished';
     batch_set($batch);
     return batch_process('batch-test/redirect');
   }
@@ -130,11 +130,10 @@ class BatchTestController {
    *   otherwise.
    */
   public function testThemeBatch() {
-    $batch_test_callbacks = new BatchTestCallbacks();
     $batch_test_helper = new BatchTestHelper();
     $batch_test_helper->stack(NULL, TRUE);
     $batch = [
-      'operations' => [[[$batch_test_callbacks, 'themeCallback'], []]],
+      'operations' => [[BatchInjectionCallbacks::class . ':themeCallback', []]],
     ];
     batch_set($batch);
     return batch_process('batch-test/redirect');
@@ -148,12 +147,11 @@ class BatchTestController {
    *   otherwise.
    */
   public function testTitleBatch() {
-    $batch_test_callbacks = new BatchTestCallbacks();
     $batch_test_helper = new BatchTestHelper();
     $batch_test_helper->stack(NULL, TRUE);
     $batch = [
       'title' => 'Batch Test',
-      'operations' => [[[$batch_test_callbacks, 'titleCallback'], []]],
+      'operations' => [[BatchInjectionCallbacks::class . ':titleCallback', []]],
     ];
     batch_set($batch);
     return batch_process('batch-test/redirect');

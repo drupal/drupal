@@ -18,38 +18,6 @@ class BatchTestCallbacks {
   /**
    * Implements callback_batch_operation().
    *
-   * Tests the progress page theme.
-   */
-  public function themeCallback(): void {
-    $batch_test_helper = new BatchTestHelper();
-    // Because drupalGet() steps through the full progressive batch before
-    // returning control to the test function, we cannot test that the correct
-    // theme is being used on the batch processing page by viewing that page
-    // directly. Instead, we save the theme being used in a variable here, so
-    // that it can be loaded and inspected in the thread running the test.
-    $theme = \Drupal::theme()->getActiveTheme()->getName();
-    $batch_test_helper->stack($theme);
-  }
-
-  /**
-   * Tests the title on the progress page by performing a batch callback.
-   */
-  public function titleCallback(): void {
-    $batch_test_helper = new BatchTestHelper();
-    // Because drupalGet() steps through the full progressive batch before
-    // returning control to the test function, we cannot test that the correct
-    // title is being used on the batch processing page by viewing that page
-    // directly. Instead, we save the title being used in a variable here, so
-    // that it can be loaded and inspected in the thread running the test.
-    $request = \Drupal::request();
-    $route_match = \Drupal::routeMatch();
-    $title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
-    $batch_test_helper->stack($title);
-  }
-
-  /**
-   * Implements callback_batch_operation().
-   *
    * Performs a simple batch operation.
    */
   public function callback1($id, $sleep, &$context): void {
