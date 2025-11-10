@@ -24,17 +24,18 @@ class InstallerLanguageTest extends KernelTestBase {
     // Different translation files would be found depending on which language
     // we are looking for.
     $expected_translation_files = [
-      NULL => ['drupal-8.0.0-beta2.hu.po', 'drupal-8.0.0.de.po', 'drupal-8.0.x.fr-CA.po'],
-      'de' => ['drupal-8.0.0.de.po'],
-      'fr-CA' => ['drupal-8.0.x.fr-CA.po'],
-      'hu' => ['drupal-8.0.0-beta2.hu.po'],
-      'it' => [],
+      [NULL, ['drupal-8.0.0-beta2.hu.po', 'drupal-8.0.0.de.po', 'drupal-8.0.x.fr-CA.po']],
+      ['de', ['drupal-8.0.0.de.po']],
+      ['fr-CA', ['drupal-8.0.x.fr-CA.po']],
+      ['hu', ['drupal-8.0.0-beta2.hu.po']],
+      ['it', []],
     ];
 
     // Hardcode the fixtures location as we don't yet know where it is.
     // @todo Remove as part of https://www.drupal.org/node/2186491
     $file_translation = new FileTranslation('core/tests/fixtures/files/translations', $this->container->get('file_system'));
-    foreach ($expected_translation_files as $langcode => $files_expected) {
+    foreach ($expected_translation_files as $data) {
+      [$langcode, $files_expected] = $data;
       $files_found = $file_translation->findTranslationFiles($langcode);
       $this->assertSameSize($files_expected, $files_found, count($files_expected) . ' installer languages found.');
       foreach ($files_found as $file) {
