@@ -8,6 +8,7 @@
 use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Core\Form\FormPreprocess;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -817,8 +818,10 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
       $query_options['op'] = 'start';
       $query_options['id'] = $batch['id'];
       $batch_url->setOption('query', $query_options);
-      if (($function = $batch['redirect_callback']) && function_exists($function)) {
-        $function($batch_url->toString(), ['query' => $query_options]);
+      if (($callback = $batch['redirect_callback'])) {
+        $callable_resolver = \Drupal::service(CallableResolver::class);
+        $callable = $callable_resolver->getCallableFromDefinition($callback);
+        $callable($batch_url->toString(), ['query' => $query_options]);
       }
       else {
         return new RedirectResponse($batch_url->setAbsolute()->toString(TRUE)->getGeneratedUrl());
