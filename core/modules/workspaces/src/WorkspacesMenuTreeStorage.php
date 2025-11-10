@@ -21,8 +21,8 @@ class WorkspacesMenuTreeStorage extends CoreMenuTreeStorage {
    *
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager service.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspaceAssociation
-   *   The workspace association service.
+   * @param \Drupal\workspaces\WorkspaceTrackerInterface $workspaceTracker
+   *   The workspace tracker service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $connection
@@ -38,7 +38,7 @@ class WorkspacesMenuTreeStorage extends CoreMenuTreeStorage {
    */
   public function __construct(
     protected readonly WorkspaceManagerInterface $workspaceManager,
-    protected readonly WorkspaceAssociationInterface $workspaceAssociation,
+    protected readonly WorkspaceTrackerInterface $workspaceTracker,
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     Connection $connection,
     CacheBackendInterface $menu_cache_backend,
@@ -69,7 +69,7 @@ class WorkspacesMenuTreeStorage extends CoreMenuTreeStorage {
 
     // Replace the menu link plugin definitions with workspace-specific ones.
     if ($active_workspace = $this->workspaceManager->getActiveWorkspace()) {
-      $tracked_revisions = $this->workspaceAssociation->getTrackedEntities($active_workspace->id());
+      $tracked_revisions = $this->workspaceTracker->getTrackedEntities($active_workspace->id());
       if (isset($tracked_revisions['menu_link_content'])) {
         /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $workspace_revisions */
         $workspace_revisions = $this->entityTypeManager->getStorage('menu_link_content')->loadMultipleRevisions(array_keys($tracked_revisions['menu_link_content']));

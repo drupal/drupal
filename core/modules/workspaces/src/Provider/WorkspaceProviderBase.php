@@ -12,10 +12,10 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\workspaces\WorkspaceAssociationInterface;
 use Drupal\workspaces\WorkspaceInformationInterface;
 use Drupal\workspaces\WorkspaceInterface;
 use Drupal\workspaces\WorkspaceManagerInterface;
+use Drupal\workspaces\WorkspaceTrackerInterface;
 
 /**
  * Defines the base class for workspace providers.
@@ -32,7 +32,7 @@ abstract class WorkspaceProviderBase implements WorkspaceProviderInterface {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected WorkspaceManagerInterface $workspaceManager,
-    protected WorkspaceAssociationInterface $workspaceAssociation,
+    protected WorkspaceTrackerInterface $workspaceTracker,
     protected WorkspaceInformationInterface $workspaceInfo,
   ) {}
 
@@ -94,7 +94,7 @@ abstract class WorkspaceProviderBase implements WorkspaceProviderInterface {
     // Get a list of revision IDs for entities that have a revision set for the
     // current active workspace. If an entity has multiple revisions set for a
     // workspace, only the one with the highest ID is returned.
-    if ($tracked_entities = $this->workspaceAssociation->getTrackedEntities($this->workspaceManager->getActiveWorkspace()->id(), $entity_type_id, $ids)) {
+    if ($tracked_entities = $this->workspaceTracker->getTrackedEntities($this->workspaceManager->getActiveWorkspace()->id(), $entity_type_id, $ids)) {
       // Bail out early if there are no tracked entities of this type.
       if (!isset($tracked_entities[$entity_type_id])) {
         return $entities;
@@ -170,7 +170,7 @@ abstract class WorkspaceProviderBase implements WorkspaceProviderInterface {
    */
   public function entityInsert(EntityInterface $entity): void {
     assert($entity instanceof RevisionableInterface && $entity instanceof EntityPublishedInterface);
-    $this->workspaceAssociation->trackEntity($entity, $this->workspaceManager->getActiveWorkspace());
+    $this->workspaceTracker->trackEntity($this->workspaceManager->getActiveWorkspace()->id(), $entity);
 
     // When a published entity is created in a workspace, it should remain
     // published only in that workspace, and unpublished in the live workspace.
@@ -204,7 +204,7 @@ abstract class WorkspaceProviderBase implements WorkspaceProviderInterface {
     // Only track new revisions.
     /** @var \Drupal\Core\Entity\RevisionableInterface $entity */
     if ($entity->getLoadedRevisionId() != $entity->getRevisionId()) {
-      $this->workspaceAssociation->trackEntity($entity, $this->workspaceManager->getActiveWorkspace());
+      $this->workspaceTracker->trackEntity($this->workspaceManager->getActiveWorkspace()->id(), $entity);
     }
   }
 

@@ -14,9 +14,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\workspaces\WorkspaceAssociationInterface;
 use Drupal\workspaces\WorkspaceInformationInterface;
 use Drupal\workspaces\WorkspaceManagerInterface;
+use Drupal\workspaces\WorkspaceTrackerInterface;
 
 /**
  * Hook implementations for workspaces.
@@ -27,7 +27,7 @@ class WorkspacesHooks {
 
   public function __construct(
     protected WorkspaceManagerInterface $workspaceManager,
-    protected WorkspaceAssociationInterface $workspaceAssociation,
+    protected WorkspaceTrackerInterface $workspaceTracker,
     protected WorkspaceInformationInterface $workspaceInfo,
     protected EntityTypeManagerInterface $entityTypeManager,
     protected StateInterface $state,
@@ -109,7 +109,7 @@ class WorkspacesHooks {
 
       $all_associated_revisions = [];
       foreach (array_keys($this->workspaceInfo->getSupportedEntityTypes()) as $entity_type_id) {
-        $all_associated_revisions[$entity_type_id] = $this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id);
+        $all_associated_revisions[$entity_type_id] = $this->workspaceTracker->getAllTrackedRevisions($workspace_id, $entity_type_id);
       }
       $all_associated_revisions = array_filter($all_associated_revisions);
 
@@ -124,7 +124,7 @@ class WorkspacesHooks {
 
         // Get a list of default revisions tracked by the given workspace,
         // because they need to be handled differently than pending revisions.
-        $initial_revision_ids = $this->workspaceAssociation->getAssociatedInitialRevisions($workspace_id, $entity_type_id);
+        $initial_revision_ids = $this->workspaceTracker->getTrackedInitialRevisions($workspace_id, $entity_type_id);
 
         foreach (array_keys($associated_revisions) as $revision_id) {
           if ($count > $batch_size) {
@@ -150,7 +150,7 @@ class WorkspacesHooks {
       // ahead and remove the deleted workspace ID entry from state.
       $has_associated_revisions = FALSE;
       foreach (array_keys($this->workspaceInfo->getSupportedEntityTypes()) as $entity_type_id) {
-        if (!empty($this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id))) {
+        if (!empty($this->workspaceTracker->getAllTrackedRevisions($workspace_id, $entity_type_id))) {
           $has_associated_revisions = TRUE;
           break;
         }
@@ -160,7 +160,7 @@ class WorkspacesHooks {
         $this->state->set('workspace.deleted', $deleted_workspace_ids);
 
         // Delete any possible leftover association entries.
-        $this->workspaceAssociation->deleteAssociations($workspace_id);
+        $this->workspaceTracker->deleteTrackedEntities($workspace_id);
       }
     });
   }

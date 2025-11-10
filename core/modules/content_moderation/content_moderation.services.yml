@@ -25,6 +25,6 @@ services:
     arguments: ['@entity_type.manager']
   content_moderation.workspace_subscriber:
     class: Drupal\content_moderation\EventSubscriber\WorkspaceSubscriber
-    arguments: ['@entity_type.manager', '@?workspaces.association']
+    arguments: ['@entity_type.manager', '@?workspaces.tracker']
   Drupal\content_moderation\EventSubscriber\DefaultContentSubscriber:
     autowire: true

@@ -80,13 +80,14 @@ class WorkspaceAssociationRevisionTableUpdateTest extends UpdatePathTestBase {
     // Verify the table was created.
     $this->assertTrue($schema->tableExists('workspace_association_revision'));
 
-    // Now test with the updated methods from the workspace association service.
-    $workspace_association = \Drupal::service('workspaces.association');
+    // Now test with the updated methods from the workspace tracker service.
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     // Compare results for each workspace/entity type combination.
     foreach ($expected_revisions as $workspace_id => $entity_types) {
       foreach ($entity_types as $entity_type_id => $expected_result) {
-        $actual_result = $workspace_association->getAssociatedRevisions($workspace_id, $entity_type_id);
+        $actual_result = $workspace_tracker->getAllTrackedRevisions($workspace_id, $entity_type_id);
         $this->assertEquals($expected_result, $actual_result, sprintf(
           'Associated revisions match for workspace %s, entity type %s',
           $workspace_id, $entity_type_id
@@ -97,7 +98,7 @@ class WorkspaceAssociationRevisionTableUpdateTest extends UpdatePathTestBase {
     // Compare initial revisions.
     foreach ($expected_initial_revisions as $workspace_id => $entity_types) {
       foreach ($entity_types as $entity_type_id => $expected_result) {
-        $actual_result = $workspace_association->getAssociatedInitialRevisions($workspace_id, $entity_type_id);
+        $actual_result = $workspace_tracker->getTrackedInitialRevisions($workspace_id, $entity_type_id);
         $this->assertEquals($expected_result, $actual_result, sprintf(
           'Associated initial revisions match for workspace %s, entity type %s',
           $workspace_id, $entity_type_id

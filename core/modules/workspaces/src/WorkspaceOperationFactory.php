@@ -23,7 +23,7 @@ class WorkspaceOperationFactory {
     protected EntityTypeManagerInterface $entityTypeManager,
     protected Connection $database,
     protected WorkspaceManagerInterface $workspaceManager,
-    protected WorkspaceAssociationInterface $workspaceAssociation,
+    protected WorkspaceTrackerInterface $workspaceTracker,
     protected EventDispatcherInterface $eventDispatcher,
     #[Autowire(service: 'logger.channel.workspaces')]
     protected LoggerInterface $logger,
@@ -45,7 +45,7 @@ class WorkspaceOperationFactory {
    *   A workspace publisher object.
    */
   public function getPublisher(WorkspaceInterface $source) {
-    return new WorkspacePublisher($this->entityTypeManager, $this->database, $this->workspaceManager, $this->workspaceAssociation, $this->eventDispatcher, $source, $this->logger, $this->time);
+    return new WorkspacePublisher($this->entityTypeManager, $this->database, $this->workspaceManager, $this->workspaceTracker, $this->eventDispatcher, $source, $this->logger, $this->time);
   }
 
   /**
@@ -60,7 +60,7 @@ class WorkspaceOperationFactory {
    *   A workspace merger object.
    */
   public function getMerger(WorkspaceInterface $source, WorkspaceInterface $target) {
-    return new WorkspaceMerger($this->entityTypeManager, $this->database, $this->workspaceAssociation, $source, $target, $this->logger);
+    return new WorkspaceMerger($this->entityTypeManager, $this->database, $this->workspaceTracker, $source, $target, $this->logger);
   }
 
 }

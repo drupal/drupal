@@ -6,7 +6,7 @@ use Drupal\content_moderation\ContentModerationState;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\workspaces\Event\WorkspacePrePublishEvent;
 use Drupal\workspaces\Event\WorkspacePublishEvent;
-use Drupal\workspaces\WorkspaceAssociationInterface;
+use Drupal\workspaces\WorkspaceTrackerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -19,12 +19,12 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface|null $workspaceAssociation
-   *   The workspace association service.
+   * @param \Drupal\workspaces\WorkspaceTrackerInterface|null $workspaceTracker
+   *   The workspace tracker service.
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-    protected readonly ?WorkspaceAssociationInterface $workspaceAssociation,
+    protected readonly ?WorkspaceTrackerInterface $workspaceTracker,
   ) {}
 
   /**
@@ -38,7 +38,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
     // revisions in a moderation state that doesn't create default revisions.
     $workspace = $event->getWorkspace();
 
-    $tracked_revisions = $this->workspaceAssociation->getTrackedEntities($workspace->id());
+    $tracked_revisions = $this->workspaceTracker->getTrackedEntities($workspace->id());
 
     // Gather a list of moderation states that don't create a default revision.
     $workflow_non_default_states = [];

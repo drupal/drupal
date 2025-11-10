@@ -29,7 +29,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
     protected EntityTypeManagerInterface $entityTypeManager,
     protected Connection $database,
     protected WorkspaceManagerInterface $workspaceManager,
-    protected WorkspaceAssociationInterface $workspaceAssociation,
+    protected WorkspaceTrackerInterface $workspaceTracker,
     protected EventDispatcherInterface $eventDispatcher,
     protected WorkspaceInterface $sourceWorkspace,
     protected LoggerInterface $logger,
@@ -53,7 +53,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       throw new WorkspaceConflictException();
     }
 
-    $tracked_entities = $this->workspaceAssociation->getTrackedEntities($this->sourceWorkspace->id());
+    $tracked_entities = $this->workspaceTracker->getTrackedEntities($this->sourceWorkspace->id());
     $event = new WorkspacePrePublishEvent($this->sourceWorkspace, $tracked_entities);
     $this->eventDispatcher->dispatch($event);
 
@@ -147,7 +147,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
   public function getDifferringRevisionIdsOnTarget() {
     $target_revision_difference = [];
 
-    $tracked_entities = $this->workspaceAssociation->getTrackedEntities($this->sourceWorkspace->id());
+    $tracked_entities = $this->workspaceTracker->getTrackedEntities($this->sourceWorkspace->id());
     foreach ($tracked_entities as $entity_type_id => $tracked_revisions) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
 
@@ -177,8 +177,8 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    * {@inheritdoc}
    */
   public function getDifferringRevisionIdsOnSource() {
-    // Get the Workspace association revisions which haven't been pushed yet.
-    return $this->workspaceAssociation->getTrackedEntities($this->sourceWorkspace->id());
+    // Get the tracked revisions that haven't been published.
+    return $this->workspaceTracker->getTrackedEntities($this->sourceWorkspace->id());
   }
 
   /**

@@ -5,32 +5,28 @@ namespace Drupal\workspaces;
 use Drupal\Core\Entity\RevisionableInterface;
 
 /**
- * Defines an interface for the workspace_association service.
+ * Defines an interface for the workspace tracker service.
  *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0.
- * Use \Drupal\workspaces\WorkspaceTrackerInterface instead.
+ * The canonical workspace tracking data is stored in a revision metadata field
+ * on each entity revision that is tracked by a workspace.
  *
- * @see https://www.drupal.org/node/3551450
+ * For the purpose of optimizing workspace-specific queries, the default
+ * implementation of this interface defines a custom 'workspace_association'
+ * index table which stores only the latest revisions tracked by a workspace.
+ *
+ * @internal
  */
-interface WorkspaceAssociationInterface {
+interface WorkspaceTrackerInterface {
 
   /**
    * Updates or creates the association for a given entity and a workspace.
    *
+   * @param string $workspace_id
+   *   The workspace in which the entity will be tracked.
    * @param \Drupal\Core\Entity\RevisionableInterface $entity
    *   The entity to update or create from.
-   * @param \Drupal\workspaces\WorkspaceInterface $workspace
-   *   The workspace in which the entity will be tracked.
    */
-  public function trackEntity(RevisionableInterface $entity, WorkspaceInterface $workspace);
-
-  /**
-   * Responds to the creation of a new workspace entity.
-   *
-   * @param \Drupal\workspaces\WorkspaceInterface $workspace
-   *   The workspaces that was inserted.
-   */
-  public function workspaceInsert(WorkspaceInterface $workspace);
+  public function trackEntity(string $workspace_id, RevisionableInterface $entity): void;
 
   /**
    * Retrieves the entities tracked by a given workspace.
@@ -47,7 +43,7 @@ interface WorkspaceAssociationInterface {
    *   Returns a multidimensional array where the first level keys are entity
    *   type IDs and the values are an array of entity IDs keyed by revision IDs.
    */
-  public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL);
+  public function getTrackedEntities(string $workspace_id, ?string $entity_type_id = NULL, ?array $entity_ids = NULL): array;
 
   /**
    * Retrieves a paged list of entities tracked by a given workspace.
@@ -65,7 +61,7 @@ interface WorkspaceAssociationInterface {
    *   Returns a multidimensional array where the first level keys are entity
    *   type IDs and the values are an array of entity IDs keyed by revision IDs.
    */
-  public function getTrackedEntitiesForListing($workspace_id, ?int $pager_id = NULL, int|false $limit = 50): array;
+  public function getTrackedEntitiesForListing(string $workspace_id, ?int $pager_id = NULL, int|false $limit = 50): array;
 
   /**
    * Retrieves all content revisions tracked by a given workspace.
@@ -86,7 +82,7 @@ interface WorkspaceAssociationInterface {
    *   Returns an array where the values are an array of entity IDs keyed by
    *   revision IDs.
    */
-  public function getAssociatedRevisions($workspace_id, $entity_type_id, $entity_ids = NULL);
+  public function getAllTrackedRevisions(string $workspace_id, string $entity_type_id, ?array $entity_ids = NULL): array;
 
   /**
    * Retrieves all content revisions that were created in a given workspace.
@@ -95,15 +91,15 @@ interface WorkspaceAssociationInterface {
    *   The ID of the workspace.
    * @param string $entity_type_id
    *   An entity type ID to find revisions for.
-   * @param int[]|string[] $entity_ids
+   * @param int[]|string[]|null $entity_ids
    *   (optional) An array of entity IDs to filter the results by. Defaults to
-   *   an empty array.
+   *   NULL.
    *
    * @return array
    *   Returns an array where the values are an array of entity IDs keyed by
    *   revision IDs.
    */
-  public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = []);
+  public function getTrackedInitialRevisions(string $workspace_id, string $entity_type_id, ?array $entity_ids = NULL): array;
 
   /**
    * Gets a list of workspace IDs in which an entity is tracked.
@@ -118,7 +114,7 @@ interface WorkspaceAssociationInterface {
    *   An array of workspace IDs where the given entity is tracked, or an empty
    *   array if it is not tracked anywhere.
    */
-  public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity, bool $latest_revision = FALSE);
+  public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity, bool $latest_revision = FALSE): array;
 
   /**
    * Moves tracked entities from one workspace to another.
@@ -161,7 +157,7 @@ interface WorkspaceAssociationInterface {
    * @throws \InvalidArgumentException
    *   If neither $workspace_id nor $entity_type_id arguments were provided.
    */
-  public function deleteAssociations($workspace_id = NULL, $entity_type_id = NULL, $entity_ids = NULL, $revision_ids = NULL);
+  public function deleteTrackedEntities(?string $workspace_id = NULL, ?string $entity_type_id = NULL, ?array $entity_ids = NULL, ?array $revision_ids = NULL): void;
 
   /**
    * Initializes a workspace with all the associations of its parent.
@@ -169,6 +165,6 @@ interface WorkspaceAssociationInterface {
    * @param \Drupal\workspaces\WorkspaceInterface $workspace
    *   The workspace to be initialized.
    */
-  public function initializeWorkspace(WorkspaceInterface $workspace);
+  public function initializeWorkspace(WorkspaceInterface $workspace): void;
 
 }
