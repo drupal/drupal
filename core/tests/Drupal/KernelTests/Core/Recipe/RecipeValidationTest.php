@@ -353,6 +353,29 @@ YAML,
         ],
       ],
     ];
+    yield 'config action targets an unknown extension' => [
+      <<<YAML
+name: Config action targets unknown extension
+config:
+  actions:
+    node.settings:
+      simpleConfigUpdate:
+        use_admin_theme: true
+YAML,
+      [
+        '[config][actions][node.settings]' => ['Config actions cannot be applied to node.settings because the node extension is not installed, and is not installed by this recipe or any of the recipes it depends on.'],
+      ],
+    ];
+    yield 'optional config action targets an unknown extension' => [
+      <<<YAML
+name: Optional config action targets unknown extension
+config:
+  actions:
+    ?node.type.test:
+      setDescription: 'Hello there'
+YAML,
+      NULL,
+    ];
     yield 'input definitions are an indexed array' => [
       <<<YAML
 name: Bad input definitions
