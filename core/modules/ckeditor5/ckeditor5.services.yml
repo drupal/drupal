@@ -22,3 +22,5 @@ services:
   logger.channel.ckeditor5:
     parent: logger.channel_base
     arguments: [ 'ckeditor5' ]
+  Drupal\ckeditor5\LanguageMapper:
+    autowire: true
