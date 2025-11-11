@@ -2,6 +2,7 @@
 
 namespace Drupal\ckeditor5\Hook;
 
+use Drupal\ckeditor5\LanguageMapper;
 use Drupal\Core\Hook\Order\OrderAfter;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
@@ -21,6 +22,12 @@ use Drupal\editor\EditorInterface;
 class Ckeditor5Hooks {
 
   use StringTranslationTrait;
+
+  public function __construct(
+    protected LanguageMapper $languageMapper,
+  ) {
+
+  }
 
   /**
    * Implements hook_help().
@@ -234,7 +241,7 @@ class Ckeditor5Hooks {
       return;
     }
     // All possibles CKEditor 5 languages that can be used by Drupal.
-    $ckeditor_langcodes = array_values(_ckeditor5_get_langcode_mapping());
+    $ckeditor_langcodes = array_values($this->languageMapper->getMappings());
     if ($extension === 'core') {
       // Generate libraries for each of the CKEditor 5 translation files so that
       // the correct translation file can be attached depending on the current
@@ -329,7 +336,7 @@ class Ckeditor5Hooks {
       if (!\Drupal::moduleHandler()->moduleExists('locale')) {
         return;
       }
-      $ckeditor5_language = _ckeditor5_get_langcode_mapping($language->getId());
+      $ckeditor5_language = $this->languageMapper->getMapping($language->getId());
       // Remove all CKEditor 5 translations files that are not in the current
       // language.
       foreach ($javascript as $index => &$item) {

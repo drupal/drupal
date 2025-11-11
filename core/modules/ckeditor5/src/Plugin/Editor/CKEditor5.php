@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Plugin\Editor;
 
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\ckeditor5\LanguageMapper;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
@@ -106,6 +107,13 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   protected $logger;
 
   /**
+   * The ckeditor language mapper.
+   *
+   * @var \Drupal\ckeditor5\LanguageMapper
+   */
+  protected LanguageMapper $languageMapper;
+
+  /**
    * Constructs a CKEditor 5 editor plugin.
    *
    * @param array $configuration
@@ -126,8 +134,10 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    *   The cache.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\ckeditor5\LanguageMapper $languageMapper
+   *   The ckeditor language mapper.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditor5PluginManagerInterface $ckeditor5_plugin_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, SmartDefaultSettings $smart_default_settings, CacheBackendInterface $cache, LoggerInterface $logger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditor5PluginManagerInterface $ckeditor5_plugin_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, SmartDefaultSettings $smart_default_settings, CacheBackendInterface $cache, LoggerInterface $logger, LanguageMapper $languageMapper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditor5PluginManager = $ckeditor5_plugin_manager;
     $this->languageManager = $language_manager;
@@ -135,6 +145,11 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $this->smartDefaultSettings = $smart_default_settings;
     $this->cache = $cache;
     $this->logger = $logger;
+    if (!$languageMapper) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $languageMapper argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3551652', E_USER_DEPRECATED);
+      $languageMapper = \Drupal::service(LanguageMapper::class);
+    }
+    $this->languageMapper = $languageMapper;
   }
 
   /**
@@ -150,7 +165,8 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       $container->get('module_handler'),
       $container->get('ckeditor5.smart_default_settings'),
       $container->get('cache.default'),
-      $container->get('logger.channel.ckeditor5')
+      $container->get('logger.channel.ckeditor5'),
+      $container->get(LanguageMapper::class)
     );
   }
 
@@ -930,7 +946,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
     if ($this->moduleHandler->moduleExists('locale')) {
       $language_interface = $this->languageManager->getCurrentLanguage();
-      $settings['language']['ui'] = _ckeditor5_get_langcode_mapping($language_interface->getId());
+      $settings['language']['ui'] = $this->languageMapper->getMapping($language_interface->getId());
     }
 
     return $settings;
@@ -944,7 +960,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
     if ($this->moduleHandler->moduleExists('locale')) {
       $language_interface = $this->languageManager->getCurrentLanguage();
-      $plugin_libraries[] = 'core/ckeditor5.translations.' . _ckeditor5_get_langcode_mapping($language_interface->getId());
+      $plugin_libraries[] = 'core/ckeditor5.translations.' . $this->languageMapper->getMapping($language_interface->getId());
     }
 
     return $plugin_libraries;
