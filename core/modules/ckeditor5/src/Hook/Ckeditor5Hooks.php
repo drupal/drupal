@@ -106,14 +106,11 @@ class Ckeditor5Hooks {
    *
    * This module's implementation of form_filter_format_form_alter() must
    * happen after the editor module's implementation, as that implementation
-   * adds the active editor to $form_state. It must also happen after the media
-   * module's implementation so media_filter_format_edit_form_validate can be
-   * removed from the validation chain, as that validator is not needed with
-   * CKEditor 5 and will trigger a false error.
+   * adds the active editor to $form_state.
    */
   #[Hook('form_filter_format_form_alter',
     order: new OrderAfter(
-      modules: ['editor', 'media'],
+      modules: ['editor'],
     )
   )]
   public function formFilterFormatFormAlter(array &$form, FormStateInterface $form_state, $form_id) : void {
@@ -137,15 +134,6 @@ class Ckeditor5Hooks {
           by the CKEditor 5 configuration. Manually removing tags would break
           enabled functionality, and any manually added tags would be removed by
           CKEditor 5 on render.');
-        // The media_filter_format_edit_form_validate validator is not needed
-        // with CKEditor 5 as it exists to enforce the inclusion of specific
-        // allowed tags that are added automatically by CKEditor 5. The
-        // validator is removed so it does not conflict with the automatic
-        // addition of those allowed tags.
-        $key = array_search('media_filter_format_edit_form_validate', $form['#validate']);
-        if ($key !== FALSE) {
-          unset($form['#validate'][$key]);
-        }
       }
     }
     // Override the AJAX callbacks for changing editors, so multiple areas of
