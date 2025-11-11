@@ -404,6 +404,13 @@ final class Recipe {
    */
   private static function validateConfigActions(mixed $value, ExecutionContextInterface $context, string $include_path): void {
     $config_name = str_replace(['[config][actions]', '[', ']'], '', $context->getPropertyPath());
+    // If this set of config actions is optional, we don't need to validate that
+    // it targets config belonging to a known extension -- the whole point of
+    // optional config actions is that the targeted entity (or the extension
+    // that provides it) might not exist, and that's okay.
+    if (str_starts_with($config_name, '?')) {
+      return;
+    }
     [$config_provider] = explode('.', $config_name);
     if ($config_provider === 'core') {
       return;
