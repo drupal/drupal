@@ -104,6 +104,13 @@ class Transaction {
   }
 
   /**
+   * Prevent transactions from being unserialized.
+   */
+  public function __wakeup(): void {
+    throw new \BadMethodCallException('Cannot unserialize ' . get_class($this));
+  }
+
+  /**
    * Retrieves the name of the transaction or savepoint.
    */
   public function name() {
