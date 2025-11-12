@@ -62,7 +62,7 @@ class RequestFormatRouteFilter implements FilterInterface {
     // \Symfony\Component\Routing\Exception\ResourceNotFoundException here
     // because we don't want to return a 404 status code, but rather a 406.
     $available_formats = static::getAvailableFormats($collection);
-    $not_acceptable = new NotAcceptableHttpException("No route found for the specified format $format. Supported formats: " . implode(', ', $available_formats) . '.');
+    $not_acceptable = new NotAcceptableHttpException("No route found for the specified format. Supported formats: " . implode(', ', $available_formats) . '.');
     if ($available_formats) {
       $links = [];
       foreach ($available_formats as $available_format) {
