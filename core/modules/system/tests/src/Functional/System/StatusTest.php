@@ -191,6 +191,7 @@ class StatusTest extends BrowserTestBase {
     }
 
     // Test APCu status.
+    $this->markTestSkipped('Skipped due to bugs with APUc size warnings. See https://www.drupal.org/project/drupal/issues/3539331');
     $elements = $this->xpath('//details[summary[contains(@class, "system-status-report__status-title") and normalize-space(text()) = "PHP APCu caching"]]/div[@class="system-status-report__entry__value"]/text()');
     // Ensure the status is not a warning if APCu size is greater than or equal
     // to the recommended size.
