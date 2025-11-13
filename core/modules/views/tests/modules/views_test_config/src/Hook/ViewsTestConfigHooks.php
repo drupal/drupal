@@ -20,7 +20,7 @@ class ViewsTestConfigHooks {
   public function viewLoad(array $views): void {
     // Emulate a severely broken view: this kind of view configuration cannot be
     // saved, it can likely be returned only by a corrupt active configuration.
-    $broken_view_id = \Drupal::state()->get('views_test_config.broken_view');
+    $broken_view_id = \Drupal::state()->get('views_test_config.broken_view', '');
     if (isset($views[$broken_view_id])) {
       $display =& $views[$broken_view_id]->getDisplay('default');
       $display['display_options']['fields']['id_broken'] = NULL;
