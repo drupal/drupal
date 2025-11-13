@@ -637,7 +637,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function buildFilters(&$form, FormStateInterface $form_state) {
     \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
 
-    $bundles = $this->bundleInfoService->getBundleInfo($this->entityTypeId);
+    $bundles = isset($this->entityTypeId) ? $this->bundleInfoService->getBundleInfo($this->entityTypeId) : [];
     // If the current base table support bundles and has more than one (like
     // user).
     if (!empty($bundles) && $this->entityType && $this->entityType->hasKey('bundle')) {
