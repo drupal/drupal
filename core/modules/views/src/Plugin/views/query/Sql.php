@@ -516,7 +516,7 @@ class Sql extends QueryPluginBase {
    */
   public function queueTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL, $alias = NULL) {
     // If the alias is set, make sure it doesn't already exist.
-    if (isset($this->tableQueue[$alias])) {
+    if (isset($alias, $this->tableQueue[$alias])) {
       return $alias;
     }
 
@@ -539,7 +539,7 @@ class Sql extends QueryPluginBase {
 
     // Check this again to make sure we don't blow up existing aliases for
     // already adjusted joins.
-    if (isset($this->tableQueue[$alias])) {
+    if (isset($alias, $this->tableQueue[$alias])) {
       return $alias;
     }
 
@@ -912,8 +912,10 @@ class Sql extends QueryPluginBase {
       $this->fields[$alias] = $field_info;
     }
 
-    // Keep track of all aliases used.
-    $this->fieldAliases[$table][$field] = $alias;
+    if ($table) {
+      // Keep track of all aliases used.
+      $this->fieldAliases[$table][$field] = $alias;
+    }
 
     return $alias;
   }
