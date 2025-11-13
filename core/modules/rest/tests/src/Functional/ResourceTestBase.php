@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Functional;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Url;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\ApiRequestTrait;
@@ -441,15 +442,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   An array to sort.
    */
   protected static function recursiveKSort(array &$array) {
-    // First, sort the main array.
-    ksort($array);
-
-    // Then check for child arrays.
-    foreach ($array as &$value) {
-      if (is_array($value)) {
-        static::recursiveKSort($value);
-      }
-    }
+    SortArray::sortByKeyRecursive($array);
   }
 
 }

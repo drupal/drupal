@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
@@ -62,32 +63,11 @@ final class ConfigConfigurator {
         // Ensure we don't get a false mismatch due to different key order.
         // @todo When https://www.drupal.org/project/drupal/issues/3230826 is
         //   fixed in core, use that API instead to sort the config data.
-        self::recursiveSortByKey($active_data);
-        self::recursiveSortByKey($recipe_data);
+        SortArray::sortByKeyRecursive($active_data);
+        SortArray::sortByKeyRecursive($recipe_data);
         if ($active_data !== $recipe_data) {
           throw new RecipePreExistingConfigException($config_name, sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
         }
-      }
-    }
-  }
-
-  /**
-   * Sorts an array recursively, by key, alphabetically.
-   *
-   * @param mixed[] $data
-   *   The array to sort, passed by reference.
-   *
-   * @todo Remove when https://www.drupal.org/project/drupal/issues/3230826 is
-   *   fixed in core.
-   */
-  private static function recursiveSortByKey(array &$data): void {
-    // If the array is a list, it is by definition already sorted.
-    if (!array_is_list($data)) {
-      ksort($data);
-    }
-    foreach ($data as &$value) {
-      if (is_array($value)) {
-        self::recursiveSortByKey($value);
       }
     }
   }

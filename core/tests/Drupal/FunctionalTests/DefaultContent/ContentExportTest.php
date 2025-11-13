@@ -6,6 +6,7 @@ namespace Drupal\FunctionalTests\DefaultContent;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\DefaultContent\ContentExportCommand;
 use Drupal\Core\DefaultContent\Exporter;
 use Drupal\Core\DefaultContent\Finder;
@@ -150,8 +151,8 @@ class ContentExportTest extends BrowserTestBase {
         $exported_data['default']['uid'][0]['entity'] = $imported_data['default']['uid'][0]['entity'] = $new_owner;
       }
 
-      self::recursiveSortByKey($exported_data);
-      self::recursiveSortByKey($imported_data);
+      SortArray::sortByKeyRecursive($exported_data);
+      SortArray::sortByKeyRecursive($imported_data);
       $this->assertSame($imported_data, $exported_data);
     }
   }
@@ -492,24 +493,6 @@ class ContentExportTest extends BrowserTestBase {
     ]);
     $this->assertSame(1, $process->wait());
     $this->assertStringContainsString('These bundles do not exist on the taxonomy_term entity type: junk', $process->getOutput());
-  }
-
-  /**
-   * Recursively sorts an array by key.
-   *
-   * @param array $data
-   *   The array to sort.
-   */
-  private static function recursiveSortByKey(array &$data): void {
-    // If the array is a list, it is by definition already sorted.
-    if (!array_is_list($data)) {
-      ksort($data);
-    }
-    foreach ($data as &$value) {
-      if (is_array($value)) {
-        self::recursiveSortByKey($value);
-      }
-    }
   }
 
 }

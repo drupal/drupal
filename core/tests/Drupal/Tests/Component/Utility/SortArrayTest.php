@@ -335,4 +335,27 @@ class SortArrayTest extends TestCase {
     }
   }
 
+  /**
+   * Tests sorting arrays recursively by key.
+   */
+  public function testRecursiveSortByKey(): void {
+    // Indexed arrays are sorted already.
+    $array = ['one', 'two', 'three'];
+    SortArray::sortByKeyRecursive($array);
+    $this->assertSame(['one', 'two', 'three'], $array);
+
+    $array = [
+      'one key' => ['one', 'two', 'three'],
+      'another key' => [
+        'b' => 'see',
+        'a' => 'bee',
+      ],
+    ];
+    SortArray::sortByKeyRecursive($array);
+    $this->assertSame($array, [
+      'another key' => ['a' => 'bee', 'b' => 'see'],
+      'one key' => ['one', 'two', 'three'],
+    ]);
+  }
+
 }

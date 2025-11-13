@@ -125,4 +125,22 @@ class SortArray {
     return $a_weight <=> $b_weight;
   }
 
+  /**
+   * Sorts an array recursively, by key, alphabetically.
+   *
+   * @param array $data
+   *   The array to sort, passed by reference.
+   */
+  public static function sortByKeyRecursive(array &$data): void {
+    // If the array is a list, it is by definition already sorted.
+    if (!array_is_list($data)) {
+      ksort($data);
+    }
+    foreach ($data as &$value) {
+      if (is_array($value)) {
+        self::sortByKeyRecursive($value);
+      }
+    }
+  }
+
 }
