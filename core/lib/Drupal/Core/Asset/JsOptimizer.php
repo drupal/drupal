@@ -28,10 +28,12 @@ class JsOptimizer implements AssetOptimizerInterface {
    */
   public function optimize(array $js_asset) {
     if ($js_asset['type'] !== 'file') {
-      throw new \Exception('Only file JavaScript assets can be optimized.');
+      throw new \Exception("Error trying to optimize JavaScript asset: {$js_asset['data']}. Only file JavaScript assets can be optimized.");
     }
+    // Note, that files with "preprocess" set to FALSE should never even enter
+    // this method.
     if (!$js_asset['preprocess']) {
-      throw new \Exception('Only file JavaScript assets with preprocessing enabled can be optimized.');
+      throw new \Exception("Error trying to optimize JavaScript asset: {$js_asset['data']}. Only file JavaScript assets with preprocessing enabled can be optimized.");
     }
 
     // If a BOM is found, convert the file to UTF-8, then use substr() to
