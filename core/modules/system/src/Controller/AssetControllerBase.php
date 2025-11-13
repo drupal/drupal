@@ -182,12 +182,6 @@ abstract class AssetControllerBase extends FileDownloadController {
     // Generate a hash based on the asset group, this uses the same method as
     // the collection optimizer does to create the filename, so it should match.
     $generated_hash = $this->generateHash($group);
-    $data = $this->optimizer->optimizeGroup($group);
-
-    $response = new Response($data, 200, [
-      'Cache-control' => static::CACHE_CONTROL,
-      'Content-Type' => $this->contentType,
-    ]);
 
     // However, the hash from the library definitions in code may not match the
     // hash from the URL. This can be for three reasons:
@@ -202,7 +196,12 @@ abstract class AssetControllerBase extends FileDownloadController {
     // from filling the disk, while still serving aggregates that may be
     // referenced in cached HTML.
     if (hash_equals($generated_hash, $received_hash)) {
+      $data = $this->optimizer->optimizeGroup($group);
       $this->dumper->dumpToUri($data, $this->assetType, $uri);
+      $response = new Response($data, 200, [
+        'Cache-control' => static::CACHE_CONTROL,
+        'Content-Type' => $this->contentType,
+      ]);
     }
     else {
       $expected_filename = $this->fileExtension . '_' . $generated_hash . '.' . $this->fileExtension;
