@@ -1,10 +1,7 @@
 {% import _self as menus %}
-<div class="admin-toolbar__item">
-  <h4 class="visually-hidden focusable">{{ title }}</h4>
-  <ul class="toolbar-block__list">
-    {{ menus.menu_items(items, attributes, 0) }}
-  </ul>
-</div>
+<ul class="toolbar-block__list">
+  {{ menus.menu_items(items, attributes, 0) }}
+</ul>
 
 {% macro menu_items(items, attributes, menu_level) %}
   {% for item in items %}
