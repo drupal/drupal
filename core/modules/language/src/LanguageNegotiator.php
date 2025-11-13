@@ -187,7 +187,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    *   language.
    *
    * @return \Drupal\Core\Language\LanguageInterface|null
-   *   Negotiated language object for given type and method, FALSE otherwise.
+   *   Negotiated language object for given type and method, NULL otherwise.
    */
   protected function negotiateLanguage($type, $method_id) {
     $langcode = NULL;
@@ -197,8 +197,12 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
       $langcode = $this->getNegotiationMethodInstance($method_id)->getLangcode($this->requestStack->getCurrentRequest());
     }
 
-    $languages = $this->languageManager->getLanguages();
-    return $languages[$langcode] ?? NULL;
+    if ($langcode !== NULL) {
+      $languages = $this->languageManager->getLanguages();
+      return $languages[$langcode] ?? NULL;
+    }
+
+    return NULL;
   }
 
   /**
