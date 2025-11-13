@@ -610,7 +610,6 @@ default:
 
 '⚡️ PHPUnit Unit tests on PHP 8.5':
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
-  allow_failure: true
   variables:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "4"
@@ -630,7 +629,6 @@ default:
 
 '⚡️ Component unit tests on PHP 8.5':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
-  allow_failure: true
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     _TARGET_PHP: "8.5-ubuntu"
