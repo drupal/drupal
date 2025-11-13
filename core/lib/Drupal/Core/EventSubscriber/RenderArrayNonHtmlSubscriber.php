@@ -27,7 +27,7 @@ class RenderArrayNonHtmlSubscriber implements EventSubscriberInterface {
     // not HTML though, we can also assume that the requested format is invalid
     // so we provide a 406 response.
     if (is_array($result) && $request->getRequestFormat() !== 'html') {
-      throw new NotAcceptableHttpException('Not acceptable format: ' . $request->getRequestFormat());
+      throw new NotAcceptableHttpException('A route that returns a rendered array as its response only supports the HTML format.');
     }
   }
 
