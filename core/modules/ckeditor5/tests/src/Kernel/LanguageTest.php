@@ -61,7 +61,7 @@ class LanguageTest extends KernelTestBase {
       ],
     ])->save();
 
-    $this->installConfig(['language']);
+    $this->installConfig(['system', 'language']);
   }
 
   /**
