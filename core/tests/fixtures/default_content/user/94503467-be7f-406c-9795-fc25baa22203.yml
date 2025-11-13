@@ -29,9 +29,6 @@ default:
   status:
     -
       value: true
-  created:
-    -
-      value: 1711125883
   access:
     -
       value: 0

@@ -20,6 +20,3 @@ default:
   provider:
     -
       value: default
-  created:
-    -
-      value: 1751154834

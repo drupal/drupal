@@ -19,9 +19,6 @@ default:
   title:
     -
       value: 'Layout override'
-  created:
-    -
-      value: 1733930395
   promote:
     -
       value: true

@@ -8,9 +8,6 @@ default:
   name:
     -
       value: 'Simple Test Entity'
-  created:
-    -
-      value: 1609459200
   user_id:
     -
       target_id: 1

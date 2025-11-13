@@ -20,9 +20,6 @@ default:
   title:
     -
       value: 'Test Article'
-  created:
-    -
-      value: 1711476803
   promote:
     -
       value: true

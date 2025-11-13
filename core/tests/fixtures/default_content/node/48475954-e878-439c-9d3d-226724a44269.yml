@@ -19,9 +19,6 @@ default:
   title:
     -
       value: 'A happy little workspace'
-  created:
-    -
-      value: 1751155670
   promote:
     -
       value: false

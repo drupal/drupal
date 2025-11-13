@@ -19,9 +19,6 @@ default:
   title:
     -
       value: 'Lost in translation'
-  created:
-    -
-      value: 1711976268
   promote:
     -
       value: true
@@ -60,9 +57,6 @@ translations:
     title:
       -
         value: 'Perdu en traduction'
-    created:
-      -
-        value: 1711976291
     promote:
       -
         value: true

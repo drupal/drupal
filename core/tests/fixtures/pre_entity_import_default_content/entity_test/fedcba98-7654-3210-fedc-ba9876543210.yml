@@ -10,9 +10,6 @@ default:
   name:
     -
       value: 'Test Entity with Dependencies'
-  created:
-    -
-      value: 1711638800
   user_id:
     -
       target_id: 1

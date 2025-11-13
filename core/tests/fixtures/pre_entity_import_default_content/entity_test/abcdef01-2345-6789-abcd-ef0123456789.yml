@@ -9,9 +9,6 @@ default:
   name:
     -
       value: 'Translatable Test Entity'
-  created:
-    -
-      value: 1711638700
   user_id:
     -
       target_id: 1
