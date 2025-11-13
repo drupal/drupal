@@ -30,8 +30,16 @@
 #}
 <div{{ attributes.addClass('toolbar-block') }}>
   {{ title_prefix }}
-  {% if label %}
-    <h2{{ title_attributes.addClass('toolbar-block__title').setAttribute('data-drupal-tooltip', label).setAttribute('data-drupal-tooltip-class', 'toolbar-block__title-tooltip') }}>{{ label }}</h2>
+  {% if configuration.label_display %}
+    <h2{{ title_attributes
+      .addClass('toolbar-block__title')
+      .setAttribute('data-drupal-tooltip', configuration.label)
+      .setAttribute('data-drupal-tooltip-class', 'toolbar-block__title-tooltip')
+    }}>{{ configuration.label }}</h2>
+  {% else %}
+    <h2{{ title_attributes
+      .addClass('visually-hidden', 'focusable')
+    }}>{{ configuration.label }}</h2>
   {% endif %}
   {{ title_suffix }}
   {% block content %}

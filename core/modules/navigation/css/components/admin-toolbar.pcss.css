@@ -219,10 +219,6 @@ body {
   }
 }
 
-.admin-toolbar__item {
-  flex: 1 0 100%;
-}
-
 .admin-toolbar__logo {
   display: inline-flex;
   overflow: hidden;

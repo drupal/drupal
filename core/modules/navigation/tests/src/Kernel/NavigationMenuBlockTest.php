@@ -374,6 +374,7 @@ class NavigationMenuBlockTest extends KernelTestBase {
     $block = $this->blockManager->createInstance('navigation_menu:' . $this->menu->id(), [
       'region' => 'content',
       'id' => 'machine_name',
+      'label' => 'Menu Name',
       'level' => 1,
       'depth' => NavigationMenuBlock::NAVIGATION_MAX_DEPTH - 1,
     ]);
@@ -381,8 +382,13 @@ class NavigationMenuBlockTest extends KernelTestBase {
     $block_build = $block->build();
     $render = \Drupal::service('renderer')->renderRoot($block_build);
 
+    // The error flags need to be added to avoid errors when parsing HTML5 tags,
+    // like nav. This trick could be replaced with
+    // Dom\HTMLDocument::createFromString(), introduced in PHP 8.4 once PHP 8.3
+    // support is dropped.
     $dom = new \DOMDocument();
-    $dom->loadHTML((string) $render);
+    // cspell:disable-next-line
+    $dom->loadHTML((string) $render, LIBXML_NOWARNING | LIBXML_NOERROR);
     $xpath = new \DOMXPath($dom);
 
     $items_query = [

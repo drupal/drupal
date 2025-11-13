@@ -94,7 +94,6 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     ]));
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    $this->assertSession()->pageTextNotContains('Shortcuts');
     $this->assertSession()->linkNotExists('Cron');
 
     // Create a role with access to shortcuts as well as the necessary
