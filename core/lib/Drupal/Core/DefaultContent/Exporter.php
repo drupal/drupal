@@ -69,10 +69,12 @@ final class Exporter implements LoggerAwareInterface {
     $event->setEntityKeyExportable('revision_default', FALSE);
     $event->setEntityKeyExportable('revision_created', FALSE);
 
-    // Default content has no history, so it doesn't make much sense to export
-    // `changed` fields.
+    // Ignore fields that don't make sense in default content:
+    // - `changed` fields aren't needed because default content has no history.
+    // - `created` fields aren't needed because default content should be
+    //   "created" upon import.
     foreach ($field_definitions as $name => $definition) {
-      if ($definition->getType() === 'changed') {
+      if (in_array($definition->getType(), ['changed', 'created'], TRUE)) {
         $event->setExportable($name, FALSE);
       }
     }
