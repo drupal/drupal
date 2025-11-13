@@ -9,6 +9,7 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\process\StaticMap;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the static map process plugin.
@@ -98,19 +99,54 @@ class StaticMapTest extends MigrateProcessTestCase {
    */
   public function testWithNullSourceNotInMap(): void {
     $this->expectException(MigrateSkipRowException::class);
-    $this->expectExceptionMessage("No static mapping found for 'NULL' and no default value provided for destination 'destination_property'");
+    $this->expectExceptionMessage("No static mapping possible for NULL and no default value provided for destination 'destination_property'");
     $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
-   * Tests when the source is invalid but there's a default.
+   * Tests when the source is invalid but there's a mapping via an empty string.
    */
-  public function testWithNullSource(): void {
+  #[IgnoreDeprecations]
+  public function testWithNullSourceWithEmptyStringMapping(): void {
     $configuration['map']['foo']['bar'] = 'baz';
-    $configuration['map'][NULL] = 'mapped NULL';
+    $configuration['map'][''] = 'mapped NULL';
     $this->plugin = new StaticMap($configuration, 'map', []);
+    $this->expectDeprecation('Relying on mapping NULL values via an empty string map key in Drupal\migrate\Plugin\migrate\process\StaticMap::transform() is deprecated in drupal:11.3.0 and will trigger a Drupal\migrate\MigrateSkipRowException from drupal:12.0.0. Set the empty string map value as the "default_value" in the plugin configuration. See https://www.drupal.org/node/3557003');
     $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('mapped NULL', $value);
+  }
+
+  /**
+   * Tests when the source is invalid but bypass is set to TRUE.
+   */
+  public function testWithNullSourceBypass(): void {
+    $configuration['map']['foo']['bar'] = 'baz';
+    $configuration['bypass'] = TRUE;
+    $this->plugin = new StaticMap($configuration, 'map', []);
+    $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
+    $this->assertNull($value);
+  }
+
+  /**
+   * Tests when the source is invalid but default_value is set to TRUE.
+   */
+  public function testWithNullSourceDefaultValue(): void {
+    $configuration['map']['foo']['bar'] = 'baz';
+    $configuration['default_value'] = FALSE;
+    $this->plugin = new StaticMap($configuration, 'map', []);
+    $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
+    $this->assertFalse($value);
+  }
+
+  /**
+   * Tests when the source returns an empty string and it is mapped to a value.
+   */
+  public function testWithEmptyStringMap(): void {
+    $configuration['map']['foo']['bar'] = 'baz';
+    $configuration['map'][''] = 'mapped empty string';
+    $this->plugin = new StaticMap($configuration, 'map', []);
+    $value = $this->plugin->transform('', $this->migrateExecutable, $this->row, 'destination_property');
+    $this->assertSame('mapped empty string', $value);
   }
 
   /**
