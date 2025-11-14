@@ -212,6 +212,9 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
     }
 
     $form_object = $this->classResolver->getInstanceFromDefinition($class);
+    if (!$form_object instanceof EntityFormInterface) {
+      throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" form handler of the "%s" entity type specifies a class "%s" that does not extend "%s".', $operation, $entity_type_id, $class, EntityFormInterface::class));
+    }
 
     return $form_object
       ->setStringTranslation($this->stringTranslation)
