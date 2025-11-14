@@ -317,10 +317,18 @@ class HookCollectorPass implements CompilerPassInterface {
    *   Order operations by hook name.
    */
   protected function getOrderOperations(): array {
+    $implementationsByHook = $this->getFilteredImplementations();
     $operations_by_hook = [];
     foreach ($this->orderOperations as $hook => $order_operations_by_weight) {
       ksort($order_operations_by_weight);
-      $operations_by_hook[$hook] = array_merge(...$order_operations_by_weight);
+      $order_operations = array_merge(...$order_operations_by_weight);
+      foreach ($order_operations as $key => $operation) {
+        if (!isset($implementationsByHook[$hook][$operation->identify()])) {
+          unset($order_operations[$key]);
+        }
+      }
+      $operations_by_hook[$hook] = array_values($order_operations);
+
     }
     return $operations_by_hook;
   }

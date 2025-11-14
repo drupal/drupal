@@ -29,6 +29,13 @@ class FirstOrLast extends OrderOperation {
   /**
    * {@inheritdoc}
    */
+  public function identify(): string {
+    return $this->identifier;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function apply(array &$identifiers, array $module_finder): void {
     $index = array_search($this->identifier, $identifiers);
     if ($index === FALSE) {
