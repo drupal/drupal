@@ -340,7 +340,7 @@ class ContentTranslationHooks {
     $manager = \Drupal::service('content_translation.manager');
     foreach ($entity_types as $entity_type_id => $entity_type) {
       $base_table = $entity_type->getBaseTable();
-      if (isset($data[$base_table]) && $entity_type->hasLinkTemplate('drupal:content-translation-overview') && $manager->isEnabled($entity_type_id)) {
+      if (isset($base_table, $data[$base_table]) && $entity_type->hasLinkTemplate('drupal:content-translation-overview') && $manager->isEnabled($entity_type_id)) {
         $t_arguments = ['@entity_type_label' => $entity_type->getLabel()];
         $data[$base_table]['translation_link'] = [
           'field' => [
