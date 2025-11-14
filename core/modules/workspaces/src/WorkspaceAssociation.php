@@ -73,13 +73,6 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
-  public function moveTrackedEntities(string $source_workspace_id, string $target_workspace_id, ?string $entity_type_id = NULL, ?array $entity_ids = NULL): void {
-    $this->moveTrackedEntities($source_workspace_id, $target_workspace_id, $entity_type_id, $entity_ids);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function deleteAssociations($workspace_id = NULL, $entity_type_id = NULL, $entity_ids = NULL, $revision_ids = NULL) {
     $this->workspaceTracker->deleteTrackedEntities($workspace_id, $entity_type_id, $entity_ids);
   }
