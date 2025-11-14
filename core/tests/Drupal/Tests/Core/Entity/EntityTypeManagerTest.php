@@ -9,14 +9,16 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityHandlerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Exception\InvalidLinkTemplateException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -295,6 +297,23 @@ class EntityTypeManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getFormObject() method with an invalid class.
+   *
+   * @legacy-covers ::getFormObject
+   */
+  public function testGetFormObjectInvalidClass(): void {
+    $donkey = $this->prophesize(EntityTypeInterface::class);
+    $donkey->getFormClass('default')->willReturn(TestNotAnEntityForm::class);
+
+    $this->setUpEntityTypeDefinitions([
+      'donkey' => $donkey,
+    ]);
+    $this->expectException(InvalidPluginDefinitionException::class);
+    $this->expectExceptionMessage('The "default" form handler of the "donkey" entity type specifies a class "Drupal\Tests\Core\Entity\TestNotAnEntityForm" that does not extend "Drupal\Core\Entity\EntityFormInterface".');
+    $this->entityTypeManager->getFormObject('donkey', 'default');
+  }
+
+  /**
    * Tests the getHandler() method.
    *
    * @legacy-covers ::getHandler
@@ -465,7 +484,7 @@ class TestEntityTypeManager extends EntityTypeManager {
 /**
  * Provides a test entity form.
  */
-class TestEntityForm extends EntityHandlerBase {
+class TestEntityForm extends EntityForm {
 
   /**
    * {@inheritdoc}
@@ -476,49 +495,6 @@ class TestEntityForm extends EntityHandlerBase {
    * {@inheritdoc}
    */
   public $stringTranslation;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBaseFormId() {
-    return 'the_base_form_id';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFormId() {
-    return 'the_form_id';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setEntity(EntityInterface $entity) {
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOperation($operation) {
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setEntityTypeManager(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    return $this;
-  }
 
 }
 
@@ -549,6 +525,29 @@ class TestEntityFormInjected extends TestEntityForm implements ContainerInjectio
    */
   public static function create(ContainerInterface $container) {
     return new static('yellow');
+  }
+
+}
+
+/**
+ * Provides a test entity form that doesn't extend EntityForm.
+ */
+class TestNotAnEntityForm extends FormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'not_an_entity_form';
+  }
+
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    // No-op.
+    return $form;
+  }
+
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
+    // No-op.
   }
 
 }
