@@ -6,6 +6,7 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore Filefield Multiupload Imagefield rulesets
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * The test method is provided by the MigrateUpgradeTestBase class.
  */
 #[Group('migrate_drupal_ui')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 
