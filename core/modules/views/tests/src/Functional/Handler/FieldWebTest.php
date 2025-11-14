@@ -252,6 +252,7 @@ class FieldWebTest extends ViewTestBase {
     $view->initHandlers();
     $this->executeView($view);
     $row = $view->result[0];
+    $view->row_index = 0;
     $id_field = $view->field['id'];
 
     // Setup the general settings required to build a link.
@@ -577,6 +578,7 @@ class FieldWebTest extends ViewTestBase {
     $name_field->options['alter']['alter_text'] = TRUE;
     $name_field->options['alter']['text'] = $html_text = '<div class="views-test">' . $random_text . '</div>';
     $row = $view->result[0];
+    $view->row_index = 0;
 
     $name_field->options['alter']['strip_tags'] = TRUE;
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
