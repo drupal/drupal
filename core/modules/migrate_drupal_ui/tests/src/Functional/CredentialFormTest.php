@@ -7,7 +7,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 use Drupal\Core\Database\Database;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore drupalmysqldriverdatabasemysql
@@ -19,7 +18,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('migrate_drupal_ui')]
 #[Group('#slow')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class CredentialFormTest extends MigrateUpgradeTestBase {
 

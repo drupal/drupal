@@ -8,14 +8,12 @@ use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WebAssert;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the flow of the Migrate Drupal UI form.
  */
 #[Group('migrate_drupal_ui')]
-#[ignoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class MigrateUpgradeFormStepsTest extends BrowserTestBase {
 

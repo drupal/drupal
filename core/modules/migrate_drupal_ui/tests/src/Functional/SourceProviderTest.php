@@ -6,7 +6,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -14,7 +13,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('migrate_drupal_ui')]
 #[Group('#slow')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class SourceProviderTest extends MigrateUpgradeTestBase {
 
