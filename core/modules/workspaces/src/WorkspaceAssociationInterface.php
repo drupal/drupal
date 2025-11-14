@@ -121,29 +121,6 @@ interface WorkspaceAssociationInterface {
   public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity, bool $latest_revision = FALSE);
 
   /**
-   * Moves tracked entities from one workspace to another.
-   *
-   * @param string $source_workspace_id
-   *   The ID of the source workspace.
-   * @param string $target_workspace_id
-   *   The ID of the target workspace.
-   * @param string|null $entity_type_id
-   *   (optional) The entity type ID to filter the move operation. If NULL,
-   *   all entity types will be moved. Defaults to NULL.
-   * @param int[]|string[]|null $entity_ids
-   *   (optional) An array of entity IDs to move. If NULL, all entities of the
-   *   specified type (or all entities if no type specified) will be moved.
-   *   Defaults to NULL.
-   *
-   * @throws \InvalidArgumentException
-   *   If the source and target workspace IDs are the same, or if entity IDs
-   *   are provided without an entity type ID.
-   * @throws \DomainException
-   *   If either workspace is not top-level or has sub-workspaces.
-   */
-  public function moveTrackedEntities(string $source_workspace_id, string $target_workspace_id, ?string $entity_type_id = NULL, ?array $entity_ids = NULL): void;
-
-  /**
    * Deletes all the workspace association records for the given workspace.
    *
    * @param string|null $workspace_id
