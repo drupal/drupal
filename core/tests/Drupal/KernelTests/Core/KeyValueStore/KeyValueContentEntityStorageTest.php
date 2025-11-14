@@ -165,6 +165,13 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
       // Verify that originalID points to new ID directly after renaming.
       $this->assertSame($new_id, $entity_test->id());
     }
+
+    // Test loading multiple entities. There should be an entity keyed by the ID
+    // we just created.
+    $entities = $storage->loadMultiple();
+    $this->assertCount(3, $entities);
+    $this->assertArrayHasKey($entity_test->id(), $entities);
+    $this->assertSame($entity_test->uuid(), $entities[$entity_test->id()]->uuid());
   }
 
   /**

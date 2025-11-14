@@ -451,7 +451,11 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       $entity_class = $this->getEntityClass();
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       $entity = new $entity_class($record, $this->entityTypeId);
-      $entities[$entity->id()] = $entity;
+      $entity_id = $entity->id();
+      if ($entity_id === NULL) {
+        throw new EntityMalformedException('The entity does not have an ID.');
+      }
+      $entities[$entity_id] = $entity;
     }
     return $entities;
   }
