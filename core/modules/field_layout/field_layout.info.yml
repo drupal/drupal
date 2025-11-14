@@ -2,7 +2,8 @@ name: 'Field Layout'
 type: module
 description: 'Allows users to configure the display and form display by arranging fields in several columns.'
 package: Core (Experimental)
-lifecycle: experimental
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-field-layout
 version: VERSION
 dependencies:
   - drupal:layout_discovery
