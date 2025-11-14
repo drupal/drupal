@@ -77,7 +77,7 @@ class ValidationResultTest extends UnitTestCase {
   /**
    * Tests create warning result exception.
    *
-   * @param string[] $messages
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $messages
    *   The warning messages of the validation result.
    * @param string $expected_exception_message
    *   The expected exception message.
@@ -94,7 +94,7 @@ class ValidationResultTest extends UnitTestCase {
   /**
    * Tests create error result exception.
    *
-   * @param string[] $messages
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $messages
    *   The error messages of the validation result.
    * @param string $expected_exception_message
    *   The expected exception message.

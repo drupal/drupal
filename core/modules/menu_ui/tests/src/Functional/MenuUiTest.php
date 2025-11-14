@@ -919,7 +919,7 @@ class MenuUiTest extends BrowserTestBase {
    *
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   The menu link item to move.
-   * @param int $parent
+   * @param string $parent
    *   The id of the new parent.
    * @param string $menu_name
    *   The menu the menu link will be moved to.
