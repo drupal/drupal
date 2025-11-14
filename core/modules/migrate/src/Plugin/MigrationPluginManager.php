@@ -221,7 +221,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    *
    * @param array $graph
    *   The graph so far, passed by reference.
-   * @param int $id
+   * @param string $id
    *   The migration ID.
    * @param string $dependency
    *   The dependency string.

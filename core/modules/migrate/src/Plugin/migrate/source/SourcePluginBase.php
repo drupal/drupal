@@ -570,7 +570,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * Save the new high water mark.
    *
-   * @param int $high_water
+   * @param int|null $high_water
    *   The high water timestamp.
    */
   protected function saveHighWater($high_water) {

@@ -161,7 +161,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
   /**
    * Actually run the test.
    *
-   * @param array $schema
+   * @param \Drupal\Core\Database\Schema $schema
    *   The mock schema object with expectations set. The Sql constructor calls
    *   ensureTables() which in turn calls this object and the expectations on
    *   it are the actual test and there are no additional asserts added.
