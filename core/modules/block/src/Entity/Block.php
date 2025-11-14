@@ -362,7 +362,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     // This is done primarily for backwards compatibility support of
     // \Drupal\block\BlockInterface::BLOCK_REGION_NONE.
     $regions = system_region_list($this->theme);
-    if (!isset($regions[$this->region]) && $this->status()) {
+    if (!isset($this->region, $regions[$this->region]) && $this->status()) {
       $this
         ->setRegion(system_default_region($this->theme))
         ->disable();
