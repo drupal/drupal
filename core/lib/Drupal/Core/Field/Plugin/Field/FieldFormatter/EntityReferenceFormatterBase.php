@@ -150,7 +150,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
     // the 'loaded' flag.
     foreach ($entities_items as $items) {
       foreach ($items as $item) {
-        if (isset($target_entities[$item->target_id])) {
+        if (isset($item->target_id, $target_entities[$item->target_id])) {
           $item->entity = $target_entities[$item->target_id];
           $item->_loaded = TRUE;
         }
