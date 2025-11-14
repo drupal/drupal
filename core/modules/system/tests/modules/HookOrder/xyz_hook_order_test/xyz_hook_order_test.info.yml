@@ -1,0 +1,6 @@
+name: XYZ Hook order test
+type: module
+description: 'Test module used to test hook ordering. This module does not contain any hook implementations, only reordering attributes.'
+package: Testing
+version: VERSION
+core_version_requirement: '*'

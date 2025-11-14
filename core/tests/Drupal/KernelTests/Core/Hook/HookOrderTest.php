@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Hook;
 
 use Drupal\aaa_hook_order_test\Hook\AHooks;
+use Drupal\aaa_hook_order_test\Hook\AMissingTargetHooks;
 use Drupal\bbb_hook_order_test\Hook\BHooks;
+use Drupal\bbb_hook_order_test\Hook\BMissingTargetHooks;
 use Drupal\ccc_hook_order_test\Hook\CHooks;
 use Drupal\ddd_hook_order_test\Hook\DHooks;
 use Drupal\KernelTests\KernelTestBase;
@@ -55,6 +57,94 @@ class HookOrderTest extends KernelTestBase {
       ],
       \Drupal::moduleHandler()->invokeAll('test_hook'),
     );
+  }
+
+  /**
+   * Tests #[ReorderHook] attributes with missing target.
+   *
+   * There are different kinds of missing target:
+   *   - The target method to be reordered may not exist.
+   *   - The hook being targeted may have no implementations.
+   *   - The target method exists, but it is registered to a different hook.
+   *
+   * The expected behavior in these cases is that the reorder or remove
+   * attribute should have no effect, and especially not cause any errors.
+   *
+   * @see \Drupal\KernelTests\Core\Hook\HookAlterOrderTest::testReorderAlterMissingTarget()
+   * @see \Drupal\xyz_hook_order_test\Hook\XyzMissingTargetHooks
+   */
+  public function testReorderMissingTarget(): void {
+    // At the beginning, the xyz_hook_order_test is not installed, so no
+    // reordering is applied.
+    // This verifies that all implementations for this test are correctly
+    // declared and discovered.
+    $this->assertSameCallList(
+      [
+        AMissingTargetHooks::class . '::testABHook',
+        BMissingTargetHooks::class . '::testABHookReorderedFirstByXyz',
+        BMissingTargetHooks::class . '::testABHookRemovedByXyz',
+      ],
+      \Drupal::moduleHandler()->invokeAll('test_ab_hook'),
+    );
+    $this->assertSameCallList(
+      [
+        BMissingTargetHooks::class . '::testBHook',
+        BMissingTargetHooks::class . '::testBHookReorderedFirstByXyz',
+        BMissingTargetHooks::class . '::testBHookRemovedByXyz',
+      ],
+      \Drupal::moduleHandler()->invokeAll('test_b_hook'),
+    );
+    $this->assertSameCallList(
+      [
+        AMissingTargetHooks::class . '::testUnrelatedHookReorderedLastForHookB',
+        AMissingTargetHooks::class . '::testUnrelatedHookRemovedForHookB',
+        BMissingTargetHooks::class . '::testUnrelatedHook',
+      ],
+      \Drupal::moduleHandler()->invokeAll('test_unrelated_hook'),
+    );
+
+    // Install the module that has the reorder and remove hook attributes.
+    $this->enableModules(['xyz_hook_order_test']);
+
+    // Reorder and remove operations are applied to 'test_ab_hook'.
+    $this->assertSameCallList(
+      [
+        BMissingTargetHooks::class . '::testABHookReorderedFirstByXyz',
+        AMissingTargetHooks::class . '::testABHook',
+      ],
+      \Drupal::moduleHandler()->invokeAll('test_ab_hook'),
+    );
+    // Reorder and remove operations are applied to 'test_b_hook'.
+    $this->assertSameCallList(
+      [
+        BMissingTargetHooks::class . '::testBHookReorderedFirstByXyz',
+        BMissingTargetHooks::class . '::testBHook',
+      ],
+      \Drupal::moduleHandler()->invokeAll('test_b_hook'),
+    );
+    // No reorder or remove operations are applied to the unrelated hook,
+    // even though the methods are being targeted.
+    $this->assertSameCallList(
+      [
+        AMissingTargetHooks::class . '::testUnrelatedHookReorderedLastForHookB',
+        AMissingTargetHooks::class . '::testUnrelatedHookRemovedForHookB',
+        BMissingTargetHooks::class . '::testUnrelatedHook',
+      ],
+      \Drupal::moduleHandler()->invokeAll('test_unrelated_hook'),
+    );
+
+    // Uninstall the B module, which contains the reorder targets.
+    $this->expectException(\TypeError::class);
+    $old_request = \Drupal::request();
+    try {
+      $this->disableModules(['bbb_hook_order_test']);
+    }
+    finally {
+      // Restore a request and session, to avoid error during tearDown().
+      /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
+      $request_stack = $this->container->get('request_stack');
+      $request_stack->push($old_request);
+    }
   }
 
   /**

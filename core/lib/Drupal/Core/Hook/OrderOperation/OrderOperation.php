@@ -24,6 +24,16 @@ abstract class OrderOperation {
   abstract public function apply(array &$identifiers, array $module_finder): void;
 
   /**
+   * Returns the identifier for filtering.
+   *
+   * The hook implementation identifier, as "$class::$method", to be changed by.
+   *
+   * @return string
+   *   The identifier for the OrderOperation.
+   */
+  abstract public function identify(): string;
+
+  /**
    * Converts the operation to a structure that can be stored in the container.
    *
    * @return array
