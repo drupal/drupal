@@ -6,12 +6,14 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that only user 1 can access the migrate UI.
  */
 #[Group('migrate_drupal_ui')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class MigrateAccessTest extends BrowserTestBase {
 
