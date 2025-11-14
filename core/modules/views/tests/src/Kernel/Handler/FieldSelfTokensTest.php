@@ -56,6 +56,7 @@ class FieldSelfTokensTest extends ViewsKernelTestBase {
     $view->initHandlers();
     $this->executeView($view);
     $row = $view->result[0];
+    $view->row_index = 0;
     $title_field = $view->field['title'];
     $title_field->options['alter']['text'] = '<p>{{ title__value }}</p>';
     $title_field->options['alter']['alter_text'] = TRUE;
