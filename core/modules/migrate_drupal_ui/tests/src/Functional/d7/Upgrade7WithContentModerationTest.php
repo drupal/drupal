@@ -7,6 +7,7 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\WorkflowInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('migrate_drupal_ui')]
 #[Group('#slow')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class Upgrade7WithContentModerationTest extends Upgrade7Test {
 

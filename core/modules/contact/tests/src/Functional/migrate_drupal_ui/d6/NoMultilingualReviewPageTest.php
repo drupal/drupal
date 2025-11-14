@@ -6,6 +6,7 @@ namespace Drupal\Tests\contact\Functional\migrate_drupal_ui\d6;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore multigroup
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests with the translation modules disabled.
  */
 #[Group('contact')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 

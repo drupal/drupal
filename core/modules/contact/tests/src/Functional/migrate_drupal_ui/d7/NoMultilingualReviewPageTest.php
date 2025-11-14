@@ -6,6 +6,7 @@ namespace Drupal\Tests\contact\Functional\migrate_drupal_ui\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * The test method is provided by the MigrateUpgradeTestBase class.
  */
 #[Group('contact')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 

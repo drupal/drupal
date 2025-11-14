@@ -6,6 +6,7 @@ namespace Drupal\Tests\contact\Functional\migrate_drupal_ui\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('contact')]
 #[Group('#slow')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
 
