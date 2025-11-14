@@ -6,7 +6,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore Filefield Flexslider Multiupload Imagefield rulesets
@@ -17,7 +16,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('migrate_drupal_7')]
 #[Group('migrate_drupal_ui')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
 

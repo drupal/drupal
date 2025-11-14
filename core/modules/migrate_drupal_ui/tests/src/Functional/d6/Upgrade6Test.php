@@ -7,7 +7,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -17,7 +16,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('migrate_drupal_ui')]
 #[Group('#slow')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
