@@ -58,20 +58,9 @@ class UserUpdate7002 extends ProcessPluginBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $timezone = NULL;
+    $timezone = $row->getSourceProperty('timezone_name') ?? $row->getSourceProperty('event_timezone');
 
-    if ($row->hasSourceProperty('timezone_name')) {
-      if (isset(static::$timezones[$row->getSourceProperty('timezone_name')])) {
-        $timezone = $row->getSourceProperty('timezone_name');
-      }
-    }
-    if (!$timezone && $row->hasSourceProperty('event_timezone')) {
-      if (isset(static::$timezones[$row->getSourceProperty('event_timezone')])) {
-        $timezone = $row->getSourceProperty('event_timezone');
-      }
-    }
-
-    if ($timezone === NULL) {
+    if ($timezone === NULL || !isset(static::$timezones[$timezone])) {
       $timezone = $this->dateConfig->get('timezone.default');
     }
     return $timezone;
