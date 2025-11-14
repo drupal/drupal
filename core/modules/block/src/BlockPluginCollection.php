@@ -48,6 +48,19 @@ class BlockPluginCollection extends DefaultSingleLazyPluginCollection {
 
   /**
    * {@inheritdoc}
+   *
+   * @return void
+   *   Returns nothing.
+   */
+  public function addInstanceId($id, $configuration = NULL) {
+    if (!$id) {
+      throw new PluginException("The block '{$this->blockId}' did not specify a plugin.");
+    }
+    parent::addInstanceId($id, $configuration);
+  }
+
+  /**
+   * {@inheritdoc}
    */
   protected function initializePlugin($instance_id) {
     if (!$instance_id) {
