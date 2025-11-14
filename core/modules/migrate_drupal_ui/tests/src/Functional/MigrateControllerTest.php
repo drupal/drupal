@@ -7,12 +7,14 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the MigrateController class.
  */
 #[Group('migrate_drupal_ui')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class MigrateControllerTest extends BrowserTestBase {
 
