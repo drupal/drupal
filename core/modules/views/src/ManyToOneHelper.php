@@ -93,7 +93,7 @@ class ManyToOneHelper {
     $relationship = $this->handler->relationship;
 
     // Determine the primary table to seek.
-    if (empty($this->handler->query->relationships[$relationship])) {
+    if (!isset($relationship, $this->handler->query->relationships[$relationship]['base'])) {
       $base_table = $this->handler->view->storage->get('base_table');
     }
     else {
