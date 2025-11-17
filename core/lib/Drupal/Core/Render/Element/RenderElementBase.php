@@ -383,6 +383,9 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
           ->merge($url)
           ->applyTo($element);
         $settings['url'] = $url->getGeneratedUrl();
+
+        // Mark the URL as trusted, see ajax.js.
+        $element['#attached']['drupalSettings']['ajaxTrustedUrl'][$settings['url']] = TRUE;
       }
       else {
         $settings['url'] = NULL;
@@ -429,7 +432,6 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
       }
 
       $element['#attached']['drupalSettings']['ajax'][$element['#id']] = $settings;
-      $element['#attached']['drupalSettings']['ajaxTrustedUrl'][$settings['url']] = TRUE;
 
       // Indicate that Ajax processing was successful.
       $element['#ajax_processed'] = TRUE;
