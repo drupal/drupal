@@ -75,7 +75,7 @@ class WeightTest extends KernelTestBase {
         ->get('system.site')
         ->get('weight_select_max'),
       // Expected by the "doBuildForm()" method of "form_builder" service.
-      '#parents' => [],
+      '#parents' => ['test'],
     ];
 
     $assert = function ($type, array $element, array $expected) use ($form_state) {
