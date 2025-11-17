@@ -780,7 +780,10 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinition($name) {
+  public function getPropertyDefinition(/* string */ $name) {
+    if (!is_string($name)) {
+      @trigger_error('Calling ' . __CLASS__ . '::getPropertyDefinition() with a non-string $name is deprecated in drupal:11.3.0 and throws an exception in drupal:12.0.0. See https://www.drupal.org/node/3557373', E_USER_DEPRECATED);
+    }
     if (!isset($this->propertyDefinitions)) {
       $this->getPropertyDefinitions();
     }

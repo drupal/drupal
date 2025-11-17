@@ -3562,6 +3562,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     /** @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $item_definition */
     $item_definition = $field_definition->getItemDefinition();
     $main_property = $item_definition->getMainPropertyName();
+    if ($main_property === NULL) {
+      return FALSE;
+    }
     $property_definition = $item_definition->getPropertyDefinition($main_property);
     return $property_definition instanceof DataReferenceTargetDefinition;
   }
