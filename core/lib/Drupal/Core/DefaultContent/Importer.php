@@ -123,7 +123,7 @@ final class Importer implements LoggerAwareInterface {
           }
         }
 
-        $entity = $this->toEntity($decoded)->enforceIsNew();
+        $entity = $this->toEntity($decoded)->enforceIsNew()->setSyncing(TRUE);
 
         // Ensure that the entity is not owned by the anonymous user.
         if ($entity instanceof EntityOwnerInterface && empty($entity->getOwnerId())) {

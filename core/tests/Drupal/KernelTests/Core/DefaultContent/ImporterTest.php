@@ -7,7 +7,9 @@ namespace Drupal\KernelTests\Core\DefaultContent;
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\DefaultContent\Importer;
 use Drupal\Core\DefaultContent\PreEntityImportEvent;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -32,6 +34,15 @@ class ImporterTest extends KernelTestBase implements EventSubscriberInterface {
   protected static $modules = ['system', 'user', 'entity_test'];
 
   /**
+   * Whether the imported content entities were syncing.
+   *
+   * @var bool
+   *
+   * @see ::onPreSave()
+   */
+  private bool $wasSyncing = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -49,6 +60,14 @@ class ImporterTest extends KernelTestBase implements EventSubscriberInterface {
     return [
       PreEntityImportEvent::class => 'onPreEntityImport',
     ];
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_presave() for entity_test entities.
+   */
+  #[Hook('entity_test_presave')]
+  public function onPreSave(ContentEntityInterface $entity): void {
+    $this->wasSyncing = $entity->isSyncing();
   }
 
   /**
@@ -77,6 +96,7 @@ class ImporterTest extends KernelTestBase implements EventSubscriberInterface {
 
     $finder = new Finder($this->getDrupalRoot() . '/core/tests/fixtures/pre_entity_import_default_content');
     $this->container->get(Importer::class)->importContent($finder);
+    self::assertTrue($this->wasSyncing);
 
     $entity = $this->container->get(EntityRepositoryInterface::class)
       ->loadEntityByUuid('entity_test', '01234567-89ab-cdef-0123-456789abcdef');
