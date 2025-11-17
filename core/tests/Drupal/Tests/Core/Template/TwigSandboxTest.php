@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Template;
 
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Template\Attribute\TwigAllowed;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigSandboxPolicy;
 use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
@@ -156,9 +157,43 @@ class TwigSandboxTest extends UnitTestCase {
     $this->assertEquals('http://kittens.cat/are/cute', $result, 'Sandbox policy allows toString() to be called.');
   }
 
+  /**
+   * Tests that method with TwigAllowed attribute is allowed.
+   */
+  public function testTwigMethodAttributeAllowed(): void {
+    $object = new AttributeAllowTestClass();
+    $result = $this->twig->render('{{ object.allowed() }}', ['object' => $object]);
+    $this->assertTrue((bool) $result, 'TwigAllowed attribute allows method to be called.');
+  }
+
+  /**
+   * Tests that method without TwigAllowed attribute is not allowed.
+   */
+  public function testTwigMethodAttributeNotAllowed(): void {
+    $object = new AttributeAllowTestClass();
+    $this->expectException(SecurityError::class);
+    $this->twig->render('{{ object.notAllowed() }}', ['object' => $object]);
+  }
+
 }
 
 /**
  * Test class for HTML attributes collector, sanitizer, and renderer.
  */
 class TestAttribute extends Attribute {}
+
+/**
+ * Test class for TwigAllowed attribute.
+ */
+class AttributeAllowTestClass {
+
+  #[TwigAllowed]
+  public function allowed(): string {
+    return __METHOD__;
+  }
+
+  public function notAllowed(): string {
+    return __METHOD__;
+  }
+
+}
