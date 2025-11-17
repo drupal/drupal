@@ -45,6 +45,7 @@ class ConfigActionsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig('system');
     $this->container->get(ThemeInstallerInterface::class)->install([
       'olivero',
       'claro',

@@ -102,6 +102,8 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('system');
+
     // Install all core themes.
     sort($this->allThemes);
     $this->container->get('theme_installer')->install($this->allThemes);

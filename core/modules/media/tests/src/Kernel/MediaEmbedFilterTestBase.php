@@ -72,6 +72,7 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('system');
     $this->installSchema('file', ['file_usage']);
     $this->installEntitySchema('file');
     $this->installEntitySchema('media');
@@ -79,7 +80,6 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
     $this->installConfig('filter');
     $this->installConfig('image');
     $this->installConfig('media');
-    $this->installConfig('system');
 
     // Create a user with required permissions. Ensure that we don't use user 1
     // because that user is treated in special ways by access control handlers.

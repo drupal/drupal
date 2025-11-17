@@ -44,6 +44,7 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('system');
     $all_modules = $this->container->get('extension.list.module')->getList();
     $stable_core_modules = array_filter($all_modules, function ($module) {
       // Filter out contrib, hidden, testing, deprecated and experimental
