@@ -196,45 +196,11 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function getCountNewComments(EntityInterface $entity, $field_name = NULL, $timestamp = 0) {
-    // @todo Replace module handler with optional history service injection
-    //   after https://www.drupal.org/node/2081585.
-    if ($this->currentUser->isAuthenticated() && $this->moduleHandler->moduleExists('history')) {
-      // Retrieve the timestamp at which the current user last viewed this
-      // entity.
-      if (!$timestamp) {
-        if ($entity->getEntityTypeId() == 'node') {
-          $timestamp = history_read($entity->id());
-        }
-        else {
-          $function = $entity->getEntityTypeId() . '_last_viewed';
-          if (function_exists($function)) {
-            $timestamp = $function($entity->id());
-          }
-          else {
-            // Default to 30 days ago.
-            // @todo Remove this else branch when we have a generic
-            //   HistoryRepository service in https://www.drupal.org/i/3267011.
-            $timestamp = COMMENT_NEW_LIMIT;
-          }
-        }
-      }
-      $timestamp = ($timestamp > HISTORY_READ_LIMIT ? $timestamp : HISTORY_READ_LIMIT);
-
-      // Use the timestamp to retrieve the number of new comments.
-      $query = $this->entityTypeManager->getStorage('comment')->getQuery()
-        ->accessCheck(TRUE)
-        ->condition('entity_type', $entity->getEntityTypeId())
-        ->condition('entity_id', $entity->id())
-        ->condition('created', $timestamp, '>')
-        ->condition('status', CommentInterface::PUBLISHED);
-      if ($field_name) {
-        // Limit to a particular field.
-        $query->condition('field_name', $field_name);
-      }
-
-      return $query->count()->execute();
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\history\HistoryManager::getCountNewComments() instead. See https://www.drupal.org/project/drupal/issues/3551729', 'E_USER_DEPRECATED');
+    if (!$this->moduleHandler->moduleExists('history')) {
+      return FALSE;
     }
-    return FALSE;
+    return \Drupal::service('Drupal\history\HistoryManager')->getCountNewComments($entity, $field_name, $timestamp);
   }
 
 }

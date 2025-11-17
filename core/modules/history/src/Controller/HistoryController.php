@@ -3,6 +3,7 @@
 namespace Drupal\history\Controller;
 
 use Drupal\Core\Url;
+use Drupal\history\HistoryManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -88,7 +89,7 @@ class HistoryController extends ControllerBase {
     $links = [];
     foreach ($nids as $nid) {
       $node = $this->entityTypeManager()->getStorage('node')->load($nid);
-      $new = \Drupal::service('comment.manager')->getCountNewComments($node);
+      $new = \Drupal::service(HistoryManager::class)->getCountNewComments($node);
       $page_number = $this->entityTypeManager()->getStorage('comment')
         ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node, $field_name);
       $query = $page_number ? ['page' => $page_number] : NULL;

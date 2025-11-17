@@ -5,4 +5,7 @@ services:
     class: Drupal\history\HistoryCommentLinkBuilder
     decorates: 'comment.link_builder'
     decoration_on_invalid: ignore
-    arguments: ['@history.comment_link_builder.inner', '@comment.manager', '@current_user', '@entity_type.manager']
+    arguments: ['@history.comment_link_builder.inner', '@comment.manager', '@current_user', '@entity_type.manager', '@Drupal\history\HistoryManager']
+  Drupal\history\HistoryManager:
+    class: Drupal\history\HistoryManager
+    autowire: true
