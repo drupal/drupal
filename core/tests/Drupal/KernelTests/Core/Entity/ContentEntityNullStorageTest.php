@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\contact\Entity\ContactForm;
+use Drupal\entity_test\Entity\EntityTestNoIdBundle;
 use Drupal\Core\Config\ConfigImporterFactory;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\KernelTests\KernelTestBase;
@@ -24,7 +24,7 @@ class ContentEntityNullStorageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'contact', 'user'];
+  protected static $modules = ['system', 'entity_test', 'user'];
 
   /**
    * Tests using entity query with ContentEntityNullStorage.
@@ -32,22 +32,22 @@ class ContentEntityNullStorageTest extends KernelTestBase {
    * @see \Drupal\Core\Entity\Query\Null\Query
    */
   public function testEntityQuery(): void {
-    $this->assertSame(0, \Drupal::entityQuery('contact_message')->accessCheck(FALSE)->count()->execute(), 'Counting a null storage returns 0.');
-    $this->assertSame([], \Drupal::entityQuery('contact_message')->accessCheck(FALSE)->execute(), 'Querying a null storage returns an empty array.');
-    $this->assertSame([], \Drupal::entityQuery('contact_message')->accessCheck(FALSE)->condition('contact_form', 'test')->execute(), 'Querying a null storage returns an empty array and conditions are ignored.');
-    $this->assertSame([], \Drupal::entityQueryAggregate('contact_message')->accessCheck(FALSE)->aggregate('name', 'AVG')->execute(), 'Aggregate querying a null storage returns an empty array');
+    $this->assertSame(0, \Drupal::entityQuery('entity_test_no_id')->accessCheck(FALSE)->count()->execute(), 'Counting a null storage returns 0.');
+    $this->assertSame([], \Drupal::entityQuery('entity_test_no_id')->accessCheck(FALSE)->execute(), 'Querying a null storage returns an empty array.');
+    $this->assertSame([], \Drupal::entityQuery('entity_test_no_id')->accessCheck(FALSE)->condition('type', 'test')->execute(), 'Querying a null storage returns an empty array and conditions are ignored.');
+    $this->assertSame([], \Drupal::entityQueryAggregate('entity_test_no_id')->accessCheck(FALSE)->aggregate('name', 'AVG')->execute(), 'Aggregate querying a null storage returns an empty array');
 
   }
 
   /**
-   * Tests deleting a contact form entity via a configuration import.
+   * Tests deleting an entity test no ID bundle entity via a configuration import.
    *
    * @see \Drupal\Core\Entity\Event\BundleConfigImportValidate
    */
   public function testDeleteThroughImport(): void {
     $this->installConfig(['system']);
-    $contact_form = ContactForm::create(['id' => 'test', 'label' => 'Test contact form']);
-    $contact_form->save();
+    $entity_test_no_id_bundle = EntityTestNoIdBundle::create(['id' => 'test', 'label' => 'Test entity test no ID bundle']);
+    $entity_test_no_id_bundle->save();
 
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 
@@ -58,13 +58,13 @@ class ContentEntityNullStorageTest extends KernelTestBase {
     );
     $config_importer = $this->container->get(ConfigImporterFactory::class)->get($storage_comparer->createChangelist());
 
-    // Delete the contact message in sync.
+    // Delete the entity test no ID bundle in sync.
     $sync = $this->container->get('config.storage.sync');
-    $sync->delete($contact_form->getConfigDependencyName());
+    $sync->delete($entity_test_no_id_bundle->getConfigDependencyName());
 
     // Import.
     $config_importer->reset()->import();
-    $this->assertNull(ContactForm::load($contact_form->id()), 'The contact form has been deleted.');
+    $this->assertNull(EntityTestNoIdBundle::load($entity_test_no_id_bundle->id()), 'The entity test no ID bundle has been deleted.');
   }
 
 }
