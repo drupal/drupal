@@ -6,7 +6,6 @@ hidden: true
 install:
   - block
   - comment
-  - contact
   - image
   - node
   - path
