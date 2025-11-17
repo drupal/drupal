@@ -707,7 +707,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   public function getJoin() {
     // Get the join from this table that links back to the base table.
     // Determine the primary table to seek.
-    if (empty($this->query->relationships[$this->relationship])) {
+    if (!isset($this->relationship) || empty($this->query->relationships[$this->relationship])) {
       $base_table = $this->view->storage->get('base_table');
     }
     else {
