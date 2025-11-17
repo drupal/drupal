@@ -30,6 +30,7 @@ class HistoryCommentLinkBuilder implements CommentLinkBuilderInterface {
     protected CommentManagerInterface $commentManager,
     protected AccountInterface $currentUser,
     protected EntityTypeManagerInterface $entityTypeManager,
+    protected HistoryManager $historyManager,
   ) {
   }
 
@@ -75,7 +76,7 @@ class HistoryCommentLinkBuilder implements CommentLinkBuilderInterface {
           // Embed the metadata for the "X new comments" link (if any) on this
           // entity.
           $entity_links['comment__' . $field_name]['#attached']['drupalSettings']['history']['lastReadTimestamps'][$entity->id()] = history_read($entity->id());
-          $new_comments = $this->commentManager->getCountNewComments($entity);
+          $new_comments = $this->historyManager->getCountNewComments($entity);
           if ($new_comments > 0) {
             $page_number = $this->entityTypeManager
               ->getStorage('comment')

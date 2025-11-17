@@ -9,6 +9,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\history\HistoryCommentLinkBuilder;
+use Drupal\history\HistoryManager;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -86,7 +87,7 @@ class HistoryCommentLinkBuilderTest extends UnitTestCase {
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->currentUser = $this->createMock('\Drupal\Core\Session\AccountProxyInterface');
     $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->stringTranslation);
-    $this->decoratedCommentLinkBuilder = new HistoryCommentLinkBuilder($this->commentLinkBuilder, $this->commentManager, $this->currentUser, $this->entityTypeManager);
+    $this->decoratedCommentLinkBuilder = new HistoryCommentLinkBuilder($this->commentLinkBuilder, $this->commentManager, $this->currentUser, $this->entityTypeManager, $this->createMock(HistoryManager::class));
     $this->commentManager->expects($this->any())
       ->method('getFields')
       ->with('node')

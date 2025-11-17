@@ -41,10 +41,6 @@ class CommentTokensHooks {
           'name' => $this->t("Comment count"),
           'description' => $this->t("The number of comments posted on an entity."),
         ];
-        $tokens[$token_type]['comment-count-new'] = [
-          'name' => $this->t("New comment count"),
-          'description' => $this->t("The number of comments posted on an entity since the reader last viewed it."),
-        ];
       }
     }
     // Core comment tokens.
@@ -248,10 +244,6 @@ class CommentTokensHooks {
               $count += $entity->get($field_name)->comment_count;
             }
             $replacements[$original] = $count;
-            break;
-
-          case 'comment-count-new':
-            $replacements[$original] = \Drupal::service('comment.manager')->getCountNewComments($entity);
             break;
         }
       }
