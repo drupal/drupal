@@ -291,7 +291,7 @@ class FileTransferAuthorizeForm extends FormBase {
    *
    * @param array $element
    *   Reference to the Form API form element we're operating on.
-   * @param string $key
+   * @param string|null $key
    *   The key for our current form element, if any.
    * @param array $defaults
    *   The default settings for the file transfer backend we're operating on.
@@ -309,7 +309,7 @@ class FileTransferAuthorizeForm extends FormBase {
     // processing, pass in that subarray to the recursive call. Otherwise, just
     // pass on the whole $defaults array.
     foreach (Element::children($element) as $child_key) {
-      $this->setConnectionSettingsDefaults($element[$child_key], $child_key, ((isset($defaults[$key]) && is_array($defaults[$key])) ? $defaults[$key] : $defaults));
+      $this->setConnectionSettingsDefaults($element[$child_key], $child_key, ((isset($key, $defaults[$key]) && is_array($defaults[$key])) ? $defaults[$key] : $defaults));
     }
   }
 
