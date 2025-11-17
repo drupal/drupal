@@ -70,7 +70,11 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if ($entity = $route_match->getParameter($entity_type_id)) {
       $operation = $route->getRequirement('_access_content_translation_manage');
-      $language = $this->languageManager->getLanguage($language) ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+      if ($language !== NULL) {
+        $language = $this->languageManager->getLanguage($language);
+      }
+      $language = $language ?? $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
 
       if (in_array($operation, ['update', 'delete'])) {
