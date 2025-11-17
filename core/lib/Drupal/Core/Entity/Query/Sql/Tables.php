@@ -300,6 +300,9 @@ class Tables implements TablesInterface {
           if (!$entity_type_id && $target_definition instanceof EntityDataDefinitionInterface) {
             $entity_type_id = $target_definition->getEntityTypeId();
           }
+          if (!$entity_type_id) {
+            throw new QueryException(sprintf("Cannot determine entity type for relationship '%s' for field '%s'", $relationship_specifier ?? '', $field));
+          }
           $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
           $field_storage_definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type_id);
           // Add the new entity base table using the table and sql column.
