@@ -95,6 +95,7 @@ function update_manager_archive_extract($file, $directory) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
   /** @var \Drupal\Core\Archiver\ArchiverInterface $archiver */
+  // @phpstan-ignore staticServiceDeprecatedService.deprecated, method.deprecatedClass
   $archiver = \Drupal::service('plugin.manager.archiver')->getInstance([
     'filepath' => $file,
   ]);
@@ -105,6 +106,7 @@ function update_manager_archive_extract($file, $directory) {
   // Remove the directory if it exists, otherwise it might contain a mixture of
   // old files mixed with the new files (e.g. in cases where files were removed
   // from a later release).
+  // @phpstan-ignore method.deprecatedInterface
   $files = $archiver->listContents();
 
   // Unfortunately, we can only use the directory name to determine the project
@@ -122,6 +124,7 @@ function update_manager_archive_extract($file, $directory) {
     }
   }
 
+  // @phpstan-ignore method.deprecatedInterface
   $archiver->extract($directory);
   return $archiver;
 }

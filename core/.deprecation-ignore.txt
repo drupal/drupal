@@ -51,6 +51,8 @@
 %The "plugin.manager.migrate.field" service is deprecated in drupal:11.3 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566%
 %Drupal\\field\\Plugin\\migrate\\process\\ProcessField\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.%
 %Drupal\\field\\Plugin\\migrate\\process\\FieldType\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.%
+%The "plugin.manager.archiver" service is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3556927%
+%Drupal\\Core\\Archiver\\ArchiverManager is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3556927%
 
 # Drupal 13.
 %The "cache.backend.memory" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use cache.backend.memory.memory instead. See https://www.drupal.org/node/3546856%
