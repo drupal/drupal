@@ -119,15 +119,15 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
       // The following values are not supposed to change during a single page
       // request processing.
       if (!isset($this->queryRewrite)) {
+        $this->queryRewrite = FALSE;
         if ($this->currentUser->isAnonymous()) {
-          $languages = $this->languageManager->getLanguages();
           $config = $this->config->get('language.negotiation')->get('session');
           $this->queryParam = $config['parameter'];
-          $this->queryValue = $request->query->has($this->queryParam) ? $request->query->get($this->queryParam) : NULL;
-          $this->queryRewrite = isset($languages[$this->queryValue]);
-        }
-        else {
-          $this->queryRewrite = FALSE;
+          if ($request->query->has($this->queryParam)) {
+            $languages = $this->languageManager->getLanguages();
+            $this->queryValue = $request->query->get($this->queryParam);
+            $this->queryRewrite = isset($languages[$this->queryValue]);
+          }
         }
       }
 
