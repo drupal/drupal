@@ -12,6 +12,10 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 /**
  * Provides an Archiver plugin manager.
  *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3556927
  * @see \Drupal\Core\Archiver\Attribute\Archiver
  * @see \Drupal\Core\Archiver\ArchiverInterface
  * @see plugin_api
@@ -39,6 +43,7 @@ class ArchiverManager extends DefaultPluginManager {
    *   The file handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, FileSystemInterface $file_system) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3556927', E_USER_DEPRECATED);
     parent::__construct('Plugin/Archiver', $namespaces, $module_handler, ArchiverInterface::class, Archiver::class, 'Drupal\Core\Archiver\Annotation\Archiver');
     $this->alterInfo('archiver_info');
     $this->setCacheBackend($cache_backend, 'archiver_info_plugins');
