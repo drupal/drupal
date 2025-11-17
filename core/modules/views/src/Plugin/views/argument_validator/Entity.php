@@ -238,7 +238,7 @@ class Entity extends ArgumentValidatorPluginBase {
 
     // The bundle entity type might not exist. For example, users do not have
     // bundles.
-    if ($this->entityTypeManager->hasHandler($bundle_entity_type, 'storage')) {
+    if ($bundle_entity_type && $this->entityTypeManager->hasHandler($bundle_entity_type, 'storage')) {
       $bundle_entity_storage = $this->entityTypeManager->getStorage($bundle_entity_type);
 
       foreach ($bundle_entity_storage->loadMultiple(array_keys($this->options['bundles'])) as $bundle_entity) {
