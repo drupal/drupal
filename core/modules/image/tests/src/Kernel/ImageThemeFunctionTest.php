@@ -59,6 +59,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('system');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('file');
     $this->installSchema('file', ['file_usage']);

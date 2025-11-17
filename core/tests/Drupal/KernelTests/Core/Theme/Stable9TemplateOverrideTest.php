@@ -56,6 +56,7 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig(['system', 'user']);
     $this->themeHandler = $this->container->get('theme_handler');
 
     $this->container->get('theme_installer')->install(['stable9']);
@@ -87,8 +88,6 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
 
     $module_installer = $this->container->get('module_installer');
     $module_installer->install($this->allModules);
-
-    $this->installConfig(['system', 'user']);
   }
 
   /**

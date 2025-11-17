@@ -32,7 +32,7 @@ class ConfigActionsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installConfig(['image', 'system']);
+    $this->installConfig(['system', 'image']);
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 

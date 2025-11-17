@@ -32,6 +32,7 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('system');
     $this->container->get('current_user')
       ->getAccount()
       ->addRole($this->drupalCreateRole([

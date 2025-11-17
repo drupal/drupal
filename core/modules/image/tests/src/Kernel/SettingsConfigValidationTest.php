@@ -25,7 +25,7 @@ class SettingsConfigValidationTest extends KernelTestBase {
    * Tests that the preview_image setting must be an existing image file.
    */
   public function testPreviewImagePathIsValidated(): void {
-    $this->installConfig('image');
+    $this->installConfig(['system', 'image']);
 
     // Drupal does not have a hard dependency on the fileinfo extension and
     // implements an extension-based mimetype guesser. Therefore, we must use

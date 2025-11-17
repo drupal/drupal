@@ -65,6 +65,8 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('system');
+
     $entity_type_id = 'entity_test_mulrev';
     $this->installEntitySchema($entity_type_id);
     $this->installEntitySchema('file');

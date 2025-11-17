@@ -89,6 +89,7 @@ class ContentModerationStateTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('system');
     $this->installSchema('node', 'node_access');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
@@ -102,7 +103,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
     $this->installSchema('file', 'file_usage');
-    $this->installConfig(['field', 'file', 'filter', 'image', 'media', 'node', 'system']);
+    $this->installConfig(['field', 'file', 'filter', 'image', 'media', 'node']);
 
     // Add the French language.
     ConfigurableLanguage::createFromLangcode('fr')->save();

@@ -66,7 +66,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('user');
 
-    $this->installConfig(['comment', 'field', 'media', 'node', 'taxonomy', 'user']);
+    $this->installConfig(['comment', 'field', 'media', 'node', 'taxonomy', 'user', 'system']);
 
     // Create the anonymous and the admin users.
     $anonymous_user = User::create([

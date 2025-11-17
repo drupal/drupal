@@ -32,6 +32,7 @@ class MediaEmbedFilterTranslationTest extends MediaEmbedFilterTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('system');
     ConfigurableLanguage::createFromLangcode('pt-br')->save();
     // Reload the entity to ensure it is aware of the newly created language.
     $this->embeddedEntity = $this->container->get('entity_type.manager')

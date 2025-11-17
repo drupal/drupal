@@ -32,6 +32,7 @@ class ImageEffectsTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'system',
     'image',
     'image_module_test',
     'image_test',
@@ -42,6 +43,7 @@ class ImageEffectsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig('system');
     $this->imageEffectPluginManager = $this->container->get('plugin.manager.image.effect');
   }
 
@@ -137,6 +139,7 @@ class ImageEffectsTest extends KernelTestBase {
    * Tests the 'image_convert_avif' effect with webp fallback.
    */
   public function testConvertAvifEffectFallback(): void {
+    $this->config('system.image')->set('toolkit', 'test')->save();
     $this->assertImageEffect(['convert'], 'image_convert_avif', [
       'extension' => 'webp',
     ]);
