@@ -101,8 +101,10 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
     $role_without_access->grantPermission('access content');
     $role_without_access->save();
 
-    $user_with_access = User::create(['roles' => ['role_with_access']]);
-    $user_without_access = User::create(['roles' => ['role_without_access']]);
+    $user_with_access = User::create(['name' => $this->randomString(), 'roles' => ['role_with_access']]);
+    $user_with_access->save();
+    $user_without_access = User::create(['name' => $this->randomString(), 'roles' => ['role_without_access']]);
+    $user_without_access->save();
 
     // Add an entity reference field.
     $this->createEntityReferenceField(
