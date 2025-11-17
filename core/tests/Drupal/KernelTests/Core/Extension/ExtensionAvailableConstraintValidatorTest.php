@@ -129,7 +129,7 @@ class ExtensionAvailableConstraintValidatorTest extends KernelTestBase {
         'module' => [
           'system' => 0,
           'sqlite' => 0,
-          'contact' => 0,
+          'user' => 0,
         ],
         'theme' => [],
         'profile' => 'minimal',
