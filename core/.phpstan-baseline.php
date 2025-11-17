@@ -58,14 +58,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/includes/theme.maintenance.inc',
 ];
 $ignoreErrors[] = [
-	// identifier: staticMethod.deprecated
-	'message' => '#^Call to deprecated method registerLoader\\(\\) of class Doctrine\\\\Common\\\\Annotations\\\\AnnotationRegistry\\:
-This method is deprecated and will be removed in
-            doctrine/annotations 2\\.0\\. Annotations will be autoloaded in 2\\.0\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Component/Annotation/Plugin/Discovery/AnnotatedClassDiscovery.php',
-];
-$ignoreErrors[] = [
 	// identifier: method.notFound
 	'message' => '#^Call to an undefined method Drupal\\\\Component\\\\Datetime\\\\DateTimePlus\\:\\:getTimeZone\\(\\)\\.$#',
 	'count' => 1,
@@ -849,6 +841,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
 ];
 $ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$render_start might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
+];
+$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
@@ -1531,14 +1529,6 @@ $ignoreErrors[] = [
 	'message' => '#^Constructor of class Drupal\\\\migrate\\\\MigrateException has an unused parameter \\$previous\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/src/MigrateException.php',
-];
-$ignoreErrors[] = [
-	// identifier: staticMethod.deprecated
-	'message' => '#^Call to deprecated method registerLoader\\(\\) of class Doctrine\\\\Common\\\\Annotations\\\\AnnotationRegistry\\:
-This method is deprecated and will be removed in
-            doctrine/annotations 2\\.0\\. Annotations will be autoloaded in 2\\.0\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/Discovery/AnnotatedClassDiscoveryAutomatedProviders.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
@@ -2785,14 +2775,6 @@ Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: staticMethod.deprecated
-	'message' => '#^Call to deprecated method registerAutoloadNamespace\\(\\) of class Doctrine\\\\Common\\\\Annotations\\\\AnnotationRegistry\\:
-This method is deprecated and will be removed in
-            doctrine/annotations 2\\.0\\. Annotations will be autoloaded in 2\\.0\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: constructor.unusedParameter
 	'message' => '#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#',
 	'count' => 1,
@@ -3068,12 +3050,6 @@ in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
   replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/TestSuites/UnitTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$render_start might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

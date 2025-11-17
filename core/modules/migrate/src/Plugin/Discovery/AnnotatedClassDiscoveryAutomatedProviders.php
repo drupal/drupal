@@ -2,7 +2,7 @@
 
 namespace Drupal\migrate\Plugin\Discovery;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
+use Drupal\Component\Annotation\Doctrine\AnnotationRegistry;
 use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser as BaseStaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;

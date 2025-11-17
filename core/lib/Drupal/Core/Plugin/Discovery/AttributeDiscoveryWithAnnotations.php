@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Plugin\Discovery;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Drupal\Component\Annotation\AnnotationInterface;
+use Drupal\Component\Annotation\Doctrine\AnnotationRegistry;
 use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
@@ -64,7 +64,6 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
     // Clear the annotation loaders of any previous annotation classes.
     AnnotationRegistry::reset();
     // Register the namespaces of classes that can be used for annotations.
-    // @phpstan-ignore-next-line
     AnnotationRegistry::registerLoader('class_exists');
 
     $definitions = parent::getDefinitions();

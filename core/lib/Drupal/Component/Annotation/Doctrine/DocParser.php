@@ -25,13 +25,10 @@
 
 namespace Drupal\Component\Annotation\Doctrine;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Enum;
-use Doctrine\Common\Annotations\Annotation\Target;
-use Doctrine\Common\Annotations\Annotation\Attributes;
-use Doctrine\Common\Annotations\AnnotationException;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocLexer;
+use Drupal\Component\Annotation\Doctrine\Annotation\Attribute;
+use Drupal\Component\Annotation\Doctrine\Annotation\Enum;
+use Drupal\Component\Annotation\Doctrine\Annotation\Target;
+use Drupal\Component\Annotation\Doctrine\Annotation\Attributes;
 
 /**
  * A parser for docblock annotations.
@@ -58,7 +55,7 @@ final class DocParser
     /**
      * The lexer.
      *
-     * @var \Doctrine\Common\Annotations\DocLexer
+     * @var \Drupal\Component\Annotation\Doctrine\DocLexer
      */
     private $lexer;
 
@@ -72,7 +69,7 @@ final class DocParser
     /**
      * Doc parser used to collect annotation target.
      *
-     * @var \Doctrine\Common\Annotations\DocParser
+     * @var \Drupal\Component\Annotation\Doctrine\DocParser
      */
     private static $metadataParser;
 
@@ -134,7 +131,7 @@ final class DocParser
      * @var array
      */
     private static $annotationMetadata = array(
-        'Doctrine\Common\Annotations\Annotation\Target' => array(
+        'Drupal\Component\Annotation\Doctrine\Annotation\Target' => array(
             'is_annotation'    => true,
             'has_constructor'  => true,
             'properties'       => array(),
@@ -150,7 +147,7 @@ final class DocParser
                 )
              ),
         ),
-        'Doctrine\Common\Annotations\Annotation\Attribute' => array(
+        'Drupal\Component\Annotation\Doctrine\Annotation\Attribute' => array(
             'is_annotation'    => true,
             'has_constructor'  => false,
             'targets_literal'  => 'ANNOTATION_ANNOTATION',
@@ -179,7 +176,7 @@ final class DocParser
                 )
              ),
         ),
-        'Doctrine\Common\Annotations\Annotation\Attributes' => array(
+        'Drupal\Component\Annotation\Doctrine\Annotation\Attributes' => array(
             'is_annotation'    => true,
             'has_constructor'  => false,
             'targets_literal'  => 'ANNOTATION_CLASS',
@@ -192,12 +189,12 @@ final class DocParser
                 'value' => array(
                     'type'      =>'array',
                     'required'  =>true,
-                    'array_type'=>'Doctrine\Common\Annotations\Annotation\Attribute',
-                    'value'     =>'array<Doctrine\Common\Annotations\Annotation\Attribute>'
+                    'array_type'=>'Drupal\Component\Annotation\Doctrine\Annotation\Attribute',
+                    'value'     =>'array<Drupal\Component\Annotation\Doctrine\Annotation\Attribute>'
                 )
              ),
         ),
-        'Doctrine\Common\Annotations\Annotation\Enum' => array(
+        'Drupal\Component\Annotation\Doctrine\Annotation\Enum' => array(
             'is_annotation'    => true,
             'has_constructor'  => true,
             'targets_literal'  => 'ANNOTATION_PROPERTY',
@@ -466,10 +463,10 @@ final class DocParser
             self::$metadataParser->setIgnoreNotImportedAnnotations(true);
             self::$metadataParser->setIgnoredAnnotationNames($this->ignoredAnnotationNames);
             self::$metadataParser->setImports(array(
-                'enum'          => 'Doctrine\Common\Annotations\Annotation\Enum',
-                'target'        => 'Doctrine\Common\Annotations\Annotation\Target',
-                'attribute'     => 'Doctrine\Common\Annotations\Annotation\Attribute',
-                'attributes'    => 'Doctrine\Common\Annotations\Annotation\Attributes'
+                'enum'          => 'Drupal\Component\Annotation\Doctrine\Annotation\Enum',
+                'target'        => 'Drupal\Component\Annotation\Doctrine\Annotation\Target',
+                'attribute'     => 'Drupal\Component\Annotation\Doctrine\Annotation\Attribute',
+                'attributes'    => 'Drupal\Component\Annotation\Doctrine\Annotation\Attributes'
             ));
         }
 
