@@ -7,7 +7,9 @@ use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
+use Drupal\Core\Validation\ExecutionContext;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\Composite;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -89,12 +91,23 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
    * {@inheritdoc}
    */
   public function validate($data, $constraints = NULL, $groups = NULL, $is_root_call = TRUE): static {
-    if (isset($groups)) {
+    if (isset($groups) && $groups !== Constraint::DEFAULT_GROUP) {
       throw new \LogicException('Passing custom groups is not supported.');
     }
 
+    if ($this->context instanceof ExecutionContext && $this->context->getConstraint() instanceof Composite) {
+      $is_root_call = FALSE;
+    }
+    // Convert to TypedDataInterface if it matches the context object's value
     if (!$data instanceof TypedDataInterface) {
-      throw new \InvalidArgumentException('The passed value must be a typed data object.');
+      $context_object = $this->context->getObject();
+
+      if ($context_object instanceof TypedDataInterface && $data === $context_object->getValue()) {
+        $data = $context_object;
+      }
+      else {
+        throw new \InvalidArgumentException('The passed value must be a typed data object.');
+      }
     }
 
     // You can pass a single constraint or an array of constraints.
@@ -129,10 +142,15 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
     $previous_object = $this->context->getObject();
     $previous_metadata = $this->context->getMetadata();
     $previous_path = $this->context->getPropertyPath();
+    $previous_constraint = $this->context instanceof ExecutionContext ? $this->context->getConstraint() : NULL;
 
     $metadata = $this->metadataFactory->getMetadataFor($data);
     $cache_key = spl_object_hash($data);
-    $property_path = $is_root_call ? '' : PropertyPath::append($previous_path, $data->getName());
+    $property_path = match(TRUE) {
+      $is_root_call => '',
+      $previous_constraint instanceof Composite => $previous_path,
+      default => PropertyPath::append($previous_path, $data->getName())
+    };
 
     // Prefer a specific instance of the typed data manager stored by the data
     // if it is available. This is necessary for specialized typed data objects,
@@ -166,6 +184,9 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
     }
 
     $this->context->setNode($previous_value, $previous_object, $previous_metadata, $previous_path);
+    if ($previous_constraint) {
+      $this->context->setConstraint($previous_constraint);
+    }
 
     return $this;
   }
