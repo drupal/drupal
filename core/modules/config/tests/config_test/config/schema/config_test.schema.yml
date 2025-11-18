@@ -309,6 +309,48 @@ config_test.validation:
       constraints:
         UriHost: ~
 
+    composite:
+      type: mapping
+      nullable: true
+      mapping:
+        sequentially:
+          required: false
+          type: string
+          constraints:
+            Sequentially:
+              constraints:
+                - NotBlank: []
+                - Length:
+                    min: 1
+                    max: 10
+        at_least_one_of:
+          required: false
+          type: string
+          constraints:
+            AtLeastOneOf:
+              constraints:
+                - Range:
+                    min: 0
+                    max: 10
+                - Range:
+                    min: 20
+                    max: 30
+        nested:
+          required: false
+          type: string
+          constraints:
+            Sequentially:
+              constraints:
+                - NotBlank: []
+                - AtLeastOneOf:
+                    constraints:
+                      - Length:
+                          min: 1
+                          max: 10
+                      - Length:
+                          min: 20
+                          max: 30
+
 config_test.with_plural_label:
   type: config_object
   mapping:

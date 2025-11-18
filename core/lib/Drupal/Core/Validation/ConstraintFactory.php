@@ -22,6 +22,17 @@ class ConstraintFactory extends ContainerFactory {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
 
+    if (is_subclass_of($plugin_class, CompositeConstraintInterface::class)) {
+      $composite_constraint_options = (array) $plugin_class::getCompositeOptionStatic();
+      foreach ($composite_constraint_options as $option) {
+        foreach ($configuration[$option] as $key => $value) {
+          foreach ($value as $nested_constraint_id => $nested_constraint_configuration) {
+            $configuration[$option][$key] = $this->createInstance($nested_constraint_id, $nested_constraint_configuration);
+          }
+        }
+      }
+    }
+
     // If the plugin provides a factory method, pass the container to it.
     if (is_subclass_of($plugin_class, ContainerFactoryPluginInterface::class)) {
       return $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition);

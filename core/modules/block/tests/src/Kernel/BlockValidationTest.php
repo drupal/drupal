@@ -137,7 +137,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     parent::testRequiredPropertyValuesMissing([
       'region' => [
         'region' => [
-          'This is not a valid region of the <em class="placeholder">stark</em> theme.',
+          'This value should not be blank.',
           'This value should not be null.',
         ],
       ],
