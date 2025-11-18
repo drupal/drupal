@@ -167,26 +167,33 @@ default:
   # job from the target branch. Allow the job to proceed and pass if the file
   # doesn't exist.
   - mkdir core/phpstan-tmp
-  - echo "PHPStan cache URL - https://git.drupalcode.org/api/v4/projects/$CORE_GITLAB_PROJECT_ID/jobs/artifacts/$CACHE_TARGET/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming"
-  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
+  - echo -e "\e[0Ksection_start:`date +%s`:phpstan-cache-download-section[collapsed=true]\r\e[0KDownloading phpstan cache"
+  - 'curl -v --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Write%20lint%20caches" || true'
+  - echo -e "\e[0Ksection_end:`date +%s`:phpstan-cache-download-section\r\e[0K"
 
 .cspell-cache: &cspell-cache
   # Fetch the cspell cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
+  - echo -e "\e[0Ksection_start:`date +%s`:cspell-cache-download-section[collapsed=true]\r\e[0KDownloading cspell cache"
+  - 'curl -v --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Write%20lint%20caches" || true'
+  - echo -e "\e[0Ksection_end:`date +%s`:cspell-cache-download-section\r\e[0K"
 
 .eslint-cache: &eslint-cache
   # Fetch the eslint cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming" || true'
+  - echo -e "\e[0Ksection_start:`date +%s`:eslint-cache-download-section[collapsed=true]\r\e[0KDownloading eslint cache"
+  - 'curl -v --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Write%20lint%20caches" || true'
+  - echo -e "\e[0Ksection_end:`date +%s`:eslint-cache-download-section\r\e[0K"
 
 .stylelint-cache: &stylelint-cache
   # Fetch the stylelint cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Lint%20cache%20warming" || true'
+  - echo -e "\e[0Ksection_start:`date +%s`:stylelint-cache-download-section[collapsed=true]\r\e[0KDownloading stylelint cache"
+  - 'curl -v --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Write%20lint%20caches" || true'
+  - echo -e "\e[0Ksection_end:`date +%s`:stylelint-cache-download-section\r\e[0K"
 
 .core-spellcheck: &core-spellcheck
   - cd core
@@ -720,22 +727,47 @@ default:
          exit((int) (min($impact) < 0));
       '
 
-'Lint cache warming':
-  <<: [ *default-job-settings-lint ]
+.lint-cache-artifacts: &lint-cache-artifacts
+  artifacts:
+    paths:
+      - core/phpstan-tmp/resultCache.php
+      - core/.cspellcache
+      - core/.eslintcache
+      - core/.stylelintcache
+
+# Download the cache artifacts from the previous pipeline run to work around
+#  https://gitlab.com/gitlab-org/gitlab/-/issues/458828.
+'Lint cache download':
+  <<: [ *lint-cache-artifacts ]
   stage: 🪄 Lint
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
+    - if: $PERFORMANCE_TEST == "1"
+  script:
+    - *phpstan-cache
+    - *cspell-cache
+    - *eslint-cache
+    - *stylelint-cache
+
+'Lint cache warming':
+  <<: [ *lint-cache-artifacts ]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
+    - if: $PERFORMANCE_TEST != "1"
+  # Run when the tests are running as creating the caches should not hold up
+  # completing the lint stage and would extend the pipeline time if run in the
+  # .post stage.
+  stage: 🗜️ Test
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
     # Prepare a directory to run lint checks that require specifying absolute
     # paths (/build), and change the working directory to it.
     - *prepare-lint-directory
-    - *phpstan-cache
-    - *cspell-cache
-    - *eslint-cache
-    - *stylelint-cache
     - composer install --optimize-autoloader
     - composer run-script drupal-phpunit-upgrade-check
     - vendor/bin/phpstan --version
@@ -746,15 +778,27 @@ default:
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content
     # Move the cache files from the build directory to the $CI_PROJECT_DIR one,
     # as the artifacts will be stowed from there.
-    - mv -f /build/core/phpstan-tmp $CI_PROJECT_DIR/core
+    - mv -f /build/core/phpstan-tmp/resultCache.php $CI_PROJECT_DIR/core/phpstan-tmp
     - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
     - mv -f /build/core/.eslintcache $CI_PROJECT_DIR/core
     - mv -f /build/core/.stylelintcache $CI_PROJECT_DIR/core
-  artifacts:
-    when: always
-    paths:
-      - core/phpstan-tmp/resultCache.php
-      - core/.cspellcache
-      - core/.eslintcache
-      - core/.stylelintcache
 
+# This job should be real quick and run at the very end of the pipeline.
+'Write lint caches':
+  <<: [ *lint-cache-artifacts ]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
+    - if: $PERFORMANCE_TEST == "1"
+  # Always run this even if the test stage fails.
+  when: always
+  stage: .post
+  script:
+    - ls -lah core
+    # Remove the cache files if they are tiny as this occurs when the gitlab
+    # API returns "{"message":"404 Not found"}".
+    - if [ "$(stat -c%s core/phpstan-tmp/resultCache.php)" -lt 50 ]; then rm core/phpstan-tmp/resultCache.php; fi
+    - if [ "$(stat -c%s core/.cspellcache)" -lt 50 ]; then rm core/.cspellcache; fi
+    - if [ "$(stat -c%s core/.eslintcache)" -lt 50 ]; then rm core/.eslintcache; fi
+    - if [ "$(stat -c%s core/.stylelintcache)" -lt 50 ]; then rm core/.stylelintcache; fi
