@@ -137,6 +137,7 @@ drupal.tablesort:
   css:
     component:
       css/classy/components/tablesort.css: {}
+      css/components/tablesort.css: {}
       css/components/tablesort-indicator.css: {}
 
 media-form:
