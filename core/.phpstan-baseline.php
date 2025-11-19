@@ -48743,13 +48743,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Cache/DatabaseBackendFactoryTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method add\\(\\) of class Symfony\\\\Component\\\\Console\\\\Application\\:
-since Symfony 7\\.4, use Application\\:\\:addCommand\\(\\) instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Command/BootableCommandTraitTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Condition\\\\ConditionAccessResolverTraitTest\\:\\:providerTestResolveConditions\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
