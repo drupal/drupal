@@ -113,7 +113,7 @@ trait FieldUiJSTestTrait {
     $this->assertSession()->linkExists('Re-use an existing field');
     $this->clickLink('Re-use an existing field');
     // Wait for the modal to open.
-    $this->assertSession()->waitForElementVisible('css', '#drupal-modal');
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '#drupal-modal'));
     $this->assertSession()->elementExists('css', "input[value=Re-use][name=$existing_storage_name]");
     $this->click("input[value=Re-use][name=$existing_storage_name]");
 
@@ -128,10 +128,7 @@ trait FieldUiJSTestTrait {
     $this->assertSession()->assert($this->assertSession()->waitForText("Saved $label configuration."), 'text not found');
 
     // Check that the field appears in the overview form.
-    $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
-      ':label' => $label,
-    ]);
-    $this->assertSession()->elementExists('xpath', $xpath);
+    $this->assertFieldExistsOnOverview($label);
   }
 
 }
