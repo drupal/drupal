@@ -59,7 +59,7 @@ class BootableCommandTraitTest extends UnitTestCase {
    */
   public function testRequestUrlIsValid(): void {
     // Create a fake command that boots Drupal and outputs the base URL.
-    $this->application->add(new class ($this->classLoader) extends Command {
+    $this->application->addCommand(new class ($this->classLoader) extends Command {
 
       use BootableCommandTrait;
 

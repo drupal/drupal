@@ -23,12 +23,12 @@ $classloader = require_once __DIR__ . '/../../autoload.php';
 
 $application = new Application('drupal', \Drupal::VERSION);
 
-$application->add(new QuickStartCommand());
-$application->add(new InstallCommand($classloader));
-$application->add(new ServerCommand($classloader));
-$application->add(new GenerateTheme());
-$application->add(new RecipeCommand($classloader));
-$application->add(new RecipeInfoCommand($classloader));
-$application->add(new ContentExportCommand($classloader));
+$application->addCommand(new QuickStartCommand());
+$application->addCommand(new InstallCommand($classloader));
+$application->addCommand(new ServerCommand($classloader));
+$application->addCommand(new GenerateTheme());
+$application->addCommand(new RecipeCommand($classloader));
+$application->addCommand(new RecipeInfoCommand($classloader));
+$application->addCommand(new ContentExportCommand($classloader));
 
 $application->run();
