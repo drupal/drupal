@@ -169,6 +169,9 @@ default:
   - mkdir core/phpstan-tmp
   - echo -e "\e[0Ksection_start:`date +%s`:phpstan-cache-download-section[collapsed=true]\r\e[0KDownloading phpstan cache"
   - 'curl -v --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Write%20lint%20caches" || true'
+  # Remove the cache file if it is tiny as this occurs when the gitlab API
+  # returns "{"message":"404 Not found"}".
+  - if [ "$(stat -c%s core/phpstan-tmp/resultCache.php)" -lt 50 ]; then rm core/phpstan-tmp/resultCache.php; fi
   - echo -e "\e[0Ksection_end:`date +%s`:phpstan-cache-download-section\r\e[0K"
 
 .cspell-cache: &cspell-cache
@@ -177,6 +180,9 @@ default:
   # exist.
   - echo -e "\e[0Ksection_start:`date +%s`:cspell-cache-download-section[collapsed=true]\r\e[0KDownloading cspell cache"
   - 'curl -v --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Write%20lint%20caches" || true'
+  # Remove the cache file if it is tiny as this occurs when the gitlab API
+  # returns "{"message":"404 Not found"}".
+  - if [ "$(stat -c%s core/.cspellcache)" -lt 50 ]; then rm core/.cspellcache; fi
   - echo -e "\e[0Ksection_end:`date +%s`:cspell-cache-download-section\r\e[0K"
 
 .eslint-cache: &eslint-cache
@@ -185,6 +191,9 @@ default:
   # exist.
   - echo -e "\e[0Ksection_start:`date +%s`:eslint-cache-download-section[collapsed=true]\r\e[0KDownloading eslint cache"
   - 'curl -v --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Write%20lint%20caches" || true'
+  # Remove the cache file if it is tiny as this occurs when the gitlab API
+  # returns "{"message":"404 Not found"}".
+  - if [ "$(stat -c%s core/.eslintcache)" -lt 50 ]; then rm core/.eslintcache; fi
   - echo -e "\e[0Ksection_end:`date +%s`:eslint-cache-download-section\r\e[0K"
 
 .stylelint-cache: &stylelint-cache
@@ -193,7 +202,21 @@ default:
   # exist.
   - echo -e "\e[0Ksection_start:`date +%s`:stylelint-cache-download-section[collapsed=true]\r\e[0KDownloading stylelint cache"
   - 'curl -v --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Write%20lint%20caches" || true'
+  # Remove the cache file if it is tiny as this occurs when the gitlab API
+  # returns "{"message":"404 Not found"}".
+  - if [ "$(stat -c%s core/.stylelintcache)" -lt 50 ]; then rm core/.stylelintcache; fi
   - echo -e "\e[0Ksection_end:`date +%s`:stylelint-cache-download-section\r\e[0K"
+
+.phpcs-cache: &phpcs-cache
+  # Fetch the phpcs cache from the artifacts of the latest successful job from
+  # the target branch. Allow the job to proceed and pass if the file doesn't
+  # exist.
+  - echo -e "\e[0Ksection_start:`date +%s`:phpcs-cache-download-section[collapsed=true]\r\e[0KDownloading phpcs cache"
+  - 'curl -v --location --output core/.phpcscache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.phpcscache?job=Write%20lint%20caches" || true'
+  # Remove the cache file if it is tiny as this occurs when the gitlab API
+  # returns "{"message":"404 Not found"}".
+  - if [ "$(stat -c%s core/.phpcscache)" -lt 50 ]; then rm core/.phpcscache; fi
+  - echo -e "\e[0Ksection_end:`date +%s`:phpcs-cache-download-section\r\e[0K"
 
 .core-spellcheck: &core-spellcheck
   - cd core
@@ -527,7 +550,7 @@ default:
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "4"
     _ARTIFACTS_DIR: "test-artifacts/phpcs"
   before_script:
     - composer validate
@@ -539,8 +562,9 @@ default:
       fi
     - mkdir -p $_ARTIFACTS_DIR
   script:
+    - *phpcs-cache
     - vendor/bin/phpcs --version
-    - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=$_ARTIFACTS_DIR/phpcs-quality-report.json
+    - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=$_ARTIFACTS_DIR/phpcs-quality-report.json --cache=core/.phpcscache
   artifacts:
     reports:
       codequality: $_ARTIFACTS_DIR/phpcs-quality-report.json
@@ -551,6 +575,7 @@ default:
       - composer.lock
       - composer/Metapackage/
       - $_ARTIFACTS_DIR
+      - core/.phpcscache
 
 '🧹 JavaScript linting (eslint)':
   stage: 🪄 Lint
@@ -753,6 +778,7 @@ default:
       - core/.cspellcache
       - core/.eslintcache
       - core/.stylelintcache
+      - core/.phpcscache
 
 # Download the cache artifacts from the previous pipeline run to work around
 #  https://gitlab.com/gitlab-org/gitlab/-/issues/458828 due to performance
@@ -770,12 +796,7 @@ default:
     - *cspell-cache
     - *eslint-cache
     - *stylelint-cache
-    # Remove the cache files if they are tiny as this occurs when the gitlab
-    # API returns "{"message":"404 Not found"}".
-    - if [ "$(stat -c%s core/phpstan-tmp/resultCache.php)" -lt 50 ]; then rm core/phpstan-tmp/resultCache.php; fi
-    - if [ "$(stat -c%s core/.cspellcache)" -lt 50 ]; then rm core/.cspellcache; fi
-    - if [ "$(stat -c%s core/.eslintcache)" -lt 50 ]; then rm core/.eslintcache; fi
-    - if [ "$(stat -c%s core/.stylelintcache)" -lt 50 ]; then rm core/.stylelintcache; fi
+    - *phpcs-cache
 
 # This job should be real quick and run at the very end of the pipeline.
 'Write lint caches':
@@ -792,3 +813,4 @@ default:
     - if [ ! -f core/.cspellcache ]; then exit 1; fi
     - if [ ! -f core/.eslintcache ]; then exit 1; fi
     - if [ ! -f core/.stylelintcache ]; then exit 1; fi
+    - if [ ! -f core/.phpcscache ]; then exit 1; fi
