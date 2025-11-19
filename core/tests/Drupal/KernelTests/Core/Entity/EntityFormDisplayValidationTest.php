@@ -108,7 +108,7 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
   public function testMultilineTextFieldWidgetTextAreaSummaryPlaceholder(): void {
     // First, create a field for which widget settings exist.
     $text_field_storage_config = FieldStorageConfig::create([
-      'type' => 'text_with_summary',
+      'type' => 'text_long',
       'field_name' => 'novel',
       'entity_type' => 'user',
     ]);
@@ -128,13 +128,11 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
     // Then, configure a form display widget for this field.
     assert($this->entity instanceof EntityFormDisplayInterface);
     $this->entity->setComponent('novel', [
-      'type' => 'text_textarea_with_summary',
+      'type' => 'text_textarea',
       'region' => 'content',
       'settings' => [
-        'rows' => 9,
-        'summary_rows' => 3,
+        'rows' => 5,
         'placeholder' => "Multi\nLine",
-        'show_summary' => FALSE,
       ],
       'third_party_settings' => [],
     ]);

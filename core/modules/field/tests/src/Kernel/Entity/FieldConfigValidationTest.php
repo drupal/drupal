@@ -79,7 +79,7 @@ class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
     // First, create a field storage for which a complex default value exists.
     $this->enableModules(['text']);
     $text_field_storage_config = FieldStorageConfig::create([
-      'type' => 'text_with_summary',
+      'type' => 'text_long',
       'field_name' => 'novel',
       'entity_type' => 'user',
     ]);
@@ -91,7 +91,6 @@ class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
       'default_value' => [
         0 => [
           'value' => "Multi\nLine",
-          'summary' => '',
           'format' => 'basic_html',
         ],
       ],
