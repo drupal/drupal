@@ -440,6 +440,9 @@ default:
     - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
     - rm -rf $CI_PROJECT_DIR/core/node_modules || true
     - mv /build/core/node_modules $CI_PROJECT_DIR/core
+    # Move the cache file from the build directory to the $CI_PROJECT_DIR one,
+    # as the artifacts will be stowed from there.
+    - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
   cache:
     key:
       files:
@@ -452,6 +455,7 @@ default:
     expose_as: 'yarn-vendor'
     paths:
       - core/node_modules/
+      - core/.cspellcache
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
@@ -505,6 +509,10 @@ default:
   after_script:
     - mkdir -p $_ARTIFACTS_DIR
     - cp -r /build/$_ARTIFACTS_DIR/* $_ARTIFACTS_DIR/
+    # Move the cache file from the build directory to the $CI_PROJECT_DIR one,
+    # as the artifacts will be stowed from there.
+    - mkdir core/phpstan-tmp
+    - mv -f /build/core/phpstan-tmp/resultCache.php $CI_PROJECT_DIR/core/phpstan-tmp
   artifacts:
     reports:
       codequality: $_ARTIFACTS_DIR/phpstan-quality-report.json
@@ -513,6 +521,7 @@ default:
     when: always
     paths:
       - $_ARTIFACTS_DIR
+      - core/phpstan-tmp/resultCache.php
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *default-job-settings-lint ]
@@ -568,9 +577,14 @@ default:
     - yarn install
     - yarn run check:ckeditor5
     - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
+    # Move the cache files from the build directory to the $CI_PROJECT_DIR one,
+    # as the artifacts will be stowed from there.
+    - mv -f /build/core/.eslintcache $CI_PROJECT_DIR/core
   artifacts:
     reports:
       codequality: eslint-quality-report.json
+    paths:
+      - core/.eslintcache
 
 '🧹 CSS linting (stylelint)':
   stage: 🪄 Lint
@@ -596,9 +610,14 @@ default:
     - yarn install
     - yarn run build:css --check
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color  --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
+    # Move the cache file from the build directory to the $CI_PROJECT_DIR one,
+    # as the artifacts will be stowed from there.
+    - mv -f /build/core/.stylelintcache $CI_PROJECT_DIR/core
   artifacts:
     reports:
       codequality: gl-codequality.json
+    paths:
+      - core/.stylelintcache
 
 '⚡️ PHPUnit Unit tests on PHP 8.3':
   <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
@@ -736,7 +755,8 @@ default:
       - core/.stylelintcache
 
 # Download the cache artifacts from the previous pipeline run to work around
-#  https://gitlab.com/gitlab-org/gitlab/-/issues/458828.
+#  https://gitlab.com/gitlab-org/gitlab/-/issues/458828 due to performance
+#  testing.
 'Lint cache download':
   <<: [ *lint-cache-artifacts ]
   stage: 🪄 Lint
@@ -750,38 +770,12 @@ default:
     - *cspell-cache
     - *eslint-cache
     - *stylelint-cache
-
-'Lint cache warming':
-  <<: [ *lint-cache-artifacts ]
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
-    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
-    - if: $PERFORMANCE_TEST != "1"
-  # Run when the tests are running as creating the caches should not hold up
-  # completing the lint stage and would extend the pipeline time if run in the
-  # .post stage.
-  stage: 🗜️ Test
-  variables:
-    KUBERNETES_CPU_REQUEST: "4"
-  script:
-    # Prepare a directory to run lint checks that require specifying absolute
-    # paths (/build), and change the working directory to it.
-    - *prepare-lint-directory
-    - composer install --optimize-autoloader
-    - composer run-script drupal-phpunit-upgrade-check
-    - vendor/bin/phpstan --version
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist
-    - *core-spellcheck
-    - yarn run lint:core-js-passing --cache --cache-strategy content
-    - yarn run build:css --check
-    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content
-    # Move the cache files from the build directory to the $CI_PROJECT_DIR one,
-    # as the artifacts will be stowed from there.
-    - mv -f /build/core/phpstan-tmp/resultCache.php $CI_PROJECT_DIR/core/phpstan-tmp
-    - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
-    - mv -f /build/core/.eslintcache $CI_PROJECT_DIR/core
-    - mv -f /build/core/.stylelintcache $CI_PROJECT_DIR/core
+    # Remove the cache files if they are tiny as this occurs when the gitlab
+    # API returns "{"message":"404 Not found"}".
+    - if [ "$(stat -c%s core/phpstan-tmp/resultCache.php)" -lt 50 ]; then rm core/phpstan-tmp/resultCache.php; fi
+    - if [ "$(stat -c%s core/.cspellcache)" -lt 50 ]; then rm core/.cspellcache; fi
+    - if [ "$(stat -c%s core/.eslintcache)" -lt 50 ]; then rm core/.eslintcache; fi
+    - if [ "$(stat -c%s core/.stylelintcache)" -lt 50 ]; then rm core/.stylelintcache; fi
 
 # This job should be real quick and run at the very end of the pipeline.
 'Write lint caches':
@@ -791,14 +785,10 @@ default:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
     - if: $PERFORMANCE_TEST == "1"
-  # Always run this even if the test stage fails.
-  when: always
-  stage: .post
+  stage: 🗜️ Test
   script:
-    - ls -lah core
-    # Remove the cache files if they are tiny as this occurs when the gitlab
-    # API returns "{"message":"404 Not found"}".
-    - if [ "$(stat -c%s core/phpstan-tmp/resultCache.php)" -lt 50 ]; then rm core/phpstan-tmp/resultCache.php; fi
-    - if [ "$(stat -c%s core/.cspellcache)" -lt 50 ]; then rm core/.cspellcache; fi
-    - if [ "$(stat -c%s core/.eslintcache)" -lt 50 ]; then rm core/.eslintcache; fi
-    - if [ "$(stat -c%s core/.stylelintcache)" -lt 50 ]; then rm core/.stylelintcache; fi
+    # Exit with an error if any of the lint cache files do not exist.
+    - if [ ! -f core/phpstan-tmp/resultCache.php) ]; then exit 1; fi
+    - if [ ! -f core/.cspellcache ]; then exit 1; fi
+    - if [ ! -f core/.eslintcache ]; then exit 1; fi
+    - if [ ! -f core/.stylelintcache ]; then exit 1; fi
