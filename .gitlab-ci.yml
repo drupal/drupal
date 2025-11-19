@@ -69,6 +69,9 @@ variables:
   _TARGET_PHP: "8.4-ubuntu"
   PHPUNIT_CONFIGURATION_FILE_PATH: $CI_PROJECT_DIR/core
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
+  # Use local cache for yarn, see .yarn-install-from-cache.
+  YARN_ENABLE_GLOBAL_CACHE: false
+  YARN_ENABLE_MIRROR: false
 
 #############
 # Stages    #
@@ -220,9 +223,23 @@ default:
 
 .core-spellcheck: &core-spellcheck
   - cd core
-  - corepack enable
-  - yarn install
   - yarn run spellcheck:core --no-progress --no-must-find-files --cache --cache-strategy content
+
+.yarn-install-from-cache: &yarn-install-from-cache
+  before_script:
+    - cd core
+    - corepack enable
+    - yarn install
+    - cd ..
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/.yarn/cache
+    policy: pull
+
 ################
 # Stages
 #
@@ -451,6 +468,7 @@ default:
 ################
 
 '📔 Spell-checking':
+  <<: [ *yarn-install-from-cache ]
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
@@ -461,18 +479,9 @@ default:
     - *core-spellcheck
     - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
     - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
-    - rm -rf $CI_PROJECT_DIR/core/node_modules || true
-    - mv /build/core/node_modules $CI_PROJECT_DIR/core
     # Move the cache file from the build directory to the $CI_PROJECT_DIR one,
     # as the artifacts will be stowed from there.
     - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
-  cache:
-    key:
-      files:
-        - ./core/package.json
-        - ./core/yarn.lock
-    paths:
-      - ./core/node_modules
   artifacts:
     expire_in: 1 week
     expose_as: 'yarn-vendor'
@@ -578,6 +587,13 @@ default:
       - core/.phpcscache
 
 '🧹 JavaScript linting (eslint)':
+  <<: [ *yarn-install-from-cache ]
+  # Overwrites the cache key to be the job that pushes the cache. All the other
+  # jobs will only pull from the cache.
+  cache:
+    key: !reference [.yarn-install-from-cache, cache, key]
+    paths: !reference [.yarn-install-from-cache, cache, paths]
+    policy: pull-push
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -598,8 +614,6 @@ default:
     - *prepare-lint-directory
     - *eslint-cache
     - cd core
-    - corepack enable
-    - yarn install
     - yarn run check:ckeditor5
     - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
     # Move the cache files from the build directory to the $CI_PROJECT_DIR one,
@@ -612,6 +626,7 @@ default:
       - core/.eslintcache
 
 '🧹 CSS linting (stylelint)':
+  <<: [ *yarn-install-from-cache ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -630,9 +645,7 @@ default:
   script:
     - *prepare-lint-directory
     - *stylelint-cache
-    - corepack enable
     - cd core
-    - yarn install
     - yarn run build:css --check
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color  --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
     # Move the cache file from the build directory to the $CI_PROJECT_DIR one,
