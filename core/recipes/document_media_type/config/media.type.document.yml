@@ -3,7 +3,7 @@ status: true
 dependencies: {  }
 id: document
 label: Document
-description: 'An uploaded file or document, such as a PDF.'
+description: 'A locally hosted document, such as a PDF file.'
 source: file
 queue_thumbnail_downloads: false
 new_revision: true
