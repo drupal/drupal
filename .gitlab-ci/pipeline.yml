@@ -50,13 +50,6 @@ default:
     - pipeline: $PARENT_PIPELINE_ID
       job: '🧹 PHP Coding standards (PHPCS)'
 
-.with-composer-and-yarn: &with-composer-and-yarn
-  needs:
-    - pipeline: $PARENT_PIPELINE_ID
-      job: '🧹 PHP Coding standards (PHPCS)'
-    - pipeline: $PARENT_PIPELINE_ID
-      job: '📔 Spell-checking'
-
 variables:
   FF_NETWORK_PER_BUILD: 1
   FF_USE_FASTZIP: 1
@@ -186,10 +179,12 @@ variables:
     - <<: *with-database
 
 '🦉️️️ Nightwatch':
-  <<: [ *with-composer-and-yarn, *default-job-settings ]
+  <<: [ *with-composer, *default-job-settings ]
   retry: 1
   variables:
     KUBERNETES_CPU_REQUEST: "16"
+    YARN_ENABLE_GLOBAL_CACHE: false
+    YARN_ENABLE_MIRROR: false
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
@@ -211,6 +206,7 @@ variables:
     - chown -R www-data:www-data ./sites /var/www
     - cd core
     - corepack enable
+    - yarn install
     - sudo -u www-data -E -H yarn run test:nightwatch --workers=3
   after_script:
     - cp /builds/chromedriver.log ./
@@ -222,6 +218,14 @@ variables:
     paths:
       - ./nightwatch_output
       - '*.log'
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/.yarn/cache
+    policy: pull
 
 '🖱️️️ PHPUnit Functional Javascript (non W3C legacy)':
   <<: [ *with-composer, *default-job-settings ]
