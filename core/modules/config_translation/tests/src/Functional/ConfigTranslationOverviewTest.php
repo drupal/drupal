@@ -195,7 +195,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       'field_storage' => FieldStorageConfig::loadByName('node', 'body'),
       'bundle' => $node_type->id(),
       'label' => 'Body',
-      'settings' => ['display_summary' => FALSE],
+      'settings' => [],
     ]);
     $field->save();
 

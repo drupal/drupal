@@ -19,14 +19,12 @@ bundle: article
 mode: default
 content:
   body:
-    type: text_textarea_with_summary
+    type: text_textarea
     weight: 2
     region: content
     settings:
       rows: 9
-      summary_rows: 3
       placeholder: ''
-      show_summary: false
     third_party_settings: {  }
   comment:
     type: comment_default

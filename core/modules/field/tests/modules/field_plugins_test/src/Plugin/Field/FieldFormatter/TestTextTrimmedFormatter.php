@@ -17,7 +17,6 @@ use Drupal\text\Plugin\Field\FieldFormatter\TextTrimmedFormatter;
   field_types: [
     'text',
     'text_long',
-    'text_with_summary',
   ],
 )]
 class TestTextTrimmedFormatter extends TextTrimmedFormatter {

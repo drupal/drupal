@@ -75,7 +75,7 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'label' => 'Body',
-      'settings' => ['display_summary' => TRUE],
+      'settings' => [],
       'required' => TRUE,
     ])->save();
 
@@ -85,7 +85,7 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
       'bundle' => 'page',
       'mode' => 'default',
       'status' => TRUE,
-    ])->setComponent('body', ['type' => 'text_textarea_with_summary'])
+    ])->setComponent('body', ['type' => 'text_textarea'])
       ->save();
 
     $this->account = $this->drupalCreateUser([

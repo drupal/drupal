@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\node\Functional\Views;
+namespace Drupal\Tests\text\Functional;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\node\Functional\Views\NodeTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,9 +16,9 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @see \Drupal\node\Tests\NodeTokenReplaceTest
  */
-#[Group('node')]
+#[Group('text')]
 #[RunTestsInSeparateProcesses]
-class NodeFieldTokensTest extends NodeTestBase {
+class TextSummaryNodeFieldsTokenTest extends NodeTestBase {
 
   /**
    * Views used by this test.
@@ -34,18 +37,38 @@ class NodeFieldTokensTest extends NodeTestBase {
    */
   public function testViewsTokenReplacement(): void {
     // Create the Article content type with a standard body field.
-    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article'], FALSE);
+
+    FieldStorageConfig::loadByName('node', 'body')->delete();
+    FieldStorageConfig::create([
+      'field_name' => 'body',
+      'type' => 'text_with_summary',
+      'entity_type' => 'node',
+      'cardinality' => 1,
+    ])->save();
+
+    $fieldStorage = FieldStorageConfig::loadByName('node', 'body');
+    FieldConfig::create([
+      'field_storage' => $fieldStorage,
+      'bundle' => 'article',
+      'label' => 'Body Test',
+      'settings' => [
+        'display_summary' => TRUE,
+        'allowed_formats' => [],
+      ],
+    ])->save();
 
     // Create a user and a node.
     $account = $this->createUser();
     $body = $this->randomMachineName(32);
+    $summary = $this->randomMachineName(16);
 
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create([
       'type' => 'article',
       'uid' => $account->id(),
       'title' => 'Testing Views tokens',
-      'body' => [['value' => $body, 'format' => 'plain_text']],
+      'body' => [['value' => $body, 'summary' => $summary, 'format' => 'plain_text']],
     ]);
     $node->save();
 
@@ -56,6 +79,9 @@ class NodeFieldTokensTest extends NodeTestBase {
 
     // Raw value: "{{ body__value }}<br />".
     $this->assertSession()->responseContains("Raw value: $body");
+
+    // Raw summary: "{{ body__summary }}<br />".
+    $this->assertSession()->responseContains("Raw summary: $summary");
 
     // Raw format: "{{ body__format }}<br />".
     $this->assertSession()->responseContains("Raw format: plain_text");
