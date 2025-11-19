@@ -788,7 +788,7 @@ default:
   stage: 🗜️ Test
   script:
     # Exit with an error if any of the lint cache files do not exist.
-    - if [ ! -f core/phpstan-tmp/resultCache.php) ]; then exit 1; fi
+    - if [ ! -f core/phpstan-tmp/resultCache.php ]; then exit 1; fi
     - if [ ! -f core/.cspellcache ]; then exit 1; fi
     - if [ ! -f core/.eslintcache ]; then exit 1; fi
     - if [ ! -f core/.stylelintcache ]; then exit 1; fi
