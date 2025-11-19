@@ -1,0 +1,81 @@
+/**
+ * @file
+ * The actual sort link.
+ */
+
+.sortable-heading {
+  padding: 0 var(--space-m);
+  & > a {
+    display: block;
+    padding-block: var(--space-xs);
+    padding-inline: 0 1.5rem;
+    text-decoration: none;
+    color: inherit;
+
+    &:focus,
+    &:hover {
+      text-decoration: none;
+
+      &::before {
+        border-color: inherit;
+      }
+
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    &::before {
+      position: absolute;
+      z-index: 0;
+      inset-block-start: 0;
+      inset-inline-end: 1rem;
+      inset-block-end: 0;
+      inset-inline-start: 1rem;
+      display: block;
+      content: "";
+      border-bottom: 0.125rem solid transparent;
+    }
+
+    &::after {
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-end: 1rem;
+      width: 0.875rem;
+      height: 1rem;
+      margin-block-start: -0.5rem;
+      content: "";
+      opacity: 0.5;
+      background: url(../../images/icons/000f33/sort--inactive.svg) no-repeat 50% 50%;
+      background-size: contain;
+
+      [dir="rtl"] & {
+        /* Horizontally flip the element. */
+        transform: scaleX(-1);
+        background-image: url(../../images/icons/000f33/sort--inactive.svg);
+
+        @media (forced-colors: active) {
+          mask: url(../../images/icons/000f33/sort--inactive.svg) no-repeat 50% 50%;
+        }
+      }
+
+      @media (forced-colors: active) {
+        opacity: 1;
+        background: linktext;
+        mask: url(../../images/icons/000f33/sort--inactive.svg) no-repeat 50% 50%;
+      }
+    }
+  }
+
+  &.is-active > a {
+    color: var(--color-absolutezero);
+
+    &::before {
+      border-bottom: 0.1875rem solid var(--color-absolutezero);
+    }
+
+    &::after {
+      content: none;
+    }
+  }
+}
