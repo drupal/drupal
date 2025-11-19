@@ -141,10 +141,7 @@ trait FieldUiTestTrait {
     $this->assertSession()->pageTextContains("Saved $label configuration.");
 
     // Check that the field appears in the overview form.
-    $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
-      ':label' => $label,
-    ]);
-    $this->assertSession()->elementExists('xpath', $xpath);
+    $this->assertFieldExistsOnOverview($label);
   }
 
   /**
@@ -207,14 +204,11 @@ trait FieldUiTestTrait {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   protected function assertFieldExistsOnOverview(string $label) {
-    $xpath = $this->assertSession()
-      ->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
-        ':label' => $label,
-      ]);
-    $element = $this->getSession()->getPage()->find('xpath', $xpath);
-    if ($element === NULL) {
-      throw new ElementNotFoundException($this->getSession()->getDriver(), 'form field', 'label', $label);
-    }
+    $field_labels = array_map(
+      fn ($element): string => html_entity_decode($element->getHtml()),
+      $this->getSession()->getPage()->findAll('css', 'table#field-overview tr td:first-child .field-label-text'),
+    );
+    $this->assertContains($label, $field_labels);
   }
 
   /**

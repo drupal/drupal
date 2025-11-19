@@ -138,7 +138,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 
     // Check that the links for edit and delete are not present.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields');
-    $locked = $this->xpath('//tr[@id=:field_name]/td[4]', [':field_name' => $field_name]);
+    $locked = $this->xpath('//tr[@id=:field_name]/td[3]', [':field_name' => $field_name]);
     $this->assertSame('Locked', $locked[0]->getHtml(), 'Field is marked as Locked in the UI');
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_name . '/delete');
     $this->assertSession()->statusCodeEquals(403);
@@ -271,7 +271,11 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body', $options);
     $this->submitForm([], 'Save settings');
     // The external redirect should not fire.
-    $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body?destinations%5B0%5D=http%3A//example.com');
+    $url = parse_url($this->getSession()->getCurrentUrl());
+    $this->assertStringEndsWith('/admin/structure/types/manage/article/fields/node.article.body', $url['path']);
+    $query = [];
+    parse_str($url['query'], $query);
+    $this->assertSame(['http://example.com'], $query['destinations']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
   }

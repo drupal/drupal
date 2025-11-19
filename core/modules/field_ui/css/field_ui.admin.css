@@ -66,3 +66,30 @@
 .field-ui-overview .field-plugin-settings-edit-form .plugin-name {
   font-weight: bold;
 }
+
+.field-label-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.field-machine-name {
+  white-space: nowrap;
+}
+
+.field-details-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.field-settings-summary-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-settings-summary-items {
+  display: flex;
+  flex-direction: column;
+}

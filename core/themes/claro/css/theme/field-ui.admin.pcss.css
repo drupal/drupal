@@ -81,3 +81,59 @@
 .allowed-values-table .form-item:where(:not(.hidden)) {
   display: inline-table;
 }
+
+.field-label-wrapper {
+  white-space: nowrap;
+}
+
+.field-label-wrapper .field-label-text,
+.field-label-wrapper .field-ui-secondary-text {
+  display: inline;
+  white-space: nowrap;
+}
+
+.field-machine-name {
+  margin-left: 0.25rem;
+  font-family: monospace;
+}
+
+.field-label-container .field-label-text {
+  font-weight: 600;
+}
+
+.field-ui-secondary-text {
+  margin-top: 0;
+  color: var(--color-gray-600);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.field-settings-summary-container {
+  gap: 0;
+}
+
+.field-settings-summary-items {
+  gap: 0;
+}
+
+.field-details-container {
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.field-ui-pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  letter-spacing: 0.025em;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.75rem;
+  background-color: var(--color-white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.field-ui-overview td[data-drupal-selector*="details"] {
+  text-align: left;
+}
