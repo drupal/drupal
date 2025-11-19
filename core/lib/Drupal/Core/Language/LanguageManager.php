@@ -299,7 +299,7 @@ class LanguageManager implements LanguageManagerInterface {
       'ml' => ['Malayalam', 'മലയാളം'],
       'mn' => ['Mongolian', 'монгол'],
       'mr' => ['Marathi', 'मराठी'],
-      'ms' => ['Bahasa Malaysia', 'بهاس ملايو'],
+      'ms' => ['Malay', 'بهاس ملايو'],
       'mt' => ['Maltese', 'Malti'],
       'my' => ['Burmese', 'ဗမာစကား'],
       'ne' => ['Nepali', 'नेपाली'],
