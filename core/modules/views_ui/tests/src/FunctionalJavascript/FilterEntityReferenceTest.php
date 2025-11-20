@@ -41,7 +41,7 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_entity_reference'];
+  public static $testViews = ['views_test_entity_reference_filtered_display'];
 
   /**
    * {@inheritdoc}
@@ -132,7 +132,7 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
 
     // Opening the settings form and change the handler to use an Entity
     // Reference view.
-    // @see views.view.test_entity_reference.yml
+    // @see views.view.views_test_entity_reference_filtered_display.yml
     $base_url = Url::fromRoute('entity.view.collection')->toString();
     $url = $base_url . '/nojs/handler-extra/content/page_1/filter/field_test_target_id';
     $extra_settings_selector = 'a[href="' . $url . '"]';
@@ -141,7 +141,7 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     $element->click();
     $assert->waitForField('options[sub_handler]');
     $page->selectFieldOption('options[sub_handler]', 'views');
-    $page->selectFieldOption('options[reference_views][view][view_and_display]', 'test_entity_reference:entity_reference');
+    $page->selectFieldOption('options[reference_views][view][view_and_display]', 'views_test_entity_reference_filtered_display:entity_reference');
     $page->find('xpath', "//*[contains(text(), 'Apply')]")
       ->press();
     $assert->assertWaitOnAjaxRequest();
@@ -155,7 +155,7 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     // Change to an autocomplete filter.
     // Opening the settings form and change the handler to use an Entity
     // Reference view.
-    // @see views.view.test_entity_reference.yml
+    // @see views.view.views_test_entity_reference_filtered_display.yml
     $page->find('css', $extra_settings_selector)
       ->click();
     $assert->waitForElementVisible('named', [
