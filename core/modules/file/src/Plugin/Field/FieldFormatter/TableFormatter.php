@@ -36,6 +36,8 @@ class TableFormatter extends DescriptionAwareFileFormatterBase {
               '#theme' => 'file_link',
               '#file' => $file,
               '#description' => $this->getSetting('use_description_as_link_text') ? $item->description : NULL,
+              // File size has its own column, so do not add it to the link.
+              '#with_size' => FALSE,
               '#cache' => [
                 'tags' => $file->getCacheTags(),
               ],

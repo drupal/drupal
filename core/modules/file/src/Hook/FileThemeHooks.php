@@ -39,6 +39,7 @@ class FileThemeHooks {
           'file' => NULL,
           'description' => NULL,
           'attributes' => [],
+          'with_size' => TRUE,
         ],
         'initial preprocess' => static::class . ':preprocessFileLink',
       ],
@@ -86,6 +87,7 @@ class FileThemeHooks {
    *   - description: A description to be displayed instead of the filename.
    *   - attributes: An associative array of attributes to be placed in the a
    *     tag.
+   *   - with_size: A Boolean indicating if the file size should be displayed.
    */
   public function preprocessFileLink(array &$variables): void {
     $file = $variables['file'];
@@ -117,7 +119,7 @@ class FileThemeHooks {
     // Set file classes to the options array.
     $variables['attributes'] = new Attribute($variables['attributes']);
     $variables['attributes']->addClass($classes);
-    $variables['file_size'] = $file->getSize() !== NULL ? ByteSizeMarkup::create($file->getSize()) : '';
+    $variables['file_size'] = ($variables['with_size'] ?? TRUE) && $file->getSize() !== NULL ? ByteSizeMarkup::create($file->getSize()) : '';
 
     $variables['link'] = (new Link($link_text, $url->mergeOptions($options)))->toRenderable();
   }
