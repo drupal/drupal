@@ -490,7 +490,6 @@ default:
       - core/.cspellcache
 
 '🧹 PHP Static Analysis (phpstan)':
-  <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "4"
@@ -681,18 +680,18 @@ default:
     _TARGET_PHP: "8.5-ubuntu"
 
 '⚡️ Component unit tests on PHP 8.3':
-  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  <<: [ *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     _TARGET_PHP: "8.3-ubuntu"
 
 '⚡️ Component unit tests on PHP 8.4':
-  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  <<: [ *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
 
 '⚡️ Component unit tests on PHP 8.5':
-  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  <<: [ *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     _TARGET_PHP: "8.5-ubuntu"
