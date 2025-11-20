@@ -4,10 +4,10 @@ dependencies:
   module:
     - node
     - user
-id: views_test_entity_reference_filtered_display
-label: 'Views Test Entity Reference Filtered Display'
+id: test_entity_reference
+label: 'Test Entity Reference'
 module: views
-description: 'Test Entity Reference Display filtered to only display one article node with the label "Article 0"'
+description: ''
 tag: ''
 base_table: node_field_data
 base_field: nid
