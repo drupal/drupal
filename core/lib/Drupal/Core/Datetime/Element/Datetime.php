@@ -90,8 +90,8 @@ class Datetime extends DateElementBase {
       else {
         $date_input = $element['#date_date_element'] != 'none' && !empty($input['date']) ? $input['date'] : '';
         $time_input = $element['#date_time_element'] != 'none' && !empty($input['time']) ? $input['time'] : '';
-        $date_format = $element['#date_date_format'] != 'none' ? static::getHtml5DateFormat($element) : '';
-        $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
+        $date_format = $element['#date_date_element'] != 'none' && $element['#date_date_format'] != 'none' ? static::getHtml5DateFormat($element) : '';
+        $time_format = $element['#date_time_element'] != 'none' && $element['#date_time_format'] != 'none' ? static::getHtml5TimeFormat($element) : '';
       }
 
       // Seconds will be omitted in a post in case there's no entry.
