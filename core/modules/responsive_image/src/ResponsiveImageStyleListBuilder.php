@@ -29,7 +29,7 @@ class ResponsiveImageStyleListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
+  protected function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
     $operations = parent::getDefaultOperations($entity);
     $operations['duplicate'] = [
       'title' => $this->t('Duplicate'),

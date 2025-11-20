@@ -154,7 +154,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
+  protected function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
     /** @var \Drupal\workspaces\WorkspaceInterface $entity */
     $operations = parent::getDefaultOperations($entity);
     if (isset($operations['edit'])) {
