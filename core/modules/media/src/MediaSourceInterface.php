@@ -75,6 +75,21 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurableIn
   const METADATA_FIELD_EMPTY = '_none';
 
   /**
+   * Key for "Drupal entity link target" metadata attribute.
+   *
+   * Media source plugins knows how the media in this source is stored and hence
+   * also how to generate a link target for it, if at all possible. This key is
+   * reserved to enable \Drupal\media\Entity\MediaLinkTarget to generate link
+   * targets for all media, with a default implementation in the base class that
+   * only works if standalone media URLs are enabled.
+   *
+   * @see \Drupal\media\Entity\MediaLinkTarget
+   * @see \Drupal\Core\Entity\EntityLinkTargetInterface
+   * @see \Drupal\media\MediaSourceBase::getMetadata()
+   */
+  const METADATA_ATTRIBUTE_LINK_TARGET = 'drupal:entity_link_target';
+
+  /**
    * Gets a list of metadata attributes provided by this plugin.
    *
    * Most media sources have associated metadata, describing attributes

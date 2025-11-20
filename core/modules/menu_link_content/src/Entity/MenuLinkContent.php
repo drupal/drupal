@@ -49,6 +49,7 @@ use Drupal\menu_link_content\MenuLinkListBuilder;
       'default' => MenuLinkContentForm::class,
       'delete' => MenuLinkContentDeleteForm::class,
     ],
+    'link_target' => ['view' => MenuLinkContentLinkTarget::class],
     'list_builder' => MenuLinkListBuilder::class,
   ],
   links: [

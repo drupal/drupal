@@ -1,0 +1,65 @@
+/**
+ * @file
+ * Styles for Entity Link Suggestions in CKEditor 5.
+ */
+
+/* Override the default jQuery UI theme */
+.entity-link-suggestions-ui-autocomplete {
+  overflow: auto;
+  max-height: calc((100vh - 80px) / 2);
+}
+
+.entity-link-suggestions-ui-autocomplete.ui-widget {
+  font-size: 0.9em;
+}
+
+.entity-link-suggestions-ui-autocomplete.ui-menu .entity-link-suggestions-result-line-wrapper {
+  margin: 0;
+  padding: 5px 7px;
+}
+
+.entity-link-suggestions-ui-autocomplete.ui-menu .entity-link-suggestions-result-line-wrapper.ui-state-focus,
+.entity-link-suggestions-ui-autocomplete.ui-menu .entity-link-suggestions-result-line-wrapper.ui-state-active {
+  color: #fff;
+  border: 0;
+  border-bottom: 1px solid #bfbfbf;
+  background: #0075ba;
+}
+
+.entity-link-suggestions-result-line:not(:last-of-type) {
+  border-bottom: 1px solid #bfbfbf;
+}
+
+.ui-menu .entity-link-suggestions-result-line--group.ui-menu-divider {
+  height: auto;
+  margin: 0;
+  padding: 3px;
+  text-align: center;
+  color: #555;
+  border-bottom: 1px solid #bfbfbf;
+  background-color: #e7e7e7;
+  font-size: 0.9em;
+  font-weight: 600;
+  line-height: inherit;
+}
+
+.entity-link-suggestions-result-line--title {
+  display: block;
+  font-weight: 600;
+}
+
+.entity-link-suggestions-result-line--description {
+  display: block;
+  font-size: 0.9em;
+  line-height: 1.3;
+}
+
+.entity-link-suggestions-result-line--description img {
+  display: block;
+}
+
+.ck.ck-form.ck-link-form.ck-responsive-form {
+  width: fit-content;
+  min-width: 340px;
+  max-width: 640px;
+}

@@ -26,6 +26,11 @@ class UniqueLabelInListConstraintValidator extends ConstraintValidator {
       throw new UnexpectedTypeException($constraint, UniqueLabelInListConstraint::class);
     }
 
+    // This validation constraint supports nullable sequences.
+    if (!is_array($list)) {
+      return;
+    }
+
     $labels = array_column($list, $constraint->labelKey);
     $label_frequencies = array_count_values($labels);
 
