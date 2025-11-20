@@ -25,3 +25,21 @@ ckeditor5.media_entity_metadata:
     parameters:
       editor:
         type: entity:editor
+
+ckeditor5.entity_link_suggestions:
+  path: '/ckeditor5/{editor}/entity-link-suggestions'
+  defaults:
+    _controller: '\Drupal\ckeditor5\Controller\EntityLinkSuggestionsController::suggestions'
+  methods: [GET]
+  requirements:
+    _entity_access: 'editor.use'
+    _custom_access: '\Drupal\ckeditor5\Controller\EntityLinkSuggestionsController::formatUsesEntityLinksFilter'
+    # The returned information relies on entity reference selection plugins ensuring only entities are returned that the
+    # current user is allowed to see.
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      editor:
+        type: entity:editor
+    no_cache: TRUE
+    _theme: ajax_base_page

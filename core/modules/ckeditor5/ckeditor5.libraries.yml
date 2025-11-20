@@ -73,6 +73,17 @@ internal.drupal.ckeditor5.emphasis:
     - core/ckeditor5
     - core/ckeditor5.basic
 
+internal.drupal.ckeditor5.link-entity-suggestions:
+  js:
+    js/build/drupalEntityLinkSuggestions.js: { minified: true }
+  css:
+    component:
+      css/entity-link-suggestions.css: {}
+  dependencies:
+    - core/ckeditor5
+    - core/drupal
+    - core/drupal.autocomplete
+
 internal.drupal.ckeditor5.media:
   js:
     js/build/drupalMedia.js: { minified: true }

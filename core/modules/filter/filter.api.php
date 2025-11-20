@@ -21,6 +21,8 @@ function hook_filter_info_alter(&$info) {
   $info['filter_url']['default_settings'] = [
     'filter_url_length' => 100,
   ];
+  // Override the default implementation of the entity_links filter.
+  $info['entity_links']['class'] = 'Drupal\MY_MODULE\CustomizedEntityLinks';
 }
 
 /**

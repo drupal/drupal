@@ -16,6 +16,8 @@ use Drupal\Component\Utility\Html;
  */
 trait CKEditor5TestTrait {
 
+  use CKEditor5ValidationTestTrait;
+
   /**
    * Gets CKEditor 5 instance data as a PHP DOMDocument.
    *
@@ -113,10 +115,17 @@ JS;
    *   The asserted balloon.
    */
   protected function assertVisibleBalloon(string $balloon_content_selector): NodeElement {
-    $this->assertSession()->elementExists('css', '.ck-balloon-panel_visible');
+    $this->assertSession()->elementExists('css', '.ck-balloon-panel.ck-balloon-panel_with-arrow:not(.ck-tooltip).ck-balloon-panel_visible');
     $selector = ".ck-balloon-panel_visible .ck-balloon-rotator__content > .ck$balloon_content_selector";
     $this->assertSession()->elementExists('css', $selector);
     return $this->getSession()->getPage()->find('css', $selector);
+  }
+
+  /**
+   * Asserts that the active balloon is closed.
+   */
+  protected function assertBalloonClosed(): void {
+    $this->assertSession()->waitForElement('css', '.ck-balloon-panel.ck-balloon-panel_with-arrow:not(.ck-tooltip):not(.ck-balloon-panel_visible)');
   }
 
   /**

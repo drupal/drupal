@@ -12086,6 +12086,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/CKEditor5Plugin/CodeBlock.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5Plugin\\\\EntityLinkSuggestions\\:\\:setConfiguration\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/CKEditor5Plugin/EntityLinkSuggestions.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5Plugin\\\\Heading\\:\\:setConfiguration\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -17870,6 +17876,18 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/tests/src/Functional/Rest/FilterFormatXmlBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\filter\\\\Kernel\\\\EntityLinksTest\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/EntityLinksTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\filter\\\\Kernel\\\\EntityLinksTest\\:\\:assertPathAliasNotExists\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/EntityLinksTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\filter\\\\Kernel\\\\TextFormatElementFormTest\\:\\:submitForm\\(\\) has no return type specified\\.$#',

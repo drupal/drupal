@@ -441,6 +441,12 @@ use Drupal\node\Entity\NodeType;
  *   - delete-form: Confirmation form to delete the entity.
  *   - edit-form: Editing form.
  *   - Other link types specific to your entity type can also be defined.
+ * - If linking to entities of your content entity type should happen with URLs
+ *   other than the canonical one, or if it does not have a route where it can
+ *   be viewed, then a link_target handler should be implemented. At minimum,
+ *   provide a link_target.view handler: a class implementing
+ *   \Drupal\Core\Entity\EntityLinkTargetInterface. Optionally, if the content
+ *   entity type is downloadable, also provide a link_target.download handler.
  * - If your content entity is fieldable, provide the 'field_ui_base_route'
  *   annotation property, giving the name of the route that the Manage Fields,
  *   Manage Display, and Manage Form Display pages from the Field UI module

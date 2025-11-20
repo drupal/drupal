@@ -2,6 +2,7 @@
 
 namespace Drupal\ckeditor5\Hook;
 
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\ckeditor5\LanguageMapper;
 use Drupal\Core\Hook\Order\OrderAfter;
 use Drupal\Core\Language\LanguageInterface;
@@ -375,6 +376,35 @@ class Ckeditor5Hooks {
   }
 
   /**
+   * Implements hook_field_widget_single_element_form_alter().
+   */
+  #[Hook('field_widget_single_element_form_alter')]
+  public function fieldWidgetSingleElementFormAlter(&$element, FormStateInterface $form_state, $context): void {
+    // Add an attribute so that CKEditor 5 plugins can vary their behavior based
+    // on host entity type, host entity bundle and host entity language.
+    if (!empty($element['#type']) && $element['#type'] == 'text_format') {
+      $items = $context['items'];
+      assert($items instanceof FieldItemListInterface);
+      $host_entity = $items->getEntity();
+      $element['#attributes']['data-ckeditor5-host-entity-type'] = $host_entity->getEntityTypeId();
+      $element['#attributes']['data-ckeditor5-host-entity-bundle'] = $host_entity->bundle();
+      $element['#attributes']['data-ckeditor5-host-entity-langcode'] = $host_entity->language()->getId();
+    }
+  }
+
+  /**
+   * Implements hook_entity_bundle_info_alter().
+   */
+  #[Hook('entity_bundle_info_alter')]
+  public function entityBundleInfoAlter(array &$bundles): void {
+    if (isset($bundles['node'])) {
+      foreach ($bundles['node'] as $key => $bundle) {
+        $bundles['node'][$key]['ckeditor5_link_suggestions'] = TRUE;
+      }
+    }
+  }
+
+  /**
    * Implements hook_ENTITY_TYPE_presave() for editor entities.
    */
   #[Hook('editor_presave')]
@@ -407,7 +437,6 @@ class Ckeditor5Hooks {
       }
 
       $editor->setSettings($settings);
-
     }
   }
 

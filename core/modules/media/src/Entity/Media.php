@@ -66,6 +66,10 @@ use Drupal\user\EntityOwnerTrait;
       'html' => MediaRouteProvider::class,
       'revision' => RevisionHtmlRouteProvider::class,
     ],
+    'link_target' => [
+      'view' => MediaLinkTargetStandaloneWhenAvailable::class,
+      'download' => MediaLinkTarget::class,
+    ],
   ],
   links: [
     'add-page' => '/media/add',

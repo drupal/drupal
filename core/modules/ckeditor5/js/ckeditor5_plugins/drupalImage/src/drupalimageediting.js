@@ -99,7 +99,6 @@ function modelEntityUuidToDataAttribute() {
     const imageInFigure = Array.from(viewElement.getChildren()).find(
       (child) => child.name === 'img',
     );
-
     writer.setAttribute(
       'data-entity-uuid',
       data.attributeNewValue,
@@ -420,26 +419,28 @@ function viewImageToModelImage(editor) {
       attributesToConsume.push('data-caption');
     }
 
-    if (
-      consumable.test(viewItem, { name: true, attributes: 'data-entity-uuid' })
-    ) {
-      writer.setAttribute(
-        'dataEntityUuid',
-        viewItem.getAttribute('data-entity-uuid'),
-        image,
-      );
-      attributesToConsume.push('data-entity-uuid');
-    }
+    const modelViewAttributes = {
+      dataEntityUuid: 'data-entity-uuid',
+      dataEntityType: 'data-entity-type',
+      drupalLinkEntityUuid: 'data-link-entity-uuid',
+      drupalLinkEntityType: 'data-link-entity-type',
+      drupalLinkEntityMetadata: 'data-link-entity-metadata',
+    };
 
-    if (
-      consumable.test(viewItem, { name: true, attributes: 'data-entity-type' })
-    ) {
-      writer.setAttribute(
-        'dataEntityType',
-        viewItem.getAttribute('data-entity-type'),
-        image,
-      );
-      attributesToConsume.push('data-entity-type');
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [modelAttribute, viewAttribute] of Object.entries(
+      modelViewAttributes,
+    )) {
+      if (
+        consumable.test(viewItem, { name: true, attributes: viewAttribute })
+      ) {
+        writer.setAttribute(
+          modelAttribute,
+          viewItem.getAttribute(viewAttribute),
+          image,
+        );
+        attributesToConsume.push(viewAttribute);
+      }
     }
 
     // Try to place the image in the allowed position.
@@ -519,6 +520,78 @@ function upcastImageBlockLinkGhsAttributes(dataFilter) {
   };
 }
 
+function downcastBlockImageLink() {
+  function converter(event, data, conversionApi) {
+    const { item } = data;
+    const { consumable, writer } = conversionApi;
+    const viewElement = conversionApi.mapper.toViewElement(item);
+
+    let image = Array.from(viewElement.getChildren()).find(
+      (child) => child.name === 'img',
+    );
+
+    if (!image && viewElement.name === 'image') {
+      image = viewElement;
+    }
+
+    const additionalAttributes = {};
+    const modelEntityLinkAttrs = {
+      drupalLinkEntityType: 'data-entity-type',
+      drupalLinkEntityUuid: 'data-entity-uuid',
+      drupalLinkEntityMetadata: 'data-entity-metadata',
+    };
+    if (!image) {
+      return;
+    }
+
+    Object.keys(modelEntityLinkAttrs).forEach((modelAttribute) => {
+      if (data.item.hasAttribute(modelAttribute)) {
+        const viewAttribute = modelEntityLinkAttrs[modelAttribute];
+        const viewValue = data.item.getAttribute(modelAttribute);
+        additionalAttributes[viewAttribute] = viewValue;
+        image._setAttribute(
+          viewAttribute.replace('data-', 'data-link-'),
+          viewValue,
+        );
+      }
+    });
+
+    // 1. Create an empty link element.
+    const linkElement = writer.createContainerElement('a', {
+      href: data.attributeNewValue,
+      ...additionalAttributes,
+    });
+    // 2. Insert link before the associated image.
+    writer.insert(writer.createPositionBefore(image), linkElement);
+    // 3. Move the image into the link.
+    writer.move(
+      writer.createRangeOn(image),
+      writer.createPositionAt(linkElement, 0),
+    );
+
+    // Modified alternative implementation of GHS' addBlockImageLinkAttributeConversion().
+    // This is happening here as well to avoid a race condition with the link
+    // element not yet existing.
+    if (
+      conversionApi.consumable.consume(
+        data.item,
+        'attribute:htmlLinkAttributes:imageBlock',
+      )
+    ) {
+      setViewAttributes(
+        conversionApi.writer,
+        data.item.getAttribute('htmlLinkAttributes'),
+        linkElement,
+      );
+    }
+  }
+  return (dispatcher) => {
+    dispatcher.on('attribute:linkHref:imageBlock', converter, {
+      priority: 'high',
+    });
+  };
+}
+
 /**
  * Modified alternative implementation of linkimageediting.js' downcastImageLink.
  *
@@ -527,7 +600,7 @@ function upcastImageBlockLinkGhsAttributes(dataFilter) {
  *
  * @private
  */
-function downcastBlockImageLink() {
+function dataDowncastBlockImageLink() {
   /**
    * Callback for the attribute:linkHref event.
    *
@@ -537,14 +610,32 @@ function downcastBlockImageLink() {
     if (!conversionApi.consumable.consume(data.item, event.name)) {
       return;
     }
-
     // The image will be already converted - so it will be present in the view.
     const image = conversionApi.mapper.toViewElement(data.item);
     const writer = conversionApi.writer;
 
+    const additionalAttributes = {};
+    const modelEntityLinkAttrs = {
+      drupalLinkEntityType: 'data-entity-type',
+      drupalLinkEntityUuid: 'data-entity-uuid',
+      drupalLinkEntityMetadata: 'data-entity-metadata',
+    };
+    Object.keys(modelEntityLinkAttrs).forEach((modelAttribute) => {
+      if (data.item.hasAttribute(modelAttribute)) {
+        const viewAttribute = modelEntityLinkAttrs[modelAttribute];
+        const viewValue = data.item.getAttribute(modelAttribute);
+        additionalAttributes[viewAttribute] = viewValue;
+        image._setAttribute(
+          viewAttribute.replace('data-', 'data-link-'),
+          viewValue,
+        );
+      }
+    });
+
     // 1. Create an empty link element.
     const linkElement = writer.createContainerElement('a', {
       href: data.attributeNewValue,
+      ...additionalAttributes,
     });
     // 2. Insert link before the associated image.
     writer.insert(writer.createPositionBefore(image), linkElement);
@@ -617,7 +708,14 @@ export default class DrupalImageEditing extends Plugin {
 
     if (schema.isRegistered('imageBlock')) {
       schema.extend('imageBlock', {
-        allowAttributes: ['dataEntityUuid', 'dataEntityType', 'isDecorative'],
+        allowAttributes: [
+          'dataEntityUuid',
+          'dataEntityType',
+          'isDecorative',
+          'drupalLinkEntityType',
+          'drupalLinkEntityUuid',
+          'drupalLinkEntityMetadata',
+        ],
       });
     }
 
@@ -670,7 +768,8 @@ export default class DrupalImageEditing extends Plugin {
     conversion
       .for('downcast')
       .add(modelEntityUuidToDataAttribute())
-      .add(modelEntityTypeToDataAttribute());
+      .add(modelEntityTypeToDataAttribute())
+      .add(downcastBlockImageLink());
 
     conversion
       .for('dataDowncast')
@@ -688,7 +787,7 @@ export default class DrupalImageEditing extends Plugin {
         converterPriority: 'high',
       })
       .add(modelImageStyleToDataAttribute())
-      .add(downcastBlockImageLink())
+      .add(dataDowncastBlockImageLink())
 
       // ⚠️ Everything below this point is copy/pasted directly from https://github.com/ckeditor/ckeditor5/pull/15222,
       // to continue to use the `width` and `height` attributes to indicate resized width and height. This is necessary

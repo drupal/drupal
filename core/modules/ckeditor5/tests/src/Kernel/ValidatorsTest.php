@@ -61,6 +61,7 @@ class ValidatorsTest extends KernelTestBase {
     'filter_test',
     'media',
     'media_library',
+    'system',
     'user',
     'views',
   ];
@@ -71,6 +72,10 @@ class ValidatorsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->typedConfig = $this->container->get('config.typed');
+
+    $this->installConfig(['system']);
+    // Avoid needing to install the Stark theme.
+    $this->config('system.theme')->delete();
   }
 
   /**
@@ -1599,6 +1604,7 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'expected_violations' => [],
     ];
+
     return $data;
   }
 

@@ -89,7 +89,6 @@ function modelToDataAttributeConverter(evt, data, conversionApi) {
   }
 
   const viewElement = conversionApi.mapper.toViewElement(data.item);
-
   setViewAttributes(conversionApi.writer, data.attributeNewValue, viewElement);
 }
 
@@ -218,7 +217,13 @@ export default class DrupalMediaGeneralHtmlSupport extends Plugin {
       }
 
       schema.extend('drupalMedia', {
-        allowAttributes: ['htmlLinkAttributes', 'htmlAttributes'],
+        allowAttributes: [
+          'htmlLinkAttributes',
+          'htmlAttributes',
+          'drupalLinkEntityType',
+          'drupalLinkEntityUuid',
+          'drupalLinkEntityMetadata',
+        ],
       });
 
       conversion

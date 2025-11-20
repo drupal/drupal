@@ -101,8 +101,6 @@ class MediaLinkabilityTest extends MediaTestBase {
         ->save();
     }
 
-    $page = $this->getSession()->getPage();
-
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $assert_session = $this->assertSession();
@@ -175,7 +173,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->assertCount($unrestricted ? 1 : 0, $xpath->query('//a[@href="http://linking-embedded-media.com" and @class="trusted"]'));
 
     // Save the entity whose text field is being edited.
-    $page->pressButton('Save');
+    $this->submitForm([], 'Save');
 
     // Assert the HTML the end user sees.
     $assert_session->elementExists('css', $unrestricted
@@ -310,6 +308,87 @@ class MediaLinkabilityTest extends MediaTestBase {
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $this->assertEmpty($xpath->query('//a'));
     $this->assertNotEmpty($xpath->query('//drupal-media'));
+  }
+
+  /**
+   * Tests that entity link suggestions work correctly for media links in CKEditor 5.
+   */
+  public function testWithEntityLinkSuggestions(): void {
+    $content_to_add = $this->drupalCreateNode([
+      'type' => 'blog',
+      'title' => 'Zoo Party',
+    ]);
+    $content_to_add_uuid = $content_to_add->uuid();
+
+    // Configure the format to enable the entity_links filter.
+    $format = FilterFormat::load('test_format');
+    $format_settings = $format->toArray();
+    $filter_html = $format_settings['filters']['filter_html'];
+    $filter_html['settings']['allowed_html'] = '<p> <br> <strong> <em> <a href data-entity-type data-entity-uuid data-entity-metadata> <drupal-media data-link-entity-type data-link-entity-uuid data-link-entity-metadata data-entity-type data-entity-uuid data-align data-view-mode data-caption alt>';
+    $format->setFilterConfig('filter_html', $filter_html);
+    $format->setFilterConfig('entity_links', ['status' => TRUE]);
+    $format->save();
+
+    $this->assertExpectedCkeditor5Violations();
+
+    $session = $this->getSession();
+    $assert_session = $this->assertSession();
+    $page = $session->getPage();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+
+    // Click somewhere outside the editor area.
+    $page->find('css', 'h1')->click();
+
+    // Initial state: the Drupal Media CKEditor Widget is not selected.
+    $drupalmedia = $assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media');
+    $this->assertNotEmpty($drupalmedia);
+    $page->find('css', '.ck-editor__main > .ck-editor__editable[contenteditable]')->click();
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+    // Link the embedded media to $content_to_add.
+    $link_media_button = $this->getBalloonButton('Link media');
+    $link_media_button->click();
+    $balloon = $this->assertVisibleBalloon('.ck-link-form');
+    $this->assertNotNull($autocomplete_field = $balloon->find('css', '.ck-input-text[inputmode=url]'));
+    $autocomplete_field->setValue('Z');
+    $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.entity-link-suggestions-result-line.ui-menu-item').length > 0"));
+    $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
+    $results[0]->click();
+    $balloon->pressButton('Insert');
+    $this->assertBalloonClosed();
+    // Assert the link in the toolbar preview displays the correct text.
+    $preview_button = $assert_session->waitForElementVisible('css', '.ck-link-toolbar__preview');
+    $this->assertNotNull($preview_button);
+    $this->assertSame('Zoo Party (Content - blog)', $preview_button->getText());
+    $expected_preview_path = base_path() . ltrim($content_to_add->toUrl('canonical')->toString(), '/');
+    $this->assertEquals($expected_preview_path, $preview_button->getAttribute('href'));
+
+    // Assert the linked media markup in the editor.
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $query = sprintf('//a[@href="' . base_path() . 'node/%s" and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/drupal-media', $content_to_add->id(), $content_to_add_uuid);
+    $this->assertCount(1, $xpath->query($query), "Search for $query");
+
+    // Submit the node form.
+    $this->submitForm([], 'Save');
+
+    // Assert the rendered markup links to the correct place.
+    $selector = sprintf('a[href="%s"] > article', $content_to_add->toUrl('canonical')->toString());
+    $link_around_media = $assert_session->elementExists('css', $selector);
+    $link_around_media->click();
+    $h1 = $page->find('css', 'h1');
+    $this->assertSame('Zoo Party', $h1->getText(), 'The link in the rendered page goes to the correct place');
+
+    // Edit the node again.
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $page->find('css', '.ck-editor__main > .ck-editor__editable[contenteditable]')->click();
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+    $link_media_button = $this->getBalloonButton('Link media');
+    $link_media_button->click();
+    // Assert the link in the toolbar preview displays as expected again.
+    $preview_button = $assert_session->waitForElementVisible('css', '.ck-link-toolbar__preview');
+    $this->assertSame('Zoo Party (Content - blog)', $preview_button->getText());
+    $this->assertEquals($expected_preview_path, $preview_button->getAttribute('href'));
   }
 
 }
