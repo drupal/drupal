@@ -321,7 +321,8 @@ class Query extends QueryBase implements QueryInterface {
    *   ORDER BY MIN/MAX. Otherwise FALSE.
    */
   protected function isSimpleQuery() {
-    return (!$this->pager && !$this->range && !$this->count) || $this->sqlQuery->getMetaData('simple_query');
+    $isSimpleRange = !$this->range || (($this->range['start'] === 0) && ($this->range['length'] === 1));
+    return (!$this->pager && $isSimpleRange && !$this->count) || $this->sqlQuery->getMetaData('simple_query');
   }
 
   /**
