@@ -226,7 +226,10 @@ default:
       - ./sites/default/files/simpletest/phpunit-*.xml
 
 'Unit tests Component':
-  <<: [ *default-job-settings-lint ]
+  # Jobs that produce metrics must run on performance test pipelines so MRs show
+  # the correct information.
+  rules:
+    - if: $PERFORMANCE_TEST != "1" || $_TARGET_PHP == $PRIMARY_PHP
   stage: ⚡️ Unit tests
   needs: []
   parallel:
