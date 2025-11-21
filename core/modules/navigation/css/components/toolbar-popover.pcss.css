@@ -1,78 +1,80 @@
 @import "../base/media-queries.pcss.css";
 
-.toolbar-popover {
-  border-radius: var(--admin-toolbar-space-8);
-}
-
-.toolbar-popover--expanded {
-  background-color: var(--admin-toolbar-color-expanded);
-}
-
-.toolbar-popover__control {
-  inline-size: 100%;
-}
-
-[data-toolbar-popover-wrapper] {
-  position: fixed;
-  z-index: var(--admin-toolbar-z-index-popover);
-  display: grid;
-  overflow: auto;
-  grid-auto-rows: max-content;
-  padding: var(--admin-toolbar-space-12) var(--admin-toolbar-space-16) var(--admin-toolbar-space-16);
-  transition:
-    transform var(--admin-toolbar-transition),
-    opacity var(--admin-toolbar-transition);
-  transform: translateX(-100%);
-  transform-origin: 0;
-  opacity: 0;
-  background-color: var(--admin-toolbar-color-white);
-  inline-size: var(--admin-toolbar-sidebar-width);
-  block-size: 100vh;
-  gap: var(--admin-toolbar-space-8);
-  inset-block-start: var(--admin-toolbar-sidebar-header);
-  inset-inline-start: 0;
-  /* Hide the drop-shadow on the left side. */
-  clip-path: inset(0 -10rem 0 0);
-
-  [dir="rtl"] & {
-    /* Hide the drop-shadow on the right side. */
-    clip-path: inset(0 0 0 -10rem);
-    transform: translateX(0);
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  .toolbar-popover {
+    border-radius: var(--admin-toolbar-space-8);
   }
 
-  @media (--admin-toolbar-desktop) {
-    --admin-toolbar-z-index-popover: var(--drupal-admin-z-index-popover, -1);
-
-    block-size: calc(100vh - var(--drupal-displace-offset-top, 0px));
-    padding-block-start: var(--admin-toolbar-space-16);
-    transform: translateX(0);
-    box-shadow:
-      0 0 72px rgb(0, 0, 0, 0.2),
-      0 0 8px rgb(0, 0, 0, 0.04),
-      0 0 40px rgb(0, 0, 0, 0.06);
-    inline-size: var(--admin-toolbar-popover-width);
-    inset-block-start: var(--drupal-displace-offset-top, 0);
-    inset-inline-start: 1px;
+  .toolbar-popover--expanded {
+    background-color: var(--admin-toolbar-color-expanded);
   }
-}
 
-[data-toolbar-popover-control][aria-expanded="true"] + [data-toolbar-popover-wrapper] {
-  transform: translateX(0);
-  opacity: 1;
+  .toolbar-popover__control {
+    inline-size: 100%;
+  }
 
-  @media (--admin-toolbar-desktop) {
-    transform: translateX(var(--admin-toolbar-sidebar-width));
+  [data-toolbar-popover-wrapper] {
+    position: fixed;
+    z-index: var(--admin-toolbar-z-index-popover);
+    display: grid;
+    overflow: auto;
+    grid-auto-rows: max-content;
+    padding: var(--admin-toolbar-space-12) var(--admin-toolbar-space-16) var(--admin-toolbar-space-16);
+    transition:
+      transform var(--admin-toolbar-transition),
+      opacity var(--admin-toolbar-transition);
+    transform: translateX(-100%);
+    transform-origin: 0;
+    opacity: 0;
+    background-color: var(--admin-toolbar-color-white);
+    inline-size: var(--admin-toolbar-sidebar-width);
+    block-size: 100vh;
+    gap: var(--admin-toolbar-space-8);
+    inset-block-start: var(--admin-toolbar-sidebar-header);
+    inset-inline-start: 0;
+    /* Hide the drop-shadow on the left side. */
+    clip-path: inset(0 -10rem 0 0);
 
-    [dir="rtl"] & {
-      transform: translateX(calc(var(--admin-toolbar-sidebar-width) * -1));
+    &:dir(rtl) {
+      /* Hide the drop-shadow on the right side. */
+      clip-path: inset(0 0 0 -10rem);
+      transform: translateX(0);
+    }
+
+    @media (--admin-toolbar-desktop) {
+      --admin-toolbar-z-index-popover: var(--drupal-admin-z-index-popover, -1);
+
+      block-size: calc(100vh - var(--drupal-displace-offset-top, 0px));
+      padding-block-start: var(--admin-toolbar-space-16);
+      transform: translateX(0);
+      box-shadow:
+        0 0 72px rgb(0, 0, 0, 0.2),
+        0 0 8px rgb(0, 0, 0, 0.04),
+        0 0 40px rgb(0, 0, 0, 0.06);
+      inline-size: var(--admin-toolbar-popover-width);
+      inset-block-start: var(--drupal-displace-offset-top, 0);
+      inset-inline-start: 1px;
     }
   }
-}
 
-[data-admin-toolbar="collapsed"] [data-toolbar-popover-wrapper] {
-  transform: translateX(calc((16 * var(--admin-toolbar-rem) * -1) + var(--drupal-displace-offset-left, var(--admin-toolbar-space-72))));
+  [data-toolbar-popover-control][aria-expanded="true"] + [data-toolbar-popover-wrapper] {
+    transform: translateX(0);
+    opacity: 1;
 
-  [dir="rtl"] & {
-    transform: translateX(calc((16 * var(--admin-toolbar-rem)) + var(--drupal-displace-offset-right, var(--admin-toolbar-space-72))));
+    @media (--admin-toolbar-desktop) {
+      transform: translateX(var(--admin-toolbar-sidebar-width));
+
+      &:dir(rtl) {
+        transform: translateX(calc(var(--admin-toolbar-sidebar-width) * -1));
+      }
+    }
+  }
+
+  [data-admin-toolbar="collapsed"] & [data-toolbar-popover-wrapper] {
+    transform: translateX(calc((16 * var(--admin-toolbar-rem) * -1) + var(--drupal-displace-offset-left, var(--admin-toolbar-space-72))));
+
+    &:dir(rtl) {
+      transform: translateX(calc((16 * var(--admin-toolbar-rem)) + var(--drupal-displace-offset-right, var(--admin-toolbar-space-72))));
+    }
   }
 }

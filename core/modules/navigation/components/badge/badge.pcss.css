@@ -4,16 +4,18 @@
  * Toolbar badge styles.
  */
 
-.toolbar-badge {
-  padding: var(--admin-toolbar-space-4) var(--admin-toolbar-space-8);
-  border-radius: 1rem;
-  background-color: var(--admin-toolbar-color-gray-100);
-  font-size: var(--admin-toolbar-font-size-label-sm);
-  line-height: var(--admin-toolbar-line-height-label-sm);
-  font-variation-settings: "wght" 700;
-}
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  .toolbar-badge {
+    padding: var(--admin-toolbar-space-4) var(--admin-toolbar-space-8);
+    border-radius: 1rem;
+    background-color: var(--admin-toolbar-color-gray-100);
+    font-size: var(--admin-toolbar-font-size-label-sm);
+    line-height: var(--admin-toolbar-line-height-label-sm);
+    font-variation-settings: "wght" 700;
+  }
 
-.toolbar-badge--success {
-  color: var(--admin-toolbar-color-green-600);
-  background-color: var(--admin-toolbar-color-green-050);
+  .toolbar-badge--success {
+    color: var(--admin-toolbar-color-green-600);
+    background-color: var(--admin-toolbar-color-green-050);
+  }
 }

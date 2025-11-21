@@ -4,32 +4,34 @@
  * Toolbar title styles.
  */
 
-.toolbar-title {
-  font-variation-settings: "wght" 500;
-}
-
-/* Sizes aligned with variables from css/base/variables.pcss.css */
-.toolbar-title--xs {
-  font-size: var(--admin-toolbar-font-size-heading-xs);
-}
-
-.toolbar-title--ellipsis {
-  .toolbar-title__label {
-    overflow: hidden;
-    max-width: var(--toolbar--title-max-width);
-    white-space: nowrap;
-    text-overflow: ellipsis;
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  .toolbar-title {
+    font-variation-settings: "wght" 500;
   }
-}
 
-.toolbar-title:has(.toolbar-title__icon) {
-  display: flex;
-  align-items: center;
-  gap: var(--admin-toolbar-space-8);
-}
+  /* Sizes aligned with variables from css/base/variables.pcss.css */
+  .toolbar-title--xs {
+    font-size: var(--admin-toolbar-font-size-heading-xs);
+  }
 
-.toolbar-title__icon {
-  flex-shrink: 0;
-  inline-size: var(--admin-toolbar-space-16);
-  block-size: var(--admin-toolbar-space-16);
+  .toolbar-title--ellipsis {
+    .toolbar-title__label {
+      overflow: hidden;
+      max-width: var(--toolbar--title-max-width);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .toolbar-title:has(.toolbar-title__icon) {
+    display: flex;
+    align-items: center;
+    gap: var(--admin-toolbar-space-8);
+  }
+
+  .toolbar-title__icon {
+    flex-shrink: 0;
+    inline-size: var(--admin-toolbar-space-16);
+    block-size: var(--admin-toolbar-space-16);
+  }
 }
