@@ -482,6 +482,35 @@ default:
 # Lint Jobs
 ################
 
+.lint-cache-artifacts: &lint-cache-artifacts
+  artifacts:
+    paths:
+      - core/phpstan-tmp/resultCache.php
+      - core/.cspellcache
+      - core/.eslintcache
+      - core/.stylelintcache
+      - core/.phpcscache
+
+# Download the cache artifacts from the previous pipeline run to work around
+# https://gitlab.com/gitlab-org/gitlab/-/issues/458828 due to performance
+# testing. Note that this job must come before the lint jobs that create the
+# updated cache files. This ensures that their updated artifacts are used in the
+# 'Write lint caches' job.
+'Lint cache download':
+  <<: [ *lint-cache-artifacts ]
+  stage: 🪄 Lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
+    - if: $PERFORMANCE_TEST == "1"
+  script:
+    - *phpstan-cache
+    - *cspell-cache
+    - *eslint-cache
+    - *stylelint-cache
+    - *phpcs-cache
+
 '📔 Spell-checking':
   <<: [ *yarn-install-from-cache ]
   <<: [ *default-job-settings-lint ]
@@ -797,33 +826,6 @@ default:
          $impact = array_map(fn (float $h, float $m) => $m-$h, $head, $mr);
          exit((int) (min($impact) < 0));
       '
-
-.lint-cache-artifacts: &lint-cache-artifacts
-  artifacts:
-    paths:
-      - core/phpstan-tmp/resultCache.php
-      - core/.cspellcache
-      - core/.eslintcache
-      - core/.stylelintcache
-      - core/.phpcscache
-
-# Download the cache artifacts from the previous pipeline run to work around
-#  https://gitlab.com/gitlab-org/gitlab/-/issues/458828 due to performance
-#  testing.
-'Lint cache download':
-  <<: [ *lint-cache-artifacts ]
-  stage: 🪄 Lint
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
-    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
-    - if: $PERFORMANCE_TEST == "1"
-  script:
-    - *phpstan-cache
-    - *cspell-cache
-    - *eslint-cache
-    - *stylelint-cache
-    - *phpcs-cache
 
 # This job should be real quick and run at the very end of the pipeline.
 'Write lint caches':
