@@ -598,11 +598,12 @@
      */
     openDialog(url, saveCallback, dialogSettings) {
       // Add a consistent dialog class.
-      const classes = dialogSettings.dialogClass
-        ? dialogSettings.dialogClass.split(' ')
+      dialogSettings.classes = dialogSettings.classes || {};
+      const classes = dialogSettings.classes['ui-dialog']
+        ? dialogSettings.classes['ui-dialog'].split(' ')
         : [];
       classes.push('ui-dialog--narrow');
-      dialogSettings.dialogClass = classes.join(' ');
+      dialogSettings.classes['ui-dialog'] = classes.join(' ');
       dialogSettings.autoResize =
         window.matchMedia('(min-width: 600px)').matches;
       dialogSettings.width = 'auto';
