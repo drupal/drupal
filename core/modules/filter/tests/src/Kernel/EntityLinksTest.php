@@ -80,7 +80,7 @@ class EntityLinksTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
+    $this->installConfig('system');
     // @see ::test
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');
