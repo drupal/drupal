@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide testdox updatedb stylelintrc fastzip
+# cspell:ignore codequality Micheh micheh webide testdox updatedb stylelintrc fastzip phpcscache Ksection
 
 ################
 # Drupal GitLabCI template.
@@ -65,6 +65,10 @@ variables:
   COMPOSER_ALLOW_SUPERUSER: 1
   CONCURRENCY: 24
   GIT_DEPTH: "50"
+  # PHPStan, ESLint and Stylelint store absolute paths in caches.
+  # Setting GIT_CLONE_PATH forces a consistent working directory,
+  # and on Kubernetes there is no risk of conflict between jobs.
+  GIT_CLONE_PATH: $CI_BUILDS_DIR
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.4-ubuntu"
   PHPUNIT_CONFIGURATION_FILE_PATH: $CI_PROJECT_DIR/core
@@ -170,15 +174,6 @@ default:
         path: $_ARTIFACTS_DIR/component-coverage-cobertura.xml
     paths:
       - $_ARTIFACTS_DIR
-
-.prepare-lint-directory: &prepare-lint-directory
-  # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
-  # working directories are not consistent, work around this by running linting in a separate,
-  # stable path.
-  # See https://github.com/phpstan/phpstan/issues/8599
-  - mkdir /build;
-  - cp -Ria $CI_PROJECT_DIR/* /build/
-  - cd /build
 
 .phpstan-cache: &phpstan-cache
   # Get the phpstan cache file from the artifacts of the latest successful
@@ -518,14 +513,8 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - *prepare-lint-directory
     - *cspell-cache
     - *core-spellcheck
-    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
-    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
-    # Move the cache file from the build directory to the $CI_PROJECT_DIR one,
-    # as the artifacts will be stowed from there.
-    - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
   artifacts:
     expire_in: 1 week
     expose_as: 'yarn-vendor'
@@ -541,7 +530,6 @@ default:
     _PHPSTAN_NEON: "core/phpstan.neon.dist"
     _PHPSTAN_BASELINE: "core/.phpstan-baseline.php"
   before_script:
-    - *prepare-lint-directory
     - *phpstan-cache
     - mkdir -p $_ARTIFACTS_DIR
     - *composer-setup
@@ -569,8 +557,6 @@ default:
         echo "Generating a PHPStan baseline file (available as job artifact)."
         cp $CI_PROJECT_DIR/.gitlab-ci/scripts/.empty-phpstan-baseline.php $_PHPSTAN_BASELINE
         php vendor/bin/phpstan analyze --configuration=$_PHPSTAN_NEON --no-progress --generate-baseline=$_PHPSTAN_BASELINE || true
-        sed -i "s/ '\\/\\/build\\/core/ '/g" $_PHPSTAN_BASELINE
-        sed -i "s/ '\\/\\/build/ '\\/../g" $_PHPSTAN_BASELINE
         # Report statistics on the new baseline.
         php $CI_PROJECT_DIR/.gitlab-ci/scripts/phpstan-baseline-statistics.php $_PHPSTAN_BASELINE $_ARTIFACTS_DIR/phpstan-metrics.txt
         # Copy the new baseline to the artifacts directory.
@@ -579,13 +565,6 @@ default:
       fi
     # Generate baseline statistics.
     - php $CI_PROJECT_DIR/.gitlab-ci/scripts/phpstan-baseline-statistics.php $_PHPSTAN_BASELINE $_ARTIFACTS_DIR/phpstan-metrics.txt
-  after_script:
-    - mkdir -p $_ARTIFACTS_DIR
-    - cp -r /build/$_ARTIFACTS_DIR/* $_ARTIFACTS_DIR/
-    # Move the cache file from the build directory to the $CI_PROJECT_DIR one,
-    # as the artifacts will be stowed from there.
-    - mkdir core/phpstan-tmp
-    - mv -f /build/core/phpstan-tmp/resultCache.php $CI_PROJECT_DIR/core/phpstan-tmp
   artifacts:
     reports:
       codequality: $_ARTIFACTS_DIR/phpstan-quality-report.json
@@ -651,14 +630,10 @@ default:
     - when: manual
       allow_failure: true
   script:
-    - *prepare-lint-directory
     - *eslint-cache
     - cd core
     - yarn run check:ckeditor5
     - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
-    # Move the cache files from the build directory to the $CI_PROJECT_DIR one,
-    # as the artifacts will be stowed from there.
-    - mv -f /build/core/.eslintcache $CI_PROJECT_DIR/core
   artifacts:
     reports:
       codequality: eslint-quality-report.json
@@ -683,14 +658,10 @@ default:
     - when: manual
       allow_failure: true
   script:
-    - *prepare-lint-directory
     - *stylelint-cache
     - cd core
     - yarn run build:css --check
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color  --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
-    # Move the cache file from the build directory to the $CI_PROJECT_DIR one,
-    # as the artifacts will be stowed from there.
-    - mv -f /build/core/.stylelintcache $CI_PROJECT_DIR/core
   artifacts:
     reports:
       codequality: gl-codequality.json
