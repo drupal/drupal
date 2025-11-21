@@ -16,6 +16,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Utility\CallableResolver;
+use Drupal\Core\Utility\FiberResumeType;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -632,6 +633,7 @@ class Renderer implements RendererInterface {
 
     $fiber = new \Fiber(static fn () => $callable());
     $fiber->start();
+    $resume_type = NULL;
     while (!$fiber->isTerminated()) {
       if ($fiber->isSuspended()) {
         // When ::executeInRenderContext() is executed within a Fiber, which is
@@ -644,12 +646,12 @@ class Renderer implements RendererInterface {
           \Fiber::suspend();
           $this->setCurrentRenderContext($context);
         }
-        $fiber->resume();
+        $resume_type = $fiber->resume();
       }
-      if (!$fiber->isTerminated()) {
-        // If we've reached this point, then the fiber has already been started
-        // and resumed at least once, so may be suspending repeatedly. Avoid
-        // a spin-lock by waiting for 0.5ms prior to continuing the while loop.
+      // If the fiber has been suspended and has not signaled that it can be
+      // immediately resumed, assume that the fiber is waiting on an async
+      // operation and wait a bit.
+      if (!$fiber->isTerminated() && $resume_type !== FiberResumeType::Immediate) {
         usleep(500);
       }
     }
