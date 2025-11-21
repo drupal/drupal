@@ -332,6 +332,7 @@ system.files:
     scheme: private
   requirements:
     _access: 'TRUE'
+    scheme: '^(?!(module|theme)).*'
 
 system.private_file_download:
   path: '/system/files/{filepath}'
