@@ -109,12 +109,15 @@ default:
   rules:
     - if: $PERFORMANCE_TEST != "1"
 
-.default-phpunit-job-settings: &default-phpunit-job-settings
+.composer-setup: &composer-setup
+  - composer validate
+  - composer install --optimize-autoloader
+  - composer run-script drupal-phpunit-upgrade-check
+
+.core-unit-test-job-settings: &core-unit-test-job-settings
   stage: 🪄 Lint
   before_script:
-    - composer validate
-    - composer install --optimize-autoloader
-    - composer run-script drupal-phpunit-upgrade-check
+    - *composer-setup
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
   script:
@@ -129,32 +132,44 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
 
-.default-component-unit-test-job-settings: &default-component-unit-test-job-settings
+.component-unit-test-job-settings: &component-unit-test-job-settings
   stage: 🪄 Lint
   before_script:
-    - composer validate
-    - composer install --optimize-autoloader
-    - composer run-script drupal-phpunit-upgrade-check
-    - docker-php-ext-enable pcov
+    - export _PHPUNIT_COVERAGE=""
   script:
+    - mkdir -p $_ARTIFACTS_DIR
+    - *composer-setup
     - |
       [[ $PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION == false ]] && export _FAIL_ON_PHPUNIT_DEPRECATION=""
       [[ $PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION != false ]] && export _FAIL_ON_PHPUNIT_DEPRECATION="--fail-on-phpunit-deprecation"
-    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=component-coverage-report.txt --coverage-cobertura=component-coverage-cobertura.xml --log-junit junit.xml --fail-on-deprecation $_FAIL_ON_PHPUNIT_DEPRECATION
-    # Process the coverage text report to produce an OpenMetrics report.
-    - php .gitlab-ci/scripts/component-coverage-metrics.php
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --log-junit $_ARTIFACTS_DIR/junit.xml --fail-on-deprecation $_FAIL_ON_PHPUNIT_DEPRECATION $_PHPUNIT_COVERAGE
   artifacts:
     when: always
     expire_in: 6 mos
     reports:
-      junit: junit.xml
-      metrics: component-coverage-metrics.txt
+      junit: $_ARTIFACTS_DIR/junit.xml
+    paths:
+      - $_ARTIFACTS_DIR
+
+.component-unit-test-job-settings-with-code-coverage: &component-unit-test-job-settings-with-code-coverage
+  <<: [ *component-unit-test-job-settings ]
+  before_script:
+    - export _PHPUNIT_COVERAGE="--coverage-text=$_ARTIFACTS_DIR/component-coverage-report.txt --coverage-cobertura=$_ARTIFACTS_DIR/component-coverage-cobertura.xml"
+    - docker-php-ext-enable pcov
+  after_script:
+    # Process the coverage text report to produce an OpenMetrics report.
+    - php .gitlab-ci/scripts/component-coverage-metrics.php $_ARTIFACTS_DIR/component-coverage-report.txt $_ARTIFACTS_DIR/component-coverage-metrics.txt
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: $_ARTIFACTS_DIR/junit.xml
+      metrics: $_ARTIFACTS_DIR/component-coverage-metrics.txt
       coverage_report:
         coverage_format: cobertura
-        path: component-coverage-cobertura.xml
+        path: $_ARTIFACTS_DIR/component-coverage-cobertura.xml
     paths:
-      - junit.xml
-      - component-coverage*
+      - $_ARTIFACTS_DIR
 
 .prepare-lint-directory: &prepare-lint-directory
   # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
@@ -500,9 +515,7 @@ default:
     - *prepare-lint-directory
     - *phpstan-cache
     - mkdir -p $_ARTIFACTS_DIR
-    - composer validate
-    - composer install --optimize-autoloader
-    - composer run-script drupal-phpunit-upgrade-check
+    - *composer-setup
     - if [ -n "$COMPOSER_UPDATE" ]; then
         composer update --optimize-autoloader;
         composer outdated;
@@ -561,9 +574,8 @@ default:
     KUBERNETES_CPU_REQUEST: "4"
     _ARTIFACTS_DIR: "test-artifacts/phpcs"
   before_script:
-    - composer validate
-    - composer install --optimize-autoloader
-    - composer run-script drupal-phpunit-upgrade-check
+    - mkdir -p $_ARTIFACTS_DIR
+    - *composer-setup
     - if [ -n "$COMPOSER_UPDATE" ]; then
         composer update --optimize-autoloader;
         composer outdated;
@@ -657,7 +669,7 @@ default:
       - core/.stylelintcache
 
 '⚡️ PHPUnit Unit tests on PHP 8.3':
-  <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
+  <<: [ *default-job-settings-lint, *core-unit-test-job-settings ]
   variables:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "4"
@@ -665,14 +677,14 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
 
 '⚡️ PHPUnit Unit tests on PHP 8.4':
-  <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
+  <<: [ *default-job-settings-lint, *core-unit-test-job-settings ]
   variables:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "4"
     CONCURRENCY: 24
 
 '⚡️ PHPUnit Unit tests on PHP 8.5':
-  <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
+  <<: [ *default-job-settings-lint, *core-unit-test-job-settings ]
   variables:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "4"
@@ -680,20 +692,23 @@ default:
     _TARGET_PHP: "8.5-ubuntu"
 
 '⚡️ Component unit tests on PHP 8.3':
-  <<: [ *default-component-unit-test-job-settings ]
+  <<: [ *component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+    _ARTIFACTS_DIR: "test-artifacts/phpunit"
     _TARGET_PHP: "8.3-ubuntu"
 
 '⚡️ Component unit tests on PHP 8.4':
-  <<: [ *default-component-unit-test-job-settings ]
+  <<: [ *component-unit-test-job-settings-with-code-coverage ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+    _ARTIFACTS_DIR: "test-artifacts/phpunit"
 
 '⚡️ Component unit tests on PHP 8.5':
-  <<: [ *default-component-unit-test-job-settings ]
+  <<: [ *component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+    _ARTIFACTS_DIR: "test-artifacts/phpunit"
     _TARGET_PHP: "8.5-ubuntu"
 
 '✅️ PHPStan rules tests':
