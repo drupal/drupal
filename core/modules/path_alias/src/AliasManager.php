@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Utility\FiberResumeType;
 
 /**
  * The default alias manager implementation.
@@ -137,7 +138,7 @@ class AliasManager implements AliasManagerInterface {
     // If we're inside a Fiber, suspend now, this allows other fibers to collect
     // more requested paths.
     if (\Fiber::getCurrent() !== NULL) {
-      \Fiber::suspend();
+      \Fiber::suspend(FiberResumeType::Immediate);
     }
 
     // If we reach here, then either there are no other Fibers, or none of them
