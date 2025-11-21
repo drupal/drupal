@@ -10,8 +10,19 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-$reportFilePath = __DIR__ . '/../../component-coverage-report.txt';
-$metricsFilePath = __DIR__ . '/../../component-coverage-metrics.txt';
+$args = $_SERVER['argv'];
+
+if (!isset($args[1])) {
+  echo "Input coverage report file path not specified.\n";
+  exit(2);
+}
+$reportFilePath = $args[1];
+
+if (!isset($args[2])) {
+  echo "Output metrics file path not specified.\n";
+  exit(2);
+}
+$metricsFilePath = $args[2];
 
 $report = @file_get_contents($reportFilePath);
 if (empty($report)) {
