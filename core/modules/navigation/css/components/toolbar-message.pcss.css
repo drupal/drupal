@@ -1,42 +1,44 @@
 /* cspell:ignore wght */
 
-.toolbar-message {
-  z-index: 1;
-  display: flex;
-  align-items: start;
-  cursor: pointer;
-  text-align: start;
-  text-decoration: none;
-  overflow-wrap: break-word;
-  color: var(--admin-toolbar-color-gray-800);
-  border: 0;
-  border-radius: var(--admin-toolbar-space-8);
-  background-color: var(--admin-toolbar-color-gray-050);
-  font-size: var(--admin-toolbar-font-size-info-sm);
-  line-height: var(--admin-toolbar-line-height-info-sm);
-  padding-inline: calc(0.75 * var(--admin-toolbar-rem));
-  padding-block: calc(0.75 * var(--admin-toolbar-rem));
-  font-variation-settings: "wght" 700;
-  gap: calc(0.5 * var(--admin-toolbar-rem));
-}
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  .toolbar-message {
+    z-index: 1;
+    display: flex;
+    align-items: start;
+    cursor: pointer;
+    text-align: start;
+    text-decoration: none;
+    overflow-wrap: break-word;
+    color: var(--admin-toolbar-color-gray-800);
+    border: 0;
+    border-radius: var(--admin-toolbar-space-8);
+    background-color: var(--admin-toolbar-color-gray-050);
+    font-size: var(--admin-toolbar-font-size-info-sm);
+    line-height: var(--admin-toolbar-line-height-info-sm);
+    padding-inline: calc(0.75 * var(--admin-toolbar-rem));
+    padding-block: calc(0.75 * var(--admin-toolbar-rem));
+    font-variation-settings: "wght" 700;
+    gap: calc(0.5 * var(--admin-toolbar-rem));
+  }
 
-.toolbar-message__icon {
-  flex-shrink: 0;
-  inline-size: var(--admin-toolbar-space-20);
-  block-size: var(--admin-toolbar-space-20);
-}
+  .toolbar-message__icon {
+    flex-shrink: 0;
+    inline-size: var(--admin-toolbar-space-20);
+    block-size: var(--admin-toolbar-space-20);
+  }
 
-html:not([data-admin-toolbar="expanded"]) .toolbar-message__label {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  width: 1px;
-  height: 1px;
-  white-space: nowrap;
-  clip-path: inset(50%);
-  opacity: 0;
-}
+  html:not([data-admin-toolbar="expanded"]) & .toolbar-message__label {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    white-space: nowrap;
+    clip-path: inset(50%);
+    opacity: 0;
+  }
 
-html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] .toolbar-message__label {
-  display: none;
+  html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] & .toolbar-message__label {
+    display: none;
+  }
 }
