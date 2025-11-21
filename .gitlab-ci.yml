@@ -129,8 +129,8 @@ default:
     fi
   # Get the cache file from the artifacts of the latest successful job from the
   # target branch. Allow the job to proceed and pass if the file doesn't exist.
-  - echo Downloading $CACHE_URL...
-  - curl --silent --fail --location -create-dirs --output $CACHE_FILE "$CACHE_URL" || true
+  - echo Downloading $CACHE_URL
+  - curl --fail --location --create-dirs --output $CACHE_FILE "$CACHE_URL" || true
 
 .core-spellcheck: &core-spellcheck
   - cd core
