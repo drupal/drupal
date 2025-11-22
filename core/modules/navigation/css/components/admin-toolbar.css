@@ -98,7 +98,6 @@ body {
     }
 
     @media (min-width: 64rem) {
-      block-size: calc(100vh - var(--drupal-displace-offset-top, 0px));
       transform: none;
       inset-block-start: 0;
     }
