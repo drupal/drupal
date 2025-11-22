@@ -17,6 +17,27 @@
   box-shadow: var(--off-canvas-wrapper-box-shadow);
 
   /*
+   * When the off-canvas appears at the top or bottom of the page (Workspaces
+   * does this), it should not obscure the Navigation module's toolbar.
+   *
+   * Note that we have to use `!important` below to override the dialog JS's
+   * inline CSS.
+   *
+   * @todo
+   * We *may* able to remove this code once the https://www.drupal.org/i/3096017
+   * is fixed.
+   */
+  [data-admin-toolbar] &:is([data-offset-top], [data-offset-bottom]) {
+    left: var(--drupal-displace-offset-left, 0) !important;
+    width: calc(100% - var(--drupal-displace-offset-left, 0px)) !important;
+
+    &:dir(rtl) {
+      right: var(--drupal-displace-offset-right, 0) !important;
+      width: calc(100% - var(--drupal-displace-offset-right, 0px)) !important;
+    }
+  }
+
+  /*
    * Force the off-canvas dialog to be 100% width at the same breakpoint the
    * dialog system uses to expand dialog widths.
    */
