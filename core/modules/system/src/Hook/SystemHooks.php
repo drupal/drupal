@@ -540,7 +540,7 @@ class SystemHooks {
    *
    * Transforms empty description into null.
    */
-  #[Hook('hook_entity_form_mode_presave')]
+  #[Hook('entity_form_mode_presave')]
   public function systemEntityFormModePresave(EntityInterface $entity): void {
     if ($entity->get('description') !== NULL && trim($entity->get('description')) === '') {
       @trigger_error("Setting description to an empty string is deprecated in drupal:11.2.0 and it must be null in drupal:12.0.0. See https://www.drupal.org/node/3452144", E_USER_DEPRECATED);
