@@ -8,8 +8,8 @@
     },
     "require": {
         "drupal/core": "11.x-dev",
-        "behat/mink": "v1.12.0",
-        "behat/mink-browserkit-driver": "v2.2.0",
+        "behat/mink": "v1.13.0",
+        "behat/mink-browserkit-driver": "v2.3.0",
         "brick/math": "0.14.0",
         "colinodell/psr-testlogger": "v1.3.0",
         "composer/ca-bundle": "1.5.8",
