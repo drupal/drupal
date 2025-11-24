@@ -14,7 +14,6 @@
 %Method "Behat\\Mink\\Driver\\CoreDriver::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\FunctionalJavascriptTests\\DrupalSelenium2Driver" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Behat\\Mink\\WebAssert::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\FunctionalJavascriptTests\\WebDriverWebAssert" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Behat\\Mink\\WebAssert::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\Tests\\WebAssert" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Doctrine\\Common\\Annotations\\Reader::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "Drupal\\Component\\Annotation\\Doctrine\\SimpleAnnotationReader" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\Extension\\ExtensionInterface::[^"]+" might add "array" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\TwigExtension" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\Loader\\FilesystemLoader::findTemplate\(\)" might add "\?string" as a native return type declaration in the future. Do the same in child class "Drupal\\Core\\Template\\Loader\\FilesystemLoader" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\Loader\\LoaderInterface::exists\(\)" might add "bool" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\Loader\\StringLoader" now to avoid errors or add an explicit @return annotation to suppress this message%
@@ -27,10 +26,6 @@
 # Indirect deprecations. These are not in Drupal's remit to fix, but it is
 # worth keeping track of dependencies' issues.
 %Method "Iterator::[^"]+" might add "void" as a native return type declaration in the future. Do the same in implementation "org\\bovigo\\vfs\\vfsStreamContainerIterator" now to avoid errors or add an explicit @return annotation to suppress this message%
-
-# Symfony 7.2.
-%Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_length" option is deprecated and will be ignored in Symfony 8.0.%
-%Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_bits_per_character" option is deprecated and will be ignored in Symfony 8.0.%
 
 # Drupal 12.
 %The "Drupal\\Core\\Database\\Query\\Select::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
@@ -46,7 +41,6 @@
 %Class "Drupal\\migrate_drupal\\Plugin\\migrate\\source\\DrupalSqlBase" as extended by "Drupal\\Tests\\migrate_drupal\\[^"]+" is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0%
 %Migrate source plugin "md_empty" used in migration "(d6_upload_field|user_picture_field)" is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0%
 %Trait "Drupal\\migrate_drupal\\Plugin\\migrate\\source\\I18nQueryTrait" used by "Drupal\\(block_content|menu_link_content|taxonomy)\\[^"]+" is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0%
-%Class "Drupal\\migrate_drupal\\Plugin\\Plugin\\MigrateFieldPluginManager" is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566%
 %Drupal\\migrate_drupal\\Plugin\\MigrateFieldPluginManager\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566%
 %The "plugin.manager.migrate.field" service is deprecated in drupal:11.3 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566%
 %Drupal\\field\\Plugin\\migrate\\process\\ProcessField\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.%
