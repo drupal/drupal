@@ -29,7 +29,7 @@ field.widget.settings.link_default:
   label: 'Link format settings'
   mapping:
     placeholder_url:
-      type: string
+      type: label
       label: 'Placeholder for URL'
     placeholder_title:
       type: label
