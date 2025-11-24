@@ -284,9 +284,7 @@ abstract class BrowserTestBase extends TestCase {
     }
 
     if ($this->minkDefaultDriverClass === BrowserKitDriver::class) {
-      $browser = new DrupalTestBrowser();
-      $browser->useHtml5Parser(FALSE);
-      $driver = new $this->minkDefaultDriverClass($browser);
+      $driver = new $this->minkDefaultDriverClass(new DrupalTestBrowser());
     }
     elseif (is_array($this->minkDefaultDriverArgs)) {
       // Use ReflectionClass to instantiate class with received params.
