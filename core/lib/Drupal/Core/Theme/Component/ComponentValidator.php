@@ -136,6 +136,7 @@ class ComponentValidator {
       $this->validator->getErrors()
     );
     $message_parts = [
+      sprintf('In component %s:', $definition['id']),
       ...$message_parts,
       ...$missing_class_errors,
     ];
