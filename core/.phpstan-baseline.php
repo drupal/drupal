@@ -47657,13 +47657,6 @@ Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method useHtml5Parser\\(\\) of class Symfony\\\\Component\\\\BrowserKit\\\\AbstractBrowser\\:
-since Symfony 7\\.4, Symfony 8 will unconditionally use the native HTML5 parser$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:__construct\\(\\) overrides @final method PHPUnit\\\\Framework\\\\TestCase\\:\\:__construct\\(\\)\\.$#',
 	'identifier' => 'method.parentMethodFinalByPhpDoc',
 	'count' => 1,
