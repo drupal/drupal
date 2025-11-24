@@ -48,23 +48,9 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    weight: 3
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 7
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    weight: 4
     region: content
     settings:
       display_label: true
@@ -94,3 +80,5 @@ content:
     third_party_settings: {  }
 hidden:
   layout_builder__layout: true
+  promote: true
+  sticky: true

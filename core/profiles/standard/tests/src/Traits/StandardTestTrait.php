@@ -43,6 +43,7 @@ trait StandardTestTrait {
 
     // Test anonymous user can access 'Main navigation' block.
     $this->adminUser = $this->drupalCreateUser([
+      'administer nodes',
       'administer blocks',
       'administer block content',
       'post comments',
@@ -92,6 +93,15 @@ trait StandardTestTrait {
     $this->drupalGet('rss.xml');
     $this->assertSession()->responseContains('Foobar');
     $this->assertSession()->responseNotContains('Then she picked out two somebodies, Sally and me');
+
+    // Test promote and sticky fields are hidden by default for the page content
+    // type and visible for the article content type.
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->fieldNotExists('promote[value]');
+    $this->assertSession()->fieldNotExists('sticky[value]');
+    $this->drupalGet('node/add/article');
+    $this->assertSession()->fieldExists('promote[value]');
+    $this->assertSession()->fieldExists('sticky[value]');
 
     // Ensure block body exists.
     $this->drupalGet('block/add');
