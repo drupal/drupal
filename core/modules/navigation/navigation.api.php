@@ -65,10 +65,10 @@ function hook_navigation_content_top_alter(array &$content_top): void {
  *    specific settings:
  *      - id: The Navigation Block plugin ID.
  *      - label: The block label.
- *      -label_display: 0 or 1 depending on whether the label should be
- *      displayed or not.
+ *      - label_display: '0' or 'visible' depending on whether the label should
+ *        be displayed or not.
  *      - provider: The module that provides the block. In general, the module
- *      that defines the Navigation block.
+ *        that defines the Navigation block.
  */
 function hook_navigation_defaults(): array {
   $blocks = [];
@@ -78,7 +78,7 @@ function hook_navigation_defaults(): array {
     'configuration' => [
       'id' => 'navigation_test',
       'label' => 'My test block',
-      'label_display' => 1,
+      'label_display' => 'visible',
       'provider' => 'navigation_test_block',
       'test_block_setting_foo' => 'Foo',
       'test_block_setting_bar' => 1,

@@ -85,7 +85,7 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
    */
   public function defaultConfiguration() {
     return [
-      'label_display' => FALSE,
+      'label_display' => '0',
       'formatter' => [
         'settings' => [],
         'third_party_settings' => [],

@@ -38,7 +38,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['label_display' => FALSE];
+    return ['label_display' => '0'];
   }
 
   /**

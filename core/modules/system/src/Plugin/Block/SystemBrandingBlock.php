@@ -62,7 +62,7 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
       'use_site_logo' => TRUE,
       'use_site_name' => TRUE,
       'use_site_slogan' => TRUE,
-      'label_display' => FALSE,
+      'label_display' => '0',
     ];
   }
 

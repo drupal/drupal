@@ -262,7 +262,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       'settings' => [
         'id' => 'system_menu_block:account',
         'label' => 'Account Menu',
-        'label_display' => FALSE,
+        'label_display' => '0',
         'provider' => 'system',
         'level' => $level,
         'depth' => $depth,

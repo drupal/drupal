@@ -64,7 +64,7 @@ class AddNavigationBlockConfigActionTest extends KernelTestBase {
       'configuration' => [
         'id' => 'navigation_menu:content',
         'label' => 'Content From Recipe',
-        'label_display' => 1,
+        'label_display' => 'visible',
         'provider' => 'navigation',
         'level' => 1,
         'depth' => 2,

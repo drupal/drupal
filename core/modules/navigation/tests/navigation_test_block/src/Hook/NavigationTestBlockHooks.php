@@ -31,7 +31,7 @@ class NavigationTestBlockHooks {
       'configuration' => [
         'id' => 'navigation_test',
         'label' => 'My test block',
-        'label_display' => 1,
+        'label_display' => 'visible',
         'provider' => 'navigation_test_block',
       ],
     ];

@@ -12,6 +12,6 @@ weight: 0
 plugin: test_html
 settings:
   label: 'Test HTML block'
-  label_display: hidden
+  label_display: '0'
   provider: block_test
 visibility: {  }

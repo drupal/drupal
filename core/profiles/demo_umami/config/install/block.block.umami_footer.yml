@@ -16,7 +16,7 @@ plugin: 'system_menu_block:footer'
 settings:
   id: 'system_menu_block:footer'
   label: 'Tell us what you think'
-  label_display: '1'
+  label_display: 'visible'
   provider: system
   level: 1
   depth: null

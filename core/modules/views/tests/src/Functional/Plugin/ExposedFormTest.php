@@ -264,7 +264,7 @@ class ExposedFormTest extends ViewTestBase {
     $block = $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-' . $display);
 
     // Set label to display on the exposed filter form block.
-    $block->getPlugin()->setConfigurationValue('label_display', TRUE);
+    $block->getPlugin()->setConfigurationValue('label_display', 'visible');
     $block->save();
 
     // Assert that the only two occurrences of `$view->getTitle()` are the title
@@ -283,7 +283,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertSession()->responseContains('<strong>Custom</strong> title alert("hacked!");');
 
     // Set label to hidden on the exposed filter form block.
-    $block->getPlugin()->setConfigurationValue('label_display', FALSE);
+    $block->getPlugin()->setConfigurationValue('label_display', '0');
     $block->save();
 
     // Test that the label is removed.
