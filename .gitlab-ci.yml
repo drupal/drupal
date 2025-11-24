@@ -68,7 +68,7 @@ variables:
   # and on Kubernetes there is no risk of conflict between jobs.
   GIT_CLONE_PATH: $CI_BUILDS_DIR
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  PRIMARY_PHP: "8.4-ubuntu"
+  PRIMARY_PHP: "8.5-ubuntu"
   _TARGET_PHP: "${PRIMARY_PHP}"
   PHPUNIT_CONFIGURATION_FILE_PATH: $CI_PROJECT_DIR/core
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
@@ -308,7 +308,7 @@ default:
         path: core/tests/PHPStan/coverage.cobertura.xml
 
 # Default configuration.
-'DEFAULT: PHP 8.4 MySQL 8.4':
+'DEFAULT: PHP 8.5 MySQL 8.4':
   <<: *default-stage
   variables:
     _TARGET_DB: "mysql-8.4"
@@ -327,7 +327,7 @@ default:
     - if: $PERFORMANCE_TEST == "1"
 
 # Re-run the pipeline, but with Composer updates.
-'DEFAULT: Updated dependencies (PHP 8.4 MySQL 8.4)':
+'DEFAULT: Updated dependencies (PHP 8.5 MySQL 8.4)':
   <<: *default-stage
   # Run daily and allow manual runs on MRs.
   rules:
@@ -342,7 +342,7 @@ default:
     include: .gitlab-ci.yml
 
 # Special job for MRs for test-only checks.
-'DEFAULT: Test-only (PHP 8.4 MySQL 8.4)':
+'DEFAULT: Test-only (PHP 8.5 MySQL 8.4)':
   <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
@@ -377,9 +377,26 @@ default:
     _TARGET_DB_DRIVER: "mysqli"
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
+'PHP 8.4 MySQ: 8.4':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mysql-8.4"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
+
+'PHP 8.4 MariaDB 10.6':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mariadb-10.6"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
+
 'mysqli - PHP 8.4 MySQL 9.4':
   <<: [ *default-stage, *run-on-mr ]
   variables:
+    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mysql-9"
     _TARGET_DB_DRIVER: "mysqli"
     _TARGET_DB_DRIVER_MODULE: "mysqli"
@@ -403,6 +420,7 @@ default:
 'PHP 8.4 MySQL 9.4':
   <<: [ *default-stage, *run-on-mr ]
   variables:
+    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mysql-9"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
@@ -425,6 +443,7 @@ default:
 'PHP 8.4 PostgreSQL 17':
   <<: [ *default-stage, *run-on-mr ]
   variables:
+    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "pgsql-17"
 
 'PHP 8.5 PostgreSQL 17':
@@ -442,6 +461,7 @@ default:
 'PHP 8.4 SQLite 3.45':
   <<: [ *default-stage, *run-on-mr ]
   variables:
+    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "sqlite-3"
 
 'PHP 8.5 SQLite 3.45':
@@ -453,6 +473,7 @@ default:
 'PHP 8.4 MySQL 8.0':
   <<: [ *default-stage, *run-on-mr ]
   variables:
+    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mysql-8"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
@@ -461,7 +482,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.3 PostgreSQL 16':
   extends: 'PHP 8.3 PostgreSQL 16'
-  needs: [ 'DEFAULT: PHP 8.4 MySQL 8.4' ]
+  needs: [ 'DEFAULT: PHP 8.5 MySQL 8.4' ]
   <<: [ *run-on-commit ]
 
 '[Commit] PHP 8.3 SQLite 3.45':
@@ -473,7 +494,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Daily] PHP 8.3 PostgreSQL 16':
   extends: 'PHP 8.3 PostgreSQL 16'
-  needs: [ 'DEFAULT: PHP 8.4 MySQL 8.4' ]
+  needs: [ 'DEFAULT: PHP 8.5 MySQL 8.4' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.3 SQLite 3.45':
@@ -481,19 +502,19 @@ default:
   needs: [ '[Daily] PHP 8.3 PostgreSQL 16' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.3 MariaDB 10.6':
-  extends: 'PHP 8.3 MariaDB 10.6'
+'[Daily] PHP 8.4 MariaDB 10.6':
+  extends: 'PHP 8.4 MariaDB 10.6'
   needs: [ '[Daily] PHP 8.3 SQLite 3.45' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.4 MySQL 8.0':
-  extends: 'PHP 8.4 MySQL 8.0'
-  needs: [ '[Daily] PHP 8.3 MariaDB 10.6' ]
+'[Daily] PHP 8.5 MySQL 9.3':
+  extends: 'PHP 8.5 MySQL 9.3'
+  needs: [ '[Daily] PHP 8.4 MariaDB 10.6' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.4 PostgreSQL 17':
-  extends: 'PHP 8.4 PostgreSQL 17'
-  needs: [ '[Daily] PHP 8.4 MySQL 8.0' ]
+'[Daily] PHP 8.5 PostgreSQL 17':
+  extends: 'PHP 8.5 PostgreSQL 17'
+  needs: [ '[Daily] PHP 8.5 MySQL 9.3' ]
   <<: [ *run-daily ]
 
 ################
