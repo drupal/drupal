@@ -10,6 +10,7 @@ use Drupal\block_content_test\Plugin\EntityReferenceSelection\TestSelection;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -146,7 +147,9 @@ class BlockContentEntityReferenceSelectionTest extends KernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
+  #[IgnoreDeprecations]
   public function testNoConditions(): void {
+    $this->expectDeprecation('Automatically filtering block_content entity reference selection queries to only reusable blocks is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Either add the condition manually in buildEntityQuery, or extend \Drupal\block_content\Plugin\EntityReferenceSelection\BlockContentSelection. See https://www.drupal.org/node/3521459');
     $this->assertEquals(
       $this->expectations['block_reusable'],
       $this->selectionHandler->getReferenceableEntities()

@@ -4,6 +4,7 @@ namespace Drupal\block_content\Hook;
 
 use Drupal\block\BlockConfigUpdater;
 use Drupal\block\BlockInterface;
+use Drupal\block_content\Plugin\EntityReferenceSelection\BlockContentSelection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -106,9 +107,16 @@ class BlockContentHooks {
    */
   #[Hook('query_entity_reference_alter')]
   public function queryEntityReferenceAlter(AlterableInterface $query): void {
+    if (($query->alterMetaData['entity_reference_selection_handler'] ?? NULL) instanceof BlockContentSelection) {
+      // The entity reference selection plugin module provided by this module
+      // already filters out non-reusable blocks so no altering of the query is
+      // needed.
+      return;
+    }
     if ($query instanceof SelectInterface && $query->getMetaData('entity_type') === 'block_content' && $query->hasTag('block_content_access')) {
       $data_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getDataTable();
       if (array_key_exists($data_table, $query->getTables()) && !_block_content_has_reusable_condition($query->conditions(), $query->getTables())) {
+        @trigger_error('Automatically filtering block_content entity reference selection queries to only reusable blocks is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Either add the condition manually in buildEntityQuery, or extend \Drupal\block_content\Plugin\EntityReferenceSelection\BlockContentSelection. See https://www.drupal.org/node/3521459', E_USER_DEPRECATED);
         $query->condition("{$data_table}.reusable", TRUE);
       }
     }
