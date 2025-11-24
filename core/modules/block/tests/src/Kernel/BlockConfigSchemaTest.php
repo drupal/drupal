@@ -81,7 +81,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
         'settings' => [
           'label' => $this->randomMachineName(),
           'provider' => 'system',
-          'label_display' => FALSE,
+          'label_display' => '0',
         ],
         'visibility' => [],
       ]);

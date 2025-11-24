@@ -24,7 +24,7 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
    */
   public function defaultConfiguration() {
     return [
-      'label_display' => FALSE,
+      'label_display' => '0',
     ];
   }
 

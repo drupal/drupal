@@ -287,7 +287,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertSession()->elementTextEquals('xpath', "{$block_xpath}//footer", 'test_view_block');
 
     // Hide the title.
-    $block->getPlugin()->setConfigurationValue('label_display', FALSE);
+    $block->getPlugin()->setConfigurationValue('label_display', '0');
     $block->save();
 
     $this->drupalGet('');

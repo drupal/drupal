@@ -227,7 +227,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    */
   public function defaultConfiguration() {
     return [
-      'label_display' => FALSE,
+      'label_display' => '0',
       'formatter' => [
         'label' => 'above',
         'type' => $this->pluginDefinition['default_formatter'],

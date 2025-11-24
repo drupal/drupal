@@ -219,7 +219,7 @@ class NavigationLinkBlockTest extends PageCacheTagsTestBase {
     $section->appendComponent(new SectionComponent(\Drupal::service('uuid')->generate(), 'content', [
       'id' => 'navigation_link',
       'label' => $label,
-      'label_display' => '1',
+      'label_display' => 'visible',
       'provider' => 'navigation',
       'context_mapping' => [],
       'title' => $link_title,

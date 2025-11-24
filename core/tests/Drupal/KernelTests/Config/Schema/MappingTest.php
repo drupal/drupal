@@ -60,7 +60,7 @@ class MappingTest extends KernelTestBase {
             'use_site_logo' => TRUE,
             'use_site_name' => TRUE,
             'use_site_slogan' => TRUE,
-            'label_display' => FALSE,
+            'label_display' => '0',
             // This is inherited from `type: block_settings`.
             'context_mapping' => [],
           ],
@@ -100,7 +100,7 @@ class MappingTest extends KernelTestBase {
           'theme' => 'stark',
           'status' => TRUE,
           'settings' => [
-            'label_display' => FALSE,
+            'label_display' => '0',
             // This is inherited from `type: block_settings`.
             'context_mapping' => [],
           ],

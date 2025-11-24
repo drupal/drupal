@@ -100,7 +100,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
         'id' => 'local_tasks_block',
         'label' => $this->randomMachineName(),
         'provider' => 'core',
-        'label_display' => FALSE,
+        'label_display' => '0',
         'primary' => TRUE,
         'secondary' => TRUE,
       ],

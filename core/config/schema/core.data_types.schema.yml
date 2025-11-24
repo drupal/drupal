@@ -456,8 +456,13 @@ block_settings:
       type: label
       label: 'Description'
     label_display:
-      type: label
+      type: string
       label: 'Display title'
+      constraints:
+        Choice:
+          - '0'
+          - visible
+        NotBlank: []
     provider:
       type: string
       label: 'Provider of this block plugin'

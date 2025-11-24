@@ -70,7 +70,7 @@ class LocalActionsBlock extends BlockBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['label_display' => FALSE];
+    return ['label_display' => '0'];
   }
 
   /**
