@@ -692,7 +692,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     if ($this->siteDirectory && !str_starts_with($this->siteDirectory, 'vfs://')) {
       // Delete test site directory.
       $callback = function (string $path) {
-        @chmod($path, 0700);
+        if (!is_link($path)) {
+          @chmod($path, 0700);
+        }
       };
       \Drupal::service('file_system')->deleteRecursive($this->siteDirectory, $callback);
     }
