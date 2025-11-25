@@ -1312,12 +1312,12 @@ function simpletest_script_reporter_display_summary($class, $results, $duration 
     $summary[] = 'exit code ' . $results['#exit_code'];
   }
 
-  if ($results['#time']) {
-    $time = sprintf('%8.3fs', $results['#time']);
-  }
-  else {
-    $time = sprintf('%8.3fs', $duration);
-  }
+  // The key $results['#time'] holds the sum of the tests execution times,
+  // without taking into account the process spawning time and the setup
+  // times of the tests themselves. So for reporting to be consistent with
+  // PHPUnit CLI reported execution time, we report here the overall time of
+  // execution of the spawned process.
+  $time = sprintf('%8.3fs', $duration);
 
   $output = vsprintf('%s %s %s', [$time, trim_with_ellipsis($class, 70, STR_PAD_LEFT), implode(', ', $summary)]);
   $status = ($results['#fail'] || $results['#cli_fail'] || $results['#exception'] || $results['#error'] ? 'fail' : 'pass');
@@ -1463,7 +1463,17 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result): void {
   global $args, $results_map, $color;
 
-  $summary = sprintf("%-9.9s %9.3fs %s\n", $results_map[$result->status], $result->time, trim_with_ellipsis($result->function, 80, STR_PAD_LEFT));
+  if ($result->time == 0) {
+    $duration = "          ";
+  }
+  elseif ($result->time < 0.001) {
+    $duration = "     <1 ms";
+  }
+  else {
+    $duration = sprintf("%9.3fs", $result->time);
+  }
+
+  $summary = sprintf("%-9.9s %s %s\n", $results_map[$result->status], $duration, trim_with_ellipsis($result->function, 80, STR_PAD_LEFT));
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 
