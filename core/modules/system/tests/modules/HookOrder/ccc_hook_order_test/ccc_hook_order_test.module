@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 /**
  * Implements hook_test_hook().
+ *
+ * This implementation has no ordering modifications.
  */
 function ccc_hook_order_test_test_hook(): string {
   return __FUNCTION__;
@@ -16,6 +18,8 @@ function ccc_hook_order_test_test_hook(): string {
 
 /**
  * Implements hook_sparse_test_hook().
+ *
+ * This implementation has no ordering modifications.
  */
 function ccc_hook_order_test_sparse_test_hook(): string {
   return __FUNCTION__;
@@ -23,6 +27,8 @@ function ccc_hook_order_test_sparse_test_hook(): string {
 
 /**
  * Implements hook_procedural_alter().
+ *
+ * This implementation has no ordering modifications.
  */
 function ccc_hook_order_test_procedural_alter(array &$calls): void {
   $calls[] = __FUNCTION__;
@@ -30,6 +36,8 @@ function ccc_hook_order_test_procedural_alter(array &$calls): void {
 
 /**
  * Implements hook_procedural_subtype_alter().
+ *
+ * This implementation has no ordering modifications.
  */
 function ccc_hook_order_test_procedural_subtype_alter(array &$calls): void {
   $calls[] = __FUNCTION__;
@@ -37,6 +45,9 @@ function ccc_hook_order_test_procedural_subtype_alter(array &$calls): void {
 
 /**
  * Implements hook_test_procedural_reorder().
+ *
+ * This implementation is removed in
+ * \Drupal\aaa_hook_order_test\Hook\AHooks::testProceduralReorder().
  */
 function ccc_hook_order_test_test_procedural_reorder(): string {
   return __FUNCTION__;

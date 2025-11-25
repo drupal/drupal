@@ -13,34 +13,71 @@ use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\ReorderHook;
 
 /**
- * This class contains hook implementations.
+ * Provides hook implementations for testing the execution order of hooks.
  *
- * By default, these will be called in module order, which is predictable due
- * to the alphabetical module names. Some of the implementations are reordered
- * using order attributes.
+ * By default, these will be called in module order, which is predictable due to
+ * the alphabetical module names.
+ *
+ * Two attributes are used to change the 'test_hook' implementations in module
+ * ccc_hook_order_test. One is the ReorderHook attribute which is used to put
+ * the \Drupal\ccc_hook_order_test\Hook\CHooks::testHookFirst() first. The other
+ * is RemoveHook which is used to remove
+ * \Drupal\ccc_hook_order_test\Hook\CHooks::testHookRemoved(). Both of those
+ * attributes are declared in \Drupal\ddd_hook_order_test\Hook\DHooks.
+ *
+ * @see \Drupal\KernelTests\Core\Hook\HookOrderTest::testHookOrder()
+ * @see \Drupal\KernelTests\Core\Hook\HookOrderTest::testBothParametersHookOrder()
  */
 class AHooks {
 
+  /**
+   * Implements hook_test_hook().
+   *
+   * This implementation has no ordering modifications.
+   */
   #[Hook('test_hook')]
   public function testHook(): string {
     return __METHOD__;
   }
 
+  /**
+   * Implements hook_test_hook().
+   *
+   * This implementation changes its order to be first.
+   */
   #[Hook('test_hook', order: Order::First)]
   public function testHookFirst(): string {
     return __METHOD__;
   }
 
+  /**
+   * Implements hook_test_hook().
+   *
+   * This implementation changes its order to be last.
+   */
   #[Hook('test_hook', order: Order::Last)]
   public function testHookLast(): string {
     return __METHOD__;
   }
 
+  /**
+   * Implements hook_test_hook().
+   *
+   * This implementation changes its order to be after the hooks in module
+   * bbb_hook_order_test.
+   */
   #[Hook('test_hook', order: new OrderAfter(modules: ['bbb_hook_order_test']))]
   public function testHookAfterB(): string {
     return __METHOD__;
   }
 
+  /**
+   * Implements test_both_parameters_hook().
+   *
+   * This implementation changes its order to be after the hooks in module
+   * bbb_hook_order_test and
+   * \Drupal\ccc_hook_order_test\Hook\CHooks::testBothParametersHook().)
+   */
   #[Hook(
     'test_both_parameters_hook',
     order: new OrderAfter(
@@ -52,6 +89,9 @@ class AHooks {
     return __METHOD__;
   }
 
+  /**
+   * Implements test_procedural_reorder().
+   */
   #[ReorderHook('test_procedural_reorder', ProceduralCall::class, 'bbb_hook_order_test_test_procedural_reorder', Order::First)]
   #[RemoveHook('test_procedural_reorder', ProceduralCall::class, 'ccc_hook_order_test_test_procedural_reorder')]
   #[Hook('test_procedural_reorder')]

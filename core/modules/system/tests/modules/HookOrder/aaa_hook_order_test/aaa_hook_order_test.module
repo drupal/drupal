@@ -11,6 +11,8 @@ use Drupal\aaa_hook_order_test\Hook\ModuleImplementsAlter;
 
 /**
  * Implements hook_test_hook().
+ *
+ * This implementation has no ordering modifications.
  */
 function aaa_hook_order_test_test_hook(): string {
   return __FUNCTION__;
@@ -18,6 +20,8 @@ function aaa_hook_order_test_test_hook(): string {
 
 /**
  * Implements hook_sparse_test_hook().
+ *
+ * This implementation has no ordering modifications.
  */
 function aaa_hook_order_test_sparse_test_hook(): string {
   return __FUNCTION__;
@@ -25,6 +29,8 @@ function aaa_hook_order_test_sparse_test_hook(): string {
 
 /**
  * Implements hook_procedural_alter().
+ *
+ * This implementation has no ordering modifications.
  */
 function aaa_hook_order_test_procedural_alter(array &$calls): void {
   $calls[] = __FUNCTION__;
@@ -32,6 +38,8 @@ function aaa_hook_order_test_procedural_alter(array &$calls): void {
 
 /**
  * Implements hook_procedural_subtype_alter().
+ *
+ * This implementation has no ordering modifications.
  */
 function aaa_hook_order_test_procedural_subtype_alter(array &$calls): void {
   $calls[] = __FUNCTION__;
@@ -39,6 +47,8 @@ function aaa_hook_order_test_procedural_subtype_alter(array &$calls): void {
 
 /**
  * Implements hook_module_implements_alter().
+ *
+ * This implementation has no ordering modifications.
  */
 function aaa_hook_order_test_module_implements_alter(array &$implementations, string $hook): void {
   ModuleImplementsAlter::call($implementations, $hook);

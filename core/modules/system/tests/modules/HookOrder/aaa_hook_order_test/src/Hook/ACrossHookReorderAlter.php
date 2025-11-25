@@ -15,13 +15,16 @@ use Drupal\Core\Hook\Order\Order;
  */
 class ACrossHookReorderAlter {
 
+  /**
+   * Implements hook_test_cross_hook_reorder_base_alter().
+   */
   #[Hook('test_cross_hook_reorder_base_alter', order: Order::Last)]
   public function baseAlterLast(array &$calls): void {
     $calls[] = __METHOD__;
   }
 
   /**
-   * Implements the base alter hook.
+   * Implements hook_test_cross_hook_reorder_base_alter().
    *
    * This method implements the base alter hook, and has an Order::Last rule.
    * In addition, it is targeted by a #[ReorderHook] for the subtype alter hook.
@@ -34,6 +37,9 @@ class ACrossHookReorderAlter {
     $calls[] = __METHOD__;
   }
 
+  /**
+   * Implements hook_test_cross_hook_reorder_base_alter().
+   */
   #[ReorderHook('test_cross_hook_reorder_subtype_alter', self::class, 'baseAlterLastIfSubtype', Order::Last)]
   #[Hook('test_cross_hook_reorder_base_alter')]
   public function baseAlterLastIfSubtype(array &$calls): void {
@@ -56,17 +62,26 @@ class ACrossHookReorderAlter {
     $calls[] = __METHOD__;
   }
 
+  /**
+   * Implements hook_test_cross_hook_reorder_subtype_alter().
+   */
   #[ReorderHook('test_cross_hook_reorder_base_alter', self::class, 'subtypeAlterLastIfBaseHook', Order::Last)]
   #[Hook('test_cross_hook_reorder_subtype_alter')]
   public function subtypeAlterLastIfBaseHook(array &$calls): void {
     $calls[] = __METHOD__;
   }
 
+  /**
+   * Implements hook_test_cross_hook_reorder_base_alter().
+   */
   #[Hook('test_cross_hook_reorder_base_alter')]
   public function baseAlter(array &$calls): void {
     $calls[] = __METHOD__;
   }
 
+  /**
+   * Implements test_cross_hook_reorder_subtype_alter().
+   */
   #[Hook('test_cross_hook_reorder_subtype_alter')]
   public function subtypeAlter(array &$calls): void {
     $calls[] = __METHOD__;
