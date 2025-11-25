@@ -10,7 +10,6 @@ use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
-use Pdo\Sqlite;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.
@@ -78,8 +77,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * Constructs a \Drupal\sqlite\Driver\Database\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
-    // @phpstan-ignore class.notFound
-    assert(\PHP_VERSION_ID >= 80400 ? $connection instanceof Sqlite : TRUE);
+    assert(\PHP_VERSION_ID >= 80400 ? $connection instanceof SqliteConnection : TRUE);
     parent::__construct($connection, $connection_options);
 
     // Empty prefix means query the main database -- no need to attach anything.
@@ -111,8 +109,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
     try {
       if (\PHP_VERSION_ID >= 80400) {
-        // @phpstan-ignore class.notFound
-        $sqlite = new Sqlite('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+        // @phpstan-ignore new.noConstructor
+        $sqlite = new SqliteConnection('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
       }
       else {
         $sqlite = new PDOConnection('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
