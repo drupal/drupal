@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 /**
  * Implements hook_test_hook().
+ *
+ * This implementation has no ordering modifications.
  */
 function ddd_hook_order_test_test_hook(): string {
   return __FUNCTION__;

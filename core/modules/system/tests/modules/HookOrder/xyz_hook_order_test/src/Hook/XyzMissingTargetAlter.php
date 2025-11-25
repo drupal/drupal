@@ -25,7 +25,7 @@ class XyzMissingTargetAlter {
   /**
    * Hook order attributes that target possibly non-existing alter methods.
    *
-   * (The targeted methods don't exist if module B is disabled.)
+   * The targeted methods only exist if module B is installed.
    */
   #[ReorderHook('test_ab_alter', BMissingTargetAlter::class, 'testABAlterReorderedFirstByXyz', Order::First)]
   #[RemoveHook('test_ab_alter', BMissingTargetAlter::class, 'testABAlterRemovedByXyz')]
@@ -34,7 +34,7 @@ class XyzMissingTargetAlter {
   /**
    * Hook order attributes that target a hook with possibly no implementations.
    *
-   * (The target hook has no implementations if module B is disabled.)
+   * The target hook has implementations only if module B is installed.
    */
   #[ReorderHook('test_b_alter', BMissingTargetAlter::class, 'testBAlterReorderedFirstByXyz', Order::First)]
   #[RemoveHook('test_b_alter', BMissingTargetAlter::class, 'testBAlterRemovedByXyz')]
