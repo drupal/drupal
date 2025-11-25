@@ -105,6 +105,12 @@ final class ConsoleInputCollector implements InputCollectorInterface {
     // input definitions should define constraints.
     unset($arguments['validator']);
 
+    // \Symfony\Component\Console\Style\StyleInterface::ask expects the default
+    // value to be a string or NULL. Therefore, let's cast it to a string if
+    // necessary.
+    if (isset($arguments['default']) && !is_string($arguments['default']) && $method === 'ask') {
+      $arguments['default'] = (string) $arguments['default'];
+    }
     return $this->io->$method(...$arguments);
   }
 
