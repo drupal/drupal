@@ -105,8 +105,11 @@
   .pager__item--last .pager__link::after {
     background-color: linktext;
     background-image: none;
+    -webkit-mask-image: var(--background-image);
     mask-image: var(--background-image);
+    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
+    -webkit-mask-position: center;
     mask-position: center;
   }
 }

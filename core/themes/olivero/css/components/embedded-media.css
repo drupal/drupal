@@ -60,7 +60,7 @@ figcaption {
      * @see https://github.com/csstools/postcss-plugins/issues/632
      */
   }
-  .align-right:dir(rtl) {
+  [dir="rtl"] .align-right {
     float: left;
   }
 }
@@ -124,7 +124,7 @@ figcaption {
      * @see https://github.com/csstools/postcss-plugins/issues/632
      */
   }
-  .align-left:dir(rtl) {
+  [dir="rtl"] .align-left {
     float: right;
   }
 }

@@ -111,7 +111,6 @@ closethick
 codesniffer
 colgroups
 colinodell
-colour
 colspans
 columnschange
 comida

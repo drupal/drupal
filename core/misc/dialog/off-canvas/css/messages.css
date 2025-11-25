@@ -50,7 +50,9 @@
 @media (forced-colors: active) {
   #drupal-off-canvas-wrapper .messages::before {
     background: canvastext;
+    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
     mask-size: contain;
   }
 }
@@ -90,6 +92,7 @@
 @media (forced-colors: active) {
   #drupal-off-canvas-wrapper .messages--status::before {
     background: canvastext;
+    -webkit-mask-image: var(--off-canvas-messages-icon-status);
     mask-image: var(--off-canvas-messages-icon-status);
   }
 }
@@ -105,6 +108,7 @@
 @media (forced-colors: active) {
   #drupal-off-canvas-wrapper .messages--warning::before {
     background: canvastext;
+    -webkit-mask-image: var(--off-canvas-messages-icon-warning);
     mask-image: var(--off-canvas-messages-icon-warning);
   }
 }
@@ -120,6 +124,7 @@
 @media (forced-colors: active) {
   #drupal-off-canvas-wrapper .messages--error::before {
     background: canvastext;
+    -webkit-mask-image: var(--off-canvas-messages-icon-error);
     mask-image: var(--off-canvas-messages-icon-error);
   }
 }

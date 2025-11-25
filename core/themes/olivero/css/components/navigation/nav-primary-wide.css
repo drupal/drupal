@@ -169,7 +169,7 @@
     border-top-width: 3px;
   }
 
-  body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner::after:dir(rtl) {
+  [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner::after {
     transform-origin: right;
   }
 

@@ -45,7 +45,7 @@
    */
 }
 
-.filter-help:dir(rtl) {
+[dir="rtl"] .filter-help {
   float: left;
 }
 

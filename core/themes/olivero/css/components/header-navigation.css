@@ -40,7 +40,7 @@
   transform: translateX(calc(-100% - var(--drupal-displace-offset-right, 0px))); /* LTR */
 }
 
-.header-nav.is-active:dir(rtl) {
+[dir="rtl"] .header-nav.is-active {
   transform: translateX(calc(100% + var(--drupal-displace-offset-left, 0px)));
 }
 

@@ -121,7 +121,8 @@
     "last 2 iOS major versions",
     "last 1 ChromeAndroid version",
     "last 1 Samsung version",
-    "Firefox ESR"
+    "Firefox ESR",
+    "Chrome 106"
   ],
   "packageManager": "yarn@1.22.22"
 }
