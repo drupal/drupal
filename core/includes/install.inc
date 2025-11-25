@@ -858,7 +858,7 @@ function install_check_class_requirements(Extension $extension): array {
 
         $namespace = "Drupal\\$extension_name\\Install\\Requirements";
         $class_name = $namespace . '\\' . $fileInfo->getBasename('.php');
-        if (class_exists($class_name) && class_implements($class_name, InstallRequirementsInterface::class)) {
+        if (class_exists($class_name) && is_subclass_of($class_name, InstallRequirementsInterface::class)) {
           $requirements = $class_name::getRequirements();
         }
       }
