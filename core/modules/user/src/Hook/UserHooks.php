@@ -3,6 +3,7 @@
 namespace Drupal\user\Hook;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -408,11 +409,10 @@ class UserHooks {
    */
   #[Hook('form_system_regional_settings_alter')]
   public function formSystemRegionalSettingsAlter(&$form, FormStateInterface $form_state) : void {
-    $config = \Drupal::config('system.date');
     $form['timezone']['configurable_timezones'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Users may set their own time zone'),
-      '#default_value' => $config->get('timezone.user.configurable'),
+      '#config_target' => 'system.date:timezone.user.configurable',
     ];
     $form['timezone']['configurable_timezones_wrapper'] = [
       '#type' => 'container',
@@ -429,13 +429,13 @@ class UserHooks {
     $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Remind users at login if their time zone is not set'),
-      '#default_value' => $config->get('timezone.user.warn'),
+      '#config_target' => 'system.date:timezone.user.warn',
       '#description' => $this->t('Only applied if users may set their own time zone.'),
     ];
     $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = [
       '#type' => 'radios',
       '#title' => $this->t('Time zone for new users'),
-      '#default_value' => $config->get('timezone.user.default'),
+      '#config_target' => new ConfigTarget('system.date', 'timezone.user.default', toConfig: fn($v) => (int) $v),
       '#options' => [
         UserInterface::TIMEZONE_DEFAULT => $this->t('Default time zone'),
         UserInterface::TIMEZONE_EMPTY => $this->t('Empty time zone'),
@@ -443,7 +443,6 @@ class UserHooks {
       ],
       '#description' => $this->t('Only applied if users may set their own time zone.'),
     ];
-    $form['#submit'][] = 'user_form_system_regional_settings_submit';
   }
 
   /**

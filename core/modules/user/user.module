@@ -6,7 +6,6 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
@@ -711,15 +710,4 @@ function user_logout(): void {
 function template_preprocess_user(&$variables): void {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
   \Drupal::service(UserThemeHooks::class)->preprocessUser($variables);
-}
-
-/**
- * Additional submit handler for \Drupal\system\Form\RegionalForm.
- */
-function user_form_system_regional_settings_submit($form, FormStateInterface $form_state): void {
-  \Drupal::configFactory()->getEditable('system.date')
-    ->set('timezone.user.configurable', $form_state->getValue('configurable_timezones'))
-    ->set('timezone.user.warn', $form_state->getValue('empty_timezone_message'))
-    ->set('timezone.user.default', $form_state->getValue('user_default_timezone'))
-    ->save();
 }
