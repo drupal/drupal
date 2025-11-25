@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\sqlite\Unit;
 
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
+use Drupal\sqlite\Driver\Database\sqlite\SqliteConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
-use Pdo\Sqlite;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -32,8 +32,7 @@ class ConnectionTest extends UnitTestCase {
    */
   #[DataProvider('providerCreateConnectionOptionsFromUrl')]
   public function testCreateConnectionOptionsFromUrl(string $url, string $expected): void {
-    // @phpstan-ignore class.notFound
-    $sqlite_connection = new Connection($this->createMock(\PHP_VERSION_ID >= 80400 ? Sqlite::class : StubPDO::class), []);
+    $sqlite_connection = new Connection($this->createMock(\PHP_VERSION_ID >= 80400 ? SqliteConnection::class : StubPDO::class), []);
     $database = $sqlite_connection->createConnectionOptionsFromUrl($url, NULL);
     $this->assertEquals('sqlite', $database['driver']);
     $this->assertEquals($expected, $database['database']);
@@ -62,8 +61,7 @@ class ConnectionTest extends UnitTestCase {
   public function testDeprecationOfRootInConnectionOptionsFromUrl(): void {
     $this->expectDeprecation('Passing the $root value to Drupal\sqlite\Driver\Database\sqlite\Connection::createConnectionOptionsFromUrl() is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3511287');
     $root = dirname(__DIR__, 8);
-    // @phpstan-ignore class.notFound
-    $sqlite_connection = new Connection($this->createMock(\PHP_VERSION_ID >= 80400 ? Sqlite::class : StubPDO::class), []);
+    $sqlite_connection = new Connection($this->createMock(\PHP_VERSION_ID >= 80400 ? SqliteConnection::class : StubPDO::class), []);
     $database = $sqlite_connection->createConnectionOptionsFromUrl('sqlite://localhost/tmp/test', $root);
     $this->assertEquals('sqlite', $database['driver']);
     $this->assertEquals('tmp/test', $database['database']);
