@@ -228,9 +228,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     // Store output from our test run.
     $output = [];
     $error = [];
-    $start = microtime(TRUE);
     $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $error, $colors);
-    $time = microtime(TRUE) - $start;
 
     if (file_exists($log_junit_file_path)) {
       $results = JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
@@ -257,7 +255,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         'function' => '*** Process execution output ***',
         'line' => '0',
         'file' => $log_junit_file_path,
-        'time' => $time,
+        'time' => 0,
       ];
     }
 
