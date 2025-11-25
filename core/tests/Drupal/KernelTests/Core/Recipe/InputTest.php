@@ -11,6 +11,7 @@ use Drupal\Core\Recipe\InputCollectorInterface;
 use Drupal\Core\Recipe\InputConfigurator;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
@@ -438,6 +439,28 @@ YAML
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage("The 'NO_SUCH_THING' environment variable is not defined.");
     $recipe->input->collectAll($collector);
+  }
+
+  /**
+   * Tests that the ask prompt for integer value doesn't fail with an error.
+   */
+  public function testAskPromptArgumentsInteger(): void {
+    $input = $this->createMock(InputInterface::class);
+    $io = $this->createMock(StyleInterface::class);
+    $io->expects($this->once())
+      ->method('ask')
+      ->with('Who are you?', '123', NULL);
+
+    $data_definition = DataDefinition::create('string')
+      ->setSetting('prompt', [
+        'method' => 'ask',
+        'arguments' => [
+          'question' => 'Who are you?',
+        ],
+      ]);
+
+    (new ConsoleInputCollector($input, $io))
+      ->collectValue('test.one', $data_definition, 123);
   }
 
 }
