@@ -1,7 +1,6 @@
 name: Navigation
 description: New administration navigation
-package: Core (Experimental)
-lifecycle: experimental
+package: Core
 version: VERSION
 configure: navigation.settings
 type: module

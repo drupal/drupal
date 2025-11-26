@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a single message in the navigation toolbar.
+ *
+ * Available variables:
+ * - content: The message to display.
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'toolbar-message',
+    'toolbar-message--type--' ~ type,
+  ]
+%}
+
+{% if url is not empty %}
+  <a {{ attributes.addClass(classes).setAttribute('href', url).setAttribute('data-drupal-tooltip', content).setAttribute('data-drupal-tooltip-class', 'admin-toolbar__tooltip') }}>
+    {{ icon('navigation', type, { class: 'toolbar-message__icon', size: 20 }) }}
+    <div class="toolbar-message__label">
+      {{ content }}
+    </div>
+  </a>
+{% else %}
+  <div {{ attributes.addClass(classes) }}>
+    {{ icon('navigation', type, { class: 'toolbar-message__icon', size: 20 }) }}
+    <div class="toolbar-message__label">
+      {{ content }}
+    </div>
+  </div>
+{% endif %}

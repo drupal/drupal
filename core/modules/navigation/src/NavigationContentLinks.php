@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * The content menu contains a "Create" section, along with links to other
  * overview pages for different entity types.
  *
- * @internal The navigation module is experimental.
+ * @internal
  */
 final class NavigationContentLinks implements ContainerInjectionInterface {
 

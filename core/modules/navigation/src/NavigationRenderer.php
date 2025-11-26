@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Handle rendering for different pieces of the navigation.
  *
- * @internal The navigation module is experimental.
+ * @internal
  */
 final class NavigationRenderer {
 
