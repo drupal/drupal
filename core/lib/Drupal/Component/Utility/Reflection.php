@@ -18,8 +18,9 @@ final class Reflection {
    */
   public static function getParameterClassName(\ReflectionParameter $parameter) : ?string {
     $name = NULL;
-    if ($parameter->hasType() && !$parameter->getType()->isBuiltin()) {
-      $name = $parameter->getType()->getName();
+    $parameterType = $parameter->getType();
+    if ($parameterType instanceof \ReflectionNamedType && !$parameterType->isBuiltin()) {
+      $name = $parameterType->getName();
       $lc_name = strtolower($name);
       switch ($lc_name) {
         case 'self':

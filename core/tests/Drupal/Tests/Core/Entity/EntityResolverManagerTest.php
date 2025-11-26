@@ -10,6 +10,8 @@ use Drupal\Core\Entity\EntityResolverManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -216,6 +218,40 @@ class EntityResolverManagerTest extends UnitTestCase {
     return [
       ['Drupal\Tests\Core\Entity\BasicControllerClass::exampleControllerWithEntityUpcasting'],
       ['Drupal\Tests\Core\Entity\test_function_controller_entity_upcasting'],
+    ];
+  }
+
+  /**
+   * Tests setRouteOptions() with an entity union type.
+   *
+   * @legacy-covers ::setRouteOptions
+   * @legacy-covers ::getControllerClass
+   * @legacy-covers ::getEntityTypes
+   * @legacy-covers ::setParametersFromReflection
+   */
+  #[DataProvider('providerTestSetRouteOptionsWithUnionEntityType')]
+  public function testSetRouteOptionsWithUnionEntityType($controller): void {
+    $this->setupEntityTypes();
+
+    $route = new Route('/example/{entity_test}', [
+      '_controller' => $controller,
+    ]);
+
+    $defaults = $route->getDefaults();
+    $this->entityResolverManager->setRouteOptions($route);
+    $this->assertEquals($defaults, $route->getDefaults());
+    $parameters = $route->getOption('parameters');
+    // Entity route parameters can't be set for union types.
+    $this->assertEquals(NULL, $parameters);
+  }
+
+  /**
+   * Data provider for testSetRouteOptionsWithUnionEntityType.
+   */
+  public static function providerTestSetRouteOptionsWithUnionEntityType(): array {
+    return [
+      ['Drupal\Tests\Core\Entity\BasicControllerClass::exampleControllerWithEntityUnionType'],
+      ['Drupal\Tests\Core\Entity\test_function_controller_entity_union_type'],
     ];
   }
 
@@ -493,6 +529,9 @@ class BasicControllerClass {
   public function exampleControllerWithEntityUpcasting(EntityInterface $entity_test) {
   }
 
+  public function exampleControllerWithEntityUnionType(EntityTest|EntityTestRev $entity_test): void {
+  }
+
 }
 
 /**
@@ -601,4 +640,7 @@ function test_function_controller_no_upcasting($entity_test) {
 }
 
 function test_function_controller_entity_upcasting(EntityInterface $entity_test) {
+}
+
+function test_function_controller_entity_union_type(EntityTest|EntityTestRev $entity_test): void {
 }
