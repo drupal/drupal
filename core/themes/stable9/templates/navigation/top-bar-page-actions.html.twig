@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Default theme implementation for navigation top bar page actions.
+ *
+ * Available variables:
+ * - page_actions: Array of page actions for the current route.
+ * - featured_page_actions: The page actions to show featured before the dropdown.
+ */
+#}
+{% set dropdown_id = 'top-bar-page-actions'|clean_unique_id %}
+
+{% for featured_page_action in featured_page_actions %}
+  {% set link = featured_page_action.page_action['#link'] %}
+  {% include 'navigation:toolbar-button' with {
+    text: link['#title'],
+    html_tag: 'a',
+    attributes: create_attribute(link['#attributes']|default([])).setAttribute('href', link['#url']|render|default(null)),
+    modifiers: ['primary'],
+    icon: featured_page_action.icon,
+  } only %}
+{% endfor %}
+
+{% if page_actions %}
+  {% include 'navigation:toolbar-button' with {
+    icon: { icon_id: 'dots' },
+    action: 'More actions'|t,
+    attributes: create_attribute(
+      {
+        'aria-expanded': 'false',
+        'aria-controls': dropdown_id,
+        'data-drupal-dropdown': 'true'
+      }
+    ),
+  } only %}
+
+  <div class="toolbar-dropdown__menu" id={{ dropdown_id }}>
+    <ul class="toolbar-dropdown__list">
+      {% for page_action in page_actions %}
+        {{ page_action }}
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the navigation top bar.
+ *
+ * Available variables:
+ * - element: The top bar render element.
+ * - tools: The tools region of the top bar.
+ * - context: The context region of the top bar.
+ * - actions: The actions region of the top bar.
+ *
+ * @ingroup themeable
+ */
+#}
+{% set attributes = create_attribute() %}
+{% if tools or context|render or actions|render %}
+  <aside {{ attributes.addClass('top-bar').setAttribute('data-drupal-admin-styles', '').setAttribute('aria-labelledby', 'top-bar__title').setAttribute('data-offset-top', true) }}>
+    <h3 id="top-bar__title" class="visually-hidden">{{ 'Administrative top bar'|t }}</h3>
+    <div class="top-bar__content">
+      <div class="top-bar__tools">
+        {{- tools -}}
+      </div>
+      <div class="top-bar__context">
+        {{- context -}}
+      </div>
+      <div class="top-bar__actions">
+        {{- actions -}}
+      </div>
+    </div>
+  </aside>
+{% endif %}

@@ -28,7 +28,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Provides navigation section storage.
  *
- * @internal The navigation module is experimental.
+ * @internal
  */
 #[SectionStorage(id: "navigation",
   context_definitions: [

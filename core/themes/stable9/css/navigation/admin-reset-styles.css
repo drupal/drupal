@@ -1,0 +1,37 @@
+/**
+ * @file
+ * Reset styles from parent theme.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/all
+ */
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  box-sizing: border-box;
+
+  *:focus {
+    outline: var(--admin-toolbar-size-focus) solid var(--admin-toolbar-color-focus);
+  }
+
+  *:not(:where(svg, svg *)) {
+    all: revert;
+    box-sizing: border-box;
+
+    button {
+      font-family: inherit;
+    }
+
+    &::after,
+    &::before {
+      all: revert;
+      box-sizing: border-box;
+    }
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    width: 1px;
+    height: 1px;
+    word-wrap: normal;
+  }
+}

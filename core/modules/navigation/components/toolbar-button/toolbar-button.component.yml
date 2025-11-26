@@ -5,7 +5,7 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 name: Toolbar button
 
 # Status can be: "experimental", "stable", "deprecated", "obsolete".
-status: experimental
+status: stable
 
 # Schema for the props. We support www.json-schema.org. Learn more about the
 # syntax there.

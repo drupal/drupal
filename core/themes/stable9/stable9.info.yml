@@ -209,6 +209,21 @@ libraries-override:
       component:
         css/components/upgrade-analysis-report-tables.css: css/migrate_drupal_ui/components/upgrade-analysis-report-tables.css
 
+  navigation/admin-reset-styles:
+    css:
+      base:
+        css/base/admin-reset-styles.css: css/navigation/admin-reset-styles.css
+
+  navigation/body-scroll-lock:
+    css:
+      base:
+        css/components/body-scroll-lock.css: css/navigation/body-scroll-lock.css
+
+  navigation/navigation.layoutBuilder:
+    css:
+      base:
+        css/base/layout-builder.css: css/navigation/layout-builder.css
+
   node/drupal.node:
     css:
       layout:

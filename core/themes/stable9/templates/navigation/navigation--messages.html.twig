@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display messages in the navigation toolbar.
+ *
+ * Available variables:
+ * - messages: An array containing the messages to display.
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library('navigation/internal.navigation-messages') }}
+<div class="toolbar-block__list">
+  {% for message in message_list %}
+    {{ message }}
+  {% endfor %}
+</div>
