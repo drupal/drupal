@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\navigation;
 
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\shortcut\ShortcutLazyBuilders;
 
 /**
@@ -13,7 +13,7 @@ use Drupal\shortcut\ShortcutLazyBuilders;
  * @internal
  * @see \Drupal\shortcut\ShortcutLazyBuilders
  */
-final class ShortcutLazyBuilder implements TrustedCallbackInterface {
+final class ShortcutLazyBuilder {
 
   /**
    * Constructs a ShortcutLazyBuilders object.
@@ -26,13 +26,6 @@ final class ShortcutLazyBuilder implements TrustedCallbackInterface {
   ) {}
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['lazyLinks'];
-  }
-
-  /**
    * The #lazy_builder callback; builds shortcut navigation links.
    *
    * @param string $label
@@ -41,6 +34,7 @@ final class ShortcutLazyBuilder implements TrustedCallbackInterface {
    * @return array
    *   A renderable array of shortcut links.
    */
+  #[TrustedCallback]
   public function lazyLinks(string $label = 'Shortcuts') {
     $shortcut_links = $this->shortcutLazyBuilder->lazyLinks();
 
