@@ -644,7 +644,7 @@ trait PerformanceTestTrait {
   /**
    * Checks whether a database event is from the database cache implementation.
    *
-   * @param Drupal\Core\Database\Event\DatabaseEvent $event
+   * @param \Drupal\Core\Database\Event\DatabaseEvent $event
    *   The database event.
    *
    * @return bool

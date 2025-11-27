@@ -55,7 +55,7 @@ function _comment_entity_uses_integer_id($entity_type_id) {
  *
  * @param \Drupal\comment\CommentInterface $comment
  *   The comment entity to preview.
- * @param Drupal\Core\Form\FormStateInterface $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  *
  * @return array
