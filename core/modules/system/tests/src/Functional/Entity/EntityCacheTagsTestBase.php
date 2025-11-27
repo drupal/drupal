@@ -623,7 +623,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * Use ::getRenderVariationCache() instead, which is inherited
    * from CacheTestTrait.
    *
-   * @see https://www.drupal.org/node/3508905
+   * @see https://www.drupal.org/project/drupal/issues/3085475
    *
    * @return \Drupal\Core\Cache\VariationCacheInterface
    *   The render cache backend as a variation cache.

@@ -310,10 +310,10 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There
    * is no replacement.
-   * @see https://www.drupal.org/node/3425340
+   * @see https://www.drupal.org/node/3427209
    */
   protected function userIsBlocked($name) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3425340', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3427209', E_USER_DEPRECATED);
     return user_is_blocked($name);
   }
 
