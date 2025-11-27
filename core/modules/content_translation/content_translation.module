@@ -4,9 +4,11 @@
  * @file
  */
 
+use Drupal\content_translation\FieldSyncWidget;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 
@@ -158,4 +160,26 @@ function content_translation_language_configuration_element_submit(array $form, 
     \Drupal::service('content_translation.manager')->setEnabled($context['entity_type'], $context['bundle'], $enabled);
     \Drupal::service('router.builder')->setRebuildNeeded();
   }
+}
+
+/**
+ * Returns a form element to configure field synchronization.
+ *
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field
+ *   A field definition object.
+ * @param string $element_name
+ *   (optional) The element name, which is added to drupalSettings so that
+ *   javascript can manipulate the form element.
+ *
+ * @return array
+ *   A form element to configure field synchronization.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ *   Drupal\content_translation\FieldSyncWidget::widget() instead.
+ *
+ * @see https://www.drupal.org/node/3548573
+ */
+function content_translation_field_sync_widget(FieldDefinitionInterface $field, $element_name = 'third_party_settings[content_translation][translation_sync]'): array {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use Drupal\content_translation\FieldSyncWidget::widget() instead. See https://www.drupal.org/node/3548573', E_USER_DEPRECATED);
+  return \Drupal::service(FieldSyncWidget::class)->widget($field, $element_name);
 }
