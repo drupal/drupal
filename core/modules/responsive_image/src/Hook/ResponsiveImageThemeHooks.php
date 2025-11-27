@@ -40,6 +40,7 @@ class ResponsiveImageThemeHooks {
       ],
       'responsive_image_formatter' => [
         'variables' => [
+          'attributes' => [],
           'item' => NULL,
           'item_attributes' => NULL,
           'url' => NULL,
@@ -95,6 +96,9 @@ class ResponsiveImageThemeHooks {
     else {
       $variables['responsive_image']['#uri'] = $item->uri;
     }
+
+    // Override any attributes with those set in the render array.
+    $attributes = array_merge($attributes, $variables['attributes']);
 
     foreach (['width', 'height'] as $key) {
       $variables['responsive_image']["#$key"] = $item->$key;
