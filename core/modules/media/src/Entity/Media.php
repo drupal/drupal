@@ -474,13 +474,19 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
 
     if ($media_source instanceof MediaSourceEntityConstraintsInterface) {
       $entity_constraints = $media_source->getEntityConstraints();
-      $this->getTypedData()->getDataDefinition()->setConstraints($entity_constraints);
+      $dataDefinition = $this->getTypedData()->getDataDefinition();
+      foreach ($entity_constraints as $constraint_id => $constraint_options) {
+        $dataDefinition->addConstraint($constraint_id, $constraint_options);
+      }
     }
 
     if ($media_source instanceof MediaSourceFieldConstraintsInterface) {
       $source_field_name = $media_source->getConfiguration()['source_field'];
       $source_field_constraints = $media_source->getSourceFieldConstraints();
-      $this->get($source_field_name)->getDataDefinition()->setConstraints($source_field_constraints);
+      $fieldDefinition = $this->get($source_field_name)->getDataDefinition();
+      foreach ($source_field_constraints as $constraint_id => $constraint_options) {
+        $fieldDefinition->addConstraint($constraint_id, $constraint_options);
+      }
     }
 
     return parent::validate();
