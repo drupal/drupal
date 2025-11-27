@@ -433,7 +433,7 @@ class LibraryDiscoveryParser {
    *   The extension name.
    * @param array $overrides
    *   The library overrides.
-   * @param Drupal\Core\Theme\ActiveTheme $active_theme
+   * @param \Drupal\Core\Theme\ActiveTheme $active_theme
    *   The active theme.
    *
    * @return array

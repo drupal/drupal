@@ -101,21 +101,21 @@ class TestFilteredPluginManager extends PluginManagerBase implements FilteredPlu
   /**
    * The module handler.
    *
-   * @var Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
    * The theme manager.
    *
-   * @var Drupal\Core\Theme\ThemeManagerInterface
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
    */
   protected $themeManager;
 
   /**
    * The context handler.
    *
-   * @var Drupal\Core\Plugin\Context\ContextHandlerInterface
+   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface
    */
   protected $contextHandler;
 

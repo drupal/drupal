@@ -472,7 +472,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * Structured (aka dynamic) queries that have tags associated may be altered by
  * any module before the query is executed.
  *
- * @param Drupal\Core\Database\Query\AlterableInterface $query
+ * @param \Drupal\Core\Database\Query\AlterableInterface $query
  *   A Query object describing the composite parts of a SQL query.
  *
  * @see hook_query_TAG_alter()
@@ -497,7 +497,7 @@ function hook_query_alter(Drupal\Core\Database\Query\AlterableInterface $query) 
  * - ENTITY_TYPE . '_access': For queries of entities that will be displayed in
  *   a listing (e.g., from Views) and therefore require access control.
  *
- * @param Drupal\Core\Database\Query\AlterableInterface $query
+ * @param \Drupal\Core\Database\Query\AlterableInterface $query
  *   A Query object describing the composite parts of a SQL query.
  *
  * @see hook_query_alter()

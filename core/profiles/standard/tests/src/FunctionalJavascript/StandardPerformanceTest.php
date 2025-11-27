@@ -620,7 +620,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Passes if no JavaScript is found on the page.
    *
-   * @param Drupal\Tests\PerformanceData $performance_data
+   * @param \Drupal\Tests\PerformanceData $performance_data
    *   A PerformanceData value object.
    *
    * @internal
