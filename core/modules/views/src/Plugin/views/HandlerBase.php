@@ -841,7 +841,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * {@inheritdoc}
    */
   public static function breakString($str, $force_int = FALSE) {
-    $operator = NULL;
+    $operator = '';
     $value = [];
 
     // Determine if the string has 'or' operators (plus signs) or 'and'
