@@ -41,7 +41,7 @@ services:
 
   workspaces.negotiator.session:
     class: Drupal\workspaces\Negotiator\SessionWorkspaceNegotiator
-    arguments: ['@current_user', '@session', '@entity_type.manager']
+    autowire: true
     tags:
       - { name: workspace_negotiator, priority: 50 }
   workspaces.negotiator.query_parameter:

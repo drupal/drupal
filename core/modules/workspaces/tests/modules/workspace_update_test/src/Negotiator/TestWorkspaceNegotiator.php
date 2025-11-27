@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\workspace_update_test\Negotiator;
 
-use Drupal\workspaces\Entity\Workspace;
 use Drupal\workspaces\Negotiator\WorkspaceIdNegotiatorInterface;
 use Drupal\workspaces\Negotiator\WorkspaceNegotiatorInterface;
 use Drupal\workspaces\WorkspaceInterface;
@@ -27,13 +26,6 @@ class TestWorkspaceNegotiator implements WorkspaceNegotiatorInterface, Workspace
    */
   public function getActiveWorkspaceId(Request $request): ?string {
     return 'test';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getActiveWorkspace(Request $request) {
-    return Workspace::load($this->getActiveWorkspaceId($request));
   }
 
   /**
