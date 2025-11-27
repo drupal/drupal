@@ -12,7 +12,7 @@ interface DateFormatterInterface {
    *
    * @param int $timestamp
    *   A UNIX timestamp to format.
-   * @param string $type
+   * @param non-empty-string $type
    *   (optional) The format to use, one of:
    *   - One of the built-in formats: 'short', 'medium',
    *     'long', 'html_datetime', 'html_date', 'html_time',
