@@ -314,4 +314,23 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertFalse($this->plugin->isOverridden());
   }
 
+  /**
+   * @legacy-covers ::isSupported
+   */
+  public function testIsSupported(): void {
+    $display = LayoutBuilderEntityViewDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $display
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+    $this->assertTrue($this->plugin->isSupported('entity_test', 'entity_test', 'default'));
+    $display->setOverridable(FALSE)->save();
+    $this->assertFalse($this->plugin->isSupported('entity_test', 'entity_test', 'default'));
+  }
+
 }

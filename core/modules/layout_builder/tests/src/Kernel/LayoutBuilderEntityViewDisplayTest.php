@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -117,6 +118,23 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
       'langcode' => TRUE,
       'name' => TRUE,
     ], $display->get('hidden'));
+  }
+
+  /**
+   * Tests that buildMultiple doesn't build sections if storage isn't supported.
+   */
+  public function testBuildOnlyWhenSupported(): void {
+    $display = LayoutBuilderEntityViewDisplay::load('entity_test.entity_test.default');
+    $entity = EntityTest::create(['type' => 'entity_test', 'name' => 'test']);
+    $entity->save();
+    $buildList = $display->buildMultiple([$entity->id() => $entity]);
+    $this->assertArrayHasKey('_layout_builder', $buildList[$entity->id()]);
+
+    // Disable layout_builder for this display and check sections aren't
+    // built.
+    $display->disableLayoutBuilder()->save();
+    $buildList = $display->buildMultiple([$entity->id() => $entity]);
+    $this->assertArrayNotHasKey('_layout_builder', $buildList[$entity->id()]);
   }
 
 }

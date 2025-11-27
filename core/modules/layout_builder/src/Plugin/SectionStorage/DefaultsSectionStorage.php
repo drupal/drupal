@@ -20,6 +20,7 @@ use Drupal\Core\Url;
 use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\DefaultsSectionStorageInterface;
 use Drupal\layout_builder\Entity\SampleEntityGeneratorInterface;
+use Drupal\layout_builder\LayoutBuilderEnabledInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -411,6 +412,17 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
       $this->setContextValue('view_mode', $context->getContextValue()->getMode());
     }
     parent::setContext($name, $context);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSupported(string $entity_type_id, string $bundle, string $view_mode): bool {
+    $id = "$entity_type_id.$bundle.$view_mode";
+
+    $storage = $this->entityTypeManager->getStorage('entity_view_display');
+    $display = $storage->load($id) ?? $storage->load("$entity_type_id.$bundle.default");
+    return $display instanceof LayoutBuilderEnabledInterface && $display->isLayoutBuilderEnabled();
   }
 
 }
