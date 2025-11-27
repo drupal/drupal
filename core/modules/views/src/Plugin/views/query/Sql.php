@@ -846,7 +846,7 @@ class Sql extends QueryPluginBase {
    * This will automatically call ensureTable to make sure the required table
    * exists, *unless* $table is unset.
    *
-   * @param string $table
+   * @param string|null $table
    *   The table this field is attached to. If NULL, it is assumed this will
    *   be a formula; otherwise, ensureTable is used to make sure the
    *   table exists.
@@ -1064,7 +1064,7 @@ class Sql extends QueryPluginBase {
   /**
    * Add an ORDER BY clause to the query.
    *
-   * @param string $table
+   * @param string|null $table
    *   The table this field is part of. If a formula, enter NULL.
    *   If you want to orderby random use "rand" as table and nothing else.
    * @param string|null $field
