@@ -5,7 +5,7 @@ namespace Drupal\layout_builder;
 /**
  * Defines an interface for an object that stores layout sections for overrides.
  */
-interface OverridesSectionStorageInterface extends SectionStorageInterface {
+interface OverridesSectionStorageInterface extends SupportAwareSectionStorageInterface {
 
   /**
    * Returns the corresponding defaults section storage for this override.

@@ -23,6 +23,7 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionListTrait;
+use Drupal\layout_builder\SectionStorage\SupportAwareSectionStorageManagerInterface;
 
 /**
  * Provides an entity view display entity that has a layout.
@@ -300,7 +301,11 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       return $build_list;
     }
 
+    $sectionStorageManager = $this->sectionStorageManager();
     foreach ($entities as $id => $entity) {
+      if ($sectionStorageManager instanceof SupportAwareSectionStorageManagerInterface && $sectionStorageManager->notSupported($entity->getEntityTypeId(), $entity->bundle(), $this->mode)) {
+        continue;
+      }
       $build_list[$id]['_layout_builder'] = $this->buildSections($entity);
 
       // If there are any sections, remove all fields with configurable display
