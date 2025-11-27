@@ -37,7 +37,7 @@ trait AutowiredInstanceTrait {
             $args[] = NULL;
             continue;
           }
-          throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": argument "$%s" of method "%s::_construct()", you should configure its value explicitly.', $service, $parameter->getName(), static::class));
+          throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": argument "$%s" of method "%s::__construct()", you should configure its value explicitly.', $service, $parameter->getName(), static::class));
         }
 
         $args[] = $container->get($service);

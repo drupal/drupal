@@ -37,7 +37,7 @@ class AutowireBlockTest extends KernelTestBase {
    */
   public function testAutowireError(): void {
     $this->expectException(AutowiringFailedException::class);
-    $this->expectExceptionMessage('Cannot autowire service "Drupal\Core\Lock\LockBackendInterface": argument "$lock" of method "Drupal\autowire_test\Plugin\Block\AutowireErrorBlock::_construct()", you should configure its value explicitly.');
+    $this->expectExceptionMessage('Cannot autowire service "Drupal\Core\Lock\LockBackendInterface": argument "$lock" of method "Drupal\autowire_test\Plugin\Block\AutowireErrorBlock::__construct()", you should configure its value explicitly.');
 
     \Drupal::service('plugin.manager.block')->createInstance('autowire_error');
   }
