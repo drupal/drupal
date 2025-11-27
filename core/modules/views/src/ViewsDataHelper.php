@@ -37,7 +37,9 @@ class ViewsDataHelper {
    * Fetches a list of all fields available for a given base type.
    *
    * @param array|string $base
-   *   A list or a single base_table, for example node.
+   *   A list or a single base_table, for example 'node'. The special table
+   *   name '#global' can be used to return the global Views handlers for the
+   *   requested $type.
    * @param string $type
    *   The handler type, for example field or filter.
    * @param bool $grouping
