@@ -419,6 +419,38 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
+   * Tests formatter passes down any attributes in the render array.
+   */
+  public function testResponsiveImageFieldFormatterAttributesInRenderArray(): void {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $field_name = $this->randomMachineName();
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public']);
+
+    // Create a new node with an image attached.
+    $test_image = current($this->getTestFiles('image'));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
+    $node_storage->resetCache([$nid]);
+    $node = $node_storage->load($nid);
+
+    $image = [
+      '#theme' => 'responsive_image_formatter',
+      '#item' => $node->{$field_name}[0],
+      '#responsive_image_style_id' => 'style_one',
+      '#attributes' => [
+        'alt' => 'test alt',
+        'data-test1' => 'test1',
+        'data-test2' => 'test2',
+      ],
+    ];
+    $html_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
+    $this->assertStringContainsString('alt="test alt"', $html_output);
+    $this->assertStringContainsString('data-test1="test1"', $html_output);
+    $this->assertStringContainsString('data-test2="test2"', $html_output);
+  }
+
+  /**
    * Tests responsive image formatter on node display with one and two sources.
    */
   public function testResponsiveImageFieldFormattersMultipleSources(): void {
