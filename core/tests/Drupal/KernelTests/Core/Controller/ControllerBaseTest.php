@@ -58,7 +58,7 @@ class ControllerBaseTest extends KernelTestBase {
    */
   public function testCreateException(): void {
     $this->expectException(AutowiringFailedException::class);
-    $this->expectExceptionMessage('Cannot autowire service "Drupal\Core\Lock\LockBackendInterface": argument "$lock" of method "Drupal\system_test\Controller\BrokenSystemTestController::_construct()", you should configure its value explicitly.');
+    $this->expectExceptionMessage('Cannot autowire service "Drupal\Core\Lock\LockBackendInterface": argument "$lock" of method "Drupal\system_test\Controller\BrokenSystemTestController::__construct()", you should configure its value explicitly.');
     $this->container->get('class_resolver')->getInstanceFromDefinition(BrokenSystemTestController::class);
   }
 
