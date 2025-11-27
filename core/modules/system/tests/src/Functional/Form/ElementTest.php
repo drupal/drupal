@@ -33,6 +33,7 @@ class ElementTest extends BrowserTestBase {
     $this->testOptions();
     $this->testRadiosChecked();
     $this->testWrapperIds();
+    $this->testChildAttributes();
     $this->testButtonClasses();
     $this->testSubmitButtonAttribute();
     $this->testGroupElements();
@@ -136,6 +137,17 @@ class ElementTest extends BrowserTestBase {
       $this->assertSession()->elementsCount('xpath', "//div[@id='edit-{$type}']", 1);
       $this->assertSession()->elementsCount('xpath', "//fieldset[@id='edit-{$type}--wrapper']", 1);
     }
+  }
+
+  /**
+   * Tests checkboxes and radios child element attributes.
+   */
+  protected function testChildAttributes(): void {
+    $this->drupalGet('form-test/checkboxes-radios');
+
+    // Verify that the child elements don't have aria-describedby attributes.
+    $this->assertSession()->elementsCount('xpath', "//input[@type='checkbox' and @aria-describedby]", 0);
+    $this->assertSession()->elementsCount('xpath', "//input[@type='radio' and @aria-describedby]", 0);
   }
 
   /**
