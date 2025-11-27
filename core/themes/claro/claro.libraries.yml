@@ -131,7 +131,7 @@ claro.drupal.dialog:
 claro.tabledrag:
   version: VERSION
   js:
-    js/tabledrag.js: {}
+    js/tabledrag.js: { weight: -1 }
 
 drupal.node.preview:
   version: VERSION
