@@ -125,7 +125,7 @@ class DateFormatter implements DateFormatterInterface {
     $date = DrupalDateTime::createFromTimestamp($timestamp, $this->timezones[$timezone], $create_settings);
 
     // If we have a non-custom date format use the provided date format pattern.
-    if ($type !== 'custom') {
+    if ($type && $type !== 'custom') {
       if ($date_format = $this->dateFormat($type, $langcode)) {
         $format = $date_format->getPattern();
       }

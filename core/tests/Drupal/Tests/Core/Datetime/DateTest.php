@@ -450,6 +450,17 @@ class DateTest extends UnitTestCase {
   }
 
   /**
+   * Tests that the formatter does not call \Drupal\Core\Language\LanguageManagerInterface::getConfigOverrideLanguage.
+   *
+   * The language manager is called by \Drupal\Core\Datetime\DateFormatter::dateFormat,
+   * which should not happen when the type is set to empty string.
+   */
+  public function testFormatWithEmptyStringAsDateFormatType(): void {
+    $this->languageManager = $this->languageManager->expects($this->never())->method('getConfigOverrideLanguage');
+    $this->assertSame('00:00:00', $this->dateFormatter->format(0, '', 'H:i:s', 'UTC', 'en'));
+  }
+
+  /**
    * Creates a UNIX timestamp given a date and time string.
    *
    * @param string $dateTimeString
