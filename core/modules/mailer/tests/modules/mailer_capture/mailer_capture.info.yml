@@ -1,0 +1,5 @@
+name: 'Mailer capture'
+type: module
+description: 'Activates mailer transport capturing all mail in a key value store.'
+package: Testing
+version: VERSION

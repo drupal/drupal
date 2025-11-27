@@ -1,0 +1,5 @@
+name: 'Mailer capture test'
+type: module
+description: 'Support module for mailer capture testing.'
+package: Testing
+version: VERSION
