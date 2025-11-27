@@ -635,7 +635,7 @@ $settings['update_free_access'] = FALSE;
  */
 # $settings['locale_custom_strings_en'][''] = [
 #   'Home' => 'Front page',
-#   '@count min' => '@count minutes',
+#   'Last run @time ago' => 'Last run was done @time ago',
 # ];
 
 /**
