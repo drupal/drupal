@@ -672,7 +672,7 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
 
     if ($this->isAvailable()) {
       // phpcs:disable DrupalPractice.General.ExceptionT.ExceptionT
-      // @see https://www.drupal.org/project/auto_updates/issues/3338651
+      // @see https://www.drupal.org/project/automatic_updates/issues/3338651
       throw new SandboxException($this, $this->computeDestroyMessage(
         $unique_id,
         $this->t('Cannot claim the stage because no stage has been created.')

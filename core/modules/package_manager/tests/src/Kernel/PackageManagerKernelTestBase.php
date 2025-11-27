@@ -472,7 +472,7 @@ class TestSandboxManager extends SandboxManagerBase {
    * will fail, because PHPUnit will want to serialize all arguments in the call
    * stack.
    *
-   * @see https://www.drupal.org/project/auto_updates/issues/3312619#comment-14801308
+   * @see https://www.drupal.org/project/automatics_updates/issues/3312619#comment-14801308
    */
   public function __sleep(): array {
     return [];

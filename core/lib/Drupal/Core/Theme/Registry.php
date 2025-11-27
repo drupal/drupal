@@ -241,7 +241,7 @@ class Registry implements DestructableInterface {
     $this->moduleList = $module_list;
     $this->themeName = $theme_name;
     if (!$key_value_factory) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $key_value_factory argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3550627', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $key_value_factory argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3550627', E_USER_DEPRECATED);
       $key_value_factory = \Drupal::service('keyvalue');
     }
     $this->keyValueFactory = $key_value_factory;
