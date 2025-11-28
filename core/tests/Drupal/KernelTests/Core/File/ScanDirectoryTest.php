@@ -24,6 +24,8 @@ class ScanDirectoryTest extends FileTestBase {
   protected static $modules = ['file_test'];
 
   /**
+   * The location of the fixtures files.
+   *
    * @var string
    */
   protected $path;

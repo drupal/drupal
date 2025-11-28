@@ -16,6 +16,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class EntityDuplicateTest extends EntityKernelTestBase {
 
   /**
+   * The entity storage.
+   *
    * @var \Drupal\Core\Entity\ContentEntityStorageInterface
    */
   protected $entityTestRevStorage;

@@ -29,6 +29,8 @@ class ConfigActionTest extends KernelTestBase {
   protected static $modules = ['config_test'];
 
   /**
+   * Tests the behavior of the entity_create config action.
+   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityCreate
    */
   public function testEntityCreate(): void {
@@ -55,6 +57,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests the behavior of the entity_method config action.
+   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityMethod
    */
   public function testEntityMethod(): void {
@@ -167,6 +171,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests pluralized method config actions on configuration entities.
+   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityMethod
    */
   public function testPluralizedEntityMethod(): void {
@@ -208,6 +214,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests exception thrown when applying an action to multiple calls.
+   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityMethod
    */
   public function testPluralizedEntityMethodException(): void {
@@ -220,6 +228,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests exception thrown for duplicate pluralized method action definitions.
+   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\EntityMethodDeriver
    */
   public function testDuplicatePluralizedMethodNameException(): void {
@@ -234,6 +244,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests exception when creating a duplicate derivative.
+   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\EntityMethodDeriver
    */
   public function testDuplicatePluralizedOtherMethodNameException(): void {
@@ -248,6 +260,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests exception thrown when entity method action has an invalid argument.
+   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityMethod
    */
   public function testEntityMethodException(): void {
@@ -260,6 +274,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests the simple config update action and related exceptions.
+   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\SimpleConfigUpdate
    */
   public function testSimpleConfigUpdate(): void {
@@ -291,6 +307,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests shorthand action IDs for a configuration entity.
+   *
    * @see \Drupal\Core\Config\Action\ConfigActionManager::getShorthandActionIdsForEntityType()
    */
   public function testShorthandActionIds(): void {
@@ -316,6 +334,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests that duplicate shorthand action IDs throw an exception.
+   *
    * @see \Drupal\Core\Config\Action\ConfigActionManager::getShorthandActionIdsForEntityType()
    */
   public function testDuplicateShorthandActionIds(): void {
@@ -328,6 +348,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests that parent attributes are properly discovered.
+   *
    * @see \Drupal\Core\Config\Action\ConfigActionManager::getShorthandActionIdsForEntityType()
    */
   public function testParentAttributes(): void {
@@ -338,6 +360,8 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests that an exception is thrown when an action does not exist.
+   *
    * @see \Drupal\Core\Config\Action\ConfigActionManager
    */
   public function testMissingAction(): void {

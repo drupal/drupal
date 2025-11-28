@@ -30,6 +30,8 @@ class UriHostValidatorTest extends KernelTestBase {
   }
 
   /**
+   * Tests the UriHost constraint validator.
+   *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\UriHostConstraint
    */
   public function testUriHost(): void {

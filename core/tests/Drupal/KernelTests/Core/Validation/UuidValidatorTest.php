@@ -30,6 +30,8 @@ class UuidValidatorTest extends KernelTestBase {
   }
 
   /**
+   * Tests the UUID.
+   *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\UuidConstraint
    */
   public function testUuid(): void {

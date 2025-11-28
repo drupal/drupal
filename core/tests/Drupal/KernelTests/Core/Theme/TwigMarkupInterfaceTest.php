@@ -70,6 +70,8 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
   }
 
   /**
+   * Renders a variable using a Twig inline template.
+   *
    * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    */
