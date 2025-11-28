@@ -213,7 +213,7 @@ final class Recipe {
               'prompt' => new Optional([
                 new Collection([
                   'method' => [
-                    new Choice(['ask', 'askHidden', 'confirm', 'choice']),
+                    new Choice(choices: ['ask', 'askHidden', 'confirm', 'choice']),
                   ],
                   'arguments' => new Optional([
                     new Type('associative_array'),
@@ -237,7 +237,7 @@ final class Recipe {
               'default' => new Required([
                 new Collection([
                   'source' => new Required([
-                    new Choice(['value', 'config', 'env']),
+                    new Choice(choices: ['value', 'config', 'env']),
                   ]),
                   'value' => new Optional(),
                   'config' => new Optional([

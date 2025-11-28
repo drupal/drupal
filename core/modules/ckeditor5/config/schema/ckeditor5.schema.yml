@@ -46,12 +46,13 @@ ckeditor5.plugin.ckeditor5_language:
           toolbarItem: textPartLanguage
         # Only the following values are accepted.
         Choice:
-          # United Nations "official languages".
-          - un
-          # Drupal's predefined language list.
-          - all
-          # Languages configured at /admin/config/regional/language for the site.
-          - site_configured
+          choices:
+            # United Nations "official languages".
+            - un
+            # Drupal's predefined language list.
+            - all
+            # Languages configured at /admin/config/regional/language for the site.
+            - site_configured
 
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading
 ckeditor5.plugin.ckeditor5_heading:
@@ -124,10 +125,11 @@ ckeditor5.plugin.ckeditor5_alignment:
         label: 'Alignment type'
         constraints:
           Choice:
-            - left
-            - center
-            - right
-            - justify
+            choices:
+              - left
+              - center
+              - right
+              - justify
 
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
 ckeditor5.plugin.ckeditor5_list:
