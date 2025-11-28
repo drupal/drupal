@@ -42,16 +42,22 @@ class EntityFieldTest extends EntityKernelTestBase {
   protected static $modules = ['filter', 'text', 'node', 'user', 'field_test'];
 
   /**
+   * The name of the entity.
+   *
    * @var string
    */
   protected $entityName;
 
   /**
+   * The user for the entity.
+   *
    * @var \Drupal\user\Entity\User
    */
   protected $entityUser;
 
   /**
+   * Text for the field on the entity.
+   *
    * @var string
    */
   protected $entityFieldText;

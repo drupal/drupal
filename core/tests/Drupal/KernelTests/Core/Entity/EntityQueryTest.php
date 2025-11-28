@@ -38,7 +38,9 @@ class EntityQueryTest extends EntityKernelTestBase {
   protected static $modules = ['field_test', 'language'];
 
   /**
-   * @var array
+   * An array of entity IDs keyed by the revision or entity ID.
+   *
+   * @var array<int, string>
    */
   protected $queryResults;
 
@@ -773,6 +775,8 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
+   * Asserts the query results.
+   *
    * @internal
    */
   protected function assertResult(): void {
@@ -788,6 +792,8 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
+   * Asserts revision query results.
+   *
    * @internal
    */
   protected function assertRevisionResult(array $keys, array $expected): void {
@@ -799,6 +805,8 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
+   * Asserts the bundle order.
+   *
    * @internal
    */
   protected function assertBundleOrder(string $order): void {

@@ -52,6 +52,8 @@ class FormattableMarkupKernelTest extends KernelTestBase {
   }
 
   /**
+   * Provides data for testFormattableMarkupUri().
+   *
    * @return array
    *   Data provider for testFormattableMarkupUri().
    */
@@ -116,6 +118,8 @@ class FormattableMarkupKernelTest extends KernelTestBase {
   }
 
   /**
+   * Provides data for testFormattableMarkupUriWithExceptionUri().
+   *
    * @return array
    *   Data provider for testFormattableMarkupUriWithExceptionUri().
    */

@@ -27,21 +27,29 @@ class EntityValidationTest extends EntityKernelTestBase {
   protected static $modules = ['filter', 'text', 'language'];
 
   /**
+   * The name of the entity.
+   *
    * @var string
    */
   protected $entityName;
 
   /**
+   * The user for the entity.
+   *
    * @var \Drupal\user\Entity\User
    */
   protected $entityUser;
 
   /**
+   * Text for the test field on the entity.
+   *
    * @var string
    */
   protected $entityFieldText;
 
   /**
+   * An array of plugin managers with clearable cached definitions.
+   *
    * @var array
    */
   protected array $cachedDiscoveries;

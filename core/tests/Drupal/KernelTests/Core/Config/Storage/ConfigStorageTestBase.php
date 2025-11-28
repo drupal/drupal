@@ -21,11 +21,15 @@ use Drupal\KernelTests\KernelTestBase;
 abstract class ConfigStorageTestBase extends KernelTestBase {
 
   /**
+   * The configuration storage.
+   *
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $storage;
 
   /**
+   * An invalid configuration storage.
+   *
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $invalidStorage;

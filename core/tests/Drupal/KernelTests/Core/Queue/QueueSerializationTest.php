@@ -29,6 +29,8 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
   protected static $modules = ['system', 'user'];
 
   /**
+   * The queue object.
+   *
    * @var \Drupal\Core\Queue\DatabaseQueue
    */
   protected DatabaseQueue $queue;

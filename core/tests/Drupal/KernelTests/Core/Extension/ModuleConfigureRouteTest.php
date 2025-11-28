@@ -27,6 +27,8 @@ class ModuleConfigureRouteTest extends KernelTestBase {
   protected static $modules = ['system', 'user', 'path_alias'];
 
   /**
+   * The route provider.
+   *
    * @var \Drupal\Core\Routing\RouteProviderInterface
    */
   protected $routeProvider;

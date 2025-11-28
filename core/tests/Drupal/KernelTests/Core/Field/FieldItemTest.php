@@ -20,6 +20,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class FieldItemTest extends EntityKernelTestBase {
 
   /**
+   * The field name.
+   *
    * @var string
    */
   protected $fieldName;

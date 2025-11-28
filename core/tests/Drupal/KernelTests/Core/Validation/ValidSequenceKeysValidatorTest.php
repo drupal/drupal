@@ -31,6 +31,8 @@ class ValidSequenceKeysValidatorTest extends KernelTestBase {
   protected TypedDataManagerInterface $typedData;
 
   /**
+   * The typed configuration manager.
+   *
    * @var \Drupal\Core\Config\TypedConfigManagerInterface
    */
   protected TypedConfigManagerInterface $typedConfigManager;

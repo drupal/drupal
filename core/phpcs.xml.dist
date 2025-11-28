@@ -60,6 +60,7 @@
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
   </rule>
   <rule  ref="Drupal.Commenting.DocComment.MissingShort">
+    <include-pattern>core/*/KernelTests/*</include-pattern>
     <include-pattern>core/*/Unit/*</include-pattern>
     <include-pattern>core/*/FunctionalJavascript/*</include-pattern>
   </rule>

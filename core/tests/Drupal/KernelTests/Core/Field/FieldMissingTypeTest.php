@@ -29,6 +29,8 @@ class FieldMissingTypeTest extends EntityKernelTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
+   * The field name.
+   *
    * @var string
    */
   protected $fieldName;
