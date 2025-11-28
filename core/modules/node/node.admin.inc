@@ -2,9 +2,16 @@
 
 /**
  * @file
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0.
+ *   Functions have been deprecated.
+ *
+ * @see https://www.drupal.org/node/3533315
  */
 
 use Drupal\node\NodeBulkUpdate;
+
+@trigger_error(__FILE__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Functions have been deprecated. See https://www.drupal.org/project/drupal/issues/3533315', E_USER_DEPRECATED);
 
 /**
  * Updates all nodes in the passed-in array with the passed-in field values.
