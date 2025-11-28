@@ -9,7 +9,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -34,15 +33,6 @@ class DatabaseTestController extends ControllerBase {
    */
   public function __construct(Connection $connection) {
     $this->connection = $connection;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('database')
-    );
   }
 
   /**

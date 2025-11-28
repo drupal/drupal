@@ -17,7 +17,7 @@ use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
@@ -93,7 +93,16 @@ class ConfigTranslationController extends ControllerBase {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(ConfigMapperManagerInterface $config_mapper_manager, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, AccountInterface $account, LanguageManagerInterface $language_manager, RendererInterface $renderer) {
+  public function __construct(
+    ConfigMapperManagerInterface $config_mapper_manager,
+    AccessManagerInterface $access_manager,
+    #[Autowire(service: 'router')]
+    RequestMatcherInterface $router,
+    InboundPathProcessorInterface $path_processor,
+    AccountInterface $account,
+    LanguageManagerInterface $language_manager,
+    RendererInterface $renderer,
+  ) {
     $this->configMapperManager = $config_mapper_manager;
     $this->accessManager = $access_manager;
     $this->router = $router;
@@ -101,21 +110,6 @@ class ConfigTranslationController extends ControllerBase {
     $this->account = $account;
     $this->languageManager = $language_manager;
     $this->renderer = $renderer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.config_translation.mapper'),
-      $container->get('access_manager'),
-      $container->get('router'),
-      $container->get('path_processor_manager'),
-      $container->get('current_user'),
-      $container->get('language_manager'),
-      $container->get('renderer')
-    );
   }
 
   /**

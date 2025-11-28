@@ -6,7 +6,6 @@ namespace Drupal\csrf_race_test\Controller;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -20,15 +19,6 @@ class TestController extends ControllerBase {
    * @var \Drupal\Core\Access\CsrfTokenGenerator
    */
   protected $tokenGenerator;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('csrf_token')
-    );
-  }
 
   /**
    * Controller constructor.
