@@ -10,12 +10,14 @@ use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\block\Plugin\migrate\process\BlockRegion.
  */
 #[CoversClass(BlockRegion::class)]
 #[Group('block')]
+#[IgnoreDeprecations]
 class BlockRegionTest extends UnitTestCase {
 
   /**

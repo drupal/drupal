@@ -11,6 +11,7 @@ use Drupal\migrate\MigrateSkipRowException;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 // cspell:ignore rbaz
 /**
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(BlockVisibility::class)]
 #[Group('block')]
+#[IgnoreDeprecations]
 class BlockVisibilityTest extends MigrateProcessTestCase {
 
   /**

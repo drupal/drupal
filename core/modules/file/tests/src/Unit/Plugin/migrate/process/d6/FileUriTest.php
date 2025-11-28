@@ -10,12 +10,14 @@ use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\file\Plugin\migrate\process\d6\FileUri.
  */
 #[CoversClass(FileUri::class)]
 #[Group('file')]
+#[IgnoreDeprecations]
 class FileUriTest extends MigrateTestCase {
 
   /**

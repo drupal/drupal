@@ -9,12 +9,14 @@ use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the path_set_translated process plugin.
  */
 #[CoversClass(PathSetTranslated::class)]
 #[Group('path')]
+#[IgnoreDeprecations]
 class PathSetTranslatedTest extends MigrateProcessTestCase {
 
   /**

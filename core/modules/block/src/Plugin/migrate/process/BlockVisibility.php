@@ -15,6 +15,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Determines the visibility for a block.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
  */
 #[MigrateProcess('block_visibility')]
 class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPluginInterface {
@@ -57,6 +62,7 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
    *   The migrate lookup service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ModuleHandlerInterface $module_handler, MigrateLookupInterface $migrate_lookup) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->moduleHandler = $module_handler;
     $this->migrateLookup = $migrate_lookup;

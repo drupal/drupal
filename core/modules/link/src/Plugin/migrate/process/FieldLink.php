@@ -33,6 +33,11 @@ use Drupal\migrate\Row;
  *     uri_scheme: 'https://'
  *     source: field_link
  * @endcode
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
  */
 #[MigrateProcess('field_link')]
 class FieldLink extends ProcessPluginBase {
@@ -41,6 +46,7 @@ class FieldLink extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     $configuration += ['uri_scheme' => 'http://'];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }

@@ -17878,6 +17878,46 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/EntityLinksTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Access to constant on deprecated class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FilterFormatPermission\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+  replacement\\.$#',
+	'identifier' => 'classConstant.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/Migrate/d6/FilterFormatPermissionTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method create\\(\\) of deprecated class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FilterFormatPermission\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+  replacement\\.$#',
+	'identifier' => 'staticMethod.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/Migrate/d6/FilterFormatPermissionTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to constant on deprecated class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\FilterID\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+   replacement\\.$#',
+	'identifier' => 'classConstant.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/Plugin/migrate/process/FilterIdTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method create\\(\\) of deprecated class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\FilterID\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+   replacement\\.$#',
+	'identifier' => 'staticMethod.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/Plugin/migrate/process/FilterIdTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to method transform\\(\\) of deprecated class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\FilterID\\:
+in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
+   replacement\\.$#',
+	'identifier' => 'method.deprecatedClass',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/Plugin/migrate/process/FilterIdTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\filter\\\\Kernel\\\\TextFormatElementFormTest\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45033,12 +45073,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/Plugin/Validation/Constraint/EntityWorkspaceConflictConstraintValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'identifier' => 'isset.variable',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceTracker.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspaceAssociation\\:\\:deleteAssociations\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45164,6 +45198,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspacePublisherInterface.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
+	'identifier' => 'isset.variable',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceTracker.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspaceViewBuilder\\:\\:buildComponents\\(\\) has no return type specified\\.$#',

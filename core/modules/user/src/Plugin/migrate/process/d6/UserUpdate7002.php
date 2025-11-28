@@ -13,6 +13,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Converts user time zones from time zone offsets to time zone names.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
  */
 #[MigrateProcess('user_update_7002')]
 class UserUpdate7002 extends ProcessPluginBase implements ContainerFactoryPluginInterface {
@@ -35,6 +40,7 @@ class UserUpdate7002 extends ProcessPluginBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, Config $date_config) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->dateConfig = $date_config;
     if (!isset(static::$timezones)) {

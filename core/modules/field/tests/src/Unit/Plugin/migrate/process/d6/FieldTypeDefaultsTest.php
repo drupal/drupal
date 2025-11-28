@@ -9,12 +9,14 @@ use Drupal\migrate\MigrateException;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests D6 fields defaults.
  */
 #[CoversClass(FieldTypeDefaults::class)]
 #[Group('field')]
+#[IgnoreDeprecations]
 class FieldTypeDefaultsTest extends MigrateProcessTestCase {
 
   /**

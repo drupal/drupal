@@ -51,6 +51,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see core/modules/comment/migrations/d7_comment_type.yml
  * @see core/modules/field/migrations/d7_field_instance.yml
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
  */
 #[MigrateProcess('field_bundle')]
 class FieldBundle extends ProcessPluginBase implements ContainerFactoryPluginInterface {
@@ -75,6 +80,7 @@ class FieldBundle extends ProcessPluginBase implements ContainerFactoryPluginInt
    *   The migrate lookup service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateLookupInterface $migrate_lookup) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migrateLookup = $migrate_lookup;
   }

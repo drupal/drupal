@@ -11,11 +11,13 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the file field process plugin.
  */
 #[Group('file')]
+#[IgnoreDeprecations]
 class FieldFileTest extends UnitTestCase {
 
   /**

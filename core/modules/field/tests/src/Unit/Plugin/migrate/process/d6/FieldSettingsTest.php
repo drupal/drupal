@@ -11,12 +11,14 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\field\Plugin\migrate\process\d6\FieldSettings.
  */
 #[CoversClass(FieldSettings::class)]
 #[Group('field')]
+#[IgnoreDeprecations]
 class FieldSettingsTest extends UnitTestCase {
 
   /**
