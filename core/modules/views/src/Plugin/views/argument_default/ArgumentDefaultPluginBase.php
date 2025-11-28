@@ -40,7 +40,7 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   /**
    * The option name.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $option_name;
 
   /**

@@ -206,7 +206,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $migration_tags = [];
 
   /**

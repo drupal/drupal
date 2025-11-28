@@ -64,7 +64,7 @@ class GroupwiseMax extends RelationshipPluginBase {
   /**
    * The namespace of the subquery.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $subquery_namespace;
 
   /**

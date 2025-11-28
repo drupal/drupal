@@ -177,7 +177,7 @@ class SearchQuery extends SelectExtender {
    *
    * @var int
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $relevance_count = 0;
 
   /**
