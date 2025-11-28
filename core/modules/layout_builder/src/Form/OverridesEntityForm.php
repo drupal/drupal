@@ -84,6 +84,14 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
       'settings' => [],
     ]);
 
+    if ($this->showRevisionUi()) {
+      $entity_type = $this->entity->getEntityType();
+      $revision_log_message_form_item = $entity_type->getRevisionMetadataKey('revision_log_message');
+      $log_field_definition = $this->entity->getFieldDefinition($revision_log_message_form_item);
+      $log_field_revision_message_form_data = $log_field_definition->getDisplayOptions('form');
+      $form_display->setComponent($revision_log_message_form_item, $log_field_revision_message_form_data);
+    }
+
     $this->setFormDisplay($form_display, $form_state);
   }
 
