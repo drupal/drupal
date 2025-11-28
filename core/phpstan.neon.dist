@@ -33,6 +33,8 @@ parameters:
     - phpstan-tmp/*
     # Skip Drupal's own PHPStan rules test fixtures.
     - tests/PHPStan/fixtures/*
+    # Skip Drupal's own PHPStan vendor directory
+    - tests/PHPStan/vendor/*
     # Skip Drupal 6 & 7 code.
     - scripts/dump-database-d?.sh
     - scripts/generate-d?-content.sh

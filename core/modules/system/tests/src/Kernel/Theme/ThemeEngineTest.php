@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Kernel\Theme;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore nyan
 
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  */
 #[IgnoreDeprecations]
 #[Group('Theme')]
+#[RunTestsInSeparateProcesses]
 class ThemeEngineTest extends KernelTestBase {
 
   /**

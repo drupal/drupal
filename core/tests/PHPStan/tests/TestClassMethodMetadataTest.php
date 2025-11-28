@@ -11,6 +11,7 @@ use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use PHPStan\Type\FileTypeMapper;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * @extends RuleTestCase<TestClassMethodMetadata>
  */
 #[TestDox('Check method-level test metadata')]
+#[Group('PHPStan')]
 class TestClassMethodMetadataTest extends RuleTestCase {
 
   /**

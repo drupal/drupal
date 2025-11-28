@@ -6,12 +6,16 @@ namespace Drupal\PHPStan\Rules;
 
 // cspell:ignore analyse testdox
 
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\BrowserTestBase;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\InClassNode;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -128,6 +132,38 @@ final class TestClassClassMetadata implements Rule {
           }
         }
       }
+
+      // Concrete test classes should have the Group attribute and in some cases
+      // the RunTestsInSeparateProcesses attribute.
+      $has_group_attribute = FALSE;
+      $has_run_in_separate_process_attribute = FALSE;
+      foreach ($class->getAttributes() as $attribute) {
+        switch ($attribute->getName()) {
+          case Group::class:
+            $has_group_attribute = TRUE;
+            break;
+
+          case RunTestsInSeparateProcesses::class:
+            $has_run_in_separate_process_attribute = TRUE;
+            break;
+        }
+      }
+      $should_run_in_separate_process =
+        $class->isSubclassOfClass($this->reflectionProvider->getClass(BrowserTestBase::class)) ||
+        $class->isSubclassOfClass($this->reflectionProvider->getClass(KernelTestBase::class));
+      if ($should_run_in_separate_process && !$has_run_in_separate_process_attribute) {
+        $fails[] = RuleErrorBuilder::message("Test class {$class->getName()} must have attribute \PHPUnit\Framework\Attributes\RunInSeparateProcesses.")
+          ->identifier('testClass.missingAttribute.RunInSeparateProcesses')
+          ->line($node->getStartLine())
+          ->build();
+      }
+      if (!$has_group_attribute) {
+        $fails[] = RuleErrorBuilder::message("Test class {$class->getName()} must have attribute \PHPUnit\Framework\Attributes\Group.")
+          ->identifier('testClass.missingAttribute.Group')
+          ->line($node->getStartLine())
+          ->build();
+      }
+
     }
 
     return $fails;
