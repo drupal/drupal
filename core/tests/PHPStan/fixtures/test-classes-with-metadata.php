@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Foo;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
@@ -34,11 +35,8 @@ abstract class SeeTest extends TestCase {
 class ConcreteWithAnnotationTest extends TestCase {
 }
 
-#[RunTestsInSeparateProcesses]
+#[Group('Test')]
 class ConcreteWithAttributeTest extends TestCase {
-}
-
-class ConcreteTest extends TestCase {
 }
 
 class NotATestClass {

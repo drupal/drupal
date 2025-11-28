@@ -9,10 +9,12 @@ use Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests ComponentTestDoesNotExtendCoreTest rule.
  */
+#[Group('PHPStan')]
 class ComponentTestDoesNotExtendCoreTestTest extends RuleTestCase {
 
   /**
