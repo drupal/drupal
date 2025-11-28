@@ -666,9 +666,6 @@ class Registry implements DestructableInterface {
             // named variable preprocessors.
             $prefixes = [];
             $prefixes[] = $name . '_engine';
-            // The theme engine registers on behalf of the theme using the
-            // theme's name.
-            $prefixes[] = $theme;
 
             foreach ($prefixes as $prefix) {
               foreach ([$prefix . '_preprocess', $prefix . '_preprocess_' . $hook] as $function) {
