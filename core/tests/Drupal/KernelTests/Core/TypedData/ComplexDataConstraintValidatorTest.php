@@ -43,9 +43,7 @@ class ComplexDataConstraintValidatorTest extends KernelTestBase {
       ->setPropertyDefinition('key', DataDefinition::create('integer'))
       ->addConstraint('ComplexData', [
         'key' => [
-          'AllowedValues' => [
-            'choices' => [1, 2, 3],
-          ],
+          'AllowedValues' => [1, 2, 3],
         ],
       ]);
 
