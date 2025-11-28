@@ -52,7 +52,7 @@ class EntityReference extends DisplayPluginBase {
   /**
    * The id field alias.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $id_field_alias;
 
   /**

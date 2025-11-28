@@ -136,7 +136,7 @@ class SandboxManagerBaseTest extends UnitTestCase {
       /**
        * {@inheritdoc}
        */
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable, Drupal.Commenting.VariableComment.Missing
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       protected string $type = 'package_manager:good_grandchild';
 
     };

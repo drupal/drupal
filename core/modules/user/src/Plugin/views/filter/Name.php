@@ -26,7 +26,7 @@ class Name extends InOperator {
   /**
    * The validated exposed input.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected array $validated_exposed_input;
 
   /**

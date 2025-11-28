@@ -65,7 +65,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    *
    * @var string|null
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $theme_hook;
 
   /**
@@ -96,7 +96,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    *
    * @see \Drupal\Core\Layout\Icon\IconBuilderInterface::build()
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $icon_map;
 
   /**
@@ -118,7 +118,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $default_region;
 
   /**
