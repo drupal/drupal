@@ -43,3 +43,4 @@ slots:
     description: The contents of the banner.
     examples:
       - <p>Foo is <strong>NOT</strong> bar.</p>
+  minimal: { }
