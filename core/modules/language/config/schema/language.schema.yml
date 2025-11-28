@@ -108,8 +108,7 @@ language.entity.*:
       constraints:
         # @see \Drupal\Core\Language\LanguageInterface::DIRECTION_LTR and
         # \Drupal\Core\Language\LanguageInterface::DIRECTION_RTL
-        Choice:
-          choices: [ 'ltr', 'rtl' ]
+        Choice: [ 'ltr', 'rtl' ]
     weight:
       type: weight
       label: 'Weight'
