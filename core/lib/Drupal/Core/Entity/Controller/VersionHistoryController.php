@@ -15,7 +15,6 @@ use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a controller showing revision history for an entity.
@@ -59,18 +58,6 @@ class VersionHistoryController extends ControllerBase {
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->languageManager = $languageManager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-      $container->get('language_manager'),
-      $container->get('date.formatter'),
-      $container->get('renderer'),
-    );
   }
 
   /**

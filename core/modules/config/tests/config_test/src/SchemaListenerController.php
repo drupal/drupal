@@ -7,7 +7,6 @@ namespace Drupal\config_test;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for testing \Drupal\Core\Config\Development\ConfigSchemaChecker.
@@ -22,15 +21,6 @@ class SchemaListenerController extends ControllerBase {
    */
   public function __construct(ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory')
-    );
   }
 
   /**

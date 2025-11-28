@@ -8,7 +8,6 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -38,15 +37,6 @@ class EarlyRenderingTestController extends ControllerBase {
    */
   public function __construct(RendererInterface $renderer) {
     $this->renderer = $renderer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('renderer')
-    );
   }
 
   protected function earlyRenderContent() {

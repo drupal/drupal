@@ -11,7 +11,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\system\FileDownloadController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,24 +64,18 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The system service.
    */
-  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system) {
+  public function __construct(
+    #[Autowire(service: 'lock')]
+    LockBackendInterface $lock,
+    ImageFactory $image_factory,
+    StreamWrapperManagerInterface $stream_wrapper_manager,
+    FileSystemInterface $file_system,
+  ) {
     parent::__construct($stream_wrapper_manager);
     $this->lock = $lock;
     $this->imageFactory = $image_factory;
     $this->logger = $this->getLogger('image');
     $this->fileSystem = $file_system;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('lock'),
-      $container->get('image.factory'),
-      $container->get('stream_wrapper_manager'),
-      $container->get('file_system')
-    );
   }
 
   /**
