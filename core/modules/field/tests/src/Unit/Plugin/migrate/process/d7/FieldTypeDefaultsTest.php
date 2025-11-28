@@ -8,12 +8,14 @@ use Drupal\field\Plugin\migrate\process\d7\FieldTypeDefaults;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests D7 field formatter defaults.
  */
 #[CoversClass(FieldTypeDefaults::class)]
 #[Group('field')]
+#[IgnoreDeprecations]
 class FieldTypeDefaultsTest extends MigrateProcessTestCase {
 
   /**

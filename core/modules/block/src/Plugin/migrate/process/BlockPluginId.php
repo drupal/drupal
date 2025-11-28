@@ -14,6 +14,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Determines the block plugin ID.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
  */
 #[MigrateProcess('block_plugin_id')]
 class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginInterface {
@@ -48,6 +53,7 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
    *   The migrate lookup service.
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, ?EntityStorageInterface $storage, MigrateLookupInterface $migrate_lookup) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->blockContentStorage = $storage;
     $this->migrateLookup = $migrate_lookup;

@@ -21,6 +21,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Determines the filter ID.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *    replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
  */
 #[MigrateProcess('filter_id')]
 class FilterID extends StaticMap implements ContainerFactoryPluginInterface {
@@ -47,6 +52,7 @@ class FilterID extends StaticMap implements ContainerFactoryPluginInterface {
    *   (optional) The string translation service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $filter_manager, ?TranslationInterface $translator = NULL) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->filterManager = $filter_manager;
     $this->stringTranslation = $translator;

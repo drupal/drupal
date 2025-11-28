@@ -43,10 +43,47 @@
 %Trait "Drupal\\migrate_drupal\\Plugin\\migrate\\source\\I18nQueryTrait" used by "Drupal\\(block_content|menu_link_content|taxonomy)\\[^"]+" is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0%
 %Drupal\\migrate_drupal\\Plugin\\MigrateFieldPluginManager\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566%
 %The "plugin.manager.migrate.field" service is deprecated in drupal:11.3 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566%
-%Drupal\\field\\Plugin\\migrate\\process\\ProcessField\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.%
+%Drupal\\block\\Plugin\\migrate\\process\\BlockPluginId is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\block\\Plugin\\migrate\\process\\BlockRegion is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\block\\Plugin\\migrate\\process\\BlockSettings is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\block\\Plugin\\migrate\\process\\BlockTheme is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\block\\Plugin\\migrate\\process\\BlockVisibility is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\block\\Plugin\\migrate\\process\\RolesLookup is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
 %Drupal\\field\\Plugin\\migrate\\process\\FieldType\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.%
 %The "plugin.manager.archiver" service is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3556927%
 %Drupal\\Core\\Archiver\\ArchiverManager is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3556927%
+%Drupal\\field\\Plugin\\migrate\\process\\ProcessField\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.%
+%Drupal\\field\\Plugin\\migrate\\process\\d6\\FieldFormatterSettingsDefaults is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\field\\Plugin\\migrate\\process\\d6\\FieldInstanceWidgetSettings is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\field\\Plugin\\migrate\\process\\d7\\FieldBundle is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\field\\Plugin\\migrate\\process\\d[67]\\FieldInstanceDefaults is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\field\\Plugin\\migrate\\process\\d[67]\\FieldInstanceOptionTranslation is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\field\\Plugin\\migrate\\process\\d[67]\\FieldInstanceSettings is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\field\\Plugin\\migrate\\process\\d[67]\\FieldOptionTranslation is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\field\\Plugin\\migrate\\process\\d[67]\\FieldSettings is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\field\\Plugin\\migrate\\process\\d[67]\\FieldTypeDefaults is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\file\\Plugin\\migrate\\process\\d6\\FieldFile is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\file\\Plugin\\migrate\\process\\d6\\FileUri is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\filter\\Plugin\\migrate\\process\\FilterID is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\filter\\Plugin\\migrate\\process\\FilterSettings is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\filter\\Plugin\\migrate\\process\\d6\\FilterFormatPermission is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\image\\Plugin\\migrate\\process\\d6\\ImageCacheActions is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\language\\Plugin\\migrate\\process\\ContentTranslationEnabledSetting is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\language\\Plugin\\migrate\\process\\LanguageDomains is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\language\\Plugin\\migrate\\process\\LanguageNegotiation is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\language\\Plugin\\migrate\\process\\LanguageTypes is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\link\\Plugin\\migrate\\process\\FieldLink is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\node\\Plugin\\migrate\\process\\d6\\NodeUpdate7008 is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\path\\Plugin\\migrate\\process\\PathSetTranslated is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\responsive_image\\Plugin\\migrate\\process\\ImageStyleMappings is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\search\\Plugin\\migrate\\process\\SearchConfigurationRankings is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\system\\Plugin\\migrate\\process\\d6\\SystemUpdate7000 is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\taxonomy\\Plugin\\migrate\\process\\TargetBundle is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\user\\Plugin\\migrate\\process\\ConvertTokens is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\user\\Plugin\\migrate\\process\\ProfileFieldSettings is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\user\\Plugin\\migrate\\process\\UserUpdate8002 is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\user\\Plugin\\migrate\\process\\d6\\ProfileFieldOptionTranslation is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\user\\Plugin\\migrate\\process\\d6\\UserUpdate7002 is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
 
 # Drupal 13.
 %The "cache.backend.memory" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use cache.backend.memory.memory instead. See https://www.drupal.org/node/3546856%

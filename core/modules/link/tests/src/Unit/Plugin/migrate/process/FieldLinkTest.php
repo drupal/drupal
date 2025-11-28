@@ -11,11 +11,13 @@ use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the link field migrate process plugin.
  */
 #[Group('Link')]
+#[IgnoreDeprecations]
 class FieldLinkTest extends UnitTestCase {
 
   /**

@@ -30,6 +30,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * This will get the destination role ID for each role in the 'roles' value on
  * the source row.
  *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
+ *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  */
 #[MigrateProcess('roles_lookup')]
@@ -62,6 +67,7 @@ class RolesLookup extends ProcessPluginBase implements ContainerFactoryPluginInt
    *   The migrate lookup service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateLookupInterface $migrate_lookup) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migrateLookup = $migrate_lookup;
 

@@ -12,6 +12,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Determines the theme to use for a block.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
  */
 #[MigrateProcess('block_theme')]
 class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInterface {
@@ -43,6 +48,7 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
    *   The list of themes available on the destination.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Config $theme_config, array $themes) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->themeConfig = $theme_config;
     $this->themes = $themes;

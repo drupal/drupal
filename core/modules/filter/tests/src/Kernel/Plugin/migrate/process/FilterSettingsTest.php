@@ -11,12 +11,14 @@ use Drupal\Tests\migrate\Unit\MigrateTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Unit tests of the filter_settings plugin.
  */
 #[CoversClass(FilterSettings::class)]
 #[Group('filter')]
+#[IgnoreDeprecations]
 class FilterSettingsTest extends MigrateTestCase {
 
   /**

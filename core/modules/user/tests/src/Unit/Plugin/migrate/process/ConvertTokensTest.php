@@ -7,11 +7,13 @@ namespace Drupal\Tests\user\Unit\Plugin\migrate\process;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 use Drupal\user\Plugin\migrate\process\ConvertTokens;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the ConvertTokens plugin.
  */
 #[Group('user')]
+#[IgnoreDeprecations]
 class ConvertTokensTest extends MigrateProcessTestCase {
 
   /**

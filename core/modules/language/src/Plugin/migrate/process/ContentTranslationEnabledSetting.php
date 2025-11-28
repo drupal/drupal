@@ -15,9 +15,19 @@ use Drupal\migrate\Row;
  * - The language content type, e.g. '1'
  * - The entity_translation_entity_types, an array of entity types.
  * - An entity type used with entity translation, e.g. comment.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533560
  */
 #[MigrateProcess('content_translation_enabled_setting')]
 class ContentTranslationEnabledSetting extends ProcessPluginBase {
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
 
   /**
    * {@inheritdoc}

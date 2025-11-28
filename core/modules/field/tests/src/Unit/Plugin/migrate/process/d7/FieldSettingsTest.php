@@ -10,12 +10,14 @@ use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\field\Plugin\migrate\process\d7\FieldSettings.
  */
 #[CoversClass(FieldSettings::class)]
 #[Group('field')]
+#[IgnoreDeprecations]
 class FieldSettingsTest extends MigrateTestCase {
 
   /**
