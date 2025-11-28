@@ -149,7 +149,7 @@ final class ProjectRelease {
         'date' => new Optional([new Type('numeric')]),
         'core_compatible' => new Optional([new Type('boolean')]),
         'core_compatibility_message' => new Optional($not_blank_constraints),
-        'status' => new Choice(['published', 'unpublished']),
+        'status' => new Choice(choices: ['published', 'unpublished']),
         'download_link' => new Optional($not_blank_constraints),
         'release_link' => $not_blank_constraints,
         'terms' => new Optional([

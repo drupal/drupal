@@ -15,9 +15,10 @@ navigation.settings:
           label: 'Select Navigation logo handling'
           constraints:
             Choice:
-              - default
-              - hide
-              - custom
+              choices:
+                - default
+                - hide
+                - custom
         path:
           type: string
           label: 'Path'

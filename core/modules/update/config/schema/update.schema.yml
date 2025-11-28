@@ -19,7 +19,8 @@ update.settings:
           constraints:
             # @see \Drupal\update\UpdateSettingsForm::buildForm()
             # The options are daily and weekly.
-            Choice: [1, 7]
+            Choice:
+              choices: [1, 7]
     fetch:
       type: mapping
       label: 'Fetch settings'
@@ -55,4 +56,5 @@ update.settings:
           label: 'Email notification threshold'
           constraints:
             # @see \Drupal\update\UpdateSettingsForm::buildForm()
-            Choice: [all, security]
+            Choice:
+              choices: [all, security]

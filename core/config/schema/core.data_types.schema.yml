@@ -460,8 +460,9 @@ block_settings:
       label: 'Display title'
       constraints:
         Choice:
-          - '0'
-          - visible
+          choices:
+            - '0'
+            - visible
         NotBlank: []
     provider:
       type: string

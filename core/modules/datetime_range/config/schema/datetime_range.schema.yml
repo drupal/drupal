@@ -33,9 +33,10 @@ field.formatter.settings.daterange_default:
       label: 'Display'
       constraints:
         Choice:
-          - both
-          - start_date
-          - end_date
+          choices:
+            - both
+            - start_date
+            - end_date
     separator:
       type: label
       label: 'Separator'
@@ -50,9 +51,10 @@ field.formatter.settings.daterange_plain:
       label: 'Display'
       constraints:
         Choice:
-          - both
-          - start_date
-          - end_date
+          choices:
+            - both
+            - start_date
+            - end_date
     separator:
       type: label
       label: 'Separator'
@@ -67,9 +69,10 @@ field.formatter.settings.daterange_custom:
       label: 'Display'
       constraints:
         Choice:
-          - both
-          - start_date
-          - end_date
+          choices:
+            - both
+            - start_date
+            - end_date
     separator:
       type: label
       label: 'Separator'
