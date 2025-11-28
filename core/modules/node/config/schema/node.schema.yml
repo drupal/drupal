@@ -51,7 +51,8 @@ node.type.*:
         # These are the values of the NodePreviewMode enum used on the NodeTypeForm.
         # @see \Drupal\node\NodePreviewMode
         # @see \Drupal\node\Form\NodeTypeForm::form()
-        Choice: [0, 1, 2]
+        Choice:
+          choices: [0, 1, 2]
     display_submitted:
       type: boolean
       label: 'Display setting for author and date Submitted by post information'

@@ -39,7 +39,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
   public function testValidation(): void {
     // Create a definition that specifies some AllowedValues.
     $definition = DataDefinition::create('integer')
-      ->addConstraint('AllowedValues', [1, 2, 3]);
+      ->addConstraint('AllowedValues', ['choices' => [1, 2, 3]]);
 
     // Test the validation.
     $typed_data = $this->typedDataManager->create($definition, 1);

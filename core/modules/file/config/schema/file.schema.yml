@@ -114,10 +114,11 @@ file.formatter.media:
       constraints:
         # @see \Drupal\file\Plugin\Field\FieldFormatter\FileMediaFormatterBase::settingsSummary()
         Choice:
-          # Multiple file display: Multiple HTML tags
-          - tags
-          # Multiple file display: One HTML tag with multiple sources
-          - sources
+          choices:
+            # Multiple file display: Multiple HTML tags
+            - tags
+            # Multiple file display: One HTML tag with multiple sources
+            - sources
 
 field.formatter.settings.file_audio:
   type: file.formatter.media
