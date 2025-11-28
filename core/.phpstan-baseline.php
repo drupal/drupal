@@ -18158,12 +18158,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/src/Controller/ImageStyleDownloadController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image\\\\Entity\\\\ImageStyle\\:\\:getReplacementID\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Entity/ImageStyle.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Entity\\\\ImageStyle\\:\\:postDelete\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
