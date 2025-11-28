@@ -137,7 +137,8 @@ system.date:
                 # - UserInterface::TIMEZONE_SELECT
                 # @see \Drupal\user\UserInterface::TIMEZONE_*
                 # @todo Update this to use enum in https://www.drupal.org/project/drupal/issues/3402178
-                Choice: [0, 1, 2]
+                Choice:
+                  choices: [0, 1, 2]
             warn:
               type: boolean
               label: 'Remind users at login if their time zone is not set'
