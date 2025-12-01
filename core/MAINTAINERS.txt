@@ -113,7 +113,6 @@ Bootstrap
 
 Breakpoint
 - Peter Droogmans 'attiks' https://www.drupal.org/u/attiks
-- Heather Brooke Drummond 'RainbowArray' https://www.drupal.org/u/rainbowarray
 
 Cache
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
@@ -363,7 +362,6 @@ REST
 
 Responsive Image
 - Peter Droogmans 'attiks' https://www.drupal.org/u/attiks
-- Heather Brooke Drummond 'RainbowArray' https://www.drupal.org/u/rainbowarray
 
 Routing
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
