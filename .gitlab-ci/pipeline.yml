@@ -207,6 +207,7 @@ variables:
     - cd core
     - corepack enable
     - yarn install
+    - echo -e "Node version $(node --version)\nYarn version $(yarn --version)"
     - sudo -u www-data -E -H yarn run test:nightwatch --workers=3
   after_script:
     - cp /builds/chromedriver.log ./
