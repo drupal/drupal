@@ -18,7 +18,8 @@ use Drupal\Core\Validation\BasicRecursiveValidatorFactory;
 use Drupal\file\Entity\File;
 use Drupal\file\FileRepositoryInterface;
 use Drupal\file\Validation\FileValidatorInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
@@ -33,62 +34,6 @@ class FileUploadHandler implements FileUploadHandlerInterface {
   const DEFAULT_EXTENSIONS = 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp';
 
   /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The stream wrapper manager.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The MIME type guesser.
-   *
-   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
-   */
-  protected $mimeTypeGuesser;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The file Repository.
-   *
-   * @var \Drupal\file\FileRepositoryInterface
-   */
-  protected $fileRepository;
-
-  /**
    * The file validator.
    *
    * @var \Drupal\file\Validation\FileValidatorInterface
@@ -96,15 +41,17 @@ class FileUploadHandler implements FileUploadHandlerInterface {
   protected FileValidatorInterface $fileValidator;
 
   public function __construct(
-    FileSystemInterface $fileSystem,
-    EntityTypeManagerInterface $entityTypeManager,
-    StreamWrapperManagerInterface $streamWrapperManager,
-    EventDispatcherInterface $eventDispatcher,
-    MimeTypeGuesserInterface $mimeTypeGuesser,
-    AccountInterface $currentUser,
-    RequestStack $requestStack,
-    FileRepositoryInterface $fileRepository,
-    FileValidatorInterface $file_validator,
+    protected FileSystemInterface $fileSystem,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected StreamWrapperManagerInterface $streamWrapperManager,
+    protected EventDispatcherInterface $eventDispatcher,
+    #[Autowire(service: 'file.mime_type.guesser')]
+    protected MimeTypeGuesserInterface $mimeTypeGuesser,
+    protected AccountInterface $currentUser,
+    protected RequestStack $requestStack,
+    protected FileRepositoryInterface $fileRepository,
+    protected FileValidatorInterface $file_validator,
+    #[Autowire(service: 'lock')]
     protected LockBackendInterface $lock,
     protected BasicRecursiveValidatorFactory $validatorFactory,
   ) {

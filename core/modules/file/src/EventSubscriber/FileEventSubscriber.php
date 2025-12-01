@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -28,6 +29,7 @@ class FileEventSubscriber implements EventSubscriberInterface {
    */
   public function __construct(
     protected ConfigFactoryInterface $configFactory,
+    #[Autowire(service: 'transliteration')]
     protected TransliterationInterface $transliteration,
     protected LanguageManagerInterface $languageManager,
   ) {}
