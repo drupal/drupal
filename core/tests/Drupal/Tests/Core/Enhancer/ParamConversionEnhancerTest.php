@@ -63,7 +63,7 @@ class ParamConversionEnhancerTest extends UnitTestCase {
 
     $this->paramConverterManager->expects($this->once())
       ->method('convert')
-      ->with($this->isType('array'))
+      ->with($this->isArray())
       ->willReturn($expected);
 
     $result = $this->paramConversionEnhancer->enhance($defaults, new Request());
@@ -93,7 +93,7 @@ class ParamConversionEnhancerTest extends UnitTestCase {
     $defaults['bar'] = &$defaults['id'];
     $this->paramConverterManager->expects($this->any())
       ->method('convert')
-      ->with($this->isType('array'))
+      ->with($this->isArray())
       ->willReturnCallback(function ($defaults) {
         // Convert the mirrored default to another value.
         $defaults['bar'] = '2';

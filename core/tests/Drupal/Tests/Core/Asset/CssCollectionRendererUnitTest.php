@@ -40,7 +40,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
     $file_url_generator = $this->createMock(FileUrlGeneratorInterface::class);
     $file_url_generator->expects($this->any())
       ->method('generateString')
-      ->with($this->isType('string'))
+      ->with($this->isString())
       ->willReturnCallback(function ($uri) {
          return 'generated-relative-url:' . $uri;
       });

@@ -282,10 +282,10 @@ class FormValidatorTest extends UnitTestCase {
       ->getMock();
     $mock->expects($this->once())
       ->method('validate_handler')
-      ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
+      ->with($this->isArray(), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
     $mock->expects($this->once())
       ->method('hash_validate')
-      ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
+      ->with($this->isArray(), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
 
     $form = [];
     $form_state = new FormState();
@@ -327,7 +327,7 @@ class FormValidatorTest extends UnitTestCase {
       ->getMock();
     $form_state->expects($this->once())
       ->method('setError')
-      ->with($this->isType('array'), $expected_message);
+      ->with($this->isArray(), $expected_message);
     $form_validator->validateForm('test_form_id', $form, $form_state);
   }
 
@@ -368,7 +368,7 @@ class FormValidatorTest extends UnitTestCase {
       ->getMock();
     $mock->expects($this->once())
       ->method('element_validate')
-      ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'), NULL);
+      ->with($this->isArray(), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'), NULL);
 
     $form = [];
     $form['test'] = [
@@ -393,7 +393,7 @@ class FormValidatorTest extends UnitTestCase {
     if ($call_watchdog) {
       $this->logger->expects($this->once())
         ->method('error')
-        ->with($this->isType('string'), $this->isType('array'));
+        ->with($this->isString(), $this->isArray());
     }
 
     $form = [];
@@ -408,7 +408,7 @@ class FormValidatorTest extends UnitTestCase {
       ->getMock();
     $form_state->expects($this->once())
       ->method('setError')
-      ->with($this->isType('array'), $expected_message);
+      ->with($this->isArray(), $expected_message);
     $form_validator->validateForm('test_form_id', $form, $form_state);
   }
 

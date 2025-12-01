@@ -38,7 +38,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
     $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
     $this->fileUrlGenerator->expects($this->any())
       ->method('generateString')
-      ->with($this->isType('string'))
+      ->with($this->isString())
       ->willReturnCallback(function ($uri) {
         return 'generated-relative-url:' . $uri;
       });
