@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigCollectionInfo;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigFactoryOverrideBase;
 use Drupal\Core\Config\ConfigRenameEvent;
+use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Language\LanguageDefault;
@@ -22,35 +23,11 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
   use LanguageConfigCollectionNameTrait;
 
   /**
-   * The configuration storage.
-   *
-   * Do not access this directly. Should be accessed through self::getStorage()
-   * so that the cache of storages per langcode is used.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $baseStorage;
-
-  /**
    * An array of configuration storages keyed by langcode.
    *
    * @var \Drupal\Core\Config\StorageInterface[]
    */
   protected $storages;
-
-  /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
-
-  /**
-   * An event dispatcher instance to use for configuration events.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
 
   /**
    * The language object used to override configuration data.
@@ -59,25 +36,28 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
    */
   protected $language;
 
-  /**
-   * Constructs the LanguageConfigFactoryOverride object.
-   *
-   * @param \Drupal\Core\Config\StorageInterface $storage
-   *   The configuration storage engine.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   An event dispatcher instance to use for configuration events.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
-   *   The typed configuration manager.
-   * @param \Drupal\Core\Language\LanguageDefault $default_language
-   *   The default language.
-   */
-  public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config, LanguageDefault $default_language) {
-    $this->baseStorage = $storage;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->typedConfigManager = $typed_config;
+  public function __construct(protected StorageInterface $baseStorage, protected EventDispatcherInterface $eventDispatcher, protected TypedConfigManagerInterface $typedConfigManager, LanguageDefault $default_language, protected ?array $defaultLanguageValues, protected ?bool $translateEnglish = TRUE) {
     // Prior to negotiation the override language should be the default
     // language.
     $this->language = $default_language->get();
+    if ($this->defaultLanguageValues === NULL) {
+      @trigger_error('Not passing the language.default_values parameter to LanguageConfigFactoryOverride::__construct() is deprecated in drupal:11.3.0 and will be removed in drupal::12.0.0. See https://www.drupal.org/project/drupal/issues/3518992');
+      $this->defaultLanguageValues = \Drupal::getContainer()->getParameter('language.default_values');
+    }
+    if ($this->translateEnglish === NULL) {
+      @trigger_error('Not passing the language.translate_english parameter to LanguageConfigFactoryOverride::__construct() is deprecated in drupal:11.3.0 and will be removed in drupal::12.0.0. See https://www.drupal.org/project/drupal/issues/3518992');
+      $this->translateEnglish = \Drupal::getContainer()->getParameter('language.translate_english');
+    }
+  }
+
+  /**
+   * Checks whether overrides should be loaded.
+   */
+  protected function shouldSkipOverrides(): bool {
+    return $this->language
+      && $this->language->getId() === 'en'
+      && $this->defaultLanguageValues['id'] === 'en'
+      && !$this->translateEnglish;
   }
 
   /**
@@ -115,8 +95,15 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
    * {@inheritdoc}
    */
   public function getStorage($langcode) {
+    // Skip loading overrides when English is the default language and the
+    // passed in langcode is English.
     if (!isset($this->storages[$langcode])) {
-      $this->storages[$langcode] = $this->baseStorage->createCollection($this->createConfigCollectionName($langcode));
+      if ($langcode === 'en' && $this->shouldSkipOverrides()) {
+        $this->storages[$langcode] = new NullStorage($this->createConfigCollectionName($langcode));
+      }
+      else {
+        $this->storages[$langcode] = $this->baseStorage->createCollection($this->createConfigCollectionName($langcode));
+      }
     }
     return $this->storages[$langcode];
   }
