@@ -43,3 +43,5 @@ services:
   locale.locale_translation_cache_tag:
     class: Drupal\locale\EventSubscriber\LocaleTranslationCacheTag
     arguments: ['@cache_tags.invalidator']
+  Drupal\locale\EventSubscriber\ConfigSubscriber:
+    autowire: true

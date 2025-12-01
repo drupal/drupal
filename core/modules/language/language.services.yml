@@ -1,5 +1,6 @@
 parameters:
   language.skip_procedural_hook_scan: true
+  language.translate_english: true
 
 services:
   _defaults:
@@ -18,7 +19,7 @@ services:
     arguments: ['@language_manager', '@language.default', '@config.factory', '@language_negotiator']
   language.config_factory_override:
     class: Drupal\language\Config\LanguageConfigFactoryOverride
-    arguments: ['@config.storage', '@event_dispatcher', '@config.typed', '@language.default']
+    arguments: ['@config.storage', '@event_dispatcher', '@config.typed', '@language.default', '%language.default_values%', '%language.translate_english%']
     tags:
       - { name: config.factory.override, priority: -254 }
   Drupal\language\Config\LanguageConfigFactoryOverrideInterface: '@language.config_factory_override'

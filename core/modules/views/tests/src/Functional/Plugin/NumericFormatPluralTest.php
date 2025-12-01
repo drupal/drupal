@@ -47,6 +47,8 @@ class NumericFormatPluralTest extends ViewTestBase {
       'administer languages',
     ]);
     $this->drupalLogin($web_user);
+    $config = $this->config('locale.settings');
+    $config->set('translate_english', TRUE)->save();
   }
 
   /**
