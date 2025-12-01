@@ -83,6 +83,9 @@ class TwigPhpStorageCache implements CacheInterface {
     }
     else {
       $name = basename($name);
+      // Windows does not allow colons, which are used by Single Directory
+      // Components, in directory or file names.
+      $name = str_replace(':', '_', $name);
     }
 
     // Windows (and some encrypted Linux systems) only support 255 characters in
