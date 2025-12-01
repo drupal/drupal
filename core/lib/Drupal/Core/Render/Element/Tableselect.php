@@ -47,8 +47,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * ];
  * @endcode
  *
- * See https://www.drupal.org/node/945102 for a full explanation.
- *
  * @see \Drupal\Core\Render\Element\Table
  */
 #[FormElement('tableselect')]

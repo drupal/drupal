@@ -16,9 +16,6 @@ interface ElementInfoManagerInterface extends DiscoveryInterface {
    * matching theme hook, which should be registered with hook_theme() as
    * normal.
    *
-   * For more information about custom element types see the explanation at
-   * https://www.drupal.org/node/169815.
-   *
    * @param string $type
    *   The machine name of an element type plugin.
    *
