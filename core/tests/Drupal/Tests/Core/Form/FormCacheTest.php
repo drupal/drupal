@@ -320,12 +320,12 @@ class FormCacheTest extends UnitTestCase {
 
     $this->formCacheStore->expects($this->once())
       ->method('setWithExpire')
-      ->with($form_build_id, $form, $this->isType('int'));
+      ->with($form_build_id, $form, $this->isInt());
 
     $form_state_data = $form_state->getCacheableArray();
     $this->formStateCacheStore->expects($this->once())
       ->method('setWithExpire')
-      ->with($form_build_id, $form_state_data, $this->isType('int'));
+      ->with($form_build_id, $form_state_data, $this->isInt());
 
     $this->formCache->setCache($form_build_id, $form, $form_state);
   }
@@ -346,7 +346,7 @@ class FormCacheTest extends UnitTestCase {
     $form_state_data = $form_state->getCacheableArray();
     $this->formStateCacheStore->expects($this->once())
       ->method('setWithExpire')
-      ->with($form_build_id, $form_state_data, $this->isType('int'));
+      ->with($form_build_id, $form_state_data, $this->isInt());
 
     $this->formCache->setCache($form_build_id, $form, $form_state);
   }
@@ -366,12 +366,12 @@ class FormCacheTest extends UnitTestCase {
     $form_data['#cache_token'] = $cache_token;
     $this->formCacheStore->expects($this->once())
       ->method('setWithExpire')
-      ->with($form_build_id, $form_data, $this->isType('int'));
+      ->with($form_build_id, $form_data, $this->isInt());
 
     $form_state_data = $form_state->getCacheableArray();
     $this->formStateCacheStore->expects($this->once())
       ->method('setWithExpire')
-      ->with($form_build_id, $form_state_data, $this->isType('int'));
+      ->with($form_build_id, $form_state_data, $this->isInt());
 
     $this->csrfToken->expects($this->once())
       ->method('get')

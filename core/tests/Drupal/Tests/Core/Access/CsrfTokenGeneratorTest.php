@@ -109,7 +109,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
 
     $this->sessionMetadata->expects($this->once())
       ->method('setCsrfTokenSeed')
-      ->with($this->isType('string'));
+      ->with($this->isString());
 
     $this->assertIsString($this->generator->get());
   }

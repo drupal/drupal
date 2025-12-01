@@ -144,7 +144,7 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
-      ->with('link', $this->isType('array'));
+      ->with('link', $this->isArray());
 
     $url = new Url('test_route_1', [], ['fragment' => 'the-fragment']);
     $url->setUrlGenerator($this->urlGenerator);
@@ -171,7 +171,7 @@ class LinkGeneratorTest extends UnitTestCase {
       ->method('generateFromRoute');
     $this->moduleHandler->expects($this->exactly(2))
       ->method('alter')
-      ->with('link', $this->isType('array'));
+      ->with('link', $this->isArray());
 
     $url = Url::fromRoute('<nolink>');
     $url->setUrlGenerator($this->urlGenerator);
@@ -206,7 +206,7 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
-      ->with('link', $this->isType('array'));
+      ->with('link', $this->isArray());
 
     $url = Url::fromRoute('<none>');
     $url->setUrlGenerator($this->urlGenerator);
@@ -226,7 +226,7 @@ class LinkGeneratorTest extends UnitTestCase {
       ->method('generateFromRoute');
     $this->moduleHandler->expects($this->exactly(2))
       ->method('alter')
-      ->with('link', $this->isType('array'));
+      ->with('link', $this->isArray());
 
     $url = Url::fromRoute('<button>');
     $url->setUrlGenerator($this->urlGenerator);
@@ -260,7 +260,7 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
-      ->with('link', $this->isType('array'));
+      ->with('link', $this->isArray());
 
     $this->urlAssembler->expects($this->once())
       ->method('assemble')
