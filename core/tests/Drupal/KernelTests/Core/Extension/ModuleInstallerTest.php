@@ -197,6 +197,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
    * Data provider for ::testContainerRebuildRequired().
    */
   public static function containerRebuildRequiredProvider(): array {
+    // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
     return [
       [['container_rebuild_required_true'], 1],
       [['container_rebuild_required_false'], 1],
@@ -210,6 +211,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
       [['container_rebuild_required_false_2', 'container_rebuild_required_dependency_false'], 3],
       [['container_rebuild_required_false_2', 'container_rebuild_required_dependency_false', 'container_rebuild_required_true'], 3],
     ];
+    // phpcs:enable
   }
 
   /**

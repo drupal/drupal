@@ -95,6 +95,7 @@ class WildcardConfigActionsTest extends KernelTestBase {
    * @param string[] $expected_changed_entities
    *   The IDs of the config entities that we expect the recipe to change.
    */
+  // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
   #[TestWith(["field.field.node.one.*", ["node.one.body", "node.one.field_test"]])]
   #[TestWith(["field.field.node.*.body", ["node.one.body", "node.two.body"]])]
   #[TestWith(["field.field.*.one.field_test", ["entity_test_with_bundle.one.field_test", "node.one.field_test"]])]
@@ -102,6 +103,7 @@ class WildcardConfigActionsTest extends KernelTestBase {
   #[TestWith(["field.field.*.one.*", ["entity_test_with_bundle.one.field_test", "node.one.field_test", "node.one.body"]])]
   #[TestWith(["field.field.*.*.field_test", ["entity_test_with_bundle.one.field_test", "entity_test_with_bundle.two.field_test", "node.one.field_test", "node.two.field_test"]])]
   #[TestWith(["field.field.*.*.*", ["entity_test_with_bundle.one.field_test", "entity_test_with_bundle.two.field_test", "node.one.field_test", "node.two.field_test", "node.one.body", "node.two.body"]])]
+  // phpcs:enable
   public function testTargetEntitiesByWildcards(string $expression, array $expected_changed_entities): void {
     $contents = <<<YAML
 name: 'Wildcards!'
@@ -127,8 +129,10 @@ YAML;
   /**
    * Tests that an invalid wildcard expression will raise an error.
    */
+  // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
   #[TestWith(["field.*.node.one.*", "No installed config entity type uses the prefix in the expression 'field.*.node.one.*'. Either there is a typo in the expression or this recipe should install an additional module or depend on another recipe."])]
   #[TestWith(["field.field.node.*.body/", " could not be parsed."])]
+  // phpcs:enable
   public function testInvalidExpression(string $expression, string $expected_exception_message): void {
     $contents = <<<YAML
 name: 'Wildcards gone wild...'

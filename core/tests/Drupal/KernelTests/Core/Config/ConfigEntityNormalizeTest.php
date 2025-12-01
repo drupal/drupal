@@ -32,7 +32,9 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
    * Tests the normalization of configuration data when saved.
    */
   public function testNormalize(): void {
-    $config_entity = \Drupal::entityTypeManager()->getStorage('config_test')->create(['id' => 'system', 'label' => 'foobar', 'weight' => 1]);
+    $config_entity = \Drupal::entityTypeManager()
+      ->getStorage('config_test')
+      ->create(['id' => 'system', 'label' => 'foobar', 'weight' => 1]);
     $config_entity->save();
 
     // Modify stored config entity, this is comparable with a schema change.

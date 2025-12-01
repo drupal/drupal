@@ -298,7 +298,26 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     // Retrieve the entity properties.
     $reflection = new \ReflectionClass($entity);
     $properties = $reflection->getProperties(~\ReflectionProperty::IS_STATIC);
-    $translation_unique_properties = ['activeLangcode', 'translationInitialize', 'fieldDefinitions', 'languages', 'langcodeKey', 'defaultLangcode', 'defaultLangcodeKey', 'revisionTranslationAffectedKey', 'validated', 'validationRequired', 'entityTypeId', 'typedData', 'cacheContexts', 'cacheTags', 'cacheMaxAge', '_serviceIds', '_entityStorages', 'enforceDefaultTranslation'];
+    $translation_unique_properties = [
+      'activeLangcode',
+      'translationInitialize',
+      'fieldDefinitions',
+      'languages',
+      'langcodeKey',
+      'defaultLangcode',
+      'defaultLangcodeKey',
+      'revisionTranslationAffectedKey',
+      'validated',
+      'validationRequired',
+      'entityTypeId',
+      'typedData',
+      'cacheContexts',
+      'cacheTags',
+      'cacheMaxAge',
+      '_serviceIds',
+      '_entityStorages',
+      'enforceDefaultTranslation',
+    ];
 
     foreach ($properties as $property) {
       // The original property is typed and can not be set to a string.

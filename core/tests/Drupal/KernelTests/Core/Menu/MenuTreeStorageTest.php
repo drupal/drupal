@@ -149,12 +149,37 @@ class MenuTreeStorageTest extends KernelTestBase {
     // ---- test2
     // ---- test6
 
-    $this->assertMenuLink('test1', ['has_children' => 1, 'depth' => 1], [], ['test4', 'test5', 'test2', 'test3', 'test6']);
-    $this->assertMenuLink('test2', ['has_children' => 0, 'depth' => 4], ['test5', 'test4', 'test1']);
-    $this->assertMenuLink('test3', ['has_children' => 0, 'depth' => 2], ['test1']);
-    $this->assertMenuLink('test4', ['has_children' => 1, 'depth' => 2], ['test1'], ['test2', 'test5', 'test6']);
-    $this->assertMenuLink('test5', ['has_children' => 1, 'depth' => 3], ['test4', 'test1'], ['test2', 'test6']);
-    $this->assertMenuLink('test6', ['has_children' => 0, 'depth' => 4], ['test5', 'test4', 'test1']);
+    $this->assertMenuLink(
+      'test1',
+      ['has_children' => 1, 'depth' => 1],
+      [],
+      ['test4', 'test5', 'test2', 'test3', 'test6']
+    );
+    $this->assertMenuLink(
+      'test2',
+      ['has_children' => 0, 'depth' => 4],
+      ['test5', 'test4', 'test1']
+    );
+    $this->assertMenuLink(
+      'test3',
+      ['has_children' => 0, 'depth' => 2],
+      ['test1']
+    );
+    $this->assertMenuLink(
+      'test4',
+      ['has_children' => 1, 'depth' => 2],
+      ['test1'], ['test2', 'test5', 'test6']
+    );
+    $this->assertMenuLink(
+      'test5',
+      ['has_children' => 1, 'depth' => 3],
+      ['test4', 'test1'], ['test2', 'test6']
+    );
+    $this->assertMenuLink(
+      'test6',
+      ['has_children' => 0, 'depth' => 4],
+      ['test5', 'test4', 'test1']
+    );
 
     // Deleting a link in the middle should re-attach child links to the parent.
     $this->treeStorage->delete('test4');

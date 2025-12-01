@@ -514,6 +514,7 @@ class MappingTest extends KernelTestBase {
   /**
  * Tests invalid mapping key definition.
  */
+  // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
   #[TestWith([FALSE, 42, "The mapping definition at `foobar` is invalid: its `invalid` key contains a integer. It must be an array."])]
   #[TestWith([FALSE, 10.2, "The mapping definition at `foobar` is invalid: its `invalid` key contains a double. It must be an array."])]
   #[TestWith([FALSE, "type", "The mapping definition at `foobar` is invalid: its `invalid` key contains a string. It must be an array."])]
@@ -522,6 +523,7 @@ class MappingTest extends KernelTestBase {
   #[TestWith([TRUE, 10.2, "The mapping definition at `my_module.settings:foobar` is invalid: its `invalid` key contains a double. It must be an array."])]
   #[TestWith([TRUE, "type", "The mapping definition at `my_module.settings:foobar` is invalid: its `invalid` key contains a string. It must be an array."])]
   #[TestWith([TRUE, FALSE, "The mapping definition at `my_module.settings:foobar` is invalid: its `invalid` key contains a boolean. It must be an array."])]
+  // phpcs:enable
   public function testInvalidMappingKeyDefinition(bool $has_parent, mixed $invalid_key_definition, string $expected_message): void {
     $definition = new MapDataDefinition([
       'type' => 'mapping',

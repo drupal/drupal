@@ -114,7 +114,21 @@ class TypedConfigTest extends KernelTestBase {
 
     $typed_config = $typed_config_manager->createFromNameAndData($config_test_entity->getConfigDependencyName(), $config_test_entity->toArray());
     $this->assertInstanceOf(TypedConfigInterface::class, $typed_config);
-    $this->assertEquals(['uuid', 'langcode', 'status', 'dependencies', 'id', 'label', 'weight', 'style', 'size', 'size_value', 'protected_property'], array_keys($typed_config->getElements()));
+    $this->assertEquals(
+      [
+        'uuid',
+        'langcode',
+        'status',
+        'dependencies',
+        'id',
+        'label',
+        'weight',
+        'style',
+        'size',
+        'size_value',
+        'protected_property',
+      ],
+      array_keys($typed_config->getElements()));
   }
 
   /**
