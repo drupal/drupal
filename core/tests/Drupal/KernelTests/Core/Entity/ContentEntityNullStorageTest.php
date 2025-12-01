@@ -46,7 +46,10 @@ class ContentEntityNullStorageTest extends KernelTestBase {
    */
   public function testDeleteThroughImport(): void {
     $this->installConfig(['system']);
-    $entity_test_no_id_bundle = EntityTestNoIdBundle::create(['id' => 'test', 'label' => 'Test entity test no ID bundle']);
+    $entity_test_no_id_bundle = EntityTestNoIdBundle::create([
+      'id' => 'test',
+      'label' => 'Test entity test no ID bundle',
+    ]);
     $entity_test_no_id_bundle->save();
 
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));

@@ -174,7 +174,10 @@ class ToolkitGdTest extends KernelTestBase {
       'version' => [
         'title' => 'GD library',
         'value' => gd_info()['GD Version'],
-        'description' => sprintf("Supported image file formats: %s.", implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP', 'AVIF'])),
+        'description' => sprintf(
+          "Supported image file formats: %s.",
+          implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP', 'AVIF']),
+        ),
       ],
     ], $this->imageFactory->get()->getToolkit()->getRequirements());
   }

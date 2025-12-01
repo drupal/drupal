@@ -185,7 +185,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertFalse($this->tryInsert(), 'Insert without a default failed.');
 
     // Add a default value to the column.
-    $this->schema->changeField('test_table', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE, 'default' => 0]);
+    $this->schema->changeField(
+      'test_table',
+      'test_field',
+      'test_field',
+      ['type' => 'int', 'not null' => TRUE, 'default' => 0]
+    );
     // The insert should now succeed.
     $this->assertTrue($this->tryInsert(), 'Insert with a default succeeded.');
 
@@ -211,7 +216,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertTrue($index_exists, 'Index was renamed.');
 
     // We need the default so that we can insert after the rename.
-    $this->schema->changeField('test_table2', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE, 'default' => 0]);
+    $this->schema->changeField(
+      'test_table2',
+      'test_field',
+      'test_field',
+      ['type' => 'int', 'not null' => TRUE, 'default' => 0]
+    );
     $this->assertFalse($this->tryInsert(), 'Insert into the old table failed.');
     $this->assertTrue($this->tryInsert('test_table2'), 'Insert into the new table succeeded.');
 
@@ -225,14 +235,29 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Recreate the table.
     $this->schema->createTable('test_table', $table_specification);
-    $this->schema->changeField('test_table', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE, 'default' => 0]);
-    $this->schema->addField('test_table', 'test_serial', ['type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => 'Added column description.']);
+    $this->schema->changeField(
+      'test_table',
+      'test_field',
+      'test_field',
+      ['type' => 'int', 'not null' => TRUE, 'default' => 0]
+    );
+    $this->schema->addField(
+      'test_table',
+      'test_serial',
+      ['type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => 'Added column description.']
+    );
 
     // Assert that the column comment has been set.
     $this->checkSchemaComment('Added column description.', 'test_table', 'test_serial');
 
     // Change the new field to a serial column.
-    $this->schema->changeField('test_table', 'test_serial', 'test_serial', ['type' => 'serial', 'not null' => TRUE, 'description' => 'Changed column description.'], ['primary key' => ['test_serial']]);
+    $this->schema->changeField(
+      'test_table',
+      'test_serial',
+      'test_serial',
+      ['type' => 'serial', 'not null' => TRUE, 'description' => 'Changed column description.'],
+      ['primary key' => ['test_serial']]
+    );
 
     // Assert that the column comment has been set.
     $this->checkSchemaComment('Changed column description.', 'test_table', 'test_serial');
@@ -249,7 +274,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     // Test adding a serial field to an existing table.
     $this->schema->dropTable('test_table');
     $this->schema->createTable('test_table', $table_specification);
-    $this->schema->changeField('test_table', 'test_field', 'test_field', ['type' => 'int', 'not null' => TRUE, 'default' => 0]);
+    $this->schema->changeField(
+      'test_table',
+      'test_field',
+      'test_field',
+      ['type' => 'int', 'not null' => TRUE, 'default' => 0]
+    );
     $this->schema->addField('test_table', 'test_serial', ['type' => 'serial', 'not null' => TRUE], ['primary key' => ['test_serial']]);
 
     // Test the primary key columns.
@@ -266,7 +296,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertEquals(2, $count, 'There were two rows.');
 
     // Test adding a new column and form a composite primary key with it.
-    $this->schema->addField('test_table', 'test_composite_primary_key', ['type' => 'int', 'not null' => TRUE, 'default' => 0], ['primary key' => ['test_serial', 'test_composite_primary_key']]);
+    $this->schema->addField(
+      'test_table',
+      'test_composite_primary_key',
+      ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+      ['primary key' => ['test_serial', 'test_composite_primary_key']]
+    );
 
     // Test the primary key columns.
     $this->assertSame(['test_serial', 'test_composite_primary_key'], $method->invoke($this->schema, 'test_table'));
@@ -603,7 +638,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($this->schema, $table_name));
 
     // Change the field type and make sure the primary key stays in place.
-    $this->schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'varchar', 'length' => 32, 'not null' => TRUE]);
+    $this->schema->changeField(
+      $table_name,
+      'test_field',
+      'test_field',
+      ['type' => 'varchar', 'length' => 32, 'not null' => TRUE]
+    );
     $this->assertTrue($this->schema->fieldExists($table_name, 'test_field'));
     $this->assertEquals($initial_primary_key, $find_primary_key_columns->invoke($this->schema, $table_name));
 
@@ -771,7 +811,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     $this->expectException(SchemaException::class);
     $this->expectExceptionMessage("The 'new_test_field' field specification does not define 'not null' as TRUE.");
-    $this->schema->addField($table_name, 'new_test_field', ['type' => 'int'], ['primary key' => ['test_field', 'new_test_field']]);
+    $this->schema->addField(
+      $table_name,
+      'new_test_field',
+      ['type' => 'int'],
+      ['primary key' => ['test_field', 'new_test_field']]
+    );
   }
 
   /**
@@ -1245,7 +1290,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Insert a row and check that columns have the expected default values.
     $this->connection->insert($table_name)->fields(['column1' => 1])->execute();
-    $result = $this->connection->select($table_name, 't')->fields('t', ['column2', 'column3', 'column4', 'column5', 'column6', 'column7'])->condition('column1', 1)->execute()->fetchObject();
+    $result = $this->connection
+      ->select($table_name, 't')
+      ->fields('t', ['column2', 'column3', 'column4', 'column5', 'column6', 'column7'])
+      ->condition('column1', 1)
+      ->execute()
+      ->fetchObject();
     $this->assertNull($result->column2);
     $this->assertSame('200', $result->column3);
     $this->assertSame('1.23', $result->column4);
@@ -1255,11 +1305,26 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Force SQLite schema to create a new table and copy data by adding a not
     // field with an initial value.
-    $this->schema->addField('test_table', 'new_column', ['type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'description' => 'Added new column', 'initial' => 'test']);
+    $this->schema->addField(
+      'test_table',
+      'new_column',
+      [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'description' => 'Added new column',
+        'initial' => 'test',
+      ]
+    );
 
     // Test that the columns default values are still correct.
     $this->connection->insert($table_name)->fields(['column1' => 2, 'new_column' => 'value'])->execute();
-    $result = $this->connection->select($table_name, 't')->fields('t', ['column2', 'column3', 'column4', 'column5', 'column6', 'column7'])->condition('column1', 2)->execute()->fetchObject();
+    $result = $this->connection
+      ->select($table_name, 't')
+      ->fields('t', ['column2', 'column3', 'column4', 'column5', 'column6', 'column7'])
+      ->condition('column1', 2)
+      ->execute()
+      ->fetchObject();
     $this->assertNull($result->column2);
     $this->assertSame('200', $result->column3);
     $this->assertSame('1.23', $result->column4);

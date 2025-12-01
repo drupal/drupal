@@ -170,7 +170,11 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // as language neutral.
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity_type);
-    $entity = $storage->create(['name' => $name, 'user_id' => $uid, $langcode_key => LanguageInterface::LANGCODE_NOT_SPECIFIED]);
+    $entity = $storage->create([
+      'name' => $name,
+      'user_id' => $uid,
+      $langcode_key => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ]);
     $entity->save();
     $entity = $storage->load($entity->id());
     $default_langcode = $entity->language()->getId();
@@ -268,9 +272,16 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     $entities = $storage->loadByProperties([$langcode_key => $langcode, 'name' => $properties[$langcode]['name'][0]]);
     $this->assertCount(0, $entities, "$entity_type: No entity loaded by name translation specifying the translation language.");
-    $entities = $storage->loadByProperties([$langcode_key => $langcode, 'name' => $properties[$langcode]['name'][0], $default_langcode_key => 0]);
+    $entities = $storage->loadByProperties([
+      $langcode_key => $langcode,
+      'name' => $properties[$langcode]['name'][0],
+      $default_langcode_key => 0,
+    ]);
     $this->assertCount(1, $entities, "$entity_type: One entity loaded by name translation and language specifying to look for translations.");
-    $entities = $storage->loadByProperties(['user_id' => $properties[$langcode]['user_id'][0], $default_langcode_key => NULL]);
+    $entities = $storage->loadByProperties([
+      'user_id' => $properties[$langcode]['user_id'][0],
+      $default_langcode_key => NULL,
+    ]);
     $this->assertCount(2, $entities, "$entity_type: Two entities loaded by uid without caring about property translatability.");
 
     // Test property conditions and orders with multiple languages in the same

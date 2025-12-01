@@ -133,7 +133,13 @@ class EntityDisplayBaseTest extends KernelTestBase {
       'mode' => 'default',
       'status' => TRUE,
       'content' => [
-        'test_field' => ['type' => 'comment_default', 'region' => 'content', 'settings' => ['view_mode' => 'default'], 'label' => 'hidden', 'third_party_settings' => []],
+        'test_field' => [
+          'type' => 'comment_default',
+          'region' => 'content',
+          'settings' => ['view_mode' => 'default'],
+          'label' => 'hidden',
+          'third_party_settings' => [],
+        ],
       ],
       'third_party_settings' => [
         'entity_test_third_party' => [

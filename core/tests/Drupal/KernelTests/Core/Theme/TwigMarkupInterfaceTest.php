@@ -41,15 +41,30 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
       // is not supposed to be an empty string.
       // phpcs:ignore Drupal.Semantics.FunctionT.EmptyString
       'empty TranslatableMarkup' => ['', new TranslatableMarkup('')],
-      'non-empty TranslatableMarkup' => ['<span>test</span>', new TranslatableMarkup('test')],
-      'empty FormattableMarkup' => ['', new FormattableMarkup('', ['@foo' => 'bar'])],
-      'non-empty FormattableMarkup' => ['<span>bar</span>', new FormattableMarkup('@foo', ['@foo' => 'bar'])],
+      'non-empty TranslatableMarkup' => [
+        '<span>test</span>',
+        new TranslatableMarkup('test'),
+      ],
+      'empty FormattableMarkup' => [
+        '',
+        new FormattableMarkup('', ['@foo' => 'bar']),
+      ],
+      'non-empty FormattableMarkup' => [
+        '<span>bar</span>',
+        new FormattableMarkup('@foo', ['@foo' => 'bar']),
+      ],
       'non-empty Markup' => ['<span>test</span>', Markup::create('test')],
       'empty GeneratedLink' => ['', new GeneratedLink()],
-      'non-empty GeneratedLink' => ['<span><a hef="http://www.example.com">test</a></span>', (new GeneratedLink())->setGeneratedLink('<a hef="http://www.example.com">test</a>')],
+      'non-empty GeneratedLink' => [
+        '<span><a hef="http://www.example.com">test</a></span>',
+        (new GeneratedLink())->setGeneratedLink('<a hef="http://www.example.com">test</a>'),
+      ],
       // Test objects that do not implement \Countable.
       'empty SafeMarkupTestMarkup' => ['', SafeMarkupTestMarkup::create('')],
-      'non-empty SafeMarkupTestMarkup' => ['<span>test</span>', SafeMarkupTestMarkup::create('test')],
+      'non-empty SafeMarkupTestMarkup' => [
+        '<span>test</span>',
+        SafeMarkupTestMarkup::create('test'),
+      ],
     ];
   }
 

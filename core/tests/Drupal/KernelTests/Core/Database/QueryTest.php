@@ -22,10 +22,14 @@ class QueryTest extends DatabaseTestBase {
    * Tests that we can pass an array of values directly in the query.
    */
   public function testArraySubstitution(): void {
-    $names = $this->connection->query('SELECT [name] FROM {test} WHERE [age] IN ( :ages[] ) ORDER BY [age]', [':ages[]' => [25, 26, 27]])->fetchAll();
+    $names = $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] IN ( :ages[] ) ORDER BY [age]', [':ages[]' => [25, 26, 27]])
+      ->fetchAll();
     $this->assertCount(3, $names, 'Correct number of names returned');
 
-    $names = $this->connection->query('SELECT [name] FROM {test} WHERE [age] IN ( :ages[] ) ORDER BY [age]', [':ages[]' => [25]])->fetchAll();
+    $names = $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] IN ( :ages[] ) ORDER BY [age]', [':ages[]' => [25]])
+      ->fetchAll();
     $this->assertCount(1, $names, 'Correct number of names returned');
   }
 
