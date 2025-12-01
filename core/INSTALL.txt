@@ -299,10 +299,9 @@ INSTALLATION
    Drupal documentation files in the installation directory, substituting the
    name of each file for CHANGELOG.txt in the example.
 
-   For more information on setting file permissions, see "Modifying Linux,
-   Unix, and Mac file permissions" (https://www.drupal.org/node/202483) or
-   "Modifying Windows file permissions" (https://www.drupal.org/node/202491) in
-   the Drupal.org online documentation.
+   For more information on setting file permissions, see "Securing file
+   permissions and ownership" (https://www.drupal.org/node/3092168) in the
+   Drupal.org online documentation.
 
 7. Set up independent "cron" maintenance jobs.
 
