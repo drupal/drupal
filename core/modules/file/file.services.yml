@@ -4,40 +4,35 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
+
   file.event.subscriber:
     class: Drupal\file\EventSubscriber\FileEventSubscriber
-    arguments: ['@config.factory', '@transliteration', '@language_manager']
   file.usage:
     class: Drupal\file\FileUsage\DatabaseFileUsageBackend
-    arguments: ['@config.factory', '@database', 'file_usage']
     tags:
       - { name: backend_overridable }
   Drupal\file\FileUsage\FileUsageInterface: '@file.usage'
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
-    arguments: ['@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository', '@file.validator', '@lock', '@validation.basic_recursive_validator_factory']
   Drupal\file\Upload\FileUploadHandler:
     alias: 'file.upload_handler'
     deprecated: 'The "%alias_id%" service alias is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use Drupal\file\Upload\FileUploadHandlerInterface instead.'
   Drupal\file\Upload\FileUploadHandlerInterface: '@file.upload_handler'
   file.repository:
     class: Drupal\file\FileRepository
-    arguments: [ '@file_system', '@stream_wrapper_manager', '@entity_type.manager', '@module_handler', '@file.usage', '@current_user' ]
   Drupal\file\FileRepositoryInterface: '@file.repository'
   file.recursive_validator_factory:
     class: Drupal\file\Validation\RecursiveValidatorFactory
-    arguments: ['@class_resolver', '@typed_data_manager']
   Drupal\file\Validation\RecursiveValidatorFactory: '@file.recursive_validator_factory'
   file.recursive_validator:
     class: Symfony\Component\Validator\Validator\ValidatorInterface
-    factory: ['@file.recursive_validator_factory', 'createValidator']
+    factory: [ '@file.recursive_validator_factory', 'createValidator' ]
   file.validator:
     class: Drupal\file\Validation\FileValidator
-    arguments: ['@file.recursive_validator', '@validation.constraint', '@event_dispatcher', '@module_handler']
   Drupal\file\Validation\FileValidatorInterface: '@file.validator'
   file.input_stream_file_writer:
     class: Drupal\file\Upload\InputStreamFileWriter
-    arguments: ['@file_system']
   Drupal\file\Upload\InputStreamFileWriterInterface: '@file.input_stream_file_writer'
   Drupal\file\EventSubscriber\DefaultContentSubscriber:
     calls:

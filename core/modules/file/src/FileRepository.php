@@ -17,71 +17,14 @@ use Drupal\file\FileUsage\FileUsageInterface;
  */
 class FileRepository implements FileRepositoryInterface {
 
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The stream wrapper manager.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The file usage service.
-   *
-   * @var \Drupal\file\FileUsage\FileUsageInterface
-   */
-  protected $fileUsage;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * FileRepository constructor.
-   *
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The file system.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
-   *   The stream wrapper manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler.
-   * @param \Drupal\file\FileUsage\FileUsageInterface $fileUsage
-   *   The file usage service.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
-   */
-  public function __construct(FileSystemInterface $fileSystem, StreamWrapperManagerInterface $streamWrapperManager, EntityTypeManagerInterface $entityTypeManager, ModuleHandlerInterface $moduleHandler, FileUsageInterface $fileUsage, AccountInterface $currentUser) {
-    $this->fileSystem = $fileSystem;
-    $this->streamWrapperManager = $streamWrapperManager;
-    $this->entityTypeManager = $entityTypeManager;
-    $this->moduleHandler = $moduleHandler;
-    $this->fileUsage = $fileUsage;
-    $this->currentUser = $currentUser;
+  public function __construct(
+    protected FileSystemInterface $fileSystem,
+    protected StreamWrapperManagerInterface $streamWrapperManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected FileUsageInterface $fileUsage,
+    protected AccountInterface $currentUser,
+  ) {
   }
 
   /**

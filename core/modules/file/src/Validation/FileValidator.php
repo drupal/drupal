@@ -5,6 +5,7 @@ namespace Drupal\file\Validation;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\file\FileInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -27,7 +28,9 @@ class FileValidator implements FileValidatorInterface {
    *   The module handler.
    */
   public function __construct(
+    #[Autowire(service: 'file.recursive_validator')]
     protected ValidatorInterface $validator,
+    #[Autowire(service: 'validation.constraint')]
     protected ConstraintManager $constraintManager,
     protected EventDispatcherInterface $eventDispatcher,
     protected ModuleHandlerInterface $moduleHandler,
