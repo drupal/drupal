@@ -519,15 +519,15 @@ services:
   Drupal\Core\File\FileUrlGeneratorInterface: '@file_url_generator'
   form_builder:
     class: Drupal\Core\Form\FormBuilder
-    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@element_info', '@theme.manager', '@?csrf_token']
+    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@element_info', '@theme.manager', '@?csrf_token', '@callable_resolver']
   Drupal\Core\Form\FormBuilderInterface: '@form_builder'
   form_validator:
     class: Drupal\Core\Form\FormValidator
-    arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form', '@form_error_handler']
+    arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form', '@form_error_handler', '@callable_resolver']
   Drupal\Core\Form\FormValidatorInterface: '@form_validator'
   form_submitter:
     class: Drupal\Core\Form\FormSubmitter
-    arguments: ['@request_stack', '@url_generator', '@redirect_response_subscriber']
+    arguments: ['@request_stack', '@url_generator', '@redirect_response_subscriber', '@callable_resolver']
   Drupal\Core\Form\FormSubmitterInterface: '@form_submitter'
   form_error_handler:
     class: Drupal\Core\Form\FormErrorHandler
@@ -1350,7 +1350,7 @@ services:
   Drupal\Core\Entity\HtmlEntityFormController: '@controller.entity_form'
   form_ajax_response_builder:
     class: Drupal\Core\Form\FormAjaxResponseBuilder
-    arguments: ['@main_content_renderer.ajax', '@current_route_match']
+    arguments: ['@main_content_renderer.ajax', '@current_route_match', '@callable_resolver']
   Drupal\Core\Form\FormAjaxResponseBuilderInterface: '@form_ajax_response_builder'
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener

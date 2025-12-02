@@ -12,11 +12,13 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormSubmitter;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\Stub;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +51,11 @@ class FormSubmitterTest extends UnitTestCase {
   protected $redirectResponseSubscriber;
 
   /**
+   * The callable resolver.
+   */
+  protected CallableResolver | Stub $callableResolver;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -56,6 +63,7 @@ class FormSubmitterTest extends UnitTestCase {
     $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     $this->unroutedUrlAssembler = $this->createMock(UnroutedUrlAssemblerInterface::class);
     $this->redirectResponseSubscriber = $this->createMock(RedirectResponseSubscriber::class);
+    $this->callableResolver = $this->createStub(CallableResolver::class);
   }
 
   /**
@@ -257,6 +265,13 @@ class FormSubmitterTest extends UnitTestCase {
     $form_state = new FormState();
     $form_submitter->executeSubmitHandlers($form, $form_state);
 
+    $this->callableResolver->method('getCallableFromDefinition')
+      ->willReturn(
+        [$mock->reveal(), 'hash_submit'],
+        [$mock->reveal(), 'submit_handler'],
+        [$mock->reveal(), 'simple_string_submit'],
+      );
+
     $form['#submit'][] = [$mock->reveal(), 'hash_submit'];
     $form_submitter->executeSubmitHandlers($form, $form_state);
 
@@ -279,7 +294,7 @@ class FormSubmitterTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $request_stack->push(Request::create('/test-path'));
     return $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
-      ->setConstructorArgs([$request_stack, $this->urlGenerator, $this->redirectResponseSubscriber])
+      ->setConstructorArgs([$request_stack, $this->urlGenerator, $this->redirectResponseSubscriber, $this->callableResolver])
       ->onlyMethods(['batchGet'])
       ->getMock();
   }

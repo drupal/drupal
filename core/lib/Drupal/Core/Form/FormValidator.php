@@ -7,6 +7,7 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -46,25 +47,28 @@ class FormValidator implements FormValidatorInterface {
   protected $formErrorHandler;
 
   /**
-   * Constructs a new FormValidator.
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The string translation service.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
-   *   The CSRF token generator.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
-   * @param \Drupal\Core\Form\FormErrorHandlerInterface $form_error_handler
-   *   The form error handler.
+   * The callable resolver.
    */
-  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, FormErrorHandlerInterface $form_error_handler) {
+  protected CallableResolver $callableResolver;
+
+  public function __construct(
+    RequestStack $request_stack,
+    TranslationInterface $string_translation,
+    CsrfTokenGenerator $csrf_token,
+    LoggerInterface $logger,
+    FormErrorHandlerInterface $form_error_handler,
+    ?CallableResolver $callableResolver = NULL,
+  ) {
     $this->requestStack = $request_stack;
     $this->stringTranslation = $string_translation;
     $this->csrfToken = $csrf_token;
     $this->logger = $logger;
     $this->formErrorHandler = $form_error_handler;
+    if (!$callableResolver) {
+      @trigger_error(sprintf('Calling %s() without the $callableResolver param is deprecated in drupal:11.3.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3548821', __METHOD__), E_USER_DEPRECATED);
+      $callableResolver = \Drupal::service(CallableResolver::class);
+    }
+    $this->callableResolver = $callableResolver;
   }
 
   /**
@@ -79,7 +83,8 @@ class FormValidator implements FormValidatorInterface {
     }
 
     foreach ($handlers as $callback) {
-      call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
+      $callable = $this->callableResolver->getCallableFromDefinition($form_state->prepareCallback($callback));
+      $callable($form, $form_state);
     }
   }
 
@@ -279,7 +284,8 @@ class FormValidator implements FormValidatorInterface {
       elseif (isset($elements['#element_validate'])) {
         foreach ($elements['#element_validate'] as $callback) {
           $complete_form = &$form_state->getCompleteForm();
-          call_user_func_array($form_state->prepareCallback($callback), [&$elements, &$form_state, &$complete_form]);
+          $callable = $this->callableResolver->getCallableFromDefinition($form_state->prepareCallback($callback));
+          $callable($elements, $form_state, $complete_form);
         }
       }
 
