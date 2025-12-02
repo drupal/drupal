@@ -64,15 +64,62 @@ inline_block:
     view_mode:
       type: string
       label: 'View mode'
+      ConfigExists:
+        prefix: core.entity_view_mode.block_content.
     block_id:
       type: integer
       label: 'Block ID'
+      constraints:
+        NotBlank: []
+        Range:
+          min: 1
     block_revision_id:
       type: integer
       label: 'Block revision ID'
+      constraints:
+        NotBlank: []
+        Range:
+          min: 1
     block_serialized:
       type: string
       label: 'Serialized block'
+      nullable: true
+      constraints:
+        Serialized: []
+  constraints:
+    FullyValidatable: ~
+    AtLeastOneOf:
+      messageCollection: 'Either block_id and block_revision_id, or block_serialized must be provided.'
+      constraints:
+        - MappingCollection:
+            allowExtraFields: true
+            allowMissingFields: true
+            fields:
+              block_id:
+                Required:
+                  constraints:
+                    - NotBlank: {}
+                    - NotNull: {}
+              block_revision_id:
+                Required:
+                  constraints:
+                    - NotBlank: {}
+                    - NotNull: {}
+              block_serialized:
+                Optional: {}
+        - MappingCollection:
+            allowExtraFields: true
+            allowMissingFields: true
+            fields:
+              block_id:
+                Optional: {}
+              block_revision_id:
+                Optional: {}
+              block_serialized:
+                Required:
+                  constraints:
+                    - NotBlank: {}
+                    - NotNull: {}
 
 block.settings.inline_block:*:
   type: inline_block

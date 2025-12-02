@@ -9,3 +9,6 @@ uuid: '7C30C50E-641A-4E34-A7F1-46BCFB9BE5A3'
 string__not_blank: 'this is a label'
 host: 'localhost'
 composite: null
+block_id: 1
+block_revision_id: 3
+block_serialized: 'a:2:{s:4:"type";s:6:"kitten";s:5:"count";i:2;}'

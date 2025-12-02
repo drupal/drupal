@@ -172,12 +172,20 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
       $this->validateConstraints($value, $cache_key, $constraints);
     }
 
-    // If the data is a list or complex data, validate the contained list items
-    // or properties. However, do not recurse if the data is empty.
-    // Next, we do not recurse if given constraints are validated against an
-    // entity, since we should determine whether the entity matches the
-    // constraints and not whether the entity validates.
-    if (($data instanceof ListInterface || $data instanceof ComplexDataInterface) && !$data->isEmpty() && !($data instanceof EntityAdapter && $constraints_given)) {
+    if (
+      // If the call is the root call or there are no constraints are given, we
+      // recurse. These are calls that should go into the values and find the
+      // relevant constraints per value.
+      ($is_root_call === TRUE || $constraints_given === FALSE) &&
+
+      // If the data is a list or complex data, validate the contained list
+      // items or properties. However, do not recurse if the data is empty.
+      ($data instanceof ListInterface || $data instanceof ComplexDataInterface) && !$data->isEmpty() &&
+
+      // Next, we do not recurse if given constraints are validated against an
+      // entity, since we should determine whether the entity matches the
+      // constraints and not whether the entity validates.
+      !($data instanceof EntityAdapter && $constraints_given)) {
       foreach ($data as $property) {
         $this->validateNode($property);
       }
