@@ -3,11 +3,12 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Utility\CallableResolver;
 
 /**
  * Base class for entity forms.
@@ -304,16 +305,32 @@ class EntityForm extends FormBase implements EntityFormInterface {
     // properties.
     if (isset($form['#entity_builders'])) {
       foreach ($form['#entity_builders'] as $function) {
-        call_user_func_array($form_state->prepareCallback($function), [
-          $entity->getEntityTypeId(),
-          $entity,
-          &$form,
-          &$form_state,
-        ]);
+        $callable = $this->getCallableFromDefinition($form_state->prepareCallback($function));
+        $callable($entity->getEntityTypeId(), $entity, $form, $form_state);
       }
     }
 
     return $entity;
+  }
+
+  /**
+   * Gets a callable from a string or array definition if possible.
+   *
+   * Checks if the service container is available and uses the callable
+   * resolver service to get the callable from the definition. Otherwise, it
+   * returns the definition as is.
+   *
+   * @param string|array $definition
+   *   The callable definition.
+   *
+   * @return callable|string|array
+   *   The callable, or the original definition if it could not be resolved.
+   */
+  protected function getCallableFromDefinition(string | array $definition): callable | string | array {
+    if (\Drupal::hasService(CallableResolver::class)) {
+      return \Drupal::service(CallableResolver::class)->getCallableFromDefinition($definition);
+    }
+    return $definition;
   }
 
   /**

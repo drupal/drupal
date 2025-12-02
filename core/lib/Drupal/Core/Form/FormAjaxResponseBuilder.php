@@ -6,6 +6,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Render\MainContent\MainContentRendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -32,16 +33,22 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
   protected $routeMatch;
 
   /**
-   * Constructs a new FormAjaxResponseBuilder.
-   *
-   * @param \Drupal\Core\Render\MainContent\MainContentRendererInterface $ajax_renderer
-   *   The ajax renderer.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The current route match.
+   * The callable resolver service.
    */
-  public function __construct(MainContentRendererInterface $ajax_renderer, RouteMatchInterface $route_match) {
+  protected CallableResolver $callableResolver;
+
+  public function __construct(
+    MainContentRendererInterface $ajax_renderer,
+    RouteMatchInterface $route_match,
+    ?CallableResolver $callableResolver = NULL,
+  ) {
     $this->ajaxRenderer = $ajax_renderer;
     $this->routeMatch = $route_match;
+    if (!$callableResolver) {
+      @trigger_error(sprintf('Calling %s() without the $callableResolver param is deprecated in drupal:11.3.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3548821', __METHOD__), E_USER_DEPRECATED);
+      $callableResolver = \Drupal::service(CallableResolver::class);
+    }
+    $this->callableResolver = $callableResolver;
   }
 
   /**
@@ -63,8 +70,14 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
       $callback = $triggering_element['#ajax']['callback'];
     }
     $callback = $form_state->prepareCallback($callback);
-    if (empty($callback) || !is_callable($callback)) {
+    if (empty($callback)) {
       throw new HttpException(500, 'The specified #ajax callback is empty or not callable.');
+    }
+    try {
+      $callback = $this->callableResolver->getCallableFromDefinition($callback);
+    }
+    catch (\InvalidArgumentException $e) {
+      throw new HttpException(500, 'The specified #ajax callback is empty or not callable.', $e);
     }
     $result = call_user_func_array($callback, [&$form, &$form_state, $request]);
 

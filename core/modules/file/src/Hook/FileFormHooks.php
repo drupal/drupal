@@ -79,17 +79,14 @@ class FileFormHooks {
       '#title' => $this->t('Convert to lowercase'),
       '#default_value' => $config->get('filename_sanitization.lowercase'),
     ];
-    $form['#submit'][] = [FileFormHooks::class, 'settingsSubmit'];
+    $form['#submit'][] = static::class . ':settingsSubmit';
   }
 
   /**
    * Form submission handler for file system settings form.
-   *
-   * @todo change this to a non-static method when
-   *   https://www.drupal.org/project/drupal/issues/3536726 is in.
    */
-  public static function settingsSubmit(array &$form, FormStateInterface $form_state): void {
-    $config = \Drupal::service(ConfigFactoryInterface::class)->getEditable('file.settings')
+  public function settingsSubmit(array &$form, FormStateInterface $form_state): void {
+    $config = $this->configFactory->getEditable('file.settings')
       ->set('filename_sanitization', $form_state->getValue('filename_sanitization'));
     $config->save();
   }

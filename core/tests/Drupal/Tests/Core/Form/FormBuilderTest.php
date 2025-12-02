@@ -204,6 +204,9 @@ class FormBuilderTest extends FormTestBase {
         $form_state->setFormState([$form_state_key => $response]);
       });
 
+    $this->callableResolver->method('getCallableFromDefinition')
+      ->willReturn([$form_arg, 'submitForm']);
+
     $form_state = new FormState();
     try {
       $input['form_id'] = $form_id;
@@ -252,6 +255,9 @@ class FormBuilderTest extends FormTestBase {
         $form_state->setResponse($response);
         $form_state->set('redirect', $redirect);
       });
+
+    $this->callableResolver->method('getCallableFromDefinition')
+      ->willReturn([$form_arg, 'submitForm']);
 
     $form_state = new FormState();
     try {
@@ -579,12 +585,15 @@ class FormBuilderTest extends FormTestBase {
     $expected_form = self::buildTestFormStructure();
     $expected_form['#build_id'] = $form_build_id;
     $form_arg = $this->getMockForm($form_id, $expected_form);
-    $form_arg->expects($this->once())
+    $form_arg->expects($this->exactly(2))
       ->method('submitForm')
       ->willReturnCallback(function (array &$form, FormStateInterface $form_state) {
         // Mimic EntityForm by cleaning the $form_state upon submit.
         $form_state->cleanValues();
       });
+
+    $this->callableResolver->method('getCallableFromDefinition')
+      ->willReturn([$form_arg, 'submitForm']);
 
     $this->formCache->expects($this->once())
       ->method('deleteCache')
@@ -625,7 +634,7 @@ class FormBuilderTest extends FormTestBase {
     $request_stack = new RequestStack();
     $request_stack->push($request);
     $this->formBuilder = $this->getMockBuilder('\Drupal\Core\Form\FormBuilder')
-      ->setConstructorArgs([$this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $request_stack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken])
+      ->setConstructorArgs([$this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $request_stack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken, $this->callableResolver])
       ->onlyMethods(['getFileUploadMaxSize'])
       ->getMock();
     $this->formBuilder->expects($this->once())
