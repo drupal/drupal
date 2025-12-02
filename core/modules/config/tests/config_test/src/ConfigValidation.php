@@ -14,6 +14,13 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class ConfigValidation {
 
   /**
+   * Keep track of called validators.
+   *
+   * @var array
+   */
+  public static array $calledValidators = [];
+
+  /**
    * Validates a llama.
    *
    * @param string $string
@@ -36,6 +43,7 @@ class ConfigValidation {
    *   The validation execution context.
    */
   public static function validateCats($string, ExecutionContextInterface $context) {
+    self::$calledValidators[__FUNCTION__] = (self::$calledValidators[__FUNCTION__] ?? 0) + 1;
     if (!in_array($string, ['kitten', 'cats', 'nyans'])) {
       $context->addViolation('no valid cat');
     }
@@ -50,6 +58,7 @@ class ConfigValidation {
    *   The validation execution context.
    */
   public static function validateCatCount($count, ExecutionContextInterface $context) {
+    self::$calledValidators[__FUNCTION__] = (self::$calledValidators[__FUNCTION__] ?? 0) + 1;
     if ($count <= 1) {
       $context->addViolation('no enough cats');
     }
@@ -78,6 +87,8 @@ class ConfigValidation {
    *   The validation execution context.
    */
   public static function validateMapping($mapping, ExecutionContextInterface $context) {
+    self::$calledValidators[__FUNCTION__] = (self::$calledValidators[__FUNCTION__] ?? 0) + 1;
+
     // Ensure we are validating the entire mapping by diffing against all the
     // keys.
     $mapping_schema = \Drupal::service('config.typed')->get('config_test.validation')->getValue();

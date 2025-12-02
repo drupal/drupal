@@ -25,6 +25,10 @@ class ConstraintFactory extends ContainerFactory {
     if (is_subclass_of($plugin_class, CompositeConstraintInterface::class)) {
       $composite_constraint_options = (array) $plugin_class::getCompositeOptionStatic();
       foreach ($composite_constraint_options as $option) {
+        // Skip if no constraints are set in the configuration.
+        if (!isset($configuration[$option])) {
+          continue;
+        }
         foreach ($configuration[$option] as $key => $value) {
           foreach ($value as $nested_constraint_id => $nested_constraint_configuration) {
             $configuration[$option][$key] = $this->createInstance($nested_constraint_id, $nested_constraint_configuration);

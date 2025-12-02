@@ -264,6 +264,39 @@ config_test.validation:
   type: config_object
   label: 'Configuration type'
   constraints:
+    AtLeastOneOf:
+      messageCollection: 'Either block_id and block_revision_id, or block_serialized must be provided.'
+      constraints:
+        - MappingCollection:
+            allowExtraFields: true
+            allowMissingFields: false
+            fields:
+              block_id:
+                Required:
+                  constraints:
+                    - NotNull: {}
+                    - NotBlank: {}
+              block_revision_id:
+                Required:
+                  constraints:
+                    - NotNull: {}
+                    - NotBlank: {}
+              block_serialized:
+                Optional: {}
+        - MappingCollection:
+            allowExtraFields: true
+            allowMissingFields: false
+            fields:
+              block_id:
+                Optional: {}
+              block_revision_id:
+                Optional: {}
+              block_serialized:
+                Required:
+                  constraints:
+                    - Serialized: []
+                    - NotNull: {}
+                    - NotBlank: {}
     Callback:
       callback: [\Drupal\config_test\ConfigValidation, validateMapping]
   mapping:
@@ -274,6 +307,13 @@ config_test.validation:
           callback: [\Drupal\config_test\ConfigValidation, validateLlama]
     cat:
       type: mapping
+      constraints:
+        NotBlank: {}
+        NotNull: {}
+        AtLeastOneOf:
+          constraints:
+            - NotBlank: {}
+            - NotNull: {}
       mapping:
         type:
           type: string
@@ -308,6 +348,29 @@ config_test.validation:
       type: string
       constraints:
         UriHost: ~
+
+    block_id:
+      type: integer
+      label: 'Block ID'
+      nullable: true
+      constraints:
+        Range:
+          min: 1
+
+    block_revision_id:
+      type: integer
+      label: 'Block revision ID'
+      nullable: true
+      constraints:
+        Range:
+          min: 1
+
+    block_serialized:
+      type: string
+      label: 'Serialized block'
+      nullable: true
+      constraints:
+        Serialized: []
 
     composite:
       type: mapping
