@@ -702,8 +702,10 @@ function drupal_check_module($module) {
     require_once $file;
   }
   // Check requirements.
-  $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']) ?? [];
-  $requirements = array_merge($requirements, install_check_class_requirements($extension));
+  $requirements = install_check_class_requirements($extension);
+  if (empty($requirements)) {
+    $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']) ?? [];
+  }
 
   if (!empty($requirements) && RequirementSeverity::maxSeverityFromRequirements($requirements) === RequirementSeverity::Error) {
     // Print any error messages.
