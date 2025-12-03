@@ -2695,6 +2695,18 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/restrictededitingexceptionautocommand.js
+ *
+ * @typedef {module:restricted-editing/restrictededitingexceptionautocommand} module:restricted-editing/restrictededitingexceptionautocommand~RestrictedEditingExceptionAutoCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/restrictededitingexceptionblockcommand.js
+ *
+ * @typedef {module:restricted-editing/restrictededitingexceptionblockcommand} module:restricted-editing/restrictededitingexceptionblockcommand~RestrictedEditingExceptionBlockCommand
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-restricted-editing/src/restrictededitingexceptioncommand.js
  *
  * @typedef {module:restricted-editing/restrictededitingexceptioncommand} module:restricted-editing/restrictededitingexceptioncommand~RestrictedEditingExceptionCommand
@@ -2712,6 +2724,7 @@
  * @typedef {module:restricted-editing/restrictededitingmode/utils} module:restricted-editing/restrictededitingmode/utils~getMarkerAtPosition
  * @typedef {module:restricted-editing/restrictededitingmode/utils} module:restricted-editing/restrictededitingmode/utils~isPositionInRangeBoundaries
  * @typedef {module:restricted-editing/restrictededitingmode/utils} module:restricted-editing/restrictededitingmode/utils~isSelectionInMarker
+ * @typedef {module:restricted-editing/restrictededitingmode/utils} module:restricted-editing/restrictededitingmode/utils~getExceptionRange
  */
 
 /**
@@ -2985,16 +2998,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-table/src/converters/downcast.js
- *
- * @typedef {module:table/converters/downcast} module:table/converters/downcast~downcastTable
- * @typedef {module:table/converters/downcast} module:table/converters/downcast~downcastRow
- * @typedef {module:table/converters/downcast} module:table/converters/downcast~downcastCell
- * @typedef {module:table/converters/downcast} module:table/converters/downcast~convertParagraphInTableCell
- * @typedef {module:table/converters/downcast} module:table/converters/downcast~isSingleParagraphWithoutAttributes
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-table/src/plaintableoutput.js
  *
  * @typedef {module:table/plaintableoutput} module:table/plaintableoutput~PlainTableOutput
@@ -3055,9 +3058,21 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablecellproperties/tablecellpropertiesuiexperimental.js
+ *
+ * @typedef {module:table/tablecellproperties/tablecellpropertiesuiexperimental} module:table/tablecellproperties/tablecellpropertiesuiexperimental~TableCellPropertiesUIExperimental
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/src/tablecellproperties/ui/tablecellpropertiesview.js
  *
  * @typedef {module:table/tablecellproperties/ui/tablecellpropertiesview} module:table/tablecellproperties/ui/tablecellpropertiesview~TableCellPropertiesView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablecellproperties/ui/tablecellpropertiesviewexperimental.js
+ *
+ * @typedef {module:table/tablecellproperties/ui/tablecellpropertiesviewexperimental} module:table/tablecellproperties/ui/tablecellpropertiesviewexperimental~TableCellPropertiesViewExperimental
  */
 
 /**
@@ -3157,9 +3172,21 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-table/src/tableproperties/tablepropertiesuiexperimental.js
+ *
+ * @typedef {module:table/tableproperties/tablepropertiesuiexperimental} module:table/tableproperties/tablepropertiesuiexperimental~TablePropertiesUIExperimental
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/src/tableproperties/ui/tablepropertiesview.js
  *
  * @typedef {module:table/tableproperties/ui/tablepropertiesview} module:table/tableproperties/ui/tablepropertiesview~TablePropertiesView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tableproperties/ui/tablepropertiesviewexperimental.js
+ *
+ * @typedef {module:table/tableproperties/ui/tablepropertiesviewexperimental} module:table/tableproperties/ui/tablepropertiesviewexperimental~TablePropertiesViewExperimental
  */
 
 /**
@@ -3218,6 +3245,20 @@
  * @typedef {module:table/utils/ui/table-properties} module:table/utils/ui/table-properties~getBorderStyleDefinitions
  * @typedef {module:table/utils/ui/table-properties} module:table/utils/ui/table-properties~fillToolbar
  * @typedef {module:table/utils/ui/table-properties} module:table/utils/ui/table-properties~getLabeledColorInputCreator
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/utils/ui/table-propertiesexperimental.js
+ *
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~getBorderStyleLabels
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~getLocalizedColorErrorText
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~getLocalizedLengthErrorText
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~colorFieldValidator
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~lengthFieldValidator
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~lineWidthFieldValidator
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~getBorderStyleDefinitions
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~fillToolbar
+ * @typedef {module:table/utils/ui/table-propertiesexperimental} module:table/utils/ui/table-propertiesexperimental~getLabeledColorInputCreator
  */
 
 /**
@@ -4013,6 +4054,7 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/position.js
  *
  * @typedef {module:utils/dom/position} module:utils/dom/position~getOptimalPosition
+ * @typedef {module:utils/dom/position} module:utils/dom/position~getConstrainedViewportRect
  */
 
 /**
