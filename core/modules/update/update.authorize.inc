@@ -2,11 +2,18 @@
 
 /**
  * @file
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0.
+ *   Functions have been deprecated.
+ *
+ * @see https://www.drupal.org/node/3512364
  */
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Updater\UpdaterException;
 use Drupal\Core\Url;
+
+@trigger_error(__FILE__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Functions have been deprecated. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
 /**
  * Updates existing projects when invoked by authorize.php.

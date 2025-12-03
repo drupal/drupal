@@ -2,12 +2,19 @@
 
 /**
  * @file
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0.
+ *   Functions have been deprecated.
+ *
+ * @see https://www.drupal.org/node/3512364
  */
 
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
 use Psr\Http\Client\ClientExceptionInterface;
+
+@trigger_error(__FILE__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Functions have been deprecated. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
 /**
  * Checks for file transfer backends and prepares a form fragment about them.
