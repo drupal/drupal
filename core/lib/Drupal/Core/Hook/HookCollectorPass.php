@@ -13,6 +13,7 @@ use Drupal\Core\Hook\Attribute\HookAttributeInterface;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
 use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
+use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
 use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\ReorderHook;
 use Drupal\Core\Hook\OrderOperation\OrderOperation;
@@ -526,7 +527,8 @@ class HookCollectorPass implements CompilerPassInterface {
               break;
             }
 
-            if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && (preg_match($current_module_preg, $function, $matches) || preg_match($all_modules_preg, $function, $matches)) && !StaticReflectionParser::hasAttribute($attributes, LegacyModuleImplementsAlter::class)) {
+            $legacy_attributes = [LegacyHook::class, LegacyModuleImplementsAlter::class, LegacyRequirementsHook::class];
+            if (!static::hasAnyAttribute($attributes, $legacy_attributes) && (preg_match($current_module_preg, $function, $matches) || preg_match($all_modules_preg, $function, $matches))) {
               // Skip hooks that are not supported by the new hook system, they
               // do not need to be added to the BC layer. Note that is different
               // from static::checkForProceduralOnlyHooks(). hook_requirements
@@ -565,6 +567,29 @@ class HookCollectorPass implements CompilerPassInterface {
         }
       }
     }
+  }
+
+  /**
+   * Returns whether the existing attributes match any of the expected ones.
+   *
+   * @param array $existingAttributes
+   *   List of attribute classes.
+   * @param array $attributesLookingFor
+   *   List of expected attribute classes.
+   *
+   * @return bool
+   *   Whether an expected attribute class exists.
+   */
+  public static function hasAnyAttribute(array $existingAttributes, array $attributesLookingFor): bool {
+    foreach ($existingAttributes as $existingAttribute) {
+      foreach ($attributesLookingFor as $attributeLookingFor) {
+        if (is_a($existingAttribute, $attributeLookingFor, TRUE)) {
+          return TRUE;
+        }
+      }
+    }
+
+    return FALSE;
   }
 
   /**
@@ -608,6 +633,10 @@ class HookCollectorPass implements CompilerPassInterface {
       @trigger_error($message, E_USER_DEPRECATED);
       $this->moduleImplementsAlters[] = $function;
       include_once $fileinfo->getPathname();
+    }
+    elseif (in_array($hook, ['requirements', 'requirements_alter'])) {
+      $message = "$function without a #[LegacyRequirementsHook] attribute is deprecated in drupal:11.3.0 and removed in drupal:13.0.0. See https://www.drupal.org/node/3549685";
+      @trigger_error($message, E_USER_DEPRECATED);
     }
     $this->proceduralImplementations[$hook][] = $module;
     if ($fileinfo->getExtension() !== 'module') {

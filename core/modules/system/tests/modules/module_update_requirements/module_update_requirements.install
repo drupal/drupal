@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for the update requirements test module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
+
+/**
+ * Implements hook_requirements()
+ */
+#[LegacyRequirementsHook]
+function module_update_requirements_requirements(): array {
+  throw new \Exception('This is a legacy hook and must not be called');
+}
