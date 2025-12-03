@@ -100,6 +100,7 @@ class ConfigSingleExportForm extends FormBase {
     $form_url = Url::fromRoute('config.export_single', ['config_type' => $config_type, 'config_name' => $config_name]);
     (new Htmx())
       ->post($form_url)
+      ->onlyMainContent()
       ->select('*:has(>select[name="config_name"])')
       ->target('*:has(>select[name="config_name"])')
       ->swap('outerHTML')
@@ -117,6 +118,7 @@ class ConfigSingleExportForm extends FormBase {
     // Select and replace the wrapper element of the export textarea.
     (new Htmx())
       ->post($form_url)
+      ->onlyMainContent()
       ->select('[data-export-wrapper]')
       ->target('[data-export-wrapper]')
       ->swap('outerHTML')
