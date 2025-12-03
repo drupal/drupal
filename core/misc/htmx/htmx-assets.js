@@ -37,8 +37,15 @@
    * @see https://htmx.org/events/#htmx:configRequest
    */
   htmx.on('htmx:configRequest', ({ detail }) => {
-    const url = new URL(detail.path, document.location.href);
-    if (Drupal.url.isLocal(url.toString())) {
+    if (Drupal.url.isLocal(detail.path)) {
+      if (detail.elt.hasAttribute('data-hx-drupal-only-main-content')) {
+        // Add _wrapper_format query parameter for all non full page requests.
+        // Drupal expects this parameter to be in the query string, not the post
+        // values.
+        const url = new URL(detail.path, window.location);
+        url.searchParams.set('_wrapper_format', 'drupal_htmx');
+        detail.path = url.toString();
+      }
       // Allow Drupal to return new JavaScript and CSS files to load without
       // returning the ones already loaded.
       // @see \Drupal\Core\StackMiddleWare\AjaxPageState
@@ -54,6 +61,23 @@
           detail.headers['HX-Trigger-Name'];
       }
     }
+  });
+
+  // When saving to the browser history always remove wrapper format and ajax
+  // page state from the query string.
+  htmx.on('htmx:beforeHistoryUpdate', ({ detail }) => {
+    const url = new URL(detail.history.path, window.location);
+    [
+      '_wrapper_format',
+      'ajax_page_state[theme]',
+      'ajax_page_state[theme_token]',
+      'ajax_page_state[libraries]',
+      '_triggering_element_name',
+      '_triggering_element_value',
+    ].forEach((key) => {
+      url.searchParams.delete(key);
+    });
+    detail.history.path = url.toString();
   });
 
   // @see https://htmx.org/events/#htmx:beforeSwap

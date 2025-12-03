@@ -46,91 +46,13 @@ class HtmxAttributesTest extends UnitTestCase {
       ->willReturn($generated);
   }
 
+  /**
+   * Applies the Htmx attributes to a render array.
+   */
   protected function apply(): array {
     $render = [];
     $this->htmx->applyTo($render);
     return $render;
-  }
-
-  /**
-   * Test get method.
-   */
-  public function testHxGet(): void {
-    $this->htmx->get($this->url);
-    $render = $this->apply();
-    // The paths in GitLabCI include a subfolder.
-    $this->assertTrue(isset($render['#attributes']['data-hx-get']));
-    $this->assertStringEndsWith('/common-test/destination', $render['#attributes']['data-hx-get']);
-    // Verify no parameters.
-    $this->htmx->get();
-    $render = $this->apply();
-    $this->assertTrue(isset($render['#attributes']['data-hx-get']));
-    $this->assertEquals('', $render['#attributes']['data-hx-get']);
-  }
-
-  /**
-   * Test post method.
-   */
-  public function testHxPost(): void {
-    $this->htmx->post($this->url);
-    $render = $this->apply();
-    // The paths in GitLabCI include a subfolder.
-    $this->assertTrue(isset($render['#attributes']['data-hx-post']));
-    $this->assertStringEndsWith('/common-test/destination', $render['#attributes']['data-hx-post']);
-    // Verify no parameters.
-    $this->htmx->post();
-    $render = $this->apply();
-    $this->assertTrue(isset($render['#attributes']['data-hx-post']));
-    $this->assertEquals('', $render['#attributes']['data-hx-post']);
-  }
-
-  /**
-   * Test put method.
-   */
-  public function testHxPut(): void {
-    $this->htmx->put($this->url);
-    $render = $this->apply();
-    // The paths in GitLabCI include a subfolder.
-    $this->assertTrue(isset($render['#attributes']['data-hx-put']));
-    $this->assertStringEndsWith('/common-test/destination', $render['#attributes']['data-hx-put']);
-    // Verify no parameters.
-    $this->htmx->put();
-    $render = $this->apply();
-    $this->assertTrue(isset($render['#attributes']['data-hx-put']));
-    $this->assertEquals('', $render['#attributes']['data-hx-put']);
-  }
-
-  /**
-   * Test patch method.
-   */
-  public function testHxPatch(): void {
-    $this->htmx->patch($this->url);
-    $render = $this->apply();
-    // The paths in GitLabCI include a subfolder.
-    $this->assertTrue(isset($render['#attributes']['data-hx-patch']));
-    $this->assertStringEndsWith('/common-test/destination', $render['#attributes']['data-hx-patch']);
-    // Verify no parameters.
-    $this->htmx->patch();
-    $render = $this->apply();
-    $this->assertTrue(isset($render['#attributes']['data-hx-patch']));
-    $this->assertEquals('', $render['#attributes']['data-hx-patch']);
-  }
-
-  /**
-   * Test delete method.
-   */
-  public function testHxDelete(): void {
-    $this->htmx->delete($this->url);
-    $render = $this->apply();
-
-    // The paths in GitLabCI include a subfolder.
-    $this->assertTrue(isset($render['#attributes']['data-hx-delete']));
-    $this->assertStringEndsWith('/common-test/destination', $render['#attributes']['data-hx-delete']);
-    // Verify no parameters.
-    $this->htmx->delete();
-    $render = $this->apply();
-    $this->assertTrue(isset($render['#attributes']['data-hx-delete']));
-    $this->assertEquals('', $render['#attributes']['data-hx-delete']);
   }
 
   /**

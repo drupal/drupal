@@ -199,19 +199,37 @@ class Htmx {
    * @param string $method
    *   The request method.
    * @param \Drupal\Core\Url|null $url
-   *   The URL for the request.
+   *   The URL for the request. If NULL, is passed it will use the current URL
+   *   without any query parameter.
    *
    * @return static
    *   returns self so that attribute methods may be chained.
    */
   protected function buildRequestAttribute(string $method, ?Url $url = NULL): static {
     if (is_null($url)) {
-      $value = '';
+      $request_url = Url::fromRoute('<none>');
     }
     else {
-      $value = $this->urlValue($url);
+      // The Htmx helper should not modify the original URL object.
+      $request_url = clone $url;
     }
-    $this->createStringAttribute($method, $value);
+    $this->createStringAttribute($method, $this->urlValue($request_url));
+    return $this;
+  }
+
+  /**
+   * Decides when to use the `drupal_htmx` wrapper format for Htmx requests.
+   *
+   * @param bool $toggle
+   *   Toggle to use the full HTML response or just the main content.
+   *
+   * @return static
+   *   returns self so that attribute methods may be chained.
+   *
+   * @see core/misc/htmx/htmx-assets.js
+   */
+  public function onlyMainContent(bool $toggle = TRUE) {
+    $this->createBooleanAttribute('hx-drupal-only-main-content', $toggle);
     return $this;
   }
 
@@ -518,7 +536,8 @@ class Htmx {
    * request to the current url. If parameters are used, both are required.
    *
    * @param \Drupal\Core\Url|null $url
-   *   The URL for the GET request. If NULL the current page is used.
+   *   The URL for the GET request. If NULL, the current page is used without
+   *   the query parameters.
    *
    * @return static
    *   returns self so that attribute methods may be chained.
@@ -538,7 +557,8 @@ class Htmx {
    *  request to the current url. If parameters are used, both are required.
    *
    * @param \Drupal\Core\Url|null $url
-   *   The URL for the POST request. If NULL the current page is used.
+   *   The URL for the GET request. If NULL, the current page is used without
+   *   the query parameters.
    *
    * @return static
    *   returns self so that attribute methods may be chained.
@@ -558,7 +578,8 @@ class Htmx {
    *  request to the current url. If parameters are used, both are required.
    *
    * @param \Drupal\Core\Url|null $url
-   *   The URL for the PUT request. If NULL the current page is used.
+   *   The URL for the GET request. If NULL, the current page is used without
+   *   the query parameters.
    *
    * @return static
    *   returns self so that attribute methods may be chained.
@@ -572,13 +593,14 @@ class Htmx {
   /**
    * Creates a `data-hx-patch` attribute.
    *
-   * This attribute instructs HTMX to issue a PATCH request
+   * This attribute instructs HTMX to issue a PATCH request.
    *
    *  This request method also accepts no parameters, which issues a patch
    *  request to the current url. If parameters are used, both are required.
    *
    * @param \Drupal\Core\Url|null $url
-   *   Collects the cacheable metadata from the URL generation.
+   *   The URL for the GET request. If NULL, the current page is used without
+   *   the query parameters.
    *
    * @return static
    *   returns self so that attribute methods may be chained.
@@ -599,7 +621,8 @@ class Htmx {
    *  request to the current url. If parameters are used, both are required.
    *
    * @param \Drupal\Core\Url|null $url
-   *   The URL for the DELETE request. If NULL the current page is used.
+   *   The URL for the GET request. If NULL, the current page is used without
+   *   the query parameters.
    *
    * @return static
    *   returns self so that attribute methods may be chained.
@@ -855,7 +878,7 @@ class Htmx {
    *
    * @see https://htmx.org/attributes/hx-boost/
    */
-  public function boost(bool $value): static {
+  public function boost(bool $value = TRUE): static {
     $this->createStringAttribute('hx-boost', $value ? 'true' : 'false');
     return $this;
   }
@@ -999,7 +1022,7 @@ class Htmx {
    * data from being saved to the localStorage cache when htmx takes a snapshot
    * of the page state. This attribute is effective when set on any element in
    * the current document, or any html fragment loaded into the current document
-   * by htmx
+   * by htmx.
    *
    * @return static
    *   Returns this object to allow chaining methods.
