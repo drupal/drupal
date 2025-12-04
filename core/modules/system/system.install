@@ -1952,3 +1952,12 @@ function system_update_10400(): void {
   // path is actually a downgrade.
   \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(11102, '11.1.0');
 }
+
+/**
+ * Equivalent update to 11300.
+ */
+function system_update_10600(): void {
+  // This is a no-op that exists to prevent an upgrade from 10.6+ to 11.2. That
+  // path is actually a downgrade.
+  \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(11300, '11.3.0');
+}
