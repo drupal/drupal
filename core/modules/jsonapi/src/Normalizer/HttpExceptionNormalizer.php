@@ -51,8 +51,13 @@ class HttpExceptionNormalizer extends NormalizerBase {
       $cacheability->setCacheMaxAge(0);
     }
 
+    $is_verbose_reporting = \Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE;
     $cacheability->addCacheTags(['config:system.logging']);
-    if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+
+    $site_report_access = $this->currentUser->hasPermission('access site reports');
+    $cacheability->addCacheContexts(['user.permissions']);
+
+    if ($site_report_access && $is_verbose_reporting) {
       $cacheability->setCacheMaxAge(0);
     }
 

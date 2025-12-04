@@ -604,6 +604,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'url.query_args',
       // Drupal defaults.
       'url.site',
+      'user.permissions',
     ];
     // If the entity type is revisionable, add a resource version cache context.
     $cache_contexts = Cache::mergeContexts($cache_contexts, $entity_type->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
@@ -983,7 +984,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document,
       $response,
       ['4xx-response', 'http_response'],
-      ['url.query_args', 'url.site'],
+      ['url.query_args', 'url.site', 'user.permissions'],
       'UNCACHEABLE (request policy)',
       TRUE,
     );
@@ -1097,6 +1098,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       [
         'url.query_args',
         'url.site',
+        'user.permissions',
       ],
       'UNCACHEABLE (request policy)',
       'UNCACHEABLE (poor cacheability)',
@@ -1118,6 +1120,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       [
         'url.query_args',
         'url.site',
+        'user.permissions',
       ],
       'UNCACHEABLE (request policy)',
       'UNCACHEABLE (poor cacheability)',
@@ -3086,6 +3089,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'url.path',
       'url.query_args',
       'url.site',
+      'user.permissions',
     ];
     $this->assertResourceErrorResponse(501, 'JSON:API does not support filtering on revisions other than the latest version because a secure Drupal core API does not yet exist to do so.', $rel_working_copy_collection_url_filtered, $actual_response, FALSE, ['http_response'], $filtered_collection_expected_cache_contexts);
     // Fetch the collection URL using an invalid version identifier.
@@ -3094,6 +3098,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'url.path',
       'url.query_args',
       'url.site',
+      'user.permissions',
     ];
     $this->assertResourceErrorResponse(
       400,
