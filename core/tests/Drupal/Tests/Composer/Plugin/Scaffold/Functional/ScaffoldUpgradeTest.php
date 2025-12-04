@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
  * the current patch-under-test).
  */
 #[Group('Scaffold')]
+#[Group('#slow')]
 class ScaffoldUpgradeTest extends TestCase {
 
   use AssertUtilsTrait;
