@@ -152,3 +152,17 @@ function system_update_11202(): void {
     ]);
   }
 }
+
+/**
+ * Equivalent update to 10600.
+ */
+function system_update_11300(): TranslatableMarkup|null {
+  // This is a no-op that exists to prevent an upgrade from 10.6+ to 11.2. That
+  // path is actually a downgrade.
+  $equivalent_update = \Drupal::service('update.update_hook_registry')
+    ->getEquivalentUpdate();
+  if ($equivalent_update instanceof EquivalentUpdate) {
+    return $equivalent_update->toSkipMessage();
+  }
+  return NULL;
+}
