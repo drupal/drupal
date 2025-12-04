@@ -24,7 +24,7 @@ trait UiHelperTrait {
   /**
    * The current user logged in using the Mink controlled browser.
    *
-   * @var \Drupal\user\UserInterface
+   * @var \Drupal\user\UserInterface|false
    */
   protected $loggedInUser = FALSE;
 
