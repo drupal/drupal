@@ -31,7 +31,10 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the @effect effect from the %style style?', ['%style' => $this->imageStyle->label(), '@effect' => $this->imageEffect->label()]);
+    return $this->t('Are you sure you want to delete the @effect effect from the %style style?', [
+      '%style' => $this->imageStyle->label(),
+      '@effect' => $this->imageEffect->label(),
+    ]);
   }
 
   /**

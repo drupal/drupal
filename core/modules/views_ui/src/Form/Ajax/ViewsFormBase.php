@@ -102,7 +102,14 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // it off; if it isn't, the user clicked somewhere else and the stack is
     // now irrelevant.
     if (!empty($view->stack)) {
-      $identifier = implode('-', array_filter([$form_key, $view->id(), $display_id, $form_state->get('type'), $form_state->get('id')]));
+      $identifier = implode('-', array_filter([
+        $form_key,
+        $view->id(),
+        $display_id,
+        $form_state->get('type'),
+        $form_state->get('id'),
+      ]));
+
       // Retrieve the first form from the stack without changing the integer
       // keys, as they're being used for the "2 of 3" progress indicator.
       reset($view->stack);
@@ -153,7 +160,11 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       // If nothing on the stack, non-js forms just go back to the main view
       // editor.
       $display_id = $form_state->get('display_id');
-      return new RedirectResponse(Url::fromRoute('entity.view.edit_display_form', ['view' => $view->id(), 'display_id' => $display_id], ['absolute' => TRUE])->toString());
+      return new RedirectResponse(Url::fromRoute(
+        'entity.view.edit_display_form',
+        ['view' => $view->id(), 'display_id' => $display_id],
+        ['absolute' => TRUE],
+      )->toString());
     }
     else {
       $response = new AjaxResponse();

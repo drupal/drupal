@@ -264,7 +264,11 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
     // estimation of the completion level we reached.
     if (count($entity_ids) > 0 && $context['sandbox']['progress'] != $context['sandbox']['max']) {
       $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-      $context['message'] = new TranslatableMarkup('Deleting items... Completed @percentage% (@current of @total).', ['@percentage' => round(100 * $context['sandbox']['progress'] / $context['sandbox']['max']), '@current' => $context['sandbox']['progress'], '@total' => $context['sandbox']['max']]);
+      $context['message'] = new TranslatableMarkup('Deleting items... Completed @percentage% (@current of @total).', [
+        '@percentage' => round(100 * $context['sandbox']['progress'] / $context['sandbox']['max']),
+        '@current' => $context['sandbox']['progress'],
+        '@total' => $context['sandbox']['max'],
+      ]);
 
     }
     else {

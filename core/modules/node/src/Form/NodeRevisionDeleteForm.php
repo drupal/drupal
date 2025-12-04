@@ -97,7 +97,12 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
     $storage = $this->nodeStorage;
     $storage->deleteRevision($this->revision->getRevisionId());
 
-    $this->logger('content')->info('@type: deleted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
+    $this->logger('content')
+      ->info('@type: deleted %title revision %revision.', [
+        '@type' => $this->revision->bundle(),
+        '%title' => $this->revision->label(),
+        '%revision' => $this->revision->getRevisionId(),
+      ]);
     $node_type = $this->nodeTypeStorage->load($this->revision->bundle())->label();
     $this->messenger()
       ->addStatus($this->t('Revision from %revision-date of @type %title has been deleted.', [

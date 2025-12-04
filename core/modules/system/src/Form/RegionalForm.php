@@ -92,7 +92,15 @@ class RegionalForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('First day of week'),
       '#config_target' => 'system.date:first_day',
-      '#options' => [0 => $this->t('Sunday'), 1 => $this->t('Monday'), 2 => $this->t('Tuesday'), 3 => $this->t('Wednesday'), 4 => $this->t('Thursday'), 5 => $this->t('Friday'), 6 => $this->t('Saturday')],
+      '#options' => [
+        0 => $this->t('Sunday'),
+        1 => $this->t('Monday'),
+        2 => $this->t('Tuesday'),
+        3 => $this->t('Wednesday'),
+        4 => $this->t('Thursday'),
+        5 => $this->t('Friday'),
+        6 => $this->t('Saturday'),
+      ],
     ];
 
     $form['timezone'] = [

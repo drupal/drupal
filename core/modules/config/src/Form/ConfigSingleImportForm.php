@@ -207,7 +207,10 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $entity_storage = $this->entityTypeManager->getStorage($form_state->getValue('config_type'));
       // If an entity ID was not specified, set an error.
       if (!isset($data[$id_key])) {
-        $form_state->setErrorByName('import', $this->t('Missing ID key "@id_key" for this @entity_type import.', ['@id_key' => $id_key, '@entity_type' => $definition->getLabel()]));
+        $form_state->setErrorByName('import', $this->t('Missing ID key "@id_key" for this @entity_type import.', [
+          '@id_key' => $id_key,
+          '@entity_type' => $definition->getLabel(),
+        ]));
         return;
       }
 

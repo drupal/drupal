@@ -70,13 +70,21 @@ class ConfigHandlerExtra extends ViewsFormBase {
     if ($item) {
       $handler = $executable->display_handler->getHandler($type, $id);
       if (empty($handler)) {
-        $form['markup'] = ['#markup' => $this->t("Error: handler for @table > @field doesn't exist!", ['@table' => $item['table'], '@field' => $item['field']])];
+        $form['markup'] = [
+          '#markup' => $this->t("Error: handler for @table > @field doesn't exist!", [
+            '@table' => $item['table'],
+            '@field' => $item['field'],
+          ]),
+        ];
       }
       else {
         $handler->init($executable, $executable->display_handler, $item);
         $types = ViewExecutable::getHandlerTypes();
 
-        $form['#title'] = $this->t('Configure extra settings for @type %item', ['@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()]);
+        $form['#title'] = $this->t('Configure extra settings for @type %item', [
+          '@type' => $types[$type]['lstitle'],
+          '%item' => $handler->adminLabel(),
+        ]);
 
         $form['#section'] = $display_id . '-' . $type . '-' . $id;
 

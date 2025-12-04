@@ -46,7 +46,11 @@ class LanguageEditForm extends LanguageFormBase {
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
-    $this->logger('language')->notice('The %language (%langcode) language has been updated.', ['%language' => $this->entity->label(), '%langcode' => $this->entity->id()]);
+    $this->logger('language')
+      ->notice('The %language (%langcode) language has been updated.', [
+        '%language' => $this->entity->label(),
+        '%langcode' => $this->entity->id(),
+      ]);
   }
 
 }

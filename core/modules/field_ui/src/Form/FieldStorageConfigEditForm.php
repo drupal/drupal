@@ -232,7 +232,15 @@ class FieldStorageConfigEditForm extends EntityForm {
         ->count()
         ->execute();
       if ($entities_with_higher_delta) {
-        $form_state->setError($element['cardinality_number'], $this->formatPlural($entities_with_higher_delta, 'There is @count entity with @delta or more values in this field, so the allowed number of values cannot be set to @allowed.', 'There are @count entities with @delta or more values in this field, so the allowed number of values cannot be set to @allowed.', ['@delta' => $cardinality_number + 1, '@allowed' => $cardinality_number]));
+        $form_state->setError($element['cardinality_number'], $this->formatPlural(
+          $entities_with_higher_delta,
+          'There is @count entity with @delta or more values in this field, so the allowed number of values cannot be set to @allowed.',
+          'There are @count entities with @delta or more values in this field, so the allowed number of values cannot be set to @allowed.',
+          [
+            '@delta' => $cardinality_number + 1,
+            '@allowed' => $cardinality_number,
+          ],
+        ));
       }
     }
   }

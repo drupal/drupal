@@ -47,7 +47,10 @@ class LocaleSettingsForm extends ConfigFormBase {
     ];
 
     if ($directory = $config->get('translation.path')) {
-      $description = $this->t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href=":url">File system</a> configuration page.', ['%path' => $directory, ':url' => Url::fromRoute('system.file_system_settings')->toString()]);
+      $description = $this->t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href=":url">File system</a> configuration page.', [
+        '%path' => $directory,
+        ':url' => Url::fromRoute('system.file_system_settings')->toString(),
+      ]);
     }
     else {
       $description = $this->t('Translation files will not be stored locally. Change the Interface translation directory on the <a href=":url">File system configuration</a> page.', [':url' => Url::fromRoute('system.file_system_settings')->toString()]);

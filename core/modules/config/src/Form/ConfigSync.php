@@ -179,7 +179,10 @@ class ConfigSync extends FormBase {
           if ($config_change_type == 'rename') {
             $names = $storage_comparer->extractRenameNames($config_name);
             $route_options = ['source_name' => $names['old_name'], 'target_name' => $names['new_name']];
-            $config_name = $this->t('@source_name to @target_name', ['@source_name' => $names['old_name'], '@target_name' => $names['new_name']]);
+            $config_name = $this->t('@source_name to @target_name', [
+              '@source_name' => $names['old_name'],
+              '@target_name' => $names['new_name'],
+            ]);
           }
           else {
             $route_options = ['source_name' => $config_name];
