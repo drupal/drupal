@@ -207,7 +207,8 @@ class TranslateEditForm extends TranslateFormBase {
 
       if ($is_changed) {
         // Only update or insert if we have a value to use.
-        $target = $existing_translation_objects[$lid] ?? $this->localeStorage->createTranslation(['lid' => $lid, 'language' => $langcode]);
+        $target = $existing_translation_objects[$lid]
+          ?? $this->localeStorage->createTranslation(['lid' => $lid, 'language' => $langcode]);
         $target->setPlurals($new_translation['translations'])
           ->setCustomized()
           ->save();

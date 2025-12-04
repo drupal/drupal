@@ -46,7 +46,10 @@ class WorkflowTransitionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete %transition from %workflow?', ['%transition' => $this->transition->label(), '%workflow' => $this->workflow->label()]);
+    return $this->t('Are you sure you want to delete %transition from %workflow?', [
+      '%transition' => $this->transition->label(),
+      '%workflow' => $this->workflow->label(),
+    ]);
   }
 
   /**

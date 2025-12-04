@@ -128,7 +128,10 @@ class NegotiationUrlForm extends ConfigFormBase {
       ];
       $form['domain'][$langcode] = [
         '#type' => 'textfield',
-        '#title' => $this->t('%language (%langcode) domain', ['%language' => $language->getName(), '%langcode' => $language->getId()]),
+        '#title' => $this->t('%language (%langcode) domain', [
+          '%language' => $language->getName(),
+          '%langcode' => $language->getId(),
+        ]),
         '#maxlength' => 128,
         '#default_value' => $domains[$langcode] ?? '',
       ];
@@ -170,7 +173,10 @@ class NegotiationUrlForm extends ConfigFormBase {
       elseif (isset($count[$value]) && $count[$value] > 1) {
         // Throw a form error if there are two languages with the same
         // domain/prefix.
-        $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix for %language, %value, is not unique.', ['%language' => $language->getName(), '%value' => $value]));
+        $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix for %language, %value, is not unique.', [
+          '%language' => $language->getName(),
+          '%value' => $value,
+        ]));
       }
     }
 
@@ -190,7 +196,10 @@ class NegotiationUrlForm extends ConfigFormBase {
       elseif (isset($count[$value]) && $count[$value] > 1) {
         // Throw a form error if there are two languages with the same
         // domain/domain.
-        $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language, %value, is not unique.', ['%language' => $language->getName(), '%value' => $value]));
+        $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language, %value, is not unique.', [
+          '%language' => $language->getName(),
+          '%value' => $value,
+        ]));
       }
     }
 

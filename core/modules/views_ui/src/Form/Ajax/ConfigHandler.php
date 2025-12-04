@@ -74,11 +74,19 @@ class ConfigHandler extends ViewsFormBase {
     if ($item) {
       $handler = $executable->display_handler->getHandler($type, $id);
       if (empty($handler)) {
-        $form['markup'] = ['#markup' => $this->t("Error: handler for @table > @field doesn't exist!", ['@table' => $item['table'], '@field' => $item['field']])];
+        $form['markup'] = [
+          '#markup' => $this->t("Error: handler for @table > @field doesn't exist!", [
+            '@table' => $item['table'],
+            '@field' => $item['field'],
+          ]),
+        ];
       }
       else {
         $types = ViewExecutable::getHandlerTypes();
-        $form['#title'] = $this->t('Configure @type: @item', ['@type' => $types[$type]['lstitle'], '@item' => $handler->adminLabel()]);
+        $form['#title'] = $this->t('Configure @type: @item', [
+          '@type' => $types[$type]['lstitle'],
+          '@item' => $handler->adminLabel(),
+        ]);
 
         // If this item can come from the default display, show a dropdown
         // that lets the user choose which display the changes should apply to.

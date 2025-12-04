@@ -39,7 +39,12 @@ class WorkflowStateDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete %state from %workflow?', ['%state' => $this->workflow->getTypePlugin()->getState($this->stateId)->label(), '%workflow' => $this->workflow->label()]);
+    return $this->t('Are you sure you want to delete %state from %workflow?', [
+      '%state' => $this->workflow->getTypePlugin()
+        ->getState($this->stateId)
+        ->label(),
+      '%workflow' => $this->workflow->label(),
+    ]);
   }
 
   /**

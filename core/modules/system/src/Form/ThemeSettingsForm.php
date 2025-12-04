@@ -211,7 +211,8 @@ class ThemeSettingsForm extends ConfigFormBase {
         $form['theme_settings']['toggle_' . $name] = [
           '#type' => 'checkbox',
           '#title' => $title,
-          '#default_value' => $this->themeSettingsProvider->getSetting('features.' . $name, $theme),
+          '#default_value' => $this->themeSettingsProvider
+            ->getSetting('features.' . $name, $theme),
         ];
         // Disable checkboxes for features not supported in the current
         // configuration.
