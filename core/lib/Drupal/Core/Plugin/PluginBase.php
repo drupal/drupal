@@ -24,9 +24,18 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * Instantiates a new instance of the implementing class using autowiring.
    *
-   * @see \Drupal\Core\Plugin\ContainerFactoryPluginInterface
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container to pull out services used in the plugin.
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    *
    * @return static
+   *
+   * @see \Drupal\Core\Plugin\ContainerFactoryPluginInterface
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return static::createInstanceAutowired($container, $configuration, $plugin_id, $plugin_definition);
