@@ -221,7 +221,9 @@ class ThemeHookCollectorPass implements CompilerPassInterface {
       $fileExtension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
 
-      if ($fileExtension === 'php') {
+      $isThemeSettings = str_ends_with($filename, 'theme-settings.php');
+
+      if ($fileExtension === 'php' && !$isThemeSettings) {
         $cached = $hookFileCache->get($filename);
         if ($cached) {
           $class = $cached['class'];
@@ -350,6 +352,9 @@ class ThemeHookCollectorPass implements CompilerPassInterface {
       }
       // glob() doesn't support streams but scandir() does.
       return !in_array($fileInfo->getFilename(), ['tests', 'js', 'css', 'templates']) && !array_filter(scandir($key), static fn($filename) => str_ends_with($filename, '.info.yml'));
+    }
+    if ($fileInfo->getFilename() === 'theme-settings.php') {
+      return TRUE;
     }
     return in_array($extension, ['inc', 'theme']);
   }
