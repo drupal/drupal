@@ -116,7 +116,7 @@ class MenuActiveTrailTest extends UnitTestCase {
    *     - expected_link: The expected active link for the given menu.
    *     - expected_trail: The expected active trail for the given menu.
    */
-  public static function provider() {
+  public static function provider(): array {
     $data = [];
 
     $mock_route = new Route('');
@@ -244,7 +244,7 @@ class MenuActiveTrailTest extends UnitTestCase {
 
     $this->cacheTagsInvalidator->expects($this->exactly(2))
       ->method('invalidateTags')
-      ->willReturnCallback(fn($tags) =>
+      ->willReturnCallback(fn($tags): NULL =>
         match($tags) {
           ['config:system.menu.' . $menu_name] => NULL,
           ['config:system.menu.' . $menu_name, 'config:system.menu.' . $menu_name, 'config:menu_list', 'menu_link_content_list'] => NULL,

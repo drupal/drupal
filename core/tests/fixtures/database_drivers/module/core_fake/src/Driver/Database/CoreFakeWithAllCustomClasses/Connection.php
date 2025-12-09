@@ -17,56 +17,56 @@ class Connection extends BaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function exceptionHandler() {
+  public function exceptionHandler(): ExceptionHandler {
     return new ExceptionHandler();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function select($table, $alias = NULL, array $options = []) {
+  public function select($table, $alias = NULL, array $options = []): Select {
     return new Select($this, $table, $alias, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function insert($table, array $options = []) {
+  public function insert($table, array $options = []): Insert {
     return new Insert($this, $table, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function merge($table, array $options = []) {
+  public function merge($table, array $options = []): Merge {
     return new Merge($this, $table, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function upsert($table, array $options = []) {
+  public function upsert($table, array $options = []): Upsert {
     return new Upsert($this, $table, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function update($table, array $options = []) {
+  public function update($table, array $options = []): Update {
     return new Update($this, $table, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function delete($table, array $options = []) {
+  public function delete($table, array $options = []): Delete {
     return new Delete($this, $table, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function truncate($table, array $options = []) {
+  public function truncate($table, array $options = []): Truncate {
     return new Truncate($this, $table, $options);
   }
 
@@ -83,14 +83,14 @@ class Connection extends BaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function condition($conjunction) {
+  public function condition($conjunction): Condition {
     return new Condition($conjunction, FALSE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function startTransaction($name = '') {
+  public function startTransaction($name = ''): Transaction {
     return new Transaction($this, $name);
   }
 

@@ -97,15 +97,15 @@ class EntityDisplayBaseTest extends UnitTestCase {
  */
 class EntityDisplayBaseMockableClass extends EntityDisplayBase {
 
-  public function getPluginCollections() {
+  public function getPluginCollections(): array {
     return [];
   }
 
-  public function getRenderer($field_name) {
+  public function getRenderer($field_name): NULL {
     return NULL;
   }
 
-  public function getEntityType() {
+  public function getEntityType(): EntityType {
     return new EntityType([
       'id' => 'entity_view_display',
       'entity_keys' => [

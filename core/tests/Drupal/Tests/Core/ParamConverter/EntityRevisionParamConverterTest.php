@@ -42,7 +42,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
     );
   }
 
-  protected function getTestRoute() {
+  protected function getTestRoute(): Route {
     $route = new Route('/test/{test_revision}');
     $route->setOption('parameters', [
       'test_revision' => [
@@ -95,7 +95,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   /**
    * Provides test data for testConvert.
    */
-  public static function providerTestConvert() {
+  public static function providerTestConvert(): array {
     $data = [];
     // Existing entity type.
     $data[] = ['valid_id', ['type' => 'entity_revision:entity_test'], ['test_revision' => 'valid_id'], (object) ['revision_id' => 'valid_id']];

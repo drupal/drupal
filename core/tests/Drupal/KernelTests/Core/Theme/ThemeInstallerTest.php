@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Theme;
 
+use Drupal\Core\Config\Config;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\Core\Extension\ExtensionNameReservedException;
 use Drupal\Core\Extension\MissingDependencyException;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Core\Extension\ThemeExtensionList;
+use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -202,7 +207,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Data provider for testInstallThemeWithUnmetModuleDependencies().
    */
-  public static function providerTestInstallThemeWithUnmetModuleDependencies() {
+  public static function providerTestInstallThemeWithUnmetModuleDependencies(): array {
     return [
       'theme with uninstalled module dependencies' => [
         'test_theme_depending_on_modules',
@@ -459,7 +464,7 @@ class ThemeInstallerTest extends KernelTestBase {
    * @return \Drupal\Core\Extension\ThemeHandlerInterface
    *   The theme handler service.
    */
-  protected function themeHandler() {
+  protected function themeHandler(): ThemeHandlerInterface {
     return $this->container->get('theme_handler');
   }
 
@@ -469,7 +474,7 @@ class ThemeInstallerTest extends KernelTestBase {
    * @return \Drupal\Core\Extension\ThemeInstallerInterface
    *   The theme installer service.
    */
-  protected function themeInstaller() {
+  protected function themeInstaller(): ThemeInstallerInterface {
     return $this->container->get('theme_installer');
   }
 
@@ -479,7 +484,7 @@ class ThemeInstallerTest extends KernelTestBase {
    * @return \Drupal\Core\Config\Config
    *   The system.theme config object.
    */
-  protected function extensionConfig() {
+  protected function extensionConfig(): Config {
     return $this->config('core.extension');
   }
 
@@ -489,7 +494,7 @@ class ThemeInstallerTest extends KernelTestBase {
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
    *   The ModuleHandler.
    */
-  protected function moduleHandler(): ?object {
+  protected function moduleHandler(): ModuleHandlerInterface {
     return $this->container->get('module_handler');
   }
 
@@ -499,7 +504,7 @@ class ThemeInstallerTest extends KernelTestBase {
    * @return \Drupal\Core\Extension\ModuleInstallerInterface
    *   The ModuleInstaller.
    */
-  protected function moduleInstaller(): ?object {
+  protected function moduleInstaller(): ModuleInstallerInterface {
     return $this->container->get('module_installer');
   }
 

@@ -41,7 +41,7 @@ class RouteCompilerTest extends UnitTestCase {
    *   be calculated as the first value and the expected fit as the second
    *   value.
    */
-  public static function providerTestGetFit() {
+  public static function providerTestGetFit(): array {
     return [
       ['test', 1],
       ['/estWithLeadingSlash', 1],

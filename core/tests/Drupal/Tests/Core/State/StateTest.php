@@ -246,7 +246,7 @@ class StateTest extends UnitTestCase {
    * @legacy-covers ::get
    */
   #[Depends('testSet')]
-  public function testSetBeforeGet(State $state) {
+  public function testSetBeforeGet(State $state): void {
     $this->assertEquals('value', $state->get('key'));
   }
 

@@ -221,7 +221,7 @@ class RegistryTest extends KernelTestBase {
    * @return array
    *   An associative array of 40x theme suggestions.
    */
-  public static function provider40xThemeSuggestions() {
+  public static function provider40xThemeSuggestions(): array {
     return [
       [401, 'page__401'],
       [403, 'page__403'],

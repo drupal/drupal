@@ -93,7 +93,7 @@ class XssTest extends TestCase {
    *     - (optional) The allowed HTML tags array that should be passed to
    *       \Drupal\Component\Utility\Xss::filter().
    */
-  public static function providerTestFilterXssNormalized() {
+  public static function providerTestFilterXssNormalized(): array {
     return [
       [
         "Who&#039;s Online",
@@ -160,7 +160,7 @@ class XssTest extends TestCase {
    *     - (optional) The allowed HTML tags array that should be passed to
    *       \Drupal\Component\Utility\Xss::filter().
    */
-  public static function providerTestFilterXssNotNormalized() {
+  public static function providerTestFilterXssNotNormalized(): array {
     $cases = [
       // Tag stripping, different ways to work around removal of HTML tags.
       [
@@ -470,7 +470,7 @@ class XssTest extends TestCase {
    *     - The value to expect after filtering.
    *     - The assertion message.
    */
-  public static function providerTestInvalidMultiByte() {
+  public static function providerTestInvalidMultiByte(): array {
     return [
       ["Foo\xC0barbaz", '', 'Xss::filter() accepted invalid sequence "Foo\xC0barbaz"'],
       ["Fooÿñ", "Fooÿñ", 'Xss::filter() rejects valid sequence Fooÿñ"'],
@@ -500,7 +500,7 @@ class XssTest extends TestCase {
   /**
    * Data provider for testFilterXssAdminNotNormalized().
    */
-  public static function providerTestAttributes() {
+  public static function providerTestAttributes(): array {
     return [
       [
         '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="md:block">',
@@ -605,7 +605,7 @@ class XssTest extends TestCase {
    *     - The value to expect after filtering.
    *     - The assertion message.
    */
-  public static function providerTestFilterXssAdminNotNormalized() {
+  public static function providerTestFilterXssAdminNotNormalized(): array {
     return [
       // DRUPAL-SA-2008-044.
       ['<object />', 'object', 'Admin HTML filter -- should not allow object tag.'],

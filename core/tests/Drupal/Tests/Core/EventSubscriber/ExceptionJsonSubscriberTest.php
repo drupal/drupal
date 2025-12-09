@@ -47,7 +47,7 @@ class ExceptionJsonSubscriberTest extends UnitTestCase {
     $this->assertEquals('application/json', $response->headers->get('Content-Type'));
   }
 
-  public static function providerTestOn4xx() {
+  public static function providerTestOn4xx(): array {
     return [
       'uncacheable exception' => [
         new MethodNotAllowedHttpException(['POST', 'PUT'], 'test message'),

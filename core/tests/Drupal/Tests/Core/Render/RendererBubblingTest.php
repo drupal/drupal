@@ -506,7 +506,7 @@ class RendererBubblingTest extends RendererTestBase {
    * @return array
    *   An array of test cases, each containing a render array with different configurations.
    */
-  public static function providerTestBubblingWithPrerender() {
+  public static function providerTestBubblingWithPrerender(): array {
     $data = [];
 
     // Test element without theme.
@@ -624,7 +624,7 @@ class BubblingTest implements TrustedCallbackInterface {
    *
    * This function is assigned as an #lazy_builder callback in.
    */
-  public static function bubblingPlaceholder($foo, $baz) {
+  public static function bubblingPlaceholder($foo, $baz): array {
     return [
       '#markup' => 'Placeholder!' . $foo . $baz,
     ];
@@ -647,7 +647,7 @@ class BubblingTest implements TrustedCallbackInterface {
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks() {
+  public static function trustedCallbacks(): array {
     return ['bubblingPreRender', 'bubblingNestedPreRenderUncached', 'bubblingNestedPreRenderCached', 'bubblingPlaceholder', 'bubblingCacheOverwritePrerender'];
   }
 

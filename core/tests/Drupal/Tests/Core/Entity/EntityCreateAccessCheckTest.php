@@ -51,7 +51,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    * @return array
    *   An array of test data for testAccess.
    */
-  public static function providerTestAccess() {
+  public static function providerTestAccess(): array {
     $no_access = FALSE;
     $access = TRUE;
 

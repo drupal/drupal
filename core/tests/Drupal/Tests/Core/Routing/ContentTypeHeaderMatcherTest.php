@@ -57,7 +57,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     $this->assertCount(7, $routes, 'The correct number of routes was found.');
   }
 
-  public static function providerTestSafeRequestFilter() {
+  public static function providerTestSafeRequestFilter(): array {
     return [
       ['GET'],
       ['HEAD'],

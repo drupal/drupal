@@ -14,7 +14,7 @@ class TestSiteInstallTestScript implements TestSetupInterface {
   /**
    * {@inheritdoc}
    */
-  public function setup() {
+  public function setup(): void {
     \Drupal::service('module_installer')->install(['test_page_test']);
   }
 

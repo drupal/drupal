@@ -51,7 +51,7 @@ abstract class FileTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     $container->register('stream_wrapper.private', 'Drupal\Core\StreamWrapper\PrivateStream')
@@ -90,7 +90,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @param string|null $message
    *   Optional message.
    */
-  public function assertFilePermissions($filepath, $expected_mode, $message = NULL) {
+  public function assertFilePermissions($filepath, $expected_mode, $message = NULL): void {
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $filepath);
 
@@ -125,7 +125,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @param string|null $message
    *   Optional message.
    */
-  public function assertDirectoryPermissions($directory, $expected_mode, $message = NULL) {
+  public function assertDirectoryPermissions($directory, $expected_mode, $message = NULL): void {
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $directory);
 

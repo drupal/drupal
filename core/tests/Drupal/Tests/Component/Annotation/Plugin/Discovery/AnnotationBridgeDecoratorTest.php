@@ -51,7 +51,7 @@ class TestAnnotation extends Plugin {
   /**
    * {@inheritdoc}
    */
-  public function get() {
+  public function get(): ObjectDefinition {
     return new ObjectDefinition($this->definition);
   }
 

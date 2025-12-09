@@ -54,7 +54,7 @@ class TranslationTest extends UnitTestCase {
   /**
    * Provides data to self::testGet().
    */
-  public static function providerTestGet() {
+  public static function providerTestGet(): array {
     $data = [];
     $data[] = [
       [

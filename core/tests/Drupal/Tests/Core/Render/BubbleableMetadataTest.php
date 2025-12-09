@@ -74,7 +74,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test data for testMerge().
    */
-  public static function providerTestMerge() {
+  public static function providerTestMerge(): array {
     return [
       // Second operand is a BubbleableMetadata object.
       // All empty.
@@ -127,7 +127,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   /**
    * Provides test data for testAddAttachments().
    */
-  public static function providerTestAddAttachments() {
+  public static function providerTestAddAttachments(): array {
     return [
       [new BubbleableMetadata(), [], new BubbleableMetadata()],
       [new BubbleableMetadata(), ['library' => ['core/foo']], (new BubbleableMetadata())->setAttachments(['library' => ['core/foo']])],
@@ -152,7 +152,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test data for testApplyTo().
    */
-  public static function providerTestApplyTo() {
+  public static function providerTestApplyTo(): array {
     $data = [];
 
     $empty_metadata = new BubbleableMetadata();
@@ -219,7 +219,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test data for createFromRenderArray().
    */
-  public static function providerTestCreateFromRenderArray() {
+  public static function providerTestCreateFromRenderArray(): array {
     $data = [];
 
     $empty_metadata = new BubbleableMetadata();
@@ -413,7 +413,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test data for testMergeAttachmentsHtmlHeadMerging.
    */
-  public static function providerTestMergeAttachmentsHtmlHeadMerging() {
+  public static function providerTestMergeAttachmentsHtmlHeadMerging(): array {
     $meta = [
       '#tag' => 'meta',
       '#attributes' => [
@@ -486,7 +486,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test data for testMergeAttachmentsHtmlHeadLinkMerging.
    */
-  public static function providerTestMergeAttachmentsHtmlHeadLinkMerging() {
+  public static function providerTestMergeAttachmentsHtmlHeadLinkMerging(): array {
     $rel = [
       'rel' => 'rel',
       'href' => 'http://rel.example.com',
@@ -552,7 +552,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test data for testMergeAttachmentsHttpHeaderMerging.
    */
-  public static function providerTestMergeAttachmentsHttpHeaderMerging() {
+  public static function providerTestMergeAttachmentsHttpHeaderMerging(): array {
     $content_type = [
       'Content-Type',
       'application/rss+xml; charset=utf-8',
@@ -627,7 +627,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test data for testMerge().
    */
-  public function providerTestAddCacheableDependency() {
+  public function providerTestAddCacheableDependency(): array {
     return [
       // Merge in a cacheable metadata.
       'merge-cacheable-metadata' => [

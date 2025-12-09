@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\Core\Display\VariantBase.
@@ -29,8 +30,8 @@ class DisplayVariantTest extends UnitTestCase {
    * @return \Drupal\Core\Display\VariantBase|\PHPUnit\Framework\MockObject\MockObject
    *   A mocked display variant plugin.
    */
-  public function setUpDisplayVariant($configuration = [], $definition = []) {
-    return $this->getMockBuilder('Drupal\Core\Display\VariantBase')
+  public function setUpDisplayVariant($configuration = [], $definition = []): VariantBase&MockObject {
+    return $this->getMockBuilder(VariantBase::class)
       ->setConstructorArgs([$configuration, 'test', $definition])
       ->onlyMethods(['build'])
       ->getMock();
@@ -91,7 +92,7 @@ class DisplayVariantTest extends UnitTestCase {
   /**
    * Provides test data for testGetConfiguration().
    */
-  public static function providerTestGetConfiguration() {
+  public static function providerTestGetConfiguration(): array {
     $data = [];
     $data[] = [
       [],

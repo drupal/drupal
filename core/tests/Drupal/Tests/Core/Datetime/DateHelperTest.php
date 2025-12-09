@@ -68,7 +68,7 @@ class DateHelperTest extends UnitTestCase {
     $this->assertSame($expected, DateHelper::weekDaysOrdered($weekdays));
   }
 
-  public static function providerTestWeekDaysOrdered() {
+  public static function providerTestWeekDaysOrdered(): array {
     $data = [];
     $data[] = [
       0,

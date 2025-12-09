@@ -182,7 +182,7 @@ class VendorHardeningPluginTest extends TestCase {
     $this->assertFileExists($dir . '/.htaccess');
   }
 
-  public static function providerFindBinOverlap() {
+  public static function providerFindBinOverlap(): array {
     return [
       [
         [],

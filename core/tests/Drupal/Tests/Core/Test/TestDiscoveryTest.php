@@ -55,7 +55,7 @@ class TestDiscoveryTest extends UnitTestCase {
     }
   }
 
-  public static function infoParserProvider() {
+  public static function infoParserProvider(): array {
     // A module provided unit test.
     $tests[] = [
       // Expected result.
@@ -487,7 +487,7 @@ EOF;
     $this->assertEquals($expected, TestDiscovery::getPhpunitTestSuite($classname));
   }
 
-  public static function providerTestGetPhpunitTestSuite() {
+  public static function providerTestGetPhpunitTestSuite(): array {
     $data = [];
     $data['simpletest-web test'] = ['\Drupal\rest\Tests\NodeTest', FALSE];
     $data['module-unittest'] = [static::class, 'Unit'];

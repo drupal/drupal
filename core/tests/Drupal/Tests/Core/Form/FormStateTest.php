@@ -40,7 +40,7 @@ class FormStateTest extends UnitTestCase {
    * @return array
    *   Returns some test data.
    */
-  public static function providerTestGetRedirect() {
+  public static function providerTestGetRedirect(): array {
     $data = [];
     $data[] = [[], NULL];
 
@@ -82,7 +82,7 @@ class FormStateTest extends UnitTestCase {
     $this->assertSame($error, $form_state->getError($element));
   }
 
-  public static function providerTestGetError() {
+  public static function providerTestGetError(): array {
     return [
       [[], ['foo']],
       [['foo][bar' => 'Fail'], []],
@@ -116,7 +116,7 @@ class FormStateTest extends UnitTestCase {
     $this->assertSame($expected_errors, $form_state->getErrors());
   }
 
-  public static function providerTestSetErrorByName() {
+  public static function providerTestSetErrorByName(): array {
     return [
       // Only validate the 'options' element.
       [[['options']], ['options' => '']],
@@ -282,7 +282,7 @@ class FormStateTest extends UnitTestCase {
   /**
    * Provides test data for testIsCached().
    */
-  public static function providerTestIsCached() {
+  public static function providerTestIsCached(): array {
     $data = [];
     $data[] = [
       TRUE,
@@ -358,7 +358,7 @@ class FormStateTest extends UnitTestCase {
   /**
    * Provides test data for testIsMethodType().
    */
-  public static function providerTestIsMethodType() {
+  public static function providerTestIsMethodType(): array {
     $data = [];
     $data[] = [
       'get',
@@ -427,7 +427,7 @@ class FormStateTest extends UnitTestCase {
    *
    * @legacy-covers ::addCleanValueKey
    */
-  public function testAddCleanValueKey() {
+  public function testAddCleanValueKey(): FormState {
     $form_state = new FormState();
     $form_state->setValue('value_to_clean', 'rainbow_sprinkles');
     $form_state->addCleanValueKey('value_to_clean');
@@ -468,11 +468,11 @@ class FormStateTest extends UnitTestCase {
  */
 class PrepareCallbackTestForm implements FormInterface {
 
-  public function getFormId() {
+  public function getFormId(): string {
     return 'test_form';
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     return [];
   }
 

@@ -56,7 +56,7 @@ class AutowireTest extends KernelTestBase {
     $services = [];
     $aliases = [];
 
-    $filenames = array_map(fn($module) => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
+    $filenames = array_map(fn($module): string => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
     $filenames[] = 'core/core.services.yml';
     foreach (array_filter($filenames, 'file_exists') as $filename) {
       foreach ((Yaml::decode(file_get_contents($filename))['services'] ?? []) as $id => $service) {
@@ -131,7 +131,7 @@ class AutowireTest extends KernelTestBase {
     }
 
     $missing = array_diff($expected, $aliases);
-    $formatted = Yaml::encode(array_map(fn ($alias) => sprintf('@%s', $alias), $missing));
+    $formatted = Yaml::encode(array_map(fn ($alias): string => sprintf('@%s', $alias), $missing));
     $this->assertSame($expected, array_intersect($expected, $aliases), sprintf('The following core services do not have map the class name to an alias. Add the following to core.services.yml in the appropriate place: %s%s%s', \PHP_EOL, \PHP_EOL, $formatted));
   }
 
@@ -141,7 +141,7 @@ class AutowireTest extends KernelTestBase {
   public function testCoreControllerAutowiring(): void {
     $aliases = [];
 
-    $filenames = array_map(fn($module) => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
+    $filenames = array_map(fn($module): string => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
     $filenames[] = 'core/core.services.yml';
     foreach (array_filter($filenames, 'file_exists') as $filename) {
       foreach ((Yaml::decode(file_get_contents($filename))['services'] ?? []) as $id => $service) {
@@ -152,7 +152,7 @@ class AutowireTest extends KernelTestBase {
     }
 
     $controllers = [];
-    $filenames = array_map(fn($module) => "core/modules/{$module[0]}/{$module[0]}.routing.yml", $this->coreModuleListDataProvider());
+    $filenames = array_map(fn($module): string => "core/modules/{$module[0]}/{$module[0]}.routing.yml", $this->coreModuleListDataProvider());
     foreach (array_filter($filenames, 'file_exists') as $filename) {
       foreach (Yaml::decode(file_get_contents($filename)) as $route) {
         if (isset($route['defaults']['_controller'])) {

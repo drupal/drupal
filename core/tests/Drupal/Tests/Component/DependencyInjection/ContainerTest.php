@@ -502,7 +502,7 @@ class ContainerTest extends TestCase {
     $configurator = $this->prophesize('\Drupal\Tests\Component\DependencyInjection\MockConfiguratorInterface');
     $configurator->configureService(Argument::type('object'))
       ->shouldBeCalled(1)
-      ->will(function ($args) use ($container) {
+      ->will(function ($args) use ($container): void {
         $args[0]->setContainer($container);
       });
     $container->set('configurator', $configurator->reveal());

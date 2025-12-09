@@ -95,7 +95,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
   /**
    * We are testing the installer, so set up a minimal environment for that.
    */
-  public function installDrupal() {
+  public function installDrupal(): void {
     // Define information about the user 1 account.
     $this->rootUser = new UserSession([
       'uid' => 1,

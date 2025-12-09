@@ -162,7 +162,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestHasHandler() {
+  public static function providerTestHasHandler(): array {
     return [
       ['apple', TRUE],
       ['banana', FALSE],
@@ -441,7 +441,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestGetDefinition() {
+  public static function providerTestGetDefinition(): array {
     return [
       ['apple', TRUE],
       ['banana', TRUE],
@@ -523,7 +523,7 @@ class TestEntityFormInjected extends TestEntityForm implements ContainerInjectio
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static('yellow');
   }
 

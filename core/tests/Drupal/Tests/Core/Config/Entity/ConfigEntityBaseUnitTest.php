@@ -947,7 +947,7 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
   /**
    * {@inheritdoc}
    */
-  public function getPluginCollections() {
+  public function getPluginCollections(): array {
     if (!$this->pluginCollection) {
       $this->pluginCollection = new DefaultLazyPluginCollection($this->pluginManager, $this->the_plugin_collection_config);
     }

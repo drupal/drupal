@@ -53,7 +53,7 @@ class UrlTransformRelativeTest extends KernelTestBase {
   /**
    * Provides data for testing URL transformation.
    */
-  public static function providerFileUrlTransformRelative() {
+  public static function providerFileUrlTransformRelative(): array {
     $data = [
       'http' => [
         'example.com',

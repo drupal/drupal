@@ -43,7 +43,7 @@ abstract class DatabaseTestBase extends KernelTestBase {
   /**
    * Sets up tables for NULL handling.
    */
-  public function ensureSampleDataNull() {
+  public function ensureSampleDataNull(): void {
     $this->connection->insert('test_null')
       ->fields(['name', 'age'])
       ->values([

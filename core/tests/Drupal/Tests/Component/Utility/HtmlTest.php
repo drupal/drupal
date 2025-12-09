@@ -60,7 +60,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestCleanCssIdentifier() {
+  public static function providerTestCleanCssIdentifier(): array {
     $id1 = 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789';
     $id2 = '¡¢£¤¥';
     $id3 = 'css__identifier__with__double__underscores';
@@ -131,7 +131,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestHtmlGetUniqueId() {
+  public static function providerTestHtmlGetUniqueId(): array {
     // cSpell:disable
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
     return [
@@ -182,7 +182,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestHtmlGetUniqueIdWithAjaxIds() {
+  public static function providerTestHtmlGetUniqueIdWithAjaxIds(): array {
     return [
       ['test-unique-id1--', 'test-unique-id1'],
       // Note, we truncate two hyphens at the end.
@@ -214,7 +214,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestHtmlGetId() {
+  public static function providerTestHtmlGetId(): array {
     // cSpell:disable
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
     return [
@@ -246,7 +246,7 @@ class HtmlTest extends TestCase {
    *
    * @see testDecodeEntities()
    */
-  public static function providerDecodeEntities() {
+  public static function providerDecodeEntities(): array {
     return [
       ['Drupal', 'Drupal'],
       ['<script>', '<script>'],
@@ -287,7 +287,7 @@ class HtmlTest extends TestCase {
    *
    * @see testEscape()
    */
-  public static function providerEscape() {
+  public static function providerEscape(): array {
     return [
       ['Drupal', 'Drupal'],
       ['&lt;script&gt;', '<script>'],
@@ -407,7 +407,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestTransformRootRelativeUrlsToAbsoluteAssertion() {
+  public static function providerTestTransformRootRelativeUrlsToAbsoluteAssertion(): array {
     return [
       'only relative path' => ['llama'],
       'only root-relative path' => ['/llama'],

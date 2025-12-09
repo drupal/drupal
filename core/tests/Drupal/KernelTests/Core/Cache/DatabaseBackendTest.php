@@ -29,7 +29,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    * @return \Drupal\Core\Cache\DatabaseBackend
    *   A new DatabaseBackend object.
    */
-  protected function createCacheBackend($bin) {
+  protected function createCacheBackend($bin): DatabaseBackend {
     return new DatabaseBackend(
       $this->container->get('database'),
       $this->container->get('cache_tags.invalidator.checksum'),

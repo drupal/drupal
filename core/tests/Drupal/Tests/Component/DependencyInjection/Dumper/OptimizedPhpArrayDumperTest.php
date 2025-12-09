@@ -125,7 +125,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
    *     - aliases as returned by ContainerBuilder.
    *     - aliases as expected in the container definition.
    */
-  public static function getAliasesDataProvider() {
+  public static function getAliasesDataProvider(): array {
     return [
       [[], []],
       [
@@ -169,7 +169,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
    *     - parameters as expected in the container definition.
    *     - frozen value
    */
-  public static function getParametersDataProvider() {
+  public static function getParametersDataProvider(): array {
     return [
       [[], [], TRUE],
       [
@@ -471,7 +471,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
    *
    * Used to override serialization.
    */
-  protected static function serializeDefinition(array $service_definition) {
+  protected static function serializeDefinition(array $service_definition): string|array {
     return serialize($service_definition);
   }
 
@@ -547,7 +547,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
     $this->assertEquals(static::serializeDefinition($data), $dump['services']['foo'], 'Expected definition matches dump.');
   }
 
-  public static function publicPrivateDataProvider() {
+  public static function publicPrivateDataProvider(): array {
     return [
       [TRUE],
       [FALSE],
@@ -657,7 +657,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
    *     - expected final value.
    *     - escaped value in service definition.
    */
-  public static function percentsEscapeProvider() {
+  public static function percentsEscapeProvider(): array {
     return [
       ['%foo%', '%%foo%%'],
       ['foo%bar%', 'foo%%bar%%'],

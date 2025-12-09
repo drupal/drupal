@@ -27,7 +27,7 @@ class ConfigDependencyManagerTest extends UnitTestCase {
     $this->assertEquals($expected_order, $dependency_manager->sortAll());
   }
 
-  public static function providerTestSortAll() {
+  public static function providerTestSortAll(): array {
     $datasets[] = [
       [
         'provider.entity_b' => [],

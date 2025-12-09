@@ -50,7 +50,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
   /**
    * Provides test data for testLoadOverride.
    */
-  public static function providerTestLoadOverride() {
+  public static function providerTestLoadOverride(): array {
     $data = [];
     // Valid ID.
     $data[] = [['test1' => ['parent' => 'test0']], 'test1', ['parent' => 'test0']];
@@ -183,7 +183,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
   /**
    * Provides test data for testDeleteOverrides.
    */
-  public static function providerTestDeleteOverrides() {
+  public static function providerTestDeleteOverrides(): array {
     $data = [];
     // Delete a non existing ID.
     $data[] = ['test0', [], []];

@@ -23,14 +23,14 @@ class ActionsTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return __CLASS__;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['key'] = [
       '#type' => 'submit',

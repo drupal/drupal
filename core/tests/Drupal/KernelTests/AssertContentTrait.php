@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\RenderContext;
 use Symfony\Component\CssSelector\CssSelectorConverter;
@@ -122,7 +122,7 @@ trait AssertContentTrait {
    * @return \SimpleXMLElement|false
    *   A SimpleXMLElement or FALSE on failure.
    */
-  protected function parse() {
+  protected function parse(): ?\SimpleXMLElement {
     if (!isset($this->elements)) {
       $content = $this->getRawContent();
       $dom = Html::load($content);

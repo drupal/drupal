@@ -24,7 +24,7 @@ class DiffFormatterTest extends TestCase {
    *   - First array of text to diff.
    *   - Second array of text to diff.
    */
-  public static function provideTestDiff() {
+  public static function provideTestDiff(): array {
     return [
       'empty' => ['', [], []],
       'add' => [

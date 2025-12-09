@@ -88,7 +88,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    * @return \Symfony\Component\HttpKernel\Event\ViewEvent
    *   A ViewEvent object to test.
    */
-  protected function createEvent($controller_result) {
+  protected function createEvent($controller_result): ViewEvent {
     return new ViewEvent(
       $this->createMock(HttpKernelInterface::class),
       $this->createMock(Request::class),

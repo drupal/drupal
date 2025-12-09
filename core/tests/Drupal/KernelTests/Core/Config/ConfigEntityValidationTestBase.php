@@ -507,7 +507,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     $mapping_properties = array_keys(array_filter(
       ConfigEntityAdapter::createFromEntity($this->entity)->getProperties(FALSE),
-      fn (TypedDataInterface $v) => $v instanceof Mapping
+      fn (TypedDataInterface $v): bool => $v instanceof Mapping
     ));
 
     $required_property_keys = $this->getRequiredPropertyKeys();

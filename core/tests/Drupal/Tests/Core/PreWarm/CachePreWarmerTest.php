@@ -50,7 +50,7 @@ class CachePreWarmerTest extends UnitTestCase {
       $this->warmedMap[$serviceMock] = 0;
 
       $serviceMock->method('preWarm')
-        ->willReturnCallback(function () use ($serviceMock) {
+        ->willReturnCallback(function () use ($serviceMock): void {
           $this->warmedMap[$serviceMock] = 1 + $this->warmedMap[$serviceMock];
         });
 

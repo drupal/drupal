@@ -143,7 +143,7 @@ namespace Drupal\Component\Datetime;
  * @return int
  *   The fixed integer timestamp used for testing purposes.
  */
-function time() {
+function time(): int {
   return 12345678;
 }
 
@@ -153,6 +153,6 @@ function time() {
  * @return float
  *   The fixed float timestamp used for testing purposes.
  */
-function microtime(bool $as_float = FALSE) {
+function microtime(bool $as_float = FALSE): float {
   return 1234567.89;
 }

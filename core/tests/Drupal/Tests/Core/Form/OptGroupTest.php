@@ -31,7 +31,7 @@ class OptGroupTest extends UnitTestCase {
    * @return array
    *   An array of option structures to be flattened.
    */
-  public static function providerTestFlattenOptions() {
+  public static function providerTestFlattenOptions(): array {
     $object1 = new \stdClass();
     $object1->option = ['foo' => 'foo'];
     $object2 = new \stdClass();

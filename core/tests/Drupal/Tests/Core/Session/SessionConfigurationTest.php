@@ -9,6 +9,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,8 +25,8 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return \Drupal\Core\Session\SessionConfiguration|\PHPUnit\Framework\MockObject\MockObject
    *   A mock object of SessionConfiguration with specific methods overridden.
    */
-  protected function createSessionConfiguration($options = []) {
-    return $this->getMockBuilder('Drupal\Core\Session\SessionConfiguration')
+  protected function createSessionConfiguration($options = []): SessionConfiguration&MockObject {
+    return $this->getMockBuilder(SessionConfiguration::class)
       ->onlyMethods(['drupalValidTestUa'])
       ->setConstructorArgs([$options])
       ->getMock();
@@ -52,7 +53,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public static function providerTestGeneratedCookieDomain() {
+  public static function providerTestGeneratedCookieDomain(): array {
     return [
       ['http://example.com/path/index.php', '.example.com'],
       ['http://www.example.com/path/index.php', '.www.example.com'],
@@ -90,7 +91,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public static function providerTestEnforcedCookieDomain() {
+  public static function providerTestEnforcedCookieDomain(): array {
     return [
       ['http://example.com/path/index.php', '.example.com'],
       ['http://www.example.com/path/index.php', '.example.com'],
@@ -154,7 +155,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public static function providerTestCookieSecure() {
+  public static function providerTestCookieSecure(): array {
     return [
       ['http://example.com/path/index.php', FALSE],
       ['https://www.example.com/path/index.php', TRUE],
@@ -186,7 +187,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public static function providerTestGeneratedSessionName() {
+  public static function providerTestGeneratedSessionName(): array {
     $data = [
       ['http://example.com/path/index.php', 'SESS', 'example.com'],
       ['http://www.example.com/path/index.php', 'SESS', 'www.example.com'],
@@ -233,7 +234,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public static function providerTestEnforcedSessionName() {
+  public static function providerTestEnforcedSessionName(): array {
     $data = [
       ['http://example.com/path/index.php', 'SESS', '.example.com'],
       ['http://www.example.com/path/index.php', 'SESS', '.example.com'],

@@ -490,7 +490,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
 
     // Test StreamedResponse is ignored. Calling setContent() would throw a
     // logic exception.
-    $response = new StreamedResponse(function () {
+    $response = new StreamedResponse(function (): void {
       echo 'Success!';
     }, 200, ['Content-Type' => 'text/html']);
     $subscriber->onResponse(new ResponseEvent(

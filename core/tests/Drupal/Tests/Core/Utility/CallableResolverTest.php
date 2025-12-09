@@ -66,7 +66,7 @@ class CallableResolverTest extends UnitTestCase {
         __CLASS__ . '::staticMethod',
       ],
       'Arrow function' => [
-        fn($suffix) => __METHOD__ . '+' . $suffix,
+        fn($suffix): string => __METHOD__ . '+' . $suffix,
         PHP_VERSION_ID >= 80400 ?
         '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():69}' :
         'Drupal\Tests\Core\Utility\{closure}',
@@ -130,7 +130,7 @@ class CallableResolverTest extends UnitTestCase {
   /**
    * Test cases for ::testCallbackResolverExceptionHandling.
    */
-  public static function callableResolverExceptionHandlingTestCases() {
+  public static function callableResolverExceptionHandlingTestCases(): array {
     return [
       'String function' => [
         'not_a_callable',
@@ -184,7 +184,7 @@ class CallableResolverTest extends UnitTestCase {
    * @return string
    *   A test string.
    */
-  public static function staticMethod($suffix) {
+  public static function staticMethod($suffix): string {
     return __METHOD__ . '+' . $suffix;
   }
 
@@ -200,7 +200,7 @@ class CallableResolverTest extends UnitTestCase {
    * @throws \Exception
    *   Throws an exception when called statically.
    */
-  public function method($suffix) {
+  public function method($suffix): string {
     return __METHOD__ . '+' . $suffix;
   }
 
@@ -213,7 +213,7 @@ class CallableResolverTest extends UnitTestCase {
    * @return string
    *   A test string.
    */
-  public function __invoke($suffix) {
+  public function __invoke($suffix): string {
     return __METHOD__ . '+' . $suffix;
   }
 
@@ -235,11 +235,11 @@ class MockContainerInjection implements ContainerInjectionInterface {
     $this->injected = $result;
   }
 
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static('foo');
   }
 
-  public function getResult($suffix) {
+  public function getResult($suffix): string {
     return __METHOD__ . '-' . $this->injected . '+' . $suffix;
   }
 
@@ -254,7 +254,7 @@ class NoInstantiationMockStaticCallable {
     throw new \Exception(sprintf('The class %s should not require instantiation for the static method to be called.', __CLASS__));
   }
 
-  public static function staticMethod($suffix) {
+  public static function staticMethod($suffix): string {
     return __METHOD__ . '+' . $suffix;
   }
 
@@ -274,7 +274,7 @@ class MethodCallable {
    * @return string
    *   A test string.
    */
-  public function __invoke($suffix) {
+  public function __invoke($suffix): string {
     return __METHOD__ . '+' . $suffix;
   }
 
@@ -290,7 +290,7 @@ class MethodCallable {
    * @throws \Exception
    *   Throws an exception when called statically.
    */
-  public function method($suffix) {
+  public function method($suffix): string {
     return __METHOD__ . '+' . $suffix;
   }
 

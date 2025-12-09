@@ -30,7 +30,7 @@ class DocParserIgnoredClassesTest extends TestCase {
 
     // Register our class loader which will fail if the parser tries to
     // autoload disallowed annotations.
-    $autoloader = function ($class_name) use ($annotation) {
+    $autoloader = function ($class_name) use ($annotation): void {
       $name_array = explode('\\', $class_name);
       $name = array_pop($name_array);
       if ($name == $annotation) {

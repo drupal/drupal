@@ -40,7 +40,7 @@ class TranslationManagerTest extends UnitTestCase {
    * @return array
    *   An array of test data for formatPlural().
    */
-  public static function providerTestFormatPlural() {
+  public static function providerTestFormatPlural(): array {
     return [
       [1, 'Singular', '@count plural', [], [], 'Singular'],
       [2, 'Singular', '@count plural', [], [], '2 plural'],
@@ -95,7 +95,7 @@ class TranslationManagerTest extends UnitTestCase {
    * @return array
    *   An array of test data for translate().
    */
-  public static function providerTestTranslatePlaceholder() {
+  public static function providerTestTranslatePlaceholder(): array {
     return [
       ['foo @bar', ['@bar' => 'bar'], 'foo bar'],
       ['bar %baz', ['%baz' => 'baz'], 'bar <em class="placeholder">baz</em>'],

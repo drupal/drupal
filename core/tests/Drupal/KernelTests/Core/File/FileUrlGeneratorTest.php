@@ -229,7 +229,7 @@ class FileUrlGeneratorTest extends FileTestBase {
   /**
    * Data provider.
    */
-  public static function providerGenerateURI() {
+  public static function providerGenerateURI(): array {
     return [
       'schemaless' =>
         [

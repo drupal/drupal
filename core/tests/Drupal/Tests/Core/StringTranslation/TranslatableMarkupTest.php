@@ -70,7 +70,7 @@ class TranslatableMarkupTest extends UnitTestCase {
     $translation
       ->method('translateString')
       ->with($text)
-      ->willReturnCallback(function () {
+      ->willReturnCallback(function (): void {
         throw new \Exception('Yes you may.');
       });
 

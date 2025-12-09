@@ -30,7 +30,7 @@ class EntityTypeTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityTypeInterface
    *   The EntityType object.
    */
-  protected function setUpEntityType($definition) {
+  protected function setUpEntityType($definition): EntityType {
     $definition += [
       'id' => 'example_entity_type',
     ];
@@ -99,7 +99,7 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Provides test data for testGet.
    */
-  public static function providerTestGet() {
+  public static function providerTestGet(): array {
     return [
       [[], 'provider', NULL],
       [['provider' => ''], 'provider', ''],
@@ -113,7 +113,7 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Provides test data for testSet.
    */
-  public static function providerTestSet() {
+  public static function providerTestSet(): array {
     return [
       ['provider', NULL],
       ['provider', ''],
@@ -127,7 +127,7 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Provides test data.
    */
-  public static function providerTestGetKeys() {
+  public static function providerTestGetKeys(): array {
     return [
       [[], ['revision' => '', 'bundle' => '', 'langcode' => '']],
       [['id' => 'id'], ['id' => 'id', 'revision' => '', 'bundle' => '', 'langcode' => '']],
@@ -457,7 +457,7 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Provides test data for ::testGetBundleLabel().
    */
-  public static function providerTestGetBundleLabel() {
+  public static function providerTestGetBundleLabel(): array {
     return [
       [['label' => 'Entity Label Foo'], 'Entity Label Foo bundle'],
       [['bundle_label' => 'Bundle Label Bar'], 'Bundle Label Bar'],

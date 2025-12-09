@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Drupal\Component\Utility\Random as RandomUtility;
 use Drupal\TestTools\Random;
 
 /**
@@ -29,7 +30,7 @@ trait RandomGeneratorTrait {
    *
    * @see \Drupal\Component\Utility\Random::string()
    */
-  public function randomString($length = 8) {
+  public function randomString($length = 8): string {
     return Random::string($length);
   }
 
@@ -63,7 +64,7 @@ trait RandomGeneratorTrait {
    *
    * @see \Drupal\Component\Utility\Random::object()
    */
-  public function randomObject($size = 4) {
+  public function randomObject($size = 4): \stdClass {
     return Random::object($size);
   }
 
@@ -73,7 +74,7 @@ trait RandomGeneratorTrait {
    * @return \Drupal\Component\Utility\Random
    *   The random generator.
    */
-  protected function getRandomGenerator() {
+  protected function getRandomGenerator(): RandomUtility {
     return Random::getGenerator();
   }
 

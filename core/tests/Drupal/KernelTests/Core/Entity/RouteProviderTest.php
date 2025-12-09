@@ -58,7 +58,7 @@ class RouteProviderTest extends KernelTestBase {
   /**
    * Returns the handle of the HTTP kernel service.
    */
-  protected function httpKernelHandle($url) {
+  protected function httpKernelHandle($url): string|false {
     $request = Request::create($url);
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel */
     $http_kernel = \Drupal::service('http_kernel');

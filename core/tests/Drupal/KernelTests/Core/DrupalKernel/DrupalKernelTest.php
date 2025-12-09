@@ -218,7 +218,7 @@ class DrupalKernelTest extends KernelTestBase {
    *   An array of test cases. Each test case is an array containing a single boolean value
    *   that represents the class_loader_auto_detect setting to be tested.
    */
-  public static function providerClassLoaderAutoDetect() {
+  public static function providerClassLoaderAutoDetect(): array {
     return [
       'TRUE' => [TRUE],
       'FALSE' => [FALSE],

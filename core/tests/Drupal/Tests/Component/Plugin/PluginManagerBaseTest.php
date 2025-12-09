@@ -24,7 +24,7 @@ class PluginManagerBaseTest extends TestCase {
   /**
    * A callback method for mocking FactoryInterface objects.
    */
-  public function createInstanceCallback() {
+  public function createInstanceCallback(): array {
     $args = func_get_args();
     $plugin_id = $args[0];
     $configuration = $args[1];

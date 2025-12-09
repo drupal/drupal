@@ -25,7 +25,7 @@ class TestContainerDerivativeDiscovery extends TestDerivativeDiscovery implement
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, $base_plugin_id) {
+  public static function create(ContainerInterface $container, $base_plugin_id): static {
     return new static($container->get('example_service'));
   }
 

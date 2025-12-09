@@ -78,14 +78,14 @@ class TestAuthenticationProvider implements AuthenticationProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(Request $request) {
+  public function applies(Request $request): bool {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function authenticate(Request $request) {
+  public function authenticate(Request $request): NULL {
     return NULL;
   }
 

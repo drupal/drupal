@@ -62,7 +62,7 @@ class StorageComparerTest extends UnitTestCase {
     $this->storageComparer = new StorageComparer($this->sourceStorage, $this->targetStorage);
   }
 
-  protected function getConfigData() {
+  protected function getConfigData(): array {
     $uuid = new Php();
     // Mock data using minimal data to use ConfigDependencyManger.
     $this->configData = [

@@ -344,7 +344,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    *     library prior to the change from jQuery UI library dependencies to
    *     direct file inclusion.
    */
-  public static function providerTestAssetLoading() {
+  public static function providerTestAssetLoading(): array {
     return [
       'drupal.autocomplete' => [
         'library' => 'drupal.autocomplete',

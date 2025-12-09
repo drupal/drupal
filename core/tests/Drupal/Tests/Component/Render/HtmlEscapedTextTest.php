@@ -35,7 +35,7 @@ class HtmlEscapedTextTest extends TestCase {
    *
    * @see testToString()
    */
-  public static function providerToString() {
+  public static function providerToString(): array {
     $prophet = new Prophet();
 
     // Checks that invalid multi-byte sequences are escaped.

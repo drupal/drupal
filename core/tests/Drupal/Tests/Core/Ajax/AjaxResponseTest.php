@@ -7,9 +7,11 @@ namespace Drupal\Tests\Core\Ajax;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CommandInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
+use Drupal\Core\Render\AttachmentsResponseProcessorInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -89,8 +91,8 @@ class AjaxResponseTest extends UnitTestCase {
     $response = new AjaxResponse([]);
     $response->headers->set('Content-Type', 'application/json; charset=utf-8');
 
-    $ajax_response_attachments_processor = $this->createMock('\Drupal\Core\Render\AttachmentsResponseProcessorInterface');
-    $subscriber = new AjaxResponseSubscriber(fn() => $ajax_response_attachments_processor);
+    $ajax_response_attachments_processor = $this->createMock(AttachmentsResponseProcessorInterface::class);
+    $subscriber = new AjaxResponseSubscriber(fn(): AttachmentsResponseProcessorInterface&MockObject => $ajax_response_attachments_processor);
     $event = new ResponseEvent(
       $this->createMock('\Symfony\Component\HttpKernel\HttpKernelInterface'),
       $request,

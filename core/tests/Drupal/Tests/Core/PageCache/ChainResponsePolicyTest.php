@@ -105,7 +105,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
    * @return array
    *   Test input and expected result.
    */
-  public static function providerChainExceptionOnInvalidReturnValue() {
+  public static function providerChainExceptionOnInvalidReturnValue(): array {
     return [
       [FALSE],
       [0],

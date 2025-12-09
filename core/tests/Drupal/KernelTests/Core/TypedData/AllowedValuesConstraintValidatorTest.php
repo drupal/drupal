@@ -99,7 +99,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
    * @return string[]
    *   A list of allowed values.
    */
-  public static function allowedValueCallback() {
+  public static function allowedValueCallback(): array {
     return ['a', 'b', 'c', '1'];
   }
 

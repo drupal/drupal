@@ -31,7 +31,7 @@ class ConfigFactoryOverrideBaseTest extends UnitTestCase {
     $this->assertEquals($override_data_after, $override_data_before);
   }
 
-  public static function providerTestFilterNestedArray() {
+  public static function providerTestFilterNestedArray(): array {
     $data = [];
     $data['empty'] = [
       [],

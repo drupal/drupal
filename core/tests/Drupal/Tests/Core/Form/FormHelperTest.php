@@ -105,7 +105,7 @@ class FormHelperTest extends UnitTestCase {
   /**
    * Provides a list of elements to test.
    */
-  public static function providerElements() {
+  public static function providerElements(): array {
     return [
       [
         [

@@ -77,7 +77,7 @@ class CacheableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test cases, each containing two CacheableMetadata objects and their expected merged result.
    */
-  public static function providerTestMerge() {
+  public static function providerTestMerge(): array {
     return [
       // All empty.
       [(new CacheableMetadata()), (new CacheableMetadata()), (new CacheableMetadata())],
@@ -131,7 +131,7 @@ class CacheableMetadataTest extends UnitTestCase {
   /**
    * Data provider for testSetCacheMaxAge.
    */
-  public static function providerSetCacheMaxAge() {
+  public static function providerSetCacheMaxAge(): array {
     return [
       [0 , FALSE],
       ['http', TRUE],
@@ -159,7 +159,7 @@ class CacheableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test cases, each containing a render array and the expected CacheableMetadata object.
    */
-  public static function providerTestCreateFromRenderArray() {
+  public static function providerTestCreateFromRenderArray(): array {
     $data = [];
 
     $empty_metadata = new CacheableMetadata();
@@ -198,7 +198,7 @@ class CacheableMetadataTest extends UnitTestCase {
    * @return array
    *   An array of test cases, each containing an object and the expected CacheableMetadata.
    */
-  public static function providerTestCreateFromObject() {
+  public static function providerTestCreateFromObject(): array {
     $data = [];
 
     $empty_metadata = new CacheableMetadata();

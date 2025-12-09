@@ -360,13 +360,13 @@ class TestRouteBuilder extends RouteBuilder {
  */
 class TestRouteSubscriber {
 
-  public function routesFromArray() {
+  public function routesFromArray(): array {
     return [
       'test_route.1' => new Route('/test-route/1'),
     ];
   }
 
-  public function routesFromCollection() {
+  public function routesFromCollection(): RouteCollection {
     $collection = new RouteCollection();
     $collection->add('test_route.2', new Route('/test-route/2'));
     return $collection;

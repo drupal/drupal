@@ -20,7 +20,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[IgnoreDeprecations]
 class TestFileParserTest extends UnitTestCase {
 
-  public static function provideTestFileContents() {
+  public static function provideTestFileContents(): array {
     return [
       'empty' => [[], ''],
       'no-namespace' => [['ConcreteClass'],

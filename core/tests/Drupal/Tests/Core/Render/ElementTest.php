@@ -146,7 +146,7 @@ class ElementTest extends UnitTestCase {
    * @return array
    *   An array of test cases.
    */
-  public static function providerVisibleChildren() {
+  public static function providerVisibleChildren(): array {
     return [
       [['#property1' => '', '#property2' => []], []],
       [['#property1' => '', 'child1' => []], ['child1']],
@@ -172,7 +172,7 @@ class ElementTest extends UnitTestCase {
   /**
    * Data provider for testSetAttributes().
    */
-  public static function providerTestSetAttributes() {
+  public static function providerTestSetAttributes(): array {
     $base = ['#id' => 'id', '#class' => []];
     return [
       [$base, [], $base],
@@ -191,7 +191,7 @@ class ElementTest extends UnitTestCase {
     $this->assertSame(Element::isEmpty($element), $expected);
   }
 
-  public static function providerTestIsEmpty() {
+  public static function providerTestIsEmpty(): array {
     return [
       [[], TRUE],
       [['#attached' => []], FALSE],
@@ -242,7 +242,7 @@ class ElementTest extends UnitTestCase {
     );
   }
 
-  public static function dataProviderIsRenderArray() {
+  public static function dataProviderIsRenderArray(): array {
     return [
       'valid markup render array' => [['#markup' => 'hello world'], TRUE],
       'invalid "foo" string' => [['foo', '#markup' => 'hello world'], FALSE],

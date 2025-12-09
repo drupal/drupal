@@ -492,7 +492,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->any())
       ->method('save')
-      ->willReturnCallback(function (ContentEntityInterface $entity) use ($storage) {
+      ->willReturnCallback(function (ContentEntityInterface $entity) use ($storage): void {
         $entity->preSave($storage);
       });
 
@@ -564,7 +564,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    *   - Language code for $activeLanguage.
    *   - Fields array for $fields.
    */
-  public static function providerGet() {
+  public static function providerGet(): array {
     return [
       // Populated fields array.
       ['result', 'field_name', 'langcode', ['field_name' => ['langcode' => 'result']]],
@@ -628,7 +628,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    *     Drupal\Core\Field\FieldDefinitionInterface object will be mocked for
    *     each name.
    */
-  public static function providerGetFields() {
+  public static function providerGetFields(): array {
     return [
       [[], FALSE, FALSE, []],
       [['field' => 'field', 'field2' => 'field2'], TRUE, FALSE, ['field', 'field2']],

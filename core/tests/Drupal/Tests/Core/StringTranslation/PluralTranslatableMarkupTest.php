@@ -37,7 +37,7 @@ class PluralTranslatableMarkupTest extends UnitTestCase {
   /**
    * Data provider for ::testPluralTranslatableMarkupSerialization().
    */
-  public static function providerPluralTranslatableMarkupSerialization() {
+  public static function providerPluralTranslatableMarkupSerialization(): array {
     return [
       [1, 'singular 1'],
       [2, 'plural 2'],

@@ -134,7 +134,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
     $typed_data = $this->typedDataManager->create(
       DataDefinition::create('string')
         ->addConstraint('Callback', [
-          'callback' => function ($value, ExecutionContextInterface $context) {
+          'callback' => function ($value, ExecutionContextInterface $context): void {
             $context->addViolation('test violation: ' . $value);
           },
         ])
@@ -154,7 +154,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
    */
   public function testBasicValidateWithMultipleConstraints(): void {
     $options = [
-      'callback' => function ($value, ExecutionContextInterface $context) {
+      'callback' => function ($value, ExecutionContextInterface $context): void {
         $context->addViolation('test violation');
       },
     ];
@@ -206,7 +206,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
    *   The typed data object.
    */
   protected function setupTypedData(array $tree, $name = '') {
-    $callback = function ($value, ExecutionContextInterface $context) {
+    $callback = function ($value, ExecutionContextInterface $context): void {
       $context->addViolation('violation: ' . (is_array($value) ? count($value) : $value));
     };
 

@@ -52,21 +52,21 @@ class StaticFileCacheBackend implements FileCacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function store($cid, $data) {
+  public function store($cid, $data): void {
     static::$cache[$this->bin][$cid] = $data;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function delete($cid) {
+  public function delete($cid): void {
     unset(static::$cache[$this->bin][$cid]);
   }
 
   /**
    * Allows tests to reset the static cache to avoid side effects.
    */
-  public static function reset() {
+  public static function reset(): void {
     static::$cache = [];
   }
 

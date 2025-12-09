@@ -37,7 +37,7 @@ class PluginWithFormsTraitTest extends UnitTestCase {
    * @return array
    *   Test cases for different block plugins and operations, mapping them to expected form classes.
    */
-  public static function providerGetFormClass() {
+  public static function providerGetFormClass(): array {
     $block_plugin_without_forms = new TestClass([], 'block_plugin_without_forms', [
       'provider' => 'block_test',
     ]);
@@ -66,7 +66,7 @@ class PluginWithFormsTraitTest extends UnitTestCase {
 class TestClass extends PluginBase implements PluginWithFormsInterface, PluginFormInterface {
   use PluginWithFormsTrait;
 
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     return [];
   }
 

@@ -200,7 +200,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * @return array
    *   A list or test plugin definition and expected weight.
    */
-  public static function providerTestGetWeight() {
+  public static function providerTestGetWeight(): array {
     return [
       // Manually specify a weight, so this is used.
       [['weight' => 314], 'test_id', 314],
@@ -368,7 +368,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
  */
 class TestLocalTaskDefault extends LocalTaskDefault {
 
-  public function setRouteProvider(RouteProviderInterface $route_provider) {
+  public function setRouteProvider(RouteProviderInterface $route_provider): static {
     $this->routeProvider = $route_provider;
     return $this;
   }

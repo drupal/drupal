@@ -65,7 +65,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testCreateController().
    */
-  public static function providerTestCreateController() {
+  public static function providerTestCreateController(): array {
     return [
       // Tests class::method.
       ['Drupal\Tests\Core\Controller\MockController::getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'],
@@ -110,7 +110,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testGetController().
    */
-  public static function providerTestGetController() {
+  public static function providerTestGetController(): array {
     return [
       // Tests passing a controller via the request.
       [
@@ -136,7 +136,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testGetControllerFromDefinition().
    */
-  public static function providerTestGetControllerFromDefinition() {
+  public static function providerTestGetControllerFromDefinition(): array {
     return [
       // Tests a method on an object.
       [[new MockController(), 'getResult'], 'This is a regular controller.'],
@@ -188,11 +188,11 @@ class ControllerResolverTest extends UnitTestCase {
  */
 class MockController {
 
-  public function getResult() {
+  public function getResult(): string {
     return 'This is a regular controller.';
   }
 
-  public function getControllerWithRequestAndRouteMatch(RouteMatchInterface $route_match, Request $request) {
+  public function getControllerWithRequestAndRouteMatch(RouteMatchInterface $route_match, Request $request): string {
     return 'this is another example controller';
   }
 
@@ -203,11 +203,11 @@ class MockController {
  */
 class MockControllerPsr7 {
 
-  public function getResult() {
+  public function getResult(): array {
     return ['#markup' => 'This is a regular controller'];
   }
 
-  public function getControllerWithRequestAndRouteMatch(RouteMatchInterface $route_match, ServerRequestInterface $request) {
+  public function getControllerWithRequestAndRouteMatch(RouteMatchInterface $route_match, ServerRequestInterface $request): array {
     return ['#markup' => 'this is another example controller'];
   }
 
@@ -229,7 +229,7 @@ class MockContainerInjection implements ContainerInjectionInterface {
     $this->result = $result;
   }
 
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static('This used injection.');
   }
 
@@ -244,7 +244,7 @@ class MockContainerInjection implements ContainerInjectionInterface {
  */
 class MockInvokeController {
 
-  public function __invoke() {
+  public function __invoke(): string {
     return 'This used __invoke().';
   }
 

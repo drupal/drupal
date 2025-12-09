@@ -28,7 +28,7 @@ class DiscoveryTraitTest extends TestCase {
    *   - Plugin definition array, to pass to doGetDefinition().
    *   - Plugin ID to get, passed to doGetDefinition().
    */
-  public static function providerDoGetDefinition() {
+  public static function providerDoGetDefinition(): array {
     return [
       ['definition', ['plugin_name' => 'definition'], 'plugin_name'],
       [NULL, ['plugin_name' => 'definition'], 'bad_plugin_name'],
@@ -58,7 +58,7 @@ class DiscoveryTraitTest extends TestCase {
    *   - Plugin definition array, to pass to doGetDefinition().
    *   - Plugin ID to get, passed to doGetDefinition().
    */
-  public static function providerDoGetDefinitionException() {
+  public static function providerDoGetDefinitionException(): array {
     return [
       [FALSE, ['plugin_name' => 'definition'], 'bad_plugin_name'],
     ];
@@ -124,7 +124,7 @@ class DiscoveryTraitTest extends TestCase {
    *   - Expected TRUE or FALSE.
    *   - Plugin ID to look for.
    */
-  public static function providerHasDefinition() {
+  public static function providerHasDefinition(): array {
     return [
       [TRUE, 'valid'],
       [FALSE, 'not_valid'],

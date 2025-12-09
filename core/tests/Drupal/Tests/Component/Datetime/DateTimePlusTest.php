@@ -311,7 +311,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see DateTimePlusTest::testDates()
    */
-  public static function providerTestDates() {
+  public static function providerTestDates(): array {
     $dates = [
       // String input.
       // Create date object from datetime string.
@@ -351,7 +351,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see DateTimePlusTest::testDates()
    */
-  public static function providerTestDateArrays() {
+  public static function providerTestDateArrays(): array {
     $dates = [
       // Array input.
       // Create date object from date array, date only.
@@ -391,7 +391,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testDateFormats()
    */
-  public static function providerTestDateFormat() {
+  public static function providerTestDateFormat(): array {
     return [
       // Create a year-only date.
       ['2009', NULL, 'Y', 'Y', '2009'],
@@ -416,7 +416,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testInvalidDates
    */
-  public static function providerTestInvalidDates() {
+  public static function providerTestInvalidDates(): array {
     return [
       // Test for invalid month names when we are using a short version
       // of the month.
@@ -443,7 +443,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testInvalidDateArrays
    */
-  public static function providerTestInvalidDateArrays() {
+  public static function providerTestInvalidDateArrays(): array {
     return [
       // One year larger than the documented upper limit of checkdate().
       [['year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
@@ -470,7 +470,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testCheckArray
    */
-  public static function providerTestCheckArray() {
+  public static function providerTestCheckArray(): array {
     return [
       'Date array, date only' => [['year' => 2010, 'month' => 2, 'day' => 28], TRUE],
       'Date array with hour' => [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10], TRUE],
@@ -497,7 +497,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testDateTimezone
    */
-  public static function providerTestDateTimezone() {
+  public static function providerTestDateTimezone(): array {
     // Use a common date for most of the tests.
     $date_string = '2007-01-31 21:00:00';
 
@@ -526,7 +526,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testTimestamp()
    */
-  public static function providerTestTimestamp() {
+  public static function providerTestTimestamp(): array {
     return [
       // Create date object from a unix timestamp and display it in
       // local time.
@@ -578,7 +578,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testDateTimestamp()
    */
-  public static function providerTestDateTimestamp() {
+  public static function providerTestDateTimestamp(): array {
     return [
       // Create date object from datetime string in UTC, and convert
       // it to a local date.
@@ -647,7 +647,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see DateTimePlusTest::testDateDiff()
    */
-  public static function providerTestDateDiff() {
+  public static function providerTestDateDiff(): array {
 
     $empty_interval = new \DateInterval('PT0S');
 
@@ -725,7 +725,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see DateTimePlusTest::testInvalidDateDiff()
    */
-  public static function providerTestInvalidDateDiff() {
+  public static function providerTestInvalidDateDiff(): array {
     return [
       [
         'input1' => DateTimePlus::createFromTimestamp(3600),
@@ -764,7 +764,7 @@ class DateTimePlusTest extends TestCase {
    * @return array
    *   An array of invalid date/time strings, and corresponding error messages.
    */
-  public static function providerTestInvalidConstructor() {
+  public static function providerTestInvalidConstructor(): array {
     return [
       [
         'YYYY-MM-DD',

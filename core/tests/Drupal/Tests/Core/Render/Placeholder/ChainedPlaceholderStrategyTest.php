@@ -41,7 +41,7 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
    * @return array
    *   An array of render strategies, placeholders and results.
    */
-  public static function providerProcessPlaceholders() {
+  public static function providerProcessPlaceholders(): array {
     $prophet = new Prophet();
     $data = [];
 

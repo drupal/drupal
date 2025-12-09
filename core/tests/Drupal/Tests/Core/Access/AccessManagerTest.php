@@ -18,6 +18,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -504,7 +505,7 @@ class AccessManagerTest extends UnitTestCase {
    * @return array
    *   An array of data for check exceptions.
    */
-  public static function providerCheckException() {
+  public static function providerCheckException(): array {
     return [
       [[1]],
       ['string'],
@@ -524,7 +525,7 @@ class AccessManagerTest extends UnitTestCase {
   /**
    * Add default expectations to the access arguments resolver factory.
    */
-  protected function setupAccessArgumentsResolverFactory($constraint = NULL) {
+  protected function setupAccessArgumentsResolverFactory($constraint = NULL): InvocationMocker {
     if (!isset($constraint)) {
       $constraint = $this->any();
     }

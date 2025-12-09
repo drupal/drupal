@@ -272,7 +272,7 @@ class NestedArrayTest extends TestCase {
     $this->assertEquals($expected, NestedArray::filter($array, $callable));
   }
 
-  public static function providerTestFilter() {
+  public static function providerTestFilter(): array {
     $data = [];
     $data['1d-array'] = [
       [0, 1, '', TRUE], NULL, [1 => 1, 3 => TRUE],

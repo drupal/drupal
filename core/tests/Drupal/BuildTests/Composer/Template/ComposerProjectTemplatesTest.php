@@ -69,7 +69,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
     return $data;
   }
 
-  public static function provideTemplateCreateProject() {
+  public static function provideTemplateCreateProject(): array {
     return [
       'recommended-project' => [
         'drupal/recommended-project',

@@ -54,7 +54,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * @return \Drupal\Core\Extension\ModuleHandler
    *   The module handler to test.
    */
-  protected function getModuleHandler($modules = [], $implementations = [], array $includes = [], array $group_includes = [], $loadAll = TRUE) {
+  protected function getModuleHandler($modules = [], $implementations = [], array $includes = [], array $group_includes = [], $loadAll = TRUE): ModuleHandler {
     // This only works if there's a single $hook.
     $modules['module_handler_test'] = 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test';
     $moduleList = [];

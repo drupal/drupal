@@ -46,7 +46,7 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
    *
    * @see Drupal\Tests\Core\Routing\AcceptHeaderMatcherTest::testAcceptFiltering()
    */
-  public static function acceptFilterProvider() {
+  public static function acceptFilterProvider(): array {
     return [
       // Check that JSON routes get filtered and prioritized correctly.
       ['application/json, text/xml;q=0.9', 'json', 'route_c', 'route_e'],

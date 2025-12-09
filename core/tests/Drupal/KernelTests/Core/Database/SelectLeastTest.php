@@ -27,7 +27,7 @@ class SelectLeastTest extends DatabaseTestBase {
   /**
    * Provides data for testing the LEAST operator.
    */
-  public static function selectLeastProvider() {
+  public static function selectLeastProvider(): array {
     return [
       [[1, 2, 3, 4, 5, 6], 1],
       [['A', 'B', 'C', 'NULL', 'F'], 'A'],

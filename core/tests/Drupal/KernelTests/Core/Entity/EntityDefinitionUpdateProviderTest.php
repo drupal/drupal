@@ -223,7 +223,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
   /**
    * Test cases for ::testBaseFieldDeleteWithExistingData.
    */
-  public static function baseFieldDeleteWithExistingDataTestCases() {
+  public static function baseFieldDeleteWithExistingDataTestCases(): array {
     return [
       'Non-revisionable, non-translatable entity type' => [
         'entity_test_update',
@@ -342,7 +342,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
   /**
    * Test cases for ::testInitialValueFromField.
    */
-  public static function initialValueFromFieldTestCases() {
+  public static function initialValueFromFieldTestCases(): array {
     return [
       'literal value' => [
         'test initial value',

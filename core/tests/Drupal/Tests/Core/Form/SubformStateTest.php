@@ -158,7 +158,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * Provides data to self::testGetValue().
    */
-  public static function providerTestGetValue() {
+  public static function providerTestGetValue(): array {
     $data = [];
     $data['exist'] = [
       ['dog'],
@@ -183,7 +183,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * Provides data to self::testGetValueBroken().
    */
-  public static function providerTestGetValueBroken() {
+  public static function providerTestGetValueBroken(): array {
     $data = [];
     $data['nested'] = [
       ['dog', 'name'],
@@ -213,7 +213,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * Provides data to self::testSetValues().
    */
-  public static function providerTestSetValues() {
+  public static function providerTestSetValues(): array {
     $data = [];
     $data['exist'] = [
       ['dog'],

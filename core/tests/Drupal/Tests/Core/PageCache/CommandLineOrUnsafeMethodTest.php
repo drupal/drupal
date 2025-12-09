@@ -61,7 +61,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
    * @return array
    *   Test data and expected results.
    */
-  public static function providerTestHttpMethod() {
+  public static function providerTestHttpMethod(): array {
     return [
       [NULL, 'GET'],
       [NULL, 'HEAD'],

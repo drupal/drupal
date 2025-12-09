@@ -20,7 +20,7 @@ class BackendChainTest extends GenericCacheBackendUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function createCacheBackend($bin) {
+  protected function createCacheBackend($bin): BackendChain {
     $chain = new BackendChain();
 
     // We need to create some various backends in the chain.

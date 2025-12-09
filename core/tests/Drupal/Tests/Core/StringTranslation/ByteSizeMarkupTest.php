@@ -35,7 +35,7 @@ class ByteSizeMarkupTest extends UnitTestCase {
   /**
    * Provides a list of byte size to test.
    */
-  public static function providerTestCommonFormatSize() {
+  public static function providerTestCommonFormatSize(): array {
     $kb = Bytes::KILOBYTE;
     return [
       ['0 bytes', 0],

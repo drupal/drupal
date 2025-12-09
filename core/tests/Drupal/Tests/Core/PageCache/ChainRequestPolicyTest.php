@@ -96,7 +96,7 @@ class ChainRequestPolicyTest extends UnitTestCase {
    * @return array
    *   Test input and expected result.
    */
-  public static function providerChainExceptionOnInvalidReturnValue() {
+  public static function providerChainExceptionOnInvalidReturnValue(): array {
     return [
       [FALSE],
       [0],
@@ -134,7 +134,7 @@ class ChainRequestPolicyTest extends UnitTestCase {
    * @return array
    *   Test input and expected result.
    */
-  public static function providerAllowIfAnyRuleReturnedAllow() {
+  public static function providerAllowIfAnyRuleReturnedAllow(): array {
     return [
       [[RequestPolicyInterface::ALLOW]],
       [[NULL, RequestPolicyInterface::ALLOW]],

@@ -36,7 +36,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * Data provider for ::testTrustedCallbacks().
    */
-  public static function providerTestTrustedCallbacks() {
+  public static function providerTestTrustedCallbacks(): array {
     $closure = function () {
       return 'test';
     };
@@ -67,7 +67,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * Data provider for ::testUntrustedCallbacks().
    */
-  public static function providerTestUntrustedCallbacks() {
+  public static function providerTestUntrustedCallbacks(): array {
     $tests['TrustedCallbackInterface_object'] = [[new TrustedMethods(), 'unTrustedCallback'], TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedMethods::unTrustedCallback', TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_array'] = [[TrustedMethods::class, 'unTrustedCallback'], TrustedInterface::class];
@@ -101,7 +101,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * Data provider for tests of ::doTrustedCallback $error_type argument.
    */
-  public static function errorTypeProvider() {
+  public static function errorTypeProvider(): array {
     $tests['untrusted_object'] = [[new UntrustedObject(), 'callback']];
     $tests['untrusted_object_static_string'] = ['Drupal\Tests\Core\Security\UntrustedObject::callback'];
     $tests['untrusted_object_static_array'] = [[UntrustedObject::class, 'callback']];
@@ -121,7 +121,7 @@ interface TrustedInterface {
  */
 class TrustedObject implements TrustedInterface {
 
-  public static function callback() {
+  public static function callback(): string {
     return 'test';
   }
 
@@ -132,7 +132,7 @@ class TrustedObject implements TrustedInterface {
  */
 class UntrustedObject {
 
-  public static function callback() {
+  public static function callback(): string {
     return 'test';
   }
 
@@ -143,7 +143,7 @@ class UntrustedObject {
  */
 class InvokableUntrustedObject {
 
-  public function __invoke() {
+  public function __invoke(): string {
     return 'test';
   }
 
@@ -154,20 +154,20 @@ class InvokableUntrustedObject {
  */
 class TrustedMethods implements TrustedCallbackInterface {
 
-  public static function trustedCallbacks() {
+  public static function trustedCallbacks(): array {
     return ['callback'];
   }
 
-  public static function callback() {
+  public static function callback(): string {
     return 'test';
   }
 
   #[TrustedCallback]
-  public static function attributeCallback() {
+  public static function attributeCallback(): string {
     return 'test';
   }
 
-  public static function unTrustedCallback() {
+  public static function unTrustedCallback(): string {
     return 'test';
   }
 

@@ -63,7 +63,7 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
    *     comparison should match, FALSE if error, or a class name of an object
    *     thrown.
    */
-  public static function dataSetProvider() {
+  public static function dataSetProvider(): array {
     return [
       'FormattableMarkup vs FormattableMarkup, equal' => [
         new FormattableMarkup('GoldFinger', []),
