@@ -359,164 +359,107 @@ default:
     include:
       - local: .gitlab-ci/pipeline-test-only.yml
 
-# Main listing of jobs.
-# All of these are available on Merge Requests and also work as base jobs for
-# on-commit and daily jobs to extend from.
-'PHP 8.3 MariaDB 10.6':
+# Main listing of jobs. All of these are available on Merge Requests.
+'MariaDB (via PDO)':
   <<: [ *default-stage, *run-on-mr ]
+  parallel:
+    matrix:
+      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+        _TARGET_DB: [mariadb-10.6]
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mariadb-10.6"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
-'mysqli - PHP 8.3 MySQL 8.4':
+'MySQL (via PDO)':
   <<: [ *default-stage, *run-on-mr ]
+  parallel:
+    matrix:
+      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+        _TARGET_DB: [mysql-8, mysql-8.4, mysql-9]
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mysql-8.4"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
+
+'MySQL (via mysqli)':
+  <<: [ *default-stage, *run-on-mr ]
+  parallel:
+    matrix:
+      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+        _TARGET_DB: [mysql-9]
+  variables:
     _TARGET_DB_DRIVER: "mysqli"
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
-'PHP 8.4 MySQ: 8.4':
+'PostgreSQL':
   <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "mysql-8.4"
-    _TARGET_DB_DRIVER: "mysql"
-    _TARGET_DB_DRIVER_MODULE: "mysql"
+  parallel:
+    matrix:
+      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+        _TARGET_DB: [pgsql-16, pgsql-17, pgsql-18]
 
-'PHP 8.4 MariaDB 10.6':
+'SQLite':
   <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "mariadb-10.6"
-    _TARGET_DB_DRIVER: "mysql"
-    _TARGET_DB_DRIVER_MODULE: "mysql"
-
-'mysqli - PHP 8.4 MySQL 9.4':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "mysql-9"
-    _TARGET_DB_DRIVER: "mysqli"
-    _TARGET_DB_DRIVER_MODULE: "mysqli"
-
-'mysqli - PHP 8.5 MySQL 9.4':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.5-ubuntu"
-    _TARGET_DB: "mysql-9"
-    _TARGET_DB_DRIVER: "mysqli"
-    _TARGET_DB_DRIVER_MODULE: "mysqli"
-
-'PHP 8.3 MySQL 8.0':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mysql-8"
-    _TARGET_DB_DRIVER: "mysql"
-    _TARGET_DB_DRIVER_MODULE: "mysql"
-
-'PHP 8.4 MySQL 9.4':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "mysql-9"
-    _TARGET_DB_DRIVER: "mysql"
-    _TARGET_DB_DRIVER_MODULE: "mysql"
-
-'PHP 8.5 MySQL 9.3':
-  <<: [ *default-stage, *run-on-mr ]
-  allow_failure: true
-  variables:
-    _TARGET_PHP: "8.5-ubuntu"
-    _TARGET_DB: "mysql-9"
-    _TARGET_DB_DRIVER: "mysql"
-    _TARGET_DB_DRIVER_MODULE: "mysql"
-
-'PHP 8.3 PostgreSQL 16':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "pgsql-16"
-
-'PHP 8.4 PostgreSQL 17':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "pgsql-17"
-
-'PHP 8.5 PostgreSQL 18':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.5-ubuntu"
-    _TARGET_DB: "pgsql-18"
-
-'PHP 8.3 SQLite 3.45':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "sqlite-3"
-
-'PHP 8.4 SQLite 3.45':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "sqlite-3"
-
-'PHP 8.5 SQLite 3.45':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.5-ubuntu"
-    _TARGET_DB: "sqlite-3"
-
-'PHP 8.4 MySQL 8.0':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.4-ubuntu"
-    _TARGET_DB: "mysql-8"
-    _TARGET_DB_DRIVER: "mysql"
-    _TARGET_DB_DRIVER_MODULE: "mysql"
+  parallel:
+    matrix:
+      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+        _TARGET_DB: [sqlite-3]
 
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.3 PostgreSQL 16':
-  extends: 'PHP 8.3 PostgreSQL 16'
+  <<: [ *default-stage, *run-on-commit ]
   needs: [ 'DEFAULT: PHP 8.5 MySQL 8.4' ]
-  <<: [ *run-on-commit ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "pgsql-16"
 
 '[Commit] PHP 8.3 SQLite 3.45':
-  extends: 'PHP 8.3 SQLite 3.45'
+  <<: [ *default-stage, *run-on-commit ]
   needs: [ '[Commit] PHP 8.3 PostgreSQL 16' ]
-  <<: [ *run-on-commit ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "sqlite-3"
 
 # Jobs running daily.
 # The value set in the "needs" property will determine the order in the sequence.
 '[Daily] PHP 8.3 PostgreSQL 16':
-  extends: 'PHP 8.3 PostgreSQL 16'
+  <<: [ *default-stage, *run-daily ]
   needs: [ 'DEFAULT: PHP 8.5 MySQL 8.4' ]
-  <<: [ *run-daily ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "pgsql-16"
 
 '[Daily] PHP 8.3 SQLite 3.45':
-  extends: 'PHP 8.3 SQLite 3.45'
+  <<: [ *default-stage, *run-daily ]
   needs: [ '[Daily] PHP 8.3 PostgreSQL 16' ]
-  <<: [ *run-daily ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "sqlite-3"
 
 '[Daily] PHP 8.4 MariaDB 10.6':
-  extends: 'PHP 8.4 MariaDB 10.6'
+  <<: [ *default-stage, *run-daily ]
   needs: [ '[Daily] PHP 8.3 SQLite 3.45' ]
-  <<: [ *run-daily ]
+  variables:
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mariadb-10.6"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
 
 '[Daily] PHP 8.5 MySQL 9.3':
-  extends: 'PHP 8.5 MySQL 9.3'
+  <<: [ *default-stage, *run-daily ]
   needs: [ '[Daily] PHP 8.4 MariaDB 10.6' ]
-  <<: [ *run-daily ]
+  variables:
+    _TARGET_PHP: "8.5-ubuntu"
+    _TARGET_DB: "mysql-9"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
 
 '[Daily] PHP 8.5 PostgreSQL 18':
-  extends: 'PHP 8.5 PostgreSQL 18'
+  <<: [ *default-stage, *run-daily ]
   needs: [ '[Daily] PHP 8.5 MySQL 9.3' ]
-  <<: [ *run-daily ]
+  variables:
+    _TARGET_PHP: "8.5-ubuntu"
+    _TARGET_DB: "pgsql-18"
 
 ################
 # Lint Jobs
