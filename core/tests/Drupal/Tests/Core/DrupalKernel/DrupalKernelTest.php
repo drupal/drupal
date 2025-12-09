@@ -58,7 +58,7 @@ class DrupalKernelTest extends UnitTestCase {
   /**
    * Provides test data for testTrustedHosts().
    */
-  public static function providerTestTrustedHosts() {
+  public static function providerTestTrustedHosts(): array {
     $data = [];
 
     // Tests canonical URL.
@@ -185,7 +185,7 @@ class FakeAutoloader {
    *
    * This class never loads.
    */
-  public function loadClass() {
+  public function loadClass(): NULL {
     return NULL;
   }
 
@@ -194,7 +194,7 @@ class FakeAutoloader {
    *
    * This class never finds.
    */
-  public function findFile() {
+  public function findFile(): NULL {
     return NULL;
   }
 

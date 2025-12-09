@@ -220,7 +220,7 @@ class StackedKernelPassTest extends UnitTestCase {
    * @return \Symfony\Component\DependencyInjection\Definition
    *   The middleware definition.
    */
-  protected function createMiddlewareServiceDefinition($tag = TRUE, $priority = 0) {
+  protected function createMiddlewareServiceDefinition($tag = TRUE, $priority = 0): Definition {
     $definition = new Definition(TestHttpMiddlewareClass::class, ['test']);
     $definition->setPublic(TRUE);
 

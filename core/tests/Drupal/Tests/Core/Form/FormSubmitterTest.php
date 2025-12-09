@@ -18,6 +18,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -123,7 +124,7 @@ class FormSubmitterTest extends UnitTestCase {
     $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $return);
   }
 
-  public static function providerTestHandleFormSubmissionWithResponses() {
+  public static function providerTestHandleFormSubmissionWithResponses(): array {
     return [
       ['Symfony\Component\HttpFoundation\Response', 'response'],
       ['Symfony\Component\HttpFoundation\RedirectResponse', 'redirect'],
@@ -195,7 +196,7 @@ class FormSubmitterTest extends UnitTestCase {
    * @return array
    *   Returns some test data.
    */
-  public static function providerTestRedirectWithUrl() {
+  public static function providerTestRedirectWithUrl(): array {
     return [
       [new Url('test_route_a', [], ['absolute' => TRUE]), 'test-route'],
       [new Url('test_route_b', ['key' => 'value'], ['absolute' => TRUE]), 'test-route/value'],
@@ -290,10 +291,10 @@ class FormSubmitterTest extends UnitTestCase {
    * @return \Drupal\Core\Form\FormSubmitterInterface
    *   A mocked instance of FormSubmitter.
    */
-  protected function getFormSubmitter() {
+  protected function getFormSubmitter(): FormSubmitter&MockObject {
     $request_stack = new RequestStack();
     $request_stack->push(Request::create('/test-path'));
-    return $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
+    return $this->getMockBuilder(FormSubmitter::class)
       ->setConstructorArgs([$request_stack, $this->urlGenerator, $this->redirectResponseSubscriber, $this->callableResolver])
       ->onlyMethods(['batchGet'])
       ->getMock();

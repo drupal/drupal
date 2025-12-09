@@ -31,7 +31,7 @@ class FormElementHelperTest extends UnitTestCase {
   /**
    * Provides test data.
    */
-  public static function getElementByNameProvider() {
+  public static function getElementByNameProvider(): array {
     $data = [];
     $data[] = ['id', [], []];
     $data[] = [
@@ -116,7 +116,7 @@ class FormElementHelperTest extends UnitTestCase {
   /**
    * Provides test data.
    */
-  public static function getElementTitleProvider() {
+  public static function getElementTitleProvider(): array {
     $data = [];
     $data[] = ['id', [], ''];
     $data[] = [

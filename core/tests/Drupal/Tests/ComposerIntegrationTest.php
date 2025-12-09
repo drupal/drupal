@@ -137,7 +137,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    * @return array
    *   An array of scaffold file mappings.
    */
-  public static function providerTestExpectedScaffoldFiles() {
+  public static function providerTestExpectedScaffoldFiles(): array {
     return [
       ['.editorconfig', 'assets/scaffold/files/editorconfig', '[project-root]'],
       ['.gitattributes', 'assets/scaffold/files/gitattributes', '[project-root]'],

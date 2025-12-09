@@ -277,7 +277,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
    * @return array
    *   An array of test cases consisting of an entity type ID and a field name.
    */
-  public static function providerTestPrimaryKeyUpdate() {
+  public static function providerTestPrimaryKeyUpdate(): array {
     // Build up test cases for all possible entity type configurations.
     // For each entity type we test reinstalling each field that is part of
     // any table's primary key.

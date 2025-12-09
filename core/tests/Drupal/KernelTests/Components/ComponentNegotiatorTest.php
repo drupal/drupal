@@ -51,7 +51,7 @@ class ComponentNegotiatorTest extends ComponentKernelTestBase {
         ['invalid^component', NULL],
         ['', NULL],
     ];
-    array_walk($data, function ($test_input) {
+    array_walk($data, function ($test_input): void {
       [$requested_id, $expected_id] = $test_input;
       $negotiated_id = $this->negotiator->negotiate(
         $requested_id,

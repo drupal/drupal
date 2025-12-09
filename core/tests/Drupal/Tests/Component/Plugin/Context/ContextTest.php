@@ -20,7 +20,7 @@ class ContextTest extends TestCase {
   /**
    * Data provider for testGetContextValue.
    */
-  public static function providerGetContextValue() {
+  public static function providerGetContextValue(): array {
     return [
       ['context_value', 'context_value', FALSE, 'data_type'],
       [NULL, NULL, FALSE, 'data_type'],
@@ -86,7 +86,7 @@ class ContextTest extends TestCase {
   /**
    * Data provider for testHasContextValue.
    */
-  public static function providerHasContextValue() {
+  public static function providerHasContextValue(): array {
     return [
       [TRUE, FALSE],
       [TRUE, 0],

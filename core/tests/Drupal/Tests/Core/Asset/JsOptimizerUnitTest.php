@@ -39,7 +39,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    * @return array
    *   An array of test data.
    */
-  public static function providerTestClean() {
+  public static function providerTestClean(): array {
     $path = dirname(__FILE__) . '/js_test_files/';
     return [
       // File. Tests:
@@ -85,7 +85,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    * @return array
    *   An array of test data.
    */
-  public static function providerTestOptimize() {
+  public static function providerTestOptimize(): array {
     $path = dirname(__FILE__) . '/js_test_files/';
     return [
       0 => [

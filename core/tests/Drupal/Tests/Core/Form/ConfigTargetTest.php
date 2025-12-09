@@ -55,7 +55,7 @@ class ConfigTargetTest extends UnitTestCase {
     ) extends ConfigFormBase {
       use RedundantEditableConfigNamesTrait;
 
-      public function getFormId() {
+      public function getFormId(): string {
         return 'test';
       }
 
@@ -90,7 +90,7 @@ class ConfigTargetTest extends UnitTestCase {
     ) extends ConfigFormBase {
       use RedundantEditableConfigNamesTrait;
 
-      public function getFormId() {
+      public function getFormId(): string {
         return 'test';
       }
 

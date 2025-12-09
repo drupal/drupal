@@ -38,7 +38,7 @@ class ReflectionTest extends TestCase {
    *   - string|null $expected: The expected class name.
    *   - \ReflectionParameter $parameter: The reflection parameter.
    */
-  public static function providerGetParameterClassName() {
+  public static function providerGetParameterClassName(): array {
     $reflection_method = new \ReflectionMethod(static::class, 'existsForTesting');
     $parameters = $reflection_method->getParameters();
     return [

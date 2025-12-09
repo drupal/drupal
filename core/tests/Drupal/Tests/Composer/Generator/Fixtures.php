@@ -17,7 +17,7 @@ class Fixtures {
    * @return \Drupal\Composer\Generator\Util\DrupalCoreComposer
    *   DrupalCoreComposer fixture.
    */
-  public function drupalCoreComposerFixture() {
+  public function drupalCoreComposerFixture(): DrupalCoreComposer {
     return new DrupalCoreComposer($this->composerJson(), $this->composerLock());
   }
 

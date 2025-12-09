@@ -395,7 +395,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
    * @return string
    *   Default value.
    */
-  public static function mockDefaultValueCallback($entity, $definition) {
+  public static function mockDefaultValueCallback($entity, $definition): string {
     return 'a default value';
   }
 

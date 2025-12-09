@@ -27,7 +27,7 @@ class MemoryCacheGenericTest extends GenericCacheBackendUnitTestBase {
    * @return \Drupal\Core\Cache\CacheBackendInterface
    *   A new MemoryBackend object.
    */
-  protected function createCacheBackend($bin) {
+  protected function createCacheBackend($bin): MemoryCache {
     $backend = new MemoryCache(\Drupal::service(TimeInterface::class));
     \Drupal::service('cache_tags.invalidator')->addInvalidator($backend);
     return $backend;

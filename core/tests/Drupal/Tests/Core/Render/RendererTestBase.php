@@ -305,7 +305,7 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
-  public static function callback($animal, $use_animal_as_array_key = FALSE) {
+  public static function callback($animal, $use_animal_as_array_key = FALSE): array {
     $value = $animal;
     if ($use_animal_as_array_key) {
       $value = [$animal => TRUE];
@@ -361,14 +361,14 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return bool
    *   TRUE, which is not a valid return value for a lazy builder.
    */
-  public static function callbackNonArrayReturn() {
+  public static function callbackNonArrayReturn(): bool {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks() {
+  public static function trustedCallbacks(): array {
     return ['callbackTagCurrentTemperature', 'callbackPerUser', 'callback', 'callbackNonArrayReturn'];
   }
 

@@ -58,7 +58,7 @@ class BaseFieldOverrideTest extends KernelTestBase {
   /**
    * Test cases for ::testGetClass.
    */
-  public static function getClassTestCases() {
+  public static function getClassTestCases(): array {
     return [
       'String (default class)' => [
         'string',
@@ -128,7 +128,7 @@ class BaseFieldOverrideTest extends KernelTestBase {
    * @return int
    *   A primitive default value.
    */
-  public static function defaultValueCallbackPrimitive() {
+  public static function defaultValueCallbackPrimitive(): int {
     return 99;
   }
 

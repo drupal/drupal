@@ -17,6 +17,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 
 /**
  * Tests Drupal\Core\Render\Renderer.
@@ -1179,7 +1180,7 @@ HTML;
    * @return \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\Builder\InvocationMocker
    *   The mocked theme manager.
    */
-  protected function setupThemeManagerForDetails() {
+  protected function setupThemeManagerForDetails(): InvocationMocker {
     return $this->themeManager->expects($this->any())
       ->method('render')
       ->willReturnCallback(function ($theme, array $vars) {
@@ -1215,7 +1216,7 @@ class RecursivePlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
-  public static function callback($animal) {
+  public static function callback($animal): array {
     return [
       'another' => [
         '#create_placeholder' => TRUE,
@@ -1227,7 +1228,7 @@ class RecursivePlaceholdersTest implements TrustedCallbackInterface {
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks() {
+  public static function trustedCallbacks(): array {
     return ['callback'];
   }
 

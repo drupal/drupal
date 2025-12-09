@@ -84,7 +84,7 @@ class StorageReplaceDataWrapperTest extends ConfigStorageTestBase {
    * @return array
    *   Returns an array of collection names.
    */
-  public static function providerCollections() {
+  public static function providerCollections(): array {
     return [
       [StorageInterface::DEFAULT_COLLECTION],
       ['foo.bar'],

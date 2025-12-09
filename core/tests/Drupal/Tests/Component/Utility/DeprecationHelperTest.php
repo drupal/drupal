@@ -29,8 +29,8 @@ class DeprecationHelperTest extends TestCase {
       $result = DeprecationHelper::backwardsCompatibleCall(
         $currentVersion,
         $deprecatedVersion,
-        fn() => 'current',
-        fn() => 'deprecated',
+        fn(): string => 'current',
+        fn(): string => 'deprecated',
       );
       $this->assertEquals($expectedCallable, $result, "Change introduced in $deprecatedVersion should return $expectedCallable for core version $currentVersion");
     }

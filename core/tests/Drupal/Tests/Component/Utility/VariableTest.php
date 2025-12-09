@@ -91,7 +91,7 @@ class VariableTest extends TestCase {
    *     - The expected export string.
    *     - The variable to export.
    */
-  public static function providerTestExport() {
+  public static function providerTestExport(): array {
     return [
       // Array.
       [

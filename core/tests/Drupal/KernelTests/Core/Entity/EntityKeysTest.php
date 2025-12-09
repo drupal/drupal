@@ -46,7 +46,7 @@ class EntityKeysTest extends EntityKernelTestBase {
   /**
    * Data provider for ::testMultipleKeysCache.
    */
-  public static function multipleKeysCacheTestCases() {
+  public static function multipleKeysCacheTestCases(): array {
     return [
       'translatable Entity Key' => [
         TRUE,

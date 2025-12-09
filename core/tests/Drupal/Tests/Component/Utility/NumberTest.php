@@ -66,7 +66,7 @@ class NumberTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Utility\Number::testValidStep
    */
-  public static function providerTestValidStep() {
+  public static function providerTestValidStep(): array {
     return [
       // Value and step equal.
       [10.3, 10.3, TRUE],
@@ -104,7 +104,7 @@ class NumberTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Utility\NumberTest::testValidStepOffset()
    */
-  public static function providerTestValidStepOffset() {
+  public static function providerTestValidStepOffset(): array {
     return [
       // Try obvious fits.
       [11.3, 10.3, 1, TRUE],
@@ -150,7 +150,7 @@ class NumberTest extends TestCase {
    *
    * @see testConversions()
    */
-  public static function providerTestConversions() {
+  public static function providerTestConversions(): array {
     return [
       [0, '00'],
       [1, '01'],

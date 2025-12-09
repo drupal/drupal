@@ -28,7 +28,7 @@ class CacheCollectorHelper extends CacheCollector {
   /**
    * {@inheritdoc}
    */
-  public function set($key, $value) {
+  public function set($key, $value): void {
     parent::set($key, $value);
     $this->persist($key);
   }
@@ -53,7 +53,7 @@ class CacheCollectorHelper extends CacheCollector {
    * @param mixed $value
    *   The value to return.
    */
-  public function setCacheMissData($key, $value) {
+  public function setCacheMissData($key, $value): void {
     $this->cacheMissData[$key] = $value;
   }
 

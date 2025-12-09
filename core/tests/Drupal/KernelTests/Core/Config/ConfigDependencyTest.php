@@ -254,7 +254,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   /**
    * Data provider for self::testConfigEntityUninstallComplex().
    */
-  public static function providerConfigEntityUninstallComplex() {
+  public static function providerConfigEntityUninstallComplex(): array {
     // Ensure that alphabetical order has no influence on dependency fixing and
     // removal.
     return [

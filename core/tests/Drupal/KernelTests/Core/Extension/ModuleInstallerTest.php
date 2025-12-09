@@ -131,7 +131,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
   /**
    * Data provider for testInvalidCoreInstall().
    */
-  public static function providerTestInvalidCoreInstall() {
+  public static function providerTestInvalidCoreInstall(): array {
     return [
       'no dependencies system_core_incompatible_semver_test' => [
         'system_core_incompatible_semver_test',

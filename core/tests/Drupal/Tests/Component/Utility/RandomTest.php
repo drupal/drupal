@@ -211,7 +211,7 @@ class RandomTest extends TestCase {
    * @see \Drupal\Component\Utility\Random::name()
    * @see \Drupal\Tests\Component\Utility\RandomTest::testRandomStringValidator()
    */
-  public function _RandomStringValidate($string) {
+  public function _RandomStringValidate($string): bool {
     // Return FALSE for the first generated string and any string that is the
     // same, as the test expects a different string to be returned.
     if (empty($this->firstStringGenerated) || $string == $this->firstStringGenerated) {

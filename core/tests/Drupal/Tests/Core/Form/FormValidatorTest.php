@@ -207,7 +207,7 @@ class FormValidatorTest extends UnitTestCase {
     $this->assertSame($expected, $form_state->getValues());
   }
 
-  public static function providerTestHandleErrorsWithLimitedValidation() {
+  public static function providerTestHandleErrorsWithLimitedValidation(): array {
     return [
       // Test with a non-existent section.
       [
@@ -353,7 +353,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_validator->validateForm('test_form_id', $form, $form_state);
   }
 
-  public static function providerTestRequiredErrorMessage() {
+  public static function providerTestRequiredErrorMessage(): array {
     return [
       [
         // Use the default message with a title.
@@ -437,7 +437,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_validator->validateForm('test_form_id', $form, $form_state);
   }
 
-  public static function providerTestPerformRequiredValidation() {
+  public static function providerTestPerformRequiredValidation(): array {
     return [
       [
         [

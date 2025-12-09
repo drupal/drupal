@@ -21,7 +21,7 @@ class ApcuBackendTest extends GenericCacheBackendUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function createCacheBackend($bin) {
+  protected function createCacheBackend($bin): ApcuBackend {
     return new ApcuBackend($bin, $this->databasePrefix, \Drupal::service('cache_tags.invalidator.checksum'), \Drupal::service(TimeInterface::class));
   }
 

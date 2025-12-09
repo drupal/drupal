@@ -21,14 +21,14 @@ class FormValidationMessageOrderTest extends KernelTestBase implements FormInter
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'form_validation_error_message_order_test';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     // Prepare fields with weights specified.
     $form['one'] = [
       '#type' => 'textfield',

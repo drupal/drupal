@@ -375,11 +375,11 @@ class AccessPolicyProcessorTest extends UnitTestCase {
     ?CacheBackendInterface $cache_static = NULL,
     ?AccountProxyInterface $current_user = NULL,
     ?AccountSwitcherInterface $account_switcher = NULL,
-  ) {
+  ): AccessPolicyProcessor {
     // Prophecy does not accept a willReturn call on a mocked method if said
     // method has a return type of void. However, without willReturn() or any
     // other will* call, the method mock will not be registered.
-    $prophecy_workaround = function () {};
+    $prophecy_workaround = function (): void {};
 
     if (!isset($variation_cache)) {
       $variation_cache = $this->prophesize(VariationCacheInterface::class);

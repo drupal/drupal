@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Reference;
 #[Group('DependencyInjection')]
 class TaggedHandlersPassTest extends UnitTestCase {
 
-  protected function buildContainer($environment = 'dev') {
+  protected function buildContainer($environment = 'dev'): ContainerBuilder {
     $container = new ContainerBuilder();
     $container->setParameter('kernel.environment', $environment);
     return $container;

@@ -21,14 +21,14 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'test_form_handlers';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['#validate'][] = '::customValidateForm';
     $form['#submit'][] = '::customSubmitForm';
     $form['submit'] = ['#type' => 'submit', '#value' => 'Save'];

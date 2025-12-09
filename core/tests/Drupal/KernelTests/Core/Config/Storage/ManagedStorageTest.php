@@ -20,7 +20,7 @@ class ManagedStorageTest extends ConfigStorageTestBase implements StorageManager
   /**
    * {@inheritdoc}
    */
-  public function getStorage() {
+  public function getStorage(): MemoryStorage {
     // We return a new storage every time to make sure the managed storage
     // only calls this once and retains the configuration by itself.
     return new MemoryStorage();

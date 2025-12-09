@@ -400,6 +400,9 @@ DOCBLOCK;
 
     }
 
+    /**
+     * @phpstan-ignore missingType.return
+     */
     public static function getAnnotationVarTypeProviderValid()
     {
         //({attribute name}, {attribute value})
@@ -453,6 +456,9 @@ DOCBLOCK;
         );
     }
 
+    /**
+     * @phpstan-ignore missingType.return
+     */
     public static function getAnnotationVarTypeProviderInvalid()
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
@@ -506,6 +512,9 @@ DOCBLOCK;
         );
     }
 
+    /**
+     * @phpstan-ignore missingType.return
+     */
     public static function getAnnotationVarTypeArrayProviderInvalid()
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
@@ -768,6 +777,9 @@ DOCBLOCK;
         $parser->parse($docblock);
     }
 
+    /**
+     * @phpstan-ignore missingType.return
+     */
     public static function getConstantsProvider()
     {
         $provider[] = array(
@@ -1089,6 +1101,9 @@ DOCBLOCK;
         self::assertInstanceOf(Autoload::class, $annotations[0]);
     }
 
+    /**
+     * @phpstan-ignore missingType.return
+     */
     public function createTestParser()
     {
         $parser = new DocParser();

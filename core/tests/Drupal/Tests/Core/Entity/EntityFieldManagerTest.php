@@ -316,7 +316,7 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $this->moduleHandler->invokeAllWith('entity_base_field_info', Argument::any());
     $this->moduleHandler->invokeAllWith('entity_field_storage_info', Argument::any())
-      ->will(function ($arguments) use ($definitions) {
+      ->will(function ($arguments) use ($definitions): void {
         [, $callback] = $arguments;
         $callback(
           function () use ($definitions) {
@@ -364,7 +364,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode() {
+  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode(): array {
     return [
       ['default_langcode'],
       ['custom_default_langcode_key'],
@@ -407,7 +407,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode() {
+  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode(): array {
     return [
       [FALSE, TRUE, TRUE],
       [TRUE, FALSE, TRUE],
@@ -430,7 +430,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->willReturn(FALSE)
       ->shouldBeCalled();
     $this->cacheBackend->set('entity_base_field_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
-      ->will(function (array $args) use ($cacheBackend) {
+      ->will(function (array $args) use ($cacheBackend): void {
         $data = (object) ['data' => $args[1]];
         $cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
           ->willReturn($data)
@@ -461,7 +461,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->willReturn(FALSE)
       ->shouldBeCalledTimes(1);
     $this->cacheBackend->set('entity_bundle_field_definitions:test_entity_type:test_bundle:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
-      ->will(function (array $args) use ($cacheBackend) {
+      ->will(function (array $args) use ($cacheBackend): void {
         $data = (object) ['data' => $args[1]];
         $cacheBackend->get('entity_bundle_field_definitions:test_entity_type:test_bundle:en')
           ->willReturn($data)
@@ -487,7 +487,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $definitions = ['field_storage' => $field_storage_definition->reveal()];
 
     $this->moduleHandler->invokeAllWith('entity_field_storage_info', Argument::any())
-      ->will(function ($arguments) use ($definitions) {
+      ->will(function ($arguments) use ($definitions): void {
         [, $callback] = $arguments;
         $callback(
           function () use ($definitions) {
@@ -510,7 +510,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->cacheBackend->get('entity_field_storage_definitions:test_entity_type:en')->willReturn(FALSE);
 
     $this->cacheBackend->set('entity_field_storage_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
-      ->will(function () use ($expected, $cacheBackend) {
+      ->will(function () use ($expected, $cacheBackend): void {
         $cacheBackend->get('entity_field_storage_definitions:test_entity_type:en')
           ->willReturn((object) ['data' => $expected])
           ->shouldBeCalled();
@@ -563,7 +563,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $field_definition->setTargetBundle('test_bundle')->shouldBeCalled();
 
     $this->moduleHandler->invokeAllWith(Argument::type('string'), Argument::any())
-      ->will(function ($arguments) use ($field_definition, $module) {
+      ->will(function ($arguments) use ($field_definition, $module): void {
         [, $callback] = $arguments;
         $callback(
           function () use ($field_definition) {

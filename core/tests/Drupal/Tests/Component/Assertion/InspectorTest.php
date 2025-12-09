@@ -30,7 +30,7 @@ class InspectorTest extends TestCase {
     $this->assertSame($expected, Inspector::assertAllStrings($input));
   }
 
-  public static function providerTestAssertAllStrings() {
+  public static function providerTestAssertAllStrings(): array {
     $data = [
       'empty-array' => [[], TRUE],
       'array-with-strings' => [['foo', 'bar'], TRUE],
@@ -231,14 +231,14 @@ class InspectorTest extends TestCase {
   /**
    * Defines a test method referenced by ::testAllCallable().
    */
-  public function callMe() {
+  public function callMe(): bool {
     return TRUE;
   }
 
   /**
    * Defines a test method referenced by ::testAllCallable().
    */
-  public static function callMeStatic() {
+  public static function callMeStatic(): bool {
     return TRUE;
   }
 

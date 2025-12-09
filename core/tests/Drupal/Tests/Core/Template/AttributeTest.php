@@ -296,7 +296,7 @@ class AttributeTest extends UnitTestCase {
    *   An array of test data each containing of a twig template string,
    *   a resulting string of classes and an optional array of attributes.
    */
-  public static function providerTestAttributeClassHelpers() {
+  public static function providerTestAttributeClassHelpers(): array {
     // cSpell:disable
     return [
       ["{{ attributes.class }}", ''],
@@ -381,7 +381,7 @@ class AttributeTest extends UnitTestCase {
     $this->assertEquals($expected, (new Attribute($attributes))->__toString());
   }
 
-  public static function providerTestAttributeValues() {
+  public static function providerTestAttributeValues(): array {
     $data = [];
 
     $string = '"> <script>alert(123)</script>"';
@@ -492,7 +492,7 @@ class AttributeTest extends UnitTestCase {
    *   An array of test data each containing an array of attributes, the name
    *   of the attribute to check existence of, and the expected result.
    */
-  public static function providerTestHasAttribute() {
+  public static function providerTestHasAttribute(): array {
     return [
       [['class' => ['example-class']], 'class', TRUE],
       [[], 'class', FALSE],
@@ -520,7 +520,7 @@ class AttributeTest extends UnitTestCase {
    *   An array of test data each containing an initial Attribute object, an
    *   Attribute object or array to be merged, and the expected result.
    */
-  public static function providerTestMerge() {
+  public static function providerTestMerge(): array {
     return [
       [new Attribute([]), new Attribute(['class' => ['class1']]), new Attribute(['class' => ['class1']])],
       [new Attribute(['class' => ['example-class']]), new Attribute(['class' => ['class1']]), new Attribute(['class' => ['example-class', 'class1']])],

@@ -48,14 +48,14 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public static function open(array &$connection_options = []) {
+  public static function open(array &$connection_options = []): \stdClass {
     return new \stdClass();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function queryRange($query, $from, $count, array $args = [], array $options = []) {
+  public function queryRange($query, $from, $count, array $args = [], array $options = []): NULL {
     return NULL;
   }
 
@@ -69,7 +69,7 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function databaseType() {
+  public function databaseType(): string {
     return 'stub';
   }
 
@@ -81,7 +81,7 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function mapConditionOperator($operator) {
+  public function mapConditionOperator($operator): NULL {
     return NULL;
   }
 
@@ -98,14 +98,14 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function exceptionHandler() {
+  public function exceptionHandler(): ExceptionHandler {
     return new ExceptionHandler();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function upsert($table, array $options = []) {
+  public function upsert($table, array $options = []): StubUpsert {
     return new StubUpsert($this, $table, $options);
   }
 
@@ -122,7 +122,7 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function condition($conjunction) {
+  public function condition($conjunction): StubCondition {
     return new StubCondition($conjunction);
   }
 

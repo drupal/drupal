@@ -90,7 +90,7 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
    * @return array
    *   Arrays with original file name.
    */
-  public static function provideFilenames() {
+  public static function provideFilenames(): array {
     return [
       'ASCII filename with extension' => [
         'example.txt',

@@ -37,7 +37,7 @@ class PercentagesTest extends UnitTestCase {
    *   An array of data used by the test. The array values, in order, are the
    *   total count, the current count, and the expected percentage.
    */
-  public static function providerTestPercentages() {
+  public static function providerTestPercentages(): array {
     // Set up an array of test cases.
     return [
       // 1/2 is 50%.

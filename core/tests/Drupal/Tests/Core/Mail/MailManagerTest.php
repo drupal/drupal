@@ -189,7 +189,7 @@ class MailManagerTest extends UnitTestCase {
 
     $this->renderer->expects($this->exactly(1))
       ->method('executeInRenderContext')
-      ->willReturnCallback(function (RenderContext $render_context, $callback) {
+      ->willReturnCallback(function (RenderContext $render_context, $callback): void {
         $message = $callback();
         $this->assertEquals('example', $message['module']);
       });

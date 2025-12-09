@@ -237,7 +237,7 @@ class TokenTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->any())
       ->method('alter')
-      ->willReturnCallback(function ($hook_name, array &$replacements, array $context, BubbleableMetadata $bubbleable_metadata) {
+      ->willReturnCallback(function ($hook_name, array &$replacements, array $context, BubbleableMetadata $bubbleable_metadata): void {
         $replacements['[node:title]'] = 'hello world';
         $bubbleable_metadata->addCacheContexts(['custom_context']);
         $bubbleable_metadata->addCacheTags(['node:1']);
@@ -295,7 +295,7 @@ class TokenTest extends UnitTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  public static function providerTestReplaceEscaping() {
+  public static function providerTestReplaceEscaping(): array {
     $data = [];
 
     // No tokens. The first argument to Token::replace() should not be escaped.

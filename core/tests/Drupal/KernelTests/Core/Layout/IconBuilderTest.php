@@ -44,7 +44,7 @@ class IconBuilderTest extends KernelTestBase {
   /**
    * Returns data for testing the icon builder.
    */
-  public static function providerTestBuild() {
+  public static function providerTestBuild(): array {
     $data = [];
     $data['empty'][] = (new SvgIconBuilder());
     $data['empty'][] = [];

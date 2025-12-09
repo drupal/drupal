@@ -109,7 +109,7 @@ final class DeprecationHandler {
       if (!is_file($ignoreFile)) {
         throw new \InvalidArgumentException(sprintf('The ignoreFile "%s" does not exist.', $ignoreFile));
       }
-      set_error_handler(static function ($t, $m) use ($ignoreFile, &$line) {
+      set_error_handler(static function ($t, $m) use ($ignoreFile, &$line): void {
         throw new \RuntimeException(sprintf('Invalid pattern found in "%s" on line "%d"', $ignoreFile, 1 + $line) . substr($m, 12));
       });
       try {

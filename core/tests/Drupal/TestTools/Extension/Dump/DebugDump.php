@@ -95,7 +95,7 @@ final class DebugDump implements Extension {
     $dump = [];
     $dumper->dump(
       $cloner->cloneVar($var),
-      function ($line, $depth, $indent_pad) use (&$dump) {
+      function ($line, $depth, $indent_pad) use (&$dump): void {
         // A negative depth means "end of dump".
         if ($depth >= 0) {
           // Adds a two spaces indentation to the line.

@@ -101,7 +101,7 @@ class FileCacheFactoryTest extends TestCase {
   /**
    * Data provider for testGetConfigurationOverrides().
    */
-  public static function configurationDataProvider() {
+  public static function configurationDataProvider(): array {
     $data = [];
 
     // Test fallback configuration.

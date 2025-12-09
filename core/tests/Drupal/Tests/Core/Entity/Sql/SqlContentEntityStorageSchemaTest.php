@@ -1379,7 +1379,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             return $expected_table_schemas[$invocation_count] == $table_schema;
           })
         )
-        ->willReturnCallback(function () use (&$invocation_count) {
+        ->willReturnCallback(function () use (&$invocation_count): void {
           $invocation_count++;
         });
     }
@@ -1569,7 +1569,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * Provides data for testCastValue().
    */
-  public static function providerSchemaCastValue() {
+  public static function providerSchemaCastValue(): array {
     $cases = [];
     // Tests NULL values.
     $cases[] = [

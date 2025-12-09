@@ -48,7 +48,7 @@ class PoHeaderTest extends TestCase {
    *   Pairs of plural expressions and expected plural positions keyed by plural
    *   value.
    */
-  public static function providerTestPluralsFormula() {
+  public static function providerTestPluralsFormula(): array {
     return [
       [
         'nplurals=1; plural=0;',

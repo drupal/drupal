@@ -79,7 +79,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    *
    * @see testRender
    */
-  public static function providerTestRender() {
+  public static function providerTestRender(): array {
     $create_link_element = function ($href, $media = 'all', $custom_attributes = []) {
       $attributes = [
         'rel' => 'stylesheet',

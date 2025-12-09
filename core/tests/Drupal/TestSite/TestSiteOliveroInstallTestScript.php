@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\TestSite;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\node\Entity\Node;
-use Drupal\comment\Entity\Comment;
 
 /**
  * Setup file used by TestSiteInstallTestScript.
@@ -19,7 +19,7 @@ class TestSiteOliveroInstallTestScript implements TestSetupInterface {
   /**
    * {@inheritdoc}
    */
-  public function setup() {
+  public function setup(): void {
     // Install required module for the Olivero front page.
     $module_installer = \Drupal::service('module_installer');
     assert($module_installer instanceof ModuleInstallerInterface);

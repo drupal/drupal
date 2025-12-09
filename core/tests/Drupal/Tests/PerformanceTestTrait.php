@@ -9,11 +9,11 @@ use Drupal\performance_test\Cache\CacheTagOperation;
 use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
 use OpenTelemetry\Contrib\Otlp\SpanExporter;
-use OpenTelemetry\SDK\Trace\SpanProcessor\SimpleSpanProcessor;
-use OpenTelemetry\SDK\Trace\TracerProvider;
+use OpenTelemetry\SDK\Common\Attribute\Attributes;
 use OpenTelemetry\SDK\Resource\ResourceInfo;
 use OpenTelemetry\SDK\Resource\ResourceInfoFactory;
-use OpenTelemetry\SDK\Common\Attribute\Attributes;
+use OpenTelemetry\SDK\Trace\SpanProcessor\SimpleSpanProcessor;
+use OpenTelemetry\SDK\Trace\TracerProvider;
 use OpenTelemetry\SemConv\Incubating\Attributes\DeploymentIncubatingAttributes;
 use OpenTelemetry\SemConv\Incubating\Attributes\ServiceIncubatingAttributes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,7 +47,7 @@ trait PerformanceTestTrait {
    *
    * @see \Drupal\Tests\BrowserTestBase::installModulesFromClassProperty()
    */
-  private function doInstallModulesFromClassProperty(ContainerInterface $container) {
+  private function doInstallModulesFromClassProperty(ContainerInterface $container): void {
     // Bypass everything that WebDriverTestBase does here to get closer to
     // a production configuration.
     BrowserTestBase::installModulesFromClassProperty($container);

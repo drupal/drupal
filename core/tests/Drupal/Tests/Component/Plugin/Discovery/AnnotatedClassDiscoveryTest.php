@@ -27,7 +27,7 @@ class AnnotatedClassDiscoveryTest extends TestCase {
    *
    * @var string[]
    */
-  public static function provideBadAnnotations() {
+  public static function provideBadAnnotations(): array {
     return [
       ['addtogroup'],
       ['code'],
@@ -83,7 +83,7 @@ class AnnotatedClassDiscoveryTest extends TestCase {
 
     // Register our class loader which will fail if the annotation reader tries
     // to autoload disallowed annotations.
-    $class_loader = function ($class_name) use ($annotation) {
+    $class_loader = function ($class_name) use ($annotation): void {
       $name_array = explode('\\', $class_name);
       $name = array_pop($name_array);
       if ($name == $annotation) {

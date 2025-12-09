@@ -70,7 +70,7 @@ class CacheContextsManagerTest extends UnitTestCase {
   /**
    * Provides a list of context token sets.
    */
-  public static function providerTestOptimizeTokens() {
+  public static function providerTestOptimizeTokens(): array {
     return [
       [['a', 'x'], ['a', 'x']],
       [['a.b', 'x'], ['a.b', 'x']],
@@ -158,7 +158,7 @@ class CacheContextsManagerTest extends UnitTestCase {
   /**
    * Provides a list of invalid 'baz' cache contexts: the parameter is missing.
    */
-  public static function providerTestInvalidCalculatedContext() {
+  public static function providerTestInvalidCalculatedContext(): array {
     return [
       ['baz'],
       ['baz:'],
@@ -210,7 +210,7 @@ class CacheContextsManagerTest extends UnitTestCase {
    * @return array
    *   An array of cache context token arrays.
    */
-  public static function validateTokensProvider() {
+  public static function validateTokensProvider(): array {
     return [
       [[], FALSE],
       [['foo'], FALSE],
@@ -264,21 +264,21 @@ class FooCacheContext implements CacheContextInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getLabel() {
+  public static function getLabel(): string {
     return 'Foo';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): string {
     return 'bar';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheableMetadata() {
+  public function getCacheableMetadata(): CacheableMetadata {
     return new CacheableMetadata();
   }
 
@@ -292,14 +292,14 @@ class BazCacheContext implements CalculatedCacheContextInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getLabel() {
+  public static function getLabel(): string {
     return 'Baz';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getContext($parameter = NULL) {
+  public function getContext($parameter = NULL): string {
     if (!is_string($parameter) || strlen($parameter) === 0) {
       throw new \Exception();
     }
@@ -309,7 +309,7 @@ class BazCacheContext implements CalculatedCacheContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCacheableMetadata($parameter = NULL) {
+  public function getCacheableMetadata($parameter = NULL): CacheableMetadata {
     return new CacheableMetadata();
   }
 
@@ -323,14 +323,14 @@ class NoOptimizeCacheContext implements CacheContextInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getLabel() {
+  public static function getLabel(): string {
     return 'Foo';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): string {
     return 'bar';
   }
 

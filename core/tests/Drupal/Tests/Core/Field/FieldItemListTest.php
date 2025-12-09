@@ -83,7 +83,7 @@ class FieldItemListTest extends UnitTestCase {
   /**
    * Data provider for testEquals.
    */
-  public static function providerTestEquals() {
+  public static function providerTestEquals(): array {
     // Tests field item lists with no values.
     $datasets[] = [TRUE];
 

@@ -90,7 +90,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * Provides data for testCheckRequirements().
    */
-  public static function providerTestCheckRequirements() {
+  public static function providerTestCheckRequirements(): array {
     $requirement_optional = new ContextDefinition();
     $requirement_optional->setRequired(FALSE);
 
@@ -145,7 +145,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * Provides data for testGetMatchingContexts().
    */
-  public static function providerTestGetMatchingContexts() {
+  public static function providerTestGetMatchingContexts(): array {
     $requirement_any = new ContextDefinition();
 
     $requirement_specific = new ContextDefinition('string');
@@ -198,7 +198,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * Provides data for testFilterPluginDefinitionsByContexts().
    */
-  public static function providerTestFilterPluginDefinitionsByContexts() {
+  public static function providerTestFilterPluginDefinitionsByContexts(): array {
     $data = [];
 
     $plugins = [];

@@ -40,7 +40,7 @@ class ContentLengthTest extends UnitTestCase {
     $this->assertSame((string) $expected_header, $response->headers->get('Content-Length'));
   }
 
-  public static function providerTestSetContentLengthHeader() {
+  public static function providerTestSetContentLengthHeader(): array {
     return [
       'Informational' => [
         FALSE,

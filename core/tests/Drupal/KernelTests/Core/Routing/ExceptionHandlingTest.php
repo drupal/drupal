@@ -152,7 +152,7 @@ class ExceptionHandlingTest extends KernelTestBase {
    *
    * @see \Drupal\system\Tests\Routing\ExceptionHandlingTest::testExceptionResponseGeneratedForOriginalRequest()
    */
-  protected function doTest404Route($path) {
+  protected function doTest404Route($path): Response {
     $this->config('system.site')->set('page.404', $path)->save();
 
     $request = Request::create('/not-found');

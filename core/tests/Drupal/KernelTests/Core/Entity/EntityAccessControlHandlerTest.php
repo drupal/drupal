@@ -349,7 +349,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   /**
    * Provides entity data for testing access.
    */
-  public static function providerTestFieldAccess() {
+  public static function providerTestFieldAccess(): array {
     return [
       'serial ID entity' => [
         EntityTest::class,

@@ -89,7 +89,7 @@ class TrustedRedirectResponseTest extends UnitTestCase {
    * @return array
    *   An array of test cases, each containing a redirect response instance.
    */
-  public static function providerCreateFromRedirectResponse() {
+  public static function providerCreateFromRedirectResponse(): array {
     return [
       'cacheable-with-tags' => [(new CacheableRedirectResponse('/example'))->addCacheableDependency((new CacheableMetadata())->addCacheTags(['foo']))],
       'cacheable-with-max-age-0' => [(new CacheableRedirectResponse('/example'))->addCacheableDependency((new CacheableMetadata())->setCacheMaxAge(0))],

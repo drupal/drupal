@@ -21,7 +21,7 @@ class AttributesTest extends UnitTestCase {
    * @return array
    *   An array of attributes, expected output, and descriptions.
    */
-  public static function providerTestAttributeData() {
+  public static function providerTestAttributeData(): array {
     return [
       // Verify that special characters are HTML encoded.
       [['&"\'<>' => 'value'], ' &amp;&quot;&#039;&lt;&gt;="value"', 'HTML encode attribute names.'],

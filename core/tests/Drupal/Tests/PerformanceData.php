@@ -138,7 +138,7 @@ class PerformanceData {
    * @param int $count
    *   The number of script requests recorded.
    */
-  public function setScriptCount(int $count) {
+  public function setScriptCount(int $count): void {
     $this->scriptCount = $count;
   }
 
@@ -253,7 +253,7 @@ class PerformanceData {
    *   Count of cache get operations keyed by bin.
    */
   public function getCacheGetCountByBin(): array {
-    return array_map(fn (array $cids) => count($cids), $this->cacheOperations['get'] ?? []);
+    return array_map(fn (array $cids): int => count($cids), $this->cacheOperations['get'] ?? []);
   }
 
   /**
@@ -263,7 +263,7 @@ class PerformanceData {
    *   Count of cache set operations keyed by bin.
    */
   public function getCacheSetCountByBin(): array {
-    return array_map(fn (array $cids) => count($cids), $this->cacheOperations['set'] ?? []);
+    return array_map(fn (array $cids): int => count($cids), $this->cacheOperations['set'] ?? []);
   }
 
   /**
@@ -273,7 +273,7 @@ class PerformanceData {
    *   Count of cache delete operations keyed by bin.
    */
   public function getCacheDeleteCountByBin(): array {
-    return array_map(fn (array $cids) => count($cids), $this->cacheOperations['delete'] ?? []);
+    return array_map(fn (array $cids): int => count($cids), $this->cacheOperations['delete'] ?? []);
   }
 
   /**

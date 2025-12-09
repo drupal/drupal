@@ -355,14 +355,14 @@ class FieldDefinitionTest extends UnitTestCase {
    * @return string
    *   Default value.
    */
-  public static function mockDefaultValueCallback($entity, $definition) {
+  public static function mockDefaultValueCallback($entity, $definition): string {
     return 'a default value';
   }
 
   /**
    * A data provider for all the types of factories that can create definitions.
    */
-  public static function factoryTypeProvider() {
+  public static function factoryTypeProvider(): array {
     return [
       '::createFromFieldStorageDefinition factory' => [
         'createFromFieldStorageDefinition',

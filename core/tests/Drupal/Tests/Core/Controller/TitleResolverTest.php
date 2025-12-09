@@ -255,7 +255,7 @@ class TitleCallback {
    * @return string|array|null
    *   Returns the example value.
    */
-  public function example(\Stringable|string|array|null $value) {
+  public function example(\Stringable|string|array|NULL $value): \Stringable|string|array|NULL {
     return $value;
   }
 

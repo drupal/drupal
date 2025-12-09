@@ -26,7 +26,7 @@ class CacheTest extends UnitTestCase {
    * @return array
    *   An array of cache tags arrays.
    */
-  public function validateTagsProvider() {
+  public function validateTagsProvider(): array {
     return [
       [[], FALSE],
       [['foo'], FALSE],
@@ -56,7 +56,7 @@ class CacheTest extends UnitTestCase {
    * @return array
    *   An array of pairs of cache tags arrays to be merged.
    */
-  public static function mergeTagsProvider() {
+  public static function mergeTagsProvider(): array {
     return [
       [[], [], []],
       [['bar', 'foo'], ['bar'], ['foo']],
@@ -85,7 +85,7 @@ class CacheTest extends UnitTestCase {
    * @return array
    *   An array of pairs of cache tags arrays to be merged.
    */
-  public static function mergeMaxAgesProvider() {
+  public static function mergeMaxAgesProvider(): array {
     return [
       [Cache::PERMANENT, Cache::PERMANENT, Cache::PERMANENT],
       [60, 60, 60],
@@ -126,7 +126,7 @@ class CacheTest extends UnitTestCase {
    * @return array
    *   An array of pairs of cache contexts arrays to be merged.
    */
-  public static function mergeCacheContextsProvide() {
+  public static function mergeCacheContextsProvide(): array {
     return [
       [[], [], []],
       [['foo'], [], ['foo']],
@@ -167,7 +167,7 @@ class CacheTest extends UnitTestCase {
    * @return array
    *   An array of pairs of (prefix, suffixes) to build cache tags from.
    */
-  public static function buildTagsProvider() {
+  public static function buildTagsProvider(): array {
     return [
       ['node', [1], ['node:1']],
       ['node', [1, 2, 3], ['node:1', 'node:2', 'node:3']],

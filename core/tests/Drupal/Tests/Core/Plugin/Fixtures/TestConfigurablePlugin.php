@@ -16,7 +16,7 @@ class TestConfigurablePlugin extends ConfigurablePluginBase implements Removable
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
+  public function calculateDependencies(): array {
     return [];
   }
 

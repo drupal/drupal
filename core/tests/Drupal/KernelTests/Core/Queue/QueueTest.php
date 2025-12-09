@@ -109,7 +109,7 @@ class QueueTest extends KernelTestBase {
   /**
    * Returns the number of equal items in two arrays.
    */
-  protected function queueScore($items, $new_items) {
+  protected function queueScore($items, $new_items): int {
     $score = 0;
     foreach ($items as $item) {
       foreach ($new_items as $new_item) {

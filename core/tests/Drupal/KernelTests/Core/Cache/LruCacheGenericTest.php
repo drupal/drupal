@@ -27,7 +27,7 @@ class LruCacheGenericTest extends GenericCacheBackendUnitTestBase {
    * @return \Drupal\Core\Cache\CacheBackendInterface
    *   A new MemoryBackend object.
    */
-  protected function createCacheBackend($bin) {
+  protected function createCacheBackend($bin): LruMemoryCache {
     $backend = new LruMemoryCache(\Drupal::service(TimeInterface::class), 300);
     \Drupal::service('cache_tags.invalidator')->addInvalidator($backend);
     return $backend;

@@ -193,7 +193,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
   /**
    * Data provider for testFromUri().
    */
-  public static function providerLanguage() {
+  public static function providerLanguage(): array {
     return [
       ['en'],
       ['fr'],

@@ -269,7 +269,7 @@ CORE_INCOMPATIBILITY;
   /**
    * Data provider for testCoreIncompatibility().
    */
-  public static function providerCoreIncompatibility() {
+  public static function providerCoreIncompatibility(): array {
     // Remove possible stability suffix to properly parse 11.0-dev.
     $version = preg_replace('/-dev$/', '', \Drupal::VERSION);
     [$major, $minor] = explode('.', $version, 2);
@@ -382,7 +382,7 @@ INFO;
   /**
    * Data provider for testValidLifecycle().
    */
-  public static function providerValidLifecycle() {
+  public static function providerValidLifecycle(): array {
     return [
       'empty' => [
         '',
@@ -438,7 +438,7 @@ INFO;
   /**
    * Data provider for testInvalidLifecycle().
    */
-  public static function providerInvalidLifecycle() {
+  public static function providerInvalidLifecycle(): array {
     return [
       'bogus' => [
         'bogus',
@@ -495,7 +495,7 @@ INFO;
   /**
    * Data provider for testLifecycleLink().
    */
-  public static function providerLifecycleLink() {
+  public static function providerLifecycleLink(): array {
     return [
       'valid deprecated' => [
         ExtensionLifecycle::DEPRECATED,

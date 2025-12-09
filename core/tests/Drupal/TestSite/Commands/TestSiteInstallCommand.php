@@ -9,9 +9,9 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestSetupTrait;
+use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\TestSite\TestPreinstallInterface;
 use Drupal\TestSite\TestSetupInterface;
-use Drupal\Tests\RandomGeneratorTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -212,7 +212,7 @@ class TestSiteInstallCommand extends Command {
    * @param string $langcode
    *   (optional) The language to install the site in.
    */
-  public function setup($profile = 'testing', $setup_class = NULL, $langcode = 'en') {
+  public function setup($profile = 'testing', $setup_class = NULL, $langcode = 'en'): void {
     $this->profile = $profile;
     $this->langcode = $langcode;
     $this->setupBaseUrl();

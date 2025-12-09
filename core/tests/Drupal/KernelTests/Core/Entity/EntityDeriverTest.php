@@ -72,7 +72,7 @@ class EntityDeriverTest extends KernelTestBase {
   /**
    * Provides test data for ::testDerivatives().
    */
-  public static function derivativesProvider() {
+  public static function derivativesProvider(): array {
     return [
       'un-bundleable entity type with no bundle type' => ['entity:user', FALSE],
       'un-bundleable entity type with bundle type' => ['entity:user:user', TRUE],

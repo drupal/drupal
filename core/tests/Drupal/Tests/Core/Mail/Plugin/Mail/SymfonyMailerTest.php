@@ -106,31 +106,31 @@ class SymfonyMailerTest extends UnitTestCase {
     $mailer->expects($this->once())->method('send')
       ->with(
         $this->logicalAnd(
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getHeaders()->get('mime-version')->getBodyAsString() === '1.0'
           ),
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getHeaders()->has('content-type') === FALSE
           ),
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getHeaders()->has('content-transfer-encoding') === FALSE
           ),
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getHeaders()->get('x-mailer')->getBodyAsString() === 'Drupal'
           ),
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getHeaders()->get('from')->getBodyAsString() === '"Foo, Bar, and Baz" <from@example.org>'
           ),
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getHeaders()->get('reply-to')->getBodyAsString() === 'from@example.org'
           ),
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getHeaders()->get('to')->getBodyAsString() === 'to@example.org'
           ),
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getHeaders()->get('subject')->getBodyAsString() === "=?utf-8?Q?test?=$line_end =?utf-8?Q?subject?="
           ),
-          $this->callback(fn (Email $email) =>
+          $this->callback(fn (Email $email): bool =>
             $email->getTextBody() === ''
           )
         )

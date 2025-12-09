@@ -509,7 +509,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testing entity URIs.
    */
-  public static function providerTestEntityUris() {
+  public static function providerTestEntityUris(): array {
     return [
       [
         'entity:test_entity/1',
@@ -609,7 +609,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testing string entity URIs.
    */
-  public static function providerTestToUriStringForEntity() {
+  public static function providerTestToUriStringForEntity(): array {
     return [
       ['entity:test_entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
       ['entity:test_entity/1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
@@ -639,7 +639,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testing internal URIs.
    */
-  public static function providerTestToUriStringForInternal() {
+  public static function providerTestToUriStringForInternal(): array {
     return [
       // The four permutations of a regular path.
       ['internal:/test-entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
@@ -675,7 +675,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testFromValidInternalUri().
    */
-  public static function providerFromValidInternalUri() {
+  public static function providerFromValidInternalUri(): array {
     return [
       // Normal paths with a leading slash.
       ['/kittens'],
@@ -715,7 +715,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testFromInvalidInternalUri().
    */
-  public static function providerFromInvalidInternalUri() {
+  public static function providerFromInvalidInternalUri(): array {
     return [
       // Normal paths without a leading slash.
       'normal_path0' => ['kittens'],
@@ -761,7 +761,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testing route: URIs.
    */
-  public static function providerTestToUriStringForRoute() {
+  public static function providerTestToUriStringForRoute(): array {
     return [
       ['route:entity.test_entity.canonical;test_entity=1', [], 'route:entity.test_entity.canonical;test_entity=1'],
       ['route:entity.test_entity.canonical;test_entity=1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
@@ -809,7 +809,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for the access test methods.
    */
-  public static function accessProvider() {
+  public static function accessProvider(): array {
     return [
       [TRUE],
       [FALSE],

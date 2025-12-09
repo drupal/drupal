@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 #[Group('event_subscriber')]
 class RssResponseRelativeUrlFilterTest extends UnitTestCase {
 
-  public static function providerTestOnResponse() {
+  public static function providerTestOnResponse(): array {
     $data = [];
 
     $valid_feed = <<<RSS

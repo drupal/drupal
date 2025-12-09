@@ -322,7 +322,7 @@ EOS;
    * @return string
    *   The code of the entire proxy.
    */
-  protected function buildExpectedClass($class, $expected_methods_body, $interface_string = '') {
+  protected function buildExpectedClass($class, $expected_methods_body, $interface_string = ''): string {
     $namespace = ProxyBuilder::buildProxyNamespace($class);
     $reflection = new \ReflectionClass($class);
     $proxy_class = $reflection->getShortName();

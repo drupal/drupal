@@ -36,7 +36,7 @@ class DocumentElement extends TraversableElement {
    *
    * @return string
    */
-  public function getContent() {
+  public function getContent(): string {
     return trim($this->getDriver()->getContent());
   }
 

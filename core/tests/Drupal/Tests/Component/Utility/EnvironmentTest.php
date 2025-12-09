@@ -46,7 +46,7 @@ class EnvironmentTest extends TestCase {
    *   \Drupal\Component\Utility\Environment::checkMemoryLimit():
    *   required and memory_limit, and the expected return value.
    */
-  public static function providerTestCheckMemoryLimit() {
+  public static function providerTestCheckMemoryLimit(): array {
     return [
       // Minimal amount of memory should be available.
       ['30MB', NULL, TRUE],

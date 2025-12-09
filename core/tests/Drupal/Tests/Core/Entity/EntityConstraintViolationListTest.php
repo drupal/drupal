@@ -148,7 +148,7 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityConstraintViolationList
    *   The entity constraint violation list.
    */
-  protected function setupConstraintListWithoutCompositeConstraint(FieldableEntityInterface $entity) {
+  protected function setupConstraintListWithoutCompositeConstraint(FieldableEntityInterface $entity): EntityConstraintViolationList {
     $violations = [];
 
     // Add two violations to two specific fields.
@@ -174,7 +174,7 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityConstraintViolationList
    *   The entity constraint violation list.
    */
-  protected function setupConstraintListWithCompositeConstraint(FieldableEntityInterface $entity) {
+  protected function setupConstraintListWithCompositeConstraint(FieldableEntityInterface $entity): EntityConstraintViolationList {
     $violations = [];
 
     // Add two violations to two specific fields.

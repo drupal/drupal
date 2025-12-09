@@ -66,7 +66,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *   - The expected value (mixed).
    *   - The default value (mixed).
    */
-  public static function providerGetValue() {
+  public static function providerGetValue(): array {
     $data = [];
     $data[] = [
       'foo', 'one',
@@ -137,7 +137,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *   - The new value to set (mixed).
    *   - The expected form state values after setting the new value (mixed[]).
    */
-  public static function providerSetValue() {
+  public static function providerSetValue(): array {
     $data = [];
     $data[] = [
       'foo', 'one', ['bar' => 'wrong', 'foo' => 'one'],
@@ -178,7 +178,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *   - The key to check for in the form state (string)
    *   - Whether the form state has an item with that key (bool).
    */
-  public static function providerHasValue() {
+  public static function providerHasValue(): array {
     $data = [];
     $data[] = [
       'foo', TRUE,
@@ -228,7 +228,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *   - The key to check for in the form state (string)
    *   - Whether the value is empty or not (bool).
    */
-  public static function providerIsValueEmpty() {
+  public static function providerIsValueEmpty(): array {
     $data = [];
     $data[] = [
       'foo', FALSE,

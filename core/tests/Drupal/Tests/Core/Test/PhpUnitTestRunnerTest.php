@@ -109,7 +109,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
-  public static function providerTestSummarizeResults() {
+  public static function providerTestSummarizeResults(): array {
     return [
       [
         [

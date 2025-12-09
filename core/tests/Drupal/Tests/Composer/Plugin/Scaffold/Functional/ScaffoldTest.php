@@ -111,7 +111,7 @@ class ScaffoldTest extends TestCase {
    * @param bool $relocated_docroot
    *   Whether the named fixture has a relocated document root.
    */
-  public function scaffoldSut($fixture_name, $is_link = FALSE, $relocated_docroot = TRUE) {
+  public function scaffoldSut($fixture_name, $is_link = FALSE, $relocated_docroot = TRUE): ScaffoldTestResult {
     $sut = $this->createSut($fixture_name, ['SYMLINK' => $is_link ? 'true' : 'false']);
     // Run composer install to get the dependencies we need to test.
     $this->fixtures->runComposer("install --no-ansi --no-scripts --no-plugins", $sut);
@@ -136,7 +136,7 @@ class ScaffoldTest extends TestCase {
   /**
    * Data provider for testScaffoldWithExpectedException.
    */
-  public static function scaffoldExpectedExceptionTestValues() {
+  public static function scaffoldExpectedExceptionTestValues(): array {
     return [
       [
         'drupal-drupal-missing-scaffold-file',
@@ -201,7 +201,7 @@ class ScaffoldTest extends TestCase {
   /**
    * Provides test values for testScaffoldOverridingSettingsExcludingHtaccess.
    */
-  public static function scaffoldOverridingSettingsExcludingHtaccessValues() {
+  public static function scaffoldOverridingSettingsExcludingHtaccessValues(): array {
     return [
       [
         'drupal-composer-drupal-project',

@@ -115,7 +115,7 @@ class DrupalComponentTest extends TestCase {
    *   - TRUE if the test passes, FALSE otherwise.
    *   - File data as a string. This will be used as a virtual file.
    */
-  public static function providerAssertNoCoreUsage() {
+  public static function providerAssertNoCoreUsage(): array {
     return [
       [
         TRUE,

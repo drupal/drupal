@@ -764,7 +764,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Data provider for testing bad CSS declarations.
    */
-  public static function providerTestCssAssert() {
+  public static function providerTestCssAssert(): array {
     return [
       'css_bad_category' => ['css_bad_category', 'See https://www.drupal.org/node/2274843.'],
       'Improper CSS nesting' => ['css_bad_nesting', 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.'],

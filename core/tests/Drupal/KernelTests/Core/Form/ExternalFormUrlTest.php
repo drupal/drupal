@@ -29,14 +29,14 @@ class ExternalFormUrlTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'external_form_url_test';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['something'] = [
       '#type' => 'textfield',
       '#title' => 'What do you think?',

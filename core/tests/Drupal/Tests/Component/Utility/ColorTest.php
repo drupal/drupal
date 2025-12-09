@@ -31,7 +31,7 @@ class ColorTest extends TestCase {
   /**
    * Provides data for testValidateHex().
    */
-  public static function providerTestValidateHex() {
+  public static function providerTestValidateHex(): array {
     return [
       // Tests length.
       [FALSE, ''],
@@ -97,7 +97,7 @@ class ColorTest extends TestCase {
    *     - The rgb color array value.
    *     - (optional) Boolean indicating invalid status. Defaults to FALSE.
    */
-  public static function providerTestHexToRgb() {
+  public static function providerTestHexToRgb(): array {
     $invalid = [];
     // Any invalid arguments should throw an exception.
     foreach (['', '-1', '1', '12', '12345', '1234567', '123456789', '123456789a', 'foo'] as $value) {
@@ -182,7 +182,7 @@ class ColorTest extends TestCase {
    *     - The hex color value.
    *     - The 6 character length hex color value.
    */
-  public static function providerTestNormalizeHexLength() {
+  public static function providerTestNormalizeHexLength(): array {
     $data = [
       ['#000', '#000000'],
       ['#FFF', '#FFFFFF'],

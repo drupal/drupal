@@ -146,7 +146,7 @@ class CategorizingPluginManager extends DefaultPluginManager implements Categori
    *
    * Provides some test definitions to the trait.
    */
-  public function getDefinitions() {
+  public function getDefinitions(): array {
     return [
       'cucumber' => [
         'label' => 'cucumber',

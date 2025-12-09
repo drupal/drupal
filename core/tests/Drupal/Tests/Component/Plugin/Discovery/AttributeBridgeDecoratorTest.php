@@ -61,7 +61,7 @@ class AttributeBridgeDecoratorTest extends TestCase {
     $discovery = $this->createMock(ExtendedDiscoveryInterface::class);
     $discovery->expects($this->exactly(2))
       ->method('otherMethod')
-      ->willReturnCallback(fn($id) => $id === 'foo');
+      ->willReturnCallback(fn($id): bool => $id === 'foo');
 
     $decorator = new AttributeBridgeDecorator($discovery, TestAttribute::class);
 
