@@ -15,7 +15,7 @@
     "require": {
         "php": ">=8.1.0",
         "symfony/dependency-injection": "^6.4",
-        "symfony/service-contracts": "v3.5.1"
+        "symfony/service-contracts": "v3.6.1"
     },
     "suggest": {
         "symfony/expression-language": "For using expressions in service container configuration"
