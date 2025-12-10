@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains hooks for a custom installer theme.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function test_installer_theme_form_install_select_language_form_alter(array &$form): void {
+  $form['function_name']['#markup'] = 'Added by custom installer theme.';
+}

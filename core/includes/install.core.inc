@@ -17,6 +17,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormState;
@@ -32,7 +33,6 @@ use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
-use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
@@ -423,6 +423,12 @@ function install_begin_request($class_loader, &$install_state): void {
   // already initialized.
   $kernel = new InstallerKernel($environment, $class_loader, FALSE);
   $kernel::bootEnvironment();
+
+  // Add list of all available profiles to the installation state.
+  $listing = new ExtensionDiscovery($kernel->getAppRoot(), FALSE);
+  $listing->setProfileDirectories([]);
+  $install_state['profiles'] += $listing->scan('profile');
+
   $kernel->setSitePath($site_path);
   $kernel->boot();
   // Get the new version of the container from the kernel. This is now a
@@ -443,11 +449,6 @@ function install_begin_request($class_loader, &$install_state): void {
   $container->set('string_translator.file_translation', new FileTranslation($directory, $file_system));
   $container->get('string_translation')
     ->addTranslator($container->get('string_translator.file_translation'));
-
-  // Add list of all available profiles to the installation state.
-  $listing = new ExtensionDiscovery($container->getParameter('app.root'));
-  $listing->setProfileDirectories([]);
-  $install_state['profiles'] += $listing->scan('profile');
 
   /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
   $module_list = \Drupal::service('extension.list.module');

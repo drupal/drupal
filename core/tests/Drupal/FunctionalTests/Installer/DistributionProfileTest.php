@@ -36,7 +36,7 @@ class DistributionProfileTest extends InstallerTestBase {
       'distribution' => [
         'name' => 'My Distribution',
         'install' => [
-          'theme' => 'claro',
+          'theme' => 'test_installer_theme',
           'finish_url' => '/root-user',
         ],
       ],
@@ -56,8 +56,12 @@ class DistributionProfileTest extends InstallerTestBase {
     $this->assertSession()->pageTextContains($this->info['distribution']['name']);
     // Verify that the distribution name is used in the site title.
     $this->assertSession()->titleEquals('Choose language | ' . $this->info['distribution']['name']);
-    // Verify that the requested theme is used.
-    $this->assertSession()->responseContains($this->info['distribution']['install']['theme']);
+    // Verify that the requested theme is used -- its modifications to this form
+    // should be visible.
+    $this->assertSession()->pageTextContains('Added by custom installer theme.');
+    // Verify the base theme CSS is loaded.
+    $this->assertSession()->responseContains("claro/css/theme/install-page.css");
+
     // Verify that the "Choose profile" step does not appear.
     $this->assertSession()->pageTextNotContains('profile');
 

@@ -61,6 +61,9 @@ class InstallerTest extends InstallerTestBase {
     $this->assertSession()->responseContains("css/components/button.css");
     $this->assertSession()->responseContains('<meta charset="utf-8" />');
 
+    // Test that the default installer theme is being used.
+    $this->assertSession()->responseContains("claro/css/theme/install-page.css");
+
     // Assert that the expected title is present.
     $this->assertEquals('Choose language', $this->cssSelect('main h2')[0]->getText());
 
