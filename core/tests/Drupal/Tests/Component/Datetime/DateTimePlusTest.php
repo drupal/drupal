@@ -420,15 +420,45 @@ class DateTimePlusTest extends TestCase {
     return [
       // Test for invalid month names when we are using a short version
       // of the month.
-      ['23 abc 2012', NULL, 'd M Y', "23 abc 2012 contains an invalid month name and did not produce errors.", \InvalidArgumentException::class],
+      [
+        '23 abc 2012',
+        NULL,
+        'd M Y',
+        "23 abc 2012 contains an invalid month name and did not produce errors.",
+        \InvalidArgumentException::class,
+      ],
       // Test for invalid hour.
-      ['0000-00-00T45:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-00T45:30:00 contains an invalid hour and did not produce errors.", \UnexpectedValueException::class],
+      [
+        '0000-00-00T45:30:00',
+        NULL,
+        'Y-m-d\TH:i:s',
+        "0000-00-00T45:30:00 contains an invalid hour and did not produce errors.",
+        \UnexpectedValueException::class,
+      ],
       // Test for invalid day.
-      ['0000-00-99T05:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-99T05:30:00 contains an invalid day and did not produce errors.", \UnexpectedValueException::class],
+      [
+        '0000-00-99T05:30:00',
+        NULL,
+        'Y-m-d\TH:i:s',
+        "0000-00-99T05:30:00 contains an invalid day and did not produce errors.",
+        \UnexpectedValueException::class,
+      ],
       // Test for invalid month.
-      ['0000-75-00T15:30:00', NULL, 'Y-m-d\TH:i:s', "0000-75-00T15:30:00 contains an invalid month and did not produce errors.", \UnexpectedValueException::class],
+      [
+        '0000-75-00T15:30:00',
+        NULL,
+        'Y-m-d\TH:i:s',
+        "0000-75-00T15:30:00 contains an invalid month and did not produce errors.",
+        \UnexpectedValueException::class,
+      ],
       // Test for invalid year.
-      ['11-08-01T15:30:00', NULL, 'Y-m-d\TH:i:s', "11-08-01T15:30:00 contains an invalid year and did not produce errors.", \UnexpectedValueException::class],
+      [
+        '11-08-01T15:30:00',
+        NULL,
+        'Y-m-d\TH:i:s',
+        "11-08-01T15:30:00 contains an invalid year and did not produce errors.",
+        \UnexpectedValueException::class,
+      ],
 
     ];
   }
@@ -446,17 +476,76 @@ class DateTimePlusTest extends TestCase {
   public static function providerTestInvalidDateArrays(): array {
     return [
       // One year larger than the documented upper limit of checkdate().
-      [['year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
+      [
+        [
+          'year' => 32768,
+          'month' => 1,
+          'day' => 8,
+          'hour' => 8,
+          'minute' => 0,
+          'second' => 0,
+        ],
+        'America/Chicago',
+        \InvalidArgumentException::class,
+      ],
       // One year smaller than the documented lower limit of checkdate().
-      [['year' => 0, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
+      [
+        [
+          'year' => 0,
+          'month' => 1,
+          'day' => 8,
+          'hour' => 8,
+          'minute' => 0,
+          'second' => 0,
+        ],
+        'America/Chicago',
+        \InvalidArgumentException::class,
+      ],
       // Test for invalid month from date array.
-      [['year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
+      [
+        [
+          'year' => 2010,
+          'month' => 27,
+          'day' => 8,
+          'hour' => 8,
+          'minute' => 0,
+          'second' => 0,
+        ],
+        'America/Chicago',
+        \InvalidArgumentException::class,
+      ],
       // Test for invalid hour from date array.
-      [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
+      [
+        [
+          'year' => 2010,
+          'month' => 2,
+          'day' => 28,
+          'hour' => 80,
+          'minute' => 0,
+          'second' => 0,
+        ],
+        'America/Chicago',
+        \InvalidArgumentException::class,
+      ],
       // Test for invalid minute from date array.
-      [['year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
+      [
+        [
+          'year' => 2010,
+          'month' => 7,
+          'day' => 8,
+          'hour' => 8,
+          'minute' => 88,
+          'second' => 0,
+        ],
+        'America/Chicago',
+        \InvalidArgumentException::class,
+      ],
       // Regression test for https://www.drupal.org/node/2084455.
-      [['hour' => 59, 'minute' => 1, 'second' => 1], 'America/Chicago', \InvalidArgumentException::class],
+      [
+        ['hour' => 59, 'minute' => 1, 'second' => 1],
+        'America/Chicago',
+        \InvalidArgumentException::class,
+      ],
     ];
   }
 
@@ -472,13 +561,74 @@ class DateTimePlusTest extends TestCase {
    */
   public static function providerTestCheckArray(): array {
     return [
-      'Date array, date only' => [['year' => 2010, 'month' => 2, 'day' => 28], TRUE],
-      'Date array with hour' => [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10], TRUE],
-      'One year larger than the documented upper limit of checkdate()' => [['year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], FALSE],
-      'One year smaller than the documented lower limit of checkdate()' => [['year' => 0, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], FALSE],
-      'Invalid month from date array' => [['year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], FALSE],
-      'Invalid hour from date array' => [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0], FALSE],
-      'Invalid minute from date array.' => [['year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0], FALSE],
+      'Date array, date only' => [
+        ['year' => 2010, 'month' => 2, 'day' => 28],
+        TRUE,
+      ],
+      'Date array with hour' => [
+        [
+          'year' => 2010,
+          'month' => 2,
+          'day' => 28,
+          'hour' => 10,
+        ],
+        TRUE,
+      ],
+      'One year larger than the documented upper limit of checkdate()' => [
+        [
+          'year' => 32768,
+          'month' => 1,
+          'day' => 8,
+          'hour' => 8,
+          'minute' => 0,
+          'second' => 0,
+        ],
+        FALSE,
+      ],
+      'One year smaller than the documented lower limit of checkdate()' => [
+        [
+          'year' => 0,
+          'month' => 1,
+          'day' => 8,
+          'hour' => 8,
+          'minute' => 0,
+          'second' => 0,
+        ],
+        FALSE,
+      ],
+      'Invalid month from date array' => [
+        [
+          'year' => 2010,
+          'month' => 27,
+          'day' => 8,
+          'hour' => 8,
+          'minute' => 0,
+          'second' => 0,
+        ],
+        FALSE,
+      ],
+      'Invalid hour from date array' => [
+        [
+          'year' => 2010,
+          'month' => 2,
+          'day' => 28,
+          'hour' => 80,
+          'minute' => 0,
+          'second' => 0,
+        ],
+        FALSE,
+      ],
+      'Invalid minute from date array.' => [
+        [
+          'year' => 2010,
+          'month' => 7,
+          'day' => 8,
+          'hour' => 8,
+          'minute' => 88,
+          'second' => 0,
+        ],
+        FALSE,
+      ],
       'Missing day' => [['year' => 2059, 'month' => 1, 'second' => 1], FALSE],
       'Zero day' => [['year' => 2059, 'month' => 1, 'day' => 0], FALSE],
     ];
@@ -507,13 +657,33 @@ class DateTimePlusTest extends TestCase {
     return [
       // Create a date object with an unspecified timezone, which should
       // end up using the system timezone.
-      [$date_string, NULL, $system_timezone, 'DateTimePlus uses the system timezone when there is no site timezone.'],
+      [
+        $date_string,
+        NULL,
+        $system_timezone,
+        'DateTimePlus uses the system timezone when there is no site timezone.',
+      ],
       // Create a date object with a specified timezone name.
-      [$date_string, 'America/Yellowknife', 'America/Yellowknife', 'DateTimePlus uses the specified timezone if provided.'],
+      [
+        $date_string,
+        'America/Yellowknife',
+        'America/Yellowknife',
+        'DateTimePlus uses the specified timezone if provided.',
+      ],
       // Create a date object with a timezone object.
-      [$date_string, new \DateTimeZone('Australia/Canberra'), 'Australia/Canberra', 'DateTimePlus uses the specified timezone if provided.'],
+      [
+        $date_string,
+        new \DateTimeZone('Australia/Canberra'),
+        'Australia/Canberra',
+        'DateTimePlus uses the specified timezone if provided.',
+      ],
       // Create a date object with another date object.
-      [new DateTimePlus('now', 'Pacific/Midway'), NULL, 'Pacific/Midway', 'DateTimePlus uses the specified timezone if provided.'],
+      [
+        new DateTimePlus('now', 'Pacific/Midway'),
+        NULL,
+        'Pacific/Midway',
+        'DateTimePlus uses the specified timezone if provided.',
+      ],
     ];
   }
 

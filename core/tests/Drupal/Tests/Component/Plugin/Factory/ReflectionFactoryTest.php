@@ -39,7 +39,13 @@ class ReflectionFactoryTest extends TestCase {
         [],
       ],
       [
-        [[], ['arguments_many' => ['class' => 'Drupal\Tests\Component\Plugin\Factory\ArgumentsMany']], 'arguments_many', 'default_value', 'what_default'],
+        [
+          [],
+          ['arguments_many' => ['class' => 'Drupal\Tests\Component\Plugin\Factory\ArgumentsMany']],
+          'arguments_many',
+          'default_value',
+          'what_default',
+        ],
         'Drupal\Tests\Component\Plugin\Factory\ArgumentsMany',
         'arguments_many',
         ['arguments_many' => ['class' => 'Drupal\Tests\Component\Plugin\Factory\ArgumentsMany']],

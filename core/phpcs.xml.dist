@@ -41,6 +41,7 @@
     <include-pattern>core/modules/*/tests/modules/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/*</include-pattern>
     <include-pattern>core/modules/*/Form/*</include-pattern>
+    <include-pattern>core/tests/Drupal/Tests/Component/*</include-pattern>
   </rule>
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
   <rule ref="Drupal.Classes.ClassDeclaration"/>
