@@ -1222,7 +1222,97 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     // Load field data.
     $langcodes = array_keys($this->languageManager->getLanguages(LanguageInterface::STATE_ALL));
+
+    $single_cardinality_fields = [];
+    $multiple_cardinality_fields = [];
+
     foreach ($storage_definitions as $field_name => $storage_definition) {
+      if ($storage_definition->getCardinality() === 1) {
+        $single_cardinality_fields[$field_name] = $storage_definition;
+      }
+      else {
+        $multiple_cardinality_fields[$field_name] = $storage_definition;
+      }
+    }
+    if ($single_cardinality_fields) {
+      $id_key = !$load_from_revision ? 'entity_id' : 'revision_id';
+
+      // Because any field could potentially have no data, we need to begin
+      // the query from a table that will reliably exist, which means the base,
+      // data, or revision table.
+      $base_table = !$load_from_revision ? ($this->dataTable ?? $this->baseTable) : $this->revisionDataTable ?? $this->revisionTable;
+      $base_id_key = !$load_from_revision ? $this->idKey : $this->revisionKey;
+      $query = $this->database->select($base_table, $base_table)
+        ->fields($base_table, [$base_id_key])
+        ->condition("[$base_table].[$base_id_key]", $ids, 'IN');
+
+      // If the entity is translatable, ensure only rows with valid langcodes
+      // are loaded.
+      if ($this->langcodeKey) {
+        $query->condition("[$base_table].[$this->langcodeKey]", $langcodes, 'IN');
+        $query->addField($base_table, $this->langcodeKey);
+      }
+
+      // Add a left join for each single cardinality field.
+      foreach ($single_cardinality_fields as $field_name => $storage_definition) {
+        $table = !$load_from_revision ? $table_mapping->getDedicatedDataTableName($storage_definition) : $table_mapping->getDedicatedRevisionTableName($storage_definition);
+        // If the entity is translatable, add the langcode to the join and
+        // a condition on valid langcodes.
+        if ($this->langcodeKey) {
+          $query->leftJoin($table, $table, "[$table].[$id_key] = [$base_table].[$base_id_key] AND [$table].[langcode] = [$base_table].[$this->langcodeKey] AND [$table].[deleted] = 0");
+        }
+        else {
+          $query->leftJoin($table, $table, "[$table].[$id_key] = [$base_table].[$base_id_key] AND [$table].[deleted] = 0");
+        }
+        $query->fields($table, $this->tableMapping->getColumnNames($field_name));
+      }
+
+      $results = $query->execute();
+
+      $is_not_null = fn($value) => !is_null($value);
+      foreach ($results as $row) {
+        $row = (array) $row;
+        $value_key = $row[$base_id_key];
+        // Field values in default language are stored with
+        // LanguageInterface::LANGCODE_DEFAULT as key.
+        $langcode = LanguageInterface::LANGCODE_DEFAULT;
+        if ($this->langcodeKey && isset($default_langcodes[$value_key]) && $row[$this->langcodeKey] != $default_langcodes[$value_key]) {
+          $langcode = $row[$this->langcodeKey];
+        }
+
+        foreach ($single_cardinality_fields as $field_name => $storage_definition) {
+          $bundle = $this->bundleKey ? $values[$value_key][$this->bundleKey][LanguageInterface::LANGCODE_DEFAULT] : $this->entityTypeId;
+          $field_values = array_intersect_key($row, array_flip($this->tableMapping->getColumnNames($field_name)));
+
+          // If all the field values are null, then there was no result for this
+          // field.
+          if (!array_any($field_values, $is_not_null)) {
+            continue;
+          }
+          if (!isset($values[$value_key][$field_name][$langcode])) {
+            $values[$value_key][$field_name][$langcode] = [];
+          }
+
+          // Ensure that records for non-translatable fields having invalid
+          // languages are skipped.
+          if ($langcode == LanguageInterface::LANGCODE_DEFAULT || $definitions[$bundle][$field_name]->isTranslatable()) {
+            if (empty($values[$value_key][$field_name][$langcode])) {
+              $item = [];
+              // For each column declared by the field, populate the item from
+              // the prefixed database column.
+              foreach ($storage_definition->getColumns() as $column => $attributes) {
+                $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
+                // Unserialize the value if specified in the column schema.
+                $item[$column] = (!empty($attributes['serialize'])) ? $this->handleNullableFieldUnserialize($row[$column_name]) : $row[$column_name];
+              }
+              // Add the item to the field values for the entity.
+              $values[$value_key][$field_name][$langcode][] = $item;
+            }
+          }
+        }
+      }
+    }
+    foreach ($multiple_cardinality_fields as $field_name => $storage_definition) {
       $table = !$load_from_revision ? $table_mapping->getDedicatedDataTableName($storage_definition) : $table_mapping->getDedicatedRevisionTableName($storage_definition);
 
       // Ensure that only values having valid languages are retrieved. Since we

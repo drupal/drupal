@@ -3601,8 +3601,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @todo Remove this after https://www.drupal.org/project/drupal/issues/3038706 lands.
    */
   protected function entityLoadUnchanged($id) {
-    $this->entityStorage->resetCache();
-    return $this->entityStorage->loadUnchanged($id);
+    $entity_storage = \Drupal::service('entity_type.manager')->getStorage(static::$entityTypeId);
+    $entity_storage->resetCache();
+    return $entity_storage->loadUnchanged($id);
   }
 
   /**
