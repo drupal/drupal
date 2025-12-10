@@ -3,6 +3,9 @@
 namespace Drupal\Core\Installer;
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\InfoParser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -102,13 +105,126 @@ class InstallerKernel extends DrupalKernel {
    */
   protected function getExtensions(): array {
     $extensions = parent::getExtensions() ?: [];
+    if (!static::installationAttempted()) {
+      return $extensions;
+    }
+
     // Ensure that the System module is always available to the installer.
     $extensions['module']['system'] ??= 0;
-    if (empty($extensions['profile']) && !empty($GLOBALS['install_state']) && ($profile = _install_select_profile($GLOBALS['install_state']))) {
-      $extensions['profile'] = $profile;
-      $extensions['module'][$profile] = 1000;
+    if ($profile = $this->installGetProfile()) {
+      $extensions['profile'] = $profile->getName();
+      if (!isset($extensions['module'][$profile->getName()])) {
+        $extensions['module'][$profile->getName()] = 1000;
+      }
+      $theme = $profile->info['distribution']['install']['theme'] ?? 'claro';
+      $extensions['theme'][$theme] ??= 0;
+
+      if ($theme !== 'claro') {
+        // Need to check for base themes.
+        foreach ($this->getBaseThemes($profile, $theme) as $base_theme) {
+          $extensions['theme'][$base_theme] ??= 0;
+        }
+      }
+    }
+    // Ensure that the default theme is always available to the installer.
+    else {
+      $extensions['theme']['claro'] ??= 0;
     }
     return $extensions;
+  }
+
+  /**
+   * Gets the base themes for a given theme.
+   *
+   * @param \Drupal\Core\Extension\Extension $profile
+   *   The profile being installed.
+   * @param string $theme
+   *   The theme for installation.
+   *
+   * @return string[]
+   *   A list of base themes.
+   */
+  private function getBaseThemes(Extension $profile, string $theme): array {
+    $base_themes = [];
+
+    // Find all the available themes.
+    $listing = new ExtensionDiscovery($this->root);
+    $listing->setProfileDirectories([$profile->getName() => $profile->getPath()]);
+    $themes = $listing->scan('theme');
+
+    $info_parser = new InfoParser($this->root);
+    $theme_info = $info_parser->parse($themes[$theme]->getPathname());
+    $base_theme = $theme_info['base theme'] ?? FALSE;
+
+    while ($base_theme) {
+      $base_themes[] = $base_theme;
+      $theme_info = $info_parser->parse($themes[$base_theme]->getPathname());
+      $base_theme = $theme_info['base theme'] ?? FALSE;
+    }
+
+    return $base_themes;
+  }
+
+  /**
+   * Gets the profile to be installed.
+   *
+   * @return string|null|\Drupal\Core\Extension\Extension
+   *   Returns NULL if no profile was selected or FALSE if the site has no
+   *   profile, or the profile extension object with the profile info added.
+   *
+   * @see _install_select_profile()
+   */
+  private function installGetProfile(): null|false|Extension {
+    global $install_state;
+
+    $profile = NULL;
+
+    if (empty($install_state['profiles'])) {
+      throw new \RuntimeException('No profiles found.');
+    }
+
+    // If there is only one profile available it will always be the one
+    // selected.
+    if (count($install_state['profiles']) == 1) {
+      $profile = reset($install_state['profiles']);
+    }
+    // If a valid profile has already been selected, return the selection.
+    if (array_key_exists('profile', $install_state['parameters'])) {
+      $profile = $install_state['parameters']['profile'];
+      if ($profile && isset($install_state['profiles'][$profile])) {
+        $profile = $install_state['profiles'][$profile];
+      }
+    }
+
+    // Not using a profile.
+    if ($profile === FALSE) {
+      return $profile;
+    }
+
+    $info_parser = new InfoParser($this->root);
+
+    if ($profile instanceof Extension) {
+      $profile->info = $info_parser->parse($profile->getPathname());
+      return $profile;
+    }
+
+    $visible_profiles = [];
+    // If any of the profiles are distribution profiles, select the first one.
+    foreach ($install_state['profiles'] as $profile) {
+      $profile->info = $info_parser->parse($profile->getPathname());
+      if (!empty($profile->info['distribution'])) {
+        return $profile;
+      }
+      if (!isset($profile->info['hidden']) || !$profile->info['hidden']) {
+        $visible_profiles[] = $profile;
+      }
+    }
+    // If there is only one visible profile, select it.
+    if (count($visible_profiles) == 1) {
+      return $visible_profiles[0];
+    }
+
+    return NULL;
   }
 
 }
