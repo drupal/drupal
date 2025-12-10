@@ -110,7 +110,12 @@ class DeleteMultipleFormTest extends BrowserTestBase {
     $assert->responseContains('1 item has not been deleted because you do not have the necessary permissions.');
 
     \Drupal::entityTypeManager()->getStorage('entity_test_mulrevpub')->resetCache();
-    $remaining_entities = EntityTestMulRevPub::loadMultiple([$entity1->id(), $entity2->id(), $entity3->id(), $entity4->id()]);
+    $remaining_entities = EntityTestMulRevPub::loadMultiple([
+      $entity1->id(),
+      $entity2->id(),
+      $entity3->id(),
+      $entity4->id(),
+    ]);
     $this->assertCount(3, $remaining_entities);
   }
 

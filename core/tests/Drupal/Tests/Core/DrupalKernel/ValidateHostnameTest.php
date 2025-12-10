@@ -47,9 +47,18 @@ class ValidateHostnameTest extends UnitTestCase {
 
     // Verifies host names that are too long, or have too many parts are
     // invalid.
-    $data[] = [str_repeat('x', 1000) . '.security.drupal.org:80', 'HTTP_HOST with more than 1000 characters is invalid.'];
-    $data[] = [str_repeat('x.', 100) . 'security.drupal.org:80', 'HTTP_HOST with more than 100 subdomains is invalid.'];
-    $data[] = ['security.drupal.org:80' . str_repeat(':x', 100), 'HTTP_HOST with more than 100 port separators is invalid.'];
+    $data[] = [
+      str_repeat('x', 1000) . '.security.drupal.org:80',
+      'HTTP_HOST with more than 1000 characters is invalid.',
+    ];
+    $data[] = [
+      str_repeat('x.', 100) . 'security.drupal.org:80',
+      'HTTP_HOST with more than 100 subdomains is invalid.',
+    ];
+    $data[] = [
+      'security.drupal.org:80' . str_repeat(':x', 100),
+      'HTTP_HOST with more than 100 port separators is invalid.',
+    ];
 
     // Verifies that a valid hostname is allowed.
     $data[] = ['security.drupal.org:80', 'Properly formed HTTP_HOST is valid.', TRUE];

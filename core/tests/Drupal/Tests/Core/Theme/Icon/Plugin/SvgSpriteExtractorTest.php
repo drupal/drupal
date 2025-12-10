@@ -138,7 +138,10 @@ class SvgSpriteExtractorTest extends UnitTestCase {
         ],
       ],
       [
-        ['/path/source/foo.svg', '<svg><symbol id="!script"></symbol><symbol id="not valid"></symbol><symbol id="_foo-bar_"></symbol></svg>'],
+        [
+          '/path/source/foo.svg',
+          '<svg><symbol id="!script"></symbol><symbol id="not valid"></symbol><symbol id="_foo-bar_"></symbol></svg>',
+        ],
       ],
       ['_foo-bar_'],
     ];

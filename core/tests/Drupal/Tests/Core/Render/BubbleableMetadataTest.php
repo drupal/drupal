@@ -78,27 +78,93 @@ class BubbleableMetadataTest extends UnitTestCase {
     return [
       // Second operand is a BubbleableMetadata object.
       // All empty.
-      [(new BubbleableMetadata()), (new BubbleableMetadata()), (new BubbleableMetadata())],
+      [
+        (new BubbleableMetadata()),
+        (new BubbleableMetadata()),
+        (new BubbleableMetadata()),
+      ],
       // Cache contexts.
-      [(new BubbleableMetadata())->setCacheContexts(['foo']), (new BubbleableMetadata())->setCacheContexts(['bar']), (new BubbleableMetadata())->setCacheContexts(['bar', 'foo'])],
+      [
+        (new BubbleableMetadata())->setCacheContexts(['foo']),
+        (new BubbleableMetadata())->setCacheContexts(['bar']),
+        (new BubbleableMetadata())->setCacheContexts(['bar', 'foo']),
+      ],
       // Cache tags.
-      [(new BubbleableMetadata())->setCacheTags(['foo']), (new BubbleableMetadata())->setCacheTags(['bar']), (new BubbleableMetadata())->setCacheTags(['foo', 'bar'])],
+      [
+        (new BubbleableMetadata())->setCacheTags(['foo']),
+        (new BubbleableMetadata())->setCacheTags(['bar']),
+        (new BubbleableMetadata())->setCacheTags(['foo', 'bar']),
+      ],
       // Cache max-ages.
-      [(new BubbleableMetadata())->setCacheMaxAge(60), (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT), (new BubbleableMetadata())->setCacheMaxAge(60)],
+      [
+        (new BubbleableMetadata())->setCacheMaxAge(60),
+        (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT),
+        (new BubbleableMetadata())->setCacheMaxAge(60),
+      ],
       // Assets.
-      [(new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]), (new BubbleableMetadata())->setAttachments(['library' => ['core/bar']]), (new BubbleableMetadata())->setAttachments(['library' => ['core/foo', 'core/bar']])],
+      [
+        (new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]),
+        (new BubbleableMetadata())->setAttachments(['library' => ['core/bar']]),
+        (new BubbleableMetadata())->setAttachments([
+          'library' => [
+            'core/foo',
+            'core/bar',
+          ],
+        ]),
+      ],
       // Placeholders.
-      [(new BubbleableMetadata())->setAttachments(['placeholders' => ['<my-placeholder>' => ['callback', ['A']]]]), (new BubbleableMetadata())->setAttachments(['placeholders' => ['<my-placeholder>' => ['callback', ['A']]]]), (new BubbleableMetadata())->setAttachments(['placeholders' => ['<my-placeholder>' => ['callback', ['A']]]])],
+      [
+        (new BubbleableMetadata())->setAttachments([
+          'placeholders' => [
+            '<my-placeholder>' => [
+              'callback',
+              ['A'],
+            ],
+          ],
+        ]),
+        (new BubbleableMetadata())->setAttachments([
+          'placeholders' => [
+            '<my-placeholder>' => [
+              'callback',
+              ['A'],
+            ],
+          ],
+        ]),
+        (new BubbleableMetadata())->setAttachments([
+          'placeholders' => [
+            '<my-placeholder>' => [
+              'callback',
+              ['A'],
+            ],
+          ],
+        ]),
+      ],
 
       // Second operand is a CacheableMetadata object.
       // All empty.
-      [(new BubbleableMetadata()), (new CacheableMetadata()), (new BubbleableMetadata())],
+      [
+        (new BubbleableMetadata()),
+        (new CacheableMetadata()),
+        (new BubbleableMetadata()),
+      ],
       // Cache contexts.
-      [(new BubbleableMetadata())->setCacheContexts(['foo']), (new CacheableMetadata())->setCacheContexts(['bar']), (new BubbleableMetadata())->setCacheContexts(['bar', 'foo'])],
+      [
+        (new BubbleableMetadata())->setCacheContexts(['foo']),
+        (new CacheableMetadata())->setCacheContexts(['bar']),
+        (new BubbleableMetadata())->setCacheContexts(['bar', 'foo']),
+      ],
       // Cache tags.
-      [(new BubbleableMetadata())->setCacheTags(['foo']), (new CacheableMetadata())->setCacheTags(['bar']), (new BubbleableMetadata())->setCacheTags(['foo', 'bar'])],
+      [
+        (new BubbleableMetadata())->setCacheTags(['foo']),
+        (new CacheableMetadata())->setCacheTags(['bar']),
+        (new BubbleableMetadata())->setCacheTags(['foo', 'bar']),
+      ],
       // Cache max-ages.
-      [(new BubbleableMetadata())->setCacheMaxAge(60), (new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT), (new BubbleableMetadata())->setCacheMaxAge(60)],
+      [
+        (new BubbleableMetadata())->setCacheMaxAge(60),
+        (new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT),
+        (new BubbleableMetadata())->setCacheMaxAge(60),
+      ],
     ];
   }
 
@@ -130,8 +196,21 @@ class BubbleableMetadataTest extends UnitTestCase {
   public static function providerTestAddAttachments(): array {
     return [
       [new BubbleableMetadata(), [], new BubbleableMetadata()],
-      [new BubbleableMetadata(), ['library' => ['core/foo']], (new BubbleableMetadata())->setAttachments(['library' => ['core/foo']])],
-      [(new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]), ['library' => ['core/bar']], (new BubbleableMetadata())->setAttachments(['library' => ['core/foo', 'core/bar']])],
+      [
+        new BubbleableMetadata(),
+        ['library' => ['core/foo']],
+        (new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]),
+      ],
+      [
+        (new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]),
+        ['library' => ['core/bar']],
+        (new BubbleableMetadata())->setAttachments([
+          'library' => [
+            'core/foo',
+            'core/bar',
+          ],
+        ]),
+      ],
     ];
   }
 
@@ -361,12 +440,33 @@ class BubbleableMetadataTest extends UnitTestCase {
     // Real world test case: multiple elements in a render array are adding the
     // same (or nearly the same) JavaScript settings. When merged, they should
     // contain all settings and not duplicate some settings.
-    $settings_one = ['moduleName' => ['ui' => ['button A', 'button B'], 'magical flag' => 3.14159265359]];
+    $settings_one = [
+      'moduleName' => [
+        'ui' => ['button A', 'button B'],
+        'magical flag' => 3.14159265359,
+      ],
+    ];
     $build['a']['#attached']['drupalSettings']['commonTestRealWorldIdentical'] = $settings_one;
     $build['b']['#attached']['drupalSettings']['commonTestRealWorldIdentical'] = $settings_one;
-    $settings_two_a = ['moduleName' => ['ui' => ['button A', 'button B', 'button C'], 'magical flag' => 3.14159265359, 'thingiesOnPage' => ['id1' => []]]];
+    $settings_two_a = [
+      'moduleName' => [
+        'ui' => [
+          'button A',
+          'button B',
+          'button C',
+        ],
+        'magical flag' => 3.14159265359,
+        'thingiesOnPage' => ['id1' => []],
+      ],
+    ];
     $build['a']['#attached']['drupalSettings']['commonTestRealWorldAlmostIdentical'] = $settings_two_a;
-    $settings_two_b = ['moduleName' => ['ui' => ['button D', 'button E'], 'magical flag' => 3.14, 'thingiesOnPage' => ['id2' => []]]];
+    $settings_two_b = [
+      'moduleName' => [
+        'ui' => ['button D', 'button E'],
+        'magical flag' => 3.14,
+        'thingiesOnPage' => ['id2' => []],
+      ],
+    ];
     $build['b']['#attached']['drupalSettings']['commonTestRealWorldAlmostIdentical'] = $settings_two_b;
 
     $merged = BubbleableMetadata::mergeAttachments($build['a']['#attached'], $build['b']['#attached']);
@@ -631,14 +731,29 @@ class BubbleableMetadataTest extends UnitTestCase {
     return [
       // Merge in a cacheable metadata.
       'merge-cacheable-metadata' => [
-        (new BubbleableMetadata())->setCacheContexts(['foo'])->setCacheTags(['foo'])->setCacheMaxAge(20),
-        (new CacheableMetadata())->setCacheContexts(['bar'])->setCacheTags(['bar'])->setCacheMaxAge(60),
-        (new BubbleableMetadata())->setCacheContexts(['foo', 'bar'])->setCacheTags(['foo', 'bar'])->setCacheMaxAge(20),
+        (new BubbleableMetadata())->setCacheContexts(['foo'])
+          ->setCacheTags(['foo'])
+          ->setCacheMaxAge(20),
+        (new CacheableMetadata())->setCacheContexts(['bar'])
+          ->setCacheTags(['bar'])
+          ->setCacheMaxAge(60),
+        (new BubbleableMetadata())->setCacheContexts(['foo', 'bar'])
+          ->setCacheTags(['foo', 'bar'])
+          ->setCacheMaxAge(20),
       ],
       'merge-bubbleable-metadata' => [
-        (new BubbleableMetadata())->setCacheContexts(['foo'])->setCacheTags(['foo'])->setCacheMaxAge(20)->setAttachments(['foo' => []]),
-        (new BubbleableMetadata())->setCacheContexts(['bar'])->setCacheTags(['bar'])->setCacheMaxAge(60)->setAttachments(['bar' => []]),
-        (new BubbleableMetadata())->setCacheContexts(['foo', 'bar'])->setCacheTags(['foo', 'bar'])->setCacheMaxAge(20)->setAttachments(['foo' => [], 'bar' => []]),
+        (new BubbleableMetadata())->setCacheContexts(['foo'])
+          ->setCacheTags(['foo'])
+          ->setCacheMaxAge(20)
+          ->setAttachments(['foo' => []]),
+        (new BubbleableMetadata())->setCacheContexts(['bar'])
+          ->setCacheTags(['bar'])
+          ->setCacheMaxAge(60)
+          ->setAttachments(['bar' => []]),
+        (new BubbleableMetadata())->setCacheContexts(['foo', 'bar'])
+          ->setCacheTags(['foo', 'bar'])
+          ->setCacheMaxAge(20)
+          ->setAttachments(['foo' => [], 'bar' => []]),
       ],
       'merge-attachments-metadata' => [
         (new BubbleableMetadata())->setAttachments(['foo' => []]),

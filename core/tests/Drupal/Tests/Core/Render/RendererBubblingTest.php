@@ -648,7 +648,13 @@ class BubblingTest implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks(): array {
-    return ['bubblingPreRender', 'bubblingNestedPreRenderUncached', 'bubblingNestedPreRenderCached', 'bubblingPlaceholder', 'bubblingCacheOverwritePrerender'];
+    return [
+      'bubblingPreRender',
+      'bubblingNestedPreRenderUncached',
+      'bubblingNestedPreRenderCached',
+      'bubblingPlaceholder',
+      'bubblingCacheOverwritePrerender',
+    ];
   }
 
 }

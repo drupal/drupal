@@ -42,6 +42,13 @@
     <include-pattern>core/modules/*/Plugin/*</include-pattern>
     <include-pattern>core/modules/*/Form/*</include-pattern>
     <include-pattern>core/tests/Drupal/Tests/Component/*</include-pattern>
+    <include-pattern>core/tests/Drupal/BuildTests/*</include-pattern>
+    <include-pattern>core/tests/Drupal/FunctionalJavascriptTests/*</include-pattern>
+    <include-pattern>core/tests/Drupal/FunctionalTests/*</include-pattern>
+    <include-pattern>core/tests/Drupal/Nightwatch/*</include-pattern>
+    <include-pattern>core/tests/Drupal/TestSite/*</include-pattern>
+    <include-pattern>core/tests/Drupal/TestTools/*</include-pattern>
+    <include-pattern>core/tests/Drupal/Tests/Core/*</include-pattern>
   </rule>
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
   <rule ref="Drupal.Classes.ClassDeclaration"/>

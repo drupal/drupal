@@ -343,7 +343,10 @@ class EntityFieldManagerTest extends UnitTestCase {
    */
   #[DataProvider('providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode')]
   public function testGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode($default_langcode_key): void {
-    $this->setUpEntityWithFieldDefinition(FALSE, 'id', ['langcode' => 'langcode', 'default_langcode' => $default_langcode_key]);
+    $this->setUpEntityWithFieldDefinition(FALSE, 'id', [
+      'langcode' => 'langcode',
+      'default_langcode' => $default_langcode_key,
+    ]);
 
     $field_definition = $this->prophesize()->willImplement(FieldDefinitionInterface::class)->willImplement(FieldStorageDefinitionInterface::class);
     $field_definition->isTranslatable()->willReturn(TRUE);
@@ -429,7 +432,10 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
       ->willReturn(FALSE)
       ->shouldBeCalled();
-    $this->cacheBackend->set('entity_base_field_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
+    $this->cacheBackend->set('entity_base_field_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, [
+      'entity_types',
+      'entity_field_info',
+    ])
       ->will(function (array $args) use ($cacheBackend): void {
         $data = (object) ['data' => $args[1]];
         $cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
@@ -460,7 +466,10 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->cacheBackend->get('entity_bundle_field_definitions:test_entity_type:test_bundle:en')
       ->willReturn(FALSE)
       ->shouldBeCalledTimes(1);
-    $this->cacheBackend->set('entity_bundle_field_definitions:test_entity_type:test_bundle:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
+    $this->cacheBackend->set('entity_bundle_field_definitions:test_entity_type:test_bundle:en', Argument::any(), Cache::PERMANENT, [
+      'entity_types',
+      'entity_field_info',
+    ])
       ->will(function (array $args) use ($cacheBackend): void {
         $data = (object) ['data' => $args[1]];
         $cacheBackend->get('entity_bundle_field_definitions:test_entity_type:test_bundle:en')
@@ -509,7 +518,10 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->shouldBeCalledTimes(2);
     $this->cacheBackend->get('entity_field_storage_definitions:test_entity_type:en')->willReturn(FALSE);
 
-    $this->cacheBackend->set('entity_field_storage_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
+    $this->cacheBackend->set('entity_field_storage_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, [
+      'entity_types',
+      'entity_field_info',
+    ])
       ->will(function () use ($expected, $cacheBackend): void {
         $cacheBackend->get('entity_field_storage_definitions:test_entity_type:en')
           ->willReturn((object) ['data' => $expected])
@@ -616,7 +628,10 @@ class EntityFieldManagerTest extends UnitTestCase {
     $override_entity_type = $this->prophesize(EntityTypeInterface::class);
 
     $this->entityType = $this->prophesize(EntityTypeInterface::class);
-    $this->setUpEntityTypeDefinitions(['test_entity_type' => $this->entityType, 'base_field_override' => $override_entity_type]);
+    $this->setUpEntityTypeDefinitions([
+      'test_entity_type' => $this->entityType,
+      'base_field_override' => $override_entity_type,
+    ]);
 
     $storage = $this->prophesize(EntityStorageInterface::class);
     $storage->loadMultiple()->willReturn([]);

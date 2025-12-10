@@ -24,7 +24,10 @@ class RendererRecursionTest extends RendererTestBase {
           'test:complex_child',
         ],
       ],
-      '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', [$this->getRandomGenerator()->string()]],
+      '#lazy_builder' => [
+        'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
+        [$this->getRandomGenerator()->string()],
+      ],
       '#create_placeholder' => TRUE,
     ];
 

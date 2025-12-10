@@ -477,7 +477,16 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $cache_context_manager = $this->prophesize(CacheContextsManager::class);
 
-    foreach ([NULL, ['user.permissions'], ['route'], ['route', 'context.example1'], ['context.example1', 'route'], ['route', 'context.example1', 'context.example2'], ['context.example1', 'context.example2', 'route'], ['route', 'context.example1', 'context.example2', 'user.permissions']] as $argument) {
+    foreach ([
+      NULL,
+      ['user.permissions'],
+      ['route'],
+      ['route', 'context.example1'],
+      ['context.example1', 'route'],
+      ['route', 'context.example1', 'context.example2'],
+      ['context.example1', 'context.example2', 'route'],
+      ['route', 'context.example1', 'context.example2', 'user.permissions'],
+    ] as $argument) {
       $cache_context_manager->assertValidTokens($argument)->willReturn(TRUE);
     }
 

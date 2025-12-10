@@ -134,7 +134,10 @@ class PathValidatorTest extends UnitTestCase {
     $this->accessUnawareRouter->expects($this->once())
       ->method('match')
       ->with('/test-path')
-      ->willReturn([RouteObjectInterface::ROUTE_NAME => 'test_route', '_raw_variables' => new InputBag(['key' => 'value'])]);
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'test_route',
+        '_raw_variables' => new InputBag(['key' => 'value']),
+      ]);
     $this->pathProcessor->expects($this->once())
       ->method('processInbound')
       ->willReturnArgument(0);
@@ -157,7 +160,10 @@ class PathValidatorTest extends UnitTestCase {
     $this->accessAwareRouter->expects($this->once())
       ->method('match')
       ->with('/test-path')
-      ->willReturn([RouteObjectInterface::ROUTE_NAME => 'test_route', '_raw_variables' => new InputBag(['key' => 'value'])]);
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'test_route',
+        '_raw_variables' => new InputBag(['key' => 'value']),
+      ]);
     $this->pathProcessor->expects($this->once())
       ->method('processInbound')
       ->willReturnArgument(0);
@@ -180,7 +186,10 @@ class PathValidatorTest extends UnitTestCase {
     $this->accessAwareRouter->expects($this->once())
       ->method('match')
       ->with('/test-path')
-      ->willReturn([RouteObjectInterface::ROUTE_NAME => 'test_route', '_raw_variables' => new InputBag(['key' => 'value'])]);
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'test_route',
+        '_raw_variables' => new InputBag(['key' => 'value']),
+      ]);
     $this->pathProcessor->expects($this->once())
       ->method('processInbound')
       ->with('/path-alias', $this->anything())
@@ -346,7 +355,10 @@ class PathValidatorTest extends UnitTestCase {
     $this->accessAwareRouter->expects($this->exactly(2))
       ->method('match')
       ->with('/test-path')
-      ->willReturn([RouteObjectInterface::ROUTE_NAME => 'test_route', '_raw_variables' => new InputBag(['key' => 'value'])]);
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'test_route',
+        '_raw_variables' => new InputBag(['key' => 'value']),
+      ]);
     $this->pathProcessor->expects($this->exactly(2))
       ->method('processInbound')
       ->willReturnArgument(0);
@@ -442,7 +454,10 @@ class PathValidatorTest extends UnitTestCase {
     $this->accessUnawareRouter->expects($this->once())
       ->method('match')
       ->with('/test-path')
-      ->willReturn([RouteObjectInterface::ROUTE_NAME => 'test_route', '_raw_variables' => new InputBag(['key' => 'value'])]);
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'test_route',
+        '_raw_variables' => new InputBag(['key' => 'value']),
+      ]);
     $this->pathProcessor->expects($this->once())
       ->method('processInbound')
       ->willReturnArgument(0);

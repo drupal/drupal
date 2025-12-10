@@ -766,9 +766,18 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    */
   public static function providerTestCssAssert(): array {
     return [
-      'css_bad_category' => ['css_bad_category', 'See https://www.drupal.org/node/2274843.'],
-      'Improper CSS nesting' => ['css_bad_nesting', 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.'],
-      'Improper CSS nesting array' => ['css_bad_nesting_array', 'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.'],
+      'css_bad_category' => [
+        'css_bad_category',
+        'See https://www.drupal.org/node/2274843.',
+      ],
+      'Improper CSS nesting' => [
+        'css_bad_nesting',
+        'CSS must be nested under a category. See https://www.drupal.org/node/2274843.',
+      ],
+      'Improper CSS nesting array' => [
+        'css_bad_nesting_array',
+        'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.',
+      ],
     ];
   }
 

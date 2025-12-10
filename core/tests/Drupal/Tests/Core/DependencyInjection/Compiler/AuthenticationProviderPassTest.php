@@ -51,7 +51,14 @@ class AuthenticationProviderPassTest extends UnitTestCase {
     $compiler_pass = new AuthenticationProviderPass();
     $compiler_pass->process($container);
 
-    $this->assertEquals(['bunny_auth' => 'test_provider_a', 'llama_auth' => 'test_provider_a', 'camel_auth' => 'test_provider_b'], $container->getParameter('authentication_providers'));
+    $this->assertEquals(
+      [
+        'bunny_auth' => 'test_provider_a',
+        'llama_auth' => 'test_provider_a',
+        'camel_auth' => 'test_provider_b',
+      ],
+      $container->getParameter('authentication_providers')
+    );
   }
 
 }

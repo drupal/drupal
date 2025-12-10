@@ -332,8 +332,21 @@ class AccessManagerTest extends UnitTestCase {
     $this->paramConverter->expects($this->exactly(4))
       ->method('convert')
       ->willReturnMap([
-        [[RouteObjectInterface::ROUTE_NAME => 'test_route_2', RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_2')], []],
-        [['value' => 'example', RouteObjectInterface::ROUTE_NAME => 'test_route_4', RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_4')], ['value' => 'example']],
+        [
+          [
+            RouteObjectInterface::ROUTE_NAME => 'test_route_2',
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_2'),
+          ],
+          [],
+        ],
+        [
+          [
+            'value' => 'example',
+            RouteObjectInterface::ROUTE_NAME => 'test_route_4',
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_4'),
+          ],
+          ['value' => 'example'],
+        ],
       ]);
 
     // Tests the access with routes with parameters without given request.
@@ -364,7 +377,11 @@ class AccessManagerTest extends UnitTestCase {
     $this->paramConverter = $this->createMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
     $this->paramConverter->expects($this->atLeastOnce())
       ->method('convert')
-      ->with(['value' => 'example', RouteObjectInterface::ROUTE_NAME => 'test_route_1', RouteObjectInterface::ROUTE_OBJECT => $route])
+      ->with([
+        'value' => 'example',
+        RouteObjectInterface::ROUTE_NAME => 'test_route_1',
+        RouteObjectInterface::ROUTE_OBJECT => $route,
+      ])
       ->willReturn(['value' => 'upcasted_value']);
 
     $this->setupAccessArgumentsResolverFactory($this->exactly(2))
@@ -412,7 +429,11 @@ class AccessManagerTest extends UnitTestCase {
     $this->paramConverter = $this->createMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
     $this->paramConverter->expects($this->atLeastOnce())
       ->method('convert')
-      ->with(['value' => 'example', RouteObjectInterface::ROUTE_NAME => 'test_route_1', RouteObjectInterface::ROUTE_OBJECT => $route])
+      ->with([
+        'value' => 'example',
+        RouteObjectInterface::ROUTE_NAME => 'test_route_1',
+        RouteObjectInterface::ROUTE_OBJECT => $route,
+      ])
       ->willReturn(['value' => 'upcasted_value']);
 
     $this->setupAccessArgumentsResolverFactory($this->exactly(2))

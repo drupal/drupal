@@ -80,13 +80,29 @@ class CacheableMetadataTest extends UnitTestCase {
   public static function providerTestMerge(): array {
     return [
       // All empty.
-      [(new CacheableMetadata()), (new CacheableMetadata()), (new CacheableMetadata())],
+      [
+        (new CacheableMetadata()),
+        (new CacheableMetadata()),
+        (new CacheableMetadata()),
+      ],
       // Cache contexts.
-      [(new CacheableMetadata())->setCacheContexts(['foo']), (new CacheableMetadata())->setCacheContexts(['bar']), (new CacheableMetadata())->setCacheContexts(['bar', 'foo'])],
+      [
+        (new CacheableMetadata())->setCacheContexts(['foo']),
+        (new CacheableMetadata())->setCacheContexts(['bar']),
+        (new CacheableMetadata())->setCacheContexts(['bar', 'foo']),
+      ],
       // Cache tags.
-      [(new CacheableMetadata())->setCacheTags(['foo']), (new CacheableMetadata())->setCacheTags(['bar']), (new CacheableMetadata())->setCacheTags(['foo', 'bar'])],
+      [
+        (new CacheableMetadata())->setCacheTags(['foo']),
+        (new CacheableMetadata())->setCacheTags(['bar']),
+        (new CacheableMetadata())->setCacheTags(['foo', 'bar']),
+      ],
       // Cache max-ages.
-      [(new CacheableMetadata())->setCacheMaxAge(60), (new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT), (new CacheableMetadata())->setCacheMaxAge(60)],
+      [
+        (new CacheableMetadata())->setCacheMaxAge(60),
+        (new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT),
+        (new CacheableMetadata())->setCacheMaxAge(60),
+      ],
     ];
   }
 

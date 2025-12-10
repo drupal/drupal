@@ -51,8 +51,14 @@ class EntityBundleListCacheTest extends BrowserTestBase {
    */
   public function testBundleListingCache(): void {
     // Access to lists of test entities with each bundle.
-    $bundle_a_url = Url::fromRoute('cache_test_list.bundle_tags', ['entity_type_id' => 'entity_test_with_bundle', 'bundle' => 'bundle_a']);
-    $bundle_b_url = Url::fromRoute('cache_test_list.bundle_tags', ['entity_type_id' => 'entity_test_with_bundle', 'bundle' => 'bundle_b']);
+    $bundle_a_url = Url::fromRoute('cache_test_list.bundle_tags', [
+      'entity_type_id' => 'entity_test_with_bundle',
+      'bundle' => 'bundle_a',
+    ]);
+    $bundle_b_url = Url::fromRoute('cache_test_list.bundle_tags', [
+      'entity_type_id' => 'entity_test_with_bundle',
+      'bundle' => 'bundle_b',
+    ]);
     $this->drupalGet($bundle_a_url);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertCacheTags(['rendered', 'entity_test_with_bundle_list:bundle_a']);

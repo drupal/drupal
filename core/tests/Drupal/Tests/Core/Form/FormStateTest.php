@@ -431,7 +431,10 @@ class FormStateTest extends UnitTestCase {
     $form_state = new FormState();
     $form_state->setValue('value_to_clean', 'rainbow_sprinkles');
     $form_state->addCleanValueKey('value_to_clean');
-    $this->assertSame($form_state->getCleanValueKeys(), ['form_id', 'form_token', 'form_build_id', 'op', 'value_to_clean']);
+    $this->assertSame(
+      $form_state->getCleanValueKeys(),
+      ['form_id', 'form_token', 'form_build_id', 'op', 'value_to_clean']
+    );
     return $form_state;
   }
 

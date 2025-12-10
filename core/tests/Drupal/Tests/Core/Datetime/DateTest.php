@@ -94,7 +94,13 @@ class DateTest extends UnitTestCase {
     $this->dateFormatter = new DateFormatter($this->entityTypeManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack);
 
     $this->dateFormatterStub = $this->getMockBuilder('\Drupal\Core\Datetime\DateFormatter')
-      ->setConstructorArgs([$this->entityTypeManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack])
+      ->setConstructorArgs([
+        $this->entityTypeManager,
+        $this->languageManager,
+        $this->stringTranslation,
+        $this->getConfigFactoryStub(),
+        $this->requestStack,
+      ])
       ->onlyMethods(['formatDiff'])
       ->getMock();
   }
@@ -337,26 +343,122 @@ class DateTest extends UnitTestCase {
       ['23 hours 59 minutes', 60, self::createTimestamp('2013-12-10 10:10:08'), $request_time],
 
       // Checks for days and possibly hours, minutes or seconds.
-      ['1 day', 86400, self::createTimestamp('2013-12-10 10:09:08'), $request_time],
-      ['1 day', 86400, self::createTimestamp('2013-12-10 10:09:07'), $request_time],
-      ['1 day 1 hour', 3600, self::createTimestamp('2013-12-10 09:09:08'), $request_time],
-      ['1 day 1 hour 1 minute', 60, self::createTimestamp('2013-12-10 09:08:07'), $request_time, $granularity_3 + $langcode_en],
-      ['1 day 1 hour 1 minute 1 second', 1, self::createTimestamp('2013-12-10 09:08:07'), $request_time, $granularity_4 + $langcode_lolspeak],
-      ['1 day 2 hours 2 minutes 2 seconds', 1, self::createTimestamp('2013-12-10 08:07:06'), $request_time, $granularity_4],
-      ['2 days', 86400, self::createTimestamp('2013-12-09 10:09:08'), $request_time],
-      ['2 days', 86400, self::createTimestamp('2013-12-09 10:07:08'), $request_time],
-      ['2 days 2 hours', 3600, self::createTimestamp('2013-12-09 08:09:08'), $request_time],
-      ['2 days 2 hours 2 minutes', 60, self::createTimestamp('2013-12-09 08:07:06'), $request_time, $granularity_3 + $langcode_en],
-      ['2 days 2 hours 2 minutes 2 seconds', 1, self::createTimestamp('2013-12-09 08:07:06'), $request_time, $granularity_4 + $langcode_lolspeak],
+      [
+        '1 day',
+        86400,
+        self::createTimestamp('2013-12-10 10:09:08'),
+        $request_time,
+      ],
+      [
+        '1 day',
+        86400,
+        self::createTimestamp('2013-12-10 10:09:07'),
+        $request_time,
+      ],
+      [
+        '1 day 1 hour',
+        3600,
+        self::createTimestamp('2013-12-10 09:09:08'),
+        $request_time,
+      ],
+      [
+        '1 day 1 hour 1 minute',
+        60,
+        self::createTimestamp('2013-12-10 09:08:07'),
+        $request_time,
+        $granularity_3 + $langcode_en,
+      ],
+      [
+        '1 day 1 hour 1 minute 1 second',
+        1,
+        self::createTimestamp('2013-12-10 09:08:07'),
+        $request_time,
+        $granularity_4 + $langcode_lolspeak,
+      ],
+      [
+        '1 day 2 hours 2 minutes 2 seconds',
+        1,
+        self::createTimestamp('2013-12-10 08:07:06'),
+        $request_time,
+        $granularity_4,
+      ],
+      [
+        '2 days',
+        86400,
+        self::createTimestamp('2013-12-09 10:09:08'),
+        $request_time,
+      ],
+      [
+        '2 days',
+        86400,
+        self::createTimestamp('2013-12-09 10:07:08'),
+        $request_time,
+      ],
+      [
+        '2 days 2 hours',
+        3600,
+        self::createTimestamp('2013-12-09 08:09:08'),
+        $request_time,
+      ],
+      [
+        '2 days 2 hours 2 minutes',
+        60,
+        self::createTimestamp('2013-12-09 08:07:06'),
+        $request_time,
+        $granularity_3 + $langcode_en,
+      ],
+      [
+        '2 days 2 hours 2 minutes 2 seconds',
+        1,
+        self::createTimestamp('2013-12-09 08:07:06'),
+        $request_time,
+        $granularity_4 + $langcode_lolspeak,
+      ],
 
       // Checks for weeks and possibly days, hours, minutes or seconds.
-      ['1 week', 7 * 86400, self::createTimestamp('2013-12-04 10:09:08'), $request_time],
-      ['1 week 1 day', 86400, self::createTimestamp('2013-12-03 10:09:08'), $request_time],
-      ['2 weeks', 7 * 86400, self::createTimestamp('2013-11-27 10:09:08'), $request_time],
-      ['2 weeks 2 days', 86400, self::createTimestamp('2013-11-25 08:07:08'), $request_time],
-      ['2 weeks 2 days 2 hours 2 minutes', 60, self::createTimestamp('2013-11-25 08:07:08'), $request_time, $granularity_4],
-      ['4 weeks', 7 * 86400, self::createTimestamp('2013-11-13 10:09:08'), $request_time],
-      ['4 weeks 1 day', 86400, self::createTimestamp('2013-11-12 10:09:08'), $request_time],
+      [
+        '1 week',
+        7 * 86400,
+        self::createTimestamp('2013-12-04 10:09:08'),
+        $request_time,
+      ],
+      [
+        '1 week 1 day',
+        86400,
+        self::createTimestamp('2013-12-03 10:09:08'),
+        $request_time,
+      ],
+      [
+        '2 weeks',
+        7 * 86400,
+        self::createTimestamp('2013-11-27 10:09:08'),
+        $request_time,
+      ],
+      [
+        '2 weeks 2 days',
+        86400,
+        self::createTimestamp('2013-11-25 08:07:08'),
+        $request_time,
+      ],
+      [
+        '2 weeks 2 days 2 hours 2 minutes',
+        60,
+        self::createTimestamp('2013-11-25 08:07:08'),
+        $request_time,
+        $granularity_4,
+      ],
+      [
+        '4 weeks',
+        7 * 86400,
+        self::createTimestamp('2013-11-13 10:09:08'),
+        $request_time,
+      ],
+      [
+        '4 weeks 1 day',
+        86400,
+        self::createTimestamp('2013-11-12 10:09:08'),
+        $request_time,
+      ],
 
       // Checks for months and possibly days, hours, minutes or seconds.
       ['1 month', 30 * 86400, self::createTimestamp('2013-11-11 10:09:08'), $request_time],
@@ -391,11 +493,23 @@ class DateTest extends UnitTestCase {
       ['100 years', 365 * 86400, self::createTimestamp('1913-12-11 10:09:08'), $request_time],
 
       // Checks the non-strict option vs. strict (default).
-      ['1 second', 1, self::createTimestamp('2013-12-11 10:09:08'), self::createTimestamp('2013-12-11 10:09:07'), $non_strict],
+      [
+        '1 second',
+        1,
+        self::createTimestamp('2013-12-11 10:09:08'),
+        self::createTimestamp('2013-12-11 10:09:07'),
+        $non_strict,
+      ],
       ['0 seconds', 0, self::createTimestamp('2013-12-11 10:09:08'), self::createTimestamp('2013-12-11 10:09:07')],
 
       // Checks granularity limit.
-      ['2 years 3 months 1 week', 7 * 86400, self::createTimestamp('2011-08-30 11:15:57'), $request_time, $granularity_3],
+      [
+        '2 years 3 months 1 week',
+        7 * 86400,
+        self::createTimestamp('2011-08-30 11:15:57'),
+        $request_time,
+        $granularity_3,
+      ],
     ];
 
     return $data;

@@ -567,7 +567,11 @@ EOS;
           'filename' => 'module_b.module',
         ],
     ], $key_value, $theme_handler, 'post_update');
-    $update_registry->registerInvokedUpdates(['module_a_post_update_a', 'module_a_post_update_b', 'theme_d_post_update_c']);
+    $update_registry->registerInvokedUpdates([
+      'module_a_post_update_a',
+      'module_a_post_update_b',
+      'theme_d_post_update_c',
+    ]);
   }
 
   /**
@@ -616,7 +620,12 @@ EOS;
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
     $key_value->get('existing_updates', [])
-      ->willReturn(['module_a_post_update_b', 'module_a_post_update_a', 'module_b_post_update_a', 'theme_d_post_update_c'])
+      ->willReturn([
+        'module_a_post_update_b',
+        'module_a_post_update_a',
+        'module_b_post_update_a',
+        'theme_d_post_update_c',
+      ])
       ->shouldBeCalledTimes(1);
     $key_value->set('existing_updates', ['module_b_post_update_a', 'theme_d_post_update_c'])
       ->willReturn(NULL)

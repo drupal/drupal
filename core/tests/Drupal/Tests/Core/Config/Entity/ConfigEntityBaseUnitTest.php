@@ -532,7 +532,14 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $container = TestKernel::setContainerWithKernel();
     $container->set('plugin.manager.foo', $plugin_manager->reveal());
 
-    $entity_values = ['the_plugin_collection_config' => [$instance_id => ['id' => $instance_id, 'foo' => 'original_value']]];
+    $entity_values = [
+      'the_plugin_collection_config' => [
+        $instance_id => [
+          'id' => $instance_id,
+          'foo' => 'original_value',
+        ],
+      ],
+    ];
     $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
     $entity->setPluginManager($plugin_manager->reveal());
 
@@ -849,7 +856,14 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       $plugin_manager->createInstance($instance_id, Argument::any())->willReturn($instance);
     }
 
-    $entity_values = ['the_plugin_collection_config' => [$instance_id => ['id' => $instance_id, 'foo' => 'original_value']]];
+    $entity_values = [
+      'the_plugin_collection_config' => [
+        $instance_id => [
+          'id' => $instance_id,
+          'foo' => 'original_value',
+        ],
+      ],
+    ];
     $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
     $entity->setSyncing($syncing);
     $entity->setPluginManager($plugin_manager->reveal());
@@ -878,7 +892,14 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       $plugin_manager->createInstance($instance_id, Argument::any())->willReturn($instance);
     }
 
-    $entity_values = ['the_plugin_collection_config' => [$instance_id => ['id' => $instance_id, 'foo' => 'original_value']]];
+    $entity_values = [
+      'the_plugin_collection_config' => [
+        $instance_id => [
+          'id' => $instance_id,
+          'foo' => 'original_value',
+        ],
+      ],
+    ];
     $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
     $entity->setSyncing($syncing);
     $entity->setPluginManager($plugin_manager->reveal());

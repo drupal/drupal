@@ -124,7 +124,13 @@ class RequestSanitizerTest extends UnitTestCase {
     $tests['no sanitization COOKIE'] = [$request, ['cookies' => ['key' => 'value']]];
 
     $request = new Request(['q' => 'index.php'], ['field' => 'value'], [], ['key' => 'value']);
-    $tests['no sanitization GET, POST, COOKIE'] = [$request, ['query' => ['q' => 'index.php'], 'request' => ['field' => 'value'], 'cookies' => ['key' => 'value']]];
+    $tests['no sanitization GET, POST, COOKIE'] = [$request,
+      [
+        'query' => ['q' => 'index.php'],
+        'request' => ['field' => 'value'],
+        'cookies' => ['key' => 'value'],
+      ],
+    ];
 
     $request = new Request(['q' => 'index.php']);
     $tests['no sanitization GET log'] = [$request, ['query' => ['q' => 'index.php']], []];
@@ -148,28 +154,57 @@ class RequestSanitizerTest extends UnitTestCase {
     $tests['sanitization GET, POST, COOKIE'] = [$request];
 
     $request = new Request(['#q' => 'index.php']);
-    $tests['sanitization GET log'] = [$request, [], ['Potentially unsafe keys removed from query string parameters (GET): #q']];
+    $tests['sanitization GET log'] = [
+      $request,
+      [],
+      ['Potentially unsafe keys removed from query string parameters (GET): #q'],
+    ];
 
     $request = new Request([], ['#field' => 'value']);
-    $tests['sanitization POST log'] = [$request, [], ['Potentially unsafe keys removed from request body parameters (POST): #field']];
+    $tests['sanitization POST log'] = [
+      $request,
+      [],
+      ['Potentially unsafe keys removed from request body parameters (POST): #field'],
+    ];
 
     $request = new Request([], [], [], ['#key' => 'value']);
     $tests['sanitization COOKIE log'] = [$request, [], ['Potentially unsafe keys removed from cookie parameters: #key']];
 
     $request = new Request(['#q' => 'index.php'], ['#field' => 'value'], [], ['#key' => 'value']);
-    $tests['sanitization GET, POST, COOKIE log'] = [$request, [], ['Potentially unsafe keys removed from query string parameters (GET): #q', 'Potentially unsafe keys removed from request body parameters (POST): #field', 'Potentially unsafe keys removed from cookie parameters: #key']];
+    $tests['sanitization GET, POST, COOKIE log'] = [
+      $request,
+      [],
+      [
+        'Potentially unsafe keys removed from query string parameters (GET): #q',
+        'Potentially unsafe keys removed from request body parameters (POST): #field',
+        'Potentially unsafe keys removed from cookie parameters: #key',
+      ],
+    ];
 
     $request = new Request(['q' => 'index.php', 'foo' => ['#bar' => 'foo']]);
-    $tests['recursive sanitization log'] = [$request, ['query' => ['q' => 'index.php', 'foo' => []]], ['Potentially unsafe keys removed from query string parameters (GET): #bar']];
+    $tests['recursive sanitization log'] = [
+      $request,
+      ['query' => ['q' => 'index.php', 'foo' => []]],
+      ['Potentially unsafe keys removed from query string parameters (GET): #bar'],
+    ];
 
     $request = new Request(['q' => 'index.php', 'foo' => ['#bar' => 'foo']]);
-    $tests['recursive no sanitization allowed list'] = [$request, ['query' => ['q' => 'index.php', 'foo' => ['#bar' => 'foo']]], [], ['#bar']];
+    $tests['recursive no sanitization allowed list'] = [
+      $request,
+      ['query' => ['q' => 'index.php', 'foo' => ['#bar' => 'foo']]],
+      [],
+      ['#bar'],
+    ];
 
     $request = new Request([], ['#field' => 'value']);
     $tests['no sanitization POST allowed list'] = [$request, ['request' => ['#field' => 'value']], [], ['#field']];
 
     $request = new Request(['q' => 'index.php', 'foo' => ['#bar' => 'foo', '#foo' => 'bar']]);
-    $tests['recursive multiple sanitization log'] = [$request, ['query' => ['q' => 'index.php', 'foo' => []]], ['Potentially unsafe keys removed from query string parameters (GET): #bar, #foo']];
+    $tests['recursive multiple sanitization log'] = [
+      $request,
+      ['query' => ['q' => 'index.php', 'foo' => []]],
+      ['Potentially unsafe keys removed from query string parameters (GET): #bar, #foo'],
+    ];
 
     $request = new Request(['#q' => 'index.php']);
     $request->attributes->set(RequestSanitizer::SANITIZED, TRUE);
@@ -185,19 +220,36 @@ class RequestSanitizerTest extends UnitTestCase {
     $tests['destination removal COOKIE'] = [$request];
 
     $request = new Request(['destination' => 'whatever?%23test=value']);
-    $tests['destination removal GET log'] = [$request, [], ['Potentially unsafe destination removed from query parameter bag because it contained the following keys: #test']];
+    $tests['destination removal GET log'] = [
+      $request,
+      [],
+      ['Potentially unsafe destination removed from query parameter bag because it contained the following keys: #test'],
+    ];
 
     $request = new Request([], ['destination' => 'whatever?%23test=value']);
-    $tests['destination removal POST log'] = [$request, [], ['Potentially unsafe destination removed from request parameter bag because it contained the following keys: #test']];
+    $tests['destination removal POST log'] = [
+      $request,
+      [],
+      ['Potentially unsafe destination removed from request parameter bag because it contained the following keys: #test'],
+    ];
 
     $request = new Request([], [], [], ['destination' => 'whatever?%23test=value']);
-    $tests['destination removal COOKIE log'] = [$request, [], ['Potentially unsafe destination removed from cookies parameter bag because it contained the following keys: #test']];
+    $tests['destination removal COOKIE log'] = [
+      $request,
+      [],
+      ['Potentially unsafe destination removed from cookies parameter bag because it contained the following keys: #test'],
+    ];
 
     $request = new Request(['destination' => 'whatever?q[%23test]=value']);
     $tests['destination removal subkey'] = [$request];
 
     $request = new Request(['destination' => 'whatever?q[%23test]=value']);
-    $tests['destination allowed list'] = [$request, ['query' => ['destination' => 'whatever?q[%23test]=value']], [], ['#test']];
+    $tests['destination allowed list'] = [
+      $request,
+      ['query' => ['destination' => 'whatever?q[%23test]=value']],
+      [],
+      ['#test'],
+    ];
 
     $request = new Request(['destination' => "whatever?\x00bar=base&%23test=value"]);
     $tests['destination removal zero byte'] = [$request];

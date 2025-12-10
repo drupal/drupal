@@ -104,7 +104,12 @@ class MenuTreeParametersTest extends UnitTestCase {
 
     // Add another condition with an operator.
     $parameters->addCondition('id', 1337, '<');
-    $this->assertEquals(['expanded' => 1, 'has_children' => 0, 'provider' => [['module1', 'module2'], 'IN'], 'id' => [1337, '<']], $parameters->conditions);
+    $this->assertEquals([
+      'expanded' => 1,
+      'has_children' => 0,
+      'provider' => [['module1', 'module2'], 'IN'],
+      'id' => [1337, '<'],
+    ], $parameters->conditions);
 
     // It's impossible to add two conditions on the same field; in that case,
     // the old condition will be overwritten.

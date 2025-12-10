@@ -94,7 +94,10 @@ class TestSiteTearDownCommand extends Command {
     array_walk($tables, [$schema, 'dropTable']);
 
     // Delete test site directory.
-    $this->fileUnmanagedDeleteRecursive($root . DIRECTORY_SEPARATOR . $test_database->getTestSitePath(), [BrowserTestBase::class, 'filePreDeleteCallback']);
+    $this->fileUnmanagedDeleteRecursive(
+      $root . DIRECTORY_SEPARATOR . $test_database->getTestSitePath(),
+      [BrowserTestBase::class, 'filePreDeleteCallback']
+    );
   }
 
   /**

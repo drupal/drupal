@@ -199,7 +199,12 @@ abstract class FormTestBase extends UnitTestCase {
     $this->callableResolver = $this->createStub(CallableResolver::class);
     $this->formValidator = new FormValidator($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler, $this->callableResolver);
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
-      ->setConstructorArgs([$this->requestStack, $this->urlGenerator, $this->redirectResponseSubscriber, $this->callableResolver])
+      ->setConstructorArgs([
+        $this->requestStack,
+        $this->urlGenerator,
+        $this->redirectResponseSubscriber,
+        $this->callableResolver,
+      ])
       ->onlyMethods(['batchGet'])
       ->getMock();
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);

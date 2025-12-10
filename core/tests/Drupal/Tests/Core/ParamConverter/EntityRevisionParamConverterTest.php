@@ -98,11 +98,26 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   public static function providerTestConvert(): array {
     $data = [];
     // Existing entity type.
-    $data[] = ['valid_id', ['type' => 'entity_revision:entity_test'], ['test_revision' => 'valid_id'], (object) ['revision_id' => 'valid_id']];
+    $data[] = [
+      'valid_id',
+      ['type' => 'entity_revision:entity_test'],
+      ['test_revision' => 'valid_id'],
+      (object) ['revision_id' => 'valid_id'],
+    ];
     // Invalid ID.
-    $data[] = ['invalid_id', ['type' => 'entity_revision:entity_test'], ['test_revision' => 'invalid_id'], NULL];
+    $data[] = [
+      'invalid_id',
+      ['type' => 'entity_revision:entity_test'],
+      ['test_revision' => 'invalid_id'],
+      NULL,
+    ];
     // Entity type placeholder.
-    $data[] = ['valid_id', ['type' => 'entity_revision:{entity_type}'], ['test_revision' => 'valid_id', 'entity_type' => 'entity_test'], (object) ['revision_id' => 'valid_id']];
+    $data[] = [
+      'valid_id',
+      ['type' => 'entity_revision:{entity_type}'],
+      ['test_revision' => 'valid_id', 'entity_type' => 'entity_test'],
+      (object) ['revision_id' => 'valid_id'],
+    ];
 
     return $data;
   }

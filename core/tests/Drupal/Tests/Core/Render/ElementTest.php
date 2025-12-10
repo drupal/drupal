@@ -152,8 +152,22 @@ class ElementTest extends UnitTestCase {
       [['#property1' => '', 'child1' => []], ['child1']],
       [['#property1' => '', 'child1' => [], 'child2' => ['#access' => TRUE]], ['child1', 'child2']],
       [['#property1' => '', 'child1' => [], 'child2' => ['#access' => FALSE]], ['child1']],
-      'access_result_object_allowed' => [['#property1' => '', 'child1' => [], 'child2' => ['#access' => AccessResult::allowed()]], ['child1', 'child2']],
-      'access_result_object_forbidden' => [['#property1' => '', 'child1' => [], 'child2' => ['#access' => AccessResult::forbidden()]], ['child1']],
+      'access_result_object_allowed' => [
+        [
+          '#property1' => '',
+          'child1' => [],
+          'child2' => ['#access' => AccessResult::allowed()],
+        ],
+        ['child1', 'child2'],
+      ],
+      'access_result_object_forbidden' => [
+        [
+          '#property1' => '',
+          'child1' => [],
+          'child2' => ['#access' => AccessResult::forbidden()],
+        ],
+        ['child1'],
+      ],
       [['#property1' => '', 'child1' => [], 'child2' => ['#type' => 'textfield']], ['child1', 'child2']],
       [['#property1' => '', 'child1' => [], 'child2' => ['#type' => 'value']], ['child1']],
       [['#property1' => '', 'child1' => [], 'child2' => ['#type' => 'hidden']], ['child1']],
@@ -176,8 +190,16 @@ class ElementTest extends UnitTestCase {
     $base = ['#id' => 'id', '#class' => []];
     return [
       [$base, [], $base],
-      [$base, ['id', 'class'], $base + ['#attributes' => ['id' => 'id', 'class' => []]]],
-      [$base + ['#attributes' => ['id' => 'id-not-overwritten']], ['id', 'class'], $base + ['#attributes' => ['id' => 'id-not-overwritten', 'class' => []]]],
+      [
+        $base,
+        ['id', 'class'],
+        $base + ['#attributes' => ['id' => 'id', 'class' => []]],
+      ],
+      [
+        $base + ['#attributes' => ['id' => 'id-not-overwritten']],
+        ['id', 'class'],
+        $base + ['#attributes' => ['id' => 'id-not-overwritten', 'class' => []]],
+      ],
     ];
   }
 

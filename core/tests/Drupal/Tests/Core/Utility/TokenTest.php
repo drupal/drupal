@@ -303,7 +303,11 @@ class TokenTest extends UnitTestCase {
     $data['html-in-string'] = ['<h1>Giraffe</h1>', [], '<h1>Giraffe</h1>'];
     $data['html-in-string-quote'] = ['<h1>Giraffe"</h1>', [], '<h1>Giraffe"</h1>'];
 
-    $data['simple-placeholder-with-plain-text'] = ['<h1>[token:meh]</h1>', ['[token:meh]' => 'Giraffe"'], '<h1>' . Html::escape('Giraffe"') . '</h1>'];
+    $data['simple-placeholder-with-plain-text'] = [
+      '<h1>[token:meh]</h1>',
+      ['[token:meh]' => 'Giraffe"'],
+      '<h1>' . Html::escape('Giraffe"') . '</h1>',
+    ];
 
     $data['simple-placeholder-with-safe-html'] = [
       '<h1>[token:meh]</h1>',

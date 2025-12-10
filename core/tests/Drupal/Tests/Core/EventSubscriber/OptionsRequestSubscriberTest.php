@@ -111,7 +111,10 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
           $collection->add('example.2', new Route('/example', [], [], [], '', [], [$method_a, $method_b]));
           $collection->add('example.3', new Route('/example', [], [], [], '', [], [$method_b, $method_c]));
           $methods = array_unique([$method_a, $method_b, $method_c]);
-          $data['multiple_routes_' . $method_a . '_' . $method_b . '_' . $method_c] = [$collection, implode(', ', $methods)];
+          $data['multiple_routes_' . $method_a . '_' . $method_b . '_' . $method_c] = [
+            $collection,
+            implode(', ', $methods),
+          ];
         }
       }
     }

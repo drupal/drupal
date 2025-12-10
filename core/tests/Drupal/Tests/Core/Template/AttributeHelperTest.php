@@ -58,10 +58,26 @@ class AttributeHelperTest extends UnitTestCase {
     return [
       [[], ['class' => ['class1']], ['class' => ['class1']]],
       [[], new Attribute(['class' => ['class1']]), ['class' => ['class1']]],
-      [['class' => ['example-class']], ['class' => ['class1']], ['class' => ['example-class', 'class1']]],
-      [['class' => ['example-class']], new Attribute(['class' => ['class1']]), ['class' => ['example-class', 'class1']]],
-      [['class' => ['example-class']], ['id' => 'foo', 'href' => 'bar'], ['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar']],
-      [['class' => ['example-class']], new Attribute(['id' => 'foo', 'href' => 'bar']), ['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar']],
+      [
+        ['class' => ['example-class']],
+        ['class' => ['class1']],
+        ['class' => ['example-class', 'class1']],
+      ],
+      [
+        ['class' => ['example-class']],
+        new Attribute(['class' => ['class1']]),
+        ['class' => ['example-class', 'class1']],
+      ],
+      [
+        ['class' => ['example-class']],
+        ['id' => 'foo', 'href' => 'bar'],
+        ['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar'],
+      ],
+      [
+        ['class' => ['example-class']],
+        new Attribute(['id' => 'foo', 'href' => 'bar']),
+        ['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar'],
+      ],
     ];
   }
 
