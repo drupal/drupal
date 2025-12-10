@@ -295,7 +295,12 @@ class FormSubmitterTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $request_stack->push(Request::create('/test-path'));
     return $this->getMockBuilder(FormSubmitter::class)
-      ->setConstructorArgs([$request_stack, $this->urlGenerator, $this->redirectResponseSubscriber, $this->callableResolver])
+      ->setConstructorArgs([
+        $request_stack,
+        $this->urlGenerator,
+        $this->redirectResponseSubscriber,
+        $this->callableResolver,
+      ])
       ->onlyMethods(['batchGet'])
       ->getMock();
   }

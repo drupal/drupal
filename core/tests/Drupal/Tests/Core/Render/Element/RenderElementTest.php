@@ -60,8 +60,14 @@ class RenderElementTest extends UnitTestCase {
 
     $prophecy = $this->prophesize('Drupal\Core\Routing\UrlGeneratorInterface');
     $url = '/test?foo=bar&ajax_form=1';
-    $prophecy->generateFromRoute('<current>', [], ['query' => ['foo' => 'bar', FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]], TRUE)
-      ->willReturn((new GeneratedUrl())->setCacheContexts(['route'])->setGeneratedUrl($url));
+    $prophecy->generateFromRoute('<current>', [], [
+      'query' => [
+        'foo' => 'bar',
+        FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
+      ],
+    ], TRUE)
+      ->willReturn((new GeneratedUrl())->setCacheContexts(['route'])
+        ->setGeneratedUrl($url));
 
     $url_generator = $prophecy->reveal();
     $this->container->set('url_generator', $url_generator);
@@ -93,8 +99,16 @@ class RenderElementTest extends UnitTestCase {
 
     $prophecy = $this->prophesize('Drupal\Core\Routing\UrlGeneratorInterface');
     $url = '/test?foo=bar&other=query&ajax_form=1';
-    $prophecy->generateFromRoute('<current>', [], ['query' => ['foo' => 'bar', 'other' => 'query', FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]], TRUE)
-      ->willReturn((new GeneratedUrl())->setCacheContexts(['route'])->setGeneratedUrl($url));
+    $prophecy->generateFromRoute('<current>', [], [
+      'query' => [
+        'foo' => 'bar',
+        'other' => 'query',
+        FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
+      ],
+    ], TRUE)
+      ->willReturn(
+        (new GeneratedUrl())->setCacheContexts(['route'])->setGeneratedUrl($url)
+       );
 
     $url_generator = $prophecy->reveal();
     $this->container->set('url_generator', $url_generator);

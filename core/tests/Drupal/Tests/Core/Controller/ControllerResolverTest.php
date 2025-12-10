@@ -68,11 +68,23 @@ class ControllerResolverTest extends UnitTestCase {
   public static function providerTestCreateController(): array {
     return [
       // Tests class::method.
-      ['Drupal\Tests\Core\Controller\MockController::getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'],
+      [
+        'Drupal\Tests\Core\Controller\MockController::getResult',
+        'Drupal\Tests\Core\Controller\MockController',
+        'This is a regular controller.',
+      ],
       // Tests service:method.
-      ['some_service:getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'],
+      [
+        'some_service:getResult',
+        'Drupal\Tests\Core\Controller\MockController',
+        'This is a regular controller.',
+      ],
       // Tests a class with injection.
-      ['Drupal\Tests\Core\Controller\MockContainerInjection::getResult', 'Drupal\Tests\Core\Controller\MockContainerInjection', 'This used injection.'],
+      [
+        'Drupal\Tests\Core\Controller\MockContainerInjection::getResult',
+        'Drupal\Tests\Core\Controller\MockContainerInjection',
+        'This used injection.',
+      ],
     ];
   }
 

@@ -522,9 +522,25 @@ class AttributeTest extends UnitTestCase {
    */
   public static function providerTestMerge(): array {
     return [
-      [new Attribute([]), new Attribute(['class' => ['class1']]), new Attribute(['class' => ['class1']])],
-      [new Attribute(['class' => ['example-class']]), new Attribute(['class' => ['class1']]), new Attribute(['class' => ['example-class', 'class1']])],
-      [new Attribute(['class' => ['example-class']]), new Attribute(['id' => 'foo', 'href' => 'bar']), new Attribute(['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar'])],
+      [
+        new Attribute([]),
+        new Attribute(['class' => ['class1']]),
+        new Attribute(['class' => ['class1']]),
+      ],
+      [
+        new Attribute(['class' => ['example-class']]),
+        new Attribute(['class' => ['class1']]),
+        new Attribute(['class' => ['example-class', 'class1']]),
+      ],
+      [
+        new Attribute(['class' => ['example-class']]),
+        new Attribute(['id' => 'foo', 'href' => 'bar']),
+        new Attribute([
+          'class' => ['example-class'],
+          'id' => 'foo',
+          'href' => 'bar',
+        ]),
+      ],
     ];
   }
 

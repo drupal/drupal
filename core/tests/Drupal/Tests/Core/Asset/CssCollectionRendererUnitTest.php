@@ -97,15 +97,25 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       return ['group' => 0, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data];
     };
 
-    // cspell:disable-next-line
-    $custom_attributes = ['integrity' => 'sha384-psK1OYPAYjYUhtDYW+Pj2yc', 'crossorigin' => 'anonymous', 'random-attribute' => 'test'];
+    $custom_attributes = [
+      // cspell:disable-next-line
+      'integrity' => 'sha384-psK1OYPAYjYUhtDYW+Pj2yc',
+      'crossorigin' => 'anonymous',
+      'random-attribute' => 'test',
+    ];
 
     return [
       // Single external CSS asset.
       0 => [
         // CSS assets.
         [
-          0 => ['group' => 0, 'type' => 'external', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'http://example.com/popular.js'],
+          0 => [
+            'group' => 0,
+            'type' => 'external',
+            'media' => 'all',
+            'preprocess' => TRUE,
+            'data' => 'http://example.com/popular.js',
+          ],
         ],
         // Render elements.
         [
@@ -115,7 +125,13 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       // Single file CSS asset.
       1 => [
         [
-          0 => ['group' => 0, 'type' => 'file', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'public://css/file-all'],
+          0 => [
+            'group' => 0,
+            'type' => 'file',
+            'media' => 'all',
+            'preprocess' => TRUE,
+            'data' => 'public://css/file-all',
+          ],
         ],
         [
           0 => $create_link_element('generated-relative-url:public://css/file-all?', 'all'),
@@ -124,7 +140,14 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       // Single file CSS asset with custom attributes.
       2 => [
         [
-          0 => ['group' => 0, 'type' => 'file', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'public://css/file-all', 'attributes' => $custom_attributes],
+          0 => [
+            'group' => 0,
+            'type' => 'file',
+            'media' => 'all',
+            'preprocess' => TRUE,
+            'data' => 'public://css/file-all',
+            'attributes' => $custom_attributes,
+          ],
         ],
         [
           0 => $create_link_element('generated-relative-url:public://css/file-all?', 'all', $custom_attributes),

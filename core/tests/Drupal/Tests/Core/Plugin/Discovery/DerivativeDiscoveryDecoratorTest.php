@@ -111,7 +111,10 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     // Ensure that both test derivatives got added.
     $this->assertContainsOnlyInstancesOf(DerivablePluginDefinitionInterface::class, $definitions);
-    $this->assertEquals(['non_container_aware_discovery:test_discovery_0', 'non_container_aware_discovery:test_discovery_1'], array_keys($definitions));
+    $this->assertEquals([
+      'non_container_aware_discovery:test_discovery_0',
+      'non_container_aware_discovery:test_discovery_1',
+    ], array_keys($definitions));
   }
 
   /**

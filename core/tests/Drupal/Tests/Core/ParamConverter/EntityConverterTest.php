@@ -165,12 +165,42 @@ class EntityConverterTest extends UnitTestCase {
    */
   public static function providerTestApplies(): array {
     $data = [];
-    $data[] = [['type' => 'entity:foo'], 'foo', new Route('/test/{foo}/bar'), FALSE];
-    $data[] = [['type' => 'entity:entity_test'], 'foo', new Route('/test/{foo}/bar'), TRUE];
-    $data[] = [['type' => 'entity:entity_test'], 'entity_test', new Route('/test/{entity_test}/bar'), TRUE];
-    $data[] = [['type' => 'entity:{entity_test}'], 'entity_test', new Route('/test/{entity_test}/bar'), FALSE];
-    $data[] = [['type' => 'entity:{entity_type}'], 'entity_test', new Route('/test/{entity_type}/{entity_test}/bar'), TRUE];
-    $data[] = [['type' => 'foo'], 'entity_test', new Route('/test/{entity_type}/{entity_test}/bar'), FALSE];
+    $data[] = [
+      ['type' => 'entity:foo'],
+      'foo',
+      new Route('/test/{foo}/bar'),
+      FALSE,
+    ];
+    $data[] = [
+      ['type' => 'entity:entity_test'],
+      'foo',
+      new Route('/test/{foo}/bar'),
+      TRUE,
+    ];
+    $data[] = [
+      ['type' => 'entity:entity_test'],
+      'entity_test',
+      new Route('/test/{entity_test}/bar'),
+      TRUE,
+    ];
+    $data[] = [
+      ['type' => 'entity:{entity_test}'],
+      'entity_test',
+      new Route('/test/{entity_test}/bar'),
+      FALSE,
+    ];
+    $data[] = [
+      ['type' => 'entity:{entity_type}'],
+      'entity_test',
+      new Route('/test/{entity_type}/{entity_test}/bar'),
+      TRUE,
+    ];
+    $data[] = [
+      ['type' => 'foo'],
+      'entity_test',
+      new Route('/test/{entity_type}/{entity_test}/bar'),
+      FALSE,
+    ];
 
     return $data;
   }
@@ -199,11 +229,26 @@ class EntityConverterTest extends UnitTestCase {
   public static function providerTestConvert(): array {
     $data = [];
     // Existing entity type.
-    $data[] = ['valid_id', ['type' => 'entity:entity_test'], ['foo' => 'valid_id'], (object) ['id' => 'valid_id']];
+    $data[] = [
+      'valid_id',
+      ['type' => 'entity:entity_test'],
+      ['foo' => 'valid_id'],
+      (object) ['id' => 'valid_id'],
+    ];
     // Invalid ID.
-    $data[] = ['invalid_id', ['type' => 'entity:entity_test'], ['foo' => 'invalid_id'], NULL];
+    $data[] = [
+      'invalid_id',
+      ['type' => 'entity:entity_test'],
+      ['foo' => 'invalid_id'],
+      NULL,
+    ];
     // Entity type placeholder.
-    $data[] = ['valid_id', ['type' => 'entity:{entity_type}'], ['foo' => 'valid_id', 'entity_type' => 'entity_test'], (object) ['id' => 'valid_id']];
+    $data[] = [
+      'valid_id',
+      ['type' => 'entity:{entity_type}'],
+      ['foo' => 'valid_id', 'entity_type' => 'entity_test'],
+      (object) ['id' => 'valid_id'],
+    ];
 
     return $data;
   }

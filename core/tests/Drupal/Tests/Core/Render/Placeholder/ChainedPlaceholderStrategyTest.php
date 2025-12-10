@@ -81,7 +81,14 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
     $prophecy->processPlaceholders([])->shouldNotBeCalled();
     $single_flush_strategy = $prophecy->reveal();
 
-    $data['fake esi and single_flush strategy - esi replaces all'] = [[$esi_strategy, $single_flush_strategy], $placeholders, $result];
+    $data['fake esi and single_flush strategy - esi replaces all'] = [
+      [
+        $esi_strategy,
+        $single_flush_strategy,
+      ],
+      $placeholders,
+      $result,
+    ];
 
     // ESI + SingleFlush strategy (mixed).
     $placeholders = [
@@ -109,7 +116,14 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
     $prophecy->processPlaceholders($normal_result)->willReturn($normal_result);
     $single_flush_strategy = $prophecy->reveal();
 
-    $data['fake esi and single_flush strategy - mixed'] = [[$esi_strategy, $single_flush_strategy], $placeholders, $result];
+    $data['fake esi and single_flush strategy - mixed'] = [
+      [
+        $esi_strategy,
+        $single_flush_strategy,
+      ],
+      $placeholders,
+      $result,
+    ];
 
     return $data;
   }

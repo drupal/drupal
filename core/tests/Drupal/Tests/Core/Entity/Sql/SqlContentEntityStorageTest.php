@@ -429,13 +429,28 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($schema_handler);
 
     $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal()])
+      ->setConstructorArgs([
+        $this->entityType,
+        $this->connection,
+        $this->entityFieldManager->reveal(),
+        $this->cache,
+        $this->languageManager,
+        new MemoryCache(new Time()),
+        $this->entityTypeBundleInfo,
+        $this->entityTypeManager->reveal(),
+      ])
       ->onlyMethods(['getStorageSchema'])
       ->getMock();
 
     $key_value = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
     $schema_handler = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager->reveal(), $this->entityType, $storage, $this->connection, $this->entityFieldManager->reveal()])
+      ->setConstructorArgs([
+        $this->entityTypeManager->reveal(),
+        $this->entityType,
+        $storage,
+        $this->connection,
+        $this->entityFieldManager->reveal(),
+      ])
       ->onlyMethods(['installedStorageSchema', 'createSharedTableSchema'])
       ->getMock();
     $schema_handler
@@ -646,10 +661,23 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ['revision_created' => 'revision_timestamp'],
       ['revision_user' => 'revision_uid'],
       ['revision_log_message' => 'revision_log'],
-      ['revision_created' => 'revision_timestamp', 'revision_user' => 'revision_uid'],
-      ['revision_created' => 'revision_timestamp', 'revision_log_message' => 'revision_log'],
-      ['revision_user' => 'revision_uid', 'revision_log_message' => 'revision_log'],
-      ['revision_created' => 'revision_timestamp', 'revision_user' => 'revision_uid', 'revision_log_message' => 'revision_log'],
+      [
+        'revision_created' => 'revision_timestamp',
+        'revision_user' => 'revision_uid',
+      ],
+      [
+        'revision_created' => 'revision_timestamp',
+        'revision_log_message' => 'revision_log',
+      ],
+      [
+        'revision_user' => 'revision_uid',
+        'revision_log_message' => 'revision_log',
+      ],
+      [
+        'revision_created' => 'revision_timestamp',
+        'revision_user' => 'revision_uid',
+        'revision_log_message' => 'revision_log',
+      ],
     ];
     foreach ($test_cases as $revision_metadata_field_names) {
       $this->setUp();
@@ -951,7 +979,11 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ['revision_created' => 'revision_timestamp', 'revision_user' => 'revision_uid'],
       ['revision_created' => 'revision_timestamp', 'revision_log_message' => 'revision_log'],
       ['revision_user' => 'revision_uid', 'revision_log_message' => 'revision_log'],
-      ['revision_created' => 'revision_timestamp', 'revision_user' => 'revision_uid', 'revision_log_message' => 'revision_log'],
+      [
+        'revision_created' => 'revision_timestamp',
+        'revision_user' => 'revision_uid',
+        'revision_log_message' => 'revision_log',
+      ],
     ];
     foreach ($test_cases as $revision_metadata_field_names) {
       $this->setUp();
@@ -1264,7 +1296,14 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($this->entityType);
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal()])
+      ->setConstructorArgs([
+        $this->entityType,
+        $this->connection,
+        $this->entityFieldManager->reveal(),
+        $this->cache,
+        $this->languageManager,
+        new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(),
+      ])
       ->onlyMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1332,7 +1371,14 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($this->entityType);
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal()])
+      ->setConstructorArgs([
+        $this->entityType,
+        $this->connection,
+        $this->entityFieldManager->reveal(),
+        $this->cache,
+        $this->languageManager,
+        new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(),
+      ])
       ->onlyMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')

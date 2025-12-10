@@ -90,7 +90,10 @@ class HtmlTagTest extends RendererTestBase {
       '#tag' => 'p><script>alert()</script><p',
       '#value' => 'value',
     ];
-    $tags['sanitized-tag'] = [$element, "<p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>value</p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>\n"];
+    $tags['sanitized-tag'] = [
+      $element,
+      "<p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>value</p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>\n",
+    ];
 
     // Ensure that #value is not filtered if it is marked as safe.
     $element = [
@@ -178,7 +181,10 @@ class HtmlTagTest extends RendererTestBase {
         'stroke-width' => 3,
       ],
     ];
-    $tags['path'] = [$element, '<path d="M 100 100 L 300 100 L 200 300 z" fill="orange" stroke="black" stroke-width="3" />' . "\n"];
+    $tags['path'] = [
+      $element,
+      '<path d="M 100 100 L 300 100 L 200 300 z" fill="orange" stroke="black" stroke-width="3" />' . "\n",
+    ];
 
     $element = [
       '#tag' => 'stop',
@@ -210,7 +216,10 @@ class HtmlTagTest extends RendererTestBase {
         ],
       ],
     ];
-    $tags['linearGradient'] = [$element, '<linearGradient><stop offset="5%" stop-color="#F60" />' . "\n" . '<stop offset="95%" stop-color="#FF6" />' . "\n" . '</linearGradient>' . "\n"];
+    $tags['linearGradient'] = [
+      $element,
+      '<linearGradient><stop offset="5%" stop-color="#F60" />' . "\n" . '<stop offset="95%" stop-color="#FF6" />' . "\n" . '</linearGradient>' . "\n",
+    ];
 
     // Simple link.
     $element = [

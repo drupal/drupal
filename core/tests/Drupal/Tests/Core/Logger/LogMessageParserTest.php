@@ -62,12 +62,24 @@ class LogMessageParserTest extends UnitTestCase {
         ['message' => 'User W-\\};~{&! created @', 'context' => []],
       ],
       'Multiple PSR3-style placeholders' => [
-        ['message' => 'Test {with} two {{encapsuled}} strings', 'context' => ['with' => 'together', 'encapsuled' => 'awesome']],
-        ['message' => 'Test @with two {@encapsuled} strings', 'context' => ['@with' => 'together', '@encapsuled' => 'awesome']],
+        [
+          'message' => 'Test {with} two {{encapsuled}} strings',
+          'context' => ['with' => 'together', 'encapsuled' => 'awesome'],
+        ],
+        [
+          'message' => 'Test @with two {@encapsuled} strings',
+          'context' => ['@with' => 'together', '@encapsuled' => 'awesome'],
+        ],
       ],
       'Disallowed placeholder' => [
-        ['message' => 'Test placeholder with :url and old !bang parameter', 'context' => [':url' => 'https://example.com', '!bang' => 'foo bar']],
-        ['message' => 'Test placeholder with :url and old !bang parameter', 'context' => [':url' => 'https://example.com']],
+        [
+          'message' => 'Test placeholder with :url and old !bang parameter',
+          'context' => [':url' => 'https://example.com', '!bang' => 'foo bar'],
+        ],
+        [
+          'message' => 'Test placeholder with :url and old !bang parameter',
+          'context' => [':url' => 'https://example.com'],
+        ],
       ],
       'Stringable object placeholder' => [
         ['message' => 'object @b', 'context' => ['@b' => new FormattableMarkup('convertible', [])]],

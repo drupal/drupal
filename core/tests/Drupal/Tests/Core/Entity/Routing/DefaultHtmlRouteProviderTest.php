@@ -176,7 +176,11 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
           'type' => 'entity:the_bundle_entity_type_id',
         ],
       ]);
-    $data['add_form_bundle_entity_id_key_type_null'] = [clone $route, $entity_type5->reveal(), $bundle_entity_type->reveal()];
+    $data['add_form_bundle_entity_id_key_type_null'] = [
+      clone $route,
+      $entity_type5->reveal(),
+      $bundle_entity_type->reveal(),
+    ];
 
     $entity_type6 = static::getEntityType($entity_type5);
     $bundle_entity_type = static::getEntityType();
@@ -184,7 +188,12 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $field_storage_definition = $prophet->prophesize(FieldStorageDefinitionInterface::class);
     $field_storage_definition->getType()->willReturn('integer');
     $route->setRequirement('the_entity_type_id', '\d+');
-    $data['add_form_bundle_entity_id_key_type_integer'] = [clone $route, $entity_type6->reveal(), $bundle_entity_type->reveal(), $field_storage_definition->reveal()];
+    $data['add_form_bundle_entity_id_key_type_integer'] = [
+      clone $route,
+      $entity_type6->reveal(),
+      $bundle_entity_type->reveal(),
+      $field_storage_definition->reveal(),
+    ];
 
     $entity_type7 = static::getEntityType($entity_type6);
     $bundle_entity_type = $prophet->prophesize(ConfigEntityTypeInterface::class);
@@ -199,7 +208,12 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
           'with_config_overrides' => TRUE,
         ],
       ]);
-    $data['add_form_bundle_entity_id_key_type_integer'] = [clone $route, $entity_type7->reveal(), $bundle_entity_type->reveal(), $field_storage_definition->reveal()];
+    $data['add_form_bundle_entity_id_key_type_integer'] = [
+      clone $route,
+      $entity_type7->reveal(),
+      $bundle_entity_type->reveal(),
+      $field_storage_definition->reveal(),
+    ];
 
     return $data;
   }

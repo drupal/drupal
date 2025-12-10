@@ -319,7 +319,11 @@ class RendererTest extends RendererTestBase {
           return '<a' . (string) $attributes . '>' . $vars['#title'] . '</a>';
         });
     };
-    $data[] = [$build, '<div class="baz"><a href="https://www.drupal.org" id="foo">bar</a></div>' . "\n", $setup_code_type_link];
+    $data[] = [
+      $build,
+      '<div class="baz"><a href="https://www.drupal.org" id="foo">bar</a></div>' . "\n",
+      $setup_code_type_link,
+    ];
 
     // Tests that #theme_wrappers can disambiguate element attributes when the
     // "base" attribute is not set for #theme.

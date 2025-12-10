@@ -280,6 +280,7 @@ class HtmxAttributesTest extends UnitTestCase {
   public static function hxSimpleStringAttributesDataProvider(): array {
     return [
       ['select', '#info-details', 'data-hx-select', '#info-details'],
+      // phpcs:ignore Drupal.Arrays.Array.LongLineDeclaration
       ['select', 'info[data-drupal-selector="edit-select"]', 'data-hx-select', 'info[data-drupal-selector="edit-select"]'],
       ['selectOob', '#info-details', 'data-hx-select-oob', '#info-details'],
       ['selectOob', ['#info-details:afterbegin', '#alert'], 'data-hx-select-oob', '#info-details:afterbegin,#alert'],

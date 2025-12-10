@@ -415,7 +415,12 @@ class EntityTypeTest extends UnitTestCase {
    * @legacy-covers ::getCountLabel
    */
   public function testGetCountLabel(): void {
-    $entity_type = $this->setUpEntityType(['label_count' => ['singular' => 'one entity test', 'plural' => '@count entity test']]);
+    $entity_type = $this->setUpEntityType([
+      'label_count' => [
+        'singular' => 'one entity test',
+        'plural' => '@count entity test',
+      ],
+    ]);
     $entity_type->setStringTranslation($this->getStringTranslationStub());
     $this->assertEquals('one entity test', $entity_type->getCountLabel(1));
     $this->assertEquals('2 entity test', $entity_type->getCountLabel(2));
@@ -423,7 +428,13 @@ class EntityTypeTest extends UnitTestCase {
     $this->assertArrayNotHasKey('context', $entity_type->getCountLabel(1)->getOptions());
 
     // Test a custom context.
-    $entity_type = $this->setUpEntityType(['label_count' => ['singular' => 'one entity test', 'plural' => '@count entity test', 'context' => 'custom context']]);
+    $entity_type = $this->setUpEntityType([
+      'label_count' => [
+        'singular' => 'one entity test',
+        'plural' => '@count entity test',
+        'context' => 'custom context',
+      ],
+    ]);
     $entity_type->setStringTranslation($this->getStringTranslationStub());
     $this->assertSame('custom context', $entity_type->getCountLabel(1)->getOption('context'));
   }
