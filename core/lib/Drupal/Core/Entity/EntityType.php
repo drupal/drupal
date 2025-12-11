@@ -67,6 +67,13 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   protected $originalClass;
 
   /**
+   * The list of the classes when overridden.
+   *
+   * @var class-string[]
+   */
+  protected array $decoratedClasses = [];
+
+  /**
    * An array of handlers.
    *
    * @var array
@@ -385,7 +392,10 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function set($property, $value) {
-    if (property_exists($this, $property)) {
+    if ($property === 'class') {
+      $this->setClass($value);
+    }
+    elseif (property_exists($this, $property)) {
       $this->{$property} = $value;
     }
     else {
@@ -455,11 +465,21 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function getDecoratedClasses(): array {
+    return $this->decoratedClasses;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setClass($class) {
-    if (!$this->originalClass && $this->class) {
-      // If the original class is currently not set, set it to the current
-      // class, assume that is the original class name.
-      $this->originalClass = $this->class;
+    if ($this->class) {
+      if (!$this->originalClass) {
+        // If the original class is currently not set, set it to the current
+        // class, assume that is the original class name.
+        $this->originalClass = $this->class;
+      }
+      $this->decoratedClasses[] = $this->class;
     }
 
     return parent::setClass($class);

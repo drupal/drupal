@@ -1,0 +1,7 @@
+name: 'Layout Builder Override Dependency Test'
+type: module
+description: 'Test layout builder override having Layout Builder has a dependency.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:layout_builder

@@ -69,6 +69,17 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getOriginalClass();
 
   /**
+   * Gets the list of all the classes for this entity type.
+   *
+   * In case the class name was changed with setClass(), this will return
+   * the list of all the changes.
+   *
+   * @return class-string[]
+   *   The list of classes.
+   */
+  public function getDecoratedClasses(): array;
+
+  /**
    * Gets an array of entity keys.
    *
    * @return array

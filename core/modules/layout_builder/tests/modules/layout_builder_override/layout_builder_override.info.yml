@@ -1,0 +1,5 @@
+name: 'Layout Builder Override Test'
+type: module
+description: 'Test layout builder override.'
+package: Testing
+version: VERSION
