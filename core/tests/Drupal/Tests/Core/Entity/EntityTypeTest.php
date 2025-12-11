@@ -305,6 +305,65 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * Tests get decorated classes through setClass.
+   *
+   * @legacy-covers ::setClass
+   * @legacy-covers ::getDecoratedClasses
+   */
+  public function testGetDecoratedClassesSetClass(): void {
+    $class_1 = $this->randomMachineName();
+    $entity_type = $this->setUpEntityType(['class' => $class_1]);
+    // No override: decoratedClasses is empty.
+    $expected = [];
+    $this->assertEquals($expected, $entity_type->getDecoratedClasses());
+
+    $class_2 = $this->randomMachineName();
+    $entity_type->setClass($class_2);
+    $expected = [
+      $class_1,
+    ];
+    $this->assertEquals($expected, $entity_type->getDecoratedClasses());
+
+    $class_3 = $this->randomMachineName();
+    $entity_type->setClass($class_3);
+    $expected = [
+      $class_1,
+      $class_2,
+    ];
+    $this->assertEquals($expected, $entity_type->getDecoratedClasses());
+  }
+
+  /**
+   * Tests get decorated classes through set.
+   *
+   * @legacy-covers ::set
+   * @legacy-covers ::setClass
+   * @legacy-covers ::getDecoratedClasses
+   */
+  public function testGetDecoratedClassesSet(): void {
+    $class_1 = $this->randomMachineName();
+    $entity_type = $this->setUpEntityType(['class' => $class_1]);
+    // No override: decoratedClasses is empty.
+    $expected = [];
+    $this->assertEquals($expected, $entity_type->getDecoratedClasses());
+
+    $class_2 = $this->randomMachineName();
+    $entity_type->set('class', $class_2);
+    $expected = [
+      $class_1,
+    ];
+    $this->assertEquals($expected, $entity_type->getDecoratedClasses());
+
+    $class_3 = $this->randomMachineName();
+    $entity_type->set('class', $class_3);
+    $expected = [
+      $class_1,
+      $class_2,
+    ];
+    $this->assertEquals($expected, $entity_type->getDecoratedClasses());
+  }
+
+  /**
    * Tests id.
    *
    * @legacy-covers ::id

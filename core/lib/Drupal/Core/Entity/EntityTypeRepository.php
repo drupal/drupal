@@ -77,7 +77,7 @@ class EntityTypeRepository implements EntityTypeRepositoryInterface {
     $entity_type_id = NULL;
     $definitions = $this->entityTypeManager->getDefinitions();
     foreach ($definitions as $entity_type) {
-      if ($entity_type->getOriginalClass() == $class_name || $entity_type->getClass() == $class_name) {
+      if (in_array($class_name, $entity_type->getDecoratedClasses(), TRUE) || $entity_type->getClass() == $class_name) {
         $entity_type_id = $entity_type->id();
         if ($same_class++) {
           throw new AmbiguousEntityClassException($class_name);
