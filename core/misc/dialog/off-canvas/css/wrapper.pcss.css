@@ -20,6 +20,9 @@
    * When the off-canvas appears at the top or bottom of the page (Workspaces
    * does this), it should not obscure the Navigation module's toolbar.
    *
+   * Note that the Layout Builder off-canvas dialog includes
+   * `data-offset-top="0"`, so we need to be sure to not select that.
+   *
    * Note that we have to use `!important` below to override the dialog JS's
    * inline CSS.
    *
@@ -27,7 +30,7 @@
    * We *may* able to remove this code once the https://www.drupal.org/i/3096017
    * is fixed.
    */
-  [data-admin-toolbar] &:is([data-offset-top], [data-offset-bottom]) {
+  [data-admin-toolbar] &:is([data-offset-top]:not([data-offset-top="0"]), [data-offset-bottom]:not([data-offset-bottom="0"])) {
     left: var(--drupal-displace-offset-left, 0) !important;
     width: calc(100% - var(--drupal-displace-offset-left, 0px)) !important;
 
