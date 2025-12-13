@@ -366,8 +366,15 @@ class FileItem extends EntityReferenceItem {
     // Ensure directory ends with a slash.
     $dirname .= str_ends_with($dirname, '/') ? '' : '/';
 
+    // Determine which extension to use when generating.
+    $extension = 'txt';
+    if (!empty($settings['file_extensions'])) {
+      $extensions = explode(' ', $settings['file_extensions']);
+      $extension = array_rand(array_flip($extensions), 1);
+    }
+
     // Generate a file entity.
-    $destination = $dirname . $random->name(10) . '.txt';
+    $destination = $dirname . $random->name(10, TRUE) . '.' . $extension;
     $data = $random->paragraphs(3);
     /** @var \Drupal\file\FileRepositoryInterface $file_repository */
     $file_repository = \Drupal::service('file.repository');

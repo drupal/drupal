@@ -203,4 +203,20 @@ class FileItemTest extends FieldKernelTestBase {
     $this->assertMatchesRegularExpression('#^' . preg_quote($expected_start, '#') . '[^/]+#', $fileUri);
   }
 
+  /**
+   * Tests sample value generation with actual allowed file extensions.
+   */
+  public function testGenerateSampleValue(): void {
+    /** @var \Drupal\field\Entity\FieldConfig $field_definition */
+    $field_definition = FieldConfig::loadByName('entity_test', 'entity_test', 'file_test');
+    $field_definition->setSetting('file_extensions', 'pdf');
+    $field_definition->save();
+
+    $class = $field_definition->getItemDefinition()->getClass();
+    $value = call_user_func("$class::generateSampleValue", $field_definition);
+    /** @var \Drupal\file\FileInterface $file */
+    $file = File::load($value['target_id']);
+    $this->assertStringEndsWith('.pdf', $file->getFileUri());
+  }
+
 }
