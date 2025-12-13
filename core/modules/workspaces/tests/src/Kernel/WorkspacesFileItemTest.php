@@ -62,4 +62,11 @@ class WorkspacesFileItemTest extends FileItemTest {
     parent::testFileItem();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testGenerateSampleValue(): void {
+    $this->markTestSkipped("This is already implemented and tested in base class. We don't require in child class.");
+  }
+
 }
