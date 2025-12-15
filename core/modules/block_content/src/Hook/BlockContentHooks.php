@@ -31,7 +31,10 @@ class BlockContentHooks {
         $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
         $output = '';
         $output .= '<h2>' . $this->t('About') . '</h2>';
-        $output .= '<p>' . $this->t('The Block Content module manages the creation, editing, and deletion of content blocks. Content blocks are field-able content entities managed by the <a href=":field">Field module</a>. For more information, see the <a href=":block-content">online documentation for the Block Content module</a>.', [':block-content' => 'https://www.drupal.org/documentation/modules/block_content', ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</p>';
+        $output .= '<p>' . $this->t('The Block Content module manages the creation, editing, and deletion of content blocks. Content blocks are field-able content entities managed by the <a href=":field">Field module</a>. For more information, see the <a href=":block-content">online documentation for the Block Content module</a>.', [
+          ':block-content' => 'https://www.drupal.org/documentation/modules/block_content',
+          ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(),
+        ]) . '</p>';
         $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
         $output .= '<dt>' . $this->t('Creating and managing block types') . '</dt>';

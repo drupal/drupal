@@ -180,7 +180,10 @@ class ImageStyleDownloadController extends FileDownloadController {
         $image_uri = $converted_image_uri;
       }
       else {
-        $this->logger->notice('Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.', ['%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri]);
+        $this->logger->notice('Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.', [
+          '%source_image_path' => $image_uri,
+          '%derivative_path' => $derivative_uri,
+        ]);
         return new Response($this->t('Error generating image, missing source file.'), 404);
       }
     }

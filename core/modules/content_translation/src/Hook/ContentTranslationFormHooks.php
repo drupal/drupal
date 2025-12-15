@@ -45,7 +45,11 @@ class ContentTranslationFormHooks {
     // Let the content translation handler alter the content entity form. This
     // can be the 'add' or 'edit' form. It also tries a 'default' form in case
     // neither of the aforementioned forms are defined.
-    if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1 && in_array($op, ['edit', 'add', 'default'], TRUE)) {
+    if ($entity instanceof ContentEntityInterface
+      && $entity->isTranslatable()
+      && count($entity->getTranslationLanguages()) > 1
+      && in_array($op, ['edit', 'add', 'default'], TRUE)
+    ) {
       $controller = $this->entityTypeManager->getHandler($entity->getEntityTypeId(), 'translation');
       $controller->entityFormAlter($form, $form_state, $entity);
       // @todo Move the following lines to the code generating the property form

@@ -208,7 +208,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
         // Check if the database is now empty, ignore the internal SQLite
         // tables.
         try {
-          $count = $this->query('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', [':type' => 'table', ':pattern' => 'sqlite_%'])->fetchField();
+          $count = $this->query('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', [
+            ':type' => 'table',
+            ':pattern' => 'sqlite_%',
+          ])->fetchField();
 
           // We can prune the database file if it doesn't have any tables.
           if ($count == 0 && $this->connectionOptions['database'] != ':memory:' && file_exists($this->connectionOptions['database'] . '-' . $prefix)) {
@@ -237,7 +240,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       // http://www.sqlite.org/inmemorydb.html it will open a unique database so
       // attaching it twice is not a problem.
       $database_file = $this->connectionOptions['database'] !== ':memory:' ? $this->connectionOptions['database'] . '-' . $database : $this->connectionOptions['database'];
-      $this->query('ATTACH DATABASE :database_file AS :database', [':database_file' => $database_file, ':database' => $database]);
+      $this->query('ATTACH DATABASE :database_file AS :database', [
+        ':database_file' => $database_file,
+        ':database' => $database,
+      ]);
       $this->attachedDatabases[$database] = $database;
     }
   }

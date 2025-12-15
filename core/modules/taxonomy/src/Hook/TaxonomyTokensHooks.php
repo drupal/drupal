@@ -52,7 +52,10 @@ class TaxonomyTokensHooks {
       'name' => $this->t("Vocabulary ID"),
       'description' => $this->t("The unique ID of the taxonomy vocabulary."),
     ];
-    $vocabulary['name'] = ['name' => $this->t("Name"), 'description' => $this->t("The name of the taxonomy vocabulary.")];
+    $vocabulary['name'] = [
+      'name' => $this->t("Name"),
+      'description' => $this->t("The name of the taxonomy vocabulary."),
+    ];
     $vocabulary['description'] = [
       'name' => $this->t("Description"),
       'description' => $this->t("The optional description of the taxonomy vocabulary."),

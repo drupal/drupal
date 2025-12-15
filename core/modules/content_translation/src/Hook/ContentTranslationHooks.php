@@ -482,7 +482,13 @@ class ContentTranslationHooks {
           else {
             $url = $entity->toUrl('canonical')->setOption('language', $language)->setAbsolute()->toString();
           }
-          $page['#attached']['html_head_link'][] = [['rel' => 'alternate', 'hreflang' => $language->getId(), 'href' => $url]];
+          $page['#attached']['html_head_link'][] = [
+            [
+              'rel' => 'alternate',
+              'hreflang' => $language->getId(),
+              'href' => $url,
+            ],
+          ];
         }
       }
       // Since entity was found, no need to iterate further.

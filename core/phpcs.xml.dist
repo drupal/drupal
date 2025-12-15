@@ -49,6 +49,9 @@
     <include-pattern>core/tests/Drupal/TestSite/*</include-pattern>
     <include-pattern>core/tests/Drupal/TestTools/*</include-pattern>
     <include-pattern>core/tests/Drupal/Tests/Core/*</include-pattern>
+    <include-pattern>core/modules/*/Hook/*</include-pattern>
+    <include-pattern>core/modules/*/Controller/*</include-pattern>
+    <include-pattern>core/modules/*/Database/*</include-pattern>
   </rule>
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
   <rule ref="Drupal.Classes.ClassDeclaration"/>

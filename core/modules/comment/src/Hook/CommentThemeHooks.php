@@ -111,7 +111,10 @@ class CommentThemeHooks {
         $variables['user_picture'] = [];
       }
 
-      $variables['submitted'] = $this->t('Submitted by @username on @datetime', ['@username' => $variables['author'], '@datetime' => $variables['created']]);
+      $variables['submitted'] = $this->t('Submitted by @username on @datetime', [
+        '@username' => $variables['author'],
+        '@datetime' => $variables['created'],
+      ]);
     }
 
     if (isset($comment->in_preview)) {

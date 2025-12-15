@@ -95,8 +95,16 @@ class PathHooks {
           'include_locked' => FALSE,
         ],
       ]);
-      $fields['path']->setDisplayOptions('form', ['type' => 'string_textfield', 'weight' => 5, 'settings' => ['size' => 45]]);
-      $fields['alias']->setDisplayOptions('form', ['type' => 'string_textfield', 'weight' => 10, 'settings' => ['size' => 45]]);
+      $fields['path']->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => 5,
+        'settings' => ['size' => 45],
+      ]);
+      $fields['alias']->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => 10,
+        'settings' => ['size' => 45],
+      ]);
     }
   }
 
@@ -106,7 +114,12 @@ class PathHooks {
   #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     if (in_array($entity_type->id(), ['taxonomy_term', 'node', 'media'], TRUE)) {
-      $fields['path'] = BaseFieldDefinition::create('path')->setLabel($this->t('URL alias'))->setTranslatable(TRUE)->setDisplayOptions('form', ['type' => 'path', 'weight' => 30])->setDisplayConfigurable('form', TRUE)->setComputed(TRUE);
+      $fields['path'] = BaseFieldDefinition::create('path')
+        ->setLabel($this->t('URL alias'))
+        ->setTranslatable(TRUE)
+        ->setDisplayOptions('form', ['type' => 'path', 'weight' => 30])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setComputed(TRUE);
       return $fields;
     }
     return [];

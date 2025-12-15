@@ -259,7 +259,10 @@ class UserController extends ControllerBase {
     $this->flood->clear('user.http_login', $identifier);
 
     user_login_finalize($user);
-    $this->logger->info('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
+    $this->logger->info('User %name used one-time login link at time %timestamp.', [
+      '%name' => $user->getDisplayName(),
+      '%timestamp' => $timestamp,
+    ]);
     $this->messenger()->addStatus($this->t('You have used a one-time login link. You can set your new password now.'));
     // Let the user's password be changed without the current password
     // check.

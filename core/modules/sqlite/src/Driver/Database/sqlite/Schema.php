@@ -32,7 +32,10 @@ class Schema extends DatabaseSchema {
     $info = $this->getPrefixInfo($table, $add_prefix);
 
     // Don't use {} around sqlite_master table.
-    return (bool) $this->connection->query('SELECT 1 FROM [' . $info['schema'] . '].sqlite_master WHERE type = :type AND name = :name', [':type' => 'table', ':name' => $info['table']])->fetchField();
+    return (bool) $this->connection->query('SELECT 1 FROM [' . $info['schema'] . '].sqlite_master WHERE type = :type AND name = :name', [
+      ':type' => 'table',
+      ':name' => $info['table'],
+    ])->fetchField();
   }
 
   /**

@@ -25,14 +25,27 @@ class ViewsTokensHooks {
       'description' => $this->t('Tokens related to views.'),
       'needs-data' => 'view',
     ];
-    $info['tokens']['view']['label'] = ['name' => $this->t('Label'), 'description' => $this->t('The label of the view.')];
-    $info['tokens']['view']['description'] = ['name' => $this->t('Description'), 'description' => $this->t('The description of the view.')];
-    $info['tokens']['view']['id'] = ['name' => $this->t('ID'), 'description' => $this->t('The machine-readable ID of the view.')];
+    $info['tokens']['view']['label'] = [
+      'name' => $this->t('Label'),
+      'description' => $this->t('The label of the view.'),
+    ];
+    $info['tokens']['view']['description'] = [
+      'name' => $this->t('Description'),
+      'description' => $this->t('The description of the view.'),
+    ];
+    $info['tokens']['view']['id'] = [
+      'name' => $this->t('ID'),
+      'description' => $this->t('The machine-readable ID of the view.'),
+    ];
     $info['tokens']['view']['title'] = [
       'name' => $this->t('Title'),
       'description' => $this->t('The title of current display of the view.'),
     ];
-    $info['tokens']['view']['url'] = ['name' => $this->t('URL'), 'description' => $this->t('The URL of the view.'), 'type' => 'url'];
+    $info['tokens']['view']['url'] = [
+      'name' => $this->t('URL'),
+      'description' => $this->t('The URL of the view.'),
+      'type' => 'url',
+    ];
     $info['tokens']['view']['base-table'] = [
       'name' => $this->t('Base table'),
       'description' => $this->t('The base table used for this view.'),
@@ -53,7 +66,10 @@ class ViewsTokensHooks {
       'name' => $this->t('Current page'),
       'description' => $this->t('The current page of results the view is on.'),
     ];
-    $info['tokens']['view']['page-count'] = ['name' => $this->t('Page count'), 'description' => $this->t('The total page count.')];
+    $info['tokens']['view']['page-count'] = [
+      'name' => $this->t('Page count'),
+      'description' => $this->t('The total page count.'),
+    ];
     return $info;
   }
 

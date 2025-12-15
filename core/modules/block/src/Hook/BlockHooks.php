@@ -217,7 +217,11 @@ class BlockHooks {
           // Disable blocks in invalid regions.
           if (!isset($regions[$block->getRegion()])) {
             if ($block->status()) {
-              \Drupal::messenger()->addWarning($this->t('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block_id, '%region' => $block->getRegion()]));
+              \Drupal::messenger()
+                ->addWarning($this->t('The block %info was assigned to the invalid region %region and has been disabled.', [
+                  '%info' => $block_id,
+                  '%region' => $block->getRegion(),
+                ]));
             }
             $block->setRegion(system_default_region($theme))->disable()->save();
           }

@@ -243,7 +243,11 @@ class ContentTranslationFormLanguageHooks {
     // set of well-known fields implementing entity system business logic.
     return $definition->isTranslatable() &&
       $definition->getProvider() != 'content_translation' &&
-      !in_array($definition->getName(), [$entity_type->getKey('langcode'), $entity_type->getKey('default_langcode'), 'revision_translation_affected']);
+      !in_array($definition->getName(), [
+        $entity_type->getKey('langcode'),
+        $entity_type->getKey('default_langcode'),
+        'revision_translation_affected',
+      ]);
   }
 
 }

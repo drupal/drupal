@@ -179,7 +179,10 @@ class NodeThemeHooks {
     // - The view mode is 'full' and we are on the 'node.view' route.
     // - The node is in preview and view mode is either 'full' or 'default'.
     $variables['page'] = FALSE;
-    if ($variables['view_mode'] == 'full' && ($this->routeMatch->getRouteName() == 'entity.node.canonical' && $this->routeMatch->getRawParameter('node') == $node->id() || (isset($node->in_preview) && in_array($node->preview_view_mode, ['full', 'default'])))) {
+    if ($variables['view_mode'] == 'full'
+      && ($this->routeMatch->getRouteName() == 'entity.node.canonical'
+        && $this->routeMatch->getRawParameter('node') == $node->id() || (isset($node->in_preview)
+          && in_array($node->preview_view_mode, ['full', 'default'])))) {
       $variables['page'] = TRUE;
     }
 

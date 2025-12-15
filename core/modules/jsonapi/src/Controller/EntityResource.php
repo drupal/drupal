@@ -808,7 +808,11 @@ class EntityResource {
 
     // Compute the list of current values and remove the ones in the payload.
     $original_resource_identifiers = ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list);
-    $removed_resource_identifiers = array_uintersect($resource_identifiers, $original_resource_identifiers, [ResourceIdentifier::class, 'compare']);
+    $removed_resource_identifiers = array_uintersect(
+      $resource_identifiers,
+      $original_resource_identifiers,
+      [ResourceIdentifier::class, 'compare']
+    );
     $deltas_to_be_removed = [];
     foreach ($removed_resource_identifiers as $removed_resource_identifier) {
       foreach ($original_resource_identifiers as $delta => $existing_resource_identifier) {
@@ -1014,7 +1018,11 @@ class EntityResource {
    *   client-sent data.
    */
   protected static function relationshipResponseRequiresBody(array $received_resource_identifiers, array $final_resource_identifiers) {
-    return !empty(array_udiff($final_resource_identifiers, $received_resource_identifiers, [ResourceIdentifier::class, 'compare']));
+    return !empty(array_udiff(
+      $final_resource_identifiers,
+      $received_resource_identifiers,
+      [ResourceIdentifier::class, 'compare']
+    ));
   }
 
   /**
@@ -1272,7 +1280,12 @@ class EntityResource {
       $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter($request->query->all('page'));
     }
     else {
-      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter(['page' => ['offset' => OffsetPage::DEFAULT_OFFSET, 'limit' => OffsetPage::SIZE_MAX]]);
+      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter([
+        'page' => [
+          'offset' => OffsetPage::DEFAULT_OFFSET,
+          'limit' => OffsetPage::SIZE_MAX,
+        ],
+      ]);
     }
     return $params;
   }
