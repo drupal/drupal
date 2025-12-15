@@ -6,8 +6,18 @@ use Drupal\migrate\Plugin\migrate\destination\EntityContentComplete;
 
 /**
  * Deriver for entity_complete:ENTITY_TYPE entity migrations.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533565
  */
 class MigrateEntityComplete extends MigrateEntity {
+
+  public function __construct(array $entity_definitions) {
+    @trigger_error(__CLASS__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565', E_USER_DEPRECATED);
+    parent::__construct($entity_definitions);
+  }
 
   /**
    * {@inheritdoc}

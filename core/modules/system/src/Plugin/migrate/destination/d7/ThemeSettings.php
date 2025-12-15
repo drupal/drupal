@@ -12,6 +12,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Persist theme settings to the config system.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533565
  */
 #[MigrateDestination('d7_theme_settings')]
 class ThemeSettings extends DestinationBase implements ContainerFactoryPluginInterface {
@@ -39,6 +44,7 @@ class ThemeSettings extends DestinationBase implements ContainerFactoryPluginInt
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+    @trigger_error(__CLASS__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565', E_USER_DEPRECATED);
     $this->configFactory = $config_factory;
   }
 
