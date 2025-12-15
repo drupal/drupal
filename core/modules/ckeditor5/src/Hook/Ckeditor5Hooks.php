@@ -435,6 +435,9 @@ class Ckeditor5Hooks {
           ->diff($ul_type)
           ->toCKEditor5ElementsArray();
       }
+      elseif (array_key_exists('ckeditor5_list', $settings['plugins']) && !array_key_exists('styles', $settings['plugins']['ckeditor5_list']['properties'])) {
+        $settings['plugins']['ckeditor5_list']['properties']['styles'] = FALSE;
+      }
 
       $editor->setSettings($settings);
     }

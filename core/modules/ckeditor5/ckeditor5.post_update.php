@@ -24,9 +24,16 @@ function ckeditor5_removed_post_updates(): array {
 }
 
 /**
- * Updates Text Editors using CKEditor 5 to native List "type" functionality.
+ * No-op update that didn't update quite enough the first time.
  */
 function ckeditor5_post_update_list_type(array &$sandbox = []): void {
+  // This update is intentionally left blank.
+}
+
+/**
+ * Updates Text Editors using CKEditor 5 to native List "type" functionality.
+ */
+function ckeditor5_post_update_list_type_again(array &$sandbox = []): void {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   $config_entity_updater->update($sandbox, 'editor', function (Editor $editor): bool {
     // Only try to update editors using CKEditor 5.
@@ -36,7 +43,6 @@ function ckeditor5_post_update_list_type(array &$sandbox = []): void {
     $settings = $editor->getSettings();
 
     // @see Ckeditor5Hooks::editorPresave()
-    return array_key_exists('ckeditor5_list', $settings['plugins'])
-      && array_key_exists('ckeditor5_sourceEditing', $settings['plugins']);
+    return array_key_exists('ckeditor5_list', $settings['plugins']);
   });
 }
