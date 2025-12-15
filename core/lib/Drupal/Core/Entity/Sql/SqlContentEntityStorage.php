@@ -1286,7 +1286,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
           // If all the field values are null, then there was no result for this
           // field.
-          if (!array_any($field_values, $is_not_null)) {
+          // @todo use array_any() once Drupal core requires PHP 8.4.
+          if (empty(array_filter($field_values, $is_not_null))) {
             continue;
           }
           if (!isset($values[$value_key][$field_name][$langcode])) {
