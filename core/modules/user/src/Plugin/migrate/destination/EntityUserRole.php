@@ -13,6 +13,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a destination plugin for migrating user role entities.
+ *
+ * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3533565
  */
 #[MigrateDestination('entity:user_role')]
 class EntityUserRole extends EntityConfigBase {
@@ -47,6 +52,7 @@ class EntityUserRole extends EntityConfigBase {
    *   All available permissions.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, array $destination_permissions) {
+    @trigger_error(__CLASS__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $language_manager, $config_factory);
     $this->destinationPermissions = $destination_permissions;
   }

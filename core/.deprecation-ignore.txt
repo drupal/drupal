@@ -84,6 +84,15 @@
 %Drupal\\user\\Plugin\\migrate\\process\\UserUpdate8002 is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
 %Drupal\\user\\Plugin\\migrate\\process\\d6\\ProfileFieldOptionTranslation is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
 %Drupal\\user\\Plugin\\migrate\\process\\d6\\UserUpdate7002 is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560%
+%Drupal\\block\\Plugin\\migrate\\destination\\EntityBlock::import\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%Drupal\\comment\\Plugin\\migrate\\destination\\EntityComment::import\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%Drupal\\migrate\\Plugin\\Derivative\\MigrateEntityComplete\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%Drupal\\migrate\\Plugin\\migrate\\destination\\EntityContentComplete\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%Drupal\\node\\Plugin\\migrate\\destination\\EntityNodeType::import\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%Drupal\\search\\Plugin\\migrate\\destination\\EntitySearchPage::import\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%Drupal\\shortcut\\Plugin\\migrate\\destination\\EntityShortcutSet\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%Drupal\\system\\Plugin\\migrate\\destination\\d7\\ThemeSettings\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%Drupal\\user\\Plugin\\migrate\\destination\\EntityUserRole\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
 
 # Drupal 13.
 %The "cache.backend.memory" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use cache.backend.memory.memory instead. See https://www.drupal.org/node/3546856%
