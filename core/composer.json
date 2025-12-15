@@ -52,7 +52,8 @@
         "psr/log": "^3.0",
         "mck89/peast": "^1.17.4",
         "sebastian/diff": "^4 || ^5 || ^6 || ^7",
-        "php-tuf/composer-stager": "^2.0"
+        "php-tuf/composer-stager": "^2.0",
+        "justinrainbow/json-schema": "^5.2 || ^6.5.2"
     },
     "conflict": {
         "drupal/automatic_updates": "<4",

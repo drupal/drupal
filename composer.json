@@ -13,8 +13,7 @@
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
         "drupal/core-recipe-unpack": "self.version",
-        "drupal/core-vendor-hardening": "self.version",
-        "justinrainbow/json-schema": "^5.2 || ^6.5.2"
+        "drupal/core-vendor-hardening": "self.version"
     },
     "conflict": {
         "dealerdirect/phpcodesniffer-composer-installer": "1.1.0"
