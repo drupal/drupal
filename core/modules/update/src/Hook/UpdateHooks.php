@@ -203,7 +203,13 @@ class UpdateHooks {
     foreach ($params as $msg_type => $msg_reason) {
       $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
     }
-    $message['body'][] = $this->t('See the available updates page for more information:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.status', [], ['absolute' => TRUE, 'language' => $language])->toString();
+    $message['body'][] = $this->t('See the available updates page for more information:',
+      [],
+      ['langcode' => $langcode]
+    ) . "\n" . Url::fromRoute('update.status', [], [
+      'absolute' => TRUE,
+      'language' => $language,
+    ])->toString();
     $settings_url = Url::fromRoute('update.settings', [], ['absolute' => TRUE])->toString();
     if (\Drupal::config('update.settings')->get('notification.threshold') == 'all') {
       $message['body'][] = $this->t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, @url.', ['@url' => $settings_url]);
@@ -246,7 +252,11 @@ class UpdateHooks {
     $incompatible = [];
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $files = $file_system->scanDirectory("{$directory}/{$project}", '/.*\.info.yml$/', ['key' => 'name', 'min_depth' => 0]);
+    $files = $file_system->scanDirectory(
+      "{$directory}/{$project}",
+      '/.*\.info.yml$/',
+      ['key' => 'name', 'min_depth' => 0],
+    );
     foreach ($files as $file) {
       // Get the .info.yml file for the module or theme this file belongs to.
       $info = \Drupal::service('info_parser')->parse($file->uri);

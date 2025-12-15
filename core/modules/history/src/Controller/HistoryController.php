@@ -95,7 +95,11 @@ class HistoryController extends ControllerBase {
       $query = $page_number ? ['page' => $page_number] : NULL;
       $links[$nid] = [
         'new_comment_count' => (int) $new,
-        'first_new_comment_link' => Url::fromRoute('entity.node.canonical', ['node' => $node->id()], ['query' => $query, 'fragment' => 'new'])->toString(),
+        'first_new_comment_link' => Url::fromRoute(
+          'entity.node.canonical',
+          ['node' => $node->id()],
+          ['query' => $query, 'fragment' => 'new']
+        )->toString(),
       ];
     }
 

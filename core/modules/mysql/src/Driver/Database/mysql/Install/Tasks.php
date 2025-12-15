@@ -113,7 +113,10 @@ class Tasks extends InstallTasks {
         catch (DatabaseNotFoundException $e) {
           // Still no dice; probably a permission issue. Raise the error to the
           // installer.
-          $this->fail($this->t('Database %database not found. The server reports the following message when attempting to create the database: %error.', ['%database' => $database, '%error' => $e->getMessage()]));
+          $this->fail($this->t('Database %database not found. The server reports the following message when attempting to create the database: %error.', [
+            '%database' => $database,
+            '%error' => $e->getMessage(),
+          ]));
         }
       }
       else {

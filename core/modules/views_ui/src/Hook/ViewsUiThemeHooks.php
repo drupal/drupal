@@ -560,7 +560,11 @@ class ViewsUiThemeHooks {
     }
 
     // Add the special 'None' row.
-    $rows[] = [['data' => $this->t('None'), 'colspan' => 6], ['align' => 'center', 'data' => $form['default'][-1]], ['colspan' => 2]];
+    $rows[] = [
+      ['data' => $this->t('None'), 'colspan' => 6],
+      ['align' => 'center', 'data' => $form['default'][-1]],
+      ['colspan' => 2],
+    ];
 
     // Unset elements from the form array that are used to build the table so
     // that they are not rendered twice.
@@ -742,13 +746,24 @@ class ViewsUiThemeHooks {
       $field_name = $handler->adminLabel(TRUE);
       $links[$type . '-edit-' . $id] = [
         'title' => $this->t('Edit @section', ['@section' => $field_name]),
-        'url' => Url::fromRoute('views_ui.form_handler', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type, 'id' => $id]),
+        'url' => Url::fromRoute('views_ui.form_handler', [
+          'js' => 'nojs',
+          'view' => $view->storage->id(),
+          'display_id' => $display['id'],
+          'type' => $type,
+          'id' => $id,
+        ]),
         'attributes' => ['class' => ['views-ajax-link']],
       ];
     }
     $links[$type . '-add'] = [
       'title' => $this->t('Add new'),
-      'url' => Url::fromRoute('views_ui.form_add_handler', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type]),
+      'url' => Url::fromRoute('views_ui.form_add_handler', [
+        'js' => 'nojs',
+        'view' => $view->storage->id(),
+        'display_id' => $display['id'],
+        'type' => $type,
+      ]),
       'attributes' => ['class' => ['views-ajax-link']],
     ];
 
@@ -763,7 +778,12 @@ class ViewsUiThemeHooks {
     $links = [
       $type . '-edit' => [
         'title' => $this->t('Edit @section', ['@section' => $title]),
-        'url' => Url::fromRoute('views_ui.form_display', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type]),
+        'url' => Url::fromRoute('views_ui.form_display', [
+          'js' => 'nojs',
+          'view' => $view->storage->id(),
+          'display_id' => $display['id'],
+          'type' => $type,
+        ]),
         'attributes' => ['class' => ['views-ajax-link']],
       ],
     ];

@@ -377,7 +377,11 @@ class ContentTranslationHooks {
     // Let the content translation handler alter the content entity form. This
     // can be the 'add' or 'edit' form. It also tries a 'default' form in case
     // neither of the aforementioned forms are defined.
-    if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1 && in_array($op, ['edit', 'add', 'default'], TRUE)) {
+    if ($entity instanceof ContentEntityInterface
+      && $entity->isTranslatable()
+      && count($entity->getTranslationLanguages()) > 1
+      && in_array($op, ['edit', 'add', 'default'], TRUE)
+    ) {
       $controller = \Drupal::entityTypeManager()->getHandler($entity->getEntityTypeId(), 'translation');
       $controller->entityFormAlter($form, $form_state, $entity);
       // @todo Move the following lines to the code generating the property form
@@ -561,7 +565,13 @@ class ContentTranslationHooks {
           else {
             $url = $entity->toUrl('canonical')->setOption('language', $language)->setAbsolute()->toString();
           }
-          $page['#attached']['html_head_link'][] = [['rel' => 'alternate', 'hreflang' => $language->getId(), 'href' => $url]];
+          $page['#attached']['html_head_link'][] = [
+            [
+              'rel' => 'alternate',
+              'hreflang' => $language->getId(),
+              'href' => $url,
+            ],
+          ];
         }
       }
       // Since entity was found, no need to iterate further.

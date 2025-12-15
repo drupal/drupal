@@ -305,7 +305,11 @@ class Ckeditor5Hooks {
             $langcode = basename($file, '.js');
             // Only add languages that Drupal can understands.
             if (in_array($langcode, $ckeditor_langcodes)) {
-              $library['js']["{$dirname}/translations/{$langcode}.js"] = ['ckeditor5_langcode' => $langcode, 'minified' => TRUE, 'preprocess' => TRUE];
+              $library['js']["{$dirname}/translations/{$langcode}.js"] = [
+                'ckeditor5_langcode' => $langcode,
+                'minified' => TRUE,
+                'preprocess' => TRUE,
+              ];
             }
           }
         }

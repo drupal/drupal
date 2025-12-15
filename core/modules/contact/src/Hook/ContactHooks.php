@@ -38,7 +38,10 @@ class ContactHooks {
         $output .= '<dt>' . $this->t('Linking to contact forms') . '</dt>';
         $output .= '<dd>' . $this->t('One site-wide contact form can be designated as the default contact form. If you choose to designate a default form, the <em>Contact</em> menu link in the <em>Footer</em> menu will link to it. You can modify this link from the <a href=":menu-settings">Menus page</a> if you have the Menu UI module installed. You can also create links to other contact forms; the URL for each form you have set up has format <em>contact/machine_name_of_form</em>.', [':menu-settings' => $menu_page]) . '</p>';
         $output .= '<dt>' . $this->t('Adding content to contact forms') . '</dt>';
-        $output .= '<dd>' . $this->t('From the <a href=":contact_admin">Contact forms page</a>, you can configure the fields to be shown on contact forms, including their labels and help text. If you would like other content (such as text or images) to appear on a contact form, use a block. You can create and edit blocks on the <a href=":blocks">Block layout page</a>, if the Block module is installed.', [':blocks' => $block_page, ':contact_admin' => $contact_page]) . '</dd>';
+        $output .= '<dd>' . $this->t('From the <a href=":contact_admin">Contact forms page</a>, you can configure the fields to be shown on contact forms, including their labels and help text. If you would like other content (such as text or images) to appear on a contact form, use a block. You can create and edit blocks on the <a href=":blocks">Block layout page</a>, if the Block module is installed.', [
+          ':blocks' => $block_page,
+          ':contact_admin' => $contact_page,
+        ]) . '</dd>';
         $output .= '</dl>';
         return $output;
     }
@@ -61,10 +64,22 @@ class ContactHooks {
   public function entityExtraFieldInfo(): array {
     $fields = [];
     foreach (array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('contact_message')) as $bundle) {
-      $fields['contact_message'][$bundle]['form']['name'] = ['label' => $this->t('Sender name'), 'description' => $this->t('Text'), 'weight' => -50];
-      $fields['contact_message'][$bundle]['form']['mail'] = ['label' => $this->t('Sender email'), 'description' => $this->t('Email'), 'weight' => -40];
+      $fields['contact_message'][$bundle]['form']['name'] = [
+        'label' => $this->t('Sender name'),
+        'description' => $this->t('Text'),
+        'weight' => -50,
+      ];
+      $fields['contact_message'][$bundle]['form']['mail'] = [
+        'label' => $this->t('Sender email'),
+        'description' => $this->t('Email'),
+        'weight' => -40,
+      ];
       if ($bundle == 'personal') {
-        $fields['contact_message'][$bundle]['form']['recipient'] = ['label' => $this->t('Recipient username'), 'description' => $this->t('User'), 'weight' => -30];
+        $fields['contact_message'][$bundle]['form']['recipient'] = [
+          'label' => $this->t('Recipient username'),
+          'description' => $this->t('User'),
+          'weight' => -30,
+        ];
       }
       $fields['contact_message'][$bundle]['form']['preview'] = [
         'label' => $this->t('Preview sender message'),
