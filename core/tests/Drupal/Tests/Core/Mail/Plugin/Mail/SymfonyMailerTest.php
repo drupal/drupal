@@ -9,6 +9,7 @@ use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\Plugin\Mail\SymfonyMailer;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -66,23 +67,34 @@ class SymfonyMailerTest extends UnitTestCase {
   }
 
   /**
-   * Tests sending a mail using a From address with a comma in it.
+   * Tests sending a mail with special characters in various fields.
+   *
+   * @param array $message
+   *   An array containing the following keys for an email message:
+   *     - from
+   *     - reply-to
+   *     - to
+   *     - subject.
+   * @param array $expected
+   *   An array containing the following keys from the email headers from the
+   *   sent email:
+   *     - from
+   *     - reply-to
+   *     - to
+   *     - subject.
    *
    * @legacy-covers ::mail
    */
-  public function testMail(): void {
+  #[DataProvider('providerMail')]
+  public function testMail(array $message, array $expected): void {
     // Setup a mail message.
-    $message = [
+    $message += [
       'id' => 'example_key',
       'module' => 'example',
       'key' => 'key',
-      'to' => 'to@example.org',
-      'from' => 'from@example.org',
-      'reply-to' => 'from@example.org',
       'langcode' => 'en',
       'params' => [],
       'send' => TRUE,
-      'subject' => "test\r\nsubject",
       'body' => '',
       'headers' => [
         'MIME-Version' => '1.0',
@@ -94,12 +106,6 @@ class SymfonyMailerTest extends UnitTestCase {
         'Return-Path' => 'from@example.org',
       ],
     ];
-
-    // Verify we use line endings consistent with the PHP mail() function, which
-    // changed with PHP 8. See:
-    // - https://www.drupal.org/node/3270647
-    // - https://bugs.php.net/bug.php?id=81158
-    $line_end = "\r\n";
 
     /** @var \Symfony\Component\Mailer\MailerInterface|\PHPUnit\Framework\MockObject\MockObject */
     $mailer = $this->getMockBuilder(MailerInterface::class)->getMock();
@@ -119,16 +125,16 @@ class SymfonyMailerTest extends UnitTestCase {
             $email->getHeaders()->get('x-mailer')->getBodyAsString() === 'Drupal'
           ),
           $this->callback(fn (Email $email): bool =>
-            $email->getHeaders()->get('from')->getBodyAsString() === '"Foo, Bar, and Baz" <from@example.org>'
+            $email->getHeaders()->get('from')->getBodyAsString() === $expected['from']
           ),
           $this->callback(fn (Email $email): bool =>
-            $email->getHeaders()->get('reply-to')->getBodyAsString() === 'from@example.org'
+            $email->getHeaders()->get('reply-to')->getBodyAsString() === $expected['reply-to']
           ),
           $this->callback(fn (Email $email): bool =>
-            $email->getHeaders()->get('to')->getBodyAsString() === 'to@example.org'
+            $email->getHeaders()->get('to')->getBodyAsString() === $expected['to']
           ),
           $this->callback(fn (Email $email): bool =>
-            $email->getHeaders()->get('subject')->getBodyAsString() === "=?utf-8?Q?test?=$line_end =?utf-8?Q?subject?="
+            $email->getHeaders()->get('subject')->getBodyAsString() === $expected['subject']
           ),
           $this->callback(fn (Email $email): bool =>
             $email->getTextBody() === ''
@@ -141,6 +147,62 @@ class SymfonyMailerTest extends UnitTestCase {
 
     $plugin = new SymfonyMailer($logger, $mailer);
     $this->assertTrue($plugin->mail($message));
+  }
+
+  /**
+   * Data provider for testMail().
+   */
+  public static function providerMail(): array {
+    // Verify we use line endings consistent with the PHP mail() function, which
+    // changed with PHP 8. See:
+    // - https://www.drupal.org/node/3270647
+    // - https://bugs.php.net/bug.php?id=81158
+    $line_end = "\r\n";
+
+    return [
+      'defaults' => [
+        [
+          'from' => 'from@example.org',
+          'reply-to' => 'from@example.org',
+          'to' => 'to@example.org',
+          'subject' => 'test subject',
+        ],
+        [
+          'from' => '"Foo, Bar, and Baz" <from@example.org>',
+          'reply-to' => 'from@example.org',
+          'to' => 'to@example.org',
+          'subject' => 'test subject',
+        ],
+      ],
+      'line endings in subject' => [
+        [
+          'from' => 'from@example.org',
+          'reply-to' => 'from@example.org',
+          'to' => 'to@example.org',
+          'subject' => "test\r\nsubject",
+        ],
+        [
+          'from' => '"Foo, Bar, and Baz" <from@example.org>',
+          'reply-to' => 'from@example.org',
+          'to' => 'to@example.org',
+          'subject' => "=?utf-8?Q?test?=$line_end =?utf-8?Q?subject?=",
+        ],
+      ],
+      'multiple comma-separated recipients' => [
+        [
+          'from' => 'from@example.org',
+          'reply-to' => 'from@example.org',
+          'to' => 'foo@example.org,bar@example.org',
+          'subject' => 'test subject',
+        ],
+        [
+          'from' => '"Foo, Bar, and Baz" <from@example.org>',
+          'reply-to' => 'from@example.org',
+          'to' => 'foo@example.org, bar@example.org',
+          'subject' => 'test subject',
+        ],
+      ],
+    ];
   }
 
 }
