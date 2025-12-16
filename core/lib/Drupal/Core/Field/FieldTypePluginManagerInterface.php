@@ -28,7 +28,7 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
    *   (optional) The data value. If set, it has to match one of the supported
    *   data type format as documented for the data type classes.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface
+   * @return \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>
    *   The instantiated object.
    */
   public function createFieldItemList(FieldableEntityInterface $entity, $field_name, $values = NULL);

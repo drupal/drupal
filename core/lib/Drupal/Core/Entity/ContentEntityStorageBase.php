@@ -590,7 +590,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @param int $batch_size
    *   The maximum number of field data records to purge before returning.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface[]
+   * @return array<int,\Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>>
    *   An array of field item lists, keyed by entity revision id.
    */
   abstract protected function readFieldItemsToPurge(FieldDefinitionInterface $field_definition, $batch_size);

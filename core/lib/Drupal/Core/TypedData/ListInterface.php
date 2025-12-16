@@ -11,6 +11,10 @@ namespace Drupal\Core\TypedData;
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  *
+ * @template T of \Drupal\Core\TypedData\TypedDataInterface
+ * @extends \Drupal\Core\TypedData\TraversableTypedDataInterface<int, T>
+ * @extends \ArrayAccess<int, T>
+ *
  * @see \Drupal\Core\TypedData\ListDataDefinitionInterface
  *
  * @ingroup typed_data
@@ -51,6 +55,8 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    *   The item at the specified position in this list, or NULL if no item
    *   exists at that position.
    *
+   * @phpstan-return ?T
+   *
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    *   If the complex data structure is unset and no item can be created.
    */
@@ -86,6 +92,8 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    * @return \Drupal\Core\TypedData\TypedDataInterface|null
    *   The first item in this list, or NULL if there are no items.
    *
+   * @phpstan-return ?T
+   *
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    *   If the complex data structure is unset and no item can be created.
    */
@@ -96,6 +104,8 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface|null
    *   The last item in this list, or NULL if there are no items.
+   *
+   * @phpstan-return ?T
    */
   public function last(): ?TypedDataInterface;
 
@@ -107,6 +117,8 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The item that was appended.
+   *
+   * @phpstan-return T
    */
   public function appendItem($value = NULL);
 

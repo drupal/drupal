@@ -17,6 +17,10 @@ use Drupal\Core\TypedData\Plugin\DataType\ItemList;
  * properties. Note that even single-valued entity fields are represented as
  * list of field items, however for easy access to the contained item the entity
  * field delegates __get() and __set() calls directly to the first item.
+ *
+ * @template T of \Drupal\Core\Field\FieldItemInterface
+ * @extends \Drupal\Core\TypedData\Plugin\DataType\ItemList<T>
+ * @implements \Drupal\Core\Field\FieldItemListInterface<T>
  */
 class FieldItemList extends ItemList implements FieldItemListInterface {
 

@@ -23,6 +23,10 @@ use Drupal\Core\TypedData\ListInterface;
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  *
+ * @template T of \Drupal\Core\Field\FieldItemInterface
+ * @extends \Drupal\Core\TypedData\ListInterface<T>
+ * @property mixed $value
+ *
  * @see \Drupal\Core\Field\FieldItemInterface
  */
 interface FieldItemListInterface extends ListInterface, AccessibleInterface {
