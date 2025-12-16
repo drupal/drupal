@@ -100,6 +100,9 @@ class Layout extends Plugin {
     // @see \Drupal\Core\Layout\LayoutDefinition::$additional
     // @see \Drupal\Core\Layout\LayoutDefinition::get()
     $this->additional = $additional;
+    if ($this->label === NULL && $this->deriver === NULL) {
+      @trigger_error('A layout plugin not having at least one of the label or deriver properties is deprecated in drupal:11.4.0 and having at least one of these properties will be enforced in drupal:12.0.0. See https://www.drupal.org/node/3464076', E_USER_DEPRECATED);
+    }
   }
 
   /**
