@@ -2,7 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.options_install_test.body
     - node.type.options_install_test
   module:
     - text
@@ -15,13 +14,6 @@ mode: default
 content:
   links:
     weight: 100
-    region: content
-  body:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 101
     region: content
 hidden:
   langcode: true
