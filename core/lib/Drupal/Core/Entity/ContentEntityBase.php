@@ -613,7 +613,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * Gets a translated field.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface
+   * @return \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>
    *   The translated field.
    */
   protected function getTranslatedField($name, $langcode) {

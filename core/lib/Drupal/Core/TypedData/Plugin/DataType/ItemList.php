@@ -19,6 +19,10 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * Drupal\Core\TypedData\Annotation\DataType.
  * Note: The class cannot be called "List" as list is a reserved PHP keyword.
  *
+ * @template T of \Drupal\Core\TypedData\TypedDataInterface
+ * @implements \IteratorAggregate<int, T>
+ * @implements \Drupal\Core\TypedData\ListInterface<T>
+ *
  * @ingroup typed_data
  */
 #[DataType(

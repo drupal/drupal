@@ -298,7 +298,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The config entity from which fields should be extracted.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface[]
+   * @return array<string, \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>>
    *   The fields extracted from a content entity.
    */
   protected static function extractContentEntityFields(ResourceType $resource_type, ContentEntityInterface $entity) {

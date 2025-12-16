@@ -4,6 +4,10 @@ namespace Drupal\Core\TypedData;
 
 /**
  * An interface for typed data objects that can be traversed.
+ *
+ * @template I of int|string
+ * @template T of \Drupal\Core\TypedData\TypedDataInterface
+ * @extends \Traversable<I, T>
  */
 interface TraversableTypedDataInterface extends TypedDataInterface, \Traversable {
 
