@@ -11,7 +11,8 @@
         "drupal/core-class-finder": "10.6.x-dev",
         "drupal/core-file-cache": "10.6.x-dev",
         "drupal/core-plugin": "10.6.x-dev",
-        "drupal/core-utility": "10.6.x-dev"
+        "drupal/core-utility": "10.6.x-dev",
+        "doctrine/lexer": "^2"
     },
     "autoload": {
         "psr-4": {
