@@ -22,12 +22,14 @@ class HistoryTokensHooks {
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $tokens = [];
+    // Check if the comment manager service exists before processing.
+    $commentManager = \Drupal::hasService('comment.manager') ? \Drupal::service('comment.manager') : NULL;
     // Provides an integration for each entity type except comment.
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type_id == 'comment' || !$entity_type->entityClassImplements(ContentEntityInterface::class)) {
         continue;
       }
-      if (\Drupal::service('comment.manager')->getFields($entity_type_id)) {
+      if ($commentManager && $commentManager->getFields($entity_type_id)) {
         // Get the correct token type.
         $token_type = $entity_type_id == 'taxonomy_term' ? 'term' : $entity_type_id;
         $tokens[$token_type]['comment-count-new'] = [
