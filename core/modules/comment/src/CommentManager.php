@@ -196,7 +196,7 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function getCountNewComments(EntityInterface $entity, $field_name = NULL, $timestamp = 0) {
-    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\history\HistoryManager::getCountNewComments() instead. See https://www.drupal.org/project/drupal/issues/3551729', 'E_USER_DEPRECATED');
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\history\HistoryManager::getCountNewComments() instead. See https://www.drupal.org/project/drupal/issues/3551729', E_USER_DEPRECATED);
     if (!$this->moduleHandler->moduleExists('history')) {
       return FALSE;
     }
