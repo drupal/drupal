@@ -176,6 +176,15 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   /**
    * {@inheritdoc}
    */
+  public function getCacheTags() {
+    // Blocks do not use a view cache tag, they have no mechanisms that would
+    // require an invalidation of view related caches.
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function trustedCallbacks() {
     return ['preRender', 'lazyBuilder'];
   }

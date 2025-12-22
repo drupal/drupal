@@ -124,9 +124,10 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
           'entity_bundles',
           'local_task',
           'library_info',
+          'http_response',
         ],
         ['jsonapi_resource_types'],
-        ['config:filter.format.plain_text', 'http_response', 'node:1'],
+        ['config:filter.format.plain_text', 'node:1'],
       ],
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -172,9 +173,10 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
           'entity_bundles',
           'local_task',
           'library_info',
+          'http_response',
         ],
         ['jsonapi_resource_types'],
-        ['config:filter.format.plain_text', 'http_response', 'node:1'],
+        ['config:filter.format.plain_text', 'node:1'],
       ],
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -235,9 +237,10 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
           'entity_bundles',
           'local_task',
           'library_info',
+          'http_response',
         ],
         ['jsonapi_resource_types'],
-        ['config:filter.format.plain_text', 'http_response', 'node:1'],
+        ['config:filter.format.plain_text', 'node:1'],
       ],
     ];
     $this->assertMetrics($expected, $performance_data);

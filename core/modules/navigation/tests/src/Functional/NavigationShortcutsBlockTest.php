@@ -53,8 +53,6 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     $this->drupalGet('admin/config/system/cron');
     $expected_cache_tags = array_merge([
       'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
-      'block_view',
-      'config:block.block.title',
       'config:block_list',
       'config:navigation.settings',
       'config:navigation.block_layout',

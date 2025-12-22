@@ -6,6 +6,7 @@ namespace Drupal\Tests\block\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests branding block display.
@@ -67,9 +68,9 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->responseNotContains('<script>alert("Community carpentry");</script>');
 
     // Turn just the logo off.
-    $this->config('block.block.site_branding')
-      ->set('settings.use_site_logo', 0)
-      ->save();
+    $block = Block::load('site_branding');
+    $block->getPlugin()->setConfigurationValue('use_site_logo', 0);
+    $block->save();
     $this->drupalGet('');
 
     // Re-test all branding elements.
@@ -80,10 +81,9 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn just the site name off.
-    $this->config('block.block.site_branding')
-      ->set('settings.use_site_logo', 1)
-      ->set('settings.use_site_name', 0)
-      ->save();
+    $block->getPlugin()->setConfigurationValue('use_site_logo', 1);
+    $block->getPlugin()->setConfigurationValue('use_site_name', 0);
+    $block->save();
     $this->drupalGet('');
 
     // Re-test all branding elements.
@@ -94,10 +94,9 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn just the site slogan off.
-    $this->config('block.block.site_branding')
-      ->set('settings.use_site_name', 1)
-      ->set('settings.use_site_slogan', 0)
-      ->save();
+    $block->getPlugin()->setConfigurationValue('use_site_name', 1);
+    $block->getPlugin()->setConfigurationValue('use_site_slogan', 0);
+    $block->save();
     $this->drupalGet('');
 
     // Re-test all branding elements.
@@ -107,10 +106,9 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn the site name and the site slogan off.
-    $this->config('block.block.site_branding')
-      ->set('settings.use_site_name', 0)
-      ->set('settings.use_site_slogan', 0)
-      ->save();
+    $block->getPlugin()->setConfigurationValue('use_site_name', 0);
+    $block->getPlugin()->setConfigurationValue('use_site_slogan', 0);
+    $block->save();
     $this->drupalGet('');
 
     // Re-test all branding elements.

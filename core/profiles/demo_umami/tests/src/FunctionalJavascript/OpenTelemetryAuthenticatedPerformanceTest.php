@@ -144,7 +144,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 341,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 32,
+      'CacheTagLookupQueryCount' => 30,
       'ScriptCount' => 5,
       'ScriptBytes' => 198900,
       'StylesheetCount' => 8,

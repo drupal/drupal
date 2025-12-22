@@ -100,7 +100,7 @@ class BlockCacheTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($old_content);
 
     // Clear the cache and verify that the stale data is no longer there.
-    Cache::invalidateTags(['block_view']);
+    Cache::invalidateTags($this->block->getCacheTagsToInvalidate());
     $this->drupalGet('');
     $this->assertSession()->pageTextNotContains($old_content);
     // Fresh block content is displayed after clearing the cache.

@@ -184,7 +184,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $output = $builder->view($entity, 'block');
 
     $this->assertSame(
-      ['block_view', 'config:block.block.test_block_title', 'custom_cache_tag'],
+      ['config:block_list', 'custom_cache_tag'],
       $output['#cache']['tags']
     );
   }
@@ -315,7 +315,7 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     $default_keys = ['entity_view', 'block', 'test_block'];
     $default_contexts = [];
-    $default_tags = ['block_view', 'config:block.block.test_block'];
+    $default_tags = ['config:block_list'];
     $default_max_age = Cache::PERMANENT;
 
     // hook_block_build_alter() adds an additional cache key.

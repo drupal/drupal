@@ -8,7 +8,6 @@ use Drupal\block\BlockListBuilder;
 use Drupal\block\BlockViewBuilder;
 use Drupal\block\Form\BlockDeleteForm;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
@@ -250,17 +249,11 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-
-    // EntityBase::postSave() calls EntityBase::invalidateTagsOnSave(), which
-    // only handles the regular cases. The Block entity has one special case: a
-    // newly created block may *also* appear on any page in the current theme,
-    // so we must invalidate the associated block's cache tag (which includes
-    // the theme cache tag).
-    if (!$update) {
-      Cache::invalidateTags($this->getCacheTagsToInvalidate());
-    }
+  public function getCacheTagsToInvalidate() {
+    // Only use the block_list cache tag for blocks as they are usually very
+    // rarely updated. Not having per-block cache tags results in a large
+    // reduction of unique cache tags on any page that displays blocks.
+    return $this->getEntityType()->getListCacheTags();
   }
 
   /**
