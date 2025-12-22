@@ -37,7 +37,7 @@ class EditorManager extends DefaultPluginManager {
     $this->alterInfo('editor_info');
     $this->setCacheBackend($cache_backend, 'editor_plugins');
     if ($this->entityTypeManager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3447794', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3509245', E_USER_DEPRECATED);
       $this->entityTypeManager = \Drupal::entityTypeManager();
     }
   }

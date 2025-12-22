@@ -4,4 +4,4 @@ parameters:
       class: 'Drupal\Component\Utility\Random'
       deprecation_version: drupal:11.2.0
       removed_version: drupal:12.0.0
-      change_record: https://www.drupal.org/project/drupal/issues/3502882
+      change_record: https://example.com/change_record

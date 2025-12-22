@@ -77,7 +77,7 @@ interface CommentManagerInterface {
    * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
    *   \Drupal\history\HistoryManager::getCountNewComments instead.
    *
-   * @see https://www.drupal.org/project/drupal/issues/3551729
+   * @see https://www.drupal.org/node/3551729
    */
   public function getCountNewComments(EntityInterface $entity, $field_name = NULL, $timestamp = 0);
 
