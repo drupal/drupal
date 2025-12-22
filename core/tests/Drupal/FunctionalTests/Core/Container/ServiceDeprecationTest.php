@@ -41,11 +41,27 @@ class ServiceDeprecationTest extends BrowserTestBase {
    */
   public function testGetDeprecated(): void {
     $this->expectDeprecation('The "deprecation_test.service" service is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.');
-    $this->expectDeprecation('The "deprecation_test.alias" alias is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.');
     // @phpstan-ignore-next-line
     \Drupal::service('deprecation_test.service');
+  }
+
+  /**
+   * Tests get deprecated service via the alias.
+   *
+   * @legacy-covers ::get
+   */
+  public function testGetDeprecatedAlias(): void {
+    $this->expectDeprecation('The "deprecation_test.service" service is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.');
+    $this->expectDeprecation('The "deprecation_test.alias" alias is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.');
     // @phpstan-ignore-next-line
     \Drupal::service('deprecation_test.alias');
+  }
+
+  /**
+   * Tests just installing the module does not trigger deprecation notices.
+   */
+  public function testNoDeprecations(): void {
+    $this->addToAssertionCount(1);
   }
 
 }
