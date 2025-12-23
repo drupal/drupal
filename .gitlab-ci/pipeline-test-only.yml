@@ -1,5 +1,7 @@
 # cspell:ignore drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB
 
+include: '.gitlab-ci/php.yml'
+
 stages:
   - 🗜️ Test
 
@@ -20,14 +22,21 @@ variables:
   stage: 🗜️ Test
   interruptible: true
   image:
-    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TEST_ONLY_TARGET_PHP-apache:production
+  parallel:
+    matrix:
+      - _TEST_ONLY_TARGET_DB: [mysql-8.4, pgsql-18, sqlite-3]
+        _TEST_ONLY_TARGET_PHP: !reference [.php_versions]
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1" && $_TARGET_PHP == $_TEST_ONLY_TARGET_PHP && $_TARGET_DB == $_TEST_ONLY_TARGET_DB
+      when: always
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
+      when: manual
   needs:
     - pipeline: $PARENT_PIPELINE_ID
       job: '🧹 PHP Coding standards (PHPCS)'
   services:
-    - name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
+    - name: $_CONFIG_DOCKERHUB_ROOT/$_TEST_ONLY_TARGET_DB:production
       alias: database
     - name: selenium/standalone-chrome:latest
       alias: selenium
@@ -38,13 +47,17 @@ variables:
         SE_START_XVFB: "false"
         SE_START_VNC: "false"
   before_script:
+    - echo "_TEST_ONLY_TARGET_DB = $_TEST_ONLY_TARGET_DB"
+    - echo "_TEST_ONLY_TARGET_PHP = $_TEST_ONLY_TARGET_PHP"
     - |
-      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+      [[ $_TEST_ONLY_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TEST_ONLY_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TEST_ONLY_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TEST_ONLY_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
   script:
+    - echo "_TEST_ONLY_TARGET_DB = $_TEST_ONLY_TARGET_DB"
+    - echo "_TEST_ONLY_TARGET_PHP = $_TEST_ONLY_TARGET_PHP"
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true

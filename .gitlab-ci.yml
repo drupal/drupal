@@ -11,6 +11,8 @@
 # - DrupalSpoons
 ################
 
+include: '.gitlab-ci/php.yml'
+
 ################
 # Workflow
 #
@@ -68,10 +70,9 @@ variables:
   # and on Kubernetes there is no risk of conflict between jobs.
   GIT_CLONE_PATH: $CI_BUILDS_DIR
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  PRIMARY_PHP: "8.5-ubuntu"
-  _TARGET_PHP: "${PRIMARY_PHP}"
   PHPUNIT_CONFIGURATION_FILE_PATH: $CI_PROJECT_DIR/core
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
+  _TARGET_PHP: "${PRIMARY_PHP}"
   # Use local cache for yarn, see .yarn-install-from-cache.
   YARN_ENABLE_GLOBAL_CACHE: false
   YARN_ENABLE_MIRROR: false
@@ -196,7 +197,7 @@ default:
   needs: []
   parallel:
     matrix:
-      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+      - _TARGET_PHP: !reference [.php_versions]
   allow_failure:
     # It's not possible to set allow failure conditional on a possible value of
     # the matrix, so we intercept failure from the script and exit with a code
@@ -214,7 +215,7 @@ default:
     - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "PHPUnit-Unit" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --verbose --non-html --all || EXIT_CODE=$?
     # Allow failure for the next PHP major.
     - |
-      [[ $EXIT_CODE != 0 && $_TARGET_PHP == "8.6-ubuntu" ]] && exit 100
+      [[ $EXIT_CODE != 0 && $_TARGET_PHP == $NEXT_PHP_MAJOR ]] && exit 100
     - exit $EXIT_CODE
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
@@ -235,7 +236,7 @@ default:
   needs: []
   parallel:
     matrix:
-      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+      - _TARGET_PHP: !reference [.php_versions]
   allow_failure:
     # It's not possible to set allow failure conditional on a possible value of
     # the matrix, so we intercept failure from the script and exit with a code
@@ -264,7 +265,7 @@ default:
     - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --log-junit $_ARTIFACTS_DIR/junit.xml --fail-on-deprecation $_FAIL_ON_PHPUNIT_DEPRECATION $_PHPUNIT_COVERAGE || EXIT_CODE=$?
     # Allow failure for the next PHP major.
     - |
-      [[ $EXIT_CODE != 0 && $_TARGET_PHP == "8.6-ubuntu" ]] && exit 100
+      [[ $EXIT_CODE != 0 && $_TARGET_PHP == $NEXT_PHP_MAJOR ]] && exit 100
     - exit $EXIT_CODE
   after_script:
     # Process the coverage text report to produce an OpenMetrics report.
@@ -342,20 +343,19 @@ default:
   trigger:
     include: .gitlab-ci.yml
 
-# Special job for MRs for test-only checks.
-'DEFAULT: Test-only (PHP 8.5 MySQL 8.4)':
+# Special job for MRs for test-only checks. The name starts with a space to be
+# listed before the other jobs.
+' 🩹 TEST-ONLY':
   <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
   variables:
     _TARGET_DB: "mysql-8.4"
-    _TARGET_DB_DRIVER: "mysql"
-    _TARGET_DB_DRIVER_MODULE: "mysql"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   trigger:
     # Rely on the status of the child pipeline.
-    strategy: depend
+    strategy: mirror
     include:
       - local: .gitlab-ci/pipeline-test-only.yml
 
@@ -364,7 +364,7 @@ default:
   <<: [ *default-stage, *run-on-mr ]
   parallel:
     matrix:
-      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+      - _TARGET_PHP: !reference [.php_versions]
         _TARGET_DB: [mariadb-10.6]
   variables:
     _TARGET_DB_DRIVER: "mysql"
@@ -374,7 +374,7 @@ default:
   <<: [ *default-stage, *run-on-mr ]
   parallel:
     matrix:
-      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+      - _TARGET_PHP: !reference [.php_versions]
         _TARGET_DB: [mysql-8, mysql-8.4, mysql-9]
   variables:
     _TARGET_DB_DRIVER: "mysql"
@@ -384,7 +384,7 @@ default:
   <<: [ *default-stage, *run-on-mr ]
   parallel:
     matrix:
-      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+      - _TARGET_PHP: !reference [.php_versions]
         _TARGET_DB: [mysql-9]
   variables:
     _TARGET_DB_DRIVER: "mysqli"
@@ -394,14 +394,14 @@ default:
   <<: [ *default-stage, *run-on-mr ]
   parallel:
     matrix:
-      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+      - _TARGET_PHP: !reference [.php_versions]
         _TARGET_DB: [pgsql-16, pgsql-17, pgsql-18]
 
 'SQLite':
   <<: [ *default-stage, *run-on-mr ]
   parallel:
     matrix:
-      - _TARGET_PHP: [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+      - _TARGET_PHP: !reference [.php_versions]
         _TARGET_DB: [sqlite-3]
 
 # Jobs running on commits.
@@ -410,55 +410,52 @@ default:
   <<: [ *default-stage, *run-on-commit ]
   needs: [ 'DEFAULT: PHP 8.5 MySQL 8.4' ]
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "pgsql-16"
 
 '[Commit] PHP 8.3 SQLite 3.45':
   <<: [ *default-stage, *run-on-commit ]
   needs: [ '[Commit] PHP 8.3 PostgreSQL 16' ]
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "sqlite-3"
 
 # Jobs running daily.
 # The value set in the "needs" property will determine the order in the sequence.
-'[Daily] PHP 8.3 PostgreSQL 16':
+'[Daily] PHP minimum PostgreSQL 16':
   <<: [ *default-stage, *run-daily ]
   needs: [ 'DEFAULT: PHP 8.5 MySQL 8.4' ]
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "pgsql-16"
 
-'[Daily] PHP 8.3 SQLite 3.45':
+'[Daily] PHP minimum SQLite 3.45':
   <<: [ *default-stage, *run-daily ]
-  needs: [ '[Daily] PHP 8.3 PostgreSQL 16' ]
+  needs: [ '[Daily] PHP minimum PostgreSQL 16' ]
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "sqlite-3"
 
-'[Daily] PHP 8.4 MariaDB 10.6':
+'[Daily] MariaDB 10.6':
   <<: [ *default-stage, *run-daily ]
-  needs: [ '[Daily] PHP 8.3 SQLite 3.45' ]
+  needs: [ '[Daily] PHP minimum SQLite 3.45' ]
   variables:
-    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mariadb-10.6"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
-'[Daily] PHP 8.5 MySQL 9.3':
+'[Daily] MySQL 9.3':
   <<: [ *default-stage, *run-daily ]
-  needs: [ '[Daily] PHP 8.4 MariaDB 10.6' ]
+  needs: [ '[Daily] MariaDB 10.6' ]
   variables:
-    _TARGET_PHP: "8.5-ubuntu"
     _TARGET_DB: "mysql-9"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
-'[Daily] PHP 8.5 PostgreSQL 18':
+'[Daily] PostgreSQL 18':
   <<: [ *default-stage, *run-daily ]
-  needs: [ '[Daily] PHP 8.5 MySQL 9.3' ]
+  needs: [ '[Daily] MySQL 9.3' ]
   variables:
-    _TARGET_PHP: "8.5-ubuntu"
     _TARGET_DB: "pgsql-18"
 
 ################
