@@ -439,6 +439,93 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->assertEqualsCanonicalizing(['context.example1', 'context.example2', 'route', 'user.permissions'], $cacheability->getCacheContexts());
   }
 
+  /**
+   * Test multiple parallel calls with fibers.
+   */
+  public function testGetTasksBuildWithFibers(): void {
+    $definitions = $this->getLocalTaskFixtures();
+
+    $this->pluginDiscovery->expects($this->once())
+      ->method('getDefinitions')
+      ->willReturn($definitions);
+
+    $active_plugin_id = 'menu_local_task_test_tasks_view';
+    $map = [];
+
+    foreach ($definitions as $plugin_id => $info) {
+      $mock = $this->prophesize(LocalTaskInterface::class);
+      $mock->willImplement(CacheableDependencyInterface::class);
+      $mock->getRouteName()->willReturn($info['route_name']);
+      $mock->getTitle()->willReturn($info['title']);
+      $mock->getRouteParameters(Argument::cetera())->willReturn([]);
+      $mock->getOptions(Argument::cetera())->willReturn([]);
+      $mock->getActive()->willReturn($plugin_id === $active_plugin_id);
+      $mock->getWeight()->willReturn($info['weight'] ?? 0);
+      $mock->getCacheContexts()->willReturn([]);
+      $mock->getCacheTags()->willReturn([]);
+      $mock->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+      $map[] = [$info['id'], [], $mock->reveal()];
+    }
+
+    // Simulate an access callback that suspends a fiber.
+    $this->accessManager->expects($this->any())
+      ->method('checkNamedRoute')
+      ->willReturnCallback(function (string $route_name) {
+        if ($route_name === 'menu_local_task_test_tasks_edit') {
+          \Fiber::suspend();
+        }
+        return AccessResult::allowed();
+      });
+
+    $this->factory->expects($this->any())
+      ->method('createInstance')
+      ->willReturnMap($map);
+    $this->setupLocalTaskManager();
+
+    $this->argumentResolver->expects($this->any())
+      ->method('getArguments')
+      ->willReturn([]);
+
+    $this->routeMatch->expects($this->any())
+      ->method('getRouteName')
+      ->willReturn('menu_local_task_test_tasks_view');
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturn(new InputBag());
+
+    $first_fiber = new \Fiber(fn () => $this->manager->getLocalTasks('menu_local_task_test_tasks_view', 0));
+    $second_fiber = new \Fiber(fn () => $this->manager->getLocalTasks('menu_local_task_test_tasks_view', 1));
+
+    $fibers = [$first_fiber, $second_fiber];
+    $suspended = FALSE;
+    do {
+      foreach ($fibers as $key => $fiber) {
+        if (!$fiber->isStarted()) {
+          $fiber->start();
+        }
+        elseif ($fiber->isSuspended()) {
+          $suspended = TRUE;
+          $fiber->resume();
+        }
+        elseif ($fiber->isTerminated()) {
+          unset($fibers[$key]);
+        }
+      }
+    } while (!empty($fibers));
+
+    // Ensure that the fibers were suspended at least once to make sure that
+    // the expected scenario is tested here.
+    $this->assertTrue($suspended);
+
+    // Assert that both fibers return the correct result.
+    $this->assertEquals([
+      'menu_local_task_test_tasks_settings',
+      'menu_local_task_test_tasks_edit',
+      'menu_local_task_test_tasks_view.tab',
+    ], array_keys($first_fiber->getReturn()['tabs']));
+    $this->assertEquals(['menu_local_task_test_tasks_view_child1', 'menu_local_task_test_tasks_view_child2'], array_keys($second_fiber->getReturn()['tabs']));
+  }
+
   protected function setupFactoryAndLocalTaskPlugins(array $definitions, $active_plugin_id): void {
     $map = [];
     $access_manager_map = [];
