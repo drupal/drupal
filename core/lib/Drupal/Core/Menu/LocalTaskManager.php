@@ -107,6 +107,11 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected $account;
 
   /**
+   * Flag that indicates if local tasks are currently being loaded.
+   */
+  protected bool $loadingLocalTasks = FALSE;
+
+  /**
    * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
    *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
@@ -344,15 +349,26 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    * {@inheritdoc}
    */
   public function getLocalTasks($route_name, $level = 0) {
+
+    if ($this->loadingLocalTasks && \Fiber::getCurrent() !== NULL) {
+      // Primary and secondary task are rendered in separate blocks, each within
+      // their own fiber. Both call this method for a different level, but the
+      // data is built for both levels on the first call. If the first call
+      // gets suspended, for example due to an entity load in a URL access
+      // check, the second block will then call into this. If the data is
+      // already being built, and we're in a fiber, suspend once to allow the
+      // first fiber to complete building the data. If it is still not done,
+      // proceed anyway, which may build that information twice but will not
+      // return incomplete local task data.
+      \Fiber::suspend();
+    }
+
     if (!isset($this->taskData[$route_name])) {
+      $this->loadingLocalTasks = TRUE;
       $cacheability = new CacheableMetadata();
       $cacheability->addCacheContexts(['route']);
-      // Look for route-based tabs.
-      $this->taskData[$route_name] = [
-        'tabs' => [],
-        'cacheability' => $cacheability,
-      ];
 
+      // Look for route-based tabs.
       if (!$this->requestStack->getCurrentRequest()->attributes->has('exception')) {
         // Safe to build tasks only when no exceptions raised.
         $data = [];
@@ -360,11 +376,23 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
         foreach ($local_tasks as $tab_level => $items) {
           $data[$tab_level] = empty($data[$tab_level]) ? $items : array_merge($data[$tab_level], $items);
         }
-        $this->taskData[$route_name]['tabs'] = $data;
+        $this->taskData[$route_name] = [
+          'tabs' => $data,
+          'cacheability' => $cacheability,
+        ];
+
         // Allow modules to alter local tasks.
         $this->moduleHandler->alter('menu_local_tasks', $this->taskData[$route_name], $route_name, $cacheability);
         $this->taskData[$route_name]['cacheability'] = $cacheability;
       }
+      else {
+        $this->taskData[$route_name] = [
+          'tabs' => [],
+          'cacheability' => $cacheability,
+        ];
+      }
+
+      $this->loadingLocalTasks = FALSE;
     }
 
     if (isset($this->taskData[$route_name]['tabs'][$level])) {
