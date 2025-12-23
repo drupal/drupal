@@ -123,16 +123,6 @@ variables:
 # Documentation: https://docs.gitlab.com/ee/ci/jobs/
 ################
 
-'🩹 Test-only changes':
-  <<: [ *with-composer, *default-job-settings ]
-  when: manual
-  allow_failure: true
-  services:
-    - <<: *with-database
-    - <<: *with-selenium-chrome
-  script:
-    - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
-
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 3
