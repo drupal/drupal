@@ -34,6 +34,15 @@ class HookCollectorKeyValueWritePass implements CompilerPassInterface {
     assert($keyvalue instanceof KeyValueStoreInterface);
     $keyvalue->setMultiple($hookData);
     $container->get('cache.bootstrap')->deleteMultiple(['hook_data', 'theme_hook_data']);
+
+    // Remove converted flags, they are only needed while building the
+    // container.
+    $parameters = $container->getParameterBag();
+    foreach ($parameters->all() as $name => $value) {
+      if (str_ends_with($name, '.skip_procedural_hook_scan')) {
+        $parameters->remove($name);
+      }
+    }
   }
 
 }
