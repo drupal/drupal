@@ -78,7 +78,7 @@ function history_read_multiple($nids): array {
  *
  * @param string|int|null $nid
  *   The node ID that has been read.
- * @param \Drupal\User\UserInterface $account
+ * @param \Drupal\user\UserInterface $account
  *   (optional) The user account to update the history for. Defaults to the
  *   current user.
  */

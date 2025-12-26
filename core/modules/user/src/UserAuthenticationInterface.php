@@ -13,7 +13,7 @@ interface UserAuthenticationInterface {
    * @param string $identifier
    *   The user identifier to authenticate. Usually the username.
    *
-   * @return \Drupal\User\UserInterface|false
+   * @return \Drupal\user\UserInterface|false
    *   The user account on success, or FALSE on failure to authenticate.
    */
   public function lookupAccount($identifier): UserInterface|false;
