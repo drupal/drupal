@@ -159,7 +159,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   /**
    * Creates a test entity and translate it.
    *
-   * @param \Drupal\User\UserInterface|null $user
+   * @param \Drupal\user\UserInterface|null $user
    *   (optional) The entity owner.
    */
   protected function setupEntity(?UserInterface $user = NULL): void {
