@@ -422,10 +422,12 @@ abstract class BrowserTestBase extends TestCase {
 
     if ($this->container) {
       // Cleanup mock session started in DrupalKernel::preHandle().
-      /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-      $session = $this->container->get('request_stack')->getSession();
-      $session->clear();
-      $session->save();
+      if ($this->container->has('request_stack')) {
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $this->container->get('request_stack')->getSession();
+        $session->clear();
+        $session->save();
+      }
 
       // If cron is running because Automated Cron started it at the end of a
       // test request, wait for it to complete.

@@ -413,9 +413,18 @@ default:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "pgsql-16"
 
-'[Commit] PHP 8.3 SQLite 3.45':
+'[Commit] PHP 8.3 MySQL 9 via mysqli':
   <<: [ *default-stage, *run-on-commit ]
   needs: [ '[Commit] PHP 8.3 PostgreSQL 16' ]
+  variables:
+    _TARGET_PHP: $MINIMUM_PHP
+    _TARGET_DB: "mysql-9"
+    _TARGET_DB_DRIVER: "mysqli"
+    _TARGET_DB_DRIVER_MODULE: "mysqli"
+
+'[Commit] PHP 8.3 SQLite 3.45':
+  <<: [ *default-stage, *run-on-commit ]
+  needs: [ '[Commit] PHP 8.3 MySQL 9 via mysqli' ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "sqlite-3"
@@ -429,9 +438,18 @@ default:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "pgsql-16"
 
-'[Daily] PHP minimum SQLite 3.45':
+'[Daily] PHP 8.5 MySQL 9 via mysqli':
   <<: [ *default-stage, *run-daily ]
   needs: [ '[Daily] PHP minimum PostgreSQL 16' ]
+  variables:
+    _TARGET_PHP: "8.5-ubuntu"
+    _TARGET_DB: "mysql-9"
+    _TARGET_DB_DRIVER: "mysqli"
+    _TARGET_DB_DRIVER_MODULE: "mysqli"
+
+'[Daily] PHP minimum SQLite 3.45':
+  <<: [ *default-stage, *run-daily ]
+  needs: [ '[Daily] PHP 8.5 MySQL 9 via mysqli' ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "sqlite-3"
