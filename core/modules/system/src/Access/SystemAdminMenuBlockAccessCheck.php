@@ -42,7 +42,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    * Checks access.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The cron key.
+   *   The route match object to be checked.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    *
