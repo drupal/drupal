@@ -91,7 +91,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     $this->assertEquals('Select a responsive image style. Loading attribute: lazy', $summary_text->getText());
 
     $page->pressButton('Save');
-    $assert_session->responseContains("Select a responsive image style.");
+    $this->assertTrue($assert_session->waitForText('Select a responsive image style.'));
 
     // Create responsive image styles.
     $responsive_image_style = ResponsiveImageStyle::create([
