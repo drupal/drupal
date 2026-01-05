@@ -173,7 +173,7 @@ We need it root to calculate the size of the displace in .dialog-off-canvas-main
   --admin-toolbar-transition: 150ms ease-out;
 }
 @media (prefers-reduced-motion) {
-  [data-drupal-admin-styles] {
+  [data-admin-toolbar-transitions] {
     --admin-toolbar-transition: 0s linear;
   }
 }
