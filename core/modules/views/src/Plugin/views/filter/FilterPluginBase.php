@@ -990,6 +990,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * filter.
    */
   public function groupForm(&$form, FormStateInterface $form_state) {
+    $groups = [];
     if (!empty($this->options['group_info']['optional']) && !$this->multipleExposedInput()) {
       $groups = ['All' => $this->t('- Any -')];
     }
@@ -1501,7 +1502,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         $selected_group = $selected_group_id;
       }
       else {
-        $selected_group = $input[$this->options['group_info']['identifier']];
+        $selected_group = $input[$this->options['group_info']['identifier']] ?? NULL;
       }
       if ($selected_group == 'All' && !empty($this->options['group_info']['optional'])) {
         return NULL;
@@ -1615,10 +1616,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
     if (!empty($this->options['expose']['identifier'])) {
       if ($this->options['is_grouped']) {
-        $value = $input[$this->options['group_info']['identifier']];
+        $value = $input[$this->options['group_info']['identifier']] ?? NULL;
       }
       else {
-        $value = $input[$this->options['expose']['identifier']];
+        $value = $input[$this->options['expose']['identifier']] ?? NULL;
       }
 
       // Various ways to check for the absence of non-required input.
