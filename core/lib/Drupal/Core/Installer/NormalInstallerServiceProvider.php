@@ -4,6 +4,7 @@ namespace Drupal\Core\Installer;
 
 use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\MemoryBackendFactory;
+use Drupal\Core\Cache\NullBackendFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\Lock\NullLockBackend;
@@ -34,6 +35,8 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
+    global $install_state;
+
     // During the installer user 1 is a superuser.
     $container->setDefinition(InstallerAccessPolicy::class, (new Definition())->addTag('access_policy')->setPublic(FALSE));
 
@@ -44,6 +47,21 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
     $definition->setClass(MemoryBackendFactory::class);
     $definition->setArguments([new Time()]);
     $definition->setMethodCalls([]);
+
+    // When installing from existing config, disabling the config cache entirely
+    // yields much faster install times.
+    // Without this, MemoryBackend::invalidateTags must iterate over a very
+    // large set of cached entries on every entity save — especially when
+    // the site to install contains lots of languages.
+    /* @see \Drupal\Core\Entity\EntityBase::postSave */
+    /* @see \Drupal\Core\Cache\MemoryBackend::invalidateTags */
+    if (!empty($install_state['config_install_path'])) {
+      $cache_config_definition = $container->getDefinition('cache.config');
+      $cache_config_definition->setFactory([new Reference('cache.backend.null'), 'get']);
+      if (!$container->hasDefinition('cache.backend.null')) {
+        $container->register('cache.backend.null', NullBackendFactory::class);
+      }
+    }
 
     // Replace lock service with no-op implementation as Drupal installation can
     // only occur in a single thread and the site should not be publicly
