@@ -11,7 +11,10 @@
     }
   },
   "extra": {
-    "class": "Drupal\\Composer\\Plugin\\VendorHardening\\VendorHardeningPlugin"
+    "class": "Drupal\\Composer\\Plugin\\VendorHardening\\VendorHardeningPlugin",
+    "branch-alias": {
+      "dev-main": "11.x-dev"
+    }
   },
   "require": {
     "php": ">=7.3.0",

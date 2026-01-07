@@ -77,6 +77,11 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
       "require" => [
         "drupal/core" => Composer::drupalVersionBranch(),
       ],
+      "extra" => [
+        "branch-alias" => [
+          "dev-main" => Composer::drupalVersionBranch(),
+        ],
+      ],
     ];
   }
 

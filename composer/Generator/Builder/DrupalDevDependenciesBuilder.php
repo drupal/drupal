@@ -2,6 +2,8 @@
 
 namespace Drupal\Composer\Generator\Builder;
 
+use Drupal\Composer\Composer;
+
 /**
  * Builder to produce metapackage for drupal/core-dev.
  */
@@ -44,6 +46,11 @@ class DrupalDevDependenciesBuilder extends DrupalPackageBuilder {
       "license" => "GPL-2.0-or-later",
       "conflict" => [
         "webflo/drupal-core-require-dev" => "*",
+      ],
+      "extra" => [
+        "branch-alias" => [
+          "dev-main" => Composer::drupalVersionBranch(),
+        ],
       ],
     ];
   }

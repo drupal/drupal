@@ -6,6 +6,11 @@
     "conflict": {
         "webflo/drupal-core-require-dev": "*"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "11.x-dev"
+        }
+    },
     "require": {
         "behat/mink": "^1.11",
         "behat/mink-browserkit-driver": "^2.2",

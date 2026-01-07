@@ -15,7 +15,10 @@
     }
   },
   "extra": {
-    "class": "Drupal\\Composer\\Plugin\\RecipeUnpack\\Plugin"
+    "class": "Drupal\\Composer\\Plugin\\RecipeUnpack\\Plugin",
+    "branch-alias": {
+      "dev-main": "11.x-dev"
+    }
   },
   "config": {
     "sort-packages": true

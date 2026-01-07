@@ -11,7 +11,10 @@
     }
   },
   "extra": {
-    "class": "Drupal\\Composer\\Plugin\\ProjectMessage\\MessagePlugin"
+    "class": "Drupal\\Composer\\Plugin\\ProjectMessage\\MessagePlugin",
+    "branch-alias": {
+      "dev-main": "11.x-dev"
+    }
   },
   "require": {
     "php": ">=7.3.0",
