@@ -121,8 +121,9 @@ class SystemManager {
    */
   public function listRequirements() {
     // Load .install files.
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    drupal_load_updates();
+    foreach ($this->moduleHandler->getModuleList() as $module => $extension) {
+      $this->moduleHandler->loadInclude($module, 'install');
+    }
 
     // Check run-time requirements and status information.
     $requirements = $this->moduleHandler->invokeAll('requirements', ['runtime']);
