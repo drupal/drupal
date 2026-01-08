@@ -14,7 +14,7 @@ block.block.*:
       # @see https://www.drupal.org/project/drupal/issues/2043527
       constraints:
         Regex:
-          pattern: '/^[a-z0-9_.]+$/'
+          pattern: '/^(?!\.)[a-z0-9_.]+$/'
           message: "The %value machine name is not valid."
     theme:
       type: string

@@ -139,8 +139,9 @@ class BlockForm extends EntityForm {
       '#default_value' => !$entity->isNew() ? $entity->id() : $this->getUniqueMachineName($entity),
       '#machine_name' => [
         'exists' => '\Drupal\block\Entity\Block::load',
-        'replace_pattern' => '[^a-z0-9_.]+',
+        'replace_pattern' => '[^a-z0-9_.]|(^\.)',
         'source' => ['settings', 'label'],
+        'error' => $this->t('The machine-readable name must contain only lowercase letters, numbers, underscores and periods, and must not begin with a period.'),
       ],
       '#required' => TRUE,
       '#disabled' => !$entity->isNew(),
