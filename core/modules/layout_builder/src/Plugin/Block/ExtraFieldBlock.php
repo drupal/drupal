@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\Plugin\Derivative\ExtraFieldBlockDeriver;
@@ -170,12 +171,34 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
         $built_cache = CacheableMetadata::createFromRenderArray($built_field);
         $merged_cache = $placeholder_cache->merge($built_cache);
         $build[$child] = $built_field;
+        $build['#pre_render'][] = [static::class, 'preRenderBlock'];
         $merged_cache->applyTo($build);
       }
       else {
         static::replaceFieldPlaceholder($build[$child], $built_field, $field_name);
       }
     }
+  }
+
+  /**
+   * Pre-render callback to ensure empty extra_field_block's are not rendered.
+   *
+   * @param array $block_build
+   *   The original block render array.
+   *
+   * @return array
+   *   The modified block render array.
+   */
+  #[TrustedCallback]
+  public static function preRenderBlock(array $block_build): array {
+    $content = $block_build['content'] ?? NULL;
+    if ($content === NULL || Element::isEmpty($content)) {
+      // Block content is empty, abort rendering the whole block and preserve
+      // cache metadata.
+      // @see \Drupal\Core\Render\Renderer::doRender
+      $block_build['#printed'] = TRUE;
+    }
+    return $block_build;
   }
 
   /**
