@@ -9,6 +9,7 @@
     z-index: var(--admin-toolbar-z-index-top-bar);
     display: flex;
     display: none;
+    color: var(--admin-toolbar-color-gray-990);
     background-color: white;
     box-shadow: 0 0 8px 0 var(--admin-toolbar-color-shadow-15);
     font-family: var(--admin-toolbar-font-family);
