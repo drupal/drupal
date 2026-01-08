@@ -95,9 +95,26 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
    * Provides uasort() callback to sort plugins.
    */
   public function sortHelper($aID, $bID) {
-    $a = $this->get($aID);
-    $b = $this->get($bID);
-    return strnatcasecmp($a->getPluginId(), $b->getPluginId());
+    return strnatcasecmp($this->getPluginId($aID), $this->getPluginId($bID));
+  }
+
+  /**
+   * Get the plugin ID for an instance.
+   *
+   * @param string $instance_id
+   *   The instance ID.
+   *
+   * @return string
+   *   The plugin ID for the instance.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown if the plugin key is not present in the instance configuration.
+   */
+  protected function getPluginId(string $instance_id): string {
+    if (isset($this->pluginInstances[$instance_id])) {
+      return $this->pluginInstances[$instance_id]->getPluginId();
+    }
+    return $this->configurations[$instance_id][$this->pluginKey] ?? throw new PluginNotFoundException($instance_id);
   }
 
   /**
