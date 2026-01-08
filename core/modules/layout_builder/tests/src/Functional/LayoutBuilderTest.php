@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Functional;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Section;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+
+// cspell:ignore blocknodebundle fieldlayout
 
 /**
  * Tests the Layout Builder UI.
@@ -484,6 +487,17 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     // Confirm that the newly added extra field is visible.
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('Extra Field 2 is hidden by default.');
+
+    // Ensure empty extra field and its container are not rendered.
+    /* @see \Drupal\layout_builder\Plugin\Block\ExtraFieldBlock::preRenderBlock */
+    $selector = '.block-extra-field-blocknodebundle-with-section-fieldlayout-builder-test-empty';
+    $assert_session->elementNotExists('css', $selector);
+    // Force extra field to render, reload page and ensure presence.
+    \Drupal::keyValue('test_extra_fields_empty')->set('render_extra_field', TRUE);
+    Cache::invalidateTags(['test_extra_fields_empty']);
+    $this->getSession()->reload();
+    $assert_session->elementExists('css', $selector);
+    $assert_session->elementTextContains('css', $selector, 'This extra field is visible because it is not empty.');
   }
 
   /**

@@ -8,11 +8,20 @@ use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Entity hook implementations for layout_builder_test.
  */
 class LayoutBuilderTestEntityHooks {
+
+  public function __construct(
+    #[Autowire(service: 'keyvalue')]
+    protected readonly KeyValueFactoryInterface $keyValueFactory,
+  ) {
+
+  }
 
   /**
    * Implements hook_ENTITY_TYPE_view().
@@ -28,6 +37,21 @@ class LayoutBuilderTestEntityHooks {
       $build['layout_builder_test_2'] = [
         '#markup' => 'Extra Field 2 is hidden by default.',
       ];
+    }
+    if ($display->getComponent('layout_builder_test_empty')) {
+      $build['layout_builder_test_empty'] = [
+        '#cache' => [
+          'tags' => ['test_extra_fields_empty'],
+        ],
+      ];
+
+      $render = $this->keyValueFactory->get('test_extra_fields_empty')->get('render_extra_field', FALSE);
+      if ($render) {
+        $build['layout_builder_test_empty'][] = [
+          '#type' => 'markup',
+          '#markup' => 'This extra field is visible because it is not empty.',
+        ];
+      }
     }
   }
 
@@ -46,6 +70,11 @@ class LayoutBuilderTestEntityHooks {
       'description' => 'Extra Field 2 description',
       'weight' => 0,
       'visible' => FALSE,
+    ];
+    $extra['node']['bundle_with_section_field']['display']['layout_builder_test_empty'] = [
+      'label' => 'Extra Field (empty)',
+      'description' => 'Extra Field (empty) description',
+      'weight' => 0,
     ];
     return $extra;
   }
