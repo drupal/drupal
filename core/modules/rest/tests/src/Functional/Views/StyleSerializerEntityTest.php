@@ -291,7 +291,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     $result_xml = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'xml']]);
     $this->addRequestWithFormat('xml');
-    $this->assertSession()->responseHeaderEquals('content-type', 'text/xml; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('content-type', 'text/xml; charset=utf-8');
     $this->assertCacheContexts($cache_contexts);
     $this->assertCacheTags($cache_tags);
     $this->assertNotEmpty($render_cache->get($original));
@@ -335,7 +335,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     // Ensure a request with no format returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field');
-    $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=utf-8');
     $this->assertSession()->statusCodeEquals(406);
 
     // Select only 'xml' as an accepted format.
@@ -349,7 +349,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(406);
     // Ensure a request for XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
-    $this->assertSession()->responseHeaderEquals('content-type', 'text/xml; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('content-type', 'text/xml; charset=utf-8');
     $this->assertSession()->statusCodeEquals(200);
 
     // Add 'json' as an accepted format, so we have multiple.
@@ -359,12 +359,12 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     // Should return a 406. Emulates a sample Firefox header.
     $this->drupalGet('test/serialize/field', [], ['Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8']);
-    $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=utf-8');
     $this->assertSession()->statusCodeEquals(406);
 
     // Ensure a request for HTML returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
-    $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=utf-8');
     $this->assertSession()->statusCodeEquals(406);
 
     // Ensure a request for JSON returns 200 OK.
@@ -374,7 +374,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     // Ensure a request XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
-    $this->assertSession()->responseHeaderEquals('content-type', 'text/xml; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('content-type', 'text/xml; charset=utf-8');
     $this->assertSession()->statusCodeEquals(200);
 
     // Now configure no format, so both serialization formats should be allowed.
@@ -391,12 +391,12 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     // Ensure a request for XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
-    $this->assertSession()->responseHeaderEquals('content-type', 'text/xml; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('content-type', 'text/xml; charset=utf-8');
     $this->assertSession()->statusCodeEquals(200);
 
     // Should return a 406 for HTML still.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
-    $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=utf-8');
     $this->assertSession()->statusCodeEquals(406);
   }
 

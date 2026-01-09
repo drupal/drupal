@@ -128,7 +128,7 @@ class PhpMailTest extends UnitTestCase {
       'body' => '',
       'headers' => [
         'MIME-Version' => '1.0',
-        'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+        'Content-Type' => 'text/plain; charset=utf-8; format=flowed; delsp=yes',
         'Content-Transfer-Encoding' => '8Bit',
         'X-Mailer' => 'Drupal',
         'From' => '"Foo, Bar, and Baz" <from@example.org>',
@@ -146,7 +146,7 @@ class PhpMailTest extends UnitTestCase {
     $line_end = "\r\n";
 
     $expected_headers = "MIME-Version: 1.0$line_end";
-    $expected_headers .= "Content-Type: text/plain; charset=UTF-8; format=flowed; delsp=yes$line_end";
+    $expected_headers .= "Content-Type: text/plain; charset=utf-8; format=flowed; delsp=yes$line_end";
     $expected_headers .= "Content-Transfer-Encoding: 8Bit$line_end";
     $expected_headers .= "X-Mailer: Drupal$line_end";
     $expected_headers .= "From: \"Foo, Bar, and Baz\" <from@example.org>$line_end";

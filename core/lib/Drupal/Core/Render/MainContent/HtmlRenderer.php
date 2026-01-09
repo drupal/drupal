@@ -177,7 +177,7 @@ class HtmlRenderer implements MainContentRendererInterface {
     $content['#cache']['tags'][] = 'rendered';
 
     $response = new HtmlResponse($content, 200, [
-      'Content-Type' => 'text/html; charset=UTF-8',
+      'Content-Type' => 'text/html; charset=utf-8',
     ]);
 
     return $response;

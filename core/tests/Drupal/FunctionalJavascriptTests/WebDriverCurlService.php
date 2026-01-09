@@ -63,8 +63,8 @@ class WebDriverCurlService extends CurlService {
     while ($retries < $max_retries) {
       try {
         $customHeaders = [
-          'Content-Type: application/json;charset=UTF-8',
-          'Accept: application/json;charset=UTF-8',
+          'Content-Type: application/json;charset=utf-8',
+          'Accept: application/json;charset=utf-8',
         ];
 
         $curl = curl_init($url);

@@ -752,12 +752,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $response = $this->handleException($e, $request, $type);
     }
 
-    // Backward compatibility for Symfony 7.4, which sets the charset to utf-8.
-    // @todo Remove this in https://www.drupal.org/project/drupal/issues/3555537
-    if (!$response->getCharset()) {
-      $response->setCharset('UTF-8');
-    }
-
     // Adapt response headers to the current request.
     $response->prepare($request);
 

@@ -121,7 +121,7 @@ HTMX_RESPONSE,
     $content['#cache']['tags'][] = 'rendered';
 
     $response = new HtmlResponse($content, 200, [
-      'Content-Type' => 'text/html; charset=UTF-8',
+      'Content-Type' => 'text/html; charset=utf-8',
       // Make sure bots do not show this response in search results.
       'X-Robots-Tag' => 'noindex',
     ]);

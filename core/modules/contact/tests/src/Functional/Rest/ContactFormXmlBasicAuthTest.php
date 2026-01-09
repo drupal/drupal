@@ -37,7 +37,7 @@ class ContactFormXmlBasicAuthTest extends ContactFormResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $mimeType = 'text/xml; charset=UTF-8';
+  protected static $mimeType = 'text/xml; charset=utf-8';
 
   /**
    * {@inheritdoc}

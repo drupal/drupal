@@ -106,7 +106,7 @@ class ExceptionHandlingTest extends KernelTestBase {
     $response = $kernel->handle($request)->prepare($request);
 
     $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
-    $this->assertEquals('text/html; charset=UTF-8', $response->headers->get('Content-type'));
+    $this->assertEquals('text/html; charset=utf-8', $response->headers->get('Content-type'));
   }
 
   /**
@@ -121,7 +121,7 @@ class ExceptionHandlingTest extends KernelTestBase {
     $response = $kernel->handle($request)->prepare($request);
 
     $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-    $this->assertEquals('text/html; charset=UTF-8', $response->headers->get('Content-type'));
+    $this->assertEquals('text/html; charset=utf-8', $response->headers->get('Content-type'));
   }
 
   /**

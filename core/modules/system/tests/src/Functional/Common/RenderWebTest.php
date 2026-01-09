@@ -36,7 +36,7 @@ class RenderWebTest extends BrowserTestBase {
   public function testWrapperFormatCacheContext(): void {
     $this->drupalGet('common-test/type-link-active-class');
     $this->assertStringStartsWith("<!DOCTYPE html>\n<html", $this->getSession()->getPage()->getContent());
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
+    $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=utf-8');
     $this->assertSession()->titleEquals('Test active link class | Drupal');
     $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
 

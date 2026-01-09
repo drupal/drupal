@@ -98,7 +98,7 @@ class SymfonyMailerTest extends UnitTestCase {
       'body' => '',
       'headers' => [
         'MIME-Version' => '1.0',
-        'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+        'Content-Type' => 'text/plain; charset=utf-8; format=flowed; delsp=yes',
         'Content-Transfer-Encoding' => '8Bit',
         'X-Mailer' => 'Drupal',
         'From' => '"Foo, Bar, and Baz" <from@example.org>',

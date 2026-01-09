@@ -148,7 +148,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
     // will not have all the blocks and page elements normally rendered by
     // Drupal.
     $response = new HtmlResponse('', HtmlResponse::HTTP_OK, [
-      'Content-Type' => 'text/html; charset=UTF-8',
+      'Content-Type' => 'text/html; charset=utf-8',
     ]);
     $response->addCacheableDependency(Url::createFromRequest($request));
 
