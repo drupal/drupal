@@ -588,7 +588,7 @@ class Url implements TrustedCallbackInterface {
    */
   public function getRouteParameters() {
     if ($this->unrouted) {
-      throw new \UnexpectedValueException('External URLs do not have internal route parameters.');
+      throw new \UnexpectedValueException($this->getUri() . ' has no corresponding route.');
     }
 
     return $this->routeParameters;
@@ -607,7 +607,7 @@ class Url implements TrustedCallbackInterface {
    */
   public function setRouteParameters($parameters) {
     if ($this->unrouted) {
-      throw new \UnexpectedValueException('External URLs do not have route parameters.');
+      throw new \UnexpectedValueException($this->getUri() . ' has no corresponding route.');
     }
     $this->routeParameters = $parameters;
     return $this;
@@ -628,7 +628,7 @@ class Url implements TrustedCallbackInterface {
    */
   public function setRouteParameter($key, $value) {
     if ($this->unrouted) {
-      throw new \UnexpectedValueException('External URLs do not have route parameters.');
+      throw new \UnexpectedValueException($this->getUri() . ' has no corresponding route.');
     }
     $this->routeParameters[$key] = $value;
     return $this;

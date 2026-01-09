@@ -426,7 +426,32 @@ class UrlTest extends UnitTestCase {
   public function testGetRouteParametersWithExternalUrl(): void {
     $url = Url::fromUri('http://example.com');
     $this->expectException(\UnexpectedValueException::class);
+    $this->expectExceptionMessage('http://example.com has no corresponding route.');
     $url->getRouteParameters();
+  }
+
+  /**
+   * Tests the setRouteParameters() with an unrouted URL.
+   *
+   * @legacy-covers ::setRouteParameters
+   */
+  public function testSetRouteParametersWithUnroutedUrl(): void {
+    $url = Url::fromUri('https://example.com');
+    $this->expectException(\UnexpectedValueException::class);
+    $this->expectExceptionMessage('https://example.com has no corresponding route.');
+    $url->setRouteParameters(['foo' => 'bar']);
+  }
+
+  /**
+   * Tests the setRouteParameter() with an unrouted URL.
+   *
+   * @legacy-covers ::setRouteParameter
+   */
+  public function testSetRouteParameterWithUnroutedUrl(): void {
+    $url = Url::fromUri('https://example.com');
+    $this->expectException(\UnexpectedValueException::class);
+    $this->expectExceptionMessage('https://example.com has no corresponding route.');
+    $url->setRouteParameter('foo', 'bar');
   }
 
   /**
