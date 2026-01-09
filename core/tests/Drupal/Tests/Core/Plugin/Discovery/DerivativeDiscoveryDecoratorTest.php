@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Plugin\Discovery;
 use Drupal\Component\Plugin\Definition\DerivablePluginDefinitionInterface;
 use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\Exception\InvalidDeriverException;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -60,6 +61,46 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     $this->assertEquals('non_container_aware_discovery', $definitions['non_container_aware_discovery:test_discovery_1']['id']);
     $this->assertEquals('\Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscovery', $definitions['non_container_aware_discovery:test_discovery_1']['deriver']);
+  }
+
+  /**
+   * Tests get definitions.
+   *
+   * @legacy-covers ::getDefinitions
+   */
+  public function testGetDefinitions(): void {
+    $example_service = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
+    $example_container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+      ->onlyMethods(['get'])
+      ->getMock();
+    $example_container->expects($this->once())
+      ->method('get')
+      ->with($this->equalTo('example_service'))
+      ->willReturn($example_service);
+
+    \Drupal::setContainer($example_container);
+
+    $definitions = [];
+    $definitions['container_aware_discovery'] = [
+      'id' => 'container_aware_discovery',
+      'deriver' => '\Drupal\Tests\Core\Plugin\Discovery\TestContainerDerivativeDiscovery',
+    ];
+    $definitions['non_container_aware_discovery'] = [
+      'id' => 'non_container_aware_discovery',
+      'deriver' => '\Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscovery',
+    ];
+
+    $discovery_main = $this->createMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
+    $discovery_main->expects($this->any())
+      ->method('getDefinitions')
+      ->willReturn($definitions);
+
+    $discovery = new ContainerDerivativeDiscoveryDecorator($discovery_main);
+    $definitions = $discovery->getDefinitions();
+
+    // Ensure that both the instances from container and non-container test
+    // derivatives got added.
+    $this->assertCount(4, $definitions);
   }
 
   /**
