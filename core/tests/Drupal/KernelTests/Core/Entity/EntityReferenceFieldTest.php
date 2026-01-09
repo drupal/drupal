@@ -88,6 +88,56 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests fiber suspension within EntityReferenceFieldItemList::__get().
+   *
+   * @see https://github.com/php/php-src/issues/14983
+   */
+  public function testEntityReferenceListFiberSuspension(): void {
+    $referenced_entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->referencedEntityType)
+      ->create(['type' => $this->bundle]);
+    $referenced_entity->save();
+
+    $storage = $this->container->get('entity_type.manager')->getStorage($this->entityType);
+
+    $entity = $storage->create(['type' => $this->bundle]);
+    $entity->{$this->fieldName}->target_id = $referenced_entity->id();
+    $entity->save();
+
+    $entity = $storage->load($entity->id());
+
+    $fiber = new \Fiber(fn() => $entity->{$this->fieldName}->entity);
+    $fiber->start();
+    $referenced_entity = $entity->{$this->fieldName}->entity;
+    $this->assertIsObject($referenced_entity);
+  }
+
+  /**
+   * Tests fiber suspension within EntityReferenceItemBase::__get().
+   */
+  public function testEntityReferenceItemFiberSuspension(): void {
+    $referenced_entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->referencedEntityType)
+      ->create(['type' => $this->bundle]);
+    $referenced_entity->save();
+
+    $storage = $this->container->get('entity_type.manager')->getStorage($this->entityType);
+
+    $entity = $storage->create(['type' => $this->bundle]);
+    $entity->{$this->fieldName}->target_id = $referenced_entity->id();
+    $entity->save();
+
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
+    $entity = $storage->load($entity->id());
+    $field_item = $entity->get($this->fieldName)->first();
+
+    $fiber = new \Fiber(fn() => $field_item->entity);
+    $fiber->start();
+    $referenced_entity = $field_item->entity;
+    $this->assertIsObject($referenced_entity);
+  }
+
+  /**
    * Tests reference field validation.
    */
   public function testEntityReferenceFieldValidation(): void {
