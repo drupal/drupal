@@ -168,7 +168,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
           $this->entity->getMode(),
           $form,
           $form_state,
-        )) ?? [];
+        ) ?? []);
       }
     );
     return $settings_form;

@@ -98,4 +98,20 @@ class FieldUiTestHooks {
     return 'content';
   }
 
+  /**
+   * Implements hook_field_formatter_third_party_settings_form().
+   *
+   * We add an empty hook implementation to test it does not result in a fatal
+   * error in \Drupal\field_ui\Form\EntityViewDisplayEditForm::thirdPartySettingsForm.
+   *
+   * @see \Drupal\field_ui\Form\EntityViewDisplayEditForm::thirdPartySettingsForm
+   * @see \Drupal\Tests\field_ui\Functional\FieldUIIndentationTest::testIndentation
+   *
+   * @link https://www.drupal.org/project/drupal/issues/3552531
+   */
+  #[Hook('field_formatter_third_party_settings_form')]
+  public function fieldFormatterThirdPartySettingsForm(): void {
+    // Empty hook implementation.
+  }
+
 }
