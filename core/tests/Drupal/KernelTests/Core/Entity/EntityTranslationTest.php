@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TranslationStatusInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\entity_test\EntityTestHelper;
@@ -808,6 +809,61 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       $adapter = $entity->getTranslation($langcode)->getTypedData();
       $name = $adapter->get('name')->value;
       $this->assertEquals($values[$langcode]['name'], $name, "Name correctly retrieved from '$langcode' adapter");
+    }
+  }
+
+  /**
+   * Tests the entity constructor works with translations.
+   */
+  public function testEntityConstructor(): void {
+    $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
+    $langcodes = array_unique(array_merge($this->langcodes ?? [], [$default_langcode]));
+    $this->assertGreaterThan(1, count($langcodes));
+
+    $bundle = $this->randomMachineName();
+    EntityTestHelper::createBundle($bundle);
+
+    $field_name = strtolower($this->randomMachineName());
+
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'text',
+      'cardinality' => 1,
+    ]);
+    $field_storage->save();
+
+    $field_config = FieldConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => $bundle,
+      'translatable' => TRUE,
+    ]);
+    $field_config->save();
+
+    $values = [];
+    foreach ($langcodes as $langcode) {
+      $index = $langcode == $default_langcode ? LanguageInterface::LANGCODE_DEFAULT : $langcode;
+      $values[$field_name][$index][0]['value'] = $this->randomString();
+    }
+
+    $entity = new EntityTest($values, 'entity_test', $bundle, $langcodes);
+    $expected_languages = array_flip($langcodes);
+
+    foreach ($entity->getTranslationLanguages() as $language) {
+      /** @var \Drupal\Core\Language\LanguageInterface $language */
+      $this->assertTrue(isset($expected_languages[$language->getId()]));
+      unset($expected_languages[$language->getId()]);
+    }
+
+    $this->assertEmpty($expected_languages);
+
+    foreach ($langcodes as $langcode) {
+      $index = $langcode == $default_langcode ? LanguageInterface::LANGCODE_DEFAULT : $langcode;
+      $this->assertEquals(
+        $entity->getTranslation($langcode)->$field_name->value,
+        $values[$field_name][$index][0]['value']
+      );
     }
   }
 
