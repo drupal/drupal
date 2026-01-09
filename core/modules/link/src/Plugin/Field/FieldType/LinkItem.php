@@ -29,6 +29,7 @@ use Drupal\link\LinkTitleVisibility;
     "LinkAccess" => [],
     "LinkExternalProtocols" => [],
     "LinkNotExistingInternal" => [],
+    "LinkTitleRequired" => [],
   ]
 )]
 class LinkItem extends FieldItemBase implements LinkItemInterface {
