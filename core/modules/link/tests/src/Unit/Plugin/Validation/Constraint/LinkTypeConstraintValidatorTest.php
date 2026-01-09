@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Exception\UnexpectedValueException;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 /**
@@ -180,9 +181,41 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Validate the link.
+   * Tests validating a value that isn't a LinkItemInterface.
    */
-  protected function doValidate(LinkItemInterface&MockObject $link, ExecutionContextInterface&MockObject $context): void {
+  public function testUnexpectedValue(): void {
+    $this->expectException(UnexpectedValueException::class);
+    $context = $this->createMock(ExecutionContextInterface::class);
+    $this->doValidate('bad value', $context);
+  }
+
+  /**
+   * Tests validating an empty Link field.
+   */
+  public function testEmptyField(): void {
+    $link = $this->createMock(LinkItemInterface::class);
+    $link->expects($this->any())
+      ->method('getFieldDefinition')
+      ->willReturn($this->getMockFieldDefinition(LinkItemInterface::LINK_INTERNAL));
+    $link->expects($this->once())
+      ->method('isEmpty')
+      ->willReturn(TRUE);
+    $link->expects($this->never())
+      ->method('getUrl');
+
+    $context = $this->createMock(ExecutionContextInterface::class);
+    $this->doValidate($link, $context);
+  }
+
+  /**
+   * Validate the link.
+   *
+   * @param mixed $link
+   *   A field value to validate.
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface&\PHPUnit\Framework\MockObject\MockObject $context
+   *   The execution context.
+   */
+  protected function doValidate($link, ExecutionContextInterface&MockObject $context): void {
     $validator = new LinkTypeConstraintValidator();
     $validator->initialize($context);
     $validator->validate($link, new LinkTypeConstraint());
@@ -199,7 +232,7 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
    */
   protected function getMockFieldDefinition(int $type): FieldDefinitionInterface {
     $definition = $this->createMock(FieldDefinitionInterface::class);
-    $definition->expects($this->once())
+    $definition->expects($this->any())
       ->method('getSetting')
       ->with('link_type')
       ->willReturn($type);
