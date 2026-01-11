@@ -71,7 +71,7 @@ class User extends DrupalSqlBase {
     // Unserialize Data.
     $data = $row->getSourceProperty('data');
     if ($data !== NULL) {
-      $row->setSourceProperty('data', unserialize($row->getSourceProperty('data')));
+      $row->setSourceProperty('data', unserialize($row->getSourceProperty('data'), ['allowed_classes' => FALSE]));
     }
 
     return parent::prepareRow($row);
