@@ -42,6 +42,10 @@ function block_content_post_update_remove_block_content_status_info_keys(array &
  * Remove block_content_listing_empty from views.
  */
 function block_content_post_update_remove_block_content_listing_empty(?array &$sandbox = NULL): void {
+  // Views is optional and may not be enabled on minimal installations.
+  if (!\Drupal::moduleHandler()->moduleExists('views')) {
+    return;
+  }
   /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   $view_config_updater->setDeprecationsEnabled(FALSE);
