@@ -111,7 +111,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
       'title[0][value]' => 'Test page',
       'link[0][uri]' => '<test>',
     ], 'Save');
-    $this->assertSession()->pageTextContains('Manually entered paths should start with one of the following characters: / ? #');
+    $this->assertSession()->pageTextContains('Enter a content title to select it, or enter an internal path starting with /, ? or #.');
   }
 
   /**

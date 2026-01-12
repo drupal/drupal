@@ -149,7 +149,22 @@ class LinkWidget extends WidgetBase {
     // @todo '<front>' is valid input for BC reasons, may be removed by
     //   https://www.drupal.org/node/2421941
     if (parse_url($uri, PHP_URL_SCHEME) === 'internal' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && !str_starts_with($element['#value'], '<front>')) {
-      $form_state->setError($element, new TranslatableMarkup('Manually entered paths should start with one of the following characters: / ? #'));
+      // Display an error message according to the link type.
+      $args = ['%link_example' => 'https://example.com'];
+      switch ($element['#link_type']) {
+        case LinkItemInterface::LINK_EXTERNAL:
+          $error_message = new TranslatableMarkup('External links must be a full URL including the protocol, such as %link_example.', $args);
+          break;
+
+        case LinkItemInterface::LINK_INTERNAL:
+          $error_message = new TranslatableMarkup('Enter a content title to select it, or enter an internal path starting with /, ? or #.');
+          break;
+
+        case LinkItemInterface::LINK_GENERIC:
+        default:
+          $error_message = new TranslatableMarkup('Enter a content title to select it, or enter an internal path starting with /, ? or #. External links must be a full URL including the protocol, such as %link_example.', $args);
+      }
+      $form_state->setError($element, $error_message);
       return;
     }
   }
