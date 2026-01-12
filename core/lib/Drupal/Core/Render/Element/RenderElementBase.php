@@ -315,6 +315,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
         case 'number':
         case 'tel':
         case 'textarea':
+        case 'email':
           $element['#ajax']['event'] = 'blur';
           break;
 
