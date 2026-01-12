@@ -136,8 +136,6 @@ class StateTest extends UnitTestCase {
    *
    * Here checking the multiple key and values. It is also a helper for
    * testGetMultipleStaticCache() function.
-   *
-   * @legacy-covers ::getMultiple
    */
   public function testGetMultiple(): State {
     $keys = ['key1', 'key2', 'key3'];
@@ -156,8 +154,6 @@ class StateTest extends UnitTestCase {
    * Tests getMultiple() method.
    *
    * Here testing all the keys with value and without values.
-   *
-   * @legacy-covers ::getMultiple
    */
   public function testGetMultipleWithMissingValues(): void {
     $keys = ['key1', 'key2', 'key3'];
@@ -179,8 +175,6 @@ class StateTest extends UnitTestCase {
    *
    * @param \Drupal\Core\State\State $state
    *   The tested state.
-   *
-   * @legacy-covers ::getMultiple
    */
   #[Depends('testGetMultiple')]
   public function testGetMultipleStaticCache(State $state): void {
@@ -197,8 +191,6 @@ class StateTest extends UnitTestCase {
    *
    * Here testing the multiple key value pare with Partially Filled Static
    * Cache.
-   *
-   * @legacy-covers ::getMultiple
    */
   public function testGetMultiplePartiallyFilledStaticCache(): void {
     $keys = ['key1', 'key2', 'key3'];
@@ -222,8 +214,6 @@ class StateTest extends UnitTestCase {
    *
    * Here we are setting the key value so those value can be used in
    * testResetCache() and testSetBeforeGet() functions.
-   *
-   * @legacy-covers ::set
    */
   public function testSet(): State {
     $this->keyValueStorage->expects($this->once())
@@ -255,8 +245,6 @@ class StateTest extends UnitTestCase {
    *
    * Here we are saving multiple key value pare in one go. Those value will be
    * used in testResetCache() and testSetBeforeGet() functions.
-   *
-   * @legacy-covers ::setMultiple
    */
   public function testSetMultiple(): State {
     $values = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
@@ -342,8 +330,6 @@ class StateTest extends UnitTestCase {
    *
    * Here testing the multiple key and value after deleting
    * the key's value in one go.
-   *
-   * @legacy-covers ::deleteMultiple
    */
   public function testDeleteMultiple(): void {
     $values = ['key1' => 'value1', 'key2' => 'value2'];
@@ -384,8 +370,6 @@ class StateTest extends UnitTestCase {
 
   /**
    * Tests the ::getValuesSetDuringRequest() method.
-   *
-   * @legacy-covers ::getValuesSetDuringRequest
    */
   public function testGetValuesSetDuringRequest(): void {
     // Confirm getValuesSetDuringRequest() returns the correct values for

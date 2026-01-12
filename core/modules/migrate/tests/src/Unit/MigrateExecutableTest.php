@@ -451,8 +451,6 @@ class MigrateExecutableTest extends MigrateTestCase {
    * @param int $expected_result
    *   The expected result of the rollback action. Optional, defaults to
    *   MigrationInterface::RESULT_COMPLETED.
-   *
-   * @legacy-covers ::rollback
    */
   #[DataProvider('providerTestRollback')]
   public function testRollback(array $id_map_records, bool $rollback_called = TRUE, array $source_id_keys = ['source'], array $destination_id_keys = ['destination'], int $expected_result = MigrationInterface::RESULT_COMPLETED): void {

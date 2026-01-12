@@ -33,8 +33,6 @@ class AccessResultNeutralTest extends UnitTestCase {
 
   /**
    * Tests setReason()
-   *
-   * @legacy-covers ::setReason
    */
   public function testSetReason(): void {
     $a = new AccessResultNeutral();

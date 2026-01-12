@@ -70,8 +70,6 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
 
   /**
    * Tests get instance ids.
-   *
-   * @legacy-covers ::getInstanceIds
    */
   public function testGetInstanceIds(): void {
     $this->setupPluginCollection($this->any());

@@ -156,8 +156,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the fromRoute() method with the special <front> path.
-   *
-   * @legacy-covers ::fromRoute
    */
   public function testFromRouteFront(): void {
     $url = Url::fromRoute('<front>');
@@ -166,8 +164,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the fromUserInput method with valid paths.
-   *
-   * @legacy-covers ::fromUserInput
    */
   #[DataProvider('providerFromValidInternalUri')]
   public function testFromUserInput($path): void {
@@ -239,8 +235,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the createFromRequest method.
-   *
-   * @legacy-covers ::createFromRequest
    */
   public function testCreateFromRequest(): void {
     $attributes = [
@@ -280,8 +274,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the isExternal() method.
-   *
-   * @legacy-covers ::isExternal
    */
   #[Depends('testUrlFromRequest')]
   public function testIsExternal($urls): void {
@@ -295,8 +287,6 @@ class UrlTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Url[] $urls
    *   Array of URL objects.
-   *
-   * @legacy-covers ::getUri
    */
   #[Depends('testUrlFromRequest')]
   public function testGetUriForInternalUrl($urls): void {
@@ -308,8 +298,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the getUri() method for external URLs.
-   *
-   * @legacy-covers ::getUri
    */
   public function testGetUriForExternalUrl(): void {
     $url = Url::fromUri('http://example.com/test');
@@ -333,8 +321,6 @@ class UrlTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Url[] $urls
    *   Array of URL objects.
-   *
-   * @legacy-covers ::getInternalPath
    */
   #[Depends('testUrlFromRequest')]
   public function testGetInternalPath($urls): void {
@@ -363,8 +349,6 @@ class UrlTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
-   *
-   * @legacy-covers ::toString
    */
   #[Depends('testUrlFromRequest')]
   public function testToString($urls): void {
@@ -382,8 +366,6 @@ class UrlTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
-   *
-   * @legacy-covers ::getRouteName
    */
   #[Depends('testUrlFromRequest')]
   public function testGetRouteName($urls): void {
@@ -394,8 +376,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the getRouteName() with an external URL.
-   *
-   * @legacy-covers ::getRouteName
    */
   public function testGetRouteNameWithExternalUrl(): void {
     $url = Url::fromUri('http://example.com');
@@ -408,8 +388,6 @@ class UrlTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
-   *
-   * @legacy-covers ::getRouteParameters
    */
   #[Depends('testUrlFromRequest')]
   public function testGetRouteParameters($urls): void {
@@ -420,8 +398,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the getRouteParameters() with an external URL.
-   *
-   * @legacy-covers ::getRouteParameters
    */
   public function testGetRouteParametersWithExternalUrl(): void {
     $url = Url::fromUri('http://example.com');
@@ -459,8 +435,6 @@ class UrlTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Url[] $urls
    *   An array of Url objects.
-   *
-   * @legacy-covers ::getOptions
    */
   #[Depends('testUrlFromRequest')]
   public function testGetOptions($urls): void {
@@ -471,8 +445,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the setOptions() method.
-   *
-   * @legacy-covers ::setOptions
    */
   public function testSetOptions(): void {
     $url = Url::fromRoute('test_route', []);
@@ -485,8 +457,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the mergeOptions() method.
-   *
-   * @legacy-covers ::mergeOptions
    */
   public function testMergeOptions(): void {
     $url = Url::fromRoute('test_route', [], ['foo' => 'bar', 'bar' => ['key' => 'value']]);
@@ -513,8 +483,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the access() method for unrouted URLs (they always have access).
-   *
-   * @legacy-covers ::access
    */
   public function testAccessUnrouted(): void {
     $account = $this->createMock('Drupal\Core\Session\AccountInterface');
@@ -628,8 +596,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the toUriString() method with entity: URIs.
-   *
-   * @legacy-covers ::toUriString
    */
   #[DataProvider('providerTestToUriStringForEntity')]
   public function testToUriStringForEntity($uri, $options, $uri_string): void {
@@ -662,8 +628,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the toUriString() method with internal: URIs.
-   *
-   * @legacy-covers ::toUriString
    */
   #[DataProvider('providerTestToUriStringForInternal')]
   public function testToUriStringForInternal($uri, $options, $uri_string): void {
@@ -798,8 +762,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the fromUri() method with a base: URI starting with a number.
-   *
-   * @legacy-covers ::fromUri
    */
   public function testFromUriNumber(): void {
     $url = Url::fromUri('base:2015/10/06');
@@ -808,8 +770,6 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Tests the toUriString() method with route: URIs.
-   *
-   * @legacy-covers ::toUriString
    */
   #[DataProvider('providerTestToUriStringForRoute')]
   public function testToUriStringForRoute($uri, $options, $uri_string): void {

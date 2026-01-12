@@ -136,8 +136,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests get value.
-   *
-   * @legacy-covers ::getValue
    */
   #[DataProvider('providerTestGetValue')]
   public function testGetValue($parents, $key, $expected, $default = NULL): void {
@@ -171,8 +169,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests get value broken.
-   *
-   * @legacy-covers ::getValue
    */
   #[DataProvider('providerTestGetValueBroken')]
   public function testGetValueBroken(array $parents, $key, $expected, $default = NULL): void {
@@ -196,8 +192,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests set values.
-   *
-   * @legacy-covers ::setValues
    */
   #[DataProvider('providerTestSetValues')]
   public function testSetValues($parents, $new_values, $expected): void {
@@ -228,8 +222,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests set values broken.
-   *
-   * @legacy-covers ::setValues
    */
   #[DataProvider('providerTestSetValuesBroken')]
   public function testSetValuesBroken($parents, $new_values, $expected): void {
@@ -255,8 +247,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests get complete form state with parent complete form.
-   *
-   * @legacy-covers ::getCompleteFormState
    */
   public function testGetCompleteFormStateWithParentCompleteForm(): void {
     $parent_form_state = $this->prophesize(FormStateInterface::class);
@@ -266,8 +256,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests get complete form state with parent subform.
-   *
-   * @legacy-covers ::getCompleteFormState
    */
   public function testGetCompleteFormStateWithParentSubform(): void {
     $complete_form_state = $this->prophesize(FormStateInterface::class);
@@ -281,8 +269,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests set limit validation errors.
-   *
-   * @legacy-covers ::setLimitValidationErrors
    */
   public function testSetLimitValidationErrors(): void {
     $parent_limit_validation_errors = ['dog', 'name'];
@@ -298,8 +284,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests get limit validation errors.
-   *
-   * @legacy-covers ::getLimitValidationErrors
    */
   public function testGetLimitValidationErrors(): void {
     $parent_limit_validation_errors = ['dog', 'name'];
@@ -316,8 +300,6 @@ class SubformStateTest extends UnitTestCase {
 
   /**
    * Tests set error by name.
-   *
-   * @legacy-covers ::setErrorByName
    */
   public function testSetErrorByName(): void {
     $parent_form_error_name = 'dog][name';

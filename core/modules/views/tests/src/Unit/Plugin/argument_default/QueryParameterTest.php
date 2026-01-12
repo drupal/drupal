@@ -20,8 +20,6 @@ class QueryParameterTest extends UnitTestCase {
 
   /**
    * Tests the getArgument() method.
-   *
-   * @legacy-covers ::getArgument
    */
   #[DataProvider('providerGetArgument')]
   public function testGetArgument($options, Request $request, $expected): void {

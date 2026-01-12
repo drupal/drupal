@@ -20,8 +20,6 @@ class FormElementHelperTest extends UnitTestCase {
 
   /**
    * Tests the getElementByName() method.
-   *
-   * @legacy-covers ::getElementByName
    */
   #[DataProvider('getElementByNameProvider')]
   public function testGetElementByName($name, $form, $expected): void {
@@ -104,8 +102,6 @@ class FormElementHelperTest extends UnitTestCase {
 
   /**
    * Tests the getElementTitle() method.
-   *
-   * @legacy-covers ::getElementTitle
    */
   #[DataProvider('getElementTitleProvider')]
   public function testGetElementTitle($name, $form, $expected): void {

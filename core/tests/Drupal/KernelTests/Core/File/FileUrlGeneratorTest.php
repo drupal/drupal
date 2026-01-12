@@ -45,8 +45,6 @@ class FileUrlGeneratorTest extends FileTestBase {
 
   /**
    * Tests missing stream handler.
-   *
-   * @legacy-covers ::generate
    */
   public function testGenerateMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -55,8 +53,6 @@ class FileUrlGeneratorTest extends FileTestBase {
 
   /**
    * Tests missing stream handler.
-   *
-   * @legacy-covers ::generateString
    */
   public function testGenerateStringMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -65,8 +61,6 @@ class FileUrlGeneratorTest extends FileTestBase {
 
   /**
    * Tests missing stream handler.
-   *
-   * @legacy-covers ::generateAbsoluteString
    */
   public function testGenerateAbsoluteStringMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -184,8 +178,6 @@ class FileUrlGeneratorTest extends FileTestBase {
 
   /**
    * Tests generate u r i.
-   *
-   * @legacy-covers ::generate
    */
   #[DataProvider('providerGenerateURI')]
   public function testGenerateURI($filepath, $expected): void {
@@ -205,8 +197,6 @@ class FileUrlGeneratorTest extends FileTestBase {
 
   /**
    * Tests generate u r i with schema.
-   *
-   * @legacy-covers ::generate
    */
   public function testGenerateURIWithSchema(): void {
     // Disable file_test.module's hook_file_url_alter() implementation.

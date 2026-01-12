@@ -18,8 +18,6 @@ class PluginSettingsBaseTest extends UnitTestCase {
 
   /**
    * Tests get third party settings.
-   *
-   * @legacy-covers ::getThirdPartySettings
    */
   public function testGetThirdPartySettings(): void {
     $plugin_settings = new TestPluginSettingsBase();

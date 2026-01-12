@@ -100,8 +100,6 @@ class MenuLinkTreeTest extends UnitTestCase {
    * template's link() function invocation). It also has its own test coverage.
    *
    * @see \Drupal\menu_link_content\Tests\MenuLinkContentCacheabilityBubblingTest
-   *
-   * @legacy-covers ::build
    */
   #[DataProvider('providerTestBuildCacheability')]
   public function testBuildCacheability($description, $tree, $expected_build, $access, array $access_cache_contexts = []): void {

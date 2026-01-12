@@ -74,8 +74,6 @@ class ModerationInformationTest extends UnitTestCase {
 
   /**
    * Tests is moderated entity type.
-   *
-   * @legacy-covers ::isModeratedEntityType
    */
   public function testIsModeratedEntityType(): void {
     $moderation_information = new ModerationInformation($this->getEntityTypeManager(), $this->setupModerationBundleInfo('test_bundle', 'workflow'));
@@ -92,8 +90,6 @@ class ModerationInformationTest extends UnitTestCase {
 
   /**
    * Tests is moderated entity.
-   *
-   * @legacy-covers ::isModeratedEntity
    */
   #[DataProvider('providerWorkflow')]
   public function testIsModeratedEntity($workflow, $expected): void {
@@ -114,8 +110,6 @@ class ModerationInformationTest extends UnitTestCase {
 
   /**
    * Tests get workflow for entity.
-   *
-   * @legacy-covers ::getWorkflowForEntity
    */
   #[DataProvider('providerWorkflow')]
   public function testGetWorkflowForEntity($workflow): void {

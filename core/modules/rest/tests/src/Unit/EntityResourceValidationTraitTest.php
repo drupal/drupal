@@ -23,8 +23,6 @@ class EntityResourceValidationTraitTest extends UnitTestCase {
 
   /**
    * Tests validate.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidate(): void {
     $trait = new EntityResourceValidationTraitTestClass();

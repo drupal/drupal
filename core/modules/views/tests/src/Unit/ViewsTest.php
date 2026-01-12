@@ -55,8 +55,6 @@ class ViewsTest extends UnitTestCase {
 
   /**
    * Tests the getView() method.
-   *
-   * @legacy-covers ::getView
    */
   public function testGetView(): void {
     $view = new View(['id' => 'test_view'], 'view');
@@ -99,8 +97,6 @@ class ViewsTest extends UnitTestCase {
 
   /**
    * Tests get applicable views.
-   *
-   * @legacy-covers ::getApplicableViews
    */
   #[DataProvider('providerTestGetApplicableViews')]
   public function testGetApplicableViews($applicable_type, $expected): void {

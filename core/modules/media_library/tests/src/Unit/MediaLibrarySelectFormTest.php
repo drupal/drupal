@@ -37,8 +37,6 @@ class MediaLibrarySelectFormTest extends UnitTestCase {
 
   /**
    * Tests views form.
-   *
-   * @legacy-covers ::viewsForm
    */
   public function testViewsForm(): void {
     $row = new ResultRow();

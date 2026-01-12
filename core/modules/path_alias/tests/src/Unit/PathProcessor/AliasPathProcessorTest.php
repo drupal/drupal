@@ -66,8 +66,6 @@ class AliasPathProcessorTest extends UnitTestCase {
 
   /**
    * Tests process outbound.
-   *
-   * @legacy-covers ::processOutbound
    */
   #[DataProvider('providerTestProcessOutbound')]
   public function testProcessOutbound($path, array $options, $expected_path): void {

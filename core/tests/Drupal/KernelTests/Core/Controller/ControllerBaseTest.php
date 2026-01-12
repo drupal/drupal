@@ -30,8 +30,6 @@ class ControllerBaseTest extends KernelTestBase {
 
   /**
    * Tests create.
-   *
-   * @legacy-covers ::create
    */
   public function testCreate(): void {
     /** @var \Drupal\system_test\Controller\SystemTestController $controller */
@@ -53,8 +51,6 @@ class ControllerBaseTest extends KernelTestBase {
 
   /**
    * Tests create exception.
-   *
-   * @legacy-covers ::create
    */
   public function testCreateException(): void {
     $this->expectException(AutowiringFailedException::class);
@@ -64,8 +60,6 @@ class ControllerBaseTest extends KernelTestBase {
 
   /**
    * Tests create optional.
-   *
-   * @legacy-covers ::create
    */
   public function testCreateOptional(): void {
     $service = $this->container->get('class_resolver')->getInstanceFromDefinition(OptionalServiceSystemTestController::class);

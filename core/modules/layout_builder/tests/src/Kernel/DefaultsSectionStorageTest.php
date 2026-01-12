@@ -90,8 +90,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
    *   Whether Layout Builder is enabled for this display.
    * @param array $section_data
    *   Data to store as the sections value for Layout Builder.
-   *
-   * @legacy-covers ::access
    */
   #[DataProvider('providerTestAccess')]
   public function testAccess($expected, $operation, $is_enabled, array $section_data): void {
@@ -143,8 +141,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests get contexts.
-   *
-   * @legacy-covers ::getContexts
    */
   public function testGetContexts(): void {
     $display = LayoutBuilderEntityViewDisplay::create([
@@ -165,8 +161,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests get contexts during preview.
-   *
-   * @legacy-covers ::getContextsDuringPreview
    */
   public function testGetContextsDuringPreview(): void {
     $display = LayoutBuilderEntityViewDisplay::create([
@@ -197,8 +191,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests get tempstore key.
-   *
-   * @legacy-covers ::getTempstoreKey
    */
   public function testGetTempstoreKey(): void {
     $display = LayoutBuilderEntityViewDisplay::create([

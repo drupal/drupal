@@ -79,8 +79,6 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
 
   /**
    * Tests the addAllFieldProcesses method.
-   *
-   * @legacy-covers ::addAllFieldProcesses
    */
   public function testAddAllFieldProcesses(): void {
     $expected_process_keys = [
@@ -120,8 +118,6 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
 
   /**
    * Tests the addAllFieldProcesses method for field migrations.
-   *
-   * @legacy-covers ::addAllFieldProcesses
    */
   #[DataProvider('addAllFieldProcessesAltersData')]
   public function testAddAllFieldProcessesAlters($field_plugin_method, $expected_process): void {
@@ -271,8 +267,6 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
 
   /**
    * Tests the getAllFields method.
-   *
-   * @legacy-covers ::getAllFields
    */
   public function testGetAllFields(): void {
     $field_discovery_test = new FieldDiscoveryTestClass($this->fieldPluginManager, $this->migrationPluginManager, $this->logger);
@@ -293,8 +287,6 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
 
   /**
    * Tests the getSourcePlugin method.
-   *
-   * @legacy-covers ::getSourcePlugin
    */
   public function testGetSourcePlugin(): void {
     $this->assertSourcePlugin('6', FieldInstance::class, [

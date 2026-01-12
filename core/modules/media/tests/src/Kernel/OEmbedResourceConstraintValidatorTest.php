@@ -45,8 +45,6 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
 
   /**
    * Tests validate empty source.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateEmptySource(): void {
     $media = Media::create([
@@ -74,8 +72,6 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
 
   /**
    * Tests validate url resolver invoked.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateUrlResolverInvoked(): void {
     $media = Media::create([

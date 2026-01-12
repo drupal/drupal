@@ -87,7 +87,7 @@ class ReflectionFactoryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::createInstance
+   * Tests create instance.
    */
   #[DataProvider('providerGetInstanceArguments')]
   public function testCreateInstance($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {
@@ -112,7 +112,7 @@ class ReflectionFactoryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getInstanceArguments
+   * Tests get instance arguments.
    */
   #[DataProvider('providerGetInstanceArguments')]
   public function testGetInstanceArguments($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {

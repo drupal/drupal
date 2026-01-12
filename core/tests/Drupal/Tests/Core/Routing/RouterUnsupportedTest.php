@@ -22,8 +22,6 @@ class RouterUnsupportedTest extends UnitTestCase {
 
   /**
    * Tests generate unsupported.
-   *
-   * @legacy-covers ::generate
    */
   public function testGenerateUnsupported(): void {
     $this->expectException(\BadMethodCallException::class);

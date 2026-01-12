@@ -20,8 +20,6 @@ class PluralTranslationTest extends UnitTestCase {
 
   /**
    * Tests get.
-   *
-   * @legacy-covers ::get
    */
   #[DataProvider('providerTestGet')]
   public function testGet(array $values): void {

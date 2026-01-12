@@ -55,8 +55,6 @@ class DateFormatterTest extends KernelTestBase {
 
   /**
    * Tests DateFormatter::format().
-   *
-   * @legacy-covers ::format
    */
   public function testFormat(): void {
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $formatter */

@@ -61,8 +61,6 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
 
   /**
    * Tests applies.
-   *
-   * @legacy-covers ::applies
    */
   public function testApplies(): void {
     $this->assertTrue($this->accessPolicy->applies(AccessPolicyInterface::SCOPE_DRUPAL));
@@ -77,8 +75,6 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
    *   The roles to grant the account.
    * @param bool $expect_admin_rights
    *   Whether to expect admin rights to be granted.
-   *
-   * @legacy-covers ::calculatePermissions
    */
   #[DataProvider('calculatePermissionsProvider')]
   public function testCalculatePermissions(array $roles, bool $expect_admin_rights): void {
@@ -166,8 +162,6 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
 
   /**
    * Tests the alterPermissions method.
-   *
-   * @legacy-covers ::alterPermissions
    */
   public function testAlterPermissions(): void {
     $account = $this->prophesize(AccountInterface::class);
@@ -185,8 +179,6 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
 
   /**
    * Tests the getPersistentCacheContexts method.
-   *
-   * @legacy-covers ::getPersistentCacheContexts
    */
   public function testGetPersistentCacheContexts(): void {
     $this->assertSame(['user.roles'], $this->accessPolicy->getPersistentCacheContexts(AccessPolicyInterface::SCOPE_DRUPAL));

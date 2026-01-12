@@ -95,8 +95,6 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     $format_id = 'filter.format.test';

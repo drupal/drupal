@@ -66,8 +66,6 @@ class UrlHelperTest extends TestCase {
    *   The expected query string.
    * @param string $message
    *   The assertion message.
-   *
-   * @legacy-covers ::buildQuery
    */
   #[DataProvider('providerTestBuildQuery')]
   public function testBuildQuery($query, $expected, $message): void {
@@ -258,8 +256,6 @@ class UrlHelperTest extends TestCase {
    *   nested items.
    * @param array $expected
    *   An array containing query parameters.
-   *
-   * @legacy-covers ::filterQueryParameters
    */
   #[DataProvider('providerTestFilterQueryParameters')]
   public function testFilterQueryParameters($query, $exclude, $expected): void {
@@ -297,8 +293,6 @@ class UrlHelperTest extends TestCase {
    *   URL to test.
    * @param array $expected
    *   Associative array with expected parameters.
-   *
-   * @legacy-covers ::parse
    */
   #[DataProvider('providerTestParse')]
   public function testParse($url, $expected): void {
@@ -428,8 +422,6 @@ class UrlHelperTest extends TestCase {
    *   A path to encode.
    * @param string $expected
    *   The expected encoded path.
-   *
-   * @legacy-covers ::encodePath
    */
   #[DataProvider('providerTestEncodePath')]
   public function testEncodePath($path, $expected): void {
@@ -457,8 +449,6 @@ class UrlHelperTest extends TestCase {
    *   URL or path to test.
    * @param bool $expected
    *   Expected result.
-   *
-   * @legacy-covers ::isExternal
    */
   #[DataProvider('providerTestIsExternal')]
   public function testIsExternal($path, $expected): void {
@@ -638,8 +628,6 @@ class UrlHelperTest extends TestCase {
    * @param bool $expected
    *   TRUE if an external URL points to this installation as determined by the
    *   base URL.
-   *
-   * @legacy-covers ::externalIsLocal
    */
   #[DataProvider('providerTestExternalIsLocal')]
   public function testExternalIsLocal($url, $base_url, $expected): void {
@@ -690,8 +678,6 @@ class UrlHelperTest extends TestCase {
    *   The URL to test.
    * @param string $base_url
    *   The base URL.
-   *
-   * @legacy-covers ::externalIsLocal
    */
   #[DataProvider('providerTestExternalIsLocalInvalid')]
   public function testExternalIsLocalInvalid($url, $base_url): void {

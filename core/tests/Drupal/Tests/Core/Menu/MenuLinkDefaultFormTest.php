@@ -27,8 +27,6 @@ class MenuLinkDefaultFormTest extends UnitTestCase {
 
   /**
    * Tests extract form values.
-   *
-   * @legacy-covers ::extractFormValues
    */
   public function testExtractFormValues(): void {
     $menu_link_manager = $this->prophesize(MenuLinkManagerInterface::class);

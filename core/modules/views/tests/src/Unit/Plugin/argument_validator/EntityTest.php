@@ -199,8 +199,6 @@ class EntityTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     // Create an entity type manager, storage, entity type, and entity to mock

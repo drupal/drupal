@@ -39,8 +39,6 @@ class SortTest extends UnitTestCase {
 
   /**
    * Tests create from query parameter.
-   *
-   * @legacy-covers ::createFromQueryParameter
    */
   #[DataProvider('parameterProvider')]
   public function testCreateFromQueryParameter($input, $expected): void {
@@ -89,8 +87,6 @@ class SortTest extends UnitTestCase {
 
   /**
    * Tests create from query parameter fail.
-   *
-   * @legacy-covers ::createFromQueryParameter
    */
   #[DataProvider('badParameterProvider')]
   public function testCreateFromQueryParameterFail($input): void {

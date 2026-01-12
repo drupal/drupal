@@ -21,8 +21,6 @@ class DateFieldTest extends UnitTestCase {
 
   /**
    * Tests defineValueProcessPipeline.
-   *
-   * @legacy-covers ::defineValueProcessPipeline
    */
   #[DataProvider('providerTestDefineValueProcessPipeline')]
   public function testDefineValueProcessPipeline($data, $from_format, $to_format): void {
@@ -130,8 +128,6 @@ class DateFieldTest extends UnitTestCase {
 
   /**
    * Tests invalid date types throw an exception.
-   *
-   * @legacy-covers ::defineValueProcessPipeline
    */
   public function testDefineValueProcessPipelineException(): void {
     $migration = $this->createMock('Drupal\migrate\Plugin\MigrationInterface');

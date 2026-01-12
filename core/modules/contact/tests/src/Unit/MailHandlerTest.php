@@ -132,8 +132,6 @@ class MailHandlerTest extends UnitTestCase {
 
   /**
    * Tests the sendMailMessages method.
-   *
-   * @legacy-covers ::sendMailMessages
    */
   #[DataProvider('getSendMailMessages')]
   public function testSendMailMessages(bool $anonymous, ?bool $auto_reply, bool $copy_sender, array $results): void {

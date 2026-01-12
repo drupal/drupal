@@ -72,8 +72,6 @@ class RedirectDestinationTest extends UnitTestCase {
    *   The request to test.
    * @param string $expected_destination
    *   The expected destination.
-   *
-   * @legacy-covers ::get
    */
   #[DataProvider('providerGet')]
   public function testGet(Request $request, $expected_destination): void {
@@ -87,8 +85,6 @@ class RedirectDestinationTest extends UnitTestCase {
 
   /**
    * Tests get as array.
-   *
-   * @legacy-covers ::getAsArray
    */
   #[DataProvider('providerGet')]
   public function testGetAsArray(Request $request, $expected_destination): void {

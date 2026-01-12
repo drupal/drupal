@@ -129,8 +129,6 @@ class LinkTest extends UnitTestCase {
 
   /**
    * Tests get link relation type.
-   *
-   * @legacy-covers ::getLinkRelationType
    */
   public function testGetLinkRelationType(): void {
     $this->mockUrlAssembler();

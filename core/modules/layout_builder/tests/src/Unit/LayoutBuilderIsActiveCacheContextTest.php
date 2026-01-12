@@ -28,8 +28,6 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
 
   /**
    * Tests get context missing entity type id.
-   *
-   * @legacy-covers ::getContext
    */
   public function testGetContextMissingEntityTypeId(): void {
     $route_match = $this->prophesize(RouteMatchInterface::class);

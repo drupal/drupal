@@ -71,8 +71,6 @@ class CacheTest extends UnitTestCase {
 
   /**
    * Tests merge tags.
-   *
-   * @legacy-covers ::mergeTags
    */
   #[DataProvider('mergeTagsProvider')]
   public function testMergeTags(array $expected, ...$cache_tags): void {
@@ -112,8 +110,6 @@ class CacheTest extends UnitTestCase {
 
   /**
    * Tests merge max ages.
-   *
-   * @legacy-covers ::mergeMaxAges
    */
   #[DataProvider('mergeMaxAgesProvider')]
   public function testMergeMaxAges($expected, ...$max_ages): void {
@@ -191,8 +187,6 @@ class CacheTest extends UnitTestCase {
 
   /**
    * Tests build tags.
-   *
-   * @legacy-covers ::buildTags
    */
   #[DataProvider('buildTagsProvider')]
   public function testBuildTags($prefix, array $suffixes, array $expected, $glue = ':'): void {

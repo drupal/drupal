@@ -72,8 +72,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the isValid() method for the frontpage.
-   *
-   * @legacy-covers ::isValid
    */
   public function testIsValidWithFrontpage(): void {
     $this->accessAwareRouter->expects($this->never())
@@ -84,8 +82,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the isValid() method for <none> (used for jump links).
-   *
-   * @legacy-covers ::isValid
    */
   public function testIsValidWithNone(): void {
     $this->accessAwareRouter->expects($this->never())
@@ -96,8 +92,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the isValid() method for an external URL.
-   *
-   * @legacy-covers ::isValid
    */
   public function testIsValidWithExternalUrl(): void {
     $this->accessAwareRouter->expects($this->never())
@@ -108,8 +102,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the isValid() method with an invalid external URL.
-   *
-   * @legacy-covers ::isValid
    */
   public function testIsValidWithInvalidExternalUrl(): void {
     $this->accessAwareRouter->expects($this->never())
@@ -147,8 +139,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the isValid() method without the 'link to any page' permission.
-   *
-   * @legacy-covers ::isValid
    */
   public function testIsValidWithoutLinkToAnyPageAccount(): void {
     $this->account->expects($this->once())
@@ -173,8 +163,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the isValid() method with a path alias.
-   *
-   * @legacy-covers ::isValid
    */
   public function testIsValidWithPathAlias(): void {
     $this->account->expects($this->once())
@@ -296,8 +284,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the isValid() method with a not working param converting.
-   *
-   * @legacy-covers ::isValid
    */
   public function testIsValidWithFailingParameterConverting(): void {
     $this->account->expects($this->once())
@@ -319,8 +305,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the isValid() method with a non-existent path.
-   *
-   * @legacy-covers ::isValid
    */
   public function testIsValidWithNotExistingPath(): void {
     $this->account->expects($this->once())
@@ -379,8 +363,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the getUrlIfValid() method with a query in the path.
-   *
-   * @legacy-covers ::getUrlIfValid
    */
   public function testGetUrlIfValidWithQuery(): void {
     $this->account->expects($this->once())
@@ -405,8 +387,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the getUrlIfValid() method where there is no access.
-   *
-   * @legacy-covers ::getUrlIfValid
    */
   public function testGetUrlIfValidWithoutAccess(): void {
     $this->account->expects($this->once())
@@ -429,8 +409,6 @@ class PathValidatorTest extends UnitTestCase {
 
   /**
    * Tests the getUrlIfValid() method with a front page + query + fragments.
-   *
-   * @legacy-covers ::getUrlIfValid
    */
   public function testGetUrlIfValidWithFrontPageAndQueryAndFragments(): void {
     $url = $this->pathValidator->getUrlIfValid('<front>?hei=sen#berg');

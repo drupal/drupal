@@ -89,8 +89,6 @@ class NegotiationMiddlewareTest extends UnitTestCase {
 
   /**
    * Tests that handle() correctly hands off to sub application.
-   *
-   * @legacy-covers ::handle
    */
   public function testHandle(): void {
     $request = $this->prophesize(Request::class);

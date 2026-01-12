@@ -41,8 +41,6 @@ class HtmlTest extends TestCase {
    * @param array|null $filter
    *   (optional) An array of string replacements to use on the identifier. If
    *   NULL, no filter will be passed and a default will be used.
-   *
-   * @legacy-covers ::cleanCssIdentifier
    */
   #[DataProvider('providerTestCleanCssIdentifier')]
   public function testCleanCssIdentifier($expected, $source, $filter = NULL): void {
@@ -233,8 +231,6 @@ class HtmlTest extends TestCase {
 
   /**
    * Tests Html::decodeEntities().
-   *
-   * @legacy-covers ::decodeEntities
    */
   #[DataProvider('providerDecodeEntities')]
   public function testDecodeEntities($text, $expected): void {
@@ -274,8 +270,6 @@ class HtmlTest extends TestCase {
 
   /**
    * Tests Html::escape().
-   *
-   * @legacy-covers ::escape
    */
   #[DataProvider('providerEscape')]
   public function testEscape($expected, $text): void {
@@ -330,8 +324,6 @@ class HtmlTest extends TestCase {
    * Resolves an issue by where an empty DOMDocument object sent to
    * serialization would cause errors in getElementsByTagName() in the
    * serialization function.
-   *
-   * @legacy-covers ::serialize
    */
   public function testSerialize(): void {
     $document = new \DOMDocument();
@@ -340,7 +332,7 @@ class HtmlTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::transformRootRelativeUrlsToAbsolute
+   * Tests transform root relative urls to absolute.
    */
   #[DataProvider('providerTestTransformRootRelativeUrlsToAbsolute')]
   public function testTransformRootRelativeUrlsToAbsolute($html, $scheme_and_host, $expected_html): void {
@@ -348,7 +340,7 @@ class HtmlTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::transformRootRelativeUrlsToAbsolute
+   * Tests transform root relative urls to absolute assertion.
    */
   #[DataProvider('providerTestTransformRootRelativeUrlsToAbsoluteAssertion')]
   public function testTransformRootRelativeUrlsToAbsoluteAssertion($scheme_and_host): void {

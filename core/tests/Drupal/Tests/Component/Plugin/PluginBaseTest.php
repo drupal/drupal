@@ -19,8 +19,6 @@ class PluginBaseTest extends TestCase {
 
   /**
    * Tests get plugin id.
-   *
-   * @legacy-covers ::getPluginId
    */
   #[DataProvider('providerTestGetPluginId')]
   public function testGetPluginId($plugin_id, $expected): void {
@@ -79,8 +77,6 @@ class PluginBaseTest extends TestCase {
 
   /**
    * Tests get derivative id.
-   *
-   * @legacy-covers ::getDerivativeId
    */
   #[DataProvider('providerTestGetDerivativeId')]
   public function testGetDerivativeId($plugin_id = NULL, $expected = NULL): void {
@@ -109,8 +105,6 @@ class PluginBaseTest extends TestCase {
 
   /**
    * Tests get plugin definition.
-   *
-   * @legacy-covers ::getPluginDefinition
    */
   public function testGetPluginDefinition(): void {
     $plugin_base = new StubPluginBase(

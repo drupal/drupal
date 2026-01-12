@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 class ConstraintTest extends TestCase {
 
   /**
-   * @legacy-covers ::isCompatible
+   * Tests is compatible.
    */
   #[DataProvider('providerIsCompatible')]
   public function testIsCompatible(Constraint $version_info, string $current_version, bool $result): void {

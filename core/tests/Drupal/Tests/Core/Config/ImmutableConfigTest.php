@@ -37,8 +37,6 @@ class ImmutableConfigTest extends UnitTestCase {
 
   /**
    * Tests set.
-   *
-   * @legacy-covers ::set
    */
   public function testSet(): void {
     $this->expectException(ImmutableConfigException::class);
@@ -48,8 +46,6 @@ class ImmutableConfigTest extends UnitTestCase {
 
   /**
    * Tests clear.
-   *
-   * @legacy-covers ::clear
    */
   public function testClear(): void {
     $this->expectException(ImmutableConfigException::class);
@@ -59,8 +55,6 @@ class ImmutableConfigTest extends UnitTestCase {
 
   /**
    * Tests save.
-   *
-   * @legacy-covers ::save
    */
   public function testSave(): void {
     $this->expectException(ImmutableConfigException::class);
@@ -70,8 +64,6 @@ class ImmutableConfigTest extends UnitTestCase {
 
   /**
    * Tests delete.
-   *
-   * @legacy-covers ::delete
    */
   public function testDelete(): void {
     $this->expectException(ImmutableConfigException::class);

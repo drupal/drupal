@@ -76,8 +76,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests set name.
-   *
-   * @legacy-covers ::setName
    */
   #[DataProvider('setNameProvider')]
   public function testSetName($name): void {
@@ -112,8 +110,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests is new.
-   *
-   * @legacy-covers ::isNew
    */
   public function testIsNew(): void {
     // Config should be new by default.
@@ -126,8 +122,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests set data.
-   *
-   * @legacy-covers ::setData
    */
   #[DataProvider('nestedDataProvider')]
   public function testSetData($data): void {
@@ -138,8 +132,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests save new.
-   *
-   * @legacy-covers ::save
    */
   #[DataProvider('nestedDataProvider')]
   public function testSaveNew($data): void {
@@ -166,8 +158,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests save existing.
-   *
-   * @legacy-covers ::save
    */
   #[DataProvider('nestedDataProvider')]
   public function testSaveExisting($data): void {
@@ -264,8 +254,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests set value.
-   *
-   * @legacy-covers ::set
    */
   #[DataProvider('nestedDataProvider')]
   public function testSetValue($data): void {
@@ -277,8 +265,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests set validation.
-   *
-   * @legacy-covers ::set
    */
   public function testSetValidation(): void {
     $this->expectException(ConfigValueException::class);
@@ -287,8 +273,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests set illegal offset value.
-   *
-   * @legacy-covers ::set
    */
   public function testSetIllegalOffsetValue(): void {
     // Set a single value.
@@ -302,8 +286,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests init with data.
-   *
-   * @legacy-covers ::initWithData
    */
   #[DataProvider('nestedDataProvider')]
   public function testInitWithData($data): void {
@@ -327,8 +309,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests clear.
-   *
-   * @legacy-covers ::clear
    */
   #[DataProvider('simpleDataProvider')]
   public function testClear($data): void {
@@ -363,8 +343,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests delete.
-   *
-   * @legacy-covers ::delete
    */
   #[DataProvider('overrideDataProvider')]
   public function testDelete($data, $module_data): void {
@@ -410,8 +388,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests merge.
-   *
-   * @legacy-covers ::merge
    */
   #[DataProvider('mergeDataProvider')]
   public function testMerge($data, $data_to_merge, $merged_data): void {
@@ -445,8 +421,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests validate name exception.
-   *
-   * @legacy-covers ::validateName
    */
   #[DataProvider('validateNameProvider')]
   public function testValidateNameException($name, $exception_message): void {
@@ -457,8 +431,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * Tests get cache tags.
-   *
-   * @legacy-covers ::getCacheTags
    */
   public function testGetCacheTags(): void {
     $this->assertSame(['config:' . $this->config->getName()], $this->config->getCacheTags());

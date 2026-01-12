@@ -63,8 +63,6 @@ class ActiveWorkspaceCheckTest extends UnitTestCase {
 
   /**
    * Tests access.
-   *
-   * @legacy-covers ::access
    */
   #[DataProvider('providerTestAccess')]
   public function testAccess($requirements, $has_active_workspace, $access, array $contexts = []): void {

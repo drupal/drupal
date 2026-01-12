@@ -22,8 +22,6 @@ class NoSourcePluginDecoratorTest extends UnitTestCase {
 
   /**
    * Tests get definitions.
-   *
-   * @legacy-covers ::getDefinitions
    */
   #[DataProvider('providerGetDefinitions')]
   public function testGetDefinitions(array $definition, bool $source_exists): void {

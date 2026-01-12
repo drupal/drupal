@@ -87,8 +87,6 @@ class EntityOperationsUnitTest extends UnitTestCase {
 
   /**
    * Tests uses group by.
-   *
-   * @legacy-covers ::usesGroupBy
    */
   public function testUsesGroupBy(): void {
     $this->assertFalse($this->plugin->usesGroupBy());
@@ -96,8 +94,6 @@ class EntityOperationsUnitTest extends UnitTestCase {
 
   /**
    * Tests define options.
-   *
-   * @legacy-covers ::defineOptions
    */
   public function testDefineOptions(): void {
     $options = $this->plugin->defineOptions();
@@ -107,8 +103,6 @@ class EntityOperationsUnitTest extends UnitTestCase {
 
   /**
    * Tests render with destination.
-   *
-   * @legacy-covers ::render
    */
   public function testRenderWithDestination(): void {
     $entity_type_id = $this->randomMachineName();
@@ -159,8 +153,6 @@ class EntityOperationsUnitTest extends UnitTestCase {
 
   /**
    * Tests render without destination.
-   *
-   * @legacy-covers ::render
    */
   public function testRenderWithoutDestination(): void {
     $entity_type_id = $this->randomMachineName();
@@ -210,8 +202,6 @@ class EntityOperationsUnitTest extends UnitTestCase {
 
   /**
    * Tests render without entity.
-   *
-   * @legacy-covers ::render
    */
   public function testRenderWithoutEntity(): void {
     $this->setUpMockLoggerWithMissingEntity();

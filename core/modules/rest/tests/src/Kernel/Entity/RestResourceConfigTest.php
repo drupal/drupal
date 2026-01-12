@@ -32,8 +32,6 @@ class RestResourceConfigTest extends KernelTestBase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     $rest_config = RestResourceConfig::create([

@@ -93,8 +93,6 @@ class EntityUrlTest extends UnitTestCase {
 
   /**
    * Tests the toUrl() method without an entity ID.
-   *
-   * @legacy-covers ::toUrl
    */
   public function testToUrlNoId(): void {
     $entity = $this->getEntity(StubEntityBase::class, []);
@@ -109,8 +107,6 @@ class EntityUrlTest extends UnitTestCase {
    *
    * It should throw an exception when neither canonical and edit-form link
    * templates exist if no parameters are passed in.
-   *
-   * @legacy-covers ::toUrl
    */
   public function testToUrlDefaultException(): void {
     $values = ['id' => static::ENTITY_ID];
@@ -127,8 +123,6 @@ class EntityUrlTest extends UnitTestCase {
    *
    * It should return the edit-form or canonical link templates by default if
    * they are registered.
-   *
-   * @legacy-covers ::toUrl
    */
   public function testToUrlDefaultFallback(): void {
     $values = ['id' => static::ENTITY_ID, 'langcode' => $this->langcode];
@@ -440,8 +434,6 @@ class EntityUrlTest extends UnitTestCase {
 
   /**
    * Tests the uriRelationships() method.
-   *
-   * @legacy-covers ::uriRelationships
    */
   public function testUriRelationships(): void {
     $entity = $this->getEntity(StubEntityBase::class, ['id' => static::ENTITY_ID]);

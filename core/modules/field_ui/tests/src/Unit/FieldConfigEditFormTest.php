@@ -43,8 +43,6 @@ class FieldConfigEditFormTest extends UnitTestCase {
 
   /**
    * Tests has any required.
-   *
-   * @legacy-covers ::hasAnyRequired
    */
   #[DataProvider('providerRequired')]
   public function testHasAnyRequired(array $element, bool $result): void {

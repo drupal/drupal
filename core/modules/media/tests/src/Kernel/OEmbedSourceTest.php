@@ -38,8 +38,6 @@ class OEmbedSourceTest extends MediaKernelTestBase {
 
   /**
    * Tests get metadata.
-   *
-   * @legacy-covers ::getMetadata
    */
   public function testGetMetadata(): void {
     $configuration = [

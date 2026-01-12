@@ -77,8 +77,6 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
    *   The settings to use for the formatter.
    * @param array $expected_summary
    *   The expected settings summary.
-   *
-   * @legacy-covers ::settingsSummary
    */
   #[DataProvider('providerTestSettingsSummary')]
   public function testSettingsSummary(array $settings, array $expected_summary): void {

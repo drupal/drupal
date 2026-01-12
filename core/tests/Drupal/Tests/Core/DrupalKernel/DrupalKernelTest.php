@@ -115,8 +115,6 @@ class DrupalKernelTest extends UnitTestCase {
    *
    * This test is run in a separate process since it defines DRUPAL_ROOT. This
    * stops any possible pollution of other tests.
-   *
-   * @legacy-covers ::findSitePath
    */
   #[RunInSeparateProcess]
   public function testFindSitePath(): void {

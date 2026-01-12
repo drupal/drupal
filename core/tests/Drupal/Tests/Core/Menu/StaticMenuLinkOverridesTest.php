@@ -19,8 +19,6 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
 
   /**
    * Tests the reload method.
-   *
-   * @legacy-covers ::reload
    */
   public function testReload(): void {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');

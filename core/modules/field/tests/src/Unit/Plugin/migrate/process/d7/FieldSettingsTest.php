@@ -22,8 +22,6 @@ class FieldSettingsTest extends MigrateTestCase {
 
   /**
    * Tests transformation of image field settings.
-   *
-   * @legacy-covers ::transform
    */
   public function testTransformImageSettings(): void {
     $plugin = new FieldSettings([], 'd7_field_settings', []);

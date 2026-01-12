@@ -81,8 +81,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
 
   /**
    * Tests get section storage for entity.
-   *
-   * @legacy-covers ::getSectionStorageForEntity
    */
   #[DataProvider('providerTestGetSectionStorageForEntity')]
   public function testGetSectionStorageForEntity($entity_type_id, $values, $expected_context_keys): void {
@@ -186,8 +184,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
 
   /**
    * Tests original entity uses default storage.
-   *
-   * @legacy-covers ::originalEntityUsesDefaultStorage
    */
   #[DataProvider('providerTestOriginalEntityUsesDefaultStorage')]
   public function testOriginalEntityUsesDefaultStorage($entity_storages, $is_new, $has_original, $expected): void {
@@ -225,8 +221,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
 
   /**
    * Tests get entity sections.
-   *
-   * @legacy-covers ::getEntitySections
    */
   public function testGetEntitySections(): void {
     $entity = EntityTest::create(['name' => 'updated']);

@@ -99,8 +99,6 @@ class LocaleLookupTest extends UnitTestCase {
 
   /**
    * Tests locale lookups without fallback.
-   *
-   * @legacy-covers ::resolveCacheMiss
    */
   public function testResolveCacheMissWithoutFallback(): void {
     $args = [
@@ -144,8 +142,6 @@ class LocaleLookupTest extends UnitTestCase {
    * Tests locale lookups with fallback.
    *
    * Note that context is irrelevant here. It is not used but it is required.
-   *
-   * @legacy-covers ::resolveCacheMiss
    */
   #[DataProvider('resolveCacheMissWithFallbackProvider')]
   public function testResolveCacheMissWithFallback($langcode, $string, $context, $expected): void {
@@ -228,8 +224,6 @@ class LocaleLookupTest extends UnitTestCase {
 
   /**
    * Tests locale lookups with persistent tracking.
-   *
-   * @legacy-covers ::resolveCacheMiss
    */
   public function testResolveCacheMissWithPersist(): void {
     $args = [
@@ -269,8 +263,6 @@ class LocaleLookupTest extends UnitTestCase {
 
   /**
    * Tests locale lookups without a found translation.
-   *
-   * @legacy-covers ::resolveCacheMiss
    */
   public function testResolveCacheMissNoTranslation(): void {
     $string = $this->createMock('Drupal\locale\StringInterface');
@@ -376,8 +368,6 @@ class LocaleLookupTest extends UnitTestCase {
 
   /**
    * Tests get cid.
-   *
-   * @legacy-covers ::getCid
    */
   #[DataProvider('getCidProvider')]
   public function testGetCid(array $roles, $expected): void {

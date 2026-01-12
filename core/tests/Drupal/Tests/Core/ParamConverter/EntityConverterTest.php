@@ -147,8 +147,6 @@ class EntityConverterTest extends UnitTestCase {
 
   /**
    * Tests the applies() method.
-   *
-   * @legacy-covers ::applies
    */
   #[DataProvider('providerTestApplies')]
   public function testApplies(array $definition, $name, Route $route, $applies): void {
@@ -207,8 +205,6 @@ class EntityConverterTest extends UnitTestCase {
 
   /**
    * Tests the convert() method.
-   *
-   * @legacy-covers ::convert
    */
   #[DataProvider('providerTestConvert')]
   public function testConvert($value, array $definition, array $defaults, $expected_result): void {

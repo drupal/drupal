@@ -72,8 +72,6 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
 
   /**
    * Tests get invalid entry.
-   *
-   * @legacy-covers ::get
    */
   public function testGetInvalidEntry(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);

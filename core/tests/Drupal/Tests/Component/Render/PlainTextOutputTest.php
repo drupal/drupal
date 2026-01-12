@@ -30,8 +30,6 @@ class PlainTextOutputTest extends TestCase {
    * @param array $args
    *   (optional) An associative array of replacements to make. Defaults to
    *   none.
-   *
-   * @legacy-covers ::renderFromHtml
    */
   #[DataProvider('providerRenderFromHtml')]
   public function testRenderFromHtml($expected, $string, $args = []): void {

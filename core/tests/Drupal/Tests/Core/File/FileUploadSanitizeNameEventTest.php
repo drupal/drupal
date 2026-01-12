@@ -33,8 +33,6 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
 
   /**
    * Tests set filename exception.
-   *
-   * @legacy-covers ::setFilename
    */
   public function testSetFilenameException(): void {
     $event = new FileUploadSanitizeNameEvent('foo.txt', '');
@@ -112,8 +110,6 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
 
   /**
    * Tests stop propagation.
-   *
-   * @legacy-covers ::stopPropagation
    */
   public function testStopPropagation(): void {
     $this->expectException(\RuntimeException::class);

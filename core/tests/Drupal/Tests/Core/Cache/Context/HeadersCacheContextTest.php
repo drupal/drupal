@@ -21,8 +21,6 @@ class HeadersCacheContextTest extends UnitTestCase {
 
   /**
    * Tests get context.
-   *
-   * @legacy-covers ::getContext
    */
   #[DataProvider('providerTestGetContext')]
   public function testGetContext($headers, $header_name, $context): void {

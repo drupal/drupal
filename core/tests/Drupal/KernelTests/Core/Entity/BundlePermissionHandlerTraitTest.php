@@ -28,8 +28,6 @@ class BundlePermissionHandlerTraitTest extends KernelTestBase {
 
   /**
    * Tests generate permissions.
-   *
-   * @legacy-covers ::generatePermissions
    */
   public function testGeneratePermissions(): void {
     EntityTestBundle::create([

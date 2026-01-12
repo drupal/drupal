@@ -205,8 +205,6 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
 
   /**
    * Tests loading a file by URI.
-   *
-   * @legacy-covers ::loadByUri
    */
   public function testLoadByUri(): void {
     $source = $this->createFile();
@@ -216,8 +214,6 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
 
   /**
    * Tests loading a file by case-sensitive URI.
-   *
-   * @legacy-covers ::loadByUri
    */
   public function testLoadByUriCaseSensitive(): void {
     $source = $this->createFile('FooBar.txt');

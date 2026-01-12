@@ -64,8 +64,6 @@ class ConfigEntityAdapterTest extends KernelTestBase {
 
   /**
    * Tests validate.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidate(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
@@ -90,8 +88,6 @@ class ConfigEntityAdapterTest extends KernelTestBase {
 
   /**
    * Tests get properties.
-   *
-   * @legacy-covers ::getProperties
    */
   public function testGetProperties(): void {
     $expected_properties = [
@@ -118,8 +114,6 @@ class ConfigEntityAdapterTest extends KernelTestBase {
 
   /**
    * Tests get value.
-   *
-   * @legacy-covers ::getValue
    */
   public function testGetValue(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
@@ -130,8 +124,6 @@ class ConfigEntityAdapterTest extends KernelTestBase {
 
   /**
    * Tests set.
-   *
-   * @legacy-covers ::set
    */
   public function testSet(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
@@ -148,8 +140,6 @@ class ConfigEntityAdapterTest extends KernelTestBase {
 
   /**
    * Tests get string.
-   *
-   * @legacy-covers ::getString
    */
   public function testGetString(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
@@ -158,8 +148,6 @@ class ConfigEntityAdapterTest extends KernelTestBase {
 
   /**
    * Tests apply default value.
-   *
-   * @legacy-covers ::applyDefaultValue
    */
   public function testApplyDefaultValue(): void {
     $this->expectException(\BadMethodCallException::class);
@@ -170,8 +158,6 @@ class ConfigEntityAdapterTest extends KernelTestBase {
 
   /**
    * Tests get iterator.
-   *
-   * @legacy-covers ::getIterator
    */
   public function testGetIterator(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);

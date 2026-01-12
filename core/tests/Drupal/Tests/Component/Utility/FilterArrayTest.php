@@ -19,8 +19,6 @@ class FilterArrayTest extends TestCase {
 
   /**
    * Tests removing empty strings.
-   *
-   * @legacy-covers ::removeEmptyStrings
    */
   #[DataProvider('providerRemoveEmptyStrings')]
   public function testRemoveEmptyStrings(array $values, array $expected): void {

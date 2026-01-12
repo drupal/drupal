@@ -72,7 +72,7 @@ COMPOUND
   }
 
   /**
-   * @legacy-covers ::parseContents
+   * Tests parse contents.
    */
   #[DataProvider('provideTestFileContents')]
   public function testParseContents($expected, $contents): void {
@@ -84,7 +84,7 @@ COMPOUND
   }
 
   /**
-   * @legacy-covers ::getTestListFromFile
+   * Tests get test list from file.
    */
   public function testGetTestListFromFile(): void {
     $parser = new TestFileParser();

@@ -20,8 +20,6 @@ class LoggerChannelFactoryTest extends UnitTestCase {
 
   /**
    * Tests LoggerChannelFactory::get().
-   *
-   * @legacy-covers ::get
    */
   public function testGet(): void {
     $factory = new LoggerChannelFactory(

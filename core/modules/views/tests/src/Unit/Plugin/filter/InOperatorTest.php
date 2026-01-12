@@ -18,8 +18,6 @@ class InOperatorTest extends UnitTestCase {
 
   /**
    * Tests validate.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidate(): void {
     $definition = [

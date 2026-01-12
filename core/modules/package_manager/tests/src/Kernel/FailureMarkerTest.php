@@ -29,8 +29,6 @@ class FailureMarkerTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests get message without throwable.
-   *
-   * @legacy-covers ::getMessage
    */
   #[TestWith([TRUE])]
   #[TestWith([FALSE])]
@@ -43,8 +41,6 @@ class FailureMarkerTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests get message with throwable.
-   *
-   * @legacy-covers ::getMessage
    */
   #[TestWith([TRUE])]
   #[TestWith([FALSE])]
@@ -85,8 +81,6 @@ REGEXP
 
   /**
    * Tests that the failure marker can contain an exception message.
-   *
-   * @legacy-covers ::assertNotExists
    */
   public function testAssertNotExists(): void {
     $failure_marker = $this->container->get(FailureMarker::class);

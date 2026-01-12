@@ -20,8 +20,6 @@ class TokenTest extends UnitTestCase {
 
   /**
    * Tests value callback.
-   *
-   * @legacy-covers ::valueCallback
    */
   #[DataProvider('providerTestValueCallback')]
   public function testValueCallback($expected, $input): void {

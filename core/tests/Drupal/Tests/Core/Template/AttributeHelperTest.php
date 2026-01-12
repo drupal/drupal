@@ -37,8 +37,6 @@ class AttributeHelperTest extends UnitTestCase {
 
   /**
    * Tests attribute exists.
-   *
-   * @legacy-covers ::attributeExists
    */
   #[DataProvider('providerTestAttributeExists')]
   public function testAttributeExists(array $test_data, $test_attribute, $expected): void {
@@ -83,8 +81,6 @@ class AttributeHelperTest extends UnitTestCase {
 
   /**
    * Tests merge collections.
-   *
-   * @legacy-covers ::mergeCollections
    */
   #[DataProvider('providerTestMergeCollections')]
   public function testMergeCollections($original, $merge, $expected): void {
@@ -94,8 +90,6 @@ class AttributeHelperTest extends UnitTestCase {
 
   /**
    * Tests merge collections argument exception.
-   *
-   * @legacy-covers ::mergeCollections
    */
   public function testMergeCollectionsArgumentException(): void {
     $attributes = new Attribute(['class' => ['example-class']]);

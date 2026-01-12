@@ -20,8 +20,6 @@ class ModuleExtensionListTest extends KernelTestBase {
 
   /**
    * Tests get list.
-   *
-   * @legacy-covers ::getList
    */
   public function testGetList(): void {
     \Drupal::configFactory()->getEditable('core.extension')

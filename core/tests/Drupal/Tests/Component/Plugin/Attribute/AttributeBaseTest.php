@@ -27,7 +27,7 @@ class AttributeBaseTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getId
+   * Tests get id.
    */
   public function testGetId(): void {
     $plugin = new AttributeBaseStub(id: 'example');

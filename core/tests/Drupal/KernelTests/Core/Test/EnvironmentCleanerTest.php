@@ -24,8 +24,6 @@ class EnvironmentCleanerTest extends KernelTestBase {
 
   /**
    * Tests do clean temporary directories.
-   *
-   * @legacy-covers ::doCleanTemporaryDirectories
    */
   public function testDoCleanTemporaryDirectories(): void {
     vfsStream::setup('cleanup_test', NULL, [

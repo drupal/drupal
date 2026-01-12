@@ -79,8 +79,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     $target_entity_type_id = $this->randomMachineName(16);
@@ -105,8 +103,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests set target type.
-   *
-   * @legacy-covers ::setTargetType
    */
   public function testSetTargetType(): void {
     // Generate mock.
@@ -134,8 +130,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests get target type.
-   *
-   * @legacy-covers ::getTargetType
    */
   public function testGetTargetType(): void {
     // Generate mock.

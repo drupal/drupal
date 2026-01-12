@@ -69,8 +69,6 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     // Create a mock entity type for FieldStorageConfig.

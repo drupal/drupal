@@ -69,8 +69,6 @@ class UserSessionTest extends UnitTestCase {
 
   /**
    * Tests the hasRole method.
-   *
-   * @legacy-covers ::hasRole
    */
   public function testHasRole(): void {
     $user1 = $this->createUserSession(['role_one']);

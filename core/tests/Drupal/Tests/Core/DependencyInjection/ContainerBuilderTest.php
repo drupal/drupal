@@ -22,8 +22,6 @@ class ContainerBuilderTest extends UnitTestCase {
 
   /**
    * Tests get.
-   *
-   * @legacy-covers ::get
    */
   public function testGet(): void {
     $container = new ContainerBuilder();
@@ -35,8 +33,6 @@ class ContainerBuilderTest extends UnitTestCase {
 
   /**
    * Tests set parameter exception.
-   *
-   * @legacy-covers ::setParameter
    */
   public function testSetParameterException(): void {
     $container = new ContainerBuilder();
@@ -47,8 +43,6 @@ class ContainerBuilderTest extends UnitTestCase {
 
   /**
    * Tests register.
-   *
-   * @legacy-covers ::register
    */
   public function testRegister(): void {
     $container = new ContainerBuilder();
@@ -58,8 +52,6 @@ class ContainerBuilderTest extends UnitTestCase {
 
   /**
    * Tests set definition.
-   *
-   * @legacy-covers ::setDefinition
    */
   public function testSetDefinition(): void {
     // Test a service with public set to true.
@@ -78,8 +70,6 @@ class ContainerBuilderTest extends UnitTestCase {
 
   /**
    * Tests set alias.
-   *
-   * @legacy-covers ::setAlias
    */
   public function testSetAlias(): void {
     $container = new ContainerBuilder();

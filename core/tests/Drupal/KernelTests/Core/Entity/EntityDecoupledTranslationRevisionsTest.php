@@ -590,8 +590,6 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
 
   /**
    * Checks that the revision create hook works as expected.
-   *
-   * @legacy-covers ::createRevision
    */
   public function testCreateRevisionHook(): void {
     $entity = EntityTestMulRev::create();

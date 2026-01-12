@@ -19,8 +19,6 @@ class MailFormatHelperTest extends UnitTestCase {
 
   /**
    * Tests wrap mail.
-   *
-   * @legacy-covers ::wrapMail
    */
   public function testWrapMail(): void {
     $delimiter = "End of header\n";

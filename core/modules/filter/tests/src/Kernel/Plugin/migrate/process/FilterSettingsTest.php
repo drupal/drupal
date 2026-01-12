@@ -23,8 +23,6 @@ class FilterSettingsTest extends MigrateTestCase {
 
   /**
    * Tests transformation of filter settings.
-   *
-   * @legacy-covers ::transform
    */
   #[DataProvider('dataProvider')]
   public function testTransform($value, $destination_id, $expected_value): void {

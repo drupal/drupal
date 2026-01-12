@@ -74,8 +74,6 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
 
   /**
    * Tests the convert() method.
-   *
-   * @legacy-covers ::convert
    */
   #[DataProvider('providerTestConvert')]
   public function testConvert($value, array $definition, array $defaults, $expected_result): void {
@@ -124,8 +122,6 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
 
   /**
    * Tests the convert() method with an invalid entity type ID.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvertWithInvalidEntityType(): void {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
@@ -139,8 +135,6 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
 
   /**
    * Tests the convert() method with an invalid dynamic entity type ID.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvertWithInvalidType(): void {
     $this->expectException(ParamNotConvertedException::class);
@@ -150,8 +144,6 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
 
   /**
    * Tests the convert() method with an invalid dynamic entity type ID.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvertWithInvalidDynamicEntityType(): void {
     $this->expectException(ParamNotConvertedException::class);

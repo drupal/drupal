@@ -58,8 +58,6 @@ class NullNormalizerTest extends UnitTestCase {
 
   /**
    * Tests normalize.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalize(): void {
     $mock = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');

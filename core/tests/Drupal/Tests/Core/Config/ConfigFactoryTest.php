@@ -73,8 +73,6 @@ class ConfigFactoryTest extends UnitTestCase {
 
   /**
    * Tests rename.
-   *
-   * @legacy-covers ::rename
    */
   public function testRename(): void {
     $old = new Config($this->randomMachineName(), $this->storage, $this->eventDispatcher, $this->typedConfig);

@@ -43,8 +43,6 @@ class YamlPeclTest extends YamlTestBase {
 
   /**
    * Tests decoding YAML node anchors.
-   *
-   * @legacy-covers ::decode
    */
   #[DataProvider('providerDecodeTests')]
   public function testDecode($string, $data): void {
@@ -53,8 +51,6 @@ class YamlPeclTest extends YamlTestBase {
 
   /**
    * Tests our encode settings.
-   *
-   * @legacy-covers ::encode
    */
   public function testEncode(): void {
     // cSpell:disable
@@ -73,8 +69,6 @@ foo:
    *   String value for the YAML boolean.
    * @param string|bool $expected
    *   The expected return value.
-   *
-   * @legacy-covers ::applyBooleanCallbacks
    */
   #[DataProvider('providerBoolTest')]
   public function testApplyBooleanCallbacks($string, $expected): void {
@@ -82,7 +76,7 @@ foo:
   }
 
   /**
-   * @legacy-covers ::getFileExtension
+   * Tests get file extension.
    */
   public function testGetFileExtension(): void {
     $this->assertEquals('yml', YamlPecl::getFileExtension());

@@ -1079,7 +1079,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getPhpDateTime
+   * Tests get php date time.
    */
   public function testGetPhpDateTime(): void {
     $new_york = new \DateTimeZone('America/New_York');

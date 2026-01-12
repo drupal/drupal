@@ -36,7 +36,7 @@ class DiscoveryTraitTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::doGetDefinition
+   * Tests do get definition.
    */
   #[DataProvider('providerDoGetDefinition')]
   public function testDoGetDefinition($expected, $definitions, $plugin_id): void {
@@ -65,7 +65,7 @@ class DiscoveryTraitTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::doGetDefinition
+   * Tests do get definition exception.
    */
   #[DataProvider('providerDoGetDefinitionException')]
   public function testDoGetDefinitionException($expected, $definitions, $plugin_id): void {
@@ -78,7 +78,7 @@ class DiscoveryTraitTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getDefinition
+   * Tests get definition.
    */
   #[DataProvider('providerDoGetDefinition')]
   public function testGetDefinition($expected, $definitions, $plugin_id): void {
@@ -99,7 +99,7 @@ class DiscoveryTraitTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getDefinition
+   * Tests get definition exception.
    */
   #[DataProvider('providerDoGetDefinitionException')]
   public function testGetDefinitionException($expected, $definitions, $plugin_id): void {
@@ -132,7 +132,7 @@ class DiscoveryTraitTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::hasDefinition
+   * Tests has definition.
    */
   #[DataProvider('providerHasDefinition')]
   public function testHasDefinition($expected, $plugin_id): void {

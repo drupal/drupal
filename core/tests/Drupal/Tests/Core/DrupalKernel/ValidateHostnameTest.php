@@ -20,8 +20,6 @@ class ValidateHostnameTest extends UnitTestCase {
 
   /**
    * Tests validate hostname.
-   *
-   * @legacy-covers ::validateHostname
    */
   #[DataProvider('providerTestValidateHostname')]
   public function testValidateHostname($hostname, $message, $expected = FALSE): void {

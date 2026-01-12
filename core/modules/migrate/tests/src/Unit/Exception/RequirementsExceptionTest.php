@@ -21,8 +21,6 @@ class RequirementsExceptionTest extends UnitTestCase {
 
   /**
    * Tests get requirements.
-   *
-   * @legacy-covers ::getRequirements
    */
   public function testGetRequirements(): void {
     $exception = new RequirementsException('Missing requirements ', ['requirements' => static::MISSING_REQUIREMENTS]);

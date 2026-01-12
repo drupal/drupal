@@ -75,8 +75,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
    *   Data to store as the sections value for Layout Builder.
    * @param string[] $permissions
    *   An array of permissions to grant to the user.
-   *
-   * @legacy-covers ::access
    */
   #[DataProvider('providerTestAccess')]
   public function testAccess($expected, $is_enabled, array $section_data, array $permissions): void {
@@ -185,8 +183,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests get contexts.
-   *
-   * @legacy-covers ::getContexts
    */
   public function testGetContexts(): void {
     $entity = EntityTest::create();
@@ -206,8 +202,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests get contexts during preview.
-   *
-   * @legacy-covers ::getContextsDuringPreview
    */
   public function testGetContextsDuringPreview(): void {
     $entity = EntityTest::create();
@@ -227,8 +221,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests get default section storage.
-   *
-   * @legacy-covers ::getDefaultSectionStorage
    */
   public function testGetDefaultSectionStorage(): void {
     $entity = EntityTest::create();
@@ -240,8 +232,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests get tempstore key.
-   *
-   * @legacy-covers ::getTempstoreKey
    */
   public function testGetTempstoreKey(): void {
     $entity = EntityTest::create();
@@ -255,8 +245,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests derive contexts from route.
-   *
-   * @legacy-covers ::deriveContextsFromRoute
    */
   public function testDeriveContextsFromRoute(): void {
     $display = LayoutBuilderEntityViewDisplay::create([
@@ -282,8 +270,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
 
   /**
    * Tests is overridden.
-   *
-   * @legacy-covers ::isOverridden
    */
   public function testIsOverridden(): void {
     $display = LayoutBuilderEntityViewDisplay::create([

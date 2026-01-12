@@ -263,8 +263,6 @@ class LayoutPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests process definition.
-   *
-   * @legacy-covers ::processDefinition
    */
   public function testProcessDefinition(): void {
     $this->moduleHandler->alter('layout', Argument::type('array'))->shouldNotBeCalled();
@@ -331,8 +329,6 @@ EOS;
 
   /**
    * Tests get theme implementations.
-   *
-   * @legacy-covers ::getThemeImplementations
    */
   public function testGetThemeImplementations(): void {
     $core_path = '/core/lib/Drupal/Core';
@@ -366,8 +362,6 @@ EOS;
 
   /**
    * Tests get categories.
-   *
-   * @legacy-covers ::getCategories
    */
   public function testGetCategories(): void {
     $expected = [
@@ -380,8 +374,6 @@ EOS;
 
   /**
    * Tests get sorted definitions.
-   *
-   * @legacy-covers ::getSortedDefinitions
    */
   public function testGetSortedDefinitions(): void {
     // Sorted by category first, then label.
@@ -399,8 +391,6 @@ EOS;
 
   /**
    * Tests get grouped definitions.
-   *
-   * @legacy-covers ::getGroupedDefinitions
    */
   public function testGetGroupedDefinitions(): void {
     $category_expected = [
@@ -425,8 +415,6 @@ EOS;
 
   /**
    * Test that modules and themes can alter the list of layouts.
-   *
-   * @legacy-covers ::getLayoutOptions
    */
   public function testGetLayoutOptions(): void {
     $this->moduleHandler->alter(

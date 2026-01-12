@@ -40,8 +40,6 @@ class PermissionsTest extends UnitTestCase {
 
   /**
    * Tests the preRender method when getEntity returns NULL.
-   *
-   * @legacy-covers ::preRender
    */
   public function testPreRenderNullEntity(): void {
     $values = [new ResultRow()];

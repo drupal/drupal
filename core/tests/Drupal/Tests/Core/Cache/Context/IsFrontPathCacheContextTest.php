@@ -20,8 +20,6 @@ class IsFrontPathCacheContextTest extends UnitTestCase {
 
   /**
    * Tests get context front.
-   *
-   * @legacy-covers ::getContext
    */
   public function testGetContextFront(): void {
     $cache_context = new IsFrontPathCacheContext($this->createPathMatcher(TRUE)->reveal());
@@ -30,8 +28,6 @@ class IsFrontPathCacheContextTest extends UnitTestCase {
 
   /**
    * Tests get context not front.
-   *
-   * @legacy-covers ::getContext
    */
   public function testGetContextNotFront(): void {
     $cache_context = new IsFrontPathCacheContext($this->createPathMatcher(FALSE)->reveal());

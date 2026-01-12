@@ -77,8 +77,6 @@ class YamlDiscoveryTest extends UnitTestCase {
 
   /**
    * Tests get definitions with translatable definitions.
-   *
-   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitionsWithTranslatableDefinitions(): void {
     vfsStream::setup('root');

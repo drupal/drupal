@@ -252,8 +252,6 @@ class ViewsBlockTest extends UnitTestCase {
 
   /**
    * Tests the build method.
-   *
-   * @legacy-covers ::build
    */
   public function testBuildEmpty(): void {
     $build = [

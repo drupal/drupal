@@ -54,7 +54,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getProvider
+   * Tests get provider.
    */
   public function testGetProvider(): void {
     $plugin = new Plugin(['provider' => 'example']);
@@ -62,7 +62,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::setProvider
+   * Tests set provider.
    */
   public function testSetProvider(): void {
     $plugin = new Plugin([]);
@@ -71,7 +71,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getId
+   * Tests get id.
    */
   public function testGetId(): void {
     $plugin = new Plugin(['id' => 'example']);
@@ -79,7 +79,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getClass
+   * Tests get class.
    */
   public function testGetClass(): void {
     $plugin = new Plugin(['class' => 'example']);
@@ -87,7 +87,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::setClass
+   * Tests set class.
    */
   public function testSetClass(): void {
     $plugin = new Plugin([]);

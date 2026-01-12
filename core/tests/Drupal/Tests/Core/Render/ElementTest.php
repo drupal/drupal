@@ -205,8 +205,6 @@ class ElementTest extends UnitTestCase {
 
   /**
    * Tests is empty.
-   *
-   * @legacy-covers ::isEmpty
    */
   #[DataProvider('providerTestIsEmpty')]
   public function testIsEmpty(array $element, $expected): void {
@@ -253,8 +251,6 @@ class ElementTest extends UnitTestCase {
 
   /**
    * Tests is render array.
-   *
-   * @legacy-covers ::isRenderArray
    */
   #[DataProvider('dataProviderIsRenderArray')]
   public function testIsRenderArray($build, $expected): void {

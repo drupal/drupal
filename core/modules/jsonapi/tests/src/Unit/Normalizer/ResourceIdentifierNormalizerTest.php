@@ -113,8 +113,6 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
 
   /**
    * Tests denormalize.
-   *
-   * @legacy-covers ::denormalize
    */
   #[DataProvider('denormalizeProvider')]
   public function testDenormalize($input, $field_name, $expected): void {
@@ -156,8 +154,6 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
 
   /**
    * Tests denormalize invalid resource.
-   *
-   * @legacy-covers ::denormalize
    */
   #[DataProvider('denormalizeInvalidResourceProvider')]
   public function testDenormalizeInvalidResource($data, $field_name): void {

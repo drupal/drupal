@@ -26,8 +26,6 @@ class MachineNameTest extends UnitTestCase {
 
   /**
    * Tests value callback.
-   *
-   * @legacy-covers ::valueCallback
    */
   #[DataProvider('providerTestValueCallback')]
   public function testValueCallback($expected, $input): void {
@@ -52,8 +50,6 @@ class MachineNameTest extends UnitTestCase {
 
   /**
    * Tests process machine name.
-   *
-   * @legacy-covers ::processMachineName
    */
   public function testProcessMachineName(): void {
     $form_state = new FormState();

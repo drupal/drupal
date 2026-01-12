@@ -23,8 +23,6 @@ class RequestPagerTest extends KernelTestBase {
 
   /**
    * Tests find page.
-   *
-   * @legacy-covers ::findPage
    */
   public function testFindPage(): void {
     $request = Request::create('http://example.com', 'GET', ['page' => '0,10']);
@@ -41,8 +39,6 @@ class RequestPagerTest extends KernelTestBase {
 
   /**
    * Tests get query parameters.
-   *
-   * @legacy-covers ::getQueryParameters
    */
   public function testGetQueryParameters(): void {
     $test_parameters = [

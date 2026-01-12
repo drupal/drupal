@@ -19,8 +19,6 @@ class PageTest extends UnitTestCase {
 
   /**
    * Tests build basic renderable.
-   *
-   * @legacy-covers ::buildBasicRenderable
    */
   public function testBuildBasicRenderable(): void {
     $route = new Route('/test-view');
@@ -37,8 +35,6 @@ class PageTest extends UnitTestCase {
 
   /**
    * Tests build basic renderable with missing route.
-   *
-   * @legacy-covers ::buildBasicRenderable
    */
   public function testBuildBasicRenderableWithMissingRoute(): void {
     $this->expectException(\BadFunctionCallException::class);

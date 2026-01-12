@@ -31,8 +31,6 @@ class HttpExceptionNormalizerTest extends UnitTestCase {
 
   /**
    * Tests normalize.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalize(): void {
     $request_stack = $this->prophesize(RequestStack::class);

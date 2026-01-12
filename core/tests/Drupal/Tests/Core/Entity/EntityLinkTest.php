@@ -62,8 +62,6 @@ class EntityLinkTest extends UnitTestCase {
 
   /**
    * Tests for the EntityBase::toLink() method.
-   *
-   * @legacy-covers ::toLink
    */
   #[DataProvider('providerTestLink')]
   public function testToLink($entity_label, $link_text, $expected_text, $link_rel = 'canonical', array $link_options = []): void {

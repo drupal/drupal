@@ -835,8 +835,6 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
    *   The query string for the current URL.
    * @param string $expected_html_markup
    *   The expected updated HTML markup.
-   *
-   * @legacy-covers ::setLinkActiveClass
    */
   #[DataProvider('providerTestSetLinkActiveClass')]
   public function testSetLinkActiveClass($html_markup, $current_path, $is_front, $url_language, array $query, $expected_html_markup): void {

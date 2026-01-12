@@ -25,8 +25,6 @@ class JUnitConverterTest extends UnitTestCase {
 
   /**
    * Tests errors reported.
-   *
-   * @legacy-covers ::xmlToRows
    */
   public function testXmlToRowsWithErrors(): void {
     $phpunit_error_xml = __DIR__ . '/../../../../fixtures/phpunit_error.xml';
@@ -66,8 +64,6 @@ class JUnitConverterTest extends UnitTestCase {
 
   /**
    * Tests xml to rows empty file.
-   *
-   * @legacy-covers ::xmlToRows
    */
   public function testXmlToRowsEmptyFile(): void {
     // File system with an empty XML file.
@@ -77,8 +73,6 @@ class JUnitConverterTest extends UnitTestCase {
 
   /**
    * Tests xml element to rows.
-   *
-   * @legacy-covers ::xmlElementToRows
    */
   public function testXmlElementToRows(): void {
     $junit = <<<EOD
@@ -108,8 +102,6 @@ EOD;
 
   /**
    * Tests convert test case to simpletest row.
-   *
-   * @legacy-covers ::convertTestCaseToSimpletestRow
    */
   public function testConvertTestCaseToSimpletestRow(): void {
     $junit = <<<EOD

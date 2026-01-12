@@ -26,8 +26,6 @@ class TestSetupTraitTest extends UnitTestCase {
 
   /**
    * Tests the SIMPLETEST_DB environment variable is used.
-   *
-   * @legacy-covers ::changeDatabasePrefix
    */
   public function testChangeDatabasePrefix(): void {
     $root = dirname(__FILE__, 7);

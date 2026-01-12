@@ -26,8 +26,6 @@ class RequestFormatRouteFilterTest extends UnitTestCase {
 
   /**
    * Tests filter.
-   *
-   * @legacy-covers ::filter
    */
   #[DataProvider('filterProvider')]
   public function testFilter(RouteCollection $collection, $request_format, array $expected_filtered_collection): void {

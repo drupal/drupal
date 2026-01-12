@@ -42,8 +42,6 @@ class ModulePermissionsLinkHelperTest extends KernelTestBase {
 
   /**
    * Tests get module permissions link.
-   *
-   * @legacy-covers ::getModulePermissionsLink
    */
   public function testGetModulePermissionsLink(): void {
 

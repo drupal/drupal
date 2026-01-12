@@ -35,8 +35,6 @@ class RequiredModuleUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate no module.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateNoModule(): void {
     $this->uninstallValidator->expects($this->once())
@@ -51,8 +49,6 @@ class RequiredModuleUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate not required.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateNotRequired(): void {
     $module = $this->randomMachineName();
@@ -68,8 +64,6 @@ class RequiredModuleUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate required.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateRequired(): void {
     $module = $this->randomMachineName();

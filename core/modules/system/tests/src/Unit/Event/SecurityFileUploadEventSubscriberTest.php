@@ -29,8 +29,6 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
    *   The expected filename if 'allow_insecure_uploads' is set to FALSE.
    * @param string|null $expected_filename_with_insecure_uploads
    *   The expected filename if 'allow_insecure_uploads' is set to TRUE.
-   *
-   * @legacy-covers ::sanitizeName
    */
   #[DataProvider('provideFilenames')]
   public function testSanitizeName(string $filename, string $allowed_extensions, string $expected_filename, ?string $expected_filename_with_insecure_uploads = NULL): void {
@@ -107,8 +105,6 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
    *   The original filename.
    * @param string $allowed_extensions
    *   The allowed extensions.
-   *
-   * @legacy-covers ::sanitizeName
    */
   #[DataProvider('provideFilenamesNoMunge')]
   public function testSanitizeNameNoMunge(string $filename, string $allowed_extensions): void {

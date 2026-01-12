@@ -399,8 +399,6 @@ class LocalTaskManagerTest extends UnitTestCase {
 
   /**
    * Tests get tasks build with cacheability metadata.
-   *
-   * @legacy-covers ::getTasksBuild
    */
   public function testGetTasksBuildWithCacheabilityMetadata(): void {
     $definitions = $this->getLocalTaskFixtures();

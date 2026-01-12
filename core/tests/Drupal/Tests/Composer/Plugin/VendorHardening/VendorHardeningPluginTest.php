@@ -45,8 +45,6 @@ class VendorHardeningPluginTest extends TestCase {
 
   /**
    * Tests clean package.
-   *
-   * @legacy-covers ::cleanPackage
    */
   public function testCleanPackage(): void {
 
@@ -83,8 +81,6 @@ class VendorHardeningPluginTest extends TestCase {
 
   /**
    * Tests clean paths for package.
-   *
-   * @legacy-covers ::cleanPathsForPackage
    */
   public function testCleanPathsForPackage(): void {
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
@@ -113,8 +109,6 @@ class VendorHardeningPluginTest extends TestCase {
 
   /**
    * Tests clean all packages.
-   *
-   * @legacy-covers ::cleanAllPackages
    */
   public function testCleanAllPackages(): void {
     $config = $this->getMockBuilder(Config::class)
@@ -155,8 +149,6 @@ class VendorHardeningPluginTest extends TestCase {
 
   /**
    * Tests write access restriction files.
-   *
-   * @legacy-covers ::writeAccessRestrictionFiles
    */
   public function testWriteAccessRestrictionFiles(): void {
     $dir = vfsStream::url('vendor');
@@ -229,8 +221,6 @@ class VendorHardeningPluginTest extends TestCase {
 
   /**
    * Tests find bin overlap.
-   *
-   * @legacy-covers ::findBinOverlap
    */
   #[DataProvider('providerFindBinOverlap')]
   public function testFindBinOverlap($expected, $binaries, $clean_paths): void {

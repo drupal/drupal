@@ -47,8 +47,6 @@ class AccountProxyTest extends UnitTestCase {
 
   /**
    * Tests set initial account id exception.
-   *
-   * @legacy-covers ::setInitialAccountId
    */
   public function testSetInitialAccountIdException(): void {
     $this->expectException(\LogicException::class);
@@ -62,8 +60,6 @@ class AccountProxyTest extends UnitTestCase {
 
   /**
    * Tests has role.
-   *
-   * @legacy-covers ::hasRole
    */
   public function testHasRole(): void {
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);

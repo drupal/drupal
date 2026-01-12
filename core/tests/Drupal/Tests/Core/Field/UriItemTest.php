@@ -23,8 +23,6 @@ class UriItemTest extends UnitTestCase {
    *
    * @param int $max_length
    *   Maximum field length.
-   *
-   * @legacy-covers ::generateSampleValue
    */
   #[DataProvider('providerMaxLength')]
   public function testGenerateSampleValue(int $max_length): void {

@@ -43,8 +43,6 @@ class LanguageDomainsTest extends MigrateProcessTestCase {
 
   /**
    * Tests transform.
-   *
-   * @legacy-covers ::transform
    */
   public function testTransform(): void {
     $source = [

@@ -38,8 +38,6 @@ class FileSystemTempDirectoryTest extends KernelTestBase {
 
   /**
    * Tests 'file_temp_path' setting.
-   *
-   * @legacy-covers ::getTempDirectory
    */
   public function testGetTempDirectorySettings(): void {
     $tempDir = '/var/tmp/' . $this->randomMachineName();
@@ -49,8 +47,6 @@ class FileSystemTempDirectoryTest extends KernelTestBase {
 
   /**
    * Tests os default fallback.
-   *
-   * @legacy-covers ::getTempDirectory
    */
   public function testGetTempDirectoryOsDefault(): void {
     $tempDir = FileSystemComponent::getOsTemporaryDirectory();

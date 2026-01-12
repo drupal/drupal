@@ -37,8 +37,6 @@ class WeightTest extends KernelTestBase {
 
   /**
    * Tests existing #default_value value in #options list.
-   *
-   * @legacy-covers ::processWeight
    */
   public function testProcessWeight(): void {
     $element = [];
@@ -63,8 +61,6 @@ class WeightTest extends KernelTestBase {
    * Tests transformation from "select" to "number" for MAX_DELTA + 1.
    *
    * @throws \Exception
-   *
-   * @legacy-covers ::processWeight
    */
   public function testProcessWeightSelectMax(): void {
     $form_state = new FormState();

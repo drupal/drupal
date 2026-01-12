@@ -7,8 +7,8 @@ namespace Drupal\Tests\Core\Entity\Sql;
 use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
@@ -313,8 +313,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
   /**
    * Tests that setting a new table mapping also updates the table names.
-   *
-   * @legacy-covers ::setTableMapping
    */
   public function testSetTableMapping(): void {
     $this->entityType->expects($this->any())
@@ -1088,8 +1086,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
   /**
    * Tests create.
-   *
-   * @legacy-covers ::create
    */
   public function testCreate(): void {
     $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
@@ -1396,8 +1392,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
   /**
    * Tests has data.
-   *
-   * @legacy-covers ::hasData
    */
   public function testHasData(): void {
     $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');

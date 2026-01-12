@@ -53,8 +53,6 @@ class DateHelperTest extends UnitTestCase {
 
   /**
    * Tests week days ordered.
-   *
-   * @legacy-covers ::weekDaysOrdered
    */
   #[DataProvider('providerTestWeekDaysOrdered')]
   public function testWeekDaysOrdered($first_day, $expected): void {
@@ -171,8 +169,6 @@ class DateHelperTest extends UnitTestCase {
 
   /**
    * Tests days in month.
-   *
-   * @legacy-covers ::daysInMonth
    */
   public function testDaysInMonth(): void {
     // @todo Consider deprecating passing NULL in
@@ -198,8 +194,6 @@ class DateHelperTest extends UnitTestCase {
 
   /**
    * Tests days in year.
-   *
-   * @legacy-covers ::daysInYear
    */
   public function testDaysInYear(): void {
     // Passing NULL, FALSE, or an empty string should default to now. Just
@@ -224,8 +218,6 @@ class DateHelperTest extends UnitTestCase {
 
   /**
    * Tests day of week.
-   *
-   * @legacy-covers ::dayOfWeek
    */
   public function testDayOfWeek(): void {
     // Passing NULL, FALSE, or an empty string should default to now. Just
@@ -251,8 +243,6 @@ class DateHelperTest extends UnitTestCase {
 
   /**
    * Tests day of week name.
-   *
-   * @legacy-covers ::dayOfWeekName
    */
   public function testDayOfWeekName(): void {
     // Passing NULL, FALSE, or an empty string should default to now. Just

@@ -72,8 +72,6 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
 
   /**
    * Tests get source context.
-   *
-   * @legacy-covers ::getSourceContext
    */
   public function testGetSourceContext(): void {
     $source = $this->helpLoader->getSourceContext('@' . HelpTopicTwigLoader::MAIN_NAMESPACE . '/test.topic.html.twig');
@@ -82,8 +80,6 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
 
   /**
    * Tests get source context exception.
-   *
-   * @legacy-covers ::getSourceContext
    */
   public function testGetSourceContextException(): void {
     $this->expectException(LoaderError::class);

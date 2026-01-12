@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 class ClassFinderTest extends TestCase {
 
   /**
-   * @legacy-covers ::findFile
+   * Tests find file.
    */
   public function testFindFile(): void {
     $finder = new ClassFinder();

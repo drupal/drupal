@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 class PluginIdTest extends TestCase {
 
   /**
-   * @legacy-covers ::get
+   * Tests get.
    */
   public function testGet(): void {
     // Assert plugin starts empty.
@@ -40,7 +40,7 @@ class PluginIdTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getId
+   * Tests get id.
    */
   public function testGetId(): void {
     $plugin = new PluginID();

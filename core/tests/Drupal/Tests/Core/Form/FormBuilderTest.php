@@ -94,8 +94,6 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests the getFormId() method with a string based form ID.
-   *
-   * @legacy-covers ::getFormId
    */
   public function testGetFormIdWithString(): void {
     $form_arg = 'foo';
@@ -107,8 +105,6 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests get form id with non form class.
-   *
-   * @legacy-covers ::getFormId
    */
   public function testGetFormIdWithNonFormClass(): void {
     $form_arg = \stdClass::class;
@@ -359,8 +355,6 @@ class FormBuilderTest extends FormTestBase {
    *   The input element "#value" value.
    * @param string $input_value
    *   The corresponding submitted input value.
-   *
-   * @legacy-covers ::buildForm
    */
   #[DataProvider('providerTestBuildFormWithTriggeringElement')]
   public function testBuildFormWithTriggeringElement($element_value, $input_value): void {
@@ -881,8 +875,6 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests value callable is safe.
-   *
-   * @legacy-covers ::valueCallableIsSafe
    */
   #[DataProvider('providerTestValueCallableIsSafe')]
   public function testValueCallableIsSafe($callback, $expected): void {

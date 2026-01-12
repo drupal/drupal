@@ -32,8 +32,6 @@ class RestPermissionsTest extends KernelTestBase {
 
   /**
    * Tests permissions.
-   *
-   * @legacy-covers ::permissions
    */
   public function testPermissions(): void {
     RestResourceConfig::create([

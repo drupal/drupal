@@ -100,8 +100,6 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests get sandbox directory.
-   *
-   * @legacy-covers ::getSandboxDirectory
    */
   public function testGetSandboxDirectory(): void {
     // In this test, we're working with paths that (probably) don't exist in

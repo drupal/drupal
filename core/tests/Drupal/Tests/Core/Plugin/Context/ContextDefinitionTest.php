@@ -33,8 +33,6 @@ class ContextDefinitionTest extends UnitTestCase {
 
   /**
    * Tests get data definition.
-   *
-   * @legacy-covers ::getDataDefinition
    */
   #[DataProvider('providerGetDataDefinition')]
   public function testGetDataDefinition($is_multiple): void {
@@ -107,8 +105,6 @@ class ContextDefinitionTest extends UnitTestCase {
 
   /**
    * Tests get data definition invalid type.
-   *
-   * @legacy-covers ::getDataDefinition
    */
   #[DataProvider('providerGetDataDefinition')]
   public function testGetDataDefinitionInvalidType($is_multiple): void {
@@ -174,8 +170,6 @@ class ContextDefinitionTest extends UnitTestCase {
 
   /**
    * Tests get constraint.
-   *
-   * @legacy-covers ::getConstraint
    */
   #[DataProvider('providerGetConstraint')]
   public function testGetConstraint($expected, $constraint_array, $constraint): void {

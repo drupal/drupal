@@ -73,8 +73,6 @@ class LoggerChannelTest extends UnitTestCase {
 
   /**
    * Tests LoggerChannel::log() recursion protection.
-   *
-   * @legacy-covers ::log
    */
   public function testLogRecursionProtection(): void {
     $channel = new LoggerChannel('test');

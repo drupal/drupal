@@ -19,8 +19,6 @@ class MenuLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests update link.
-   *
-   * @legacy-covers ::updateLink
    */
   public function testUpdateLink(): void {
     $plugin_definition = [
@@ -45,8 +43,6 @@ class MenuLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests update link without persist.
-   *
-   * @legacy-covers ::updateLink
    */
   public function testUpdateLinkWithoutPersist(): void {
     $plugin_definition = [

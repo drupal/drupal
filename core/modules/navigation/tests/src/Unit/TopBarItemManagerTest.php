@@ -84,8 +84,6 @@ class TopBarItemManagerTest extends UnitTestCase {
 
   /**
    * Tests get definitions by region.
-   *
-   * @legacy-covers ::getDefinitionsByRegion
    */
   public function testGetDefinitionsByRegion(): void {
     $tools = $this->manager->getDefinitionsByRegion(TopBarRegion::Tools);

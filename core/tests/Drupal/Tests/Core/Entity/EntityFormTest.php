@@ -126,8 +126,6 @@ class EntityFormTest extends UnitTestCase {
 
   /**
    * Tests copy form values to entity.
-   *
-   * @legacy-covers ::copyFormValuesToEntity
    */
   public function testCopyFormValuesToEntity(): void {
     $entity_id = 'test_config_entity_id';
@@ -156,8 +154,6 @@ class EntityFormTest extends UnitTestCase {
 
   /**
    * Tests EntityForm::getEntityFromRouteMatch() for edit and delete forms.
-   *
-   * @legacy-covers ::getEntityFromRouteMatch
    */
   public function testGetEntityFromRouteMatchEditDelete(): void {
     $entity = $this->prophesize(EntityInterface::class)->reveal();
@@ -174,8 +170,6 @@ class EntityFormTest extends UnitTestCase {
 
   /**
    * Tests EntityForm::getEntityFromRouteMatch() for add forms without a bundle.
-   *
-   * @legacy-covers ::getEntityFromRouteMatch
    */
   public function testGetEntityFromRouteMatchAdd(): void {
     $entity = $this->prophesize(EntityInterface::class)->reveal();
@@ -187,8 +181,6 @@ class EntityFormTest extends UnitTestCase {
 
   /**
    * Tests EntityForm::getEntityFromRouteMatch() with a static bundle.
-   *
-   * @legacy-covers ::getEntityFromRouteMatch
    */
   public function testGetEntityFromRouteMatchAddStatic(): void {
     $entity = $this->prophesize(EntityInterface::class)->reveal();
@@ -217,8 +209,6 @@ class EntityFormTest extends UnitTestCase {
 
   /**
    * Tests EntityForm::getEntityFromRouteMatch() with a config entity bundle.
-   *
-   * @legacy-covers ::getEntityFromRouteMatch
    */
   public function testGetEntityFromRouteMatchAddEntity(): void {
     $entity = $this->prophesize(EntityInterface::class)->reveal();

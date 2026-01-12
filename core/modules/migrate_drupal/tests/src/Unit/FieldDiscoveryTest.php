@@ -61,8 +61,6 @@ class FieldDiscoveryTest extends UnitTestCase {
    *   The entity type ID.
    * @param array $expected_fields
    *   The expected fields.
-   *
-   * @legacy-covers ::getEntityFields
    */
   #[DataProvider('getEntityFieldsData')]
   public function testGetEntityFields($entity_type_id, array $expected_fields): void {
@@ -138,8 +136,6 @@ class FieldDiscoveryTest extends UnitTestCase {
    *   The bundle.
    * @param array $expected_fields
    *   The expected fields.
-   *
-   * @legacy-covers ::getBundleFields
    */
   #[DataProvider('getBundleFieldsData')]
   public function testGetBundleFields($entity_type_id, $bundle, array $expected_fields): void {
@@ -224,8 +220,6 @@ class FieldDiscoveryTest extends UnitTestCase {
    *   The migration tags.
    * @param string|bool $expected_result
    *   The expected return value of the method.
-   *
-   * @legacy-covers ::getCoreVersion
    */
   #[DataProvider('getCoreVersionData')]
   public function testGetCoreVersion(array $tags, $expected_result): void {
@@ -314,8 +308,6 @@ class FieldDiscoveryTest extends UnitTestCase {
    *   The Drupal core version.
    * @param array|bool $expected_definition
    *   The expected migration definition, or false if an exception is expected.
-   *
-   * @legacy-covers ::getFieldInstanceStubMigrationDefinition
    */
   #[DataProvider('getFieldInstanceStubMigrationDefinition')]
   public function testGetFieldInstanceStubMigrationDefinition($core, $expected_definition): void {

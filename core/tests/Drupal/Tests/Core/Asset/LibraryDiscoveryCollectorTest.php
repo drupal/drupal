@@ -112,8 +112,6 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
 
   /**
    * Tests the resolve cache miss function.
-   *
-   * @legacy-covers ::resolveCacheMiss
    */
   public function testResolveCacheMiss(): void {
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
@@ -138,8 +136,6 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
 
   /**
    * Tests the destruct method.
-   *
-   * @legacy-covers ::destruct
    */
   public function testDestruct(): void {
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)

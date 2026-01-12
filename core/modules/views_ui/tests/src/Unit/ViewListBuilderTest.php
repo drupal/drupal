@@ -28,7 +28,6 @@ class ViewListBuilderTest extends UnitTestCase {
    * Tests the listing of displays on a views list builder.
    *
    * @see \Drupal\views_ui\ViewListBuilder::getDisplaysList()
-   * @legacy-covers ::buildRow
    */
   public function testBuildRowEntityList(): void {
     $storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')

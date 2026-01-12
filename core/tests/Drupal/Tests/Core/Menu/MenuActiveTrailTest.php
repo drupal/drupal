@@ -174,8 +174,6 @@ class MenuActiveTrailTest extends UnitTestCase {
 
   /**
    * Tests getActiveLink().
-   *
-   * @legacy-covers ::getActiveLink
    */
   #[DataProvider('provider')]
   public function testGetActiveLink(Request $request, $links, $menu_name, $expected_link): void {
@@ -194,8 +192,6 @@ class MenuActiveTrailTest extends UnitTestCase {
 
   /**
    * Tests that getActiveLink() returns a <front> route link for a route that is the front page and has no other links.
-   *
-   * @legacy-covers ::getActiveLink
    */
   public function testGetActiveLinkReturnsFrontPageLinkAtTheFrontPage(): void {
 
@@ -235,8 +231,6 @@ class MenuActiveTrailTest extends UnitTestCase {
 
   /**
    * Tests getActiveTrailIds().
-   *
-   * @legacy-covers ::getActiveTrailIds
    */
   #[DataProvider('provider')]
   public function testGetActiveTrailIds(Request $request, $links, $menu_name, $expected_link, $expected_trail): void {
@@ -287,8 +281,6 @@ class MenuActiveTrailTest extends UnitTestCase {
 
   /**
    * Tests getCid()
-   *
-   * @legacy-covers ::getCid
    */
   public function testGetCid(): void {
     $data = $this->provider()[1];

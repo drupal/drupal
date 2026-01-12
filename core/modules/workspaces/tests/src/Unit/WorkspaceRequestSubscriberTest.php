@@ -44,8 +44,6 @@ class WorkspaceRequestSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on kernel request with cacheable route provider.
-   *
-   * @legacy-covers ::onKernelRequest
    */
   public function testOnKernelRequestWithCacheableRouteProvider(): void {
     $route_provider = $this->prophesize(CacheableRouteProviderInterface::class);
@@ -61,8 +59,6 @@ class WorkspaceRequestSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on kernel request without cacheable route provider.
-   *
-   * @legacy-covers ::onKernelRequest
    */
   public function testOnKernelRequestWithoutCacheableRouteProvider(): void {
     $route_provider = $this->prophesize(RouteProviderInterface::class);

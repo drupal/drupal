@@ -18,8 +18,6 @@ class DefaultPasswordGeneratorTest extends UnitTestCase {
 
   /**
    * Tests generate.
-   *
-   * @legacy-covers ::generate
    */
   public function testGenerate(): void {
     $generator = new DefaultPasswordGenerator();

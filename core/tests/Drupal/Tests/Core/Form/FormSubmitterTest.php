@@ -246,8 +246,6 @@ class FormSubmitterTest extends UnitTestCase {
 
   /**
    * Tests execute submit handlers.
-   *
-   * @legacy-covers ::executeSubmitHandlers
    */
   public function testExecuteSubmitHandlers(): void {
     $form_submitter = $this->getFormSubmitter();

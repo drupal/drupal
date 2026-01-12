@@ -37,8 +37,6 @@ class TranslationTest extends UnitTestCase {
 
   /**
    * Tests get.
-   *
-   * @legacy-covers ::get
    */
   #[DataProvider('providerTestGet')]
   public function testGet(array $values, $expected): void {

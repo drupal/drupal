@@ -28,8 +28,6 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
 
   /**
    * Tests copy form values to entity.
-   *
-   * @legacy-covers ::copyFormValuesToEntity
    */
   public function testCopyFormValuesToEntity(): void {
     $field_values = [];

@@ -20,8 +20,6 @@ class BreadcrumbTest extends UnitTestCase {
 
   /**
    * Tests set links.
-   *
-   * @legacy-covers ::setLinks
    */
   public function testSetLinks(): void {
     $breadcrumb = new Breadcrumb();

@@ -942,8 +942,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
   /**
    * Tests find primary key columns.
-   *
-   * @legacy-covers ::findPrimaryKeyColumns
    */
   public function testFindPrimaryKeyColumns(): void {
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');

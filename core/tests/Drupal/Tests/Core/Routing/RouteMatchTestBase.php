@@ -82,8 +82,6 @@ abstract class RouteMatchTestBase extends UnitTestCase {
 
   /**
    * Tests get route name.
-   *
-   * @legacy-covers ::getRouteName
    */
   #[DataProvider('routeMatchProvider')]
   public function testGetRouteName(RouteMatchInterface $route_match): void {
@@ -92,8 +90,6 @@ abstract class RouteMatchTestBase extends UnitTestCase {
 
   /**
    * Tests get route object.
-   *
-   * @legacy-covers ::getRouteObject
    */
   #[DataProvider('routeMatchProvider')]
   public function testGetRouteObject(RouteMatchInterface $route_match, Route $route): void {

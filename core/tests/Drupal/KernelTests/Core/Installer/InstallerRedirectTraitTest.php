@@ -71,8 +71,6 @@ class InstallerRedirectTraitTest extends KernelTestBase {
 
   /**
    * Tests should redirect to installer.
-   *
-   * @legacy-covers ::shouldRedirectToInstaller
    */
   #[DataProvider('providerShouldRedirectToInstaller')]
   public function testShouldRedirectToInstaller(bool $expected, string $exception, bool $connection, bool $connection_info, bool $sequences_table_exists = TRUE): void {

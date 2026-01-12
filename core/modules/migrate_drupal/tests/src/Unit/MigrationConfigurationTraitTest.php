@@ -20,8 +20,6 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
 
   /**
    * Tests get legacy drupal version.
-   *
-   * @legacy-covers ::getLegacyDrupalVersion
    */
   #[DataProvider('providerTestGetLegacyDrupalVersion')]
   public function testGetLegacyDrupalVersion($expected_version_string, $schema_version, $exception, $system_table_exists): void {

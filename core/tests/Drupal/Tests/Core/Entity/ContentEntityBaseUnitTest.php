@@ -271,8 +271,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests set new revision exception.
-   *
-   * @legacy-covers ::setNewRevision
    */
   public function testSetNewRevisionException(): void {
     $this->entityType->expects($this->once())
@@ -286,8 +284,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests is default revision.
-   *
-   * @legacy-covers ::isDefaultRevision
    */
   public function testIsDefaultRevision(): void {
     // The default value is TRUE.
@@ -307,8 +303,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests get revision id.
-   *
-   * @legacy-covers ::getRevisionId
    */
   public function testGetRevisionId(): void {
     // The default getRevisionId() implementation returns NULL.
@@ -317,8 +311,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests is translatable.
-   *
-   * @legacy-covers ::isTranslatable
    */
   public function testIsTranslatable(): void {
     $this->entityTypeBundleInfo->expects($this->any())
@@ -343,8 +335,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests is translatable for monolingual.
-   *
-   * @legacy-covers ::isTranslatable
    */
   public function testIsTranslatableForMonolingual(): void {
     $this->languageManager->expects($this->any())
@@ -355,8 +345,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests pre save revision.
-   *
-   * @legacy-covers ::preSaveRevision
    */
   public function testPreSaveRevision(): void {
     // This method is internal, so check for errors on calling it only.
@@ -446,8 +434,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests validate.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidate(): void {
     $validator = $this->createMock(ValidatorInterface::class);
@@ -524,8 +510,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests bundle.
-   *
-   * @legacy-covers ::bundle
    */
   public function testBundle(): void {
     $this->assertSame($this->bundle, $this->entity->bundle());
@@ -533,8 +517,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests access.
-   *
-   * @legacy-covers ::access
    */
   public function testAccess(): void {
     $access = $this->createMock('\Drupal\Core\Entity\EntityAccessControlHandlerInterface');
@@ -577,8 +559,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests get.
-   *
-   * @legacy-covers ::get
    */
   #[DataProvider('providerGet')]
   public function testGet($expected, $field_name, $active_langcode, $fields): void {
@@ -639,8 +619,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests get fields.
-   *
-   * @legacy-covers ::getFields
    */
   #[DataProvider('providerGetFields')]
   public function testGetFields($expected, $include_computed, $is_computed, $field_definitions): void {
@@ -692,8 +670,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * Tests set.
-   *
-   * @legacy-covers ::set
    */
   public function testSet(): void {
     // Exercise set(), check if it returns $this.

@@ -102,8 +102,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests get.
-   *
-   * @legacy-covers ::get
    */
   public function testGet(): void {
     $calls = ['test_2', 'test'];
@@ -123,8 +121,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the getIfOwner() method.
-   *
-   * @legacy-covers ::getIfOwner
    */
   public function testGetIfOwner(): void {
     $calls = ['test_2', 'test', 'test'];
@@ -146,8 +142,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the set() method with no lock available.
-   *
-   * @legacy-covers ::set
    */
   public function testSetWithNoLockAvailable(): void {
     $this->lock->expects($this->exactly(2))
@@ -167,8 +161,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests a successful set() call.
-   *
-   * @legacy-covers ::set
    */
   public function testSet(): void {
     $this->lock->expects($this->once())
@@ -190,8 +182,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the setIfNotExists() methods.
-   *
-   * @legacy-covers ::setIfNotExists
    */
   public function testSetIfNotExists(): void {
     $this->keyValue->expects($this->once())
@@ -204,8 +194,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the setIfOwner() method when no key exists.
-   *
-   * @legacy-covers ::setIfOwner
    */
   public function testSetIfOwnerWhenNotExists(): void {
     $this->keyValue->expects($this->once())
@@ -217,8 +205,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the setIfOwner() method when a key already exists but no object.
-   *
-   * @legacy-covers ::setIfOwner
    */
   public function testSetIfOwnerNoObject(): void {
     $this->keyValue->expects($this->once())
@@ -235,8 +221,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the setIfOwner() method with matching and non matching owners.
-   *
-   * @legacy-covers ::setIfOwner
    */
   public function testSetIfOwner(): void {
     $this->lock->expects($this->once())
@@ -259,8 +243,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the getMetadata() method.
-   *
-   * @legacy-covers ::getMetadata
    */
   public function testGetMetadata(): void {
     $this->keyValue->expects($this->exactly(2))
@@ -279,8 +261,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the delete() method.
-   *
-   * @legacy-covers ::delete
    */
   public function testDelete(): void {
     $this->lock->expects($this->once())
@@ -302,8 +282,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the delete() method with no lock available.
-   *
-   * @legacy-covers ::delete
    */
   public function testDeleteWithNoLockAvailable(): void {
     $this->lock->expects($this->exactly(2))
@@ -323,8 +301,6 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the deleteIfOwner() method.
-   *
-   * @legacy-covers ::deleteIfOwner
    */
   public function testDeleteIfOwner(): void {
     $this->lock->expects($this->once())

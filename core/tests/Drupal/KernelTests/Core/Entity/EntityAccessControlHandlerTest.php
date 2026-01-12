@@ -301,8 +301,6 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
   /**
    * Tests the default access handling for the ID and UUID fields.
-   *
-   * @legacy-covers ::fieldAccess
    */
   #[DataProvider('providerTestFieldAccess')]
   public function testFieldAccess($entity_class, array $entity_create_values, $expected_id_create_access): void {

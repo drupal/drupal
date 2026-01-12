@@ -39,8 +39,6 @@ class DisplayVariantTest extends UnitTestCase {
 
   /**
    * Tests the label() method.
-   *
-   * @legacy-covers ::label
    */
   public function testLabel(): void {
     $display_variant = $this->setUpDisplayVariant(['label' => 'foo']);
@@ -49,8 +47,6 @@ class DisplayVariantTest extends UnitTestCase {
 
   /**
    * Tests the label() method using a default value.
-   *
-   * @legacy-covers ::label
    */
   public function testLabelDefault(): void {
     $display_variant = $this->setUpDisplayVariant();
@@ -59,8 +55,6 @@ class DisplayVariantTest extends UnitTestCase {
 
   /**
    * Tests the getWeight() method.
-   *
-   * @legacy-covers ::getWeight
    */
   public function testGetWeight(): void {
     $display_variant = $this->setUpDisplayVariant(['weight' => 5]);
@@ -69,8 +63,6 @@ class DisplayVariantTest extends UnitTestCase {
 
   /**
    * Tests the getWeight() method using a default value.
-   *
-   * @legacy-covers ::getWeight
    */
   public function testGetWeightDefault(): void {
     $display_variant = $this->setUpDisplayVariant();
@@ -79,8 +71,6 @@ class DisplayVariantTest extends UnitTestCase {
 
   /**
    * Tests the getConfiguration() method.
-   *
-   * @legacy-covers ::getConfiguration
    */
   #[DataProvider('providerTestGetConfiguration')]
   public function testGetConfiguration($configuration, $expected): void {
@@ -126,8 +116,6 @@ class DisplayVariantTest extends UnitTestCase {
 
   /**
    * Tests the access() method.
-   *
-   * @legacy-covers ::access
    */
   public function testAccess(): void {
     $display_variant = $this->setUpDisplayVariant();
@@ -136,8 +124,6 @@ class DisplayVariantTest extends UnitTestCase {
 
   /**
    * Tests the submitConfigurationForm() method.
-   *
-   * @legacy-covers ::submitConfigurationForm
    */
   public function testSubmitConfigurationForm(): void {
     $display_variant = $this->setUpDisplayVariant();

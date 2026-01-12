@@ -18,8 +18,6 @@ class EndpointTest extends UnitTestCase {
 
   /**
    * Tests match url.
-   *
-   * @legacy-covers ::matchUrl
    */
   public function testMatchUrl(): void {
     $endpoint = new Endpoint(

@@ -28,8 +28,6 @@ class SectionListTraitTest extends SectionListTestBase {
 
   /**
    * Tests add blank section.
-   *
-   * @legacy-covers ::addBlankSection
    */
   public function testAddBlankSection(): void {
     $this->expectException(\Exception::class);

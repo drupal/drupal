@@ -22,8 +22,6 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
 
   /**
    * Tests the resolveConditions() method.
-   *
-   * @legacy-covers ::resolveConditions
    */
   #[DataProvider('providerTestResolveConditions')]
   public function testResolveConditions($conditions, $logic, $expected): void {

@@ -66,8 +66,6 @@ class BreakpointTest extends UnitTestCase {
 
   /**
    * Tests get label.
-   *
-   * @legacy-covers ::getLabel
    */
   public function testGetLabel(): void {
     $this->pluginDefinition['label'] = 'Test label';
@@ -77,8 +75,6 @@ class BreakpointTest extends UnitTestCase {
 
   /**
    * Tests get weight.
-   *
-   * @legacy-covers ::getWeight
    */
   public function testGetWeight(): void {
     $this->pluginDefinition['weight'] = '4';
@@ -89,8 +85,6 @@ class BreakpointTest extends UnitTestCase {
 
   /**
    * Tests get media query.
-   *
-   * @legacy-covers ::getMediaQuery
    */
   public function testGetMediaQuery(): void {
     $this->pluginDefinition['mediaQuery'] = 'only screen and (min-width: 1220px)';
@@ -100,8 +94,6 @@ class BreakpointTest extends UnitTestCase {
 
   /**
    * Tests get multipliers.
-   *
-   * @legacy-covers ::getMultipliers
    */
   public function testGetMultipliers(): void {
     $this->pluginDefinition['multipliers'] = ['1x', '2x'];
@@ -111,8 +103,6 @@ class BreakpointTest extends UnitTestCase {
 
   /**
    * Tests get provider.
-   *
-   * @legacy-covers ::getProvider
    */
   public function testGetProvider(): void {
     $this->pluginDefinition['provider'] = 'Breakpoint';
@@ -122,8 +112,6 @@ class BreakpointTest extends UnitTestCase {
 
   /**
    * Tests get group.
-   *
-   * @legacy-covers ::getGroup
    */
   public function testGetGroup(): void {
     $this->pluginDefinition['group'] = 'Breakpoint';

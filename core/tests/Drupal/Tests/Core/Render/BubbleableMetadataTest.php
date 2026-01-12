@@ -35,8 +35,6 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @see testMergeAttachmentsHtmlHeadMerging()
    * @see testMergeAttachmentsHtmlHeadLinkMerging()
    * @see testMergeAttachmentsHttpHeaderMerging()
-   *
-   * @legacy-covers ::merge
    */
   #[DataProvider('providerTestMerge')]
   public function testMerge(BubbleableMetadata $a, CacheableMetadata $b, BubbleableMetadata $expected): void {
@@ -216,8 +214,6 @@ class BubbleableMetadataTest extends UnitTestCase {
 
   /**
    * Tests apply to.
-   *
-   * @legacy-covers ::applyTo
    */
   #[DataProvider('providerTestApplyTo')]
   public function testApplyTo(BubbleableMetadata $metadata, array $render_array, array $expected): void {
@@ -284,8 +280,6 @@ class BubbleableMetadataTest extends UnitTestCase {
 
   /**
    * Tests create from render array.
-   *
-   * @legacy-covers ::createFromRenderArray
    */
   #[DataProvider('providerTestCreateFromRenderArray')]
   public function testCreateFromRenderArray(array $render_array, BubbleableMetadata $expected): void {
@@ -329,8 +323,6 @@ class BubbleableMetadataTest extends UnitTestCase {
 
   /**
    * Tests library asset merging.
-   *
-   * @legacy-covers ::mergeAttachments
    */
   public function testMergeAttachmentsLibraryMerging(): void {
     $a['#attached'] = [
@@ -499,8 +491,6 @@ class BubbleableMetadataTest extends UnitTestCase {
 
   /**
    * Tests html_head asset merging.
-   *
-   * @legacy-covers ::mergeAttachments
    */
   #[DataProvider('providerTestMergeAttachmentsHtmlHeadMerging')]
   public function testMergeAttachmentsHtmlHeadMerging($a, $b, $expected): void {
@@ -572,8 +562,6 @@ class BubbleableMetadataTest extends UnitTestCase {
 
   /**
    * Tests html_head_link asset merging.
-   *
-   * @legacy-covers ::mergeAttachments
    */
   #[DataProvider('providerTestMergeAttachmentsHtmlHeadLinkMerging')]
   public function testMergeAttachmentsHtmlHeadLinkMerging($a, $b, $expected): void {
@@ -638,8 +626,6 @@ class BubbleableMetadataTest extends UnitTestCase {
 
   /**
    * Tests http_header asset merging.
-   *
-   * @legacy-covers ::mergeAttachments
    */
   #[DataProvider('providerTestMergeAttachmentsHttpHeaderMerging')]
   public function testMergeAttachmentsHttpHeaderMerging($a, $b, $expected): void {
@@ -705,8 +691,6 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
-   *
-   * @legacy-covers ::addCacheableDependency
    */
   #[DataProvider('providerTestMerge')]
   public function testAddCacheableDependency(BubbleableMetadata $a, $b, BubbleableMetadata $expected): void {

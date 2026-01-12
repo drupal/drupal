@@ -179,8 +179,6 @@ class ViewExecutableTest extends UnitTestCase {
 
   /**
    * Tests get url with overridden url.
-   *
-   * @legacy-covers ::getUrl
    */
   public function testGetUrlWithOverriddenUrl(): void {
     $url = Url::fromRoute('example');
@@ -191,8 +189,6 @@ class ViewExecutableTest extends UnitTestCase {
 
   /**
    * Tests get url with path no placeholders.
-   *
-   * @legacy-covers ::getUrl
    */
   public function testGetUrlWithPathNoPlaceholders(): void {
     $this->displayHandler->expects($this->any())
@@ -213,8 +209,6 @@ class ViewExecutableTest extends UnitTestCase {
 
   /**
    * Tests get url without router display.
-   *
-   * @legacy-covers ::getUrl
    */
   public function testGetUrlWithoutRouterDisplay(): void {
     $this->displayHandler = $this->createMock('Drupal\views\Plugin\views\display\DisplayPluginInterface');
@@ -229,8 +223,6 @@ class ViewExecutableTest extends UnitTestCase {
 
   /**
    * Tests get url with placeholders and args.
-   *
-   * @legacy-covers ::getUrl
    */
   public function testGetUrlWithPlaceholdersAndArgs(): void {
     $this->displayHandler->expects($this->any())
@@ -257,8 +249,6 @@ class ViewExecutableTest extends UnitTestCase {
 
   /**
    * Tests get url with placeholders and without args.
-   *
-   * @legacy-covers ::getUrl
    */
   public function testGetUrlWithPlaceholdersAndWithoutArgs(): void {
     $this->displayHandler->expects($this->any())
@@ -285,8 +275,6 @@ class ViewExecutableTest extends UnitTestCase {
 
   /**
    * Tests get url with placeholders and without args and exception value.
-   *
-   * @legacy-covers ::getUrl
    */
   public function testGetUrlWithPlaceholdersAndWithoutArgsAndExceptionValue(): void {
     $this->displayHandler->expects($this->any())
@@ -324,8 +312,6 @@ class ViewExecutableTest extends UnitTestCase {
 
   /**
    * Tests build theme functions.
-   *
-   * @legacy-covers ::buildThemeFunctions
    */
   public function testBuildThemeFunctions(): void {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
@@ -370,8 +356,6 @@ class ViewExecutableTest extends UnitTestCase {
 
   /**
    * Tests generate handler id.
-   *
-   * @legacy-covers ::generateHandlerId
    */
   public function testGenerateHandlerId(): void {
     // Test the generateHandlerId() method.
@@ -387,8 +371,6 @@ class ViewExecutableTest extends UnitTestCase {
    *   The option to set on the View.
    * @param string $handler_type
    *   The handler type to set.
-   *
-   * @legacy-covers ::addHandler
    */
   #[DataProvider('addHandlerProvider')]
   public function testAddHandler($option, $handler_type): void {
@@ -430,8 +412,6 @@ class ViewExecutableTest extends UnitTestCase {
    *   The option to set on the View.
    * @param string $handler_type
    *   The handler type to set.
-   *
-   * @legacy-covers ::addHandler
    */
   #[DataProvider('addHandlerProvider')]
   public function testAddHandlerWithEntityField($option, $handler_type): void {
@@ -494,8 +474,6 @@ class ViewExecutableTest extends UnitTestCase {
    *   Whether the user has access to the attached display or not.
    * @param bool $expected_to_be_attached
    *   Expected result.
-   *
-   * @legacy-covers ::attachDisplays
    */
   #[DataProvider('providerAttachDisplays')]
   public function testAttachDisplays($display_enabled, $access_granted, $expected_to_be_attached): void {
@@ -747,8 +725,6 @@ class ViewExecutableTest extends UnitTestCase {
    *   Whether the display to test should be enabled.
    * @param bool $expected_result
    *   The expected result when calling execute().
-   *
-   * @legacy-covers ::execute
    */
   #[DataProvider('providerExecuteReturn')]
   public function testExecuteReturn($display_enabled, $expected_result): void {

@@ -69,8 +69,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests get component invalid uuid.
-   *
-   * @legacy-covers ::getComponent
    */
   public function testGetComponentInvalidUuid(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -80,8 +78,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests get component.
-   *
-   * @legacy-covers ::getComponent
    */
   public function testGetComponent(): void {
     $expected = new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']);
@@ -126,8 +122,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests insert after component.
-   *
-   * @legacy-covers ::insertAfterComponent
    */
   public function testInsertAfterComponent(): void {
     $expected = [
@@ -143,8 +137,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests insert after component valid uuid region mismatch.
-   *
-   * @legacy-covers ::insertAfterComponent
    */
   public function testInsertAfterComponentValidUuidRegionMismatch(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -154,8 +146,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests insert after component invalid uuid.
-   *
-   * @legacy-covers ::insertAfterComponent
    */
   public function testInsertAfterComponentInvalidUuid(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -183,8 +173,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests insert component append.
-   *
-   * @legacy-covers ::insertComponent
    */
   public function testInsertComponentAppend(): void {
     $expected = [
@@ -200,8 +188,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests insert component invalid delta.
-   *
-   * @legacy-covers ::insertComponent
    */
   public function testInsertComponentInvalidDelta(): void {
     $this->expectException(\OutOfBoundsException::class);
@@ -227,8 +213,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests get third party settings.
-   *
-   * @legacy-covers ::getThirdPartySettings
    */
   #[DataProvider('providerTestGetThirdPartySettings')]
   public function testGetThirdPartySettings($provider, $expected): void {
@@ -257,8 +241,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests get third party setting.
-   *
-   * @legacy-covers ::getThirdPartySetting
    */
   #[DataProvider('providerTestGetThirdPartySetting')]
   public function testGetThirdPartySetting(string $provider, string $key, ?string $expected, mixed $default = FALSE): void {
@@ -306,8 +288,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests set third party setting.
-   *
-   * @legacy-covers ::setThirdPartySetting
    */
   #[DataProvider('providerTestSetThirdPartySetting')]
   public function testSetThirdPartySetting($provider, $key, $value, $expected): void {
@@ -352,8 +332,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests unset third party setting.
-   *
-   * @legacy-covers ::unsetThirdPartySetting
    */
   #[DataProvider('providerTestUnsetThirdPartySetting')]
   public function testUnsetThirdPartySetting($provider, $key, $expected): void {
@@ -397,8 +375,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests get third party providers.
-   *
-   * @legacy-covers ::getThirdPartyProviders
    */
   public function testGetThirdPartyProviders(): void {
     $this->assertSame(['bad_judgement', 'hunt_and_peck'], $this->section->getThirdPartyProviders());
@@ -408,8 +384,6 @@ class SectionTest extends UnitTestCase {
 
   /**
    * Tests get layout.
-   *
-   * @legacy-covers ::getLayout
    */
   #[DataProvider('providerTestGetLayout')]
   public function testGetLayout(array $contexts, bool $should_context_apply): void {

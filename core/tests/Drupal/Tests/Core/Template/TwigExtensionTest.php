@@ -249,8 +249,6 @@ class TwigExtensionTest extends UnitTestCase {
 
   /**
    * Tests safe join.
-   *
-   * @legacy-covers ::safeJoin
    */
   public function testSafeJoin(): void {
     $this->renderer->expects($this->any())
@@ -377,8 +375,6 @@ class TwigExtensionTest extends UnitTestCase {
 
   /**
    * Tests render var early return.
-   *
-   * @legacy-covers ::renderVar
    */
   #[DataProvider('providerTestRenderVarEarlyReturn')]
   public function testRenderVarEarlyReturn($expected, $input): void {
@@ -406,8 +402,6 @@ class TwigExtensionTest extends UnitTestCase {
 
   /**
    * Tests creating attributes within a Twig template.
-   *
-   * @legacy-covers ::createAttribute
    */
   public function testCreateAttribute(): void {
     $name = '__string_template_test_1__';

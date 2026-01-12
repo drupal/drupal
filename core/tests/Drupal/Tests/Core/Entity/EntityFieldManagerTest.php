@@ -420,8 +420,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
   /**
    * Tests the getBaseFieldDefinitions() method with caching.
-   *
-   * @legacy-covers ::getBaseFieldDefinitions
    */
   public function testGetBaseFieldDefinitionsWithCaching(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition();
@@ -451,8 +449,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
   /**
    * Tests the getFieldDefinitions() method with caching.
-   *
-   * @legacy-covers ::getFieldDefinitions
    */
   public function testGetFieldDefinitionsWithCaching(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition(FALSE, 'id');
@@ -485,8 +481,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
   /**
    * Tests the getFieldStorageDefinitions() method with caching.
-   *
-   * @legacy-covers ::getFieldStorageDefinitions
    */
   public function testGetFieldStorageDefinitionsWithCaching(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition(TRUE, 'id');
@@ -660,8 +654,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
   /**
    * Tests the clearCachedFieldDefinitions() method.
-   *
-   * @legacy-covers ::clearCachedFieldDefinitions
    */
   public function testClearCachedFieldDefinitions(): void {
     $this->setUpEntityTypeDefinitions();
@@ -676,8 +668,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
   /**
    * Tests get extra fields.
-   *
-   * @legacy-covers ::getExtraFields
    */
   public function testGetExtraFields(): void {
     $this->setUpEntityTypeDefinitions();
@@ -719,8 +709,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
   /**
    * Tests get field map.
-   *
-   * @legacy-covers ::getFieldMap
    */
   public function testGetFieldMap(): void {
     $this->entityTypeBundleInfo->getBundleInfo('test_entity_type')->willReturn([])->shouldBeCalled();
@@ -797,8 +785,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
   /**
    * Tests get field map from cache.
-   *
-   * @legacy-covers ::getFieldMap
    */
   public function testGetFieldMapFromCache(): void {
     $expected = [
@@ -823,8 +809,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
   /**
    * Tests get field map by field type.
-   *
-   * @legacy-covers ::getFieldMapByFieldType
    */
   public function testGetFieldMapByFieldType(): void {
     // Set up a content entity type.

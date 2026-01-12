@@ -209,8 +209,6 @@ class SourceEditingPluginTest extends UnitTestCase {
 
   /**
    * Tests get dynamic plugin config.
-   *
-   * @legacy-covers ::getDynamicPluginConfig
    */
   #[DataProvider('providerGetDynamicPluginConfig')]
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {

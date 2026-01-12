@@ -272,8 +272,6 @@ class EntityTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies with placeholder.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   #[DataProvider('providerTestTokens')]
   public function testCalculateDependenciesWithPlaceholder($token, $id): void {
@@ -289,8 +287,6 @@ class EntityTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies with uuid.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithUuid(): void {
     $this->setupEntityTypeManager();
@@ -323,8 +319,6 @@ class EntityTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies with entity id.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithEntityId(): void {
     $this->setupEntityTypeManager();

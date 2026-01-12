@@ -26,8 +26,6 @@ class StreamFileUploaderTest extends KernelTestBase {
 
   /**
    * Tests write stream to file success.
-   *
-   * @legacy-covers ::writeStreamToFile
    */
   public function testWriteStreamToFileSuccess(): void {
     vfsStream::newFile('foo.txt')
@@ -44,8 +42,6 @@ class StreamFileUploaderTest extends KernelTestBase {
 
   /**
    * Tests write stream to file with smaller bytes.
-   *
-   * @legacy-covers ::writeStreamToFile
    */
   public function testWriteStreamToFileWithSmallerBytes(): void {
     $content = $this->randomString(2048);

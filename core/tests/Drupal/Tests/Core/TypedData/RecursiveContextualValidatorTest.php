@@ -96,8 +96,6 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
 
   /**
    * Ensures that passing an explicit group is not supported.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateWithGroups(): void {
     $this->expectException(\LogicException::class);
@@ -106,8 +104,6 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
 
   /**
    * Ensures that passing a non typed data value is not supported.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateWithoutTypedData(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -240,8 +236,6 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate property with custom group.
-   *
-   * @legacy-covers ::validateProperty
    */
   public function testValidatePropertyWithCustomGroup(): void {
     $tree = [
@@ -257,8 +251,6 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate property with invalid objects.
-   *
-   * @legacy-covers ::validateProperty
    */
   #[DataProvider('providerTestValidatePropertyWithInvalidObjects')]
   public function testValidatePropertyWithInvalidObjects($object): void {

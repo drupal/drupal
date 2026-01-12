@@ -262,8 +262,6 @@ class WorkspaceTrackerTest extends KernelTestBase {
 
   /**
    * Tests moving an entity with multiple revisions between workspaces.
-   *
-   * @legacy-covers ::moveTrackedEntities
    */
   public function testMoveTrackedEntitiesWithMultipleRevisions(): void {
     $entity_type_id = 'entity_test_mulrevpub';
@@ -303,8 +301,6 @@ class WorkspaceTrackerTest extends KernelTestBase {
 
   /**
    * Tests moving all entities of a specific type while leaving others.
-   *
-   * @legacy-covers ::moveTrackedEntities
    */
   public function testMoveTrackedEntitiesOfSpecificType(): void {
     $entity_type_id = 'entity_test_mulrevpub';
@@ -372,8 +368,6 @@ class WorkspaceTrackerTest extends KernelTestBase {
 
   /**
    * Tests validation for moveTrackedEntities().
-   *
-   * @legacy-covers ::moveTrackedEntities
    */
   #[DataProvider('providerMoveTrackedEntitiesValidation')]
   public function testMoveTrackedEntitiesValidation(

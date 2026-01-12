@@ -49,8 +49,6 @@ class TimeTest extends TestCase {
 
   /**
    * Tests the getRequestTime method.
-   *
-   * @legacy-covers ::getRequestTime
    */
   public function testGetRequestTime(): void {
     $expected = 12345678;
@@ -68,8 +66,6 @@ class TimeTest extends TestCase {
 
   /**
    * Tests the getRequestMicroTime method.
-   *
-   * @legacy-covers ::getRequestMicroTime
    */
   public function testGetRequestMicroTime(): void {
     $expected = 1234567.89;
@@ -87,8 +83,6 @@ class TimeTest extends TestCase {
 
   /**
    * Tests get request time no request.
-   *
-   * @legacy-covers ::getRequestTime
    */
   public function testGetRequestTimeNoRequest(): void {
     // With no request, and no global variable, we expect to get the int part
@@ -102,8 +96,6 @@ class TimeTest extends TestCase {
 
   /**
    * Tests get request micro time no request.
-   *
-   * @legacy-covers ::getRequestMicroTime
    */
   public function testGetRequestMicroTimeNoRequest(): void {
     $expected = 1234567.89;
@@ -115,8 +107,6 @@ class TimeTest extends TestCase {
 
   /**
    * Tests the getCurrentTime method.
-   *
-   * @legacy-covers ::getCurrentTime
    */
   public function testGetCurrentTime(): void {
     $expected = 12345678;
@@ -125,8 +115,6 @@ class TimeTest extends TestCase {
 
   /**
    * Tests the getCurrentMicroTime method.
-   *
-   * @legacy-covers ::getCurrentMicroTime
    */
   public function testGetCurrentMicroTime(): void {
     $expected = 1234567.89;

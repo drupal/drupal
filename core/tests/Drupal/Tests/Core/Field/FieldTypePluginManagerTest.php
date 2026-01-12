@@ -80,8 +80,6 @@ class FieldTypePluginManagerTest extends UnitTestCase {
 
   /**
    * Tests get grouped definitions.
-   *
-   * @legacy-covers ::getGroupedDefinitions
    */
   public function testGetGroupedDefinitions(): void {
     $this->discovery->getDefinitions()->willReturn([
@@ -135,8 +133,6 @@ class FieldTypePluginManagerTest extends UnitTestCase {
 
   /**
    * Tests get grouped definitions invalid.
-   *
-   * @legacy-covers ::getGroupedDefinitions
    */
   public function testGetGroupedDefinitionsInvalid(): void {
     $this->discovery->getDefinitions()->willReturn([
@@ -177,8 +173,6 @@ class FieldTypePluginManagerTest extends UnitTestCase {
 
   /**
    * Tests get grouped definitions empty.
-   *
-   * @legacy-covers ::getGroupedDefinitions
    */
   public function testGetGroupedDefinitionsEmpty(): void {
     $this->fieldTypeCategoryManager->getDefinitions()->willReturn([]);

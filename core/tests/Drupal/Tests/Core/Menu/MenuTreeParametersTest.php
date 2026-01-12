@@ -43,8 +43,6 @@ class MenuTreeParametersTest extends UnitTestCase {
 
   /**
    * Tests setMinDepth().
-   *
-   * @legacy-covers ::setMinDepth
    */
   #[DataProvider('providerTestSetMinDepth')]
   public function testSetMinDepth($min_depth, $expected): void {
@@ -81,8 +79,6 @@ class MenuTreeParametersTest extends UnitTestCase {
 
   /**
    * Tests addCondition().
-   *
-   * @legacy-covers ::addCondition
    */
   public function testAddCondition(): void {
     $parameters = new MenuTreeParameters();
@@ -119,8 +115,6 @@ class MenuTreeParametersTest extends UnitTestCase {
 
   /**
    * Tests onlyEnabledLinks().
-   *
-   * @legacy-covers ::onlyEnabledLinks
    */
   public function testOnlyEnabledLinks(): void {
     $parameters = new MenuTreeParameters();
@@ -130,8 +124,6 @@ class MenuTreeParametersTest extends UnitTestCase {
 
   /**
    * Tests setTopLevelOnly().
-   *
-   * @legacy-covers ::setTopLevelOnly
    */
   public function testSetTopLevelOnly(): void {
     $parameters = new MenuTreeParameters();
@@ -141,8 +133,6 @@ class MenuTreeParametersTest extends UnitTestCase {
 
   /**
    * Tests excludeRoot().
-   *
-   * @legacy-covers ::excludeRoot
    */
   public function testExcludeRoot(): void {
     $parameters = new MenuTreeParameters();

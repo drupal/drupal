@@ -23,7 +23,7 @@ class AnnotationBridgeDecoratorTest extends TestCase {
   use ProphecyTrait;
 
   /**
-   * @legacy-covers ::getDefinitions
+   * Tests get definitions.
    */
   public function testGetDefinitions(): void {
     $definitions = [];

@@ -20,8 +20,6 @@ class SemVerTest extends TestCase {
 
   /**
    * Tests minimize constraints.
-   *
-   * @legacy-covers ::minimizeConstraints
    */
   #[TestWith(["^6.1", "^6.3", "^6.3"])]
   #[TestWith(["*", "^6.3", "^6.3"])]
@@ -34,8 +32,6 @@ class SemVerTest extends TestCase {
 
   /**
    * Tests minimize constraints which are not subsets.
-   *
-   * @legacy-covers ::minimizeConstraints
    */
   #[TestWith(["^6.1 || ^4.0", "^6.3 || ^7.4", ">=6.3.0.0-dev, <7.0.0.0-dev"])]
   public function testMinimizeConstraintsWhichAreNotSubsets(string $constraint_a, string $constraint_b, string $expected): void {
@@ -44,8 +40,6 @@ class SemVerTest extends TestCase {
 
   /**
    * Tests minimize constraints which do not intersect.
-   *
-   * @legacy-covers ::minimizeConstraints
    */
   #[TestWith(["^6.1", "^5.1", ">=6.3.0.0-dev, <7.0.0.0-dev"])]
   public function testMinimizeConstraintsWhichDoNotIntersect(string $constraint_a, string $constraint_b, string $expected): void {

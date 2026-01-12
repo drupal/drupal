@@ -28,8 +28,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getProcessPlugins()
-   *
-   * @legacy-covers ::getProcessPlugins
    */
   public function testGetProcessPlugins(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
@@ -38,8 +36,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getProcessPlugins() throws an exception.
-   *
-   * @legacy-covers ::getProcessPlugins
    */
   public function testGetProcessPluginsException(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
@@ -53,8 +49,6 @@ class MigrationTest extends KernelTestBase {
    *
    * @param array $process
    *   The migration process pipeline.
-   *
-   * @legacy-covers ::getProcessPlugins
    */
   #[DataProvider('getProcessPluginsExceptionMessageProvider')]
   public function testGetProcessPluginsExceptionMessage(array $process): void {
@@ -84,8 +78,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getMigrationDependencies()
-   *
-   * @legacy-covers ::getMigrationDependencies
    */
   public function testGetMigrationDependencies(): void {
     $plugin_manager = \Drupal::service('plugin.manager.migration');
@@ -141,8 +133,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getDestinationIds()
-   *
-   * @legacy-covers ::getDestinationIds
    */
   public function testGetDestinationIds(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration(['destinationIds' => ['foo' => 'bar']]);
@@ -153,8 +143,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getDestinationPlugin()
-   *
-   * @legacy-covers ::getDestinationPlugin
    */
   public function testGetDestinationPlugin(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration(['destination' => ['no_stub' => TRUE]]);

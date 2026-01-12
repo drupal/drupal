@@ -140,8 +140,6 @@ class LocalActionManagerTest extends UnitTestCase {
 
   /**
    * Tests get title.
-   *
-   * @legacy-covers ::getTitle
    */
   public function testGetTitle(): void {
     $local_action = $this->createMock('Drupal\Core\Menu\LocalActionInterface');
@@ -159,8 +157,6 @@ class LocalActionManagerTest extends UnitTestCase {
 
   /**
    * Tests get actions for route.
-   *
-   * @legacy-covers ::getActionsForRoute
    */
   #[DataProvider('getActionsForRouteProvider')]
   public function testGetActionsForRoute($route_appears, array $plugin_definitions, array $expected_actions): void {

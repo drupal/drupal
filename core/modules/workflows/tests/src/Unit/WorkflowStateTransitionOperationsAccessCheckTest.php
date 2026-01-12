@@ -25,8 +25,6 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests the access method correctly proxies to the entity access system.
-   *
-   * @legacy-covers ::access
    */
   #[DataProvider('accessTestCases')]
   public function testAccess($route_requirement, $resulting_entity_access_check, $route_parameters = []): void {

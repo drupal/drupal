@@ -51,8 +51,6 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate no theme dependency.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateNoThemeDependency(): void {
     $this->themeExtensionList->getAllInstalledInfo()->willReturn([
@@ -74,8 +72,6 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate one theme dependency.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateOneThemeDependency(): void {
     $module = 'single_module';
@@ -115,8 +111,6 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate two theme dependencies.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateTwoThemeDependencies(): void {
     $module = 'popular_module';

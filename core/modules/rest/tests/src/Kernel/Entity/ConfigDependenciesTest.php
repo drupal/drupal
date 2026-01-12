@@ -28,8 +28,6 @@ class ConfigDependenciesTest extends KernelTestBase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   #[DataProvider('providerBasicDependencies')]
   public function testCalculateDependencies(array $configuration): void {

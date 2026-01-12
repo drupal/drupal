@@ -63,8 +63,6 @@ class LazyRouteCollectionTest extends UnitTestCase {
 
   /**
    * Tests count.
-   *
-   * @legacy-covers ::count
    */
   public function testCount(): void {
     $this->routeProvider
@@ -77,8 +75,6 @@ class LazyRouteCollectionTest extends UnitTestCase {
 
   /**
    * Search for a both an existing and a non-existing route.
-   *
-   * @legacy-covers ::get
    */
   public function testGetName(): void {
     // Hit.

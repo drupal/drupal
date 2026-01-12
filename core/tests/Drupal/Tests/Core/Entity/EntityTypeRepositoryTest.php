@@ -97,8 +97,6 @@ class EntityTypeRepositoryTest extends UnitTestCase {
 
   /**
    * Tests the getEntityTypeLabels() method.
-   *
-   * @legacy-covers ::getEntityTypeLabels
    */
   public function testGetEntityTypeLabels(): void {
     $apple = $this->prophesize(EntityTypeInterface::class);
@@ -123,8 +121,6 @@ class EntityTypeRepositoryTest extends UnitTestCase {
 
   /**
    * Tests get entity type from class.
-   *
-   * @legacy-covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClass(): void {
     $apple = $this->prophesize(EntityTypeInterface::class);
@@ -153,8 +149,6 @@ class EntityTypeRepositoryTest extends UnitTestCase {
 
   /**
    * Tests get entity type from class no match.
-   *
-   * @legacy-covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClassNoMatch(): void {
     $apple = $this->prophesize(EntityTypeInterface::class);
@@ -177,8 +171,6 @@ class EntityTypeRepositoryTest extends UnitTestCase {
 
   /**
    * Tests get entity type from class ambiguous.
-   *
-   * @legacy-covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClassAmbiguous(): void {
     $jazz = $this->prophesize(EntityTypeInterface::class);
@@ -203,8 +195,6 @@ class EntityTypeRepositoryTest extends UnitTestCase {
 
   /**
    * Tests get entity type from class ambiguous bundle class.
-   *
-   * @legacy-covers ::getEntityTypeFromClass
    */
   public function testGetEntityTypeFromClassAmbiguousBundleClass(): void {
     $blackcurrant = $this->prophesize(EntityTypeInterface::class);

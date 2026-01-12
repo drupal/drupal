@@ -93,8 +93,6 @@ class DiffOpOutputBuilderTest extends TestCase {
 
   /**
    * Tests whether op classes returned match expectations.
-   *
-   * @legacy-covers ::toOpsArray
    */
   #[DataProvider('provideTestDiff')]
   public function testToOpsArray(array $expected, array $from, array $to): void {
@@ -105,7 +103,7 @@ class DiffOpOutputBuilderTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getDiff
+   * Tests get diff.
    */
   #[DataProvider('provideTestDiff')]
   public function testGetDiff(array $expected, array $from, array $to): void {

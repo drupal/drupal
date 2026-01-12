@@ -27,8 +27,6 @@ class PluginDependencyTraitTest extends UnitTestCase {
 
   /**
    * Tests get plugin dependencies.
-   *
-   * @legacy-covers ::getPluginDependencies
    */
   #[DataProvider('providerTestPluginDependencies')]
   public function testGetPluginDependencies(ProphecyInterface $plugin, $definition, array $expected): void {
@@ -60,8 +58,6 @@ class PluginDependencyTraitTest extends UnitTestCase {
    *   A plugin definition.
    * @param array $expected
    *   The expected dependencies.
-   *
-   * @legacy-covers ::calculatePluginDependencies
    */
   #[DataProvider('providerTestPluginDependencies')]
   public function testCalculatePluginDependencies(ProphecyInterface $plugin, $definition, array $expected): void {

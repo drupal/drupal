@@ -24,8 +24,6 @@ class CryptTest extends TestCase {
    *   Data to hash.
    * @param string $expected_hash
    *   Expected result from hashing $data.
-   *
-   * @legacy-covers ::hashBase64
    */
   #[DataProvider('providerTestHashBase64')]
   public function testHashBase64($data, $expected_hash): void {
@@ -42,8 +40,6 @@ class CryptTest extends TestCase {
    *   Key to use in hashing process.
    * @param string $expected_hmac
    *   Expected result from hashing $data using $key.
-   *
-   * @legacy-covers ::hmacBase64
    */
   #[DataProvider('providerTestHmacBase64')]
   public function testHmacBase64($data, $key, $expected_hmac): void {
@@ -58,8 +54,6 @@ class CryptTest extends TestCase {
    *   Data to hash.
    * @param string $key
    *   Key to use in hashing process.
-   *
-   * @legacy-covers ::hmacBase64
    */
   #[DataProvider('providerTestHmacBase64Invalid')]
   public function testHmacBase64Invalid($data, $key): void {

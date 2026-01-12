@@ -78,8 +78,6 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on exception.
-   *
-   * @legacy-covers ::onException
    */
   public function testOnException(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
@@ -105,8 +103,6 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on exception new build id.
-   *
-   * @legacy-covers ::onException
    */
   public function testOnExceptionNewBuildId(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
@@ -132,8 +128,6 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on exception other class.
-   *
-   * @legacy-covers ::onException
    */
   public function testOnExceptionOtherClass(): void {
     $request = new Request();
@@ -147,8 +141,6 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on exception response builder exception.
-   *
-   * @legacy-covers ::onException
    */
   public function testOnExceptionResponseBuilderException(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
@@ -172,8 +164,6 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on exception broken post request.
-   *
-   * @legacy-covers ::onException
    */
   public function testOnExceptionBrokenPostRequest(): void {
     $this->formAjaxResponseBuilder->expects($this->never())

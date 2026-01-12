@@ -20,8 +20,6 @@ class SkipOpTest extends TestCase {
 
   /**
    * Tests process.
-   *
-   * @legacy-covers ::process
    */
   public function testProcess(): void {
     $fixtures = new Fixtures();

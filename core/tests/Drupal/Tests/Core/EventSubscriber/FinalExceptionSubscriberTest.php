@@ -23,8 +23,6 @@ class FinalExceptionSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on exception with unknown format.
-   *
-   * @legacy-covers ::onException
    */
   public function testOnExceptionWithUnknownFormat(): void {
     $config_factory = $this->getConfigFactoryStub();

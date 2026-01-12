@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ReverseContainerTest extends TestCase {
 
   /**
-   * @legacy-covers ::getId
+   * Tests get id.
    */
   public function testGetId(): void {
     $container = new ContainerBuilder();
@@ -39,7 +39,7 @@ class ReverseContainerTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::recordContainer
+   * Tests record container.
    */
   public function testRecordContainer(): void {
     $container = new ContainerBuilder();

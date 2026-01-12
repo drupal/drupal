@@ -319,8 +319,6 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * Tests get driver class.
-   *
-   * @legacy-covers ::getDriverClass
    */
   #[DataProvider('providerGetDriverClass')]
   #[IgnoreDeprecations]
@@ -475,8 +473,6 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * Tests escape table.
-   *
-   * @legacy-covers ::escapeTable
    */
   #[DataProvider('providerEscapeTables')]
   public function testEscapeTable($expected, $name, array $identifier_quote = ['"', '"']): void {
@@ -508,8 +504,6 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * Tests escape alias.
-   *
-   * @legacy-covers ::escapeAlias
    */
   #[DataProvider('providerEscapeAlias')]
   public function testEscapeAlias($expected, $name, array $identifier_quote = ['"', '"']): void {
@@ -544,8 +538,6 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * Tests escape field.
-   *
-   * @legacy-covers ::escapeField
    */
   #[DataProvider('providerEscapeFields')]
   public function testEscapeField($expected, $name, array $identifier_quote = ['"', '"']): void {
@@ -575,8 +567,6 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * Tests escape database.
-   *
-   * @legacy-covers ::escapeDatabase
    */
   #[DataProvider('providerEscapeDatabase')]
   public function testEscapeDatabase($expected, $name, array $identifier_quote = ['"', '"']): void {

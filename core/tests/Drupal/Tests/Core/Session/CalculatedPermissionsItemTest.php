@@ -42,8 +42,6 @@ class CalculatedPermissionsItemTest extends UnitTestCase {
 
   /**
    * Tests the permission check when the admin flag is not set.
-   *
-   * @legacy-covers ::hasPermission
    */
   #[Depends('testConstructor')]
   public function testHasPermission(): void {
@@ -54,8 +52,6 @@ class CalculatedPermissionsItemTest extends UnitTestCase {
 
   /**
    * Tests the permission check when the admin flag is set.
-   *
-   * @legacy-covers ::hasPermission
    */
   #[Depends('testConstructor')]
   public function testHasPermissionWithAdminFlag(): void {

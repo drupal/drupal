@@ -40,8 +40,6 @@ class BaseFieldOverrideTest extends KernelTestBase {
 
   /**
    * Tests get class.
-   *
-   * @legacy-covers ::getClass
    */
   #[DataProvider('getClassTestCases')]
   public function testGetClass($field_type, $base_field_class, $expected_override_class): void {

@@ -41,7 +41,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getId
+   * Tests get id.
    */
   public function testGetId(): void {
     $plugin = new Plugin(id: 'example');

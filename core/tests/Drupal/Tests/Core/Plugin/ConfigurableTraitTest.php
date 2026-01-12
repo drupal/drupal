@@ -21,8 +21,6 @@ class ConfigurableTraitTest extends TestCase {
 
   /**
    * Tests ConfigurableTrait::defaultConfiguration.
-   *
-   * @legacy-covers ::defaultConfiguration
    */
   public function testDefaultConfiguration(): void {
     /** @var \Drupal\Component\Plugin\ConfigurableInterface $configurable_plugin */
@@ -32,8 +30,6 @@ class ConfigurableTraitTest extends TestCase {
 
   /**
    * Tests ConfigurableTrait::getConfiguration.
-   *
-   * @legacy-covers ::getConfiguration
    */
   public function testGetConfiguration(): void {
     $test_configuration = [
@@ -58,8 +54,6 @@ class ConfigurableTraitTest extends TestCase {
    *   The configuration to test.
    * @param array $final_configuration
    *   The expected final plugin configuration.
-   *
-   * @legacy-covers ::setConfiguration
    */
   #[DataProvider('setConfigurationDataProvider')]
   public function testSetConfiguration(array $default_configuration, array $test_configuration, array $final_configuration): void {

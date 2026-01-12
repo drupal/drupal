@@ -24,8 +24,6 @@ class PagerManagerTest extends KernelTestBase {
 
   /**
    * Tests get updated parameters.
-   *
-   * @legacy-covers ::getUpdatedParameters
    */
   public function testGetUpdatedParameters(): void {
     $element = 2;
@@ -53,8 +51,6 @@ class PagerManagerTest extends KernelTestBase {
 
   /**
    * Tests find page.
-   *
-   * @legacy-covers ::findPage
    */
   public function testFindPage(): void {
     $request = Request::create('http://example.com', 'GET', ['page' => '0,10']);
@@ -71,8 +67,6 @@ class PagerManagerTest extends KernelTestBase {
 
   /**
    * Tests get max pager element id.
-   *
-   * @legacy-covers ::getMaxPagerElementId
    */
   #[DataProvider('providerTestGetMaxPagerElementId')]
   public function testGetMaxPagerElementId(array $elements, int $expected_max_element_id): void {

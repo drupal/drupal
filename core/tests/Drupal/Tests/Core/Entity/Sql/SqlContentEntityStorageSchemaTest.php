@@ -1185,8 +1185,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
   /**
    * Tests requires entity data migration.
-   *
-   * @legacy-covers ::requiresEntityDataMigration
    */
   #[DataProvider('providerTestRequiresEntityDataMigration')]
   public function testRequiresEntityDataMigration(string $storage_class, bool|null $original_storage_has_data, bool $shared_table_structure_changed, bool $migration_required): void {
@@ -1265,8 +1263,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
   /**
    * Tests requires entity storage schema changes.
-   *
-   * @legacy-covers ::requiresEntityStorageSchemaChanges
    */
   #[DataProvider('providerTestRequiresEntityStorageSchemaChanges')]
   public function testRequiresEntityStorageSchemaChanges(bool $requires_change, bool $change_schema, bool $change_shared_table, ?string $method = NULL): void {
@@ -1578,8 +1574,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   The tested value.
    * @param array $schema
    *   The schema for the table column.
-   *
-   * @legacy-covers ::castValue
    */
   #[DataProvider('providerSchemaCastValue')]
   public function testCastValue($expected, $value, array $schema): void {

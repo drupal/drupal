@@ -32,8 +32,6 @@ class ExtensionMimeTypeGuesserLegacyTest extends KernelTestBase {
 
   /**
    * Tests mapping of mimetypes from filenames.
-   *
-   * @legacy-covers ::guessMimeType
    */
   public function testGuessMimeType(): void {
     $prefixes = ['public://', 'private://', 'temporary://', 'dummy-remote://'];

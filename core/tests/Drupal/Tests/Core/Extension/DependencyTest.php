@@ -20,8 +20,6 @@ class DependencyTest extends UnitTestCase {
 
   /**
    * Tests create from string.
-   *
-   * @legacy-covers ::createFromString
    */
   #[DataProvider('providerCreateFromString')]
   public function testCreateFromString($string, $expected_name, $expected_project, $expected_constraint): void {
@@ -45,8 +43,6 @@ class DependencyTest extends UnitTestCase {
 
   /**
    * Tests is compatible.
-   *
-   * @legacy-covers ::isCompatible
    */
   public function testIsCompatible(): void {
     $dependency = new Dependency('paragraphs_demo', 'paragraphs', '>8.x-1.1');

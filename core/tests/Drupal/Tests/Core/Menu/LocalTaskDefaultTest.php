@@ -86,8 +86,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests get route parameters for static route.
-   *
-   * @legacy-covers ::getRouteParameters
    */
   public function testGetRouteParametersForStaticRoute(): void {
     $this->pluginDefinition = [
@@ -107,8 +105,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests get route parameters in plugin definitions.
-   *
-   * @legacy-covers ::getRouteParameters
    */
   public function testGetRouteParametersInPluginDefinitions(): void {
     $this->pluginDefinition = [
@@ -129,8 +125,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests get route parameters for dynamic route with non upcasted parameters.
-   *
-   * @legacy-covers ::getRouteParameters
    */
   public function testGetRouteParametersForDynamicRouteWithNonUpcastedParameters(): void {
     $this->pluginDefinition = [
@@ -152,8 +146,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests the getRouteParameters method for a route with upcasted parameters.
-   *
-   * @legacy-covers ::getRouteParameters
    */
   public function testGetRouteParametersForDynamicRouteWithUpcastedParameters(): void {
     $this->pluginDefinition = [
@@ -174,8 +166,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests the getRouteParameters method for a route with upcasted parameters.
-   *
-   * @legacy-covers ::getRouteParameters
    */
   public function testGetRouteParametersForDynamicRouteWithUpcastedParametersEmptyRawParameters(): void {
     $this->pluginDefinition = [
@@ -239,8 +229,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests get weight.
-   *
-   * @legacy-covers ::getWeight
    */
   #[DataProvider('providerTestGetWeight')]
   public function testGetWeight($plugin_definition, $plugin_id, $expected_weight): void {
@@ -267,8 +255,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests get title.
-   *
-   * @legacy-covers ::getTitle
    */
   public function testGetTitle(): void {
     $this->pluginDefinition['title'] = (new TranslatableMarkup('Example', [], [], $this->stringTranslation));
@@ -283,8 +269,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests get title with context.
-   *
-   * @legacy-covers ::getTitle
    */
   public function testGetTitleWithContext(): void {
     $title = 'Example';
@@ -301,8 +285,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests get title with title arguments.
-   *
-   * @legacy-covers ::getTitle
    */
   public function testGetTitleWithTitleArguments(): void {
     $this->pluginDefinition['title'] = (new TranslatableMarkup('Example @test', ['@test' => 'value'], [], $this->stringTranslation));
@@ -317,8 +299,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
   /**
    * Tests get options.
-   *
-   * @legacy-covers ::getOptions
    */
   public function testGetOptions(): void {
     $this->pluginDefinition['options'] = [

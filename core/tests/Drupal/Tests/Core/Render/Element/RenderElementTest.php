@@ -50,8 +50,6 @@ class RenderElementTest extends UnitTestCase {
 
   /**
    * Tests pre render ajax form.
-   *
-   * @legacy-covers ::preRenderAjaxForm
    */
   public function testPreRenderAjaxForm(): void {
     $request = Request::create('/test');
@@ -89,8 +87,6 @@ class RenderElementTest extends UnitTestCase {
 
   /**
    * Tests pre render ajax form with query options.
-   *
-   * @legacy-covers ::preRenderAjaxForm
    */
   public function testPreRenderAjaxFormWithQueryOptions(): void {
     $request = Request::create('/test');
@@ -135,8 +131,6 @@ class RenderElementTest extends UnitTestCase {
 
   /**
    * Tests set attributes.
-   *
-   * @legacy-covers ::setAttributes
    */
   #[DataProvider('providerTestSetAttributes')]
   public function testSetAttributes(array $element, array $class, array $expected): void {

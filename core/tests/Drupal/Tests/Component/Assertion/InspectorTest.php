@@ -22,8 +22,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all members are strings.
-   *
-   * @legacy-covers ::assertAllStrings
    */
   #[DataProvider('providerTestAssertAllStrings')]
   public function testAssertAllStrings($input, $expected): void {
@@ -58,8 +56,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all members are strings or objects with __toString().
-   *
-   * @legacy-covers ::assertAllStringable
    */
   public function testAssertAllStringable(): void {
     $this->assertTrue(Inspector::assertAllStringable([]));
@@ -70,8 +66,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all members are arrays.
-   *
-   * @legacy-covers ::assertAllArrays
    */
   public function testAssertAllArrays(): void {
     $this->assertTrue(Inspector::assertAllArrays([]));
@@ -81,8 +75,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting array is 0-indexed - the strict definition of array.
-   *
-   * @legacy-covers ::assertStrictArray
    */
   public function testAssertStrictArray(): void {
     $this->assertTrue(Inspector::assertStrictArray([]));
@@ -92,8 +84,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all members are strict arrays.
-   *
-   * @legacy-covers ::assertAllStrictArrays
    */
   public function testAssertAllStrictArrays(): void {
     $this->assertTrue(Inspector::assertAllStrictArrays([]));
@@ -103,8 +93,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all members have specified keys.
-   *
-   * @legacy-covers ::assertAllHaveKey
    */
   public function testAssertAllHaveKey(): void {
     $this->assertTrue(Inspector::assertAllHaveKey([]));
@@ -116,8 +104,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all members are integers.
-   *
-   * @legacy-covers ::assertAllIntegers
    */
   public function testAssertAllIntegers(): void {
     $this->assertTrue(Inspector::assertAllIntegers([]));
@@ -128,8 +114,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all members are floating point variables.
-   *
-   * @legacy-covers ::assertAllFloat
    */
   public function testAssertAllFloat(): void {
     $this->assertTrue(Inspector::assertAllFloat([]));
@@ -177,8 +161,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all arguments are numbers or strings castable to numbers.
-   *
-   * @legacy-covers ::assertAllNumeric
    */
   public function testAssertAllNumeric(): void {
     $this->assertTrue(Inspector::assertAllNumeric([1, '2', 3.14]));
@@ -187,8 +169,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting strstr() or stristr() match.
-   *
-   * @legacy-covers ::assertAllMatch
    */
   public function testAssertAllMatch(): void {
     $this->assertTrue(Inspector::assertAllMatch('f', ['fee', 'fi', 'fo']));
@@ -201,8 +181,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting regular expression match.
-   *
-   * @legacy-covers ::assertAllRegularExpressionMatch
    */
   public function testAssertAllRegularExpressionMatch(): void {
     $this->assertTrue(Inspector::assertAllRegularExpressionMatch('/f/i', ['fee', 'fi', 'fo']));
@@ -215,8 +193,6 @@ class InspectorTest extends TestCase {
 
   /**
    * Tests asserting all members are objects.
-   *
-   * @legacy-covers ::assertAllObjects
    */
   public function testAssertAllObjects(): void {
     $this->assertTrue(Inspector::assertAllObjects([new \ArrayObject(), new \ArrayObject()]));

@@ -236,8 +236,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get constraints.
-   *
-   * @legacy-covers ::getConstraints
    */
   public function testGetConstraints(): void {
     $this->assertIsArray($this->entityAdapter->getConstraints());
@@ -245,8 +243,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get name.
-   *
-   * @legacy-covers ::getName
    */
   public function testGetName(): void {
     $this->assertNull($this->entityAdapter->getName());
@@ -254,8 +250,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get root.
-   *
-   * @legacy-covers ::getRoot
    */
   public function testGetRoot(): void {
     $this->assertSame(spl_object_hash($this->entityAdapter), spl_object_hash($this->entityAdapter->getRoot()));
@@ -263,8 +257,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get property path.
-   *
-   * @legacy-covers ::getPropertyPath
    */
   public function testGetPropertyPath(): void {
     $this->assertSame('', $this->entityAdapter->getPropertyPath());
@@ -272,8 +264,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get parent.
-   *
-   * @legacy-covers ::getParent
    */
   public function testGetParent(): void {
     $this->assertNull($this->entityAdapter->getParent());
@@ -281,8 +271,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests set context.
-   *
-   * @legacy-covers ::setContext
    */
   public function testSetContext(): void {
     $name = $this->randomMachineName();
@@ -295,8 +283,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get value.
-   *
-   * @legacy-covers ::getValue
    */
   public function testGetValue(): void {
     $this->assertEquals($this->entity, $this->entityAdapter->getValue());
@@ -304,8 +290,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get entity.
-   *
-   * @legacy-covers ::getEntity
    */
   public function testGetEntity(): void {
     $this->assertSame($this->entity, $this->entityAdapter->getEntity());
@@ -313,8 +297,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests set value.
-   *
-   * @legacy-covers ::setValue
    */
   public function testSetValue(): void {
     $this->entityAdapter->setValue(NULL);
@@ -323,8 +305,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get.
-   *
-   * @legacy-covers ::get
    */
   public function testGet(): void {
     $this->assertInstanceOf('\Drupal\Core\Field\FieldItemListInterface', $this->entityAdapter->get('id'));
@@ -332,8 +312,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get invalid field.
-   *
-   * @legacy-covers ::get
    */
   public function testGetInvalidField(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -342,8 +320,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get without data.
-   *
-   * @legacy-covers ::get
    */
   public function testGetWithoutData(): void {
     $this->entityAdapter->setValue(NULL);
@@ -353,8 +329,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests set.
-   *
-   * @legacy-covers ::set
    */
   public function testSet(): void {
     $id_items = [['value' => $this->id + 1]];
@@ -368,8 +342,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests set without data.
-   *
-   * @legacy-covers ::set
    */
   public function testSetWithoutData(): void {
     $this->entityAdapter->setValue(NULL);
@@ -380,8 +352,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get properties.
-   *
-   * @legacy-covers ::getProperties
    */
   public function testGetProperties(): void {
     $fields = $this->entityAdapter->getProperties();
@@ -391,8 +361,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests to array.
-   *
-   * @legacy-covers ::toArray
    */
   public function testToArray(): void {
     $array = $this->entityAdapter->toArray();
@@ -404,8 +372,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests to array without data.
-   *
-   * @legacy-covers ::toArray
    */
   public function testToArrayWithoutData(): void {
     $this->entityAdapter->setValue(NULL);
@@ -415,8 +381,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests is empty.
-   *
-   * @legacy-covers ::isEmpty
    */
   public function testIsEmpty(): void {
     $this->assertFalse($this->entityAdapter->isEmpty());
@@ -426,8 +390,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests on change.
-   *
-   * @legacy-covers ::onChange
    */
   public function testOnChange(): void {
     $entity = $this->createMock('\Drupal\Core\Entity\ContentEntityInterface');
@@ -441,8 +403,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get data definition.
-   *
-   * @legacy-covers ::getDataDefinition
    */
   public function testGetDataDefinition(): void {
     $definition = $this->entityAdapter->getDataDefinition();
@@ -453,8 +413,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get string.
-   *
-   * @legacy-covers ::getString
    */
   public function testGetString(): void {
     $entity = $this->createMock('\Drupal\Core\Entity\ContentEntityInterface');
@@ -469,8 +427,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests apply default value.
-   *
-   * @legacy-covers ::applyDefaultValue
    */
   public function testApplyDefaultValue(): void {
     // For each field on the entity the mock method has to be invoked once.
@@ -481,8 +437,6 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * Tests get iterator.
-   *
-   * @legacy-covers ::getIterator
    */
   public function testGetIterator(): void {
     // Content entity test.

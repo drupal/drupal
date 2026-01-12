@@ -18,8 +18,6 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
 
   /**
    * Tests process skips on empty.
-   *
-   * @legacy-covers ::process
    */
   public function testProcessSkipsOnEmpty(): void {
     $configuration['method'] = 'process';
@@ -31,8 +29,6 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
 
   /**
    * Tests process bypasses on non empty.
-   *
-   * @legacy-covers ::process
    */
   public function testProcessBypassesOnNonEmpty(): void {
     $configuration['method'] = 'process';
@@ -45,8 +41,6 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
 
   /**
    * Tests row skips on empty.
-   *
-   * @legacy-covers ::row
    */
   public function testRowSkipsOnEmpty(): void {
     $configuration['method'] = 'row';
@@ -57,8 +51,6 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
 
   /**
    * Tests row bypasses on non empty.
-   *
-   * @legacy-covers ::row
    */
   public function testRowBypassesOnNonEmpty(): void {
     $configuration['method'] = 'row';
@@ -69,8 +61,6 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
 
   /**
    * Tests that a skip row exception without a message is raised.
-   *
-   * @legacy-covers ::row
    */
   public function testRowSkipWithoutMessage(): void {
     $configuration = [
@@ -83,8 +73,6 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
 
   /**
    * Tests that a skip row exception with a message is raised.
-   *
-   * @legacy-covers ::row
    */
   public function testRowSkipWithMessage(): void {
     $configuration = [

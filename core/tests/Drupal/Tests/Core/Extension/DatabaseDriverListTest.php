@@ -20,8 +20,6 @@ class DatabaseDriverListTest extends UnitTestCase {
 
   /**
    * Tests get.
-   *
-   * @legacy-covers ::get
    */
   #[DataProvider('providerDatabaseDrivers')]
   public function testGet(string $driverName, string $moduleName, string $driverExtensionName): void {

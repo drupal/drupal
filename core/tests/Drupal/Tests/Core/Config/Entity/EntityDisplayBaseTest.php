@@ -37,8 +37,6 @@ class EntityDisplayBaseTest extends UnitTestCase {
 
   /**
    * Tests get target entity type id.
-   *
-   * @legacy-covers ::getTargetEntityTypeId
    */
   public function testGetTargetEntityTypeId(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'targetEntityType');
@@ -48,8 +46,6 @@ class EntityDisplayBaseTest extends UnitTestCase {
 
   /**
    * Tests get mode.
-   *
-   * @legacy-covers ::getMode
    */
   public function testGetMode(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'mode');
@@ -59,8 +55,6 @@ class EntityDisplayBaseTest extends UnitTestCase {
 
   /**
    * Tests get original mode.
-   *
-   * @legacy-covers ::getOriginalMode
    */
   public function testGetOriginalMode(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'originalMode');
@@ -70,8 +64,6 @@ class EntityDisplayBaseTest extends UnitTestCase {
 
   /**
    * Tests get target bundle.
-   *
-   * @legacy-covers ::getTargetBundle
    */
   public function testGetTargetBundle(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'bundle');
@@ -81,8 +73,6 @@ class EntityDisplayBaseTest extends UnitTestCase {
 
   /**
    * Tests set target bundle.
-   *
-   * @legacy-covers ::setTargetBundle
    */
   public function testSetTargetBundle(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'bundle');

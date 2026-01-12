@@ -25,8 +25,6 @@ class DefaultExceptionSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on 4xx.
-   *
-   * @legacy-covers ::on4xx
    */
   public function testOn4xx(): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);

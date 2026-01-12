@@ -91,8 +91,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
 
   /**
    * Tests denormalize.
-   *
-   * @legacy-covers ::denormalize
    */
   #[DataProvider('denormalizeProvider')]
   public function testDenormalize($input, $expected): void {
@@ -220,8 +218,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
    *   The input UUID. May be invalid.
    * @param bool $expect_exception
    *   Whether to expect an exception.
-   *
-   * @legacy-covers ::denormalize
    */
   #[DataProvider('denormalizeUuidProvider')]
   public function testDenormalizeUuid($id, $expect_exception): void {

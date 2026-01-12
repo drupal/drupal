@@ -36,8 +36,6 @@ class NullCoalesceTest extends MigrateProcessTestCase {
    *   The expected result.
    *
    * @throws \Drupal\migrate\MigrateException
-   *
-   * @legacy-covers ::transform
    */
   #[DataProvider('transformDataProvider')]
   public function testTransform(array $source, $expected_result): void {
@@ -89,8 +87,6 @@ class NullCoalesceTest extends MigrateProcessTestCase {
    *   The expected result.
    *
    * @throws \Drupal\migrate\MigrateException
-   *
-   * @legacy-covers ::transform
    */
   #[DataProvider('transformWithDefaultProvider')]
   public function testTransformWithDefault(array $source, $default_value, $expected_result): void {

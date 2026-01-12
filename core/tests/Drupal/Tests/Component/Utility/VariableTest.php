@@ -75,8 +75,6 @@ class VariableTest extends TestCase {
    *   A callable.
    * @param string $expected_name
    *   The expected human-readable name of the callable.
-   *
-   * @legacy-covers ::callableToString
    */
   #[DataProvider('providerCallableToString')]
   public function testCallableToString($callable, string $expected_name): void {
@@ -170,8 +168,6 @@ class VariableTest extends TestCase {
    *   The expected exported variable.
    * @param mixed $variable
    *   The variable to be exported.
-   *
-   * @legacy-covers ::export
    */
   #[DataProvider('providerTestExport')]
   public function testExport($expected, $variable): void {

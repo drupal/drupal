@@ -71,8 +71,6 @@ class UploadedFileConstraintValidatorTest extends KernelTestBase {
 
   /**
    * Tests validate success.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateSuccess(): void {
     $uploadedFile = new FormUploadedFile(new UploadedFile(
@@ -86,8 +84,6 @@ class UploadedFileConstraintValidatorTest extends KernelTestBase {
 
   /**
    * Tests validate fail.
-   *
-   * @legacy-covers ::validate
    */
   #[DataProvider('validateProvider')]
   public function testValidateFail(int $errorCode, string $message): void {

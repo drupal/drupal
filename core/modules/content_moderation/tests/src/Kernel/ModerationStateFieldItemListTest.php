@@ -103,8 +103,6 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
 
   /**
    * Tests get value.
-   *
-   * @legacy-covers ::getValue
    */
   public function testGetValue(): void {
     $this->assertEquals([['value' => 'draft']], $this->testNode->moderation_state->getValue());
@@ -112,8 +110,6 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
 
   /**
    * Tests get.
-   *
-   * @legacy-covers ::get
    */
   public function testGet(): void {
     $this->assertEquals('draft', $this->testNode->moderation_state->get(0)->value);

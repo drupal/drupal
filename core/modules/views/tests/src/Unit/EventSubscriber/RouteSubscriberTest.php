@@ -68,8 +68,6 @@ class RouteSubscriberTest extends UnitTestCase {
 
   /**
    * Tests route rebuild finished.
-   *
-   * @legacy-covers ::routeRebuildFinished
    */
   public function testRouteRebuildFinished(): void {
     [$display_1, $display_2] = $this->setupMocks();

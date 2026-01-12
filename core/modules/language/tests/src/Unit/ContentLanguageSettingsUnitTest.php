@@ -91,8 +91,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     // Mock the interfaces necessary to create a dependency on a bundle entity.
@@ -116,8 +114,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
 
   /**
    * Tests id.
-   *
-   * @legacy-covers ::id
    */
   public function testId(): void {
     $config = new ContentLanguageSettings([
@@ -227,8 +223,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
 
   /**
    * Tests is default configuration.
-   *
-   * @legacy-covers ::isDefaultConfiguration
    */
   #[DataProvider('providerIsDefaultConfiguration')]
   public function testIsDefaultConfiguration(ContentLanguageSettings $config, $expected): void {
@@ -265,8 +259,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
 
   /**
    * Tests load by entity type bundle.
-   *
-   * @legacy-covers ::loadByEntityTypeBundle
    */
   #[DataProvider('providerLoadByEntityTypeBundle')]
   public function testLoadByEntityTypeBundle($config_id, ?ContentLanguageSettings $existing_config, $expected_langcode, $expected_language_alterable): void {

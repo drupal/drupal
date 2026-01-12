@@ -46,8 +46,6 @@ class ModuleAdminLinksHelperTest extends KernelTestBase {
 
   /**
    * Tests get module admin links.
-   *
-   * @legacy-covers ::getModuleAdminLinks
    */
   public function testGetModuleAdminLinks(): void {
     // Rebuild the menu links.
