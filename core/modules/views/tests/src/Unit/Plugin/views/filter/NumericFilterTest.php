@@ -21,8 +21,6 @@ class NumericFilterTest extends UnitTestCase {
 
   /**
    * Tests the acceptExposedInput method.
-   *
-   * @legacy-covers ::acceptExposedInput
    */
   #[DataProvider('provideAcceptExposedInput')]
   public function testAcceptExposedInput($options, $value, $expected): void {

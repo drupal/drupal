@@ -50,8 +50,6 @@ class AuthenticationManagerTest extends UnitTestCase {
 
   /**
    * Tests apply filter with filter provider.
-   *
-   * @legacy-covers ::applyFilter
    */
   public function testApplyFilterWithFilterProvider(): void {
     $auth_provider = $this->createMock('Drupal\Tests\Core\Authentication\TestAuthenticationProviderInterface');

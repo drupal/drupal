@@ -48,7 +48,7 @@ class FormattableMarkupTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::count
+   * Tests count.
    */
   public function testCount(): void {
     $string = 'Can I have a @replacement';

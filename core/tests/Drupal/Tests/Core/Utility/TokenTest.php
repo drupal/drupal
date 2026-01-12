@@ -110,8 +110,6 @@ class TokenTest extends UnitTestCase {
 
   /**
    * Tests get info.
-   *
-   * @legacy-covers ::getInfo
    */
   public function testGetInfo(): void {
     $token_info = [
@@ -158,8 +156,6 @@ class TokenTest extends UnitTestCase {
 
   /**
    * Tests replace with bubbleable metadata object.
-   *
-   * @legacy-covers ::replace
    */
   public function testReplaceWithBubbleableMetadataObject(): void {
     $this->moduleHandler->expects($this->any())
@@ -189,8 +185,6 @@ class TokenTest extends UnitTestCase {
 
   /**
    * Tests replace with hook tokens with bubbleable metadata.
-   *
-   * @legacy-covers ::replace
    */
   public function testReplaceWithHookTokensWithBubbleableMetadata(): void {
     $this->moduleHandler->expects($this->any())
@@ -266,8 +260,6 @@ class TokenTest extends UnitTestCase {
 
   /**
    * Tests reset info.
-   *
-   * @legacy-covers ::resetInfo
    */
   public function testResetInfo(): void {
     $this->cacheTagsInvalidator->expects($this->once())
@@ -279,8 +271,6 @@ class TokenTest extends UnitTestCase {
 
   /**
    * Tests replace escaping.
-   *
-   * @legacy-covers ::replace
    */
   #[DataProvider('providerTestReplaceEscaping')]
   public function testReplaceEscaping($string, array $tokens, $expected): void {
@@ -320,8 +310,6 @@ class TokenTest extends UnitTestCase {
 
   /**
    * Tests replace plain.
-   *
-   * @legacy-covers ::replacePlain
    */
   public function testReplacePlain(): void {
     $this->setupSiteTokens();

@@ -60,8 +60,6 @@ class ResourceResponseValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate response.
-   *
-   * @legacy-covers ::validateResponse
    */
   #[DataProvider('validateResponseProvider')]
   public function testValidateResponse($request, $response, $expected, $description): void {

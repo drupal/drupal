@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 class AttributeBridgeDecoratorTest extends TestCase {
 
   /**
-   * @legacy-covers ::getDefinitions
+   * Tests get definitions.
    */
   public function testGetDefinitions(): void {
     // Normally the attribute classes would be autoloaded.

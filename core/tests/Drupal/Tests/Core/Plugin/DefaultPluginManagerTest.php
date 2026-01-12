@@ -276,8 +276,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests plugins with the proper interface.
-   *
-   * @legacy-covers ::createInstance
    */
   public function testCreateInstanceWithJustValidInterfaces(): void {
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, NULL, NULL, FruitInterface::class);
@@ -289,8 +287,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests plugins without the proper interface.
-   *
-   * @legacy-covers ::createInstance
    */
   public function testCreateInstanceWithInvalidInterfaces(): void {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
@@ -318,8 +314,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests plugins without a required interface.
-   *
-   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitionsWithoutRequiredInterface(): void {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
@@ -345,8 +339,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests get cache contexts.
-   *
-   * @legacy-covers ::getCacheContexts
    */
   public function testGetCacheContexts(): void {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
@@ -360,8 +352,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests get cache tags.
-   *
-   * @legacy-covers ::getCacheTags
    */
   public function testGetCacheTags(): void {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
@@ -375,8 +365,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests get cache max age.
-   *
-   * @legacy-covers ::getCacheMaxAge
    */
   public function testGetCacheMaxAge(): void {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
@@ -415,8 +403,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests process definition.
-   *
-   * @legacy-covers ::processDefinition
    */
   #[DataProvider('providerTestProcessDefinition')]
   public function testProcessDefinition($definition, $expected): void {

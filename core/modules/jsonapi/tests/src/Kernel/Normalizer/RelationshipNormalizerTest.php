@@ -229,8 +229,6 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Tests normalize.
-   *
-   * @legacy-covers ::normalize
    */
   #[DataProvider('normalizeProvider')]
   public function testNormalize($entity_property_names, $field_name, $expected): void {

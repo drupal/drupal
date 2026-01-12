@@ -19,8 +19,6 @@ class OpenOffCanvasDialogCommandTest extends UnitTestCase {
 
   /**
    * Tests render.
-   *
-   * @legacy-covers ::render
    */
   #[DataProvider('dialogPosition')]
   public function testRender($position): void {

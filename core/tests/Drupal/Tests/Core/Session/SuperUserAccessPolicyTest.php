@@ -49,8 +49,6 @@ class SuperUserAccessPolicyTest extends UnitTestCase {
 
   /**
    * Tests applies.
-   *
-   * @legacy-covers ::applies
    */
   public function testApplies(): void {
     $this->assertTrue($this->accessPolicy->applies(AccessPolicyInterface::SCOPE_DRUPAL));
@@ -65,8 +63,6 @@ class SuperUserAccessPolicyTest extends UnitTestCase {
    *   The UID for the account the policy checks.
    * @param bool $expect_admin_rights
    *   Whether to expect admin rights to be granted.
-   *
-   * @legacy-covers ::calculatePermissions
    */
   #[DataProvider('calculatePermissionsProvider')]
   public function testCalculatePermissions(int $uid, bool $expect_admin_rights): void {
@@ -103,8 +99,6 @@ class SuperUserAccessPolicyTest extends UnitTestCase {
    *
    * @param int $uid
    *   The UID for the account the policy checks.
-   *
-   * @legacy-covers ::alterPermissions
    */
   #[DataProvider('alterPermissionsProvider')]
   public function testAlterPermissions(int $uid): void {
@@ -136,8 +130,6 @@ class SuperUserAccessPolicyTest extends UnitTestCase {
 
   /**
    * Tests the getPersistentCacheContexts method.
-   *
-   * @legacy-covers ::getPersistentCacheContexts
    */
   public function testGetPersistentCacheContexts(): void {
     $this->assertSame(['user.is_super_user'], $this->accessPolicy->getPersistentCacheContexts(AccessPolicyInterface::SCOPE_DRUPAL));

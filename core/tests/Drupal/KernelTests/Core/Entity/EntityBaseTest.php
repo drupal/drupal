@@ -32,8 +32,6 @@ class EntityBaseTest extends EntityKernelTestBase {
 
   /**
    * Tests that the correct entity adapter is returned.
-   *
-   * @legacy-covers ::getTypedData
    */
   public function testGetTypedData(): void {
     $bundle = EntityTestBundle::create([

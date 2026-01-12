@@ -212,8 +212,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests rendering as a link without a path.
-   *
-   * @legacy-covers ::renderAsLink
    */
   public function testRenderAsLinkWithoutPath(): void {
     $alter = [
@@ -315,8 +313,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests rendering of a link with a path and options.
-   *
-   * @legacy-covers ::renderAsLink
    */
   #[DataProvider('providerTestRenderAsLinkWithPathAndOptions')]
   public function testRenderAsLinkWithPathAndOptions($path, $alter, $final_html): void {
@@ -386,8 +382,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests link rendering with a URL and options.
-   *
-   * @legacy-covers ::renderAsLink
    */
   #[DataProvider('providerTestRenderAsLinkWithUrlAndOptions')]
   public function testRenderAsLinkWithUrlAndOptions(Url $url, $alter, Url $expected_url, $url_path, Url $expected_link_url, $final_html): void {
@@ -617,8 +611,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests rendering of a link with a path and options.
-   *
-   * @legacy-covers ::renderAsLink
    */
   #[DataProvider('providerTestRenderAsLinkWithPathAndTokens')]
   public function testRenderAsLinkWithPathAndTokens($path, $tokens, $link_html): void {
@@ -767,8 +759,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests get render tokens without fields and arguments.
-   *
-   * @legacy-covers ::getRenderTokens
    */
   public function testGetRenderTokensWithoutFieldsAndArguments(): void {
     $field = $this->setupTestField();
@@ -785,8 +775,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests get render tokens without arguments.
-   *
-   * @legacy-covers ::getRenderTokens
    */
   public function testGetRenderTokensWithoutArguments(): void {
     $field = $this->setupTestField(['id' => 'id']);
@@ -804,8 +792,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests get render tokens with arguments.
-   *
-   * @legacy-covers ::getRenderTokens
    */
   public function testGetRenderTokensWithArguments(): void {
     $field = $this->setupTestField(['id' => 'id']);

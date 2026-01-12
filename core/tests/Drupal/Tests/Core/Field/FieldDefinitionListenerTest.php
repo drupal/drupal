@@ -110,8 +110,6 @@ class FieldDefinitionListenerTest extends UnitTestCase {
 
   /**
    * Tests on field definition create new field.
-   *
-   * @legacy-covers ::onFieldDefinitionCreate
    */
   public function testOnFieldDefinitionCreateNewField(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -143,8 +141,6 @@ class FieldDefinitionListenerTest extends UnitTestCase {
 
   /**
    * Tests on field definition create existing field.
-   *
-   * @legacy-covers ::onFieldDefinitionCreate
    */
   public function testOnFieldDefinitionCreateExistingField(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -181,8 +177,6 @@ class FieldDefinitionListenerTest extends UnitTestCase {
 
   /**
    * Tests on field definition update.
-   *
-   * @legacy-covers ::onFieldDefinitionUpdate
    */
   public function testOnFieldDefinitionUpdate(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -200,8 +194,6 @@ class FieldDefinitionListenerTest extends UnitTestCase {
 
   /**
    * Tests on field definition delete multiple bundles.
-   *
-   * @legacy-covers ::onFieldDefinitionDelete
    */
   public function testOnFieldDefinitionDeleteMultipleBundles(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -242,8 +234,6 @@ class FieldDefinitionListenerTest extends UnitTestCase {
 
   /**
    * Tests on field definition delete single bundles.
-   *
-   * @legacy-covers ::onFieldDefinitionDelete
    */
   public function testOnFieldDefinitionDeleteSingleBundles(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);

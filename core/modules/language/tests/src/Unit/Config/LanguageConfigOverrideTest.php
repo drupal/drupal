@@ -72,8 +72,6 @@ class LanguageConfigOverrideTest extends UnitTestCase {
 
   /**
    * Tests save new.
-   *
-   * @legacy-covers ::save
    */
   public function testSaveNew(): void {
     $this->cacheTagsInvalidator->expects($this->once())
@@ -85,8 +83,6 @@ class LanguageConfigOverrideTest extends UnitTestCase {
 
   /**
    * Tests save existing.
-   *
-   * @legacy-covers ::save
    */
   public function testSaveExisting(): void {
     $this->cacheTagsInvalidator->expects($this->once())
@@ -98,8 +94,6 @@ class LanguageConfigOverrideTest extends UnitTestCase {
 
   /**
    * Tests delete.
-   *
-   * @legacy-covers ::delete
    */
   public function testDelete(): void {
     $this->cacheTagsInvalidator->expects($this->once())

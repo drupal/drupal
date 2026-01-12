@@ -27,8 +27,6 @@ class ConnectionTest extends UnitTestCase {
    *   SQLite URL.
    * @param string $expected
    *   Expected connection option.
-   *
-   * @legacy-covers ::createConnectionOptionsFromUrl
    */
   #[DataProvider('providerCreateConnectionOptionsFromUrl')]
   public function testCreateConnectionOptionsFromUrl(string $url, string $expected): void {

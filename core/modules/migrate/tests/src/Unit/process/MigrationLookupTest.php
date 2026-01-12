@@ -23,8 +23,6 @@ class MigrationLookupTest extends MigrationLookupTestCase {
 
   /**
    * Tests transform with stub skipping.
-   *
-   * @legacy-covers ::transform
    */
   public function testTransformWithStubSkipping(): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
@@ -54,8 +52,6 @@ class MigrationLookupTest extends MigrationLookupTestCase {
 
   /**
    * Tests transform with stubbing.
-   *
-   * @legacy-covers ::transform
    */
   #[DataProvider('providerTestTransformWithStubbing')]
   public function testTransformWithStubbing($exception_class, $exception_message, $expected_message): void {

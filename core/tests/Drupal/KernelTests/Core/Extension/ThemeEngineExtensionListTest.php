@@ -21,8 +21,6 @@ class ThemeEngineExtensionListTest extends KernelTestBase {
 
   /**
    * Tests get list.
-   *
-   * @legacy-covers ::getList
    */
   public function testGetList(): void {
     // Confirm that all theme engines are available.

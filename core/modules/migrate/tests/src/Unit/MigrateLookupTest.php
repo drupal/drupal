@@ -24,8 +24,6 @@ class MigrateLookupTest extends MigrateTestCase {
 
   /**
    * Tests the lookup function.
-   *
-   * @legacy-covers ::lookup
    */
   public function testLookup(): void {
     $source_ids = ['id' => '1'];

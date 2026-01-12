@@ -27,8 +27,6 @@ class StorageCopyTraitTest extends UnitTestCase {
 
   /**
    * Tests replace storage contents.
-   *
-   * @legacy-covers ::replaceStorageContents
    */
   #[DataProvider('providerTestReplaceStorageContents')]
   public function testReplaceStorageContents($source_collections, $target_collections): void {

@@ -203,8 +203,6 @@ class BlockPageVariantTest extends UnitTestCase {
 
   /**
    * Tests the building of a full page variant.
-   *
-   * @legacy-covers ::build
    */
   #[DataProvider('providerBuild')]
   public function testBuild(array $blocks_config, $visible_block_count, array $expected_render_array): void {
@@ -239,8 +237,6 @@ class BlockPageVariantTest extends UnitTestCase {
 
   /**
    * Tests the building of a full page variant with no main content set.
-   *
-   * @legacy-covers ::build
    */
   public function testBuildWithoutMainContent(): void {
     $display_variant = $this->setUpDisplayVariant();

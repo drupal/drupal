@@ -33,8 +33,6 @@ class PlaceholderGeneratorTest extends RendererTestBase {
    * impossible to replace the placeholders: the placeholder markup in
    * #attached versus that in the HTML processed by DOMDocument would no longer
    * match.
-   *
-   * @legacy-covers ::createPlaceholder
    */
   #[DataProvider('providerCreatePlaceholderGeneratesValidHtmlMarkup')]
   public function testCreatePlaceholderGeneratesValidHtmlMarkup(array $element): void {

@@ -62,7 +62,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getDefinition
+   * Tests get definition.
    */
   #[DataProvider('providerGetDefinition')]
   public function testGetDefinition($expected, $has_register_definitions, $exception_on_invalid, $definitions, $base_plugin_id): void {
@@ -127,7 +127,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getDefinitions
+   * Tests get definitions.
    */
   #[DataProvider('providerGetDefinitions')]
   public function testGetDefinitions($has_register_definitions, $definitions): void {

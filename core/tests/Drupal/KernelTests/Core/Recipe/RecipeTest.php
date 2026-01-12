@@ -45,8 +45,6 @@ class RecipeTest extends KernelTestBase {
 
   /**
    * Tests creating a recipe from an empty directory.
-   *
-   * @legacy-covers ::createFromDirectory
    */
   public function testCreateFromDirectoryNoRecipe(): void {
     $dir = uniqid('public://');

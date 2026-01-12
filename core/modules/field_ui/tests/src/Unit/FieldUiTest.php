@@ -38,8 +38,6 @@ class FieldUiTest extends UnitTestCase {
 
   /**
    * Tests get next destination.
-   *
-   * @legacy-covers ::getNextDestination
    */
   public function testGetNextDestination(): void {
     $destinations = ['admin', 'admin/content'];
@@ -54,8 +52,6 @@ class FieldUiTest extends UnitTestCase {
 
   /**
    * Tests get next destination empty.
-   *
-   * @legacy-covers ::getNextDestination
    */
   public function testGetNextDestinationEmpty(): void {
     $destinations = [];
@@ -65,8 +61,6 @@ class FieldUiTest extends UnitTestCase {
 
   /**
    * Tests get next destination route name.
-   *
-   * @legacy-covers ::getNextDestination
    */
   public function testGetNextDestinationRouteName(): void {
     $destinations = [['route_name' => 'system.admin'], ['route_name' => 'system.admin_content']];

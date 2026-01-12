@@ -60,8 +60,6 @@ class FieldItemNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Tests a field item that has no properties.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalizeFieldItemWithoutProperties(): void {
     $item = $this->prophesize(FieldItemInterface::class);

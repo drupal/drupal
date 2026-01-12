@@ -23,8 +23,6 @@ class FileStorageFactoryTest extends KernelTestBase {
 
   /**
    * Tests get sync.
-   *
-   * @legacy-covers ::getSync
    */
   public function testGetSync(): void {
 

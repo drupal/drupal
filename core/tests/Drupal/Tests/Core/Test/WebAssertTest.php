@@ -70,8 +70,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests WebAssert::responseHeaderExists().
-   *
-   * @legacy-covers ::responseHeaderExists
    */
   public function testResponseHeaderExists(): void {
     $this->visit('', '', ['Null-Header' => '']);
@@ -83,8 +81,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests WebAssert::responseHeaderDoesNotExist().
-   *
-   * @legacy-covers ::responseHeaderDoesNotExist
    */
   public function testResponseHeaderDoesNotExist(): void {
     $this->visit('', '', ['Null-Header' => '']);
@@ -97,8 +93,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests page text matches count.
-   *
-   * @legacy-covers ::pageTextMatchesCount
    */
   public function testPageTextMatchesCount(): void {
     $this->visit('', 'Test page text. <a href="#">Foo</a>');
@@ -111,8 +105,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests page text contains once.
-   *
-   * @legacy-covers ::pageTextContainsOnce
    */
   public function testPageTextContainsOnce(): void {
     $this->visit('', 'Test page text. <a href="#">Foo</a>');
@@ -125,8 +117,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests element text equals.
-   *
-   * @legacy-covers ::elementTextEquals
    */
   public function testElementTextEquals(): void {
     $this->visit('', '<h1>Test page</h1>');
@@ -139,8 +129,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests address equals.
-   *
-   * @legacy-covers ::addressEquals
    */
   public function testAddressEquals(): void {
     $this->visit('http://localhost/test-page');
@@ -173,8 +161,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests address not equals exception.
-   *
-   * @legacy-covers ::addressNotEquals
    */
   public function testAddressNotEqualsException(): void {
     $this->visit('http://localhost/test-page?a=b&c=d');
@@ -197,8 +183,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests linkExistsExact() functionality.
-   *
-   * @legacy-covers ::linkExistsExact
    */
   public function testLinkExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
@@ -220,8 +204,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests linkNotExistsExact() functionality.
-   *
-   * @legacy-covers ::linkNotExistsExact
    */
   public function testLinkNotExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
@@ -244,8 +226,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests linkExistsByHref() functionality.
-   *
-   * @legacy-covers ::linkByHrefExists
    */
   public function testLinkByHrefExists(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -270,8 +250,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests linkByHrefNotExists() functionality.
-   *
-   * @legacy-covers ::linkByHrefNotExists
    */
   public function testLinkByHrefNotExists(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -304,8 +282,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests linkExistsByHref() functionality.
-   *
-   * @legacy-covers ::linkByHrefExistsExact
    */
   public function testLinkByHrefExistsExact(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -326,8 +302,6 @@ class WebAssertTest extends UnitTestCase {
 
   /**
    * Tests linkByHrefNotExistsExact() functionality.
-   *
-   * @legacy-covers ::linkByHrefNotExistsExact
    */
   public function testLinkByHrefNotExistsExact(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -406,8 +380,6 @@ HTML);
 
   /**
    * Tests pageContainsNoDuplicateId() functionality.
-   *
-   * @legacy-covers ::pageContainsNoDuplicateId
    */
   public function testPageContainsNoDuplicateId(): void {
     $this->visit('', <<<HTML

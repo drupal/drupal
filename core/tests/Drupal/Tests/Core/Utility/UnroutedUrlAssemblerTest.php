@@ -63,8 +63,6 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * Tests assemble with neither external nor domain local uri.
-   *
-   * @legacy-covers ::assemble
    */
   public function testAssembleWithNeitherExternalNorDomainLocalUri(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -73,8 +71,6 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * Tests assemble with leading slash.
-   *
-   * @legacy-covers ::assemble
    */
   public function testAssembleWithLeadingSlash(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -170,8 +166,6 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * Tests assemble with not enabled processing.
-   *
-   * @legacy-covers ::assemble
    */
   public function testAssembleWithNotEnabledProcessing(): void {
     $this->setupRequestStack(FALSE);
@@ -183,8 +177,6 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * Tests assemble with enabled processing.
-   *
-   * @legacy-covers ::assemble
    */
   public function testAssembleWithEnabledProcessing(): void {
     $this->setupRequestStack(FALSE);
@@ -209,8 +201,6 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * Tests assemble with starting slash enabled processing.
-   *
-   * @legacy-covers ::assemble
    */
   public function testAssembleWithStartingSlashEnabledProcessing(): void {
     $this->setupRequestStack(FALSE);

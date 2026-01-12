@@ -145,8 +145,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests define options with no options.
-   *
-   * @legacy-covers ::defineOptions
    */
   public function testDefineOptionsWithNoOptions(): void {
     $definition = [
@@ -174,8 +172,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests define options with default formatter on field definition.
-   *
-   * @legacy-covers ::defineOptions
    */
   public function testDefineOptionsWithDefaultFormatterOnFieldDefinition(): void {
     $definition = [
@@ -204,8 +200,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests define options with default formatter on field type.
-   *
-   * @legacy-covers ::defineOptions
    */
   public function testDefineOptionsWithDefaultFormatterOnFieldType(): void {
     $definition = [
@@ -233,8 +227,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies with base field.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithBaseField(): void {
     $definition = [
@@ -257,8 +249,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies with configured field.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithConfiguredField(): void {
     $definition = [
@@ -285,8 +275,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests access.
-   *
-   * @legacy-covers ::access
    */
   public function testAccess(): void {
     $definition = [
@@ -359,8 +347,6 @@ class FieldTest extends UnitTestCase {
    *
    * @param string $order
    *   The sort order.
-   *
-   * @legacy-covers ::clickSort
    */
   #[DataProvider('providerSortOrders')]
   public function testClickSortWithBaseField($order): void {
@@ -420,8 +406,6 @@ class FieldTest extends UnitTestCase {
    *
    * @param string $order
    *   The sort order.
-   *
-   * @legacy-covers ::clickSort
    */
   #[DataProvider('providerSortOrders')]
   public function testClickSortWithConfiguredField($order): void {
@@ -478,8 +462,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests query with group by for base field.
-   *
-   * @legacy-covers ::query
    */
   public function testQueryWithGroupByForBaseField(): void {
     $definition = [
@@ -542,8 +524,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests query with group by for config field.
-   *
-   * @legacy-covers ::query
    */
   public function testQueryWithGroupByForConfigField(): void {
     $definition = [
@@ -606,8 +586,6 @@ class FieldTest extends UnitTestCase {
 
   /**
    * Tests prepare items by delta.
-   *
-   * @legacy-covers ::prepareItemsByDelta
    */
   #[DataProvider('providerTestPrepareItemsByDelta')]
   public function testPrepareItemsByDelta(array $options, array $expected_values): void {

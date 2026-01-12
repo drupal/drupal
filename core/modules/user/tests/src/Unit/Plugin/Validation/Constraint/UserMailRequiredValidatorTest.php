@@ -59,8 +59,6 @@ class UserMailRequiredValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate.
-   *
-   * @legacy-covers ::validate
    */
   #[DataProvider('providerTestValidate')]
   public function testValidate($items, $expected_violation, $is_admin = FALSE): void {

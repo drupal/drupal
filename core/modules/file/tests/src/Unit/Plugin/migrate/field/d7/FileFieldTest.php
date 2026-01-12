@@ -58,8 +58,6 @@ class FileFieldTest extends UnitTestCase {
 
   /**
    * Tests define value process pipeline.
-   *
-   * @legacy-covers ::defineValueProcessPipeline
    */
   public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline'): void {
     $this->plugin->$method($this->migration, 'field_name', []);
@@ -89,8 +87,6 @@ class FileFieldTest extends UnitTestCase {
 
   /**
    * Tests get field type.
-   *
-   * @legacy-covers ::getFieldType
    */
   #[DataProvider('getFieldTypeProvider')]
   public function testGetFieldType($expected_type, $widget_type, array $settings = []): void {

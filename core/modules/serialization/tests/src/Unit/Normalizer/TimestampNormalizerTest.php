@@ -54,8 +54,6 @@ class TimestampNormalizerTest extends UnitTestCase {
 
   /**
    * Tests supports normalization.
-   *
-   * @legacy-covers ::supportsNormalization
    */
   public function testSupportsNormalization(): void {
     $this->assertTrue($this->normalizer->supportsNormalization($this->data->reveal()));
@@ -69,8 +67,6 @@ class TimestampNormalizerTest extends UnitTestCase {
 
   /**
    * Tests supports denormalization.
-   *
-   * @legacy-covers ::supportsDenormalization
    */
   public function testSupportsDenormalization(): void {
     $this->assertTrue($this->normalizer->supportsDenormalization($this->data->reveal(), Timestamp::class));
@@ -78,8 +74,6 @@ class TimestampNormalizerTest extends UnitTestCase {
 
   /**
    * Tests normalize.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalize(): void {
     $random_rfc_3339_string = $this->randomMachineName();
@@ -99,8 +93,6 @@ class TimestampNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with good data.
-   *
-   * @legacy-covers ::denormalize
    */
   #[DataProvider('providerTestDenormalizeValidFormats')]
   public function testDenormalizeValidFormats($normalized, $expected): void {
@@ -133,8 +125,6 @@ class TimestampNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with bad data.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeException(): void {
     $this->expectException(UnexpectedValueException::class);

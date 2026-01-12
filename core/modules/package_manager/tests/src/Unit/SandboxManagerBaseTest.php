@@ -27,8 +27,6 @@ class SandboxManagerBaseTest extends UnitTestCase {
    *   any exception.
    * @param string $requirement
    *   The requirement (package name and optional constraint) to validate.
-   *
-   * @legacy-covers ::validateRequirements
    */
   #[DataProvider('providerValidateRequirements')]
   public function testValidateRequirements(?string $expected_exception, string $requirement): void {

@@ -29,8 +29,6 @@ class LogMessageParserTest extends UnitTestCase {
    *   An array with the expected values after the test has run.
    *    - message: The expected parsed message.
    *    - context: The expected values of the placeholders.
-   *
-   * @legacy-covers ::parseMessagePlaceholders
    */
   #[DataProvider('providerTestParseMessagePlaceholders')]
   public function testParseMessagePlaceholders(array $value, array $expected): void {

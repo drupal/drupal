@@ -89,8 +89,6 @@ class SectionStorageManagerTest extends UnitTestCase {
 
   /**
    * Tests load empty.
-   *
-   * @legacy-covers ::loadEmpty
    */
   public function testLoadEmpty(): void {
     $result = $this->manager->loadEmpty('the_plugin_id');
@@ -100,8 +98,6 @@ class SectionStorageManagerTest extends UnitTestCase {
 
   /**
    * Tests load.
-   *
-   * @legacy-covers ::load
    */
   public function testLoad(): void {
     $contexts = [
@@ -116,8 +112,6 @@ class SectionStorageManagerTest extends UnitTestCase {
 
   /**
    * Tests load null.
-   *
-   * @legacy-covers ::load
    */
   public function testLoadNull(): void {
     $contexts = [
@@ -132,8 +126,6 @@ class SectionStorageManagerTest extends UnitTestCase {
 
   /**
    * Tests find definitions.
-   *
-   * @legacy-covers ::findDefinitions
    */
   public function testFindDefinitions(): void {
     $this->discovery->getDefinitions()->willReturn([
@@ -158,8 +150,6 @@ class SectionStorageManagerTest extends UnitTestCase {
    *
    * @param bool $plugin_is_applicable
    *   The result for the plugin's isApplicable() method to return.
-   *
-   * @legacy-covers ::findByContext
    */
   #[DataProvider('providerTestFindByContext')]
   public function testFindByContext($plugin_is_applicable): void {
@@ -215,8 +205,6 @@ class SectionStorageManagerTest extends UnitTestCase {
 
   /**
    * Tests find by context cacheable section storage.
-   *
-   * @legacy-covers ::findByContext
    */
   public function testFindByContextCacheableSectionStorage(): void {
     $cacheability = new CacheableMetadata();

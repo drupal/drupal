@@ -24,8 +24,6 @@ final class ContentLengthTest extends UnitTestCase {
 
   /**
    * Tests handle.
-   *
-   * @legacy-covers ::handle
    */
   #[DataProvider('providerTestSetContentLengthHeader')]
   public function testHandle(false|int $expected_header, Response $response): void {

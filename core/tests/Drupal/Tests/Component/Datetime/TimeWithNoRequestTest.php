@@ -42,8 +42,6 @@ class TimeWithNoRequestTest extends TestCase {
 
   /**
    * Tests the getRequestTime method.
-   *
-   * @legacy-covers ::getRequestTime
    */
   public function testGetRequestTimeImmutable(): void {
     $requestTime = $this->time->getRequestTime();
@@ -53,8 +51,6 @@ class TimeWithNoRequestTest extends TestCase {
 
   /**
    * Tests the getRequestMicroTime method.
-   *
-   * @legacy-covers ::getRequestMicroTime
    */
   public function testGetRequestMicroTimeImmutable(): void {
     $requestTime = $this->time->getRequestMicroTime();

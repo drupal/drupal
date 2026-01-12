@@ -85,8 +85,6 @@ class BlockRepositoryTest extends UnitTestCase {
 
   /**
    * Tests the retrieval of block entities.
-   *
-   * @legacy-covers ::getVisibleBlocksPerRegion
    */
   #[DataProvider('providerBlocksConfig')]
   public function testGetVisibleBlocksPerRegion(array $blocks_config, array $expected_blocks): void {
@@ -160,8 +158,6 @@ class BlockRepositoryTest extends UnitTestCase {
 
   /**
    * Tests the retrieval of block entities that are context-aware.
-   *
-   * @legacy-covers ::getVisibleBlocksPerRegion
    */
   public function testGetVisibleBlocksPerRegionWithContext(): void {
     $block = $this->createMock('Drupal\block\BlockInterface');

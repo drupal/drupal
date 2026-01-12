@@ -18,12 +18,12 @@ use PHPUnit\Framework\TestCase;
 class ReflectionTest extends TestCase {
 
   /**
+   * Tests get parameter class name.
+   *
    * @param string|null $expected
    *   The expected value of the parameter.
    * @param \ReflectionParameter $parameter
    *   The reflection parameter.
-   *
-   * @legacy-covers ::getParameterClassName
    */
   #[DataProvider('providerGetParameterClassName')]
   public function testGetParameterClassName(?string $expected, \ReflectionParameter $parameter): void {

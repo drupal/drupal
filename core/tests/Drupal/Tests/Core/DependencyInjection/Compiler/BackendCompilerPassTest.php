@@ -39,8 +39,6 @@ class BackendCompilerPassTest extends UnitTestCase {
 
   /**
    * Tests the process method.
-   *
-   * @legacy-covers ::process
    */
   public function testProcess(): void {
     // Add a container with no set default_backend.

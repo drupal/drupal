@@ -23,8 +23,6 @@ class CommentManagerTest extends UnitTestCase {
 
   /**
    * Tests the getFields method.
-   *
-   * @legacy-covers ::getFields
    */
   public function testGetFields(): void {
     // Set up a content entity type.

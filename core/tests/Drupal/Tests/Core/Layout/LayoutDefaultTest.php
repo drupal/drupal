@@ -20,8 +20,6 @@ class LayoutDefaultTest extends UnitTestCase {
 
   /**
    * Tests build.
-   *
-   * @legacy-covers ::build
    */
   #[DataProvider('providerTestBuild')]
   public function testBuild($regions, $expected): void {

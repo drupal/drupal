@@ -328,8 +328,6 @@ class UrlConversionTest extends UnitTestCase {
 
   /**
    * Tests get connection info as url.
-   *
-   * @legacy-covers ::getConnectionInfoAsUrl
    */
   #[DataProvider('providerGetConnectionInfoAsUrl')]
   public function testGetConnectionInfoAsUrl(array $info, $expected_url): void {

@@ -27,8 +27,6 @@ class XdebugRequestTraitTest extends UnitTestCase {
    *   The request server array.
    * @param array $expected_cookies
    *   The expected cookies for the request.
-   *
-   * @legacy-covers ::extractCookiesFromRequest
    */
   #[DataProvider('extractCookiesDataProvider')]
   public function testExtractCookiesFromRequest(array $server, array $expected_cookies): void {

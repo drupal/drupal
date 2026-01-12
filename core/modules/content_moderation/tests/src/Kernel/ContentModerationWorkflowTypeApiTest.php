@@ -84,8 +84,6 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
 
   /**
    * Tests add entity type and bundle.
-   *
-   * @legacy-covers ::addEntityTypeAndBundle
    */
   public function testAddEntityTypeAndBundle(): void {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */

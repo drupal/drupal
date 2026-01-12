@@ -45,8 +45,6 @@ class ComplexDataNormalizerTest extends UnitTestCase {
 
   /**
    * Tests supports normalization.
-   *
-   * @legacy-covers ::supportsNormalization
    */
   public function testSupportsNormalization(): void {
     $complex_data = $this->prophesize(ComplexDataInterface::class)->reveal();
@@ -57,8 +55,6 @@ class ComplexDataNormalizerTest extends UnitTestCase {
 
   /**
    * Tests normalizing complex data.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalizeComplexData(): void {
     $serializer_prophecy = $this->prophesize(Serializer::class);
@@ -88,8 +84,6 @@ class ComplexDataNormalizerTest extends UnitTestCase {
    *
    * Normalizers extending ComplexDataNormalizer may have a different supported
    * class.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalizeNonComplex(): void {
     $normalizer = new TestExtendedNormalizer();

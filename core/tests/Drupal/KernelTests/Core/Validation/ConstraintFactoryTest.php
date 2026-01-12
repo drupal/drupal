@@ -28,8 +28,6 @@ class ConstraintFactoryTest extends KernelTestBase {
 
   /**
    * Tests create instance.
-   *
-   * @legacy-covers ::createInstance
    */
   public function testCreateInstance(): void {
     $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();

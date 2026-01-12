@@ -50,8 +50,6 @@ class PluginManagerBaseTest extends TestCase {
 
   /**
    * Tests createInstance() with no fallback methods.
-   *
-   * @legacy-covers ::createInstance
    */
   public function testCreateInstance(): void {
     $manager = new StubPluginManagerBase();
@@ -69,8 +67,6 @@ class PluginManagerBaseTest extends TestCase {
 
   /**
    * Tests createInstance() with a fallback method.
-   *
-   * @legacy-covers ::createInstance
    */
   public function testCreateInstanceFallback(): void {
     // We use our special stub class which extends PluginManagerBase and also
@@ -96,7 +92,7 @@ class PluginManagerBaseTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getInstance
+   * Tests get instance.
    */
   public function testGetInstance(): void {
     $options = [
@@ -113,7 +109,7 @@ class PluginManagerBaseTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getInstance
+   * Tests get instance without mapper should throw exception.
    */
   public function testGetInstanceWithoutMapperShouldThrowException(): void {
     $options = [

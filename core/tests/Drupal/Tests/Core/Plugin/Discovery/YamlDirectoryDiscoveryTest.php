@@ -21,8 +21,6 @@ class YamlDirectoryDiscoveryTest extends UnitTestCase {
 
   /**
    * Tests get definitions.
-   *
-   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     vfsStream::setup('modules', NULL, [
@@ -71,8 +69,6 @@ class YamlDirectoryDiscoveryTest extends UnitTestCase {
 
   /**
    * Tests get definitions with translatable definitions.
-   *
-   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitionsWithTranslatableDefinitions(): void {
     vfsStream::setup('modules', NULL, [

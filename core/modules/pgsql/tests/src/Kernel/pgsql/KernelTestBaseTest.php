@@ -21,8 +21,6 @@ class KernelTestBaseTest extends DriverSpecificKernelTestBase {
 
   /**
    * Tests set up.
-   *
-   * @legacy-covers ::setUp
    */
   public function testSetUp(): void {
     // Ensure that the database tasks have been run during set up.

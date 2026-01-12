@@ -81,8 +81,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::getParameter() works properly.
-   *
-   * @legacy-covers ::getParameter
    */
   public function testGetParameter(): void {
     $this->assertEquals($this->containerDefinition['parameters']['some_config'], $this->container->getParameter('some_config'), 'Container parameter matches for %some_config%.');
@@ -103,8 +101,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::hasParameter() works properly.
-   *
-   * @legacy-covers ::hasParameter
    */
   public function testHasParameter(): void {
     $this->assertTrue($this->container->hasParameter('some_config'), 'Container parameters include %some_config%.');
@@ -113,8 +109,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::setParameter() in an unfrozen case works properly.
-   *
-   * @legacy-covers ::setParameter
    */
   public function testSetParameterWithUnfrozenContainer(): void {
     $container_definition = $this->containerDefinition;
@@ -126,8 +120,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::setParameter() in a frozen case works properly.
-   *
-   * @legacy-covers ::setParameter
    */
   public function testSetParameterWithFrozenContainer(): void {
     $this->container = new $this->containerClass($this->containerDefinition);
@@ -193,8 +185,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::set() works properly.
-   *
-   * @legacy-covers ::set
    */
   public function testSet(): void {
     $this->assertNull($this->container->get('new_id', ContainerInterface::NULL_ON_INVALID_REFERENCE));
@@ -206,8 +196,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::has() works properly.
-   *
-   * @legacy-covers ::has
    */
   public function testHas(): void {
     $this->assertTrue($this->container->has('other.service'));
@@ -221,8 +209,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::has() for aliased services works properly.
-   *
-   * @legacy-covers ::has
    */
   public function testHasForAliasedService(): void {
     $service = $this->container->has('service.provider');
@@ -634,8 +620,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::initialized works correctly.
-   *
-   * @legacy-covers ::initialized
    */
   public function testInitialized(): void {
     $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
@@ -645,8 +629,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::initialized works correctly for aliases.
-   *
-   * @legacy-covers ::initialized
    */
   public function testInitializedForAliases(): void {
     $this->assertFalse($this->container->initialized('late.service_alias'), 'Late service is not initialized.');
@@ -656,8 +638,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::getServiceIds() works properly.
-   *
-   * @legacy-covers ::getServiceIds
    */
   public function testGetServiceIds(): void {
     $service_definition_keys = array_merge(['service_container'], array_keys($this->containerDefinition['services']));
@@ -697,8 +677,6 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests Container::reset().
-   *
-   * @legacy-covers ::reset
    */
   public function testReset(): void {
     $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');

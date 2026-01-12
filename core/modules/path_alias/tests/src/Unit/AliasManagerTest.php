@@ -86,8 +86,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests the getPathByAlias method for an alias that have no matching path.
-   *
-   * @legacy-covers ::getPathByAlias
    */
   public function testGetPathByAliasNoMatch(): void {
     $alias = '/' . $this->randomMachineName();
@@ -111,8 +109,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests the getPathByAlias method for an alias that have a matching path.
-   *
-   * @legacy-covers ::getPathByAlias
    */
   public function testGetPathByAliasMatch(): void {
     $alias = $this->randomMachineName();
@@ -132,8 +128,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests the getPathByAlias method when a langcode is passed explicitly.
-   *
-   * @legacy-covers ::getPathByAlias
    */
   public function testGetPathByAliasLangcode(): void {
     $alias = $this->randomMachineName();
@@ -154,8 +148,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests the getAliasByPath method for a path that is not in the prefix list.
-   *
-   * @legacy-covers ::getAliasByPath
    */
   public function testGetAliasByPathPrefixList() {
     $path_part1 = $this->randomMachineName();
@@ -179,8 +171,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests the getAliasByPath method for a path that has no matching alias.
-   *
-   * @legacy-covers ::getAliasByPath
    */
   public function testGetAliasByPathNoMatch(): void {
     $path_part1 = $this->randomMachineName();
@@ -206,8 +196,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests the getAliasByPath method exception.
-   *
-   * @legacy-covers ::getAliasByPath
    */
   public function testGetAliasByPathException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -216,8 +204,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests the getAliasByPath method for a path that has a matching alias.
-   *
-   * @legacy-covers ::getAliasByPath
    */
   public function testGetAliasByPathMatch(): void {
     $path_part1 = $this->randomMachineName();
@@ -244,8 +230,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests the getAliasByPath cache when a different language is requested.
-   *
-   * @legacy-covers ::getAliasByPath
    */
   public function testGetAliasByPathCachedMissLanguage(): void {
     $path_part1 = $this->randomMachineName();
@@ -276,8 +260,6 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Tests cache clear.
-   *
-   * @legacy-covers ::cacheClear
    */
   public function testCacheClear(): void {
     $path = '/path';

@@ -46,8 +46,6 @@ class AliasTest extends KernelTestBase {
 
   /**
    * Tests preload path alias.
-   *
-   * @legacy-covers ::preloadPathAlias
    */
   public function testPreloadPathAlias(): void {
     $path_alias_repository = $this->container->get('path_alias.repository');
@@ -292,8 +290,6 @@ class AliasTest extends KernelTestBase {
 
   /**
    * Tests lookup by system path.
-   *
-   * @legacy-covers ::lookupBySystemPath
    */
   public function testLookupBySystemPath(): void {
     $this->createPathAlias('/test-source-Case', '/test-alias');
@@ -305,8 +301,6 @@ class AliasTest extends KernelTestBase {
 
   /**
    * Tests lookup by alias.
-   *
-   * @legacy-covers ::lookupByAlias
    */
   public function testLookupByAlias(): void {
     $this->createPathAlias('/test-source', '/test-alias-Case');

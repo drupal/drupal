@@ -40,8 +40,6 @@ class StateTest extends UnitTestCase {
 
   /**
    * Tests can transition to.
-   *
-   * @legacy-covers ::canTransitionTo
    */
   public function testCanTransitionTo(): void {
     $workflow_type = new TestType([], '', []);
@@ -59,8 +57,6 @@ class StateTest extends UnitTestCase {
 
   /**
    * Tests get transition to.
-   *
-   * @legacy-covers ::getTransitionTo
    */
   public function testGetTransitionTo(): void {
     $workflow_type = new TestType([], '', []);
@@ -75,8 +71,6 @@ class StateTest extends UnitTestCase {
 
   /**
    * Tests get transition to exception.
-   *
-   * @legacy-covers ::getTransitionTo
    */
   public function testGetTransitionToException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -89,8 +83,6 @@ class StateTest extends UnitTestCase {
 
   /**
    * Tests get transitions.
-   *
-   * @legacy-covers ::getTransitions
    */
   public function testGetTransitions(): void {
     $workflow_type = new TestType([], '', []);
@@ -110,8 +102,6 @@ class StateTest extends UnitTestCase {
 
   /**
    * Tests label callback.
-   *
-   * @legacy-covers ::labelCallback
    */
   public function testLabelCallback(): void {
     $workflow_type = $this->prophesize(WorkflowTypeInterface::class)->reveal();

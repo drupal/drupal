@@ -87,8 +87,6 @@ class ModerationStateWidgetTest extends KernelTestBase {
 
   /**
    * Tests is applicable.
-   *
-   * @legacy-covers ::isApplicable
    */
   public function testIsApplicable(): void {
     // The moderation_state field definition should be applicable to our widget.

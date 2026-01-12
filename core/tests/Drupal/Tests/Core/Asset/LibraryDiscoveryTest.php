@@ -80,8 +80,6 @@ class LibraryDiscoveryTest extends UnitTestCase {
 
   /**
    * Tests getting a library by name.
-   *
-   * @legacy-covers ::getLibraryByName
    */
   public function testGetLibraryByName(): void {
     $this->assertSame($this->libraryData['test_1'], $this->libraryDiscovery->getLibraryByName('test', 'test_1'));

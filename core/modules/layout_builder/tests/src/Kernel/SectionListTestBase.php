@@ -75,8 +75,6 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
 
   /**
    * Tests get section.
-   *
-   * @legacy-covers ::getSection
    */
   public function testGetSection(): void {
     $this->assertInstanceOf(Section::class, $this->sectionList->getSection(0));
@@ -84,8 +82,6 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
 
   /**
    * Tests get section invalid delta.
-   *
-   * @legacy-covers ::getSection
    */
   public function testGetSectionInvalidDelta(): void {
     $this->expectException(\OutOfBoundsException::class);
@@ -95,8 +91,6 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
 
   /**
    * Tests insert section.
-   *
-   * @legacy-covers ::insertSection
    */
   public function testInsertSection(): void {
     $expected = [
@@ -115,8 +109,6 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
 
   /**
    * Tests append section.
-   *
-   * @legacy-covers ::appendSection
    */
   public function testAppendSection(): void {
     $expected = [
@@ -135,8 +127,6 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
 
   /**
    * Tests remove all sections.
-   *
-   * @legacy-covers ::removeAllSections
    */
   #[DataProvider('providerTestRemoveAllSections')]
   public function testRemoveAllSections($set_blank, $expected): void {
@@ -162,8 +152,6 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
 
   /**
    * Tests remove section.
-   *
-   * @legacy-covers ::removeSection
    */
   public function testRemoveSection(): void {
     $expected = [

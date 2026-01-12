@@ -41,8 +41,6 @@ class StyleSerializerKernelTest extends ViewsKernelTestBase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     /** @var \Drupal\views\Entity\View $view */

@@ -130,8 +130,6 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
 
   /**
    * Tests process placeholders no strategies.
-   *
-   * @legacy-covers ::processPlaceholders
    */
   public function testProcessPlaceholdersNoStrategies(): void {
     // Placeholders but no strategies defined.
@@ -147,8 +145,6 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
 
   /**
    * Tests process placeholders with rogue placeholder strategy.
-   *
-   * @legacy-covers ::processPlaceholders
    */
   public function testProcessPlaceholdersWithRoguePlaceholderStrategy(): void {
     // Placeholders but no strategies defined.

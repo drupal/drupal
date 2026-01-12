@@ -139,8 +139,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests id.
-   *
-   * @legacy-covers ::id
    */
   public function testId(): void {
     $this->assertSame($this->values['id'], $this->entity->id());
@@ -148,8 +146,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests uuid.
-   *
-   * @legacy-covers ::uuid
    */
   public function testUuid(): void {
     $this->assertSame($this->values['uuid'], $this->entity->uuid());
@@ -171,8 +167,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests get entity type.
-   *
-   * @legacy-covers ::getEntityType
    */
   public function testGetEntityType(): void {
     $this->assertSame($this->entityType, $this->entity->getEntityType());
@@ -180,8 +174,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests bundle.
-   *
-   * @legacy-covers ::bundle
    */
   public function testBundle(): void {
     $this->assertSame($this->entityTypeId, $this->entity->bundle());
@@ -189,8 +181,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests label.
-   *
-   * @legacy-covers ::label
    */
   public function testLabel(): void {
     $property_label = $this->randomMachineName();
@@ -216,8 +206,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests access.
-   *
-   * @legacy-covers ::access
    */
   public function testAccess(): void {
     $access = $this->createMock('\Drupal\Core\Entity\EntityAccessControlHandlerInterface');
@@ -239,8 +227,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests language.
-   *
-   * @legacy-covers ::language
    */
   public function testLanguage(): void {
     $this->entityType->expects($this->any())
@@ -273,8 +259,6 @@ class EntityUnitTest extends UnitTestCase {
    * Tests EntityBase::load().
    *
    * When called statically on a subclass of Entity.
-   *
-   * @legacy-covers ::load
    */
   public function testLoad(): void {
     $this->setupTestLoad();
@@ -309,8 +293,6 @@ class EntityUnitTest extends UnitTestCase {
    * Tests EntityBase::loadMultiple().
    *
    * When called statically on a subclass of Entity.
-   *
-   * @legacy-covers ::loadMultiple
    */
   public function testLoadMultiple(): void {
     $this->setupTestLoad();
@@ -343,8 +325,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests create.
-   *
-   * @legacy-covers ::create
    */
   public function testCreate(): void {
     $this->setupTestLoad();
@@ -377,8 +357,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests save.
-   *
-   * @legacy-covers ::save
    */
   public function testSave(): void {
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
@@ -396,8 +374,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests delete.
-   *
-   * @legacy-covers ::delete
    */
   public function testDelete(): void {
     $this->entity->id = $this->randomMachineName();
@@ -416,8 +392,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests get entity type id.
-   *
-   * @legacy-covers ::getEntityTypeId
    */
   public function testGetEntityTypeId(): void {
     $this->assertSame($this->entityTypeId, $this->entity->getEntityTypeId());
@@ -425,8 +399,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests pre save.
-   *
-   * @legacy-covers ::preSave
    */
   public function testPreSave(): void {
     // This method is internal, so check for errors on calling it only.
@@ -437,8 +409,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests post save.
-   *
-   * @legacy-covers ::postSave
    */
   public function testPostSave(): void {
     // This method is internal, so check for errors on calling it only.
@@ -461,8 +431,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests post save bundle.
-   *
-   * @legacy-covers ::postSave
    */
   public function testPostSaveBundle(): void {
     $this->entityType->expects($this->atLeastOnce())
@@ -493,8 +461,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests pre create.
-   *
-   * @legacy-covers ::preCreate
    */
   public function testPreCreate(): void {
     // This method is internal, so check for errors on calling it only.
@@ -506,8 +472,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests post create.
-   *
-   * @legacy-covers ::postCreate
    */
   public function testPostCreate(): void {
     // This method is internal, so check for errors on calling it only.
@@ -518,8 +482,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests pre delete.
-   *
-   * @legacy-covers ::preDelete
    */
   public function testPreDelete(): void {
     // This method is internal, so check for errors on calling it only.
@@ -530,8 +492,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests post delete.
-   *
-   * @legacy-covers ::postDelete
    */
   public function testPostDelete(): void {
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
@@ -550,8 +510,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests post delete bundle.
-   *
-   * @legacy-covers ::postDelete
    */
   public function testPostDeleteBundle(): void {
     $this->entityType->expects($this->atLeastOnce())
@@ -577,8 +535,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests post load.
-   *
-   * @legacy-covers ::postLoad
    */
   public function testPostLoad(): void {
     // This method is internal, so check for errors on calling it only.
@@ -590,8 +546,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * Tests referenced entities.
-   *
-   * @legacy-covers ::referencedEntities
    */
   public function testReferencedEntities(): void {
     $this->assertSame([], $this->entity->referencedEntities());

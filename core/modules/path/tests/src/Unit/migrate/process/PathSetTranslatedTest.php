@@ -28,8 +28,6 @@ class PathSetTranslatedTest extends MigrateProcessTestCase {
    *   The translated node value to test.
    * @param string $expected_result
    *   The expected result.
-   *
-   * @legacy-covers ::transform
    */
   #[DataProvider('transformDataProvider')]
   public function testTransform($path, $node_translation, $expected_result): void {

@@ -69,8 +69,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests supports normalization.
-   *
-   * @legacy-covers ::supportsNormalization
    */
   public function testSupportsNormalization(): void {
     $this->assertTrue($this->normalizer->supportsNormalization($this->data->reveal()));
@@ -84,8 +82,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests supports denormalization.
-   *
-   * @legacy-covers ::supportsDenormalization
    */
   public function testSupportsDenormalization(): void {
     $this->assertTrue($this->normalizer->supportsDenormalization($this->data->reveal(), DateTimeIso8601::class));
@@ -93,8 +89,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests normalize.
-   *
-   * @legacy-covers ::normalize
    */
   #[DataProvider('providerTestNormalize')]
   public function testNormalize($parent_field_item_class, $datetime_type, $expected_format): void {
@@ -132,8 +126,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests normalize when null.
-   *
-   * @legacy-covers ::normalize
    */
   #[DataProvider('providerTestNormalize')]
   public function testNormalizeWhenNull($parent_field_item_class, $datetime_type, $expected_format): void {
@@ -194,8 +186,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with good data.
-   *
-   * @legacy-covers ::denormalize
    */
   #[DataProvider('providerTestDenormalizeValidFormats')]
   public function testDenormalizeValidFormats($type, $normalized, $expected): void {
@@ -230,8 +220,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with bad data for the date-only case.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeDateOnlyException(): void {
     $this->expectException(UnexpectedValueException::class);
@@ -246,8 +234,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with bad data for the date+time case.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeDateAndTimeException(): void {
     $this->expectException(UnexpectedValueException::class);
@@ -262,8 +248,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with incomplete serialization context.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeNoTargetInstanceOrFieldDefinitionException(): void {
     $this->expectException(InvalidArgumentException::class);

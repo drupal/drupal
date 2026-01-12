@@ -93,8 +93,6 @@ class MethodFilterTest extends UnitTestCase {
 
   /**
    * Tests filtered methods.
-   *
-   * @legacy-covers ::filter
    */
   public function testFilteredMethods(): void {
     $request = Request::create('/test', 'PATCH');

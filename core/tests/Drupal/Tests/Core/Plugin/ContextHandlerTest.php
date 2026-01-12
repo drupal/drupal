@@ -71,8 +71,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests check requirements.
-   *
-   * @legacy-covers ::checkRequirements
    */
   #[DataProvider('providerTestCheckRequirements')]
   public function testCheckRequirements($contexts, $requirements, $expected): void {
@@ -123,8 +121,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests get matching contexts.
-   *
-   * @legacy-covers ::getMatchingContexts
    */
   #[DataProvider('providerTestGetMatchingContexts')]
   public function testGetMatchingContexts($contexts, $requirement, $expected = NULL): void {
@@ -175,8 +171,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests filter plugin definitions by contexts.
-   *
-   * @legacy-covers ::filterPluginDefinitionsByContexts
    */
   #[DataProvider('providerTestFilterPluginDefinitionsByContexts')]
   public function testFilterPluginDefinitionsByContexts($has_context, $definitions, $expected): void {
@@ -305,8 +299,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests apply context mapping.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMapping(): void {
     $context_hit = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -348,8 +340,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests apply context mapping missing required.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMappingMissingRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -387,8 +377,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests apply context mapping missing not required.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMappingMissingNotRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -424,8 +412,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests apply context mapping no value required.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMappingNoValueRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -461,8 +447,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests apply context mapping no value non required.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMappingNoValueNonRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -496,8 +480,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests apply context mapping configurable assigned.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMappingConfigurableAssigned(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -537,8 +519,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * Tests apply context mapping configurable assigned miss.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMappingConfigurableAssignedMiss(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');

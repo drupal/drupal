@@ -312,8 +312,6 @@ class LibraryDependencyResolverTest extends UnitTestCase {
 
   /**
    * Tests get libraries with dependencies.
-   *
-   * @legacy-covers ::getLibrariesWithDependencies
    */
   #[DataProvider('providerTestGetLibrariesWithDependencies')]
   public function testGetLibrariesWithDependencies(array $libraries, array $expected): void {
@@ -367,8 +365,6 @@ class LibraryDependencyResolverTest extends UnitTestCase {
 
   /**
    * Tests get minimal representative subset.
-   *
-   * @legacy-covers ::getMinimalRepresentativeSubset
    */
   #[DataProvider('providerTestGetMinimalRepresentativeSubset')]
   public function testGetMinimalRepresentativeSubset(array $libraries, array $expected): void {
@@ -377,8 +373,6 @@ class LibraryDependencyResolverTest extends UnitTestCase {
 
   /**
    * Tests get minimal representative subset invalid input.
-   *
-   * @legacy-covers ::getMinimalRepresentativeSubset
    */
   public function testGetMinimalRepresentativeSubsetInvalidInput(): void {
     $this->expectException(\AssertionError::class);

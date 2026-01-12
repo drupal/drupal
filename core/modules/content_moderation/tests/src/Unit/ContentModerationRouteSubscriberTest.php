@@ -227,8 +227,6 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
    *   The route parameters.
    * @param array|bool $expected_parameters
    *   (optional) The expected route parameters. Defaults to FALSE.
-   *
-   * @legacy-covers ::setLatestRevisionFlag
    */
   #[DataProvider('setLatestRevisionFlagTestCases')]
   public function testSetLatestRevisionFlag($defaults, $parameters, $expected_parameters = FALSE): void {

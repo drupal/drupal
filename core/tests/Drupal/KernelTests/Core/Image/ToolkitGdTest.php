@@ -15,7 +15,6 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore imagecreatefrom
-
 /**
  * Tests for the GD image toolkit.
  */
@@ -166,8 +165,6 @@ class ToolkitGdTest extends KernelTestBase {
 
   /**
    * Tests get requirements.
-   *
-   * @legacy-covers ::getRequirements
    */
   public function testGetRequirements(): void {
     $this->assertEquals([

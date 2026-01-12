@@ -40,7 +40,7 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::get
+   * Tests get.
    */
   public function testGet(): void {
     $file_cache = FileCacheFactory::get('test_foo_settings', []);
@@ -61,7 +61,7 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::get
+   * Tests get no prefix.
    */
   public function testGetNoPrefix(): void {
     FileCacheFactory::setPrefix(NULL);
@@ -71,7 +71,7 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::get
+   * Tests get disabled file cache.
    */
   public function testGetDisabledFileCache(): void {
     // Ensure the returned FileCache is an instance of FileCache::class.
@@ -88,7 +88,7 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::get
+   * Tests get configuration overrides.
    */
   #[DataProvider('configurationDataProvider')]
   public function testGetConfigurationOverrides($configuration, $arguments, $class): void {

@@ -45,8 +45,6 @@ class ContextTypedDataTest extends KernelTestBase {
    *
    * This test ensures that the typed data manager is set correctly on the
    * Context class.
-   *
-   * @legacy-covers ::getContextValue
    */
   public function testGetContextValue(): void {
     $data_definition = DataDefinition::create('string');
@@ -85,8 +83,6 @@ class ContextTypedDataTest extends KernelTestBase {
 
   /**
    * Tests has context value.
-   *
-   * @legacy-covers ::hasContextValue
    */
   #[DataProvider('providerHasContextValue')]
   public function testHasContextValue($has_context_value, $default_value): void {

@@ -22,8 +22,6 @@ class TableSelectTest extends UnitTestCase {
 
   /**
    * Tests process tableselect with link title.
-   *
-   * @legacy-covers ::processTableselect
    */
   public function testProcessTableselectWithLinkTitle(): void {
     $element = [];
@@ -49,8 +47,6 @@ class TableSelectTest extends UnitTestCase {
 
   /**
    * Tests process tableselect with string title.
-   *
-   * @legacy-covers ::processTableselect
    */
   public function testProcessTableselectWithStringTitle(): void {
     $element = [];

@@ -101,8 +101,6 @@ class PrivateTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the get() method.
-   *
-   * @legacy-covers ::get
    */
   public function testGet(): void {
     $calls = ['1:test_2', '1:test', '1:test'];
@@ -124,8 +122,6 @@ class PrivateTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the set() method with no lock available.
-   *
-   * @legacy-covers ::set
    */
   public function testSetWithNoLockAvailable(): void {
     $this->lock->expects($this->exactly(2))
@@ -145,8 +141,6 @@ class PrivateTempStoreTest extends UnitTestCase {
 
   /**
    * Tests a successful set() call.
-   *
-   * @legacy-covers ::set
    */
   public function testSet(): void {
     $this->lock->expects($this->once())
@@ -168,8 +162,6 @@ class PrivateTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the getMetadata() method.
-   *
-   * @legacy-covers ::getMetadata
    */
   public function testGetMetadata(): void {
     $this->keyValue->expects($this->exactly(2))
@@ -189,8 +181,6 @@ class PrivateTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the locking in the delete() method.
-   *
-   * @legacy-covers ::delete
    */
   public function testDeleteLocking(): void {
     $this->keyValue->expects($this->once())
@@ -216,8 +206,6 @@ class PrivateTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the delete() method with no lock available.
-   *
-   * @legacy-covers ::delete
    */
   public function testDeleteWithNoLockAvailable(): void {
     $this->keyValue->expects($this->once())
@@ -241,8 +229,6 @@ class PrivateTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the delete() method.
-   *
-   * @legacy-covers ::delete
    */
   public function testDelete(): void {
     $this->lock->expects($this->once())

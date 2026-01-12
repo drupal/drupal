@@ -55,8 +55,6 @@ class LinkFieldTest extends KernelTestBase {
 
   /**
    * Tests alter field instance migration.
-   *
-   * @legacy-covers ::alterFieldInstanceMigration
    */
   public function testAlterFieldInstanceMigration($method = 'alterFieldInstanceMigration'): void {
     $this->plugin->$method($this->migration);

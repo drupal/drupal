@@ -31,8 +31,6 @@ class YamlTest extends YamlTestBase {
 
   /**
    * Tests decoding YAML node anchors.
-   *
-   * @legacy-covers ::decode
    */
   #[DataProvider('providerDecodeTests')]
   public function testDecode($string, $data): void {
@@ -41,8 +39,6 @@ class YamlTest extends YamlTestBase {
 
   /**
    * Tests our encode settings.
-   *
-   * @legacy-covers ::encode
    */
   public function testEncode(): void {
     // cSpell:disable
@@ -53,7 +49,7 @@ class YamlTest extends YamlTestBase {
   }
 
   /**
-   * @legacy-covers ::getFileExtension
+   * Tests get file extension.
    */
   public function testGetFileExtension(): void {
     $this->assertSame('yml', Yaml::getFileExtension());
@@ -71,8 +67,6 @@ class YamlTest extends YamlTestBase {
 
   /**
    * Ensures that php object support is disabled.
-   *
-   * @legacy-covers ::encode
    */
   public function testEncodeObjectSupportDisabled(): void {
     $this->expectException(InvalidDataTypeException::class);
@@ -84,8 +78,6 @@ class YamlTest extends YamlTestBase {
 
   /**
    * Ensures that decoding PHP objects does not work in Symfony.
-   *
-   * @legacy-covers ::decode
    */
   public function testDecodeObjectSupportDisabled(): void {
     $this->expectException(InvalidDataTypeException::class);

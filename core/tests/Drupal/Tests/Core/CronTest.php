@@ -190,8 +190,6 @@ class CronTest extends UnitTestCase {
 
   /**
    * Tests the ::processQueues() method.
-   *
-   * @legacy-covers ::processQueues
    */
   #[DataProvider('processQueuesTestData')]
   public function testProcessQueues($item, $message_logged_assertion, $count_post_run): void {

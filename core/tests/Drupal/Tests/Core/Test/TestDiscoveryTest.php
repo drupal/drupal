@@ -358,7 +358,7 @@ EOF;
   }
 
   /**
-   * @legacy-covers ::getTestClasses
+   * Tests get test classes.
    */
   public function testGetTestClasses(): void {
     $this->setupVfsWithTestClasses();
@@ -427,7 +427,7 @@ EOF;
   }
 
   /**
-   * @legacy-covers ::getTestClasses
+   * Tests get test classes with selected types.
    */
   public function testGetTestClassesWithSelectedTypes(): void {
     $this->setupVfsWithTestClasses();
@@ -501,7 +501,7 @@ EOF;
   }
 
   /**
-   * @legacy-covers ::getPhpunitTestSuite
+   * Tests get phpunit test suite.
    */
   #[DataProvider('providerTestGetPhpunitTestSuite')]
   public function testGetPhpunitTestSuite($classname, $expected): void {
@@ -531,8 +531,6 @@ EOF;
 
   /**
    * Ensure that classes are not reflected when the docblock is empty.
-   *
-   * @legacy-covers ::getTestInfo
    */
   public function testGetTestInfoEmptyDocblock(): void {
     // If getTestInfo() performed reflection, it won't be able to find the
@@ -546,8 +544,6 @@ EOF;
 
   /**
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
-   *
-   * @legacy-covers ::scanDirectory
    */
   public function testScanDirectoryNoAbstract(): void {
     $this->setupVfsWithTestClasses();

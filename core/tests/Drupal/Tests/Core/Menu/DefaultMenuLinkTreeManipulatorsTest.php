@@ -193,8 +193,6 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
   /**
    * Tests the generateIndexAndSort() tree manipulator.
-   *
-   * @legacy-covers ::generateIndexAndSort
    */
   public function testGenerateIndexAndSort(): void {
     $this->mockTree();
@@ -325,8 +323,6 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
   /**
    * Tests the flatten() tree manipulator.
-   *
-   * @legacy-covers ::flatten
    */
   public function testFlatten(): void {
     $this->mockTree();

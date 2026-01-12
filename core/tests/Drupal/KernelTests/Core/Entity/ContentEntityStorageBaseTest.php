@@ -36,8 +36,6 @@ class ContentEntityStorageBaseTest extends KernelTestBase {
 
   /**
    * Tests create.
-   *
-   * @legacy-covers ::create
    */
   #[DataProvider('providerTestCreate')]
   public function testCreate(string|array $bundle): void {

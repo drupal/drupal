@@ -31,8 +31,6 @@ class MimeTypeMapTest extends UnitTestCase {
 
   /**
    * Tests add mapping.
-   *
-   * @legacy-covers ::addMapping
    */
   public function testAddMapping(): void {
     $this->map->addMapping('image/gif', 'gif');
@@ -50,8 +48,6 @@ class MimeTypeMapTest extends UnitTestCase {
 
   /**
    * Tests remove mapping.
-   *
-   * @legacy-covers ::removeMapping
    */
   public function testRemoveMapping(): void {
     $this->assertTrue($this->map->removeMapping('image/jpeg', 'jpg'));
@@ -61,8 +57,6 @@ class MimeTypeMapTest extends UnitTestCase {
 
   /**
    * Tests remove mime type.
-   *
-   * @legacy-covers ::removeMimeType
    */
   public function testRemoveMimeType(): void {
     $this->assertTrue($this->map->removeMimeType('image/jpeg'));
@@ -72,8 +66,6 @@ class MimeTypeMapTest extends UnitTestCase {
 
   /**
    * Tests list mime types.
-   *
-   * @legacy-covers ::listMimeTypes
    */
   public function testListMimeTypes(): void {
     $mimeTypes = $this->map->listMimeTypes();
@@ -83,8 +75,6 @@ class MimeTypeMapTest extends UnitTestCase {
 
   /**
    * Tests has mime type.
-   *
-   * @legacy-covers ::hasMimeType
    */
   public function testHasMimeType(): void {
     $this->assertTrue($this->map->hasMimeType('image/jpeg'));
@@ -93,8 +83,6 @@ class MimeTypeMapTest extends UnitTestCase {
 
   /**
    * Tests get mime type for extension.
-   *
-   * @legacy-covers ::getMimeTypeForExtension
    */
   public function testGetMimeTypeForExtension(): void {
     $this->assertSame('image/jpeg', $this->map->getMimeTypeForExtension('jpe'));
@@ -102,8 +90,6 @@ class MimeTypeMapTest extends UnitTestCase {
 
   /**
    * Tests get extensions for mime type.
-   *
-   * @legacy-covers ::getExtensionsForMimeType
    */
   public function testGetExtensionsForMimeType(): void {
     $this->assertEquals(['jpe', 'jpeg', 'jpg'],
@@ -123,8 +109,6 @@ class MimeTypeMapTest extends UnitTestCase {
 
   /**
    * Tests has extension.
-   *
-   * @legacy-covers ::hasExtension
    */
   public function testHasExtension(): void {
     $this->assertTrue($this->map->hasExtension('jpg'));

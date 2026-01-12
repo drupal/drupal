@@ -69,8 +69,6 @@ class ModerationInformationTest extends KernelTestBase {
 
   /**
    * Tests get default revision id.
-   *
-   * @legacy-covers ::getDefaultRevisionId
    */
   public function testGetDefaultRevisionId(): void {
     $entity_test_rev = EntityTestRev::create([
@@ -91,8 +89,6 @@ class ModerationInformationTest extends KernelTestBase {
 
   /**
    * Tests is default revision published.
-   *
-   * @legacy-covers ::isDefaultRevisionPublished
    */
   #[DataProvider('isDefaultRevisionPublishedTestCases')]
   public function testIsDefaultRevisionPublished($initial_state, $final_state, $initial_is_default_published, $final_is_default_published): void {
@@ -141,8 +137,6 @@ class ModerationInformationTest extends KernelTestBase {
 
   /**
    * Tests is default revision published multilingual.
-   *
-   * @legacy-covers ::isDefaultRevisionPublished
    */
   public function testIsDefaultRevisionPublishedMultilingual(): void {
     $entity = EntityTestMulRevPub::create([
@@ -165,8 +159,6 @@ class ModerationInformationTest extends KernelTestBase {
 
   /**
    * Tests has pending revision.
-   *
-   * @legacy-covers ::hasPendingRevision
    */
   public function testHasPendingRevision(): void {
     $entity = EntityTestMulRevPub::create([
@@ -198,8 +190,6 @@ class ModerationInformationTest extends KernelTestBase {
 
   /**
    * Tests get original state.
-   *
-   * @legacy-covers ::getOriginalState
    */
   public function testGetOriginalState(): void {
     $entity = EntityTestMulRevPub::create([
@@ -212,8 +202,6 @@ class ModerationInformationTest extends KernelTestBase {
 
   /**
    * Tests get original state multilingual.
-   *
-   * @legacy-covers ::getOriginalState
    */
   public function testGetOriginalStateMultilingual(): void {
     $entity = EntityTestMulRevPub::create([

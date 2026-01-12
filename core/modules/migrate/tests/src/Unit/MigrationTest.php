@@ -261,8 +261,6 @@ class MigrationTest extends UnitTestCase {
    *   The migration dependencies configuration array expected.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   *
-   * @legacy-covers ::addRequiredDependencies
    */
   #[DataProvider('providerTestAddRequiredDependencies')]
   public function testAddRequiredDependencies(?array $initial_dependency, array $addition, array $expected): void {
@@ -346,8 +344,6 @@ class MigrationTest extends UnitTestCase {
    *   Add array of additions.
    * @param string[] $expected
    *   The migration dependencies configuration array expected.
-   *
-   * @legacy-covers ::addOptionalDependencies
    */
   #[DataProvider('providerTestAddOptionalDependencies')]
   public function testAddOptionalDependencies(?array $initial_dependency, array $addition, array $expected): void {

@@ -39,8 +39,6 @@ class OffsetPageTest extends UnitTestCase {
 
   /**
    * Tests create from query parameter.
-   *
-   * @legacy-covers ::createFromQueryParameter
    */
   #[DataProvider('parameterProvider')]
   public function testCreateFromQueryParameter($original, $expected): void {
@@ -64,8 +62,6 @@ class OffsetPageTest extends UnitTestCase {
 
   /**
    * Tests create from query parameter fail.
-   *
-   * @legacy-covers ::createFromQueryParameter
    */
   public function testCreateFromQueryParameterFail(): void {
     $this->expectException(BadRequestHttpException::class);

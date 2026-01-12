@@ -504,8 +504,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 
   /**
    * Tests load missing entity.
-   *
-   * @legacy-covers ::load
    */
   public function testLoadMissingEntity(): void {
     $this->setUpKeyValueEntityStorage();

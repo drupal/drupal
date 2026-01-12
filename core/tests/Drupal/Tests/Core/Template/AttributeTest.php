@@ -83,8 +83,6 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests setting attributes.
-   *
-   * @legacy-covers ::setAttribute
    */
   public function testSetAttribute(): void {
     $attribute = new Attribute();
@@ -112,8 +110,6 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing attributes.
-   *
-   * @legacy-covers ::removeAttribute
    */
   public function testRemoveAttribute(): void {
     $attributes = [
@@ -152,8 +148,6 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests adding class attributes with the AttributeArray helper method.
-   *
-   * @legacy-covers ::addClass
    */
   public function testAddClasses(): void {
     // Add a class with the array syntax without first initializing the 'class'
@@ -209,8 +203,6 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the AttributeArray helper method.
-   *
-   * @legacy-covers ::removeClass
    */
   public function testRemoveClasses(): void {
     // Add duplicate class to ensure that both duplicates are removed.
@@ -241,8 +233,6 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests checking for class names with the Attribute method.
-   *
-   * @legacy-covers ::hasClass
    */
   public function testHasClass(): void {
     // Test an attribute without any classes.
@@ -504,8 +494,6 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests has attribute.
-   *
-   * @legacy-covers ::hasAttribute
    */
   #[DataProvider('providerTestHasAttribute')]
   public function testHasAttribute(array $test_data, $test_attribute, $expected): void {
@@ -546,8 +534,6 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests merge.
-   *
-   * @legacy-covers ::merge
    */
   #[DataProvider('providerTestMerge')]
   public function testMerge($original, $merge, $expected): void {
@@ -556,8 +542,6 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests merge argument exception.
-   *
-   * @legacy-covers ::merge
    */
   public function testMergeArgumentException(): void {
     $attributes = new Attribute(['class' => ['example-class']]);

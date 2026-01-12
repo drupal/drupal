@@ -69,7 +69,7 @@ class FileCacheTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getMultiple
+   * Tests get multiple.
    */
   public function testGetMultiple(): void {
     // Test a cache miss.
@@ -104,7 +104,7 @@ class FileCacheTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::set
+   * Tests set.
    */
   public function testSet(): void {
     $filename = __DIR__ . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR . 'llama-23.txt';
@@ -125,7 +125,7 @@ class FileCacheTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::delete
+   * Tests delete.
    */
   public function testDelete(): void {
     $filename = __DIR__ . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR . 'llama-23.txt';

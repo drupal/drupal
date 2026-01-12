@@ -22,8 +22,6 @@ class BatchControllerTest extends UnitTestCase {
 
   /**
    * Tests title callback.
-   *
-   * @legacy-covers ::batchPageTitle
    */
   public function testBatchPageTitle(): void {
     $batch_storage = $this->createMock(BatchStorageInterface::class);

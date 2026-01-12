@@ -19,8 +19,6 @@ class FormStateValuesTraitTest extends UnitTestCase {
 
   /**
    * Tests that setting the value for an element adds to the values.
-   *
-   * @legacy-covers ::setValueForElement
    */
   public function testSetValueForElement(): void {
     $element = [
@@ -43,8 +41,6 @@ class FormStateValuesTraitTest extends UnitTestCase {
 
   /**
    * Tests get value.
-   *
-   * @legacy-covers ::getValue
    */
   #[DataProvider('providerGetValue')]
   public function testGetValue($key, $expected, $default = NULL): void {
@@ -94,8 +90,6 @@ class FormStateValuesTraitTest extends UnitTestCase {
 
   /**
    * Tests get value modify return.
-   *
-   * @legacy-covers ::getValue
    */
   public function testGetValueModifyReturn(): void {
     $initial_values = $values = [
@@ -116,8 +110,6 @@ class FormStateValuesTraitTest extends UnitTestCase {
 
   /**
    * Tests set value.
-   *
-   * @legacy-covers ::setValue
    */
   #[DataProvider('providerSetValue')]
   public function testSetValue($key, $value, $expected): void {
@@ -153,8 +145,6 @@ class FormStateValuesTraitTest extends UnitTestCase {
 
   /**
    * Tests has value.
-   *
-   * @legacy-covers ::hasValue
    */
   #[DataProvider('providerHasValue')]
   public function testHasValue($key, $expected): void {
@@ -203,8 +193,6 @@ class FormStateValuesTraitTest extends UnitTestCase {
 
   /**
    * Tests is value empty.
-   *
-   * @legacy-covers ::isValueEmpty
    */
   #[DataProvider('providerIsValueEmpty')]
   public function testIsValueEmpty($key, $expected): void {

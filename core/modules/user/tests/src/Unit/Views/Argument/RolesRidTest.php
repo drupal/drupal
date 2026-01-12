@@ -21,8 +21,6 @@ class RolesRidTest extends UnitTestCase {
 
   /**
    * Tests the titleQuery method.
-   *
-   * @legacy-covers ::titleQuery
    */
   public function testTitleQuery(): void {
     $role1 = new Role([

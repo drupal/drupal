@@ -70,8 +70,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests get title.
-   *
-   * @legacy-covers ::getTitle
    */
   public function testGetTitle(): void {
     $title = 'Example';
@@ -88,8 +86,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests get title with context.
-   *
-   * @legacy-covers ::getTitle
    */
   public function testGetTitleWithContext(): void {
     $title = 'Example';
@@ -106,8 +102,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests get title with title arguments.
-   *
-   * @legacy-covers ::getTitle
    */
   public function testGetTitleWithTitleArguments(): void {
     $title = 'Example @test';
@@ -125,8 +119,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests get route name.
-   *
-   * @legacy-covers ::getRouteName
    */
   public function testGetRouteName($route_name = 'test_route_name'): void {
     $this->pluginDefinition['route_name'] = $route_name;
@@ -137,8 +129,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests get group.
-   *
-   * @legacy-covers ::getGroup
    */
   public function testGetGroup($group_name = 'test_group'): void {
     $this->pluginDefinition['group'] = $group_name;
@@ -149,8 +139,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests get options.
-   *
-   * @legacy-covers ::getOptions
    */
   public function testGetOptions($options = ['key' => 'value']): void {
     $this->pluginDefinition['options'] = $options;
@@ -161,8 +149,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
   /**
    * Tests get weight.
-   *
-   * @legacy-covers ::getWeight
    */
   public function testGetWeight($weight = 5): void {
     $this->pluginDefinition['weight'] = $weight;

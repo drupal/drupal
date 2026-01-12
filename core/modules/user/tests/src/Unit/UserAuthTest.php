@@ -95,8 +95,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests failing authentication with missing credential parameters.
-   *
-   * @legacy-covers ::authenticate
    */
   #[DataProvider('providerTestAuthenticateWithMissingCredentials')]
   public function testAuthenticateWithMissingCredentials($username, $password): void {
@@ -123,8 +121,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests the authenticate method with no account returned.
-   *
-   * @legacy-covers ::authenticate
    */
   public function testAuthenticateWithNoAccountReturned(): void {
     $this->userStorage->expects($this->once())
@@ -137,8 +133,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests the authenticate method with an incorrect password.
-   *
-   * @legacy-covers ::authenticate
    */
   public function testAuthenticateWithIncorrectPassword(): void {
     $this->userStorage->expects($this->once())
@@ -156,8 +150,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests the authenticate method with a correct password.
-   *
-   * @legacy-covers ::authenticate
    */
   public function testAuthenticateWithCorrectPassword(): void {
     $this->testUser->expects($this->once())
@@ -183,8 +175,6 @@ class UserAuthTest extends UnitTestCase {
    * We discovered in https://www.drupal.org/node/2563751 that logging in with a
    * password that is literally "0" was not possible. This test ensures that
    * this regression can't happen again.
-   *
-   * @legacy-covers ::authenticate
    */
   public function testAuthenticateWithZeroPassword(): void {
     $this->testUser->expects($this->once())
@@ -206,8 +196,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests the authenticate method with a correct password & new password hash.
-   *
-   * @legacy-covers ::authenticate
    */
   public function testAuthenticateWithCorrectPasswordAndNewPasswordHash(): void {
     $this->testUser->expects($this->once())

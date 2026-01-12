@@ -91,8 +91,6 @@ class ContextTest extends UnitTestCase {
 
   /**
    * Tests set context value typed data.
-   *
-   * @legacy-covers ::setContextValue
    */
   public function testSetContextValueTypedData(): void {
 
@@ -105,8 +103,6 @@ class ContextTest extends UnitTestCase {
 
   /**
    * Tests set context value cacheable dependency.
-   *
-   * @legacy-covers ::setContextValue
    */
   public function testSetContextValueCacheableDependency(): void {
     $container = new Container();

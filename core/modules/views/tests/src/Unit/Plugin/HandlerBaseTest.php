@@ -31,8 +31,6 @@ class HandlerBaseTest extends UnitTestCase {
 
   /**
    * Tests get entity type for field on base table.
-   *
-   * @legacy-covers ::getEntityType
    */
   public function testGetEntityTypeForFieldOnBaseTable(): void {
     $handler = new TestHandler([], 'test_handler', []);
@@ -55,8 +53,6 @@ class HandlerBaseTest extends UnitTestCase {
 
   /**
    * Tests get entity type for field with relationship.
-   *
-   * @legacy-covers ::getEntityType
    */
   public function testGetEntityTypeForFieldWithRelationship(): void {
     $handler = new TestHandler([], 'test_handler', []);

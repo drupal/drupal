@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 class FileSecurityTest extends TestCase {
 
   /**
-   * @legacy-covers ::writeHtaccess
+   * Tests write htaccess private.
    */
   public function testWriteHtaccessPrivate(): void {
     vfsStream::setup('root');
@@ -31,7 +31,7 @@ class FileSecurityTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::writeHtaccess
+   * Tests write htaccess public.
    */
   public function testWriteHtaccessPublic(): void {
     vfsStream::setup('root');
@@ -44,7 +44,7 @@ class FileSecurityTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::writeHtaccess
+   * Tests write htaccess force overwrite.
    */
   public function testWriteHtaccessForceOverwrite(): void {
     vfsStream::setup('root');
@@ -57,7 +57,7 @@ class FileSecurityTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::writeHtaccess
+   * Tests write htaccess failure.
    */
   public function testWriteHtaccessFailure(): void {
     vfsStream::setup('root');

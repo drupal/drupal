@@ -21,8 +21,6 @@ class ExtensionInstallStorageTest extends UnitTestCase {
 
   /**
    * Tests create collection.
-   *
-   * @legacy-covers ::createCollection
    */
   public function testCreateCollection(): void {
     $memory = new MemoryStorage();

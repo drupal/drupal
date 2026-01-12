@@ -28,8 +28,6 @@ class ExceptionJsonSubscriberTest extends UnitTestCase {
 
   /**
    * Tests on 4xx.
-   *
-   * @legacy-covers ::on4xx
    */
   #[DataProvider('providerTestOn4xx')]
   public function testOn4xx(HttpExceptionInterface $exception, $expected_response_class): void {

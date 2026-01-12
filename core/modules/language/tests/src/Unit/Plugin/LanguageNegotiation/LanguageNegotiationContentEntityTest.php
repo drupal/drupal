@@ -98,8 +98,6 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
 
   /**
    * Tests get langcode.
-   *
-   * @legacy-covers ::getLangcode
    */
   public function testGetLangcode(): void {
     $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
@@ -134,8 +132,6 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
 
   /**
    * Tests process outbound.
-   *
-   * @legacy-covers ::processOutbound
    */
   public function testProcessOutbound(): void {
 
@@ -214,8 +210,6 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
 
   /**
    * Tests get language switch links.
-   *
-   * @legacy-covers ::getLanguageSwitchLinks
    */
   public function testGetLanguageSwitchLinks(): void {
     $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();

@@ -69,8 +69,6 @@ class TextItemBaseTest extends KernelTestBase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     $this->installEntitySchema('user');

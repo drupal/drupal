@@ -89,8 +89,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
    *   The value to pass to ::extractEntityFromRoute().
    * @param array $defaults
    *   The defaults to pass to ::extractEntityFromRoute().
-   *
-   * @legacy-covers ::extractEntityFromRoute
    */
   #[DataProvider('providerTestExtractEntityFromRoute')]
   public function testExtractEntityFromRoute($success, $expected_entity_type_id, $value, array $defaults): void {

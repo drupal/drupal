@@ -67,8 +67,6 @@ class ResourceFetcherTest extends MediaFunctionalTestBase {
    *   The expected name of the resource provider.
    * @param string $title
    *   The expected title of the resource.
-   *
-   * @legacy-covers ::fetchResource
    */
   #[DataProvider('providerFetchResource')]
   public function testFetchResource($resource_url, $provider_name, $title): void {

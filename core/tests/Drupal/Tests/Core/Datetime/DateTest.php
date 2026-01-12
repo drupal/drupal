@@ -107,8 +107,6 @@ class DateTest extends UnitTestCase {
 
   /**
    * Tests the formatInterval method.
-   *
-   * @legacy-covers ::formatInterval
    */
   #[DataProvider('providerTestFormatInterval')]
   public function testFormatInterval($interval, $granularity, $expected, $langcode = NULL): void {
@@ -195,8 +193,6 @@ class DateTest extends UnitTestCase {
 
   /**
    * Tests the formatTimeDiffUntil method.
-   *
-   * @legacy-covers ::formatTimeDiffUntil
    */
   public function testFormatTimeDiffUntil(): void {
     $expected = '1 second';
@@ -228,8 +224,6 @@ class DateTest extends UnitTestCase {
 
   /**
    * Tests the formatTimeDiffSince method.
-   *
-   * @legacy-covers ::formatTimeDiffSince
    */
   public function testFormatTimeDiffSince(): void {
     $expected = '1 second';
@@ -261,8 +255,6 @@ class DateTest extends UnitTestCase {
 
   /**
    * Tests the formatDiff method.
-   *
-   * @legacy-covers ::formatDiff
    */
   #[DataProvider('providerTestFormatDiff')]
   public function testFormatDiff(string $expected, int $max_age, int $timestamp1, int $timestamp2, array $options = []): void {

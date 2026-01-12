@@ -26,8 +26,6 @@ class FieldItemListTest extends UnitTestCase {
 
   /**
    * Tests equals.
-   *
-   * @legacy-covers ::equals
    */
   #[DataProvider('providerTestEquals')]
   public function testEquals($expected, ?FieldItemInterface $first_field_item = NULL, ?FieldItemInterface $second_field_item = NULL): void {
@@ -167,8 +165,6 @@ class FieldItemListTest extends UnitTestCase {
 
   /**
    * Tests identical behavior of ::hasAffectingChanges with ::equals.
-   *
-   * @legacy-covers ::hasAffectingChanges
    */
   #[DataProvider('providerTestEquals')]
   public function testHasAffectingChanges($expected, ?FieldItemInterface $first_field_item = NULL, ?FieldItemInterface $second_field_item = NULL): void {
@@ -231,8 +227,6 @@ class FieldItemListTest extends UnitTestCase {
 
   /**
    * Tests equals empty items.
-   *
-   * @legacy-covers ::equals
    */
   public function testEqualsEmptyItems(): void {
     /** @var \Drupal\Core\Field\FieldItemBase  $fv */
@@ -297,8 +291,6 @@ class FieldItemListTest extends UnitTestCase {
 
   /**
    * Tests default values form.
-   *
-   * @legacy-covers ::defaultValuesForm
    */
   public function testDefaultValuesForm(): void {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
@@ -323,8 +315,6 @@ class FieldItemListTest extends UnitTestCase {
 
   /**
    * Tests default values form validate.
-   *
-   * @legacy-covers ::defaultValuesFormValidate
    */
   public function testDefaultValuesFormValidate(): void {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
@@ -346,8 +336,6 @@ class FieldItemListTest extends UnitTestCase {
 
   /**
    * Tests default values form submit.
-   *
-   * @legacy-covers ::defaultValuesFormSubmit
    */
   public function testDefaultValuesFormSubmit(): void {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);

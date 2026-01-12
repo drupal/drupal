@@ -21,8 +21,6 @@ class QueryArgsCacheContextTest extends UnitTestCase {
 
   /**
    * Tests get context.
-   *
-   * @legacy-covers ::getContext
    */
   #[DataProvider('providerTestGetContext')]
   public function testGetContext(array $query_args, $cache_context_parameter, $context): void {

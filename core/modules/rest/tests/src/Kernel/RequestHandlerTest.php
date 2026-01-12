@@ -59,8 +59,6 @@ class RequestHandlerTest extends KernelTestBase {
 
   /**
    * Tests handle.
-   *
-   * @legacy-covers ::handle
    */
   public function testHandle(): void {
     $request = new Request([], [], [], [], [], ['CONTENT_TYPE' => 'application/json'], Json::encode(['this is an array']));

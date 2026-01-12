@@ -125,8 +125,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
   /**
    * Tests that basic functionality works for getLibraryByName.
-   *
-   * @legacy-covers ::buildByExtension
    */
   #[RunInSeparateProcess]
   public function testBuildByExtensionSimple(): void {
@@ -166,8 +164,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
   /**
    * Tests that a theme can be used instead of a module.
-   *
-   * @legacy-covers ::buildByExtension
    */
   public function testBuildByExtensionWithTheme(): void {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -193,8 +189,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
   /**
    * Tests that a module with a missing library file results in FALSE.
-   *
-   * @legacy-covers ::buildByExtension
    */
   public function testBuildByExtensionWithMissingLibraryFile(): void {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -236,8 +230,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
   /**
    * Tests that no exception is thrown when only dependencies are specified.
-   *
-   * @legacy-covers ::buildByExtension
    */
   public function testBuildByExtensionWithOnlyDependencies(): void {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -258,8 +250,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
   /**
    * Tests that an exception is thrown with only the version property specified.
-   *
-   * @legacy-covers ::buildByExtension
    */
   public function testBuildByExtensionWithMissingInformation(): void {
     $this->moduleHandler->expects($this->atLeastOnce())

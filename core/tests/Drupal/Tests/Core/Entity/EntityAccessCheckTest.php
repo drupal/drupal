@@ -65,8 +65,6 @@ class EntityAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests access with type placeholder.
-   *
-   * @legacy-covers ::access
    */
   public function testAccessWithTypePlaceholder(): void {
     $route = new Route('/foo/{entity_type}/{var_name}', [], ['_entity_access' => 'var_name.update'], ['parameters' => ['var_name' => ['type' => 'entity:{entity_type}']]]);
@@ -87,8 +85,6 @@ class EntityAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests access with different route parameters.
-   *
-   * @legacy-covers ::access
    */
   public function testAccessWithDifferentRouteParameters(): void {
     $route = new Route(

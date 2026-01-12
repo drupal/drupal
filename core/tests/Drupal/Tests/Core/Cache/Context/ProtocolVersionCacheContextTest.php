@@ -21,8 +21,6 @@ class ProtocolVersionCacheContextTest extends UnitTestCase {
 
   /**
    * Tests get context.
-   *
-   * @legacy-covers ::getContext
    */
   #[DataProvider('providerTestGetContext')]
   public function testGetContext($protocol, $context): void {

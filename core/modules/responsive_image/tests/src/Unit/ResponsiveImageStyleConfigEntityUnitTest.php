@@ -67,8 +67,6 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     // Set up image style loading mock.

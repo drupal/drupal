@@ -20,8 +20,6 @@ class HtmlTagTest extends RendererTestBase {
 
   /**
    * Tests get info.
-   *
-   * @legacy-covers ::getInfo
    */
   public function testGetInfo(): void {
     $htmlTag = new HtmlTag([], 'test', 'test');
@@ -33,8 +31,6 @@ class HtmlTagTest extends RendererTestBase {
 
   /**
    * Tests pre render html tag.
-   *
-   * @legacy-covers ::preRenderHtmlTag
    */
   #[DataProvider('providerPreRenderHtmlTag')]
   public function testPreRenderHtmlTag($element, $expected): void {

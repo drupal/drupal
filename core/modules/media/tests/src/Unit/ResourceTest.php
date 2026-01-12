@@ -79,8 +79,6 @@ class ResourceTest extends UnitTestCase {
 
   /**
    * Tests set dimensions.
-   *
-   * @legacy-covers ::setDimensions
    */
   #[DataProvider('setDimensionsTestCases')]
   public function testSetDimensions($factory, $width, $height, $exception = NULL, $expected_width = NULL, $expected_height = NULL): void {

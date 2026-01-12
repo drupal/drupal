@@ -21,8 +21,6 @@ class UnicodeTest extends TestCase {
 
   /**
    * Tests multibyte ucfirst.
-   *
-   * @legacy-covers ::ucfirst
    */
   #[DataProvider('providerUcfirst')]
   public function testUcfirst($text, $expected): void {
@@ -52,8 +50,6 @@ class UnicodeTest extends TestCase {
 
   /**
    * Tests multibyte lcfirst.
-   *
-   * @legacy-covers ::lcfirst
    */
   #[DataProvider('providerLcfirst')]
   public function testLcfirst($text, $expected): void {
@@ -83,8 +79,6 @@ class UnicodeTest extends TestCase {
 
   /**
    * Tests multibyte ucwords.
-   *
-   * @legacy-covers ::ucwords
    */
   #[DataProvider('providerUcwords')]
   public function testUcwords($text, $expected): void {
@@ -116,8 +110,6 @@ class UnicodeTest extends TestCase {
 
   /**
    * Tests multibyte truncate.
-   *
-   * @legacy-covers ::truncate
    */
   #[DataProvider('providerTruncate')]
   public function testTruncate($text, $max_length, $expected, $wordsafe = FALSE, $add_ellipsis = FALSE): void {
@@ -215,8 +207,6 @@ EOF;
    *   The upper limit on the returned string length.
    * @param string $expected
    *   The expected return from Unicode::truncateBytes().
-   *
-   * @legacy-covers ::truncateBytes
    */
   #[DataProvider('providerTestTruncateBytes')]
   public function testTruncateBytes($text, $max_length, $expected): void {
@@ -250,8 +240,6 @@ EOF;
    *   The expected return value from Unicode::validateUtf8().
    * @param string $message
    *   The message to display on failure.
-   *
-   * @legacy-covers ::validateUtf8
    */
   #[DataProvider('providerTestValidateUtf8')]
   public function testValidateUtf8($text, $expected, $message): void {
@@ -290,8 +278,6 @@ EOF;
    *   The encoding the data is in.
    * @param string|bool $expected
    *   The expected result.
-   *
-   * @legacy-covers ::convertToUtf8
    */
   #[DataProvider('providerTestConvertToUtf8')]
   public function testConvertToUtf8($data, $encoding, $expected): void {

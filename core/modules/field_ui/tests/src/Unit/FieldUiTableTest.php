@@ -19,8 +19,6 @@ class FieldUiTableTest extends UnitTestCase {
 
   /**
    * Tests reduce order.
-   *
-   * @legacy-covers ::reduceOrder
    */
   #[DataProvider('providerTestReduceOrder')]
   public function testReduceOrder($array, $expected): void {

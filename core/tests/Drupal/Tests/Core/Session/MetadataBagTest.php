@@ -19,8 +19,6 @@ class MetadataBagTest extends UnitTestCase {
 
   /**
    * Tests stamp new.
-   *
-   * @legacy-covers ::stampNew
    */
   public function testStampNew(): void {
     $metadata = new MetadataBag(new Settings([]));

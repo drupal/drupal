@@ -44,8 +44,6 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
 
   /**
    * Tests that getDefinitions() retrieves the file cache correctly.
-   *
-   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     // Path to the classes which we'll discover and parse annotation.
@@ -103,8 +101,6 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
 
   /**
    * Tests discovery with missing traits.
-   *
-   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitionsMissingTrait(): void {
     // Path to the classes which we'll discover and parse annotation.

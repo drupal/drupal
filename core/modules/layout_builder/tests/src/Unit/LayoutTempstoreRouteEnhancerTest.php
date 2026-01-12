@@ -23,8 +23,6 @@ class LayoutTempstoreRouteEnhancerTest extends UnitTestCase {
 
   /**
    * Tests enhance.
-   *
-   * @legacy-covers ::enhance
    */
   public function testEnhance(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);

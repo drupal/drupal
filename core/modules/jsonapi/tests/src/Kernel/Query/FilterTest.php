@@ -162,8 +162,6 @@ class FilterTest extends JsonapiKernelTestBase {
 
   /**
    * Tests query condition.
-   *
-   * @legacy-covers ::queryCondition
    */
   public function testQueryCondition(): void {
     // Can't use a data provider because we need access to the container.
@@ -329,8 +327,6 @@ class FilterTest extends JsonapiKernelTestBase {
 
   /**
    * Tests create from query parameter.
-   *
-   * @legacy-covers ::createFromQueryParameter
    */
   #[DataProvider('parameterProvider')]
   public function testCreateFromQueryParameter($case, $expected): void {
@@ -362,8 +358,6 @@ class FilterTest extends JsonapiKernelTestBase {
 
   /**
    * Tests create from query parameter nested.
-   *
-   * @legacy-covers ::createFromQueryParameter
    */
   public function testCreateFromQueryParameterNested(): void {
     $parameter = [

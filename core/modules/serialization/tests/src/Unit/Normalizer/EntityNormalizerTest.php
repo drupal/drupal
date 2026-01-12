@@ -77,8 +77,6 @@ class EntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the normalize() method.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalize(): void {
     $list_item_1 = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
@@ -108,8 +106,6 @@ class EntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize() method with no entity type provided in context.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithNoEntityType(): void {
     $this->expectException(UnexpectedValueException::class);
@@ -118,8 +114,6 @@ class EntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize method with a bundle property.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithValidBundle(): void {
     $test_data = [
@@ -235,8 +229,6 @@ class EntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize method with a bundle property.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithInvalidBundle(): void {
     $test_data = [
@@ -317,8 +309,6 @@ class EntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize method with no bundle defined.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithNoBundle(): void {
     $test_data = [
@@ -385,8 +375,6 @@ class EntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize method with no bundle defined.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeWithNoFieldableEntityType(): void {
     $test_data = [

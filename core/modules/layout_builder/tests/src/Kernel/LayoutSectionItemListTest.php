@@ -49,8 +49,6 @@ class LayoutSectionItemListTest extends SectionListTestBase {
 
   /**
    * Tests equals.
-   *
-   * @legacy-covers ::equals
    */
   public function testEquals(): void {
     $this->sectionList->getSection(0)->setLayoutSettings(['foo' => 1]);
@@ -64,8 +62,6 @@ class LayoutSectionItemListTest extends SectionListTestBase {
 
   /**
    * Tests equals non section.
-   *
-   * @legacy-covers ::equals
    */
   public function testEqualsNonSection(): void {
     $list = $this->prophesize(FieldItemListInterface::class);

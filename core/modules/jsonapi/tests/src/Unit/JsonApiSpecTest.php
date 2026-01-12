@@ -22,8 +22,6 @@ class JsonApiSpecTest extends UnitTestCase {
 
   /**
    * Ensures that member names are properly validated.
-   *
-   * @legacy-covers ::isValidMemberName
    */
   #[DataProvider('providerTestIsValidMemberName')]
   public function testIsValidMemberName($member_name, $expected): void {

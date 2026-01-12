@@ -20,8 +20,6 @@ class WizardPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests get selected.
-   *
-   * @legacy-covers ::getSelected
    */
   #[DataProvider('providerTestGetSelected')]
   public function testGetSelected($expected, $element = [], $parents = [], $user_input = [], $not_rebuilding_expected = NULL): void {

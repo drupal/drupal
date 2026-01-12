@@ -71,8 +71,6 @@ class MigrationPluginListTest extends KernelTestBase {
 
   /**
    * Tests get definitions.
-   *
-   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     // Create an entity reference field to make sure that migrations derived by

@@ -115,8 +115,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests calculate dependencies.
-   *
-   * @legacy-covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     // Mock the interfaces necessary to create a dependency on a bundle entity.
@@ -206,8 +204,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests on dependency removal.
-   *
-   * @legacy-covers ::onDependencyRemoval
    */
   public function testOnDependencyRemoval(): void {
     $this->fieldTypePluginManager->expects($this->any())
@@ -237,8 +233,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests to array.
-   *
-   * @legacy-covers ::toArray
    */
   public function testToArray(): void {
     $field = new FieldConfig([
@@ -284,8 +278,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests get type.
-   *
-   * @legacy-covers ::getType
    */
   public function testGetType(): void {
     // Ensure that FieldConfig::getType() is not delegated to

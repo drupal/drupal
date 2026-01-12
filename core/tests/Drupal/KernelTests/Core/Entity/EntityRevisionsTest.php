@@ -172,8 +172,6 @@ class EntityRevisionsTest extends EntityKernelTestBase {
 
   /**
    * Tests that latest revisions are working as expected.
-   *
-   * @legacy-covers ::isLatestRevision
    */
   public function testIsLatestRevision(): void {
     // Create a basic EntityTestMulRev entity and save it.

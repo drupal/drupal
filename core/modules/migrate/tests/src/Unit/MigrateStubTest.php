@@ -41,8 +41,6 @@ class MigrateStubTest extends UnitTestCase {
 
   /**
    * Tests stubbing.
-   *
-   * @legacy-covers ::createStub
    */
   public function testCreateStub(): void {
     $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);

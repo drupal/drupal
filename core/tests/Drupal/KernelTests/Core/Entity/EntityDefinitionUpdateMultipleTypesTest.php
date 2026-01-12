@@ -135,8 +135,6 @@ class EntityDefinitionUpdateMultipleTypesTest extends EntityKernelTestBase {
 
   /**
    * Tests creating a fieldable entity type that doesn't exist in code anymore.
-   *
-   * @legacy-covers ::installFieldableEntityType
    */
   public function testInstallFieldableEntityTypeWithoutInCodeDefinition(): void {
     $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_update');
@@ -153,8 +151,6 @@ class EntityDefinitionUpdateMultipleTypesTest extends EntityKernelTestBase {
 
   /**
    * Tests updating an entity type that doesn't exist in code anymore.
-   *
-   * @legacy-covers ::updateEntityType
    */
   public function testUpdateEntityTypeWithoutInCodeDefinition(): void {
     $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_update');
@@ -173,8 +169,6 @@ class EntityDefinitionUpdateMultipleTypesTest extends EntityKernelTestBase {
 
   /**
    * Tests updating a fieldable entity type that doesn't exist in code anymore.
-   *
-   * @legacy-covers ::updateFieldableEntityType
    */
   public function testUpdateFieldableEntityTypeWithoutInCodeDefinition(): void {
     $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_update');
@@ -195,8 +189,6 @@ class EntityDefinitionUpdateMultipleTypesTest extends EntityKernelTestBase {
 
   /**
    * Tests uninstalling an entity type that doesn't exist in code anymore.
-   *
-   * @legacy-covers ::uninstallEntityType
    */
   public function testUninstallEntityTypeWithoutInCodeDefinition(): void {
     $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_update');

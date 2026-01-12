@@ -154,8 +154,6 @@ class MailManagerTest extends UnitTestCase {
 
   /**
    * Tests the getInstance method.
-   *
-   * @legacy-covers ::getInstance
    */
   public function testGetInstance(): void {
     $interface = [
@@ -177,8 +175,6 @@ class MailManagerTest extends UnitTestCase {
 
   /**
    * Tests that mails are sent in a separate render context.
-   *
-   * @legacy-covers ::mail
    */
   public function testMailInRenderContext(): void {
     $interface = [

@@ -18,8 +18,6 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
 
   /**
    * Tests config.
-   *
-   * @legacy-covers ::config
    */
   public function testConfig(): void {
 
@@ -48,8 +46,6 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
 
   /**
    * Tests config factory exception.
-   *
-   * @legacy-covers ::config
    */
   public function testConfigFactoryException(): void {
     $testObject = new ConfiguredTrait();
@@ -63,8 +59,6 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
 
   /**
    * Tests config factory exception invalid property.
-   *
-   * @legacy-covers ::config
    */
   public function testConfigFactoryExceptionInvalidProperty(): void {
     $testObject = new ConfiguredTrait();

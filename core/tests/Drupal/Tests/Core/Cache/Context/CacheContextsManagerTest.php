@@ -25,8 +25,6 @@ class CacheContextsManagerTest extends UnitTestCase {
 
   /**
    * Tests optimize tokens.
-   *
-   * @legacy-covers ::optimizeTokens
    */
   #[DataProvider('providerTestOptimizeTokens')]
   public function testOptimizeTokens(array $context_tokens, array $optimized_context_tokens): void {
@@ -107,8 +105,6 @@ class CacheContextsManagerTest extends UnitTestCase {
 
   /**
    * Tests convert tokens to keys.
-   *
-   * @legacy-covers ::convertTokensToKeys
    */
   public function testConvertTokensToKeys(): void {
     $container = $this->getMockContainer();

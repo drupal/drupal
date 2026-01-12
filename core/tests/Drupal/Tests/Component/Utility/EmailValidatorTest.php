@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 class EmailValidatorTest extends TestCase {
 
   /**
-   * @legacy-covers ::isValid
+   * Tests is valid.
    */
   public function testIsValid(): void {
     // Note that \Drupal\Component\Utility\EmailValidator wraps
@@ -32,7 +32,7 @@ class EmailValidatorTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::isValid
+   * Tests is valid exception.
    */
   public function testIsValidException(): void {
     $validator = new EmailValidator();

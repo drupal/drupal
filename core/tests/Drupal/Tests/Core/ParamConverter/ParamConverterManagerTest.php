@@ -37,8 +37,6 @@ class ParamConverterManagerTest extends UnitTestCase {
 
   /**
    * Tests \Drupal\Core\ParamConverter\ParamConverterManager::getConverter().
-   *
-   * @legacy-covers ::getConverter
    */
   #[DataProvider('providerTestGetConverter')]
   public function testGetConverter($name, $class): void {
@@ -55,8 +53,6 @@ class ParamConverterManagerTest extends UnitTestCase {
 
   /**
    * Tests \Drupal\Core\ParamConverter\ParamConverterManager::getConverter().
-   *
-   * @legacy-covers ::getConverter
    */
   public function testGetConverterException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -129,8 +125,6 @@ class ParamConverterManagerTest extends UnitTestCase {
 
   /**
    * Tests set route parameter converters.
-   *
-   * @legacy-covers ::setRouteParameterConverters
    */
   #[DataProvider('providerTestSetRouteParameterConverters')]
   public function testSetRouteParameterConverters($path, $parameters = NULL, $expected = NULL): void {
@@ -173,8 +167,6 @@ class ParamConverterManagerTest extends UnitTestCase {
 
   /**
    * Tests convert.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvert(): void {
     $route = new Route('/test/{id}/{literal}/{null}');
@@ -212,8 +204,6 @@ class ParamConverterManagerTest extends UnitTestCase {
 
   /**
    * Tests convert no converting.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvertNoConverting(): void {
     $route = new Route('/test');
@@ -230,8 +220,6 @@ class ParamConverterManagerTest extends UnitTestCase {
 
   /**
    * Tests convert missing param.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvertMissingParam(): void {
     $route = new Route('/test/{id}');

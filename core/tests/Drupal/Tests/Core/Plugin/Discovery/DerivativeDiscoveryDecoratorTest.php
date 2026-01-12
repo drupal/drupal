@@ -133,8 +133,6 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
   /**
    * Tests getDeriverClass with classed objects instead of arrays.
-   *
-   * @legacy-covers ::getDeriverClass
    */
   public function testGetDeriverClassWithClassedDefinitions(): void {
     $definitions = [];
@@ -160,8 +158,6 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
   /**
    * Tests get deriver class with invalid classed definitions.
-   *
-   * @legacy-covers ::getDeriverClass
    */
   public function testGetDeriverClassWithInvalidClassedDefinitions(): void {
     $definition = $this->prophesize(DerivablePluginDefinitionInterface::class);

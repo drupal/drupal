@@ -20,8 +20,6 @@ class LibrariesDirectoryFileFinderTest extends UnitTestCase {
 
   /**
    * Tests find.
-   *
-   * @legacy-covers ::find
    */
   public function testFind(): void {
     // Place a library file in all the possible locations.

@@ -23,8 +23,6 @@ class FieldSettingsTest extends UnitTestCase {
 
   /**
    * Tests get settings.
-   *
-   * @legacy-covers ::getSettings
    */
   #[DataProvider('getSettingsProvider')]
   public function testGetSettings($field_type, $field_settings, $allowed_values): void {

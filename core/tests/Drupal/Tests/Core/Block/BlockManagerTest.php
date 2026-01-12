@@ -117,8 +117,6 @@ class BlockManagerTest extends UnitTestCase {
 
   /**
    * Tests handle plugin not found.
-   *
-   * @legacy-covers ::handlePluginNotFound
    */
   public function testHandlePluginNotFound(): void {
     $this->logger->warning('The "%plugin_id" block plugin was not found', ['%plugin_id' => 'invalid'])->shouldBeCalled();

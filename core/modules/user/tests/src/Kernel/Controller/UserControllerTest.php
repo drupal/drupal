@@ -59,8 +59,6 @@ class UserControllerTest extends KernelTestBase {
 
   /**
    * Tests the redirection to a user edit page.
-   *
-   * @legacy-covers ::userEditPage
    */
   public function testUserEditPage(): void {
 

@@ -33,8 +33,6 @@ class BytesTest extends TestCase {
    * @param float $expected_number
    *   The expected return value from
    *   \Drupal\Component\Utility\Bytes::toNumber().
-   *
-   * @legacy-covers ::toNumber
    */
   #[DataProvider('providerTestToNumber')]
   public function testToNumber($size, float $expected_number): void {

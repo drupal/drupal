@@ -39,8 +39,6 @@ class TermContextTest extends KernelTestBase {
 
   /**
    * Tests get available contexts.
-   *
-   * @legacy-covers ::getAvailableContexts
    */
   public function testGetAvailableContexts(): void {
     $context_repository = $this->container->get('context.repository');
@@ -54,8 +52,6 @@ class TermContextTest extends KernelTestBase {
 
   /**
    * Tests get runtime contexts.
-   *
-   * @legacy-covers ::getRuntimeContexts
    */
   public function testGetRuntimeContexts(): void {
     // Create term.

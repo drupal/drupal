@@ -81,8 +81,6 @@ class PermissionAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests the access check method.
-   *
-   * @legacy-covers ::access
    */
   #[DataProvider('providerTestAccess')]
   public function testAccess($requirements, $access, array $contexts = [], $message = ''): void {

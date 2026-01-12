@@ -314,8 +314,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Tests normalize.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalize(): void {
     [$resource_type, $resource_object, $includes] = $this->getTestContentEntityResource();
@@ -413,8 +411,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Tests normalize uuid.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalizeUuid(): void {
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
@@ -456,8 +452,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Tests normalize exception.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalizeException(): void {
     $normalized = $this
@@ -546,8 +540,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Tests normalize config.
-   *
-   * @legacy-covers ::normalize
    */
   public function testNormalizeConfig(): void {
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node_type', 'node_type');
@@ -577,8 +569,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Try to POST a node and check if it exists afterwards.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalize(): void {
     $payload = '{"data":{"type":"article","attributes":{"title":"Testing article"}}}';
@@ -595,8 +585,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Try to POST a node and check if it exists afterwards.
-   *
-   * @legacy-covers ::denormalize
    */
   public function testDenormalizeUuid(): void {
     $configurations = [

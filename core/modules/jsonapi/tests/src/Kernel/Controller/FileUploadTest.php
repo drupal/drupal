@@ -92,8 +92,6 @@ class FileUploadTest extends JsonapiKernelTestBase {
 
   /**
    * Tests check file upload access with base field.
-   *
-   * @legacy-covers ::checkFileUploadAccess
    */
   public function testCheckFileUploadAccessWithBaseField(): void {
     // Create a set of users for access testing.

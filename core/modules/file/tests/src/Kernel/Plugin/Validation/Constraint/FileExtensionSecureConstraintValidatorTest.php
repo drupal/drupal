@@ -20,8 +20,6 @@ class FileExtensionSecureConstraintValidatorTest extends FileValidatorTestBase {
 
   /**
    * Tests validate.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidate(): void {
     // Test success with .txt extension.

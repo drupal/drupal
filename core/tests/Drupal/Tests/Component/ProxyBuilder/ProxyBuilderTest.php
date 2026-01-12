@@ -33,7 +33,7 @@ class ProxyBuilderTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::buildProxyClassName
+   * Tests build proxy class name.
    */
   public function testBuildProxyClassName(): void {
     $class_name = $this->proxyBuilder->buildProxyClassName('Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod');
@@ -41,7 +41,7 @@ class ProxyBuilderTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::buildProxyClassName
+   * Tests build proxy class name for module.
    */
   public function testBuildProxyClassNameForModule(): void {
     $class_name = $this->proxyBuilder->buildProxyClassName('Drupal\views_ui\ParamConverter\ViewUIConverter');
@@ -49,7 +49,7 @@ class ProxyBuilderTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::buildProxyNamespace
+   * Tests build proxy namespace.
    */
   public function testBuildProxyNamespace(): void {
     $class_name = $this->proxyBuilder->buildProxyNamespace('Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod');
@@ -220,7 +220,7 @@ EOS;
   }
 
   /**
-   * @legacy-covers ::build
+   * Tests build with nested interface.
    */
   public function testBuildWithNestedInterface(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithChildInterfaces';

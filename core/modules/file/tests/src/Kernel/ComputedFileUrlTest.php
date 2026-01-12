@@ -30,8 +30,6 @@ class ComputedFileUrlTest extends KernelTestBase {
 
   /**
    * Tests get value.
-   *
-   * @legacy-covers ::getValue
    */
   public function testGetValue(): void {
     $entity = $this->prophesize(FileInterface::class);
@@ -57,8 +55,6 @@ class ComputedFileUrlTest extends KernelTestBase {
 
   /**
    * Tests set value.
-   *
-   * @legacy-covers ::setValue
    */
   public function testSetValue(): void {
     $name = $this->randomMachineName();
@@ -81,8 +77,6 @@ class ComputedFileUrlTest extends KernelTestBase {
 
   /**
    * Tests set value no notify.
-   *
-   * @legacy-covers ::setValue
    */
   public function testSetValueNoNotify(): void {
     $name = $this->randomMachineName();

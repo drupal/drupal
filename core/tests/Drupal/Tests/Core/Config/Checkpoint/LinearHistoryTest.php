@@ -84,8 +84,6 @@ class LinearHistoryTest extends UnitTestCase {
 
   /**
    * Tests add exception.
-   *
-   * @legacy-covers ::add
    */
   public function testAddException(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -104,8 +102,6 @@ class LinearHistoryTest extends UnitTestCase {
 
   /**
    * Tests delete all.
-   *
-   * @legacy-covers ::delete
    */
   public function testDeleteAll(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -127,8 +123,6 @@ class LinearHistoryTest extends UnitTestCase {
 
   /**
    * Tests delete.
-   *
-   * @legacy-covers ::delete
    */
   public function testDelete(): void {
     // Create a real State object so that we can manipulate it.
@@ -162,8 +156,6 @@ class LinearHistoryTest extends UnitTestCase {
 
   /**
    * Tests delete exception.
-   *
-   * @legacy-covers ::delete
    */
   public function testDeleteException(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -179,8 +171,6 @@ class LinearHistoryTest extends UnitTestCase {
 
   /**
    * Tests get parents.
-   *
-   * @legacy-covers ::getParents
    */
   public function testGetParents(): void {
     $state = $this->prophesize(StateInterface::class);
@@ -200,8 +190,6 @@ class LinearHistoryTest extends UnitTestCase {
 
   /**
    * Tests get parents exception.
-   *
-   * @legacy-covers ::getParents
    */
   public function testGetParentsException(): void {
     $state = $this->prophesize(StateInterface::class);

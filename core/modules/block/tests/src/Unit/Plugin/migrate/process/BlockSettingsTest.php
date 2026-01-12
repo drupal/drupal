@@ -31,8 +31,6 @@ class BlockSettingsTest extends UnitTestCase {
    *   The source value for the plugin.
    * @param array $expected
    *   The expected result.
-   *
-   * @legacy-covers ::transform
    */
   #[DataProvider('providerTestTransform')]
   public function testTransform($value, $expected): void {

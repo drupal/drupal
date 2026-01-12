@@ -24,8 +24,6 @@ class FilteredPluginManagerTraitTest extends UnitTestCase {
 
   /**
    * Tests get filtered definitions.
-   *
-   * @legacy-covers ::getFilteredDefinitions
    */
   #[DataProvider('providerTestGetFilteredDefinitions')]
   public function testGetFilteredDefinitions($contexts, $expected): void {

@@ -40,8 +40,6 @@ class MigrationPluginManagerTest extends MigrateTestBase {
 
   /**
    * Tests Migration::createInstancesByTag().
-   *
-   * @legacy-covers ::createInstancesByTag
    */
   #[DataProvider('providerCreateInstanceByTag')]
   public function testCreateInstancesByTag($tags, $expected): void {

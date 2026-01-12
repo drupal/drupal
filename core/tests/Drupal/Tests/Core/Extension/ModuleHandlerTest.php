@@ -84,8 +84,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests loading a module.
-   *
-   * @legacy-covers ::load
    */
   public function testLoadModule(): void {
     $moduleList = [
@@ -104,8 +102,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests loading all modules.
-   *
-   * @legacy-covers ::loadAll
    */
   #[IgnoreDeprecations]
   public function testLoadAllModules(): void {
@@ -154,8 +150,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests isLoaded accessor.
-   *
-   * @legacy-covers ::isLoaded
    */
   public function testIsLoaded(): void {
     $module_handler = $this->getModuleHandler(loadAll: FALSE);
@@ -166,8 +160,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Confirm we get back the modules set in the constructor.
-   *
-   * @legacy-covers ::getModuleList
    */
   public function testGetModuleList(): void {
     $this->assertEquals($this->getModuleHandler()->getModuleList(), [
@@ -177,8 +169,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Confirm we get back a module from the module list.
-   *
-   * @legacy-covers ::getModule
    */
   public function testGetModuleWithExistingModule(): void {
     $this->assertEquals($this->getModuleHandler()->getModule('module_handler_test'), new Extension($this->root, 'module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'));
@@ -186,8 +176,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests get module with non existing module.
-   *
-   * @legacy-covers ::getModule
    */
   public function testGetModuleWithNonExistingModule(): void {
     $this->expectException(UnknownExtensionException::class);
@@ -196,8 +184,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Ensure setting the module list replaces the module list and resets internal structures.
-   *
-   * @legacy-covers ::setModuleList
    */
   public function testSetModuleList(): void {
     $fixture_module_handler = $this->getModuleHandler();
@@ -227,8 +213,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests module exists returns correct module status.
-   *
-   * @legacy-covers ::moduleExists
    */
   public function testModuleExists(): void {
     $module_handler = $this->getModuleHandler();
@@ -238,8 +222,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests load all includes.
-   *
-   * @legacy-covers ::loadAllIncludes
    */
   #[IgnoreDeprecations]
   public function testLoadAllIncludes(): void {
@@ -271,8 +253,6 @@ class ModuleHandlerTest extends UnitTestCase {
    * Tests loadInclude().
    *
    * Note we load code, so isolate the test.
-   *
-   * @legacy-covers ::loadInclude
    */
   #[PreserveGlobalState(FALSE)]
   #[RunInSeparateProcess]
@@ -287,8 +267,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests invoke methods when module is enabled.
-   *
-   * @legacy-covers ::invoke
    */
   public function testInvokeModuleEnabled(): void {
     $module_handler = $this->getModuleHandler();
@@ -328,8 +306,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests invoke all.
-   *
-   * @legacy-covers ::invokeAll
    */
   #[IgnoreDeprecations]
   public function testInvokeAll(): void {
@@ -350,8 +326,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests hasImplementations.
-   *
-   * @legacy-covers ::hasImplementations
    */
   public function testHasImplementations(): void {
     $implementations = [
@@ -398,8 +372,6 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * Tests get module directories.
-   *
-   * @legacy-covers ::getModuleDirectories
    */
   public function testGetModuleDirectories(): void {
     $moduleList = [

@@ -36,8 +36,6 @@ class ComponentNegotiatorTest extends ComponentKernelTestBase {
 
   /**
    * Tests negotiate.
-   *
-   * @legacy-covers ::negotiate
    */
   public function testNegotiate(): void {
     $data = [

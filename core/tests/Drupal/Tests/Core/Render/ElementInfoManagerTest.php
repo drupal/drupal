@@ -150,8 +150,6 @@ class ElementInfoManagerTest extends UnitTestCase {
 
   /**
    * Tests get info property.
-   *
-   * @legacy-covers ::getInfoProperty
    */
   public function testGetInfoProperty(): void {
     $this->themeManager

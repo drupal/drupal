@@ -47,8 +47,6 @@ class PluginBaseTest extends UnitTestCase {
    *   The expected array after unpacking.
    * @param bool $all
    *   Whether to unpack all options.
-   *
-   * @legacy-covers ::unpackOptions
    */
   #[DataProvider('providerTestUnpackOptions')]
   public function testUnpackOptions($storage, $options, $definition, $expected, $all = FALSE): void {
@@ -287,8 +285,6 @@ class PluginBaseTest extends UnitTestCase {
 
   /**
    * Tests filter by defined options.
-   *
-   * @legacy-covers ::filterByDefinedOptions
    */
   #[DataProvider('providerTestFilterByDefinedOptions')]
   public function testFilterByDefinedOptions($storage, $options, $expected_storage): void {

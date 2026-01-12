@@ -223,8 +223,6 @@ class DrupalDateTimeTest extends UnitTestCase {
 
   /**
    * Tests get php date time.
-   *
-   * @legacy-covers ::getPhpDateTime
    */
   public function testGetPhpDateTime(): void {
     $new_york = new \DateTimeZone('America/New_York');

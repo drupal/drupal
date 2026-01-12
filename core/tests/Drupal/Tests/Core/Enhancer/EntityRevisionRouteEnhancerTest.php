@@ -36,8 +36,6 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
 
   /**
    * Tests enhance without parameter.
-   *
-   * @legacy-covers ::enhance
    */
   public function testEnhanceWithoutParameter(): void {
     $route = new Route('/test-path/{entity_test}');
@@ -51,8 +49,6 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
 
   /**
    * Tests enhance without entity revision.
-   *
-   * @legacy-covers ::enhance
    */
   public function testEnhanceWithoutEntityRevision(): void {
     $route = new Route('/test-path/{entity_test}', [], [], ['parameters' => ['entity_test' => ['type' => 'entity:entity_test']]]);
@@ -67,8 +63,6 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
 
   /**
    * Tests enhance with entity revision.
-   *
-   * @legacy-covers ::enhance
    */
   public function testEnhanceWithEntityRevision(): void {
     $route = new Route('/test-path/{entity_test_revision}', [], [], ['parameters' => ['entity_test_revision' => ['type' => 'entity_revision:entity_test']]]);

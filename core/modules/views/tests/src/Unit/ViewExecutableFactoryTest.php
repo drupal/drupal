@@ -88,8 +88,6 @@ class ViewExecutableFactoryTest extends UnitTestCase {
 
   /**
    * Tests the get method.
-   *
-   * @legacy-covers ::get
    */
   public function testGet(): void {
     $request_1 = new Request();

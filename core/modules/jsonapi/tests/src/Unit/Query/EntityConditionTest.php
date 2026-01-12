@@ -39,8 +39,6 @@ class EntityConditionTest extends UnitTestCase {
 
   /**
    * Tests create from query parameter.
-   *
-   * @legacy-covers ::createFromQueryParameter
    */
   #[DataProvider('queryParameterProvider')]
   public function testCreateFromQueryParameter($case): void {

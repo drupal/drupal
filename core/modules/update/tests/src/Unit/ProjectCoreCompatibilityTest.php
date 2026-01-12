@@ -171,8 +171,6 @@ class ProjectCoreCompatibilityTest extends UnitTestCase {
    *   The installed version of core to compare against.
    * @param bool $expected
    *   The expected result.
-   *
-   * @legacy-covers ::isCoreCompatible
    */
   #[DataProvider('providerIsCoreCompatible')]
   public function testIsCoreCompatible(string $constraint, string $installed_core, bool $expected): void {

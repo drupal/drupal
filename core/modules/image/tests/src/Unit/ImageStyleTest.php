@@ -100,8 +100,6 @@ class ImageStyleTest extends UnitTestCase {
 
   /**
    * Tests get derivative extension.
-   *
-   * @legacy-covers ::getDerivativeExtension
    */
   public function testGetDerivativeExtension(): void {
     $image_effect_id = $this->randomMachineName();
@@ -124,8 +122,6 @@ class ImageStyleTest extends UnitTestCase {
 
   /**
    * Tests build uri.
-   *
-   * @legacy-covers ::buildUri
    */
   public function testBuildUri(): void {
     // Image style that changes the extension.
@@ -156,8 +152,6 @@ class ImageStyleTest extends UnitTestCase {
 
   /**
    * Tests get path token.
-   *
-   * @legacy-covers ::getPathToken
    */
   public function testGetPathToken(): void {
     $logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
@@ -210,8 +204,6 @@ class ImageStyleTest extends UnitTestCase {
 
   /**
    * Tests flush.
-   *
-   * @legacy-covers ::flush
    */
   public function testFlush(): void {
     $cache_tag_invalidator = $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidator');

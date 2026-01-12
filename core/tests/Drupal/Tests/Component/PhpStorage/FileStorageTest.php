@@ -54,7 +54,7 @@ class FileStorageTest extends PhpStorageTestBase {
   }
 
   /**
-   * @legacy-covers ::deleteAll
+   * Tests delete all.
    */
   public function testDeleteAll(): void {
     // Random generator.
@@ -89,7 +89,7 @@ class FileStorageTest extends PhpStorageTestBase {
   }
 
   /**
-   * @legacy-covers ::createDirectory
+   * Tests create directory fail warning.
    */
   public function testCreateDirectoryFailWarning(): void {
     $directory = new vfsStreamDirectory('permissionDenied', 0200);

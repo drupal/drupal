@@ -20,8 +20,6 @@ class StringBaseTest extends UnitTestCase {
 
   /**
    * Tests save without storage.
-   *
-   * @legacy-covers ::save
    */
   public function testSaveWithoutStorage(): void {
     $string = new SourceString(['source' => 'test']);
@@ -32,8 +30,6 @@ class StringBaseTest extends UnitTestCase {
 
   /**
    * Tests delete without storage.
-   *
-   * @legacy-covers ::delete
    */
   public function testDeleteWithoutStorage(): void {
     $string = new SourceString(['lid' => 1, 'source' => 'test']);

@@ -124,8 +124,6 @@ class LruMemoryCacheTest extends UnitTestCase {
 
   /**
    * Tests setting items with numeric keys in the LRU memory cache.
-   *
-   * @legacy-covers ::set
    */
   public function testSetNumericKeys(): void {
     $lru_cache = $this->getLruMemoryCache(3);
@@ -157,8 +155,6 @@ class LruMemoryCacheTest extends UnitTestCase {
 
   /**
    * Tests setting multiple items in the LRU memory cache.
-   *
-   * @legacy-covers ::setMultiple
    */
   public function testSetMultiple(): void {
     $lru_cache = $this->getLruMemoryCache(3);

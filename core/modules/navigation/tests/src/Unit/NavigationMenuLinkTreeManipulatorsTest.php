@@ -26,8 +26,6 @@ class NavigationMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
   /**
    * Tests the addSecondLevelOverviewLinks() tree manipulator.
-   *
-   * @legacy-covers ::addSecondLevelOverviewLinks
    */
   public function testAddSecondLevelOverviewLinks(): void {
     $routeProvider = $this->createMock(RouteProviderInterface::class);

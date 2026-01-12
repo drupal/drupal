@@ -48,8 +48,6 @@ class NestedArrayTest extends TestCase {
 
   /**
    * Tests getting nested array values.
-   *
-   * @legacy-covers ::getValue
    */
   public function testGetValue(): void {
     // Verify getting a value of a nested element.
@@ -78,8 +76,6 @@ class NestedArrayTest extends TestCase {
 
   /**
    * Tests setting nested array values.
-   *
-   * @legacy-covers ::setValue
    */
   public function testSetValue(): void {
     $new_value = [
@@ -99,8 +95,6 @@ class NestedArrayTest extends TestCase {
 
   /**
    * Tests force-setting values.
-   *
-   * @legacy-covers ::setValue
    */
   public function testSetValueForce(): void {
     $new_value = [
@@ -114,8 +108,6 @@ class NestedArrayTest extends TestCase {
 
   /**
    * Tests unsetting nested array values.
-   *
-   * @legacy-covers ::unsetValue
    */
   public function testUnsetValue(): void {
     // Verify unsetting a non-existing nested element throws no errors and the
@@ -265,7 +257,7 @@ class NestedArrayTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::filter
+   * Tests filter.
    */
   #[DataProvider('providerTestFilter')]
   public function testFilter($array, $callable, $expected): void {

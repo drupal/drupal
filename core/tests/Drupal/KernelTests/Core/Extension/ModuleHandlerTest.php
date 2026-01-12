@@ -44,8 +44,6 @@ class ModuleHandlerTest extends KernelTestBase {
 
   /**
    * Tests that resetImplementations() clears the hook memory cache.
-   *
-   * @legacy-covers ::resetImplementations
    */
   public function testResetImplementationsClearsHooks(): void {
     $oldModuleHandler = \Drupal::moduleHandler();

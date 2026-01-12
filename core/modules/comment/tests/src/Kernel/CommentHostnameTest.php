@@ -29,8 +29,6 @@ class CommentHostnameTest extends KernelTestBase {
 
   /**
    * Tests hostname default value callback.
-   *
-   * @legacy-covers ::getDefaultHostname
    */
   public function testGetDefaultHostname(): void {
     // Create a fake request to be used for testing.

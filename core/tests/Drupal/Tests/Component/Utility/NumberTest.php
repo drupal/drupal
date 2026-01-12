@@ -32,8 +32,6 @@ class NumberTest extends TestCase {
    *   The step argument for Number::validStep().
    * @param bool $expected
    *   Expected return value from Number::validStep().
-   *
-   * @legacy-covers ::validStep
    */
   #[DataProvider('providerTestValidStep')]
   public function testValidStep($value, $step, $expected): void {
@@ -52,8 +50,6 @@ class NumberTest extends TestCase {
    *   The offset argument for Number::validStep().
    * @param bool $expected
    *   Expected return value from Number::validStep().
-   *
-   * @legacy-covers ::validStep
    */
   #[DataProvider('providerTestValidStepOffset')]
   public function testValidStepOffset($value, $step, $offset, $expected): void {
@@ -167,8 +163,6 @@ class NumberTest extends TestCase {
    *
    * Number::alphadecimalToInt() must throw an exception
    * when non-alphanumeric characters are passed as input.
-   *
-   * @legacy-covers ::alphadecimalToInt
    */
   public function testAlphadecimalToIntThrowsExceptionWithMalformedStrings(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -181,8 +175,6 @@ class NumberTest extends TestCase {
    *
    * Many tests and code rely on Number::alphadecimalToInt() returning 0
    * for degenerate values '' and NULL. We must ensure they are accepted.
-   *
-   * @legacy-covers ::alphadecimalToInt
    */
   #[IgnoreDeprecations]
   public function testAlphadecimalToIntReturnsZeroWithNullAndEmptyString(): void {

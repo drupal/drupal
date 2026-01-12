@@ -29,8 +29,6 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate.
-   *
-   * @legacy-covers ::validate
    */
   #[DataProvider('provideTestValidate')]
   public function testValidate(PrimitiveInterface $typed_data, string|TranslatableMarkup|int|float|array|null $value, bool $valid): void {

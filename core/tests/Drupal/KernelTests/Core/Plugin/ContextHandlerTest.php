@@ -34,8 +34,6 @@ class ContextHandlerTest extends KernelTestBase {
 
   /**
    * Tests apply context mapping.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMapping(): void {
     $entity = EntityTest::create([]);
@@ -54,8 +52,6 @@ class ContextHandlerTest extends KernelTestBase {
 
   /**
    * Tests apply context mapping already applied.
-   *
-   * @legacy-covers ::applyContextMapping
    */
   public function testApplyContextMappingAlreadyApplied(): void {
     $entity = EntityTest::create([]);

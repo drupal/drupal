@@ -78,8 +78,6 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
 
   /**
    * Tests check create access.
-   *
-   * @legacy-covers ::checkCreateAccess
    */
   public function testCheckCreateAccess(): void {
     // A user must have the correct permission to create a workflow.
@@ -109,8 +107,6 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
 
   /**
    * Tests check access.
-   *
-   * @legacy-covers ::checkAccess
    */
   #[DataProvider('checkAccessProvider')]
   public function testCheckAccess($user, $operation, $result, $states_to_create = []): void {

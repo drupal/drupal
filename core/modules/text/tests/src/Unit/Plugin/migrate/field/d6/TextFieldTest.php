@@ -174,8 +174,6 @@ class TextFieldTest extends UnitTestCase {
 
   /**
    * Tests get field type.
-   *
-   * @legacy-covers ::getFieldType
    */
   #[DataProvider('getFieldTypeProvider')]
   public function testGetFieldType($expected_type, $widget_type, array $settings = []): void {

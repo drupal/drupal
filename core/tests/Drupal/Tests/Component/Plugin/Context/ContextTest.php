@@ -29,7 +29,7 @@ class ContextTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getContextValue
+   * Tests get context value.
    */
   #[DataProvider('providerGetContextValue')]
   public function testGetContextValue($expected, $context_value, $is_required, $data_type): void {
@@ -101,7 +101,7 @@ class ContextTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::hasContextValue
+   * Tests has context value.
    */
   #[DataProvider('providerHasContextValue')]
   public function testHasContextValue($has_context_value, $default_value): void {

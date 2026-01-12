@@ -65,7 +65,7 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::writeItem
+   * Tests write item.
    */
   #[DataProvider('providerWriteData')]
   public function testWriteItem($poContent, $expected, $long): void {
@@ -109,7 +109,7 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::close
+   * Tests close exception.
    */
   public function testCloseException(): void {
     $this->expectException(\Exception::class);

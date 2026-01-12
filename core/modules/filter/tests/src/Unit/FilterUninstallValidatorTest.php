@@ -39,8 +39,6 @@ class FilterUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate no plugins.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateNoPlugins(): void {
     $this->filterUninstallValidator->expects($this->once())
@@ -57,8 +55,6 @@ class FilterUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate no formats.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateNoFormats(): void {
     $this->filterUninstallValidator->expects($this->once())
@@ -81,8 +77,6 @@ class FilterUninstallValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate no matching formats.
-   *
-   * @legacy-covers ::validate
    */
   public function testValidateNoMatchingFormats(): void {
     $this->filterUninstallValidator->expects($this->once())

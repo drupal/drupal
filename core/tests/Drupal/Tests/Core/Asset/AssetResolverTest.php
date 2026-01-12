@@ -204,8 +204,6 @@ class AssetResolverTest extends UnitTestCase {
 
   /**
    * Tests get css assets.
-   *
-   * @legacy-covers ::getCssAssets
    */
   #[DataProvider('providerAttachedCssAssets')]
   public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_css_cache_item_count): void {
@@ -236,8 +234,6 @@ class AssetResolverTest extends UnitTestCase {
 
   /**
    * Tests get js assets.
-   *
-   * @legacy-covers ::getJsAssets
    */
   #[DataProvider('providerAttachedJsAssets')]
   public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_js_cache_item_count, $expected_multilingual_js_cache_item_count): void {

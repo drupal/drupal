@@ -218,8 +218,6 @@ class FormValidatorTest extends UnitTestCase {
 
   /**
    * Tests handle errors with limited validation.
-   *
-   * @legacy-covers ::handleErrorsWithLimitedValidation
    */
   #[DataProvider('providerTestHandleErrorsWithLimitedValidation')]
   public function testHandleErrorsWithLimitedValidation($sections, $triggering_element, $values, $expected): void {
@@ -314,8 +312,6 @@ class FormValidatorTest extends UnitTestCase {
 
   /**
    * Tests execute validate handlers.
-   *
-   * @legacy-covers ::executeValidateHandlers
    */
   public function testExecuteValidateHandlers(): void {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler, $this->callableResolver);
@@ -450,8 +446,6 @@ class FormValidatorTest extends UnitTestCase {
 
   /**
    * Tests perform required validation.
-   *
-   * @legacy-covers ::performRequiredValidation
    */
   #[DataProvider('providerTestPerformRequiredValidation')]
   public function testPerformRequiredValidation($element, $expected_message, $call_watchdog): void {

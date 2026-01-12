@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 class PluginIdTest extends TestCase {
 
   /**
-   * @legacy-covers ::get
+   * Tests get.
    */
   public function testGet(): void {
     // Assert plugin starts with only an ID.

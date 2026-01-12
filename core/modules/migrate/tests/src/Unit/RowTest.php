@@ -271,8 +271,6 @@ class RowTest extends UnitTestCase {
 
   /**
    * Tests getting the source property.
-   *
-   * @legacy-covers ::getSourceProperty
    */
   public function testGetSourceProperty(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
@@ -359,8 +357,6 @@ class RowTest extends UnitTestCase {
    *   The key to look up.
    * @param string $expected_value
    *   The expected value.
-   *
-   * @legacy-covers ::get
    */
   #[DataProvider('getDataProvider')]
   public function testGet($key, $expected_value): void {
@@ -403,8 +399,6 @@ class RowTest extends UnitTestCase {
    *   An array of keys to look up.
    * @param array $expected_values
    *   An array of expected values.
-   *
-   * @legacy-covers ::getMultiple
    */
   #[DataProvider('getMultipleDataProvider')]
   public function testGetMultiple(array $keys, array $expected_values): void {

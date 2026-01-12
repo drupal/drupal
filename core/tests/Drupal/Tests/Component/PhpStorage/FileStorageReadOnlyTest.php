@@ -85,7 +85,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
   }
 
   /**
-   * @legacy-covers ::deleteAll
+   * Tests delete all.
    */
   public function testDeleteAll(): void {
     // Random generator.

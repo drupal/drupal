@@ -27,8 +27,6 @@ class SectionComponentTest extends UnitTestCase {
 
   /**
    * Tests to render array.
-   *
-   * @legacy-covers ::toRenderArray
    */
   public function testToRenderArray(): void {
     $existing_block = $this->prophesize(BlockPluginInterface::class);

@@ -75,8 +75,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render.
-   *
-   * @legacy-covers ::onBuildRender
    */
   #[DataProvider('providerBlockTypes')]
   public function testOnBuildRender($refinable_dependent_access): void {
@@ -150,8 +148,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render without preview fallback string.
-   *
-   * @legacy-covers ::onBuildRender
    */
   #[DataProvider('providerBlockTypes')]
   public function testOnBuildRenderWithoutPreviewFallbackString($refinable_dependent_access): void {
@@ -224,8 +220,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render denied.
-   *
-   * @legacy-covers ::onBuildRender
    */
   #[DataProvider('providerBlockTypes')]
   public function testOnBuildRenderDenied($refinable_dependent_access): void {
@@ -283,8 +277,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render in preview.
-   *
-   * @legacy-covers ::onBuildRender
    */
   #[DataProvider('providerBlockTypes')]
   public function testOnBuildRenderInPreview($refinable_dependent_access): void {
@@ -357,8 +349,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render in preview empty build.
-   *
-   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderInPreviewEmptyBuild(): void {
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
@@ -421,8 +411,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render empty build.
-   *
-   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderEmptyBuild(): void {
     $block = $this->prophesize(BlockPluginInterface::class);
@@ -468,8 +456,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render empty build with cache tags.
-   *
-   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderEmptyBuildWithCacheTags(): void {
     $block = $this->prophesize(BlockPluginInterface::class);
@@ -515,8 +501,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render null build.
-   *
-   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderNullBuild(): void {
     $block = $this->prophesize(BlockPluginInterface::class);
@@ -540,8 +524,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
    * Tests on build render no block.
-   *
-   * @legacy-covers ::onBuildRender
    */
   public function testOnBuildRenderNoBlock(): void {
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn(NULL);

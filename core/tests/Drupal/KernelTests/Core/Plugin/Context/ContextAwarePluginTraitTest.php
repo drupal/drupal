@@ -59,8 +59,6 @@ class ContextAwarePluginTraitTest extends KernelTestBase {
 
   /**
    * Tests get context definitions.
-   *
-   * @legacy-covers ::getContextDefinitions
    */
   public function testGetContextDefinitions(): void {
     $this->assertIsArray($this->plugin->getContextDefinitions());
@@ -68,8 +66,6 @@ class ContextAwarePluginTraitTest extends KernelTestBase {
 
   /**
    * Tests get context definition.
-   *
-   * @legacy-covers ::getContextDefinition
    */
   public function testGetContextDefinition(): void {
     // The context is not defined, so an exception will be thrown.
@@ -80,8 +76,6 @@ class ContextAwarePluginTraitTest extends KernelTestBase {
 
   /**
    * Tests get context value.
-   *
-   * @legacy-covers ::getContextValue
    */
   public function testGetContextValue(): void {
     $this->plugin->setContextValue('nato_letter', 'Alpha');
@@ -90,8 +84,6 @@ class ContextAwarePluginTraitTest extends KernelTestBase {
 
   /**
    * Tests set context value.
-   *
-   * @legacy-covers ::setContextValue
    */
   public function testSetContextValue(): void {
     $typed_data_manager = $this->prophesize(TypedDataManagerInterface::class);

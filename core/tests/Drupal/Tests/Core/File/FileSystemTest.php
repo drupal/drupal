@@ -54,8 +54,6 @@ class FileSystemTest extends UnitTestCase {
 
   /**
    * Tests chmod file.
-   *
-   * @legacy-covers ::chmod
    */
   public function testChmodFile(): void {
     vfsStream::setup('dir');
@@ -70,8 +68,6 @@ class FileSystemTest extends UnitTestCase {
 
   /**
    * Tests chmod dir.
-   *
-   * @legacy-covers ::chmod
    */
   public function testChmodDir(): void {
     vfsStream::setup('dir');
@@ -86,8 +82,6 @@ class FileSystemTest extends UnitTestCase {
 
   /**
    * Tests chmod unsuccessful.
-   *
-   * @legacy-covers ::chmod
    */
   public function testChmodUnsuccessful(): void {
     vfsStream::setup('dir');
@@ -96,8 +90,6 @@ class FileSystemTest extends UnitTestCase {
 
   /**
    * Tests unlink.
-   *
-   * @legacy-covers ::unlink
    */
   public function testUnlink(): void {
     vfsStream::setup('dir');
@@ -115,8 +107,6 @@ class FileSystemTest extends UnitTestCase {
 
   /**
    * Tests basename.
-   *
-   * @legacy-covers ::basename
    */
   #[IgnoreDeprecations]
   #[DataProvider('providerTestBasename')]

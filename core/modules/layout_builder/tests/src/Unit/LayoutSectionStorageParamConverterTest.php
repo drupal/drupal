@@ -20,8 +20,6 @@ class LayoutSectionStorageParamConverterTest extends UnitTestCase {
 
   /**
    * Tests convert.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvert(): void {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
@@ -45,8 +43,6 @@ class LayoutSectionStorageParamConverterTest extends UnitTestCase {
 
   /**
    * Tests convert no type.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvertNoType(): void {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
@@ -66,8 +62,6 @@ class LayoutSectionStorageParamConverterTest extends UnitTestCase {
 
   /**
    * Tests convert invalid converter.
-   *
-   * @legacy-covers ::convert
    */
   public function testConvertInvalidConverter(): void {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);

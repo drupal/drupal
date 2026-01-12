@@ -21,8 +21,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
 
   /**
    * Tests the parseFilename() method.
-   *
-   * @legacy-covers ::parseFilename
    */
   public function testParseFilenameSuccess(): void {
     $request = $this->createRequest('filename="test.txt"');
@@ -32,8 +30,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
 
   /**
    * Tests parse filename invalid.
-   *
-   * @legacy-covers ::parseFilename
    */
   #[DataProvider('invalidHeaderProvider')]
   public function testParseFilenameInvalid(string | bool $contentDisposition): void {
@@ -45,8 +41,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
 
   /**
    * Tests parse filename missing.
-   *
-   * @legacy-covers ::parseFilename
    */
   public function testParseFilenameMissing(): void {
     $this->expectException(BadRequestHttpException::class);
@@ -57,8 +51,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
 
   /**
    * Tests parse filename extended.
-   *
-   * @legacy-covers ::parseFilename
    */
   public function testParseFilenameExtended(): void {
     $this->expectException(BadRequestHttpException::class);

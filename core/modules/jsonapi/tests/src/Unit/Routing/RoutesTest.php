@@ -71,8 +71,6 @@ class RoutesTest extends UnitTestCase {
 
   /**
    * Tests routes collection.
-   *
-   * @legacy-covers ::routes
    */
   public function testRoutesCollection(): void {
     // Get the route collection and start making assertions.
@@ -109,8 +107,6 @@ class RoutesTest extends UnitTestCase {
 
   /**
    * Tests routes individual.
-   *
-   * @legacy-covers ::routes
    */
   public function testRoutesIndividual(): void {
     // Get the route collection and start making assertions.
@@ -154,8 +150,6 @@ class RoutesTest extends UnitTestCase {
 
   /**
    * Tests routes related.
-   *
-   * @legacy-covers ::routes
    */
   public function testRoutesRelated(): void {
     // Get the route collection and start making assertions.
@@ -177,8 +171,6 @@ class RoutesTest extends UnitTestCase {
 
   /**
    * Tests routes relationships.
-   *
-   * @legacy-covers ::routes
    */
   public function testRoutesRelationships(): void {
     // Get the route collection and start making assertions.

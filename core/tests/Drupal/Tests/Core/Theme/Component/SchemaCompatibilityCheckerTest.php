@@ -33,8 +33,6 @@ class SchemaCompatibilityCheckerTest extends UnitTestCase {
 
   /**
    * Tests is compatible.
-   *
-   * @legacy-covers ::isCompatible
    */
   #[DataProvider('dataProviderIsCompatible')]
   public function testIsCompatible(array $first_schema, array $second_schema, bool $expected): void {

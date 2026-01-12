@@ -94,8 +94,6 @@ class SecurityAdvisoryTest extends UnitTestCase {
    *
    * @param string $missing_field
    *   The field to test.
-   *
-   * @legacy-covers ::createFromArray
    */
   #[DataProvider('providerCreateFromArrayMissingField')]
   public function testCreateFromArrayMissingField(string $missing_field): void {
@@ -129,8 +127,6 @@ class SecurityAdvisoryTest extends UnitTestCase {
    *   The field to test for an invalid value.
    * @param string $expected_type_message
    *   The expected message for the field.
-   *
-   * @legacy-covers ::createFromArray
    */
   #[DataProvider('providerCreateFromArrayInvalidField')]
   public function testCreateFromArrayInvalidField(string $invalid_field, string $expected_type_message): void {

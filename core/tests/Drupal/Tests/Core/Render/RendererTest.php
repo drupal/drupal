@@ -1057,8 +1057,6 @@ class RendererTest extends RendererTestBase {
 
   /**
    * Tests add cacheable dependency.
-   *
-   * @legacy-covers ::addCacheableDependency
    */
   #[DataProvider('providerTestAddCacheableDependency')]
   public function testAddCacheableDependency(array $build, $object, array $expected): void {
@@ -1133,8 +1131,6 @@ class RendererTest extends RendererTestBase {
 
   /**
    * Tests has render context.
-   *
-   * @legacy-covers ::hasRenderContext
    */
   public function testHasRenderContext(): void {
     // Tests with no render context.
@@ -1152,8 +1148,6 @@ class RendererTest extends RendererTestBase {
 
   /**
    * Tests execute in render context.
-   *
-   * @legacy-covers ::executeInRenderContext
    */
   public function testExecuteInRenderContext(): void {
     $return = $this->renderer->executeInRenderContext(new RenderContext(), function () {

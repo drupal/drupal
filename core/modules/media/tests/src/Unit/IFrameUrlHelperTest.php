@@ -76,8 +76,6 @@ class IFrameUrlHelperTest extends UnitTestCase {
    *   The base URL to compare $url against.
    * @param bool $secure
    *   The expected result of isSecure().
-   *
-   * @legacy-covers ::isSecure
    */
   #[DataProvider('providerIsSecure')]
   public function testIsSecure($url, $base_url, $secure): void {

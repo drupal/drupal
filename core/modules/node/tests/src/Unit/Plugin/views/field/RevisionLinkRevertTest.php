@@ -41,8 +41,6 @@ class RevisionLinkRevertTest extends UnitTestCase {
 
   /**
    * Test the render method when getEntity returns NULL.
-   *
-   * @legacy-covers ::render
    */
   public function testRenderNullEntity(): void {
     $row = new ResultRow();

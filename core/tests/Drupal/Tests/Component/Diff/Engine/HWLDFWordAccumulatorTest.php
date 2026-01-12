@@ -23,7 +23,6 @@ class HWLDFWordAccumulatorTest extends TestCase {
    * Verify that we only get back a NBSP from an empty accumulator.
    *
    * @see Drupal\Component\Diff\Engine\HWLDFWordAccumulator::NBSP
-   * @legacy-covers ::getLines
    */
   public function testGetLinesEmpty(): void {
     $acc = new HWLDFWordAccumulator();
@@ -45,7 +44,7 @@ class HWLDFWordAccumulatorTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::addWords
+   * Tests add words.
    */
   #[DataProvider('provideAddWords')]
   public function testAddWords($expected, $words, $tag): void {

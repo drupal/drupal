@@ -124,8 +124,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
    *   The value to pass to ::extractEntityFromRoute().
    * @param array $defaults
    *   The defaults to pass to ::extractEntityFromRoute().
-   *
-   * @legacy-covers ::extractEntityFromRoute
    */
   #[DataProvider('providerTestExtractEntityFromRoute')]
   public function testExtractEntityFromRoute($success, $expected_entity_id, $value, array $defaults): void {
@@ -199,8 +197,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
 
   /**
    * Tests extract entity from route create.
-   *
-   * @legacy-covers ::extractEntityFromRoute
    */
   public function testExtractEntityFromRouteCreate(): void {
     $expected = 'the_return_value';
@@ -424,8 +420,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
 
   /**
    * Tests build routes no field ui.
-   *
-   * @legacy-covers ::buildRoutes
    */
   public function testBuildRoutesNoFieldUi(): void {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);

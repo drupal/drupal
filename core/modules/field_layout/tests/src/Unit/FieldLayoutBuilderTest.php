@@ -285,8 +285,6 @@ class FieldLayoutBuilderTest extends UnitTestCase {
 
   /**
    * Tests build form empty.
-   *
-   * @legacy-covers ::buildForm
    */
   public function testBuildFormEmpty(): void {
     $definitions = [];
@@ -328,8 +326,6 @@ class FieldLayoutBuilderTest extends UnitTestCase {
 
   /**
    * Tests build form no layout.
-   *
-   * @legacy-covers ::buildForm
    */
   public function testBuildFormNoLayout(): void {
     $this->entityFieldManager->getFieldDefinitions(Argument::any(), Argument::any())->shouldNotBeCalled();

@@ -170,7 +170,7 @@ class ImageTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getKeywordOffset
+   * Tests get keyword offset.
    */
   #[DataProvider('providerTestGetKeywordOffset')]
   public function testGetKeywordOffset(array $input, int $expected): void {

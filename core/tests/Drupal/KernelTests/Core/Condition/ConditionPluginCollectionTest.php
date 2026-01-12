@@ -29,8 +29,6 @@ class ConditionPluginCollectionTest extends KernelTestBase {
 
   /**
    * Tests get configuration.
-   *
-   * @legacy-covers ::getConfiguration
    */
   public function testGetConfiguration(): void {
     // Include a condition that has custom configuration and a type mismatch on

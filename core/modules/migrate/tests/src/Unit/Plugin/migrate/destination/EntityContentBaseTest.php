@@ -25,8 +25,6 @@ class EntityContentBaseTest extends EntityTestBase {
 
   /**
    * Tests basic entity save.
-   *
-   * @legacy-covers ::import
    */
   public function testImport(): void {
     $bundles = [];
@@ -60,8 +58,6 @@ class EntityContentBaseTest extends EntityTestBase {
 
   /**
    * Tests row skipping when we can't get an entity to save.
-   *
-   * @legacy-covers ::import
    */
   public function testImportEntityLoadFailure(): void {
     $bundles = [];

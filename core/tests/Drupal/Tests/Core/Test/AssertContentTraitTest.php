@@ -20,8 +20,6 @@ class AssertContentTraitTest extends UnitTestCase {
 
   /**
    * Tests get text content.
-   *
-   * @legacy-covers ::getTextContent
    */
   public function testGetTextContent(): void {
 

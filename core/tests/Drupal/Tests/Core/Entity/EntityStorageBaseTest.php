@@ -49,8 +49,6 @@ class EntityStorageBaseTest extends UnitTestCase {
 
   /**
    * Tests load.
-   *
-   * @legacy-covers ::load
    */
   #[DataProvider('providerLoad')]
   public function testLoad(string|null $expected, array $entity_fixture, string $query): void {
@@ -105,8 +103,6 @@ class EntityStorageBaseTest extends UnitTestCase {
    * Test loadMultiple().
    *
    * Does not cover statically-cached results.
-   *
-   * @legacy-covers ::loadMultiple
    */
   #[DataProvider('providerLoadMultiple')]
   public function testLoadMultiple(array $expected, array $load_multiple, array|null $query): void {

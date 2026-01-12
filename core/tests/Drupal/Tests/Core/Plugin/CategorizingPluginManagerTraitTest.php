@@ -55,8 +55,6 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
 
   /**
    * Tests get categories.
-   *
-   * @legacy-covers ::getCategories
    */
   public function testGetCategories(): void {
     $this->assertSame([
@@ -67,8 +65,6 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
 
   /**
    * Tests get sorted definitions.
-   *
-   * @legacy-covers ::getSortedDefinitions
    */
   public function testGetSortedDefinitions(): void {
     $sorted = $this->pluginManager->getSortedDefinitions();
@@ -77,8 +73,6 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
 
   /**
    * Tests get grouped definitions.
-   *
-   * @legacy-covers ::getGroupedDefinitions
    */
   public function testGetGroupedDefinitions(): void {
     $grouped = $this->pluginManager->getGroupedDefinitions();
@@ -89,8 +83,6 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
 
   /**
    * Tests process definition category.
-   *
-   * @legacy-covers ::processDefinitionCategory
    */
   public function testProcessDefinitionCategory(): void {
     // Existing category.

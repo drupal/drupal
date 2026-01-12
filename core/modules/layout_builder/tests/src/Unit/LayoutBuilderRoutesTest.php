@@ -49,8 +49,6 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
 
   /**
    * Tests on alter routes.
-   *
-   * @legacy-covers ::onAlterRoutes
    */
   public function testOnAlterRoutes(): void {
     $expected = [

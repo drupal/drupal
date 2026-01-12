@@ -40,8 +40,6 @@ class DefaultTableMappingTest extends UnitTestCase {
 
   /**
    * Tests DefaultTableMapping::getTableNames().
-   *
-   * @legacy-covers ::getTableNames
    */
   public function testGetTableNames(): void {
     // The storage definitions are only used in getColumnNames() so we do not
@@ -278,8 +276,6 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   The name of the column to be processed.
    * @param string $expected
    *   The expected result.
-   *
-   * @legacy-covers ::getFieldColumnName
    */
   #[DataProvider('providerTestGetFieldColumnName')]
   public function testGetFieldColumnName($base_field, $columns, $column, $expected): void {
@@ -299,8 +295,6 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   An array of available field column names.
    * @param string $column
    *   The name of the column to be processed.
-   *
-   * @legacy-covers ::getFieldColumnName
    */
   #[DataProvider('providerTestGetFieldColumnName')]
   public function testGetFieldColumnNameInvalid($base_field, $columns, $column): void {
@@ -352,8 +346,6 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   where keys can be 'base', 'data' and 'revision'.
    * @param string $expected
    *   The expected table name.
-   *
-   * @legacy-covers ::getFieldTableName
    */
   #[DataProvider('providerTestGetFieldTableName')]
   public function testGetFieldTableName($table_names, $expected): void {
@@ -442,8 +434,6 @@ class DefaultTableMappingTest extends UnitTestCase {
 
   /**
    * Tests DefaultTableMapping::getFieldTableName() with an invalid parameter.
-   *
-   * @legacy-covers ::getFieldTableName
    */
   public function testGetFieldTableNameInvalid(): void {
     $table_mapping = new TestDefaultTableMapping($this->entityType, []);

@@ -100,8 +100,6 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   /**
    * Tests get entity types.
-   *
-   * @legacy-covers ::getEntityTypes
    */
   public function testGetEntityTypes(): void {
     $entity_type_definitions = $this->entityDefinitionUpdateManager->getEntityTypes();

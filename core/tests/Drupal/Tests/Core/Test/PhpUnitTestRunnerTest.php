@@ -91,8 +91,6 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
 
   /**
    * Tests php unit command.
-   *
-   * @legacy-covers ::phpUnitCommand
    */
   public function testPhpUnitCommand(): void {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
@@ -101,8 +99,6 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
 
   /**
    * Tests xml log file path.
-   *
-   * @legacy-covers ::xmlLogFilePath
    */
   public function testXmlLogFilePath(): void {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
@@ -156,8 +152,6 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
 
   /**
    * Tests summarize results.
-   *
-   * @legacy-covers ::summarizeResults
    */
   #[DataProvider('providerTestSummarizeResults')]
   public function testSummarizeResults($results, $has_status): void {

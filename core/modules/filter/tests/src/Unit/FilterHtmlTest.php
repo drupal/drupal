@@ -45,8 +45,6 @@ class FilterHtmlTest extends UnitTestCase {
    *   Input HTML.
    * @param string $expected
    *   The expected output string.
-   *
-   * @legacy-covers ::filterAttributes
    */
   #[DataProvider('providerFilterAttributes')]
   public function testFilterAttributes($html, $expected): void {
@@ -121,8 +119,6 @@ class FilterHtmlTest extends UnitTestCase {
 
   /**
    * Tests set configuration.
-   *
-   * @legacy-covers ::setConfiguration
    */
   public function testSetConfiguration(): void {
     $configuration['settings'] = [

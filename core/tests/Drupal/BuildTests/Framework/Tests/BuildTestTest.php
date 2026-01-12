@@ -37,7 +37,7 @@ class BuildTestTest extends BuildTestBase {
   }
 
   /**
-   * @legacy-covers ::copyCodebase
+   * Tests copy codebase.
    */
   public function testCopyCodebase(): void {
     $test_directory = 'copied_codebase';
@@ -58,8 +58,6 @@ class BuildTestTest extends BuildTestBase {
 
   /**
    * Ensure we're not copying directories we wish to exclude.
-   *
-   * @legacy-covers ::copyCodebase
    */
   public function testCopyCodebaseExclude(): void {
     // Create a virtual file system containing items that should be
@@ -131,8 +129,6 @@ class BuildTestTest extends BuildTestBase {
 
   /**
    * Tests copying codebase when Drupal and Composer roots are different.
-   *
-   * @legacy-covers ::copyCodebase
    */
   public function testCopyCodebaseDocRoot(): void {
     // Create a virtual file system containing items that should be
@@ -237,7 +233,7 @@ class BuildTestTest extends BuildTestBase {
   }
 
   /**
-   * @legacy-covers ::standUpServer
+   * Tests stand up server.
    */
   public function testStandUpServer(): void {
     // Stand up a server with working directory 'first'.

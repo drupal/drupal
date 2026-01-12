@@ -83,8 +83,6 @@ class ConditionTest extends UnitTestCase {
    *   The operator to pass into the condition() method.
    * @param mixed $expected_arguments
    *   (optional) The expected set arguments.
-   *
-   * @legacy-covers ::compile
    */
   #[DataProvider('dataProviderTestCompileWithKnownOperators')]
   public function testCompileWithKnownOperators($expected, $field, $value, $operator, $expected_arguments = NULL): void {
@@ -188,8 +186,6 @@ class ConditionTest extends UnitTestCase {
 
   /**
    * Tests compile with sql injection for operator.
-   *
-   * @legacy-covers ::compile
    */
   #[DataProvider('providerTestCompileWithSqlInjectionForOperator')]
   public function testCompileWithSqlInjectionForOperator($operator): void {

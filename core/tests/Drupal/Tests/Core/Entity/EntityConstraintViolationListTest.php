@@ -23,8 +23,6 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
   /**
    * Tests filter by fields.
-   *
-   * @legacy-covers ::filterByFields
    */
   public function testFilterByFields(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -45,8 +43,6 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
   /**
    * Tests filter by fields with composite constraints.
-   *
-   * @legacy-covers ::filterByFields
    */
   public function testFilterByFieldsWithCompositeConstraints(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -67,8 +63,6 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
   /**
    * Tests filter by field access.
-   *
-   * @legacy-covers ::filterByFieldAccess
    */
   public function testFilterByFieldAccess(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -89,8 +83,6 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
   /**
    * Tests filter by field access with composite constraint.
-   *
-   * @legacy-covers ::filterByFieldAccess
    */
   public function testFilterByFieldAccessWithCompositeConstraint(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -111,8 +103,6 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
   /**
    * Tests find by codes.
-   *
-   * @legacy-covers ::findByCodes
    */
   public function testFindByCodes(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();

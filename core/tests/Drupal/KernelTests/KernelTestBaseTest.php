@@ -28,8 +28,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests set up before class.
-   *
-   * @legacy-covers ::setUpBeforeClass
    */
   public function testSetUpBeforeClass(): void {
     // Note: PHPUnit automatically restores the original working directory.
@@ -38,8 +36,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests boot environment.
-   *
-   * @legacy-covers ::bootEnvironment
    */
   public function testBootEnvironment(): void {
     $this->assertMatchesRegularExpression('/^test\d{8}$/', $this->databasePrefix);
@@ -63,8 +59,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests get database connection info with out manual set db url.
-   *
-   * @legacy-covers ::getDatabaseConnectionInfo
    */
   public function testGetDatabaseConnectionInfoWithOutManualSetDbUrl(): void {
     $options = $this->container->get('database')->getConnectionOptions();
@@ -73,8 +67,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests set up.
-   *
-   * @legacy-covers ::setUp
    */
   public function testSetUp(): void {
     $this->assertTrue($this->container->has('request_stack'));
@@ -104,8 +96,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests set up does not leak.
-   *
-   * @legacy-covers ::setUp
    */
   #[Depends('testSetUp')]
   public function testSetUpDoesNotLeak(): void {
@@ -116,8 +106,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests register.
-   *
-   * @legacy-covers ::register
    */
   public function testRegister(): void {
     // Verify that this container is identical to the actual container.
@@ -192,8 +180,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests render.
-   *
-   * @legacy-covers ::render
    */
   public function testRender(): void {
     $type = 'processed_text';
@@ -222,8 +208,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests render with theme.
-   *
-   * @legacy-covers ::render
    */
   public function testRenderWithTheme(): void {
     $this->enableModules(['system']);
@@ -244,8 +228,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * Tests boot kernel.
-   *
-   * @legacy-covers ::bootKernel
    */
   public function testBootKernel(): void {
     $this->assertNull($this->container->get('request_stack')->getParentRequest(), 'There should only be one request on the stack');

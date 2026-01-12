@@ -29,8 +29,6 @@ class CacheableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
-   *
-   * @legacy-covers ::merge
    */
   #[DataProvider('providerTestMerge')]
   public function testMerge(CacheableMetadata $a, CacheableMetadata $b, CacheableMetadata $expected): void {
@@ -55,8 +53,6 @@ class CacheableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
-   *
-   * @legacy-covers ::addCacheableDependency
    */
   #[DataProvider('providerTestMerge')]
   public function testAddCacheableDependency(CacheableMetadata $a, CacheableMetadata $b, CacheableMetadata $expected): void {
@@ -108,8 +104,6 @@ class CacheableMetadataTest extends UnitTestCase {
 
   /**
    * This delegates to Cache::mergeTags(), so just a basic test.
-   *
-   * @legacy-covers ::addCacheTags
    */
   public function testAddCacheTags(): void {
     $metadata = new CacheableMetadata();
@@ -131,8 +125,6 @@ class CacheableMetadataTest extends UnitTestCase {
 
   /**
    * Tests valid and invalid values as max age.
-   *
-   * @legacy-covers ::setCacheMaxAge
    */
   #[DataProvider('providerSetCacheMaxAge')]
   public function testSetCacheMaxAge($data, $expect_exception): void {
@@ -161,8 +153,6 @@ class CacheableMetadataTest extends UnitTestCase {
 
   /**
    * Tests create from render array.
-   *
-   * @legacy-covers ::createFromRenderArray
    */
   #[DataProvider('providerTestCreateFromRenderArray')]
   public function testCreateFromRenderArray(array $render_array, CacheableMetadata $expected): void {
@@ -200,8 +190,6 @@ class CacheableMetadataTest extends UnitTestCase {
 
   /**
    * Tests create from object.
-   *
-   * @legacy-covers ::createFromObject
    */
   #[DataProvider('providerTestCreateFromObject')]
   public function testCreateFromObject($object, CacheableMetadata $expected): void {

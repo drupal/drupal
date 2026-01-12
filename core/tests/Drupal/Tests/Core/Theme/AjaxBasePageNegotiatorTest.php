@@ -58,8 +58,6 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
 
   /**
    * Tests applies.
-   *
-   * @legacy-covers ::applies
    */
   #[DataProvider('providerTestApplies')]
   public function testApplies($request_data, $expected): void {
@@ -93,8 +91,6 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
 
   /**
    * Tests determine active theme valid token.
-   *
-   * @legacy-covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeValidToken(): void {
     $theme = 'claro';
@@ -113,8 +109,6 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
 
   /**
    * Tests determine active theme invalid token.
-   *
-   * @legacy-covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeInvalidToken(): void {
     $theme = 'claro';
@@ -133,8 +127,6 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
 
   /**
    * Tests determine active theme default theme.
-   *
-   * @legacy-covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeDefaultTheme(): void {
     $theme = 'stark';

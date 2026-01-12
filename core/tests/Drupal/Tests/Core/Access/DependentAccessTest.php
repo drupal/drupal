@@ -48,8 +48,6 @@ class DependentAccessTest extends UnitTestCase {
 
   /**
    * Tests that the previous dependency is replaced when using set.
-   *
-   * @legacy-covers ::setAccessDependency
    */
   #[DataProvider('providerTestSetFirst')]
   public function testSetAccessDependency($use_set_first): void {

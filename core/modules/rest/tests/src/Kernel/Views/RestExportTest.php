@@ -47,8 +47,6 @@ class RestExportTest extends ViewsKernelTestBase {
 
   /**
    * Tests build response.
-   *
-   * @legacy-covers ::buildResponse
    */
   public function testBuildResponse(): void {
     /** @var \Drupal\views\Entity\View $view */

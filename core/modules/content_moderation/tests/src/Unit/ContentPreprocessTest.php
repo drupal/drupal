@@ -21,8 +21,6 @@ class ContentPreprocessTest extends UnitTestCase {
 
   /**
    * Tests is latest version page.
-   *
-   * @legacy-covers ::isLatestVersionPage
    */
   #[DataProvider('routeNodeProvider')]
   public function testIsLatestVersionPage($route_name, $route_nid, $check_nid, $result, $message): void {

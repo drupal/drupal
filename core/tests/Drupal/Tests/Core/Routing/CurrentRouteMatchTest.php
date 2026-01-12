@@ -87,8 +87,6 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
 
   /**
    * Tests get route match from request with routing.
-   *
-   * @legacy-covers ::getRouteMatchFromRequest
    */
   public function testGetRouteMatchFromRequestWithRouting(): void {
     $request_stack = new RequestStack();
@@ -104,8 +102,6 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
 
   /**
    * Tests get route match from request.
-   *
-   * @legacy-covers ::getRouteMatchFromRequest
    */
   public function testGetRouteMatchFromRequest(): void {
     $request_stack = new RequestStack();
@@ -125,8 +121,6 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
 
   /**
    * Tests reset route match.
-   *
-   * @legacy-covers ::resetRouteMatch
    */
   public function testResetRouteMatch(): void {
     $route = new Route('/test-route/{foo}');

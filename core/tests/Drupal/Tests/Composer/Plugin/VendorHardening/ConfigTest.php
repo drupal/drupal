@@ -20,8 +20,6 @@ class ConfigTest extends TestCase {
 
   /**
    * Tests get paths for package mixed case.
-   *
-   * @legacy-covers ::getPathsForPackage
    */
   public function testGetPathsForPackageMixedCase(): void {
     $config = $this->getMockBuilder(Config::class)

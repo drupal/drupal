@@ -71,7 +71,7 @@ class HtmlEscapedTextTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::count
+   * Tests count.
    */
   public function testCount(): void {
     $string = 'Can I have a <em>kitten</em>';
