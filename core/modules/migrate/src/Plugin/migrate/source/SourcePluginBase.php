@@ -133,14 +133,14 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * The current row from the query.
    *
-   * @var \Drupal\migrate\Row
+   * @var \Drupal\migrate\Row|null
    */
   protected $currentRow;
 
   /**
    * The primary key of the current row.
    *
-   * @var array
+   * @var array|null
    */
   protected $currentSourceIds;
 
