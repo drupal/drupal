@@ -139,9 +139,6 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
       }
       elseif ($response instanceof AjaxResponse) {
         $response->addAttachments($early_rendering_bubbleable_metadata->getAttachments());
-        // @todo Make AjaxResponse cacheable in
-        //   https://www.drupal.org/node/956186. Meanwhile, allow contrib
-        //   subclasses to be.
         if ($response instanceof CacheableResponseInterface) {
           $response->addCacheableDependency($early_rendering_bubbleable_metadata);
         }
