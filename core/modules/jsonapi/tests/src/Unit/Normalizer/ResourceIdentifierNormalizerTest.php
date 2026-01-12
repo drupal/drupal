@@ -53,12 +53,12 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $target_resource_type = new ResourceType('lorem', 'dummy_bundle', NULL);
+    $target_resource_type = new ResourceType('lorem', 'dummy_bundle', \stdClass::class);
     $relationship_fields = [
       'field_dummy' => new ResourceTypeRelationship('field_dummy'),
       'field_dummy_single' => new ResourceTypeRelationship('field_dummy_single'),
     ];
-    $this->resourceType = new ResourceType('fake_entity_type', 'dummy_bundle', NULL, FALSE, TRUE, TRUE, FALSE, $relationship_fields);
+    $this->resourceType = new ResourceType('fake_entity_type', 'dummy_bundle', \stdClass::class, FALSE, TRUE, TRUE, FALSE, $relationship_fields);
     $this->resourceType->setRelatableResourceTypes([
       'field_dummy' => [$target_resource_type],
       'field_dummy_single' => [$target_resource_type],

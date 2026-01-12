@@ -49,7 +49,7 @@ class ResourceType {
   /**
    * The class to which a payload converts to.
    *
-   * @var string
+   * @var class-string
    */
   protected $deserializationTargetClass;
 
@@ -333,7 +333,7 @@ class ResourceType {
    *   An entity type ID.
    * @param string $bundle
    *   A bundle.
-   * @param string $deserialization_target_class
+   * @param class-string $deserialization_target_class
    *   The deserialization target class.
    * @param bool $internal
    *   (optional) Whether the resource type should be internal.
@@ -349,6 +349,9 @@ class ResourceType {
    *   The resource type name.
    */
   public function __construct($entity_type_id, $bundle, $deserialization_target_class, $internal = FALSE, $is_locatable = TRUE, $is_mutable = TRUE, $is_versionable = FALSE, array $fields = [], $type_name = NULL) {
+    if ($deserialization_target_class === NULL) {
+      @trigger_error('Passing NULL as the $deserialization_target_class is deprecated in drupal:11.3.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3558394', E_USER_DEPRECATED);
+    }
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $this->deserializationTargetClass = $deserialization_target_class;
