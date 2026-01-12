@@ -117,7 +117,7 @@ final class Serializer extends SymfonySerializer implements JsonSchemaProviderSe
    *
    * @param mixed $data
    *   Data to denormalize from.
-   * @param string $type
+   * @param class-string $type
    *   The class to which the data should be denormalized.
    * @param string $format
    *   The format being deserialized from.
