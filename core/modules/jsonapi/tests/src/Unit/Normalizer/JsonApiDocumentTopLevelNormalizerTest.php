@@ -12,7 +12,6 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepository;
-use Drupal\node\Entity\Node;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -48,7 +47,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
 
     $resource_type_repository
       ->getByTypeName(Argument::any())
-      ->willReturn(new ResourceType('node', 'article', Node::class));
+      ->willReturn(new ResourceType('node', 'article', NULL));
 
     $entity_storage = $this->prophesize(EntityStorageInterface::class);
     $self = $this;

@@ -330,7 +330,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   #[DataProvider('parameterProvider')]
   public function testCreateFromQueryParameter($case, $expected): void {
-    $resource_type = new ResourceType('foo', 'bar', \stdClass::class);
+    $resource_type = new ResourceType('foo', 'bar', NULL);
     $actual = Filter::createFromQueryParameter($case, $resource_type, $this->getFieldResolverMock($resource_type));
     $conditions = $actual->root()->members();
     for ($i = 0; $i < count($case); $i++) {
@@ -397,7 +397,7 @@ class FilterTest extends JsonapiKernelTestBase {
         ],
       ],
     ];
-    $resource_type = new ResourceType('foo', 'bar', \stdClass::class);
+    $resource_type = new ResourceType('foo', 'bar', NULL);
     $filter = Filter::createFromQueryParameter($parameter, $resource_type, $this->getFieldResolverMock($resource_type));
     $root = $filter->root();
 

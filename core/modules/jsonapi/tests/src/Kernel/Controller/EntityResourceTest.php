@@ -238,7 +238,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $request->query = new InputBag(['filter' => ['id' => 'invalid']]);
 
     // Get the response.
-    $resource_type = new ResourceType('node', 'article', Node::class);
+    $resource_type = new ResourceType('node', 'article', NULL);
     $response = $this->entityResource->getCollection($resource_type, $request);
 
     // Assertions.
