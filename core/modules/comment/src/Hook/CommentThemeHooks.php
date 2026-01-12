@@ -213,8 +213,11 @@ class CommentThemeHooks {
    *   An associative array containing:
    *   - element: An associative array containing render arrays for the list of
    *     comments, and the comment form. Array keys: comments, comment_form.
+   *
+   * @todo Rename to preprocess_field__comment() once
+   *   https://www.drupal.org/node/3566850 is resolved.
    */
-  #[Hook('preprocess_field__comment')]
+  #[Hook('preprocess_field')]
   public function preprocessField(&$variables): void {
     $element = $variables['element'];
     // We need to check for the field type even though we are using the comment
