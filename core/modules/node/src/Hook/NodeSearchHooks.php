@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\NodeInterface;
 use Drupal\search\SearchIndexInterface;
 
 /**
@@ -88,8 +89,10 @@ class NodeSearchHooks {
    * Implements hook_node_update().
    */
   #[Hook('node_update')]
-  public function nodeUpdate($node): void {
-    $this->reindexNodeForSearch($node->id());
+  public function nodeUpdate(NodeInterface $node): void {
+    if ($node->isDefaultRevision()) {
+      $this->reindexNodeForSearch($node->id());
+    }
   }
 
   /**
