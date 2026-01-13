@@ -85,6 +85,11 @@ class PageContext extends TopBarItemBase implements ContainerFactoryPluginInterf
       return $build;
     }
 
+    $entity_label = $this->getEntityLabel($entity);
+    if (!$entity_label) {
+      return $build;
+    }
+
     $build[] = [
       '#type' => 'component',
       '#component' => 'navigation:title',
@@ -95,11 +100,11 @@ class PageContext extends TopBarItemBase implements ContainerFactoryPluginInterf
         'extra_classes' => ['top-bar__title'],
       ],
       '#slots' => [
-        'content' => $entity->label(),
+        'content' => $entity_label,
       ],
     ];
 
-    if ($label = $this->getBadgeLabel($entity)) {
+    if ($badge_label = $this->getBadgeLabel($entity)) {
       $build[] = [
         '#type' => 'component',
         '#component' => 'navigation:badge',
@@ -107,12 +112,32 @@ class PageContext extends TopBarItemBase implements ContainerFactoryPluginInterf
           'status' => $this->getBadgeStatus($entity) ?? 'info',
         ],
         '#slots' => [
-          'label' => $label,
+          'label' => $badge_label,
         ],
       ];
     }
 
     return $build;
+  }
+
+  /**
+   * Retrieves the label of the given entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity from which the label will be retrieved.
+   *
+   * @return string|null
+   *   The label as a string if available, NULL otherwise.
+   */
+  protected function getEntityLabel(EntityInterface $entity): ?string {
+    $label = $entity->label();
+    if (is_string($label)) {
+      return $label;
+    }
+    if ($label instanceof \Stringable) {
+      return (string) $label;
+    }
+    return NULL;
   }
 
   /**
