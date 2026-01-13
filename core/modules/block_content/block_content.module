@@ -198,7 +198,7 @@ function block_content_theme_suggestions_block_alter(array &$suggestions, array 
 
   if ($block_content instanceof BlockContentInterface) {
     $bundle = $content['#block_content']->bundle();
-    $view_mode = strtr($variables['elements']['#configuration']['view_mode'], '.', '_');
+    $view_mode = strtr($variables['elements']['content']['#view_mode'], '.', '_');
 
     $suggestions_new[] = 'block__block_content__view__' . $view_mode;
     $suggestions_new[] = 'block__block_content__type__' . $bundle;

@@ -69,8 +69,8 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
 
     $variables['elements']['#id'] = $block->id();
     $variables['elements']['#configuration']['provider'] = 'block_content';
-    $variables['elements']['#configuration']['view_mode'] = 'full';
     $variables['elements']['content']['#block_content'] = $this->blockContent;
+    $variables['elements']['content']['#view_mode'] = 'full';
     $suggestions_empty = [];
     $suggestions_empty[] = 'block__block_content__' . $block->uuid();
     $suggestions = block_content_theme_suggestions_block_alter($suggestions_empty, $variables);
