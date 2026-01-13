@@ -77,7 +77,7 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
    *
    * @var int
    */
-  public $weight = 0;
+  public int $weight = 0;
 
   /**
    * The image style to use.

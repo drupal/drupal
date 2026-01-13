@@ -587,14 +587,27 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       }
 
       $this->entity = clone $original_entity;
-      $this->entity->set($property, NULL);
+
+      try {
+        $this->entity->set($property, NULL);
+      }
+      catch (\TypeError) {
+        // If setting the property to NULL causes a TypeError, skip this
+        // property as validation is already enforced at the language level.
+        continue;
+      }
+
       $expected_validation_errors = in_array($property, $properties_with_optional_values, TRUE)
         ? []
         : [$property => 'This value should not be null.'];
 
       // @see `type: required_label`
       // @see \Symfony\Component\Validator\Constraints\NotBlank
-      if (!$this->isFullyValidatable() && $this->entity->getEntityType()->getKey('label') == $property) {
+      if (
+        !$this->isFullyValidatable()
+        && $this->entity->getEntityType()->getKey('label') == $property
+        && $this->entity->getTypedData()->get($property)->getDataDefinition()->getDataType() == 'required_label'
+      ) {
         $expected_validation_errors = [$property => 'This value should not be blank.'];
       }
 
@@ -690,15 +703,19 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // optional, with the exception of `type: langcode` and
     // `type: required_label`.
     if (!$this->isFullyValidatable()) {
-      return array_diff($config_entity_properties, [
+      $excepted_properties = [
         // @see `type: langcode`
         // @see \Symfony\Component\Validator\Constraints\NotNull
         'langcode',
         'default_langcode',
+      ];
+      $label_property = $this->entity->getEntityType()->getKey('label');
+      if ($label_property && $this->entity->getTypedData()->get($label_property)->getDataDefinition()->getDataType() == 'required_label') {
         // @see `type: required_label`
         // @see \Symfony\Component\Validator\Constraints\NotBlank
-        $this->entity->getEntityType()->getKey('label'),
-      ]);
+        $excepted_properties[] = $label_property;
+      }
+      return array_diff($config_entity_properties, $excepted_properties);
     }
 
     // Otherwise, all properties are required except for those marked

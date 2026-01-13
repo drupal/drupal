@@ -72,18 +72,15 @@ class ConfigEntityAdapterTest extends KernelTestBase {
     $this->entity = \Drupal::entityTypeManager()->getStorage('config_test')->create([
       'id' => 'system',
       'label' => 'foobar',
-      // Set weight to be a string which should not validate.
-      'weight' => 'very heavy',
+      // Set style to be an array which should not validate.
+      'style' => [],
     ]);
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $violations = $adapter->validate();
-    $this->assertCount(2, $violations);
+    $this->assertCount(1, $violations);
     $violation = $violations->get(0);
-    $this->assertEquals('This value should be a valid number.', $violation->getMessage());
-    $this->assertEquals('weight', $violation->getPropertyPath());
-    $violation = $violations->get(1);
     $this->assertEquals('This value should be of the correct primitive type.', $violation->getMessage());
-    $this->assertEquals('weight', $violation->getPropertyPath());
+    $this->assertEquals('style', $violation->getPropertyPath());
   }
 
   /**
