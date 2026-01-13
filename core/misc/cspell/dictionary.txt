@@ -527,6 +527,7 @@ trgm
 truecolor
 twistie
 twocol
+ufffd
 uids
 unban
 uncacheable

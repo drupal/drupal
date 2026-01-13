@@ -29,7 +29,10 @@ class JsonEncoder extends BaseJsonEncoder {
     // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be
     // embedded into HTML.
     // @see \Symfony\Component\HttpFoundation\JsonResponse
-    $json_encoding_options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
+    // Additionally, substitute invalid UTF-8 sequences to ensure control
+    // characters and malformed data are properly handled.
+    // @see https://www.drupal.org/project/drupal/issues/3549107
+    $json_encoding_options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE;
     $this->encodingImpl = $encodingImpl ?: new JsonEncode([JsonEncode::OPTIONS => $json_encoding_options]);
     $this->decodingImpl = $decodingImpl ?: new JsonDecode([JsonDecode::ASSOCIATIVE => TRUE]);
   }
