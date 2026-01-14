@@ -83,7 +83,7 @@
             "https://www.drupal.org/node/2718229"
         ],
         "branch-alias": {
-            "dev-main": "11.x-dev"
+            "dev-main": "12.x-dev"
         },
         "installer-paths": {
             "core": ["type:drupal-core"],

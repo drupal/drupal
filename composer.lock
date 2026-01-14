@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49570e85328e62bb46dc74038cb18c7b",
+    "content-hash": "d7e7e808d0ae067e9f0b2f383a9924df",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -364,11 +364,11 @@
         },
         {
             "name": "drupal/core",
-            "version": "11.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "b832c56fb52356249b370a29af9bf6172e4538ed"
+                "reference": "ca99399c3d0117b65426eda3a5ffe3257112b50a"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -460,7 +460,7 @@
             "type": "drupal-core",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "11.x-dev"
+                    "dev-main": "12.x-dev"
                 },
                 "drupal-scaffold": {
                     "file-mapping": {
@@ -538,11 +538,11 @@
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "11.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/Scaffold",
-                "reference": "3d3825e326471743d538a2404ed6c9f6af50dcae"
+                "reference": "0fdec1a8ed622a9ed92bb80730a5337c390cc7fb"
             },
             "require": {
                 "composer-plugin-api": "^2",
@@ -558,7 +558,7 @@
             "extra": {
                 "class": "Drupal\\Composer\\Plugin\\Scaffold\\Plugin",
                 "branch-alias": {
-                    "dev-main": "11.x-dev"
+                    "dev-main": "12.x-dev"
                 }
             },
             "autoload": {
@@ -580,11 +580,11 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "11.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
-                "reference": "1384bf4a91459b6f56aaacd71ca2d9cb3992dba0"
+                "reference": "569e7bfe4490e7e05d20a039956ef6e2d6c06968"
             },
             "require": {
                 "composer-plugin-api": "^2",
@@ -594,7 +594,7 @@
             "extra": {
                 "class": "Drupal\\Composer\\Plugin\\ProjectMessage\\MessagePlugin",
                 "branch-alias": {
-                    "dev-main": "11.x-dev"
+                    "dev-main": "12.x-dev"
                 }
             },
             "autoload": {
@@ -616,11 +616,11 @@
         },
         {
             "name": "drupal/core-recipe-unpack",
-            "version": "11.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/RecipeUnpack",
-                "reference": "c7433b094104ac68b24272af8531aaa72b5c0159"
+                "reference": "5a9effb8344fadff1820e394b4bd820f23472328"
             },
             "require": {
                 "composer-plugin-api": "^2",
@@ -633,7 +633,7 @@
             "extra": {
                 "class": "Drupal\\Composer\\Plugin\\RecipeUnpack\\Plugin",
                 "branch-alias": {
-                    "dev-main": "11.x-dev"
+                    "dev-main": "12.x-dev"
                 }
             },
             "autoload": {
@@ -655,11 +655,11 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "11.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "735e55991528ffc5d7b6cae8de07fabf6fe15ed5"
+                "reference": "3e006d6d544e6c59a60b09f0d2608f906b60fe8a"
             },
             "require": {
                 "composer-plugin-api": "^2",
@@ -669,7 +669,7 @@
             "extra": {
                 "class": "Drupal\\Composer\\Plugin\\VendorHardening\\VendorHardeningPlugin",
                 "branch-alias": {
-                    "dev-main": "11.x-dev"
+                    "dev-main": "12.x-dev"
                 }
             },
             "autoload": {

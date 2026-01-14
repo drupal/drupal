@@ -20,7 +20,7 @@
   "extra": {
     "class": "Drupal\\Composer\\Plugin\\Scaffold\\Plugin",
     "branch-alias": {
-      "dev-main": "11.x-dev"
+      "dev-main": "12.x-dev"
     }
   },
   "config": {
