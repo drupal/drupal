@@ -40,7 +40,7 @@ class AnnounceRendererTest extends AnnounceTestBase {
       'url' => 'https://www.drupal.org/project/announce',
       '_drupalorg' => [
         'featured' => TRUE,
-        'version' => '^10||^11',
+        'version' => '>=10',
       ],
       'date_modified' => "2021-09-02T15:09:42+00:00",
       'date_published' => "2021-09-01T15:09:42+00:00",
@@ -51,7 +51,7 @@ class AnnounceRendererTest extends AnnounceTestBase {
       'url' => 'https://www.drupal.org/project/announce',
       '_drupalorg' => [
         'featured' => FALSE,
-        'version' => '^10||^11',
+        'version' => '>=10',
       ],
       'date_modified' => "2021-09-02T15:09:42+00:00",
       'date_published' => "2021-09-01T15:09:42+00:00",
