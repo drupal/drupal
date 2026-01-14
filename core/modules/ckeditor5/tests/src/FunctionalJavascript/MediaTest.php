@@ -582,7 +582,7 @@ class MediaTest extends MediaTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('xpath', '//img[contains(@alt, "' . $qui_est_zartan . '")]'));
     $this->getSession()->switchToIFrame();
     $page->pressButton('Save');
-    $assert_session->elementExists('xpath', '//img[contains(@alt, "' . $qui_est_zartan . '")]');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('xpath', '//img[contains(@alt, "' . $qui_est_zartan . '")]'));
   }
 
   /**
