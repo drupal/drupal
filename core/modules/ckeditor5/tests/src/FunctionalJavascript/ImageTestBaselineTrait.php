@@ -229,9 +229,10 @@ trait ImageTestBaselineTrait {
       $page->pressButton('Save');
 
       // Assert the HTML the end user sees.
-      $assert_session->elementExists('css', $unrestricted
+      $this->assertNotEmpty($assert_session->waitForElement('css', $unrestricted
         ? 'a[href="http://www.drupal.org/association"].trusted img[src*="' . $src . '"]'
-        : 'a[href="http://www.drupal.org/association"] img[src*="' . $src . '"]');
+        : 'a[href="http://www.drupal.org/association"] img[src*="' . $src . '"]'
+      ));
 
       // Go back to edit the now *linked* <drupal-media>. Everything from this
       // point onwards is effectively testing "upcasting" and proving there is
