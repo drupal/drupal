@@ -61,7 +61,7 @@ variables:
   FF_USE_FASTZIP: 1
   _CONFIG_DOCKERHUB_ROOT: "registry.gitlab.com/drupal-infrastructure/drupalci/drupalci-environments"
   # Let composer know what self.version means.
-  COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
+  COMPOSER_ROOT_VERSION: dev-main
   COMPOSER_ALLOW_SUPERUSER: 1
   CONCURRENCY: 24
   GIT_DEPTH: "50"
