@@ -339,7 +339,7 @@ class MediaLibraryUiBuilder {
     $view_executable->preExecute($args);
     $view_executable->execute($display_id);
 
-    return $view_executable->buildRenderable($display_id, $args, FALSE);
+    return $view_executable->buildRenderable($display_id, [], FALSE);
   }
 
 }
