@@ -692,13 +692,6 @@ default:
     KUBERNETES_CPU_REQUEST: "2"
   # Run on MRs if config schema files have changed, or manually.
   rules:
-    - if: $PERFORMANCE_TEST != "1"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        - "**/config/schema/*.schema.yml"
-        # Modules may alter config schema using hook_config_schema_info_alter().
-        - "**/*.module"
-        - "**/src/Hook/*.php"
     - when: manual
       allow_failure: true
   artifacts:
