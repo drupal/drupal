@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\workspaces;
+namespace Drupal\workspaces_ui;
 
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityListBuilder;

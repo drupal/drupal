@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\workspaces\Plugin\Block;
+namespace Drupal\workspaces_ui\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\workspaces\Form\WorkspaceSwitcherForm;
+use Drupal\workspaces_ui\Form\WorkspaceSwitcherForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

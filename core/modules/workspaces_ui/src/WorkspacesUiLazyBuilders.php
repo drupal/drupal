@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Drupal\workspaces;
+namespace Drupal\workspaces_ui;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\workspaces\WorkspaceManagerInterface;
 
 /**
  * Defines a service for workspaces #lazy_builder callbacks.
  *
  * @internal
  */
-final class WorkspacesLazyBuilders implements TrustedCallbackInterface {
+final class WorkspacesUiLazyBuilders implements TrustedCallbackInterface {
 
   use StringTranslationTrait;
 
@@ -55,7 +56,7 @@ final class WorkspacesLazyBuilders implements TrustedCallbackInterface {
         ]),
       ],
       '#attached' => [
-        'library' => ['workspaces/drupal.workspaces.toolbar'],
+        'library' => ['workspaces_ui/drupal.workspaces_ui.toolbar'],
       ],
       '#cache' => [
         'max-age' => 0,

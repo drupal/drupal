@@ -1,5 +1,28 @@
 parameters:
   workspaces.skip_procedural_hook_scan: true
+  workspaces.moved_classes:
+    'Drupal\workspaces\Form\SwitchToLiveForm':
+      class: 'Drupal\workspaces_ui\Form\SwitchToLiveForm'
+    'Drupal\workspaces\Form\WorkspaceActivateForm':
+      class: 'Drupal\workspaces_ui\Form\WorkspaceActivateForm'
+    'Drupal\workspaces\Form\WorkspaceDeleteForm':
+      class: 'Drupal\workspaces_ui\Form\WorkspaceDeleteForm'
+    'Drupal\workspaces\Form\WorkspaceForm':
+      class: 'Drupal\workspaces_ui\Form\WorkspaceForm'
+    'Drupal\workspaces\Form\WorkspaceMergeForm':
+      class: 'Drupal\workspaces_ui\Form\WorkspaceMergeForm'
+    'Drupal\workspaces\Form\WorkspacePublishForm':
+      class: 'Drupal\workspaces_ui\Form\WorkspacePublishForm'
+    'Drupal\workspaces\Form\WorkspaceSwitcherForm':
+      class: 'Drupal\workspaces_ui\Form\WorkspaceSwitcherForm'
+    'Drupal\workspaces\WorkspaceViewBuilder':
+      class: 'Drupal\workspaces_ui\WorkspaceViewBuilder'
+    'Drupal\workspaces\WorkspaceListBuilder':
+      class: 'Drupal\workspaces_ui\WorkspaceListBuilder'
+    'Drupal\workspaces\WorkspacesLazyBuilders':
+      class: 'Drupal\workspaces_ui\WorkspacesUiLazyBuilders'
+    'Drupal\workspaces\Plugin\Block\WorkspaceSwitcherBlock':
+      class: 'Drupal\workspaces_ui\Plugin\Block\WorkspaceSwitcherBlock'
 
 services:
   _defaults:
@@ -73,11 +96,6 @@ services:
   logger.channel.workspaces:
     parent: logger.channel_base
     arguments: ['workspaces']
-
-  workspaces.lazy_builders:
-    class: Drupal\workspaces\WorkspacesLazyBuilders
-    arguments: [ '@workspaces.manager', '@plugin.manager.element_info' ]
-  Drupal\workspaces\WorkspacesLazyBuilders: '@workspaces.lazy_builders'
 
   workspaces.entity.repository:
     decorates: entity.repository

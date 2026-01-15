@@ -27,7 +27,7 @@ final class NavigationServiceProvider implements ServiceProviderInterface {
     }
 
     // If Workspaces module service is available, register our own service.
-    if ($container->has('workspaces.lazy_builders')) {
+    if ($container->has('workspaces_ui.lazy_builders')) {
       $container
         ->register('navigation.workspaces_lazy_builders', WorkspacesLazyBuilder::class)
         ->addArgument(new Reference('workspaces.manager'));

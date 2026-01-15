@@ -20,7 +20,12 @@ class WorkspaceFormValidationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'form_test', 'workspaces'];
+  protected static $modules = [
+    'block',
+    'form_test',
+    'workspaces',
+    'workspaces_ui',
+  ];
 
   /**
    * {@inheritdoc}

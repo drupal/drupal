@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\workspaces\Form;
+namespace Drupal\workspaces_ui\Form;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityConfirmFormBase;

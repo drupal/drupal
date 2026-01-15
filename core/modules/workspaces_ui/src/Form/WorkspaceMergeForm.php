@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\workspaces\Form;
+namespace Drupal\workspaces_ui\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;

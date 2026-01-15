@@ -7,23 +7,17 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\EntityOwnerTrait;
 use Drupal\views\EntityViewsData;
 use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
-use Drupal\workspaces\Form\WorkspaceActivateForm;
-use Drupal\workspaces\Form\WorkspaceDeleteForm;
-use Drupal\workspaces\Form\WorkspaceForm;
 use Drupal\workspaces\Hook\WorkspacesHooks;
 use Drupal\workspaces\Provider\DefaultWorkspaceProvider;
 use Drupal\workspaces\Provider\WorkspaceProviderCollector;
 use Drupal\workspaces\Provider\WorkspaceProviderInterface;
 use Drupal\workspaces\WorkspaceAccessControlHandler;
 use Drupal\workspaces\WorkspaceInterface;
-use Drupal\workspaces\WorkspaceListBuilder;
-use Drupal\workspaces\WorkspaceViewBuilder;
 
 /**
  * The workspace entity class.
@@ -43,29 +37,9 @@ use Drupal\workspaces\WorkspaceViewBuilder;
     'owner' => 'uid',
   ],
   handlers: [
-    'list_builder' => WorkspaceListBuilder::class,
-    'view_builder' => WorkspaceViewBuilder::class,
     'access' => WorkspaceAccessControlHandler::class,
     'views_data' => EntityViewsData::class,
-    'route_provider' => [
-      'html' => AdminHtmlRouteProvider::class,
-    ],
-    'form' => [
-      'default' => WorkspaceForm::class,
-      'add' => WorkspaceForm::class,
-      'edit' => WorkspaceForm::class,
-      'delete' => WorkspaceDeleteForm::class,
-      'activate' => WorkspaceActivateForm::class,
-    ],
     'workspace' => IgnoredWorkspaceHandler::class,
-  ],
-  links: [
-    'canonical' => '/admin/config/workflow/workspaces/manage/{workspace}',
-    'add-form' => '/admin/config/workflow/workspaces/add',
-    'edit-form' => '/admin/config/workflow/workspaces/manage/{workspace}/edit',
-    'delete-form' => '/admin/config/workflow/workspaces/manage/{workspace}/delete',
-    'activate-form' => '/admin/config/workflow/workspaces/manage/{workspace}/activate',
-    'collection' => '/admin/config/workflow/workspaces',
   ],
   admin_permission: 'administer workspaces',
   base_table: 'workspace',
@@ -76,7 +50,6 @@ use Drupal\workspaces\WorkspaceViewBuilder;
     'singular' => '@count workspace',
     'plural' => '@count workspaces',
   ],
-  field_ui_base_route: 'entity.workspace.collection',
 )]
 class Workspace extends ContentEntityBase implements WorkspaceInterface {
 

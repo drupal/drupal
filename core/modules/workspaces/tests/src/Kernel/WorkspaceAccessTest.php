@@ -30,6 +30,7 @@ class WorkspaceAccessTest extends KernelTestBase {
     'workspaces',
     'workspace_access_test',
     'workspaces_test',
+    'workspaces_ui',
   ];
 
   /**
