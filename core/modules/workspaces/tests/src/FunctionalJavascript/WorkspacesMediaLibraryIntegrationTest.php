@@ -57,7 +57,7 @@ class WorkspacesMediaLibraryIntegrationTest extends EntityReferenceWidgetTest {
   /**
    * {@inheritdoc}
    */
-  protected function drupalCreateUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []): UserInterface|false {
+  protected function drupalCreateUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []): UserInterface {
     // Ensure that users and roles are managed outside a workspace context.
     return \Drupal::service('workspaces.manager')->executeOutsideWorkspace(function () use ($permissions, $name, $admin, $values) {
       $permissions = array_merge($permissions, [
