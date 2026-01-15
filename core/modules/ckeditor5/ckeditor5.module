@@ -632,7 +632,7 @@ function ckeditor5_editor_presave(EditorInterface $editor) {
   if ($editor->getEditor() === 'ckeditor5') {
     $settings = $editor->getSettings();
     // @see ckeditor5_post_update_code_block()
-    if (in_array('codeBlock', $settings['toolbar']['items'], TRUE) && !isset($settings['plugins']['ckeditor5_codeBlock'])) {
+    if (in_array('codeBlock', $settings['toolbar']['items'] ?: [], TRUE) && !isset($settings['plugins']['ckeditor5_codeBlock'])) {
       // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock::defaultConfiguration()
       $settings['plugins']['ckeditor5_codeBlock'] = [
         'languages' => [
@@ -664,7 +664,7 @@ function ckeditor5_editor_presave(EditorInterface $editor) {
     }
 
     // @see ckeditor5_post_update_list_start_reversed()
-    if (in_array('numberedList', $settings['toolbar']['items'], TRUE) && array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
+    if (in_array('numberedList', $settings['toolbar']['items'] ?: [], TRUE) && array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
       $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
       $format_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
 

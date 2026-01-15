@@ -104,7 +104,7 @@ function ckeditor5_post_update_code_block(&$sandbox = []) {
     }
     $settings = $editor->getSettings();
     // @see ckeditor5_editor_presave()
-    return in_array('codeBlock', $settings['toolbar']['items'], TRUE);
+    return in_array('codeBlock', $settings['toolbar']['items'] ?: [], TRUE);
   });
 }
 
@@ -138,7 +138,7 @@ function ckeditor5_post_update_list_start_reversed(&$sandbox = []) {
     $settings = $editor->getSettings();
 
     // @see ckeditor5_editor_presave()
-    return in_array('numberedList', $settings['toolbar']['items'], TRUE)
+    return in_array('numberedList', $settings['toolbar']['items'] ?: [], TRUE)
       && array_key_exists('ckeditor5_sourceEditing', $settings['plugins']);
   });
 }
