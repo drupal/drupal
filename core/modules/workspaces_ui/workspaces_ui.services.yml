@@ -4,5 +4,8 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
-  workspaces_ui.route_subscriber:
-    class: Drupal\workspaces_ui\Routing\RouteSubscriber
+
+  workspaces_ui.lazy_builders:
+    class: Drupal\workspaces_ui\WorkspacesUiLazyBuilders
+    arguments: [ '@workspaces.manager', '@plugin.manager.element_info' ]
+  Drupal\workspaces_ui\WorkspacesUiLazyBuilders: '@workspaces_ui.lazy_builders'

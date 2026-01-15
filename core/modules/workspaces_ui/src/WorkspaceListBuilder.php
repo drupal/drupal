@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\workspaces;
+namespace Drupal\workspaces_ui;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxHelperTrait;
@@ -13,6 +13,8 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 use Drupal\workspaces\Provider\DefaultWorkspaceProvider;
+use Drupal\workspaces\WorkspaceManagerInterface;
+use Drupal\workspaces\WorkspaceRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -262,7 +264,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
       array_unshift($build['table']['#rows'], $row_live);
 
       $build['#attached'] = [
-        'library' => ['workspaces/drupal.workspaces.overview'],
+        'library' => ['workspaces_ui/drupal.workspaces_ui.overview'],
       ];
     }
     return $build;

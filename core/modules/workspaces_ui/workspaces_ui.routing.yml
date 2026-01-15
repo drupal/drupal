@@ -1,11 +1,9 @@
-# Access to these routes is enabled by the Workspaces UI module.
 entity.workspace.collection:
   path: '/admin/config/workflow/workspaces'
   defaults:
     _title: 'Workspaces'
     _entity_list: 'workspace'
   requirements:
-    _access: 'FALSE'
     _permission: 'view any workspace+administer workspaces+edit any workspace'
 
 entity.workspace.activate_form:
@@ -16,14 +14,13 @@ entity.workspace.activate_form:
   options:
     _admin_route: TRUE
   requirements:
-    _access: 'FALSE'
     _entity_access: 'workspace.view'
-    _custom_access: '\Drupal\workspaces\Form\WorkspaceActivateForm::checkAccess'
+    _custom_access: '\Drupal\workspaces_ui\Form\WorkspaceActivateForm::checkAccess'
 
 entity.workspace.publish_form:
   path: '/admin/config/workflow/workspaces/manage/{workspace}/publish'
   defaults:
-    _form: '\Drupal\workspaces\Form\WorkspacePublishForm'
+    _form: '\Drupal\workspaces_ui\Form\WorkspacePublishForm'
     _title: 'Publish workspace'
   options:
     _admin_route: TRUE
@@ -31,13 +28,12 @@ entity.workspace.publish_form:
       workspace:
         type: entity:workspace
   requirements:
-    _access: 'FALSE'
     _permission: 'administer workspaces'
 
 entity.workspace.merge_form:
   path: '/admin/config/workflow/workspaces/manage/{source_workspace}/{target_workspace}/merge'
   defaults:
-    _form: '\Drupal\workspaces\Form\WorkspaceMergeForm'
+    _form: '\Drupal\workspaces_ui\Form\WorkspaceMergeForm'
     _title: 'Merge workspace'
   options:
     _admin_route: TRUE
@@ -47,15 +43,13 @@ entity.workspace.merge_form:
       target_workspace:
         type: entity:workspace
   requirements:
-    _access: 'FALSE'
     _permission: 'administer workspaces'
 
 workspaces.switch_to_live:
   path: '/admin/config/workflow/workspaces/switch-to-live'
   defaults:
-    _form: '\Drupal\workspaces\Form\SwitchToLiveForm'
+    _form: '\Drupal\workspaces_ui\Form\SwitchToLiveForm'
     _title: 'Switch to Live'
   requirements:
-    _access: 'FALSE'
     _user_is_logged_in: 'TRUE'
     _has_active_workspace: 'TRUE'

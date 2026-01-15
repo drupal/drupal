@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\workspaces\Form;
+namespace Drupal\workspaces_ui\Form;
 
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;

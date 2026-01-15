@@ -14,10 +14,10 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
-use Drupal\workspaces\Form\WorkspacePublishForm;
 use Drupal\workspaces\WorkspaceOperationFactory;
 use Drupal\workspaces\WorkspacePublisher;
 use Drupal\workspaces\WorkspacePublisherInterface;
+use Drupal\workspaces_ui\Form\WorkspacePublishForm;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -47,6 +47,7 @@ class WorkspacePublisherTest extends KernelTestBase {
     'node',
     'user',
     'workspaces',
+    'workspaces_ui',
   ];
 
   /**

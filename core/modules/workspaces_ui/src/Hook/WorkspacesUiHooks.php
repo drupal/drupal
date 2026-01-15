@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\workspaces_ui\Hook;
 
+use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\workspaces_ui\Form\WorkspaceActivateForm;
+use Drupal\workspaces_ui\Form\WorkspaceDeleteForm;
+use Drupal\workspaces_ui\Form\WorkspaceForm;
+use Drupal\workspaces_ui\WorkspaceListBuilder;
+use Drupal\workspaces_ui\WorkspaceViewBuilder;
 
 /**
  * Hook implementations for the workspaces_ui module.
@@ -15,6 +21,33 @@ use Drupal\Core\Url;
 class WorkspacesUiHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * Implements hook_entity_type_alter().
+   */
+  #[Hook('entity_type_alter')]
+  public function entityTypeAlter(array &$entity_types): void {
+    /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+    if (isset($entity_types['workspace'])) {
+      $entity_types['workspace']->setHandlerClass('list_builder', WorkspaceListBuilder::class);
+      $entity_types['workspace']->setHandlerClass('view_builder', WorkspaceViewBuilder::class);
+      $entity_types['workspace']->setHandlerClass('route_provider', [
+        'html' => AdminHtmlRouteProvider::class,
+      ]);
+      $entity_types['workspace']->setFormClass('default', WorkspaceForm::class);
+      $entity_types['workspace']->setFormClass('add', WorkspaceForm::class);
+      $entity_types['workspace']->setFormClass('edit', WorkspaceForm::class);
+      $entity_types['workspace']->setFormClass('delete', WorkspaceDeleteForm::class);
+      $entity_types['workspace']->setFormClass('activate', WorkspaceActivateForm::class);
+      $entity_types['workspace']->setLinkTemplate('canonical', '/admin/config/workflow/workspaces/manage/{workspace}');
+      $entity_types['workspace']->setLinkTemplate('add-form', '/admin/config/workflow/workspaces/add');
+      $entity_types['workspace']->setLinkTemplate('edit-form', '/admin/config/workflow/workspaces/manage/{workspace}/edit');
+      $entity_types['workspace']->setLinkTemplate('delete-form', '/admin/config/workflow/workspaces/manage/{workspace}/delete');
+      $entity_types['workspace']->setLinkTemplate('activate-form', '/admin/config/workflow/workspaces/manage/{workspace}/activate');
+      $entity_types['workspace']->setLinkTemplate('collection', '/admin/config/workflow/workspaces');
+      $entity_types['workspace']->set('field_ui_base_route', 'entity.workspace.collection');
+    }
+  }
 
   /**
    * Implements hook_help().
@@ -61,7 +94,7 @@ class WorkspacesUiHooks {
     $items['workspace'] += [
       '#type' => 'toolbar_item',
       'tab' => [
-        '#lazy_builder' => ['workspaces.lazy_builders:renderToolbarTab', []],
+        '#lazy_builder' => ['workspaces_ui.lazy_builders:renderToolbarTab', []],
         '#create_placeholder' => TRUE,
         '#lazy_builder_preview' => [
           '#type' => 'link',
@@ -90,7 +123,7 @@ class WorkspacesUiHooks {
     // render callback to remove the #attributes property. We start by adding
     // the defaults, and then we append our own pre render callback.
     $items['workspace'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
-    $items['workspace']['#pre_render'][] = 'workspaces.lazy_builders:removeTabAttributes';
+    $items['workspace']['#pre_render'][] = 'workspaces_ui.lazy_builders:removeTabAttributes';
 
     return $items;
   }
