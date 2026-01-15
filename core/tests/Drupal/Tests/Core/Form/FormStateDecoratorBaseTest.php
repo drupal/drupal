@@ -650,7 +650,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Tests get temporary value.
    *
-   * @param string $key
+   * @param string|array $key
    *   Any valid value for
    *   \Drupal\Core\Form\FormStateInterface::getTemporaryValue()'s $key
    *   argument.
@@ -660,7 +660,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   value.
    */
   #[DataProvider('providerGetTemporaryValue')]
-  public function testGetTemporaryValue($key, $value = NULL): void {
+  public function testGetTemporaryValue(string|array $key, mixed $value = NULL): void {
     // Use PHPUnit for mocking, because Prophecy cannot mock methods that return
     // by reference. See \Prophecy\Doubler\Generator\Node::getCode().
     $decorated_form_state = $this->createMock(FormStateInterface::class);
@@ -679,8 +679,9 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    */
   public static function providerGetTemporaryValue(): array {
     return [
-      [TRUE, 'FOO', 'BAR'],
-      [TRUE, 'FOO', NULL],
+      ['FOO', 'BAR'],
+      ['FOO', NULL],
+      [['foo', 'bar'], 'qux'],
     ];
   }
 

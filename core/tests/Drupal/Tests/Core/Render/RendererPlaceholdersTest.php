@@ -740,7 +740,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @legacy-covers ::replacePlaceholders
    */
   #[DataProvider('providerPlaceholders')]
-  public function testCacheableParentWithPostRequest(array $test_element, array $args): void {
+  public function testCacheableParentWithPostRequest(array $test_element, array $args, array $expected_placeholder_render_array, array|false $placeholder_cache_keys, array $bubbled_cache_contexts, array $bubbled_cache_tags, array $placeholder_expected_render_cache_array): void {
     $this->setUpMemoryCache();
 
     // Verify behavior when handling a non-GET request, e.g. a POST request:
@@ -777,7 +777,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @legacy-covers ::replacePlaceholders
    */
   #[DataProvider('providerPlaceholders')]
-  public function testPlaceholderingDisabledForPostRequests(array $test_element, array $args, array $expected_placeholder_render_array, array|false $placeholder_cache_keys): void {
+  public function testPlaceholderingDisabledForPostRequests(array $test_element, array $args, array $expected_placeholder_render_array, array|false $placeholder_cache_keys, array $bubbled_cache_contexts, array $bubbled_cache_tags, array $placeholder_expected_render_cache_array): void {
     if ($placeholder_cache_keys && !empty($test_element['placeholder']['#cache']['keys'])) {
       $this->setUpMemoryCache();
     }

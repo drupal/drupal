@@ -10,7 +10,7 @@ use Drupal\Core\Plugin\Component;
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Component\ComponentValidator;
-use Drupal\Tests\UnitTestCaseTest;
+use Drupal\Tests\UnitTestCase;
 use JsonSchema\ConstraintError;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\Constraints\FormatConstraint;
@@ -26,7 +26,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 #[CoversClass(ComponentValidator::class)]
 #[Group('sdc')]
-class ComponentValidatorTest extends UnitTestCaseTest {
+class ComponentValidatorTest extends UnitTestCase {
 
   /**
    * Tests that valid component definitions don't cause errors.
@@ -49,13 +49,14 @@ class ComponentValidatorTest extends UnitTestCaseTest {
    * @return array
    *   The data.
    */
-  public static function dataProviderValidateDefinitionValid(): array {
-    return [
-      array_map(
-        [static::class, 'loadComponentDefinitionFromFs'],
-        ['my-banner', 'my-button', 'my-cta'],
-      ),
-    ];
+  public static function dataProviderValidateDefinitionValid(): \Generator {
+    $data = array_map(
+      [static::class, 'loadComponentDefinitionFromFs'],
+      ['my-banner', 'my-button', 'my-cta'],
+    );
+    foreach ($data as $definition) {
+      yield [$definition];
+    }
   }
 
   /**

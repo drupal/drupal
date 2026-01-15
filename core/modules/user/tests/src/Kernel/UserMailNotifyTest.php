@@ -102,9 +102,11 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *
    * @param string $op
    *   The operation being performed on the account.
+   * @param array $mail_keys
+   *   The mail keys to test for.
    */
   #[DataProvider('userMailsProvider')]
-  public function testUserMailsNotSent($op): void {
+  public function testUserMailsNotSent(string $op, array $mail_keys): void {
     $this->installConfig('user');
     $this->config('user.settings')->set('notify.' . $op, FALSE)->save();
     $return = _user_mail_notify($op, $this->createUser());
@@ -117,9 +119,11 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *
    * @param string $op
    *   The operation being performed on the account.
+   * @param array $mail_keys
+   *   The mail keys to test for.
    */
   #[DataProvider('userMailsProvider')]
-  public function testUserMailsWithoutAccountEmail($op): void {
+  public function testUserMailsWithoutAccountEmail(string $op, array $mail_keys): void {
     $this->installConfig('user');
     $this->config('user.settings')->set('notify.' . $op, TRUE)->save();
 

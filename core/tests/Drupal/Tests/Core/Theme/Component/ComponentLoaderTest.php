@@ -7,7 +7,7 @@ namespace Drupal\Tests\Core\Theme\Component;
 use Drupal\Core\Plugin\Component;
 use Drupal\Core\Template\Loader\ComponentLoader;
 use Drupal\Core\Theme\ComponentPluginManager;
-use Drupal\Tests\UnitTestCaseTest;
+use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
  */
 #[CoversClass(ComponentLoader::class)]
 #[Group('sdc')]
-class ComponentLoaderTest extends UnitTestCaseTest {
+class ComponentLoaderTest extends UnitTestCase {
 
   /**
    * Tests the is fresh function for component loader.

@@ -73,10 +73,6 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
             t('It must be a root dependency.'),
           ], $summary),
         ],
-        [
-          'package-manager-faq-composer-patches-not-a-root-dependency',
-          NULL,
-        ],
       ],
       'VALID: present' => [
         static::CONFIG_ALLOWED_PLUGIN | static::EXTRA_EXIT_ON_PATCH_FAILURE | static::REQUIRE_PACKAGE_FROM_ROOT,
@@ -212,9 +208,13 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
    *   Whether patcher is installed in stage.
    * @param \Drupal\package_manager\ValidationResult[] $expected_results
    *   The expected validation results.
+   * @param string[] $help_page_sections
+   *   An associative array of fragments (anchors) in the online help. The keys
+   *   should be the numeric indices of the validation result messages which
+   *   should link to those fragments.
    */
   #[DataProvider('providerErrorDuringPreApply')]
-  public function testErrorDuringPreApply(int $in_active, int $in_stage, array $expected_results): void {
+  public function testErrorDuringPreApply(int $in_active, int $in_stage, array $expected_results, array $help_page_sections): void {
     // Simulate in active.
     $active_manipulator = new ActiveFixtureManipulator();
     if ($in_active & static::CONFIG_ALLOWED_PLUGIN) {
@@ -315,7 +315,7 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
       }
       $expected_results[$result_index] = ValidationResult::createError($messages, $result->summary);
     }
-    $this->testErrorDuringPreApply($in_active, $in_stage, $expected_results);
+    $this->testErrorDuringPreApply($in_active, $in_stage, $expected_results, $help_page_sections);
   }
 
 }

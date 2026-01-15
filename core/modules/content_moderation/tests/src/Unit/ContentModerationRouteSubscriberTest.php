@@ -167,7 +167,6 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
           ],
         ],
         FALSE,
-        FALSE,
       ],
       'Overridden load_latest_revision flag does not change with multiple parameters' => [
         [
