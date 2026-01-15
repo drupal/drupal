@@ -454,20 +454,28 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     $this->prepareForm($form_id, $form, $form_state);
 
-    // Caching is normally done in self::processForm(), but what needs to be
-    // cached is the $form structure before it passes through
-    // self::doBuildForm(), so we need to do it here.
-    // @todo For Drupal 8, find a way to avoid this code duplication.
-    if ($form_state->isCached()) {
-      $this->setCache($form['#build_id'], $form, $form_state);
-    }
-
     // Clear out all group associations as these might be different when
     // re-rendering the form.
     $form_state->setGroups([]);
 
+    // Retain unprocessed form, because what needs to be cached is $form
+    // structure before it passes through self::doBuildForm().
+    $unprocessed_form = $form;
+    $form = $this->doBuildForm($form_id, $form, $form_state);
+
+    // After processing the form, the form builder or a #process callback may
+    // have called $form_state->setCached() to indicate that the form and form
+    // state shall be cached. But the form may only be cached if
+    // $form_state->disableCache() is not called. Only cache $form as it was
+    // prior to self::doBuildForm(), because self::doBuildForm() must run for
+    // each request to accommodate new user input.
+    // @see self::processForm()
+    if ($form_state->isCached()) {
+      $this->setCache($form['#build_id'], $unprocessed_form, $form_state);
+    }
+
     // Return a fully built form that is ready for rendering.
-    return $this->doBuildForm($form_id, $form, $form_state);
+    return $form;
   }
 
   /**
