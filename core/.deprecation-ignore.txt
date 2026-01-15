@@ -11,9 +11,6 @@
 
 # Skip some dependencies' DebugClassLoader forward compatibility warnings, in
 # order to let contrib modules make their necessary fixes first.
-%Method "Behat\\Mink\\Driver\\CoreDriver::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\FunctionalJavascriptTests\\DrupalSelenium2Driver" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Behat\\Mink\\WebAssert::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\FunctionalJavascriptTests\\WebDriverWebAssert" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Behat\\Mink\\WebAssert::[^"]+" might add "void" as a native return type declaration in the future. Do the same in child class "Drupal\\Tests\\WebAssert" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\Extension\\ExtensionInterface::[^"]+" might add "array" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\TwigExtension" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\Loader\\FilesystemLoader::findTemplate\(\)" might add "\?string" as a native return type declaration in the future. Do the same in child class "Drupal\\Core\\Template\\Loader\\FilesystemLoader" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\Loader\\LoaderInterface::exists\(\)" might add "bool" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\Loader\\StringLoader" now to avoid errors or add an explicit @return annotation to suppress this message%
