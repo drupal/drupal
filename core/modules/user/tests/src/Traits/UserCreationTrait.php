@@ -143,24 +143,13 @@ trait UserCreationTrait {
    * @param array $values
    *   (optional) An array of initial user field values.
    *
-   * @return \Drupal\user\Entity\User|false
-   *   A fully loaded user object with pass_raw property, or FALSE if account
-   *   creation fails.
+   * @return \Drupal\user\UserInterface
+   *   A fully loaded user object with pass_raw property.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   If the user creation fails.
    */
-  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []): UserInterface|false {
-    // Create a role with the given permission set, if any.
-    $rid = FALSE;
-    if ($permissions) {
-      $rid = $this->createRole($permissions);
-      if (!$rid) {
-        return FALSE;
-      }
-    }
-
-    // Create a user assigned to that role.
+  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []): UserInterface {
     $edit = $values;
     if ($name) {
       $edit['name'] = $name;
@@ -173,8 +162,9 @@ trait UserCreationTrait {
       'pass' => \Drupal::service('password_generator')->generate(),
       'status' => 1,
     ];
-    if ($rid) {
-      $edit['roles'] = [$rid];
+
+    if ($permissions) {
+      $edit['roles'] = [$this->createRole($permissions)];
     }
 
     if ($admin) {
@@ -184,11 +174,7 @@ trait UserCreationTrait {
     $account = User::create($edit);
     $account->save();
 
-    $valid_user = $account->id() !== NULL;
-    $this->assertTrue($valid_user, "User created with name {$edit['name']} and pass {$edit['pass']}");
-    if (!$valid_user) {
-      return FALSE;
-    }
+    $this->assertNotNull($account->id(), "User created with name {$edit['name']} and pass {$edit['pass']}");
 
     // Add the raw password so that we can log in as this user.
     $account->pass_raw = $edit['pass'];
@@ -208,17 +194,17 @@ trait UserCreationTrait {
    *   (optional) The weight for the role. Defaults to NULL which sets the
    *   weight to maximum + 1.
    *
-   * @return string|false
-   *   Role ID of newly created role, or FALSE if role creation failed.
+   * @return string
+   *   Role ID of newly created role.
    */
-  protected function createAdminRole($rid = NULL, $name = NULL, $weight = NULL): string|false {
+  protected function createAdminRole($rid = NULL, $name = NULL, $weight = NULL): string {
     $rid = $this->createRole([], $rid, $name, $weight);
-    if ($rid) {
-      /** @var \Drupal\user\RoleInterface $role */
-      $role = Role::load($rid);
-      $role->setIsAdmin(TRUE);
-      $role->save();
-    }
+
+    /** @var \Drupal\user\RoleInterface $role */
+    $role = Role::load($rid);
+    $role->setIsAdmin(TRUE);
+    $role->save();
+
     return $rid;
   }
 
@@ -235,10 +221,10 @@ trait UserCreationTrait {
    *   (optional) The weight for the role. Defaults to NULL which sets the
    *   weight to maximum + 1.
    *
-   * @return string|false
-   *   Role ID of newly created role, or FALSE if role creation failed.
+   * @return string
+   *   Role ID of newly created role.
    */
-  protected function createRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL): string|false {
+  protected function createRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL): string {
     // Generate a random, lowercase machine name if none was passed.
     if (!isset($rid)) {
       $rid = $this->randomMachineName(8);
@@ -265,19 +251,14 @@ trait UserCreationTrait {
 
     $this->assertSame(SAVED_NEW, $result, "Created role ID {$role->id()} with name {$role->label()}.");
 
-    if ($result === SAVED_NEW) {
-      // Grant the specified permissions to the role, if any.
-      if (!empty($permissions)) {
-        $this->grantPermissions($role, $permissions);
-        $assigned_permissions = Role::load($role->id())->getPermissions();
-        $missing_permissions = array_diff($permissions, $assigned_permissions);
-        $this->assertEmpty($missing_permissions);
-      }
-      return $role->id();
+    // Grant the specified permissions to the role, if any.
+    if (!empty($permissions)) {
+      $this->grantPermissions($role, $permissions);
+      $assigned_permissions = Role::load($role->id())->getPermissions();
+      $missing_permissions = array_diff($permissions, $assigned_permissions);
+      $this->assertEmpty($missing_permissions);
     }
-    else {
-      return FALSE;
-    }
+    return $role->id();
   }
 
   /**
