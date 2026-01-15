@@ -279,69 +279,68 @@ class AddComponentTest extends KernelTestBase {
         ConfigActionException::class,
         'Cannot determine which region of the section to place this component into, because no default region was provided.',
       ],
-      yield 'exception when no region given' => [
-        [
-          'section' => 0,
-          'position' => 4,
-          'component' => [
-            'configuration' => [
-              'id' => 'my_plugin_id',
-            ],
+    ];
+    yield 'exception when no region given' => [
+      [
+        'section' => 0,
+        'position' => 4,
+        'component' => [
+          'configuration' => [
+            'id' => 'my_plugin_id',
           ],
         ],
-        'second',
-        0,
-        1,
-        // No default_region, no matching region, so we error.
-        [
-          ConfigActionException::class,
-          'Cannot determine which region of the section to place this component into, because no region was provided.',
+      ],
+      'second',
+      0,
+      1,
+      // No default_region, no matching region, so we error.
+      [
+        ConfigActionException::class,
+        'Cannot determine which region of the section to place this component into, because no region was provided.',
+      ],
+    ];
+    yield 'exception when no configuration given' => [
+      [
+        'section' => 0,
+        'position' => 4,
+        'component' => [
+          'region' => [
+            'layout_test_plugin' => 'content',
+          ],
+          'default_region' => 'content',
         ],
       ],
-      yield 'exception when no configuration given' => [
-        [
-          'section' => 0,
-          'position' => 4,
-          'component' => [
-            'region' => [
-              'layout_test_plugin' => 'content',
-            ],
-            'default_region' => 'content',
+      'second',
+      0,
+      1,
+      // No component configuration.
+      [
+        ConfigActionException::class,
+        'Cannot determine the component configuration, or misses a plugin ID.',
+      ],
+    ];
+    yield 'exception when no id in configuration is given' => [
+      [
+        'section' => 0,
+        'position' => 4,
+        'component' => [
+          'region' => [
+            'layout_test_plugin' => 'content',
+          ],
+          'default_region' => 'content',
+          'configuration' => [
+            'no_id' => 'my_plugin_id',
           ],
         ],
-        'second',
-        0,
-        1,
-        // No component configuration.
-        [
-          ConfigActionException::class,
-          'Cannot determine the component configuration, or misses a plugin ID.',
-        ],
       ],
-      yield 'exception when no id in configuration is given' => [
-        [
-          'section' => 0,
-          'position' => 4,
-          'component' => [
-            'region' => [
-              'layout_test_plugin' => 'content',
-            ],
-            'default_region' => 'content',
-            'configuration' => [
-              'no_id' => 'my_plugin_id',
-            ],
-          ],
-        ],
-        'second',
-        0,
-        1,
-        // No component configuration id.
-        [
-          ConfigActionException::class,
-          'Cannot determine the component configuration, or misses a plugin ID.',
-        ],
+      'second',
+      0,
+      1,
+      // No component configuration id.
+      [
+        ConfigActionException::class,
+        'Cannot determine the component configuration, or misses a plugin ID.',
       ],
-
     ];
   }
 

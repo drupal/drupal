@@ -11,7 +11,7 @@ use Drupal\layout_builder\LayoutEntityHelperTrait;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophet;
@@ -19,14 +19,14 @@ use Prophecy\Prophet;
 /**
  * Tests Drupal\layout_builder\LayoutEntityHelperTrait.
  */
-#[CoversClass(LayoutEntityHelperTrait::class)]
+#[CoversTrait(LayoutEntityHelperTrait::class)]
 #[Group('layout_builder')]
 class LayoutEntityHelperTraitTest extends UnitTestCase {
 
   /**
    * Data provider method for tests that need sections with inline blocks.
    */
-  public static function providerSectionsWithInlineComponents() {
+  public static function providerSectionsWithInlineComponents(): array {
     $prophet = new Prophet();
     $components = [];
 
@@ -96,7 +96,7 @@ class LayoutEntityHelperTraitTest extends UnitTestCase {
    * Tests get inline block components.
    */
   #[DataProvider('providerSectionsWithInlineComponents')]
-  public function testGetInlineBlockComponents($sections, $expected_components): void {
+  public function testGetInlineBlockComponents(array $sections, array $expected_components, array $expected_revision_ids): void {
     $test_class = new TestClass();
     $this->assertSame($expected_components, $test_class->getInlineBlockComponents($sections));
   }
@@ -105,7 +105,7 @@ class LayoutEntityHelperTraitTest extends UnitTestCase {
    * Tests get inline block revision ids in sections.
    */
   #[DataProvider('providerSectionsWithInlineComponents')]
-  public function testGetInlineBlockRevisionIdsInSections($sections, $components, $expected_revision_ids): void {
+  public function testGetInlineBlockRevisionIdsInSections(array $sections, array $components, array $expected_revision_ids): void {
     $test_class = new TestClass();
     $this->assertSame($expected_revision_ids, $test_class->getInlineBlockRevisionIdsInSections($sections));
   }
