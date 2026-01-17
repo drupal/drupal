@@ -28,9 +28,9 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
    * Logs authenticated tracing data.
    */
   public function testAuthenticatedPerformance(): void {
-    // Replace toolbar with navigation and uninstall history to avoid AJAX
-    // requests while recording performance data.
-    \Drupal::service('module_installer')->uninstall(['toolbar', 'history']);
+    // Replace toolbar with navigation to avoid AJAX requests while recording
+    // performance data.
+    \Drupal::service('module_installer')->uninstall(['toolbar']);
     \Drupal::service('module_installer')->install(['navigation']);
     $this->doTestFrontPageAuthenticatedWarmCache();
     $this->doTestNodePageAdministrator();

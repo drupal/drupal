@@ -4,7 +4,6 @@ description: 'Install an example site that shows off some of Drupal’s capabili
 version: VERSION
 install:
   - node
-  - history
   - big_pipe
   - block
   - breakpoint
