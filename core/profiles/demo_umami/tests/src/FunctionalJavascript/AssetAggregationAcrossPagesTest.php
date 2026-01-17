@@ -49,10 +49,10 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     }, 'umamiFrontAndRecipePagesAuthenticated');
 
     $expected = [
-      'ScriptCount' => 6,
-      'ScriptBytes' => 204618,
+      'ScriptCount' => 3,
+      'ScriptBytes' => 73750,
       'StylesheetCount' => 5,
-      'StylesheetBytes' => 81750,
+      'StylesheetBytes' => 79400,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
@@ -70,8 +70,8 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
       $this->doRequests();
     }, 'umamiFrontAndRecipePagesEditor');
     $expected = [
-      'ScriptCount' => 8,
-      'ScriptBytes' => 397256,
+      'ScriptCount' => 5,
+      'ScriptBytes' => 262800,
       'StylesheetCount' => 5,
       'StylesheetBytes' => 204350,
     ];

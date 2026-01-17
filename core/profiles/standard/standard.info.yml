@@ -4,7 +4,6 @@ description: 'Install with commonly used features pre-configured.'
 version: VERSION
 install:
   - node
-  - history
   - block
   - breakpoint
   - ckeditor5
