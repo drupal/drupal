@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity\Sql;
 
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -40,6 +43,51 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
     $key_value_factory = $this->container->get('keyvalue');
     $this->installedStorageSchema = $key_value_factory->get('entity.storage_schema.sql');
     $this->entityDefinitionUpdateManager = $this->container->get('entity.definition_update_manager');
+  }
+
+  /**
+   * Test to ensure that updating field with data triggers expected exceptions.
+   *
+   * This test ensures that attempting to change the cardinality of a field
+   * with existing data triggers a expected exception.
+   */
+  public function testUpdateFieldStorageDefinitionThrowsException(): void {
+    // Install the test entity type with an additional field.
+    // Don't care about the field type, just need a field with data.
+    $field = BaseFieldDefinition::create('shape')
+      ->setName('shape')
+      ->setProvider('entity_test');
+    $this->state->set('entity_test.additional_base_field_definitions', [
+      'shape' => $field,
+    ]);
+
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition(
+      'shape',
+      'entity_test',
+      'entity_test',
+      $field
+    );
+
+    // Create an entity with field data.
+    $entity = EntityTest::create([
+      'user_id' => 2,
+      'name' => $this->randomMachineName(),
+      'shape' => [
+        'shape' => 'rectangle',
+        'color' => 'pink',
+      ],
+    ]);
+    $entity->save();
+
+    $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+    $field_storage_definition = $entity_definition_update_manager->getFieldStorageDefinition('user_id', 'entity_test');
+
+    // Change the cardinality of the field storage definition.
+    // This should throw an exception because the field has existing data.
+    $field_storage_definition->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
+    $this->expectException(FieldStorageDefinitionUpdateForbiddenException::class);
+    $this->entityDefinitionUpdateManager->updateFieldStorageDefinition($field_storage_definition);
   }
 
   /**

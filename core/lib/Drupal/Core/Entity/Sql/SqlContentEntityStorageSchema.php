@@ -2484,6 +2484,18 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     if (!$storage_definition->hasCustomStorage()) {
+
+      // Compare storage requirements of current and original field definitions.
+      // This checks whether the field requires dedicated table storage and
+      // identifies schema changes related to table mapping.
+      $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
+      $table_mapping_original = $this->getTableMapping($this->entityType, [$original]);
+      if ($table_mapping->requiresDedicatedTableStorage($storage_definition) !==
+        $table_mapping_original->requiresDedicatedTableStorage($original)
+      ) {
+        return TRUE;
+      }
+
       $keys = array_flip($this->getColumnSchemaRelevantKeys());
       $definition_schema = $this->getSchemaFromStorageDefinition($storage_definition);
       foreach ($this->loadFieldSchemaData($original) as $table => $table_schema) {
