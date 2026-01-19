@@ -115,8 +115,13 @@ class ViewAjaxControllerTest extends UnitTestCase {
        * Use a callback because container is not initialized yet
        * so we can't generate a URL object right now.
        */
-      ->willReturnCallback(function () {
-        return Url::fromUserInput('/foo');
+      ->willReturnCallback(function ($path) {
+        if ($path === '/invalid-test-page') {
+          return FALSE;
+        }
+        else {
+          return Url::fromUserInput('/foo');
+        }
       });
     $unroutedUrlAssembler = $this->createMock(UnroutedUrlAssemblerInterface::class);
     $unroutedUrlAssembler->expects($this->any())
@@ -241,6 +246,43 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->assertSame($response->getView(), $executable);
 
     $this->assertViewResultCommand($response, 1);
+
+    // Test that the ajax controller for Views contains the
+    // Drupal Settings.
+    $this->assertEquals([
+      'drupalSettings' => [
+        'testSetting' => ['Setting'],
+      ],
+    ], $response->getAttachments());
+  }
+
+  /**
+   * Tests a valid view without arguments pagers etc.
+   */
+  public function testInvalidPath(): void {
+    $request = new Request();
+    $request->query->set('view_name', 'test_view');
+    $request->query->set('view_display_id', 'page_1');
+    $request->query->set('view_path', '/invalid-test-page');
+    $request->query->set('_wrapper_format', 'ajax');
+    $request->query->set('ajax_page_state', 'drupal.settings[]');
+    $request->query->set('type', 'article');
+
+    $executable = $this->setupValidMocks();
+
+    $this->redirectDestination->expects($this->atLeastOnce())
+      ->method('set')
+      ->with('/invalid-test-page');
+    $this->currentPath->expects($this->once())
+      ->method('setPath')
+      ->with('/invalid-test-page', $request);
+
+    $response = $this->viewAjaxController->ajaxView($request);
+    $this->assertTrue($response instanceof ViewAjaxResponse);
+
+    $this->assertSame($response->getView(), $executable);
+
+    $this->assertViewResultCommand($response, 0);
 
     // Test that the ajax controller for Views contains the
     // Drupal Settings.
