@@ -68,7 +68,7 @@ class FormUploadedFile implements UploadedFileInterface {
    * {@inheritdoc}
    */
   public function validate(ValidatorInterface $validator, array $options = []): ConstraintViolationListInterface {
-    $constraint = new UploadedFileConstraint($options);
+    $constraint = new UploadedFileConstraint(...$options);
     return $validator->validate($this->uploadedFile, $constraint);
   }
 
