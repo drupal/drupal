@@ -144,6 +144,16 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $current_set = $shortcut_set_storage->getDisplayedToUser($this->adminUser);
     $this->assertNotEquals($this->set->id(), $current_set->id(), 'A shortcut set can be switched to at the same time as it is created.');
     $this->assertEquals($edit['label'], $current_set->label(), 'The new set is correctly assigned to the user.');
+
+    // Verify that users without the "administer shortcuts" permission have
+    // access to the set selection radios, but not the new shortcut form
+    // elements.
+    $this->drupalLogin($this->shortcutUser);
+    $this->drupalGet('user/' . $this->shortcutUser->id() . '/shortcuts');
+    $this->assertSession()->elementExists('xpath', '//fieldset[@data-drupal-selector="edit-set"]');
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-set-new"]');
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-label"]');
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-id"]');
   }
 
   /**
