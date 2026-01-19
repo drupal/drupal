@@ -49,3 +49,5 @@ services:
   Symfony\Component\Mailer\Mailer:
     autowire: true
   Symfony\Component\Mailer\MailerInterface: '@Symfony\Component\Mailer\Mailer'
+  Drupal\Core\Mailer\EventSubscriber\OriginatorSubscriber:
+    autowire: true
