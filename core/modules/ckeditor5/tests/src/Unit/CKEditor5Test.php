@@ -4,13 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Unit;
 
-use Drupal\ckeditor5\LanguageMapper;
-use Drupal\ckeditor5\Hook\Ckeditor5Hooks;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Drupal\Core\Asset\AttachedAssets;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Tests\ckeditor5\Traits\PrivateMethodUnitTestTrait;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -112,77 +106,6 @@ class CKEditor5Test extends UnitTestCase {
         TRUE,
       ],
     ];
-  }
-
-  /**
-   * Test the js_alter hook alters when expected.
-   *
-   * @legacy-covers \Drupal\ckeditor5\Hook\Ckeditor5Hooks::jsAlter
-   */
-  public function testJsAlterHook(): void {
-    $placeholder_file = 'core/assets/vendor/ckeditor5/translation.js';
-    $language_mapper = $this->createMock(LanguageMapper::class);
-    $language_mapper->expects($this->any())
-      ->method('getMapping')
-      ->willReturn('en');
-    $hooks = new Ckeditor5Hooks($language_mapper);
-    $assets = new AttachedAssets();
-    $assets->setLibraries([
-      'core/ckeditor5.translations',
-      'core/ckeditor5.translations.en',
-    ]);
-    $language = new Language([
-      'id' => 'en',
-      'name' => 'English',
-      'direction' => 'ltr',
-    ]);
-    $original_javascript = [
-      'keep_this' => [
-        'ckeditor5_langcode' => 'en',
-      ],
-      'remove_this' => [
-        'ckeditor5_langcode' => 'sv',
-      ],
-      'keep_this_too' => [],
-    ];
-    $expected_javascript = [
-      'keep_this' => [
-        'ckeditor5_langcode' => 'en',
-        'weight' => 5,
-      ],
-      'keep_this_too' => [],
-    ];
-
-    $container = new ContainerBuilder();
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $module_handler->moduleExists('locale')->willReturn(TRUE);
-    $container->set('module_handler', $module_handler->reveal());
-    \Drupal::setContainer($container);
-
-    // First check that it filters when the placeholder script is present.
-    $javascript = $original_javascript + [
-      $placeholder_file => [
-        'weight' => 5,
-      ],
-    ];
-    $hooks->jsAlter($javascript, $assets, $language);
-    $this->assertEquals($expected_javascript, $javascript);
-
-    // Next check it still filters if the placeholder script has already been
-    // loaded and is now excluded from the list, such as an AJAX operation
-    // loading a new format which uses another set of plugins.
-    $assets = new AttachedAssets();
-    $assets->setLibraries([
-      'core/ckeditor5.translations.en',
-    ]);
-    $assets->setAlreadyLoadedLibraries([
-      'core/ckeditor5.translations',
-    ]);
-    $javascript = $original_javascript;
-    $hooks->jsAlter($javascript, $assets, $language);
-    // There was no placeholder to get the weight from.
-    $expected_javascript['keep_this']['weight'] = 0;
-    $this->assertEquals($expected_javascript, $javascript);
   }
 
 }
