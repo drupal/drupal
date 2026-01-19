@@ -77,7 +77,7 @@
     "eslint-plugin-yml": "^1.19.0",
     "glob": "^11.1.0",
     "htmx.org": "2.0.8",
-    "jquery": "^4.0.0-rc.1",
+    "jquery": "^4.0.0",
     "jquery-ui": "^1.14.1",
     "js-cookie": "^3.0.5",
     "jsdom": "^27.1.0",
