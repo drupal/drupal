@@ -163,7 +163,9 @@ class NodeForm extends ContentEntityForm {
       '#wrapper_attributes' => ['class' => ['entity-meta__author']],
     ];
 
-    $form['status']['#group'] = 'footer';
+    if (isset($form['status'])) {
+      $form['status']['#group'] = 'footer';
+    }
 
     // Node author information for administrators.
     $form['author'] = [
