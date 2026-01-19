@@ -81,6 +81,13 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   protected $singleFieldDisplays;
 
   /**
+   * A collection of keys.
+   *
+   * It identifies rendering in progress, used to prevent recursion.
+   */
+  protected static array $recursionKeys = [];
+
+  /**
    * Constructs a new EntityViewBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -136,7 +143,12 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['build', 'buildMultiple'];
+    return [
+      'build',
+      'buildMultiple',
+      'setRecursiveRenderProtection',
+      'unsetRecursiveRenderProtection',
+    ];
   }
 
   /**
@@ -190,6 +202,9 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
         'max-age' => $entity->getCacheMaxAge(),
       ],
     ];
+    // Add callbacks to protect from recursive rendering.
+    $build['#pre_render'] = [[$this, 'setRecursiveRenderProtection']];
+    $build['#post_render'] = [[$this, 'unsetRecursiveRenderProtection']];
 
     // Add the default #theme key if a template exists for it.
     if ($this->themeRegistry->getRuntime()->has($this->entityTypeId)) {
@@ -535,6 +550,79 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     }
 
     return $display;
+  }
+
+  /**
+   * Entity render array #pre_render callback.
+   */
+  public function setRecursiveRenderProtection(array $build): array {
+    // Checks whether entity render array with matching cache keys is being
+    // recursively rendered. If not already being rendered,
+    // add an entry to track that it is.
+    $recursion_key = $this->getRenderRecursionKey($build);
+    if (isset(static::$recursionKeys[$recursion_key])) {
+      trigger_error(sprintf('Recursive rendering attempt aborted for %s. In progress: %s', $recursion_key, print_r(static::$recursionKeys, TRUE)), E_USER_WARNING);
+      $build['#printed'] = TRUE;
+    }
+    else {
+      static::$recursionKeys[$recursion_key] = TRUE;
+    }
+    return $build;
+  }
+
+  /**
+   * Entity render array #post_render callback.
+   */
+  public function unsetRecursiveRenderProtection(string $renderedEntity, array $build): string {
+    // Removes rendered entity matching cache keys from recursive render
+    // tracking, once the entity has been rendered.
+    $recursion_key = $this->getRenderRecursionKey($build);
+    unset(static::$recursionKeys[$recursion_key]);
+
+    return $renderedEntity;
+  }
+
+  /**
+   * Generates a key for an entity render array for recursion protection.
+   *
+   * @param array $build
+   *   The entity render array.
+   *
+   * @return string
+   *   The key to ID the build array within recursion tracking.
+   */
+  protected function getRenderRecursionKey(array $build): string {
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    $entity = $build['#' . $this->entityTypeId];
+
+    $recursion_keys = [
+      $entity->getEntityTypeId(),
+    ];
+
+    // If entity is new and has no ID, generate unique ID from entity object.
+    // This is to prevent false positives, for example when previewing a new
+    // node that is referencing a new node without either node yet being saved.
+    if ($entity->id()) {
+      $recursion_keys[] = 'entity_id';
+      $recursion_keys[] = $entity->id();
+      if ($entity instanceof RevisionableInterface) {
+        $recursion_keys[] = $entity->getRevisionId();
+      }
+    }
+    else {
+      $recursion_keys[] = 'object_id';
+      $recursion_keys[] = spl_object_id($entity);
+    }
+
+    if ($entity instanceof TranslatableDataInterface) {
+      $recursion_keys[] = $entity->language()->getId();
+    }
+
+    $recursion_keys[] = $build['#view_mode'];
+
+    // It seems very unlikely that the same entity displayed in the same view
+    // mode would be recursively nested and meant to be displayed differently.
+    return implode(':', $recursion_keys);
   }
 
 }

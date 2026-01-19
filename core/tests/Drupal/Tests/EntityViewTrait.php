@@ -64,6 +64,15 @@ trait EntityViewTrait {
     $build = $render_controller->view($entity, $view_mode, $langcode);
     $ensure_fully_built($build);
 
+    // EntityViewBuilder adds a #pre_render hook that tracks entity render array
+    // to prevent recursive rendering. Since the #pre_render hooks were called
+    // manually here without rendering actually taking place, unset the tracking
+    // for the render array so that when it is rendered, it does not trigger
+    // the recursive protection.
+    if (method_exists($render_controller, 'unsetRecursiveRenderProtection')) {
+      $render_controller->unsetRecursiveRenderProtection('', $build);
+    }
+
     return $build;
   }
 
