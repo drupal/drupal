@@ -92,7 +92,7 @@ class AliasManager implements AliasManagerInterface {
 
     // Look for path in storage.
     if ($path_alias = $this->pathAliasRepository->lookupByAlias($alias, $langcode)) {
-      $this->lookupMap[$langcode][$path_alias['path']] = $alias;
+      $this->lookupMap[$langcode][$path_alias['path']] = $path_alias['alias'];
       return $path_alias['path'];
     }
 

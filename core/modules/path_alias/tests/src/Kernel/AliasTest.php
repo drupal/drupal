@@ -326,6 +326,11 @@ class AliasTest extends KernelTestBase {
     $this->assertEquals($path_alias->getAlias(), $aliasManager->getAliasByPath($path_alias->getPath()), 'Basic alias lookup works.');
     $this->assertEquals($path_alias->getPath(), $aliasManager->getPathByAlias($path_alias->getAlias()), 'Basic source lookup works.');
 
+    // Ensure that path alias data is used.
+    $path_alias = $this->createPathAlias('/user/2', '/bar');
+    $this->assertEquals($path_alias->getPath(), $aliasManager->getPathByAlias(strtoupper($path_alias->getAlias())), 'Basic source lookup is case insensitive.');
+    $this->assertEquals($path_alias->getAlias(), $aliasManager->getAliasByPath($path_alias->getPath()), 'Basic alias lookup returns the stored alias if getPathByAlias() is called with a case insensitive alias.');
+
     // Create a language specific alias for the default language (English).
     $path_alias = $this->createPathAlias('/user/1', '/users/Dries', 'en');
 
