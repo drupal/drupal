@@ -3071,7 +3071,7 @@ __metadata:
     eslint-plugin-yml: "npm:^1.19.0"
     glob: "npm:^11.1.0"
     htmx.org: "npm:2.0.8"
-    jquery: "npm:^4.0.0-rc.1"
+    jquery: "npm:^4.0.0"
     jquery-ui: "npm:^1.14.1"
     js-cookie: "npm:^3.0.5"
     jsdom: "npm:^27.1.0"
@@ -6931,10 +6931,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^4.0.0-rc.1":
-  version: 4.0.0-rc.1
-  resolution: "jquery@npm:4.0.0-rc.1"
-  checksum: 10c0/f13951f4d06a091f74817ab086f5dc83d1d953728ec1ebca7d7bcd9f97e1094184146f60d6edb48df375b46d818b155ef1bf6670b943a59140f04ecd07852895
+"jquery@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "jquery@npm:4.0.0"
+  checksum: 10c0/06d8d0f51121af5a691f8b59c74823157bb5b60eea915b30eaa920d6c0ffd91e60ba81e9b97bd8203f331f9dd8d0ec9a4b010935ea314bdd2f15453c29bc780b
   languageName: node
   linkType: hard
 
