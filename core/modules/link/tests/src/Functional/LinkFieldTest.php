@@ -474,7 +474,7 @@ class LinkFieldTest extends BrowserTestBase {
   /**
    * Renders a test_entity and returns the output.
    *
-   * @param int $id
+   * @param int|string $id
    *   The test_entity ID to render.
    * @param string $view_mode
    *   (optional) The view mode to use for rendering.

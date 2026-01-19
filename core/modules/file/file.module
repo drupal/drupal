@@ -430,7 +430,7 @@ function template_preprocess_file_upload_help(&$variables): void {
  * @param \Drupal\Core\Field\FieldDefinitionInterface|null $field
  *   (optional) A field definition to be used for this check. If given,
  *   limits the reference check to the given field. Defaults to NULL.
- * @param int $age
+ * @param string $age
  *   (optional) A constant that specifies which references to count. Use
  *   EntityStorageInterface::FIELD_LOAD_REVISION (the default) to retrieve all
  *   references within all revisions or

@@ -178,7 +178,7 @@ abstract class AssetControllerBase extends FileDownloadController {
     }
     $groups = $this->getGroups($attached_assets, $request);
 
-    $group = $this->getGroup($groups, $request->query->get('delta'));
+    $group = $this->getGroup($groups, (int) $request->query->get('delta'));
     // Generate a hash based on the asset group, this uses the same method as
     // the collection optimizer does to create the filename, so it should match.
     $generated_hash = $this->generateHash($group);
