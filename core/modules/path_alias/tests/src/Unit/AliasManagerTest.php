@@ -119,7 +119,7 @@ class AliasManagerTest extends UnitTestCase {
     $this->aliasRepository->expects($this->once())
       ->method('lookupByAlias')
       ->with($alias, $language->getId())
-      ->willReturn(['path' => $path]);
+      ->willReturn(['path' => $path, 'alias' => $alias]);
 
     $this->assertEquals($path, $this->aliasManager->getPathByAlias($alias));
     // Call it twice to test the static cache.
@@ -139,7 +139,7 @@ class AliasManagerTest extends UnitTestCase {
     $this->aliasRepository->expects($this->once())
       ->method('lookupByAlias')
       ->with($alias, 'de')
-      ->willReturn(['path' => $path]);
+      ->willReturn(['path' => $path, 'alias' => $alias]);
 
     $this->assertEquals($path, $this->aliasManager->getPathByAlias($alias, 'de'));
     // Call it twice to test the static cache.
