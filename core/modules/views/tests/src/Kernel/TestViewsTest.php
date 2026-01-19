@@ -96,8 +96,6 @@ class TestViewsTest extends KernelTestBase {
     'rest_test_views',
     // `search` is a module dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_argument_dependency.yml
-    // `history` is a module dependency.
-    // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_history.yml
     // The `image` module is required by at least one of the Node module's
     // views.
     'image',
