@@ -154,11 +154,6 @@
         });
 
       if (this.bulkActionsSticky) {
-        // Will be set to true as soon as the forEach() hits a row that is
-        // completely under the sticky header, indicating that no further
-        // processing is needed. Using a For...Of loop to accomplish this
-        // is preferable, but not supported by IE11.
-        let pastStickyHeader = false;
         const stickyRect = this.bulkActions.getBoundingClientRect();
         const stickyStart = stickyRect.y;
         const stickyEnd = stickyStart + stickyRect.height;
@@ -166,82 +161,83 @@
         // Loop through each table row. If a row has focusable elements under
         // the sticky Views Bulk Actions form, add a spacer that pushes the row
         // down the page and outside of the viewport.
-        this.form.querySelectorAll('tbody tr').forEach((row) => {
-          if (!pastStickyHeader) {
-            const rowRect = row.getBoundingClientRect();
-            const rowStart = rowRect.y;
-            const rowEnd = rowStart + rowRect.height;
-            if (rowStart > stickyEnd) {
-              pastStickyHeader = true;
-            } else if (rowEnd > stickyStart) {
-              // Get padding amount for the row's cells, which are used to
-              // determine where a row can be pushed out of the viewport
-              // without any visible difference.
-              const cellTopPadding = Array.from(
-                row.querySelectorAll('td.views-field'),
-              ).map((element) =>
-                document.defaultView
-                  .getComputedStyle(element, '')
-                  .getPropertyValue('padding-top')
-                  .replace('px', ''),
-              );
-              const minimumTopPadding = Math.min.apply(null, cellTopPadding);
-
-              // If all parts of the table row that could be displaying content
-              // are under the sticky.
-              if (rowStart + minimumTopPadding >= stickyStart) {
-                // If the row scrolled underneath the sticky has the element
-                // with focus, the addition of a spacer can potentially create
-                // an additional scroll event that can lead to unwanted results.
-                // The variables below are used to identify this so a flag can
-                // be set to bypass scroll handler actions in just those
-                // instances.
-                const oldScrollTop =
-                  window.scrollY || document.documentElement.scrollTop;
-                const scrollLeft =
-                  window.scrollX || document.documentElement.scrollLeft;
-                const rowContainsActiveElement = row.contains(
-                  document.activeElement,
-                );
-
-                // If the row contains the active element, set the flag that
-                // bypasses the actions of scrollResizeHandler() as a call to
-                // window.scrollTo() may be needed.
-                if (rowContainsActiveElement) {
-                  this.ignoreScrollEvent = true;
-                }
-
-                // a spacer to push it out of the viewport. Because the elements
-                // are fully underneath the sticky, the added spacer should not
-                // result in any visible difference.
-                const spacer = document.createElement('div');
-                spacer.style.height = `${stickyRect.height}px`;
-                spacer.setAttribute('data-drupal-table-row-spacer', true);
-                row.parentNode.insertBefore(spacer, row);
-
-                // Will be used to determine if a scroll position change
-                // occurred due to adding the spacer.
-                const newScrollTop =
-                  window.scrollY || document.documentElement.scrollTop;
-
-                // If the browser pushed the row back into the viewport after
-                // the spacer was added, return the scroll position to the
-                // intended location.
-                const windowBottom =
-                  window.innerHeight || document.documentElement.clientHeight;
-                if (
-                  rowContainsActiveElement &&
-                  oldScrollTop !== newScrollTop &&
-                  rowStart < windowBottom
-                ) {
-                  window.scrollTo(scrollLeft, oldScrollTop);
-                }
-
-                // Set this flag back to its default value of false.
-                this.ignoreScrollEvent = false;
-              }
-            }
+        Array.from(this.form.querySelectorAll('tbody tr')).some((row) => {
+          const rowRect = row.getBoundingClientRect();
+          const rowStart = rowRect.y;
+          const rowEnd = rowStart + rowRect.height;
+          if (rowStart > stickyEnd) {
+            return true;
           }
+          if (rowEnd <= stickyStart) {
+            return false;
+          }
+          // Get padding amount for the row's cells, which are used to
+          // determine where a row can be pushed out of the viewport
+          // without any visible difference.
+          const cellTopPadding = Array.from(
+            row.querySelectorAll('td.views-field'),
+          ).map((element) =>
+            document.defaultView
+              .getComputedStyle(element, '')
+              .getPropertyValue('padding-top')
+              .replace('px', ''),
+          );
+          const minimumTopPadding = Math.min.apply(null, cellTopPadding);
+
+          // If all parts of the table row that could be displaying content
+          // are under the sticky.
+          if (rowStart + minimumTopPadding >= stickyStart) {
+            // If the row scrolled underneath the sticky has the element
+            // with focus, the addition of a spacer can potentially create
+            // an additional scroll event that can lead to unwanted results.
+            // The variables below are used to identify this so a flag can
+            // be set to bypass scroll handler actions in just those
+            // instances.
+            const oldScrollTop =
+              window.scrollY || document.documentElement.scrollTop;
+            const scrollLeft =
+              window.scrollX || document.documentElement.scrollLeft;
+            const rowContainsActiveElement = row.contains(
+              document.activeElement,
+            );
+
+            // If the row contains the active element, set the flag that
+            // bypasses the actions of scrollResizeHandler() as a call to
+            // window.scrollTo() may be needed.
+            if (rowContainsActiveElement) {
+              this.ignoreScrollEvent = true;
+            }
+
+            // a spacer to push it out of the viewport. Because the elements
+            // are fully underneath the sticky, the added spacer should not
+            // result in any visible difference.
+            const spacer = document.createElement('div');
+            spacer.style.height = `${stickyRect.height}px`;
+            spacer.setAttribute('data-drupal-table-row-spacer', true);
+            row.parentNode.insertBefore(spacer, row);
+
+            // Will be used to determine if a scroll position change
+            // occurred due to adding the spacer.
+            const newScrollTop =
+              window.scrollY || document.documentElement.scrollTop;
+
+            // If the browser pushed the row back into the viewport after
+            // the spacer was added, return the scroll position to the
+            // intended location.
+            const windowBottom =
+              window.innerHeight || document.documentElement.clientHeight;
+            if (
+              rowContainsActiveElement &&
+              oldScrollTop !== newScrollTop &&
+              rowStart < windowBottom
+            ) {
+              window.scrollTo(scrollLeft, oldScrollTop);
+            }
+
+            // Set this flag back to its default value of false.
+            this.ignoreScrollEvent = false;
+          }
+          return false;
         });
       }
     }
@@ -323,11 +319,9 @@
             stickyRect.top + stickyRect.height <
             window.scrollY + window.innerHeight;
 
-          // Determine add/remove with ternary since IE11 does not support the
-          // second argument for classList.toggle().
-          const classAction = bypassAnimation ? 'add' : 'remove';
-          this.bulkActions.classList[classAction](
+          this.bulkActions.classList.toggle(
             'views-form__header--bypass-animation',
+            bypassAnimation,
           );
         }
 
