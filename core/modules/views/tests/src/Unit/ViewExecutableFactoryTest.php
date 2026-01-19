@@ -111,4 +111,17 @@ class ViewExecutableFactoryTest extends UnitTestCase {
     $this->assertSame($executable->getUser(), $this->user);
   }
 
+  /**
+   * Tests the get method when current request is null.
+   *
+   * @legacy-covers ::get
+   */
+  public function testGetNoRequest(): void {
+    $executable = $this->viewExecutableFactory->get($this->view);
+
+    $this->assertInstanceOf('Drupal\views\ViewExecutable', $executable);
+    $this->assertSame($executable->getUser(), $this->user);
+    $this->assertSame($executable->getRequest(), NULL);
+  }
+
 }
