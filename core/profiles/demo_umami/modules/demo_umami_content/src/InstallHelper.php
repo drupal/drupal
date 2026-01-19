@@ -207,7 +207,7 @@ class InstallHelper implements ContainerInjectionInterface {
    *
    * @param string $vocabulary
    *   Machine name of vocabulary to which it was saved.
-   * @param int $term_csv_id
+   * @param int|string $term_csv_id
    *   The term's ID from the CSV file.
    *
    * @return int

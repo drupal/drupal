@@ -1509,7 +1509,7 @@ function simpletest_script_print_error($message): void {
  *
  * @param string $message
  *   The message to print.
- * @param int $color_code
+ * @param int|string $color_code
  *   The color code to use for coloring.
  */
 function simpletest_script_print($message, $color_code): void {

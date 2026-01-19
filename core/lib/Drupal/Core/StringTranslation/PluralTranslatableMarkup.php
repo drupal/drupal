@@ -12,7 +12,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
   /**
    * The item count to display.
    *
-   * @var int
+   * @var numeric
    */
   protected $count;
 
@@ -29,7 +29,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    * Parses values passed into this class through the format_plural() function
    * in Drupal and handles an optional context for the string.
    *
-   * @param int $count
+   * @param numeric $count
    *   The item count to display.
    * @param string $singular
    *   The string for the singular case. Make sure it is clear this is singular,
@@ -66,7 +66,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    * to the __construct() method, this method is designed to be invoked with
    * a string already translated (such as with configuration translation).
    *
-   * @param int $count
+   * @param numeric $count
    *   The item count to display.
    * @param string $translated_string
    *   The already translated string.

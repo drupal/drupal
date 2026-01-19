@@ -63,7 +63,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
           // Extend the execution time in order to allow processing workspaces
           // that contain a large number of items.
           if ((int) ($counter / $step_size) >= 1) {
-            set_time_limit($max_execution_time);
+            set_time_limit((int) $max_execution_time);
             $counter = 0;
           }
         }
