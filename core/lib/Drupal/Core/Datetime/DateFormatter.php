@@ -26,34 +26,6 @@ class DateFormatter implements DateFormatterInterface {
   protected $timezones;
 
   /**
-   * The date format storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $dateFormatStorage;
-
-  /**
-   * The Language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * The available date formats.
    *
    * @var array
@@ -79,26 +51,14 @@ class DateFormatter implements DateFormatterInterface {
     '@count sec|@count sec' => 1,
   ];
 
-  /**
-   * Constructs a Date object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
-   *   The string translation.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
-    $this->dateFormatStorage = $entity_type_manager->getStorage('date_format');
-    $this->languageManager = $language_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected LanguageManagerInterface $languageManager,
+    TranslationInterface $translation,
+    protected ConfigFactoryInterface $configFactory,
+    protected RequestStack $requestStack,
+  ) {
     $this->stringTranslation = $translation;
-    $this->configFactory = $config_factory;
-    $this->requestStack = $request_stack;
   }
 
   /**
@@ -341,7 +301,7 @@ class DateFormatter implements DateFormatterInterface {
     if (!isset($this->dateFormats[$type][$langcode])) {
       $original_language = $this->languageManager->getConfigOverrideLanguage();
       $this->languageManager->setConfigOverrideLanguage(new Language(['id' => $langcode]));
-      $this->dateFormats[$type][$langcode] = $this->dateFormatStorage->load($type);
+      $this->dateFormats[$type][$langcode] = $this->entityTypeManager->getStorage('date_format')->load($type);
       $this->languageManager->setConfigOverrideLanguage($original_language);
     }
     return $this->dateFormats[$type][$langcode];
