@@ -725,7 +725,7 @@ class ViewsThemeHooks {
         }
         // Add a CSS align class to each field if one was set.
         if (!empty($options['info'][$field]['align'])) {
-          $variables['header'][$field]['attributes']->addClass(Html::cleanCssIdentifier($options['info'][$field]['align']));
+          $variables['header'][$field]['attributes']->addClass(Html::cleanCssIdentifier(str_replace('views-', 'text-', $options['info'][$field]['align'])));
         }
         // Add a header label wrapper if one was selected.
         if ($variables['header'][$field]['content']) {
