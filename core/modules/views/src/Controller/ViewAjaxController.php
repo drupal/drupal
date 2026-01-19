@@ -142,7 +142,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
 
         $used_query_parameters = $request_clone->query->all();
         $query = UrlHelper::buildQuery($used_query_parameters);
-        if ($query != '') {
+        if ($query != '' && $target_url) {
           $origin_destination .= '?' . $query;
           $target_url->setOption('query', $used_query_parameters);
         }
@@ -168,7 +168,9 @@ class ViewAjaxController implements ContainerInjectionInterface {
         }
         $preview = $view->preview($display_id, $args);
         $request->attributes->remove('ajax_page_state');
-        $response->addCommand(new SetBrowserUrl($target_url->toString()));
+        if ($target_url) {
+          $response->addCommand(new SetBrowserUrl($target_url->toString()));
+        }
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
         $request->query->set('ajax_page_state', $existing_page_state);
