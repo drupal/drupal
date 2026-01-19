@@ -203,7 +203,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
       $this->migrateMessages[$type][] = $message;
     }
     else {
-      $this->assertEquals('status', $type, $message);
+      $this->assertEquals('status', $type, (string) $message);
     }
   }
 
