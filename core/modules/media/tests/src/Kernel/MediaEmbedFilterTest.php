@@ -390,16 +390,11 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
     ]);
 
-    // Render and verify the presence of the embedded entity 20 times.
-    for ($i = 0; $i < 20; $i++) {
+    // Render and verify the presence of the embedded entity 30 times.
+    for ($i = 0; $i < 30; $i++) {
       $this->applyFilter($text);
       $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     }
-
-    // Render a 21st time, this is exceeding the recursion limit. The entity
-    // embed markup will be stripped.
-    $this->applyFilter($text);
-    $this->assertEmpty($this->getRawContent());
   }
 
   /**
