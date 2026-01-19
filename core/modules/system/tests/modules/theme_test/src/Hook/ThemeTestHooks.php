@@ -19,30 +19,78 @@ class ThemeTestHooks {
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {
     $items['theme_test'] = [
-      'variables' => ['foo' => ''],
+      'variables' => [
+        'foo' => '',
+      ],
       'initial preprocess' => static::class . ':preprocessThemeTest',
     ];
-    $items['theme_test_template_test'] = ['template' => 'theme_test.template_test'];
-    $items['theme_test_template_test_2'] = ['template' => 'theme_test.template_test'];
-    $items['theme_test_suggestion_provided'] = ['variables' => []];
-    $items['theme_test_specific_suggestions'] = ['variables' => []];
-    $items['theme_test_suggestions'] = ['variables' => []];
+
+    $items['theme_test_template_test'] = [
+      'template' => 'theme_test.template_test',
+    ];
+
+    $items['theme_test_template_test_2'] = [
+      'template' => 'theme_test.template_test',
+    ];
+
+    $items['theme_test_suggestion_provided'] = [
+      'variables' => [],
+    ];
+
+    $items['theme_test_specific_suggestions'] = [
+      'variables' => [],
+    ];
+
+    $items['theme_test_suggestions'] = [
+      'variables' => [],
+    ];
+
     $items['theme_test_general_suggestions'] = [
       'variables' => [
         'module_hook' => 'theme_test_theme',
         'theme_hook' => 'none',
       ],
     ];
-    $items['theme_test_foo'] = ['variables' => ['foo' => NULL]];
+
+    $items['theme_test_foo'] = [
+      'variables' => [
+        'foo' => NULL,
+      ],
+    ];
+
     $items['theme_test_render_element'] = [
       'render element' => 'elements',
       'initial preprocess' => static::class . ':preprocessThemeTestRenderElement',
     ];
-    $items['theme_test_render_element_children'] = ['render element' => 'element'];
-    $items['theme_test_preprocess_suggestions'] = ['variables' => ['foo' => '', 'bar' => '']];
-    $items['theme_test_preprocess_callback'] = ['variables' => ['foo' => '']];
-    $items['theme_test_registered_by_module'] = ['render element' => 'content', 'base hook' => 'container'];
-    $items['theme_test_theme_class'] = ['variables' => ['message' => '']];
+
+    $items['theme_test_render_element_children'] = [
+      'render element' => 'element',
+    ];
+
+    $items['theme_test_preprocess_suggestions'] = [
+      'variables' => [
+        'foo' => '',
+        'bar' => '',
+      ],
+    ];
+
+    $items['theme_test_preprocess_callback'] = [
+      'variables' => [
+        'foo' => '',
+      ],
+    ];
+
+    $items['theme_test_registered_by_module'] = [
+      'render element' => 'content',
+      'base hook' => 'container',
+    ];
+
+    $items['theme_test_theme_class'] = [
+      'variables' => [
+        'message' => '',
+      ],
+    ];
+
     $items['theme_test_deprecations_preprocess'] = [
       'variables' => [
         'foo' => '',
@@ -54,7 +102,15 @@ class ThemeTestHooks {
       ],
       'initial preprocess' => static::class . ':preprocessThemeTestDeprecationsPreprocess',
     ];
-    $items['theme_test_deprecations_child'] = ['variables' => ['foo' => '', 'bar' => '', 'gaz' => '']];
+
+    $items['theme_test_deprecations_child'] = [
+      'variables' => [
+        'foo' => '',
+        'bar' => '',
+        'gaz' => '',
+      ],
+    ];
+
     $items['theme_test_deprecations_hook_theme'] = [
       'variables' => [
         'foo' => '',
