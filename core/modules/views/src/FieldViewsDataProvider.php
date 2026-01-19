@@ -4,7 +4,7 @@ namespace Drupal\views;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Render\Markup;
@@ -20,7 +20,7 @@ class FieldViewsDataProvider {
   use StringTranslationTrait;
 
   public function __construct(
-    protected readonly EntityTypeManager $entityTypeManager,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly FieldTypePluginManagerInterface $fieldTypePluginManager,
     protected readonly EntityFieldManagerInterface $entityFieldManager,
   ) {}
