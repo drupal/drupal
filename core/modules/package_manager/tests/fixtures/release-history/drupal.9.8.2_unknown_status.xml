@@ -23,7 +23,7 @@ What's special about this file is that the project as a whole has a status other
     <dc:creator>Drupal</dc:creator>
     <supported_branches>9.7.,9.8.</supported_branches>
     <project_status>any status besides published</project_status>
-    <link>http://example.com/project/drupal</link>
+    <link>https://example.com/project/drupal</link>
     <terms>
         <term>
             <name>Projects</name>
@@ -35,8 +35,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.8.2</name>
             <version>9.8.2</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-8-2-release</release_link>
-            <download_link>http://example.com/drupal-9-8-2.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-8-2-release</release_link>
+            <download_link>https://example.com/drupal-9-8-2.tar.gz</download_link>
             <date>1250425521</date>
             <terms>
                 <term>
@@ -53,8 +53,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.8.1</name>
             <version>9.8.1</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-8-1-release</release_link>
-            <download_link>http://example.com/drupal-9-8-1.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-8-1-release</release_link>
+            <download_link>https://example.com/drupal-9-8-1.tar.gz</download_link>
             <date>1250425521</date>
             <terms>
                 <term>
@@ -71,8 +71,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.8.0</name>
             <version>9.8.0</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-8-0-release</release_link>
-            <download_link>http://example.com/drupal-9-8-0.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-8-0-release</release_link>
+            <download_link>https://example.com/drupal-9-8-0.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>
@@ -89,8 +89,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.8.0-alpha1</name>
             <version>9.8.0-alpha1</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-8-0-alpha1-release</release_link>
-            <download_link>http://example.com/drupal-9-8-0-alpha1.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-8-0-alpha1-release</release_link>
+            <download_link>https://example.com/drupal-9-8-0-alpha1.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>
@@ -107,8 +107,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.7.1</name>
             <version>9.7.1</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-7-1-release</release_link>
-            <download_link>http://example.com/drupal-9-7-1.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-7-1-release</release_link>
+            <download_link>https://example.com/drupal-9-7-1.tar.gz</download_link>
             <date>1250425521</date>
             <terms>
                 <term>
@@ -125,8 +125,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.7.0</name>
             <version>9.7.0</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-7-0-release</release_link>
-            <download_link>http://example.com/drupal-9-7-0.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-7-0-release</release_link>
+            <download_link>https://example.com/drupal-9-7-0.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>
@@ -143,8 +143,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.7.0-alpha1</name>
             <version>9.7.0-alpha1</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-7-0-alpha1-release</release_link>
-            <download_link>http://example.com/drupal-9-7-0-alpha1.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-7-0-alpha1-release</release_link>
+            <download_link>https://example.com/drupal-9-7-0-alpha1.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>
@@ -161,8 +161,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.6.1</name>
             <version>9.6.1</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-6-1-release</release_link>
-            <download_link>http://example.com/drupal-9-6-1.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-6-1-release</release_link>
+            <download_link>https://example.com/drupal-9-6-1.tar.gz</download_link>
             <date>1250425521</date>
             <terms>
                 <term>
@@ -179,8 +179,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.6.0</name>
             <version>9.6.0</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-6-0-release</release_link>
-            <download_link>http://example.com/drupal-9-6-0.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-6-0-release</release_link>
+            <download_link>https://example.com/drupal-9-6-0.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>
@@ -197,8 +197,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.6.0-alpha1</name>
             <version>9.6.0-alpha1</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-6-0-alpha1-release</release_link>
-            <download_link>http://example.com/drupal-9-6-0-alpha1.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-6-0-alpha1-release</release_link>
+            <download_link>https://example.com/drupal-9-6-0-alpha1.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>
@@ -215,8 +215,8 @@ What's special about this file is that the project as a whole has a status other
             <name>Drupal 9.8.x-dev</name>
             <version>9.8.x-dev</version>
             <status>published</status>
-            <release_link>http://example.com/drupal-9-8-x-dex-release</release_link>
-            <download_link>http://example.com/drupal-9-8-x-dex.tar.gz</download_link>
+            <release_link>https://example.com/drupal-9-8-x-dex-release</release_link>
+            <download_link>https://example.com/drupal-9-8-x-dex.tar.gz</download_link>
             <date>1250424521</date>
             <terms>
                 <term>

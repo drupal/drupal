@@ -23,7 +23,7 @@ Contains metadata about the following (fake) releases of semver_test module, all
 <dc:creator>Drupal</dc:creator>
 <supported_branches>8.0.,8.1.</supported_branches>
 <project_status>published</project_status>
-<link>http://example.com/project/semver_test</link>
+<link>https://example.com/project/semver_test</link>
   <terms>
    <term><name>Projects</name><value>Semver Test project</value></term>
   </terms>
@@ -33,8 +33,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
     <version>8.2.0</version>
     <tag>8.2.0</tag>
     <status>published</status>
-    <release_link>http://example.com/semver_test-8-2-0-release</release_link>
-    <download_link>http://example.com/semver_test-8-2-0.tar.gz</download_link>
+    <release_link>https://example.com/semver_test-8-2-0-release</release_link>
+    <download_link>https://example.com/semver_test-8-2-0.tar.gz</download_link>
     <date>1584195300</date>
     <terms>
       <term><name>Release type</name><value>New features</value></term>
@@ -46,8 +46,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.1.1</version>
    <tag>8.1.1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-1-1-release</release_link>
-   <download_link>http://example.com/semver_test-8-1-1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-1-1-release</release_link>
+   <download_link>https://example.com/semver_test-8-1-1.tar.gz</download_link>
    <date>1581603300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -59,8 +59,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.1.1-beta1</version>
    <tag>8.1.1-beta1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-1-1-beta1-release</release_link>
-   <download_link>http://example.com/semver_test-8-1-1-beta1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-1-1-beta1-release</release_link>
+   <download_link>https://example.com/semver_test-8-1-1-beta1.tar.gz</download_link>
    <date>1579011300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -72,8 +72,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.1.1-alpha1</version>
    <tag>8.1.1-alpha1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-1-1-alpha1-release</release_link>
-   <download_link>http://example.com/semver_test-8-1-1-alpha1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-1-1-alpha1-release</release_link>
+   <download_link>https://example.com/semver_test-8-1-1-alpha1.tar.gz</download_link>
    <date>1576419300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -85,8 +85,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.1.0</version>
    <tag>8.1.0</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-1-0-release</release_link>
-   <download_link>http://example.com/semver_test-8-1-0.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-1-0-release</release_link>
+   <download_link>https://example.com/semver_test-8-1-0.tar.gz</download_link>
    <date>1573827300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -98,8 +98,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.1.0-beta1</version>
    <tag>8.1.0-beta1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-1-0-beta1-release</release_link>
-   <download_link>http://example.com/semver_test-8-1-0-beta1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-1-0-beta1-release</release_link>
+   <download_link>https://example.com/semver_test-8-1-0-beta1.tar.gz</download_link>
    <date>1571235300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -111,8 +111,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.1.0-alpha1</version>
    <tag>8.1.0-alpha1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-1-0-alpha1-release</release_link>
-   <download_link>http://example.com/semver_test-8-1-0-alpha1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-1-0-alpha1-release</release_link>
+   <download_link>https://example.com/semver_test-8-1-0-alpha1.tar.gz</download_link>
    <date>1568643300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -124,8 +124,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.0.1</version>
    <tag>8.0.1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-0-1-release</release_link>
-   <download_link>http://example.com/semver_test-8-0-1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-0-1-release</release_link>
+   <download_link>https://example.com/semver_test-8-0-1.tar.gz</download_link>
    <date>1566051300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -137,8 +137,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.0.1-beta1</version>
    <tag>8.0.1-beta1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-0-1-beta1-release</release_link>
-   <download_link>http://example.com/semver_test-8-0-1-beta1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-0-1-beta1-release</release_link>
+   <download_link>https://example.com/semver_test-8-0-1-beta1.tar.gz</download_link>
    <date>1563459300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -150,8 +150,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.0.1-alpha1</version>
    <tag>8.0.1-alpha1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-0-1-alpha1-release</release_link>
-   <download_link>http://example.com/semver_test-8-0-1-alpha1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-0-1-alpha1-release</release_link>
+   <download_link>https://example.com/semver_test-8-0-1-alpha1.tar.gz</download_link>
    <date>1560867300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -163,8 +163,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.0.0</version>
    <tag>8.0.0</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-0-0-release</release_link>
-   <download_link>http://example.com/semver_test-8-0-0.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-0-0-release</release_link>
+   <download_link>https://example.com/semver_test-8-0-0.tar.gz</download_link>
    <date>1558275300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -176,8 +176,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.0.0-beta1</version>
    <tag>8.0.0-beta1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-0-0-beta1-release</release_link>
-   <download_link>http://example.com/semver_test-8-0-0-beta1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-0-0-beta1-release</release_link>
+   <download_link>https://example.com/semver_test-8-0-0-beta1.tar.gz</download_link>
    <date>1555683300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -189,8 +189,8 @@ Contains metadata about the following (fake) releases of semver_test module, all
    <version>8.0.0-alpha1</version>
    <tag>8.0.0-alpha1</tag>
    <status>published</status>
-   <release_link>http://example.com/semver_test-8-0-0-alpha1-release</release_link>
-   <download_link>http://example.com/semver_test-8-0-0-alpha1.tar.gz</download_link>
+   <release_link>https://example.com/semver_test-8-0-0-alpha1-release</release_link>
+   <download_link>https://example.com/semver_test-8-0-0-alpha1.tar.gz</download_link>
    <date>1553091300</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>

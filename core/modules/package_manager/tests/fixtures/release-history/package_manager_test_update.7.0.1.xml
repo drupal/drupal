@@ -22,7 +22,7 @@ Contains metadata about the following (fake) releases of package_manager_test_up
 <dc:creator>Package Manager</dc:creator>
 <supported_branches>7.0.,8.x-6.</supported_branches>
 <project_status>published</project_status>
-<link>http://example.com/project/package_manager_test_update</link>
+<link>https://example.com/project/package_manager_test_update</link>
   <terms>
    <term><name>Projects</name><value>Package Manager Test Update project</value></term>
   </terms>
@@ -31,8 +31,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
         <name>Package Manager Test Update 7.0.1</name>
         <version>7.0.1</version>
         <status>published</status>
-        <release_link>http://example.com/package_manager_test_update-9-7-1-release</release_link>
-        <download_link>http://example.com/package_manager_test_update-9-7-1.tar.gz</download_link>
+        <release_link>https://example.com/package_manager_test_update-9-7-1-release</release_link>
+        <download_link>https://example.com/package_manager_test_update-9-7-1.tar.gz</download_link>
         <date>1250425521</date>
         <terms>
             <term><name>Release type</name><value>New features</value></term>
@@ -43,8 +43,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
         <name>Package Manager Test Update 7.0.0</name>
         <version>7.0.0</version>
         <status>published</status>
-        <release_link>http://example.com/package_manager_test_update-9-7-0-release</release_link>
-        <download_link>http://example.com/package_manager_test_update-9-7-0.tar.gz</download_link>
+        <release_link>https://example.com/package_manager_test_update-9-7-0-release</release_link>
+        <download_link>https://example.com/package_manager_test_update-9-7-0.tar.gz</download_link>
         <date>1250424521</date>
         <terms>
             <term><name>Release type</name><value>New features</value></term>
@@ -55,8 +55,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
         <name>Package Manager Test Update 7.0.0-alpha1</name>
         <version>7.0.0-alpha1</version>
         <status>published</status>
-        <release_link>http://example.com/package_manager_test_update-9-7-0-alpha1-release</release_link>
-        <download_link>http://example.com/package_manager_test_update-9-7-0-alpha1.tar.gz</download_link>
+        <release_link>https://example.com/package_manager_test_update-9-7-0-alpha1-release</release_link>
+        <download_link>https://example.com/package_manager_test_update-9-7-0-alpha1.tar.gz</download_link>
         <date>1250424521</date>
         <terms>
             <term><name>Release type</name><value>New features</value></term>
@@ -67,8 +67,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
     <name>Package Manager Test Update 8.x-6.2</name>
     <version>8.x-6.2</version>
     <status>published</status>
-    <release_link>http://example.com/package_manager_test_update-9-8-2-release</release_link>
-    <download_link>http://example.com/package_manager_test_update-9-8-2.tar.gz</download_link>
+    <release_link>https://example.com/package_manager_test_update-9-8-2-release</release_link>
+    <download_link>https://example.com/package_manager_test_update-9-8-2.tar.gz</download_link>
     <date>1250425521</date>
     <terms>
       <term><name>Release type</name><value>New features</value></term>
@@ -79,8 +79,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
   <name>Package Manager Test Update 8.x-6.1</name>
   <version>8.x-6.1</version>
   <status>published</status>
-  <release_link>http://example.com/package_manager_test_update-9-8-1-release</release_link>
-  <download_link>http://example.com/package_manager_test_update-9-8-1.tar.gz</download_link>
+  <release_link>https://example.com/package_manager_test_update-9-8-1-release</release_link>
+  <download_link>https://example.com/package_manager_test_update-9-8-1.tar.gz</download_link>
   <date>1250425521</date>
   <terms>
     <term><name>Release type</name><value>New features</value></term>
@@ -91,8 +91,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
    <name>Package Manager Test Update 8.x-6.0</name>
    <version>8.x-6.0</version>
    <status>published</status>
-   <release_link>http://example.com/package_manager_test_update-9-8-0-release</release_link>
-   <download_link>http://example.com/package_manager_test_update-9-8-0.tar.gz</download_link>
+   <release_link>https://example.com/package_manager_test_update-9-8-0-release</release_link>
+   <download_link>https://example.com/package_manager_test_update-9-8-0.tar.gz</download_link>
    <date>1250424521</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -103,8 +103,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
     <name>Package Manager Test Update 8.x-6.0-alpha1</name>
     <version>8.x-6.0-alpha1</version>
     <status>published</status>
-    <release_link>http://example.com/package_manager_test_update-9-8-0-alpha1-release</release_link>
-    <download_link>http://example.com/package_manager_test_update-9-8-0-alpha1.tar.gz</download_link>
+    <release_link>https://example.com/package_manager_test_update-9-8-0-alpha1-release</release_link>
+    <download_link>https://example.com/package_manager_test_update-9-8-0-alpha1.tar.gz</download_link>
     <date>1250424521</date>
     <terms>
       <term><name>Release type</name><value>New features</value></term>
@@ -115,8 +115,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
         <name>Package Manager Test Update 7.0.0-dev</name>
         <version>7.0.x-dev</version>
         <status>published</status>
-        <release_link>http://example.com/package_manager_test_update-9-7-0-dev-release</release_link>
-        <download_link>http://example.com/package_manager_test_update-9-7-0-dev.tar.gz</download_link>
+        <release_link>https://example.com/package_manager_test_update-9-7-0-dev-release</release_link>
+        <download_link>https://example.com/package_manager_test_update-9-7-0-dev.tar.gz</download_link>
         <date>1250424521</date>
         <terms>
             <term><name>Release type</name><value>New features</value></term>
@@ -127,8 +127,8 @@ Contains metadata about the following (fake) releases of package_manager_test_up
         <name>Package Manager Test Update 8.x-6.x-dev</name>
         <version>8.x-6.x-dev</version>
         <status>published</status>
-        <release_link>http://example.com/package_manager_test_update-9-8-0-dev-release</release_link>
-        <download_link>http://example.com/package_manager_test_update-9-8-0-dev.tar.gz</download_link>
+        <release_link>https://example.com/package_manager_test_update-9-8-0-dev-release</release_link>
+        <download_link>https://example.com/package_manager_test_update-9-8-0-dev.tar.gz</download_link>
         <date>1250424521</date>
         <terms>
             <term><name>Release type</name><value>New features</value></term>
@@ -139,7 +139,7 @@ Contains metadata about the following (fake) releases of package_manager_test_up
         <name>Package Manager Test Update 8.x-5.x</name>
         <version>8.x-5.x</version>
         <status>published</status>
-        <release_link>http://example.com/package_manager_test_update-9-5-0-dev-release</release_link>
+        <release_link>https://example.com/package_manager_test_update-9-5-0-dev-release</release_link>
         <download_link/>
         <date/>
         <filesize/>

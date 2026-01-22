@@ -9,7 +9,7 @@ has stable releases but the later major release does not.
 <dc:creator>Drupal</dc:creator>
 <supported_branches>9.2.,10.0.</supported_branches>
 <project_status>published</project_status>
-  <link>http://example.com/project/semver_test</link>
+  <link>https://example.com/project/semver_test</link>
   <terms>
     <term><name>Projects</name><value>Semver Test project</value></term>
   </terms>
@@ -18,8 +18,8 @@ has stable releases but the later major release does not.
     <name>Semver Test 10.0.0-beta1</name>
     <version>10.0.0-beta1</version>
     <status>published</status>
-    <release_link>http://example.com/semver_test-10-0-0-beta1-release</release_link>
-    <download_link>http://example.com/semver_test-10-0-0.tar.gz</download_link>
+    <release_link>https://example.com/semver_test-10-0-0-beta1-release</release_link>
+    <download_link>https://example.com/semver_test-10-0-0.tar.gz</download_link>
     <date>1663358020</date>
     <terms>
       <term><name>Release type</name><value>New features</value></term>
@@ -30,8 +30,8 @@ has stable releases but the later major release does not.
     <name>Semver Test 10.0.0-alpha1</name>
     <version>10.0.0-alpha1</version>
     <status>published</status>
-    <release_link>http://example.com/semver_test-10-0-0-alpha1-release</release_link>
-    <download_link>http://example.com/semver_test-10-0-0.tar.gz</download_link>
+    <release_link>https://example.com/semver_test-10-0-0-alpha1-release</release_link>
+    <download_link>https://example.com/semver_test-10-0-0.tar.gz</download_link>
     <date>1643404041</date>
     <terms>
       <term><name>Release type</name><value>New features</value></term>
@@ -42,8 +42,8 @@ has stable releases but the later major release does not.
     <name>Semver Test 9.2.2</name>
     <version>9.2.2</version>
     <status>published</status>
-    <release_link>http://example.com/semver_test-9-2-2-release</release_link>
-    <download_link>http://example.com/semver_test-9-2-2.tar.gz</download_link>
+    <release_link>https://example.com/semver_test-9-2-2-release</release_link>
+    <download_link>https://example.com/semver_test-9-2-2.tar.gz</download_link>
    <date>1674066112</date>
    <terms>
      <term><name>Release type</name><value>New features</value></term>
@@ -54,8 +54,8 @@ has stable releases but the later major release does not.
     <name>Semver Test 9.2.0</name>
     <version>9.2.0</version>
     <status>published</status>
-    <release_link>http://example.com/semver_test-9-2-0-release</release_link>
-    <download_link>http://example.com/semver_test-9-2-0.tar.gz</download_link>
+    <release_link>https://example.com/semver_test-9-2-0-release</release_link>
+    <download_link>https://example.com/semver_test-9-2-0.tar.gz</download_link>
     <date>1671115839</date>
     <terms>
       <term><name>Release type</name><value>New features</value></term>

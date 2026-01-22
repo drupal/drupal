@@ -142,9 +142,9 @@ trait UpdateSemverTestBaselineTrait {
             $this->clickLink('Check manually');
             $this->checkForMetaRefresh();
             $this->assertUpdateTableTextNotContains('Security update required!');
-            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))
+            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('9.0.0', Url::fromUri("https://example.com/{$this->updateProject}-9-0-0-release"))
               ->toString());
-            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('Release notes', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))
+            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('Release notes', Url::fromUri("https://example.com/{$this->updateProject}-9-0-0-release"))
               ->toString());
             $this->assertUpdateTableTextNotContains('Latest version:');
 
@@ -196,13 +196,13 @@ trait UpdateSemverTestBaselineTrait {
             $this->checkForMetaRefresh();
             $this->assertUpdateTableTextNotContains('Security update required!');
 
-            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('9.2.2', Url::fromUri("http://example.com/{$this->updateProject}-9-2-2-release"))
+            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('9.2.2', Url::fromUri("https://example.com/{$this->updateProject}-9-2-2-release"))
               ->toString());
-            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('Release notes', Url::fromUri("http://example.com/{$this->updateProject}-9-2-2-release"))
+            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('Release notes', Url::fromUri("https://example.com/{$this->updateProject}-9-2-2-release"))
               ->toString());
-            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('10.0.0-beta1', Url::fromUri("http://example.com/{$this->updateProject}-10-0-0-beta1-release"))
+            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('10.0.0-beta1', Url::fromUri("https://example.com/{$this->updateProject}-10-0-0-beta1-release"))
               ->toString());
-            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('Release notes', Url::fromUri("http://example.com/{$this->updateProject}-10-0-0-beta1-release"))
+            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('Release notes', Url::fromUri("https://example.com/{$this->updateProject}-10-0-0-beta1-release"))
               ->toString());
             $this->assertUpdateTableTextNotContains('Latest version:');
 

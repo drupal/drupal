@@ -49,20 +49,20 @@ class UpdateSettingsFormTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('update_notify_emails');
 
     $values_to_enter = [
-      'http://example.com',
+      'https://example.com',
       'sofie@example.com',
-      'http://example.com/also-not-an-email-address',
+      'https://example.com/also-not-an-email-address',
       'dries@example.com',
     ];
 
-    // Fill in `http://example.com` as the email address to notify. We expect
+    // Fill in `https://example.com` as the email address to notify. We expect
     // this to trigger a validation error, because it's not an email address,
     // and for the corresponding form item to be highlighted.
     $this->assertSession()->fieldExists('update_notify_emails')->setValue($values_to_enter[0]);
     $this->submitForm([], 'Save configuration');
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_STATUS);
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_WARNING);
-    $this->assertSession()->statusMessageContains('"http://example.com" is not a valid email address.', MessengerInterface::TYPE_ERROR);
+    $this->assertSession()->statusMessageContains('"https://example.com" is not a valid email address.', MessengerInterface::TYPE_ERROR);
     $this->assertTrue($this->assertSession()->fieldExists('update_notify_emails')->hasClass('error'));
     $this->assertSame([], $this->config('update.settings')->get('notification.emails'));
 
@@ -71,7 +71,7 @@ class UpdateSettingsFormTest extends BrowserTestBase {
     $this->submitForm([], 'Save configuration');
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_STATUS);
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_WARNING);
-    $this->assertSession()->statusMessageContains('"http://example.com/also-not-an-email-address" is not a valid email address.', MessengerInterface::TYPE_ERROR);
+    $this->assertSession()->statusMessageContains('"https://example.com/also-not-an-email-address" is not a valid email address.', MessengerInterface::TYPE_ERROR);
     $this->assertTrue($this->assertSession()->fieldExists('update_notify_emails')->hasClass('error'));
     $this->assertSame([], $this->config('update.settings')->get('notification.emails'));
 
@@ -81,7 +81,7 @@ class UpdateSettingsFormTest extends BrowserTestBase {
     $this->submitForm([], 'Save configuration');
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_STATUS);
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_WARNING);
-    $this->assertSession()->statusMessageContains('http://example.com, http://example.com/also-not-an-email-address are not valid email addresses.', MessengerInterface::TYPE_ERROR);
+    $this->assertSession()->statusMessageContains('https://example.com, https://example.com/also-not-an-email-address are not valid email addresses.', MessengerInterface::TYPE_ERROR);
     $this->assertTrue($this->assertSession()->fieldExists('update_notify_emails')->hasClass('error'));
     $this->assertSame([], $this->config('update.settings')->get('notification.emails'));
 

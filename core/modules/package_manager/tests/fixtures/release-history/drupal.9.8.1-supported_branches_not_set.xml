@@ -9,7 +9,7 @@ Contains metadata about releases of Drupal core with <supported_branches></suppo
     <short_name>drupal</short_name>
     <dc:creator>Drupal</dc:creator>
     <project_status>published</project_status>
-    <link>http://example.com/project/drupal</link>
+    <link>https://example.com/project/drupal</link>
     <terms>
         <term>
             <name>Projects</name>
