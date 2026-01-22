@@ -554,12 +554,23 @@ field_config_base:
     id:
       type: string
       label: 'ID'
+      constraints:
+        StringEqualsConcatenatedValues:
+          separator: .
+          values:
+            - '%parent.entity_type'
+            - '%parent.bundle'
+            - '%parent.field_name'
     field_name:
-      type: string
+      type: machine_name
       label: 'Field name'
     entity_type:
       type: string
       label: 'Entity type'
+      constraints:
+        PluginExists:
+          manager: 'entity_type.manager'
+          interface: '\Drupal\Core\Entity\FieldableEntityInterface'
     bundle:
       type: string
       label: 'Bundle'
@@ -595,10 +606,14 @@ field_config_base:
         PluginExists:
           manager: plugin.manager.field.field_type
           interface: '\Drupal\Core\Field\FieldItemInterface'
+  constraints:
+    FullyValidatable: ~
 
 core.base_field_override.*.*.*:
   type: field_config_base
   label: 'Base field bundle override'
+  constraints:
+    FullyValidatable: ~
 
 core.date_format.*:
   type: config_entity

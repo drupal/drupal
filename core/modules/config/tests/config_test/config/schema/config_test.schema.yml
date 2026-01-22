@@ -414,6 +414,54 @@ config_test.validation:
                           min: 20
                           max: 30
 
+    string_concat_value_1:
+      type: string
+      label: 'String part 1'
+
+    string_concat_value_2:
+      type: string
+      label: 'String part 2'
+
+    string_concat_values:
+      type: string
+      label: 'String parts'
+      constraints:
+        StringEqualsConcatenatedValues:
+          separator: .
+          reservedCharacters:
+            - '|'
+          reservedCharactersSubstitute: '>'
+          values:
+            - '%parent.string_concat_value_1'
+            - '%parent.string_concat_value_2'
+
+    string_concat_values_invalid:
+      type: string
+      nullable: true
+      constraints:
+        StringEqualsConcatenatedValues:
+          separator: .
+          values:
+            - '%parent.invalid'
+            - '%parent.reference'
+
+config_test.string_concat_values_invalid:
+  type: config_object
+  label: 'Configuration type'
+  constraints:
+    Callback:
+      callback: [\Drupal\config_test\ConfigValidation, validateMapping]
+  mapping:
+    string_concat_values_invalid:
+      type: string
+      nullable: true
+      constraints:
+        StringEqualsConcatenatedValues:
+          separator: .
+          values:
+            - '%parent.host'
+            - '%parent.green'
+
 config_test.with_plural_label:
   type: config_object
   mapping:

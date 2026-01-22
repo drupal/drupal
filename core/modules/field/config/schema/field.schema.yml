@@ -67,3 +67,5 @@ field.storage.*.*:
 field.field.*.*.*:
   type: field_config_base
   label: 'Field'
+  constraints:
+    FullyValidatable: ~
