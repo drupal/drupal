@@ -90,15 +90,6 @@ class FieldStorageAddForm extends FormBase {
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
 
-    $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager
-      ->getGroupedDefinitions($this->fieldTypePluginManager->getEntityTypeUiDefinitions($this->entityTypeId), 'label', 'id');
-    if (array_key_exists($selected_field_type, $grouped_definitions)) {
-      $field_types = $grouped_definitions[$selected_field_type];
-      foreach ($field_types as $name => $field_type) {
-        $unique_definitions[$selected_field_type][$name] = ['unique_identifier' => $name] + $field_type;
-      }
-    }
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
 
@@ -138,49 +129,7 @@ class FieldStorageAddForm extends FormBase {
     // the checked attribute.
     if (isset($selected_field_type)) {
       if ($display_as_group) {
-        $form['field_options_wrapper']['label'] = [
-          '#type' => 'label',
-          '#title' => $this->t('Choose a field type'),
-          '#required' => TRUE,
-        ];
-        $form['field_options_wrapper']['fields'] = [
-          '#type' => 'container',
-          '#attributes' => [
-            'class' => ['group-field-options'],
-          ],
-        ];
-        foreach ($unique_definitions[$selected_field_type] as $option_key => $option) {
-          $description = !is_array($option['description']) ? $option['description'] : [
-            '#theme' => 'item_list',
-            '#items' => $option['description'],
-          ];
-          $radio_element = [
-            '#type' => 'radio',
-            '#theme_wrappers' => ['form_element__new_storage_type'],
-            '#title' => $option['label'],
-            '#description' => $description,
-            '#id' => Html::getClass($option['unique_identifier']),
-            '#weight' => $option['weight'],
-            '#parents' => ['field_options_wrapper'],
-            '#attributes' => [
-              'class' => ['field-option-radio'],
-              'data-once' => 'field-click-to-select',
-              'checked' => $this->getRequest()->request->get('field_options_wrapper') !== NULL && $this->getRequest()->request->get('field_options_wrapper') == $option_key,
-            ],
-            '#wrapper_attributes' => [
-              'class' => ['js-click-to-select', 'subfield-option'],
-            ],
-            '#variant' => 'field-suboption',
-          ];
-          $radio_element['#return_value'] = $option['unique_identifier'];
-          if ((string) $option['unique_identifier'] === 'entity_reference') {
-            $radio_element['#title'] = 'Other';
-            $radio_element['#weight'] = 10;
-          }
-          $group_field_options[$option['unique_identifier']] = $radio_element;
-        }
-        uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
-        $form['field_options_wrapper']['fields'] += $group_field_options;
+        $form = $this->buildGroupForm($form, $form_state);
       }
 
       $form['actions']['previous'] = [
@@ -230,6 +179,91 @@ class FieldStorageAddForm extends FormBase {
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.dialog.ajax',
     ];
+    return $form;
+  }
+
+  /**
+   * Adds form elements to choose a field type from a selected field group.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array
+   *   The form array with additional elements added.
+   */
+  protected function buildGroupForm(array $form, FormStateInterface $form_state): array {
+    $field_group = $form_state->get('field_type');
+    $unique_definitions = [];
+    $grouped_definitions = $this->fieldTypePluginManager
+      ->getGroupedDefinitions($this->fieldTypePluginManager->getEntityTypeUiDefinitions($this->entityTypeId), 'label', 'id');
+    if (array_key_exists($field_group, $grouped_definitions)) {
+      $field_types = $grouped_definitions[$field_group];
+      foreach ($field_types as $name => $field_type) {
+        $unique_definitions[$field_group][$name] = ['unique_identifier' => $name] + $field_type;
+      }
+    }
+
+    $group_field_options = [];
+    foreach ($unique_definitions[$field_group] as $option_key => $option) {
+      $description = !is_array($option['description']) ? $option['description'] : [
+        '#theme' => 'item_list',
+        '#items' => $option['description'],
+      ];
+      $radio_element = [
+        '#type' => 'radio',
+        '#theme_wrappers' => ['form_element__new_storage_type'],
+        '#title' => $option['label'],
+        '#description' => $description,
+        '#id' => Html::getClass($option['unique_identifier']),
+        '#weight' => $option['weight'],
+        '#parents' => ['field_options_wrapper'],
+        '#attributes' => [
+          'class' => ['field-option-radio'],
+          'data-once' => 'field-click-to-select',
+          'checked' => $this->getRequest()->request->get('field_options_wrapper') !== NULL
+          && $this->getRequest()->request->get('field_options_wrapper') === $option_key,
+        ],
+        '#wrapper_attributes' => [
+          'class' => ['js-click-to-select', 'subfield-option'],
+        ],
+        '#variant' => 'field-suboption',
+      ];
+      $radio_element['#return_value'] = $option['unique_identifier'];
+      if ((string) $option['unique_identifier'] === 'entity_reference') {
+        $radio_element['#title'] = $this->t('Other');
+        $radio_element['#weight'] = 10;
+      }
+      $group_field_options[$option['unique_identifier']] = $radio_element;
+    }
+    uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
+
+    /** @var \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
+    $category_info = $this->fieldTypeCategoryManager
+      ->createInstance($field_group, []);
+    if ($summary = $category_info->getSummary()) {
+      $form['field_options_wrapper']['summary'] = [
+        '#type' => 'markup',
+        '#markup' => $summary,
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+      ];
+    }
+    $form['field_options_wrapper']['label'] = [
+      '#type' => 'label',
+      '#title' => $this->t('Choose a field type'),
+      '#required' => TRUE,
+    ];
+
+    $form['field_options_wrapper']['fields'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['group-field-options'],
+      ],
+    ];
+    $form['field_options_wrapper']['fields'] += $group_field_options;
+
     return $form;
   }
 

@@ -23,7 +23,7 @@ use Drupal\Core\Url;
 #[FieldType(
   id: "comment",
   label: new TranslatableMarkup("Comments"),
-  description: new TranslatableMarkup("This field manages configuration and presentation of comments on an entity."),
+  description: new TranslatableMarkup("Enable and configure how comments look and behave"),
   default_widget: "comment_default",
   default_formatter: "comment_default",
   list_class: CommentFieldItemList::class,

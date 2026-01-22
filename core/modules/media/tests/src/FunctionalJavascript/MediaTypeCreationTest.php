@@ -49,7 +49,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     // Change the media source.
     $assert_session->selectExists('Media source')->selectOption('test');
     $this->assertNotEmpty(
-      $assert_session->waitForElement('css', 'fieldset[data-drupal-selector="edit-source-configuration"] .fieldset-wrapper .placeholder:contains("Text (plain)")')
+      $assert_session->waitForElement('css', 'fieldset[data-drupal-selector="edit-source-configuration"] .fieldset-wrapper .placeholder:contains("Short text")')
     );
 
     $page->pressButton('Save');
@@ -99,7 +99,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     // The machine name should be in the first column.
     $this->assertStringContainsString('field_media_test', $cells[0]->getText());
     // The second column should contain the field type.
-    $this->assertSame('Text (plain)', $assert_session->elementExists('css', '.field-type-label', $cells[1])->getText());
+    $this->assertSame('Short text', $assert_session->elementExists('css', '.field-type-label', $cells[1])->getText());
 
     // Check that the source field is correctly assigned to media type.
     $this->drupalGet("admin/structure/media/manage/{$mediaTypeMachineName}");

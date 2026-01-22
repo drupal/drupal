@@ -18,7 +18,7 @@ use Drupal\Core\TypedData\OptionsProviderInterface;
 #[FieldType(
   id: "boolean",
   label: new TranslatableMarkup("Boolean"),
-  description: new TranslatableMarkup("Field to store a true or false value."),
+  description: new TranslatableMarkup("True or false value"),
   default_widget: "boolean_checkbox",
   default_formatter: "boolean",
 )]

@@ -226,24 +226,24 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     $this->drupalGet('admin/structure/types/manage/test_content_type/fields');
 
     // Make sure fields are the right type.
-    $assert_session->elementContains('css', '#body', 'Text (formatted, long, with summary)');
+    $assert_session->elementContains('css', '#body', 'Long text with summary');
     $assert_session->elementContains('css', '#field-test-1', 'Boolean');
     $assert_session->elementContains('css', '#field-test-2', 'Comments');
     $assert_session->elementContains('css', '#field-test-3', 'Date');
     $assert_session->elementContains('css', '#field-test-4', 'Email');
     $assert_session->elementContains('css', '#field-test-5', 'Link');
-    $assert_session->elementContains('css', '#field-test-6', 'List (float)');
+    $assert_session->elementContains('css', '#field-test-6', 'Float');
     $assert_session->elementContains('css', '#field-test-7', 'Telephone number');
     $assert_session->elementContains('css', '#field-test-8', 'Entity reference');
     $assert_session->elementContains('css', '#field-test-9', 'File');
     $assert_session->elementContains('css', '#field-test-10', 'Image');
-    $assert_session->elementContains('css', '#field-test-15', 'Text (plain, long)');
-    $assert_session->elementContains('css', '#field-test-16', 'List (text)');
-    $assert_session->elementContains('css', '#field-test-17', 'Text (formatted)');
-    $assert_session->elementContains('css', '#field-test-18', 'Text (formatted, long)');
-    $assert_session->elementContains('css', '#field-test-20', 'List (integer)');
-    $assert_session->elementContains('css', '#field-test-22', 'Number (float)');
-    $assert_session->elementContains('css', '#field-test-23', 'Number (integer)');
+    $assert_session->elementContains('css', '#field-test-15', 'Long text');
+    $assert_session->elementContains('css', '#field-test-16', 'Text');
+    $assert_session->elementContains('css', '#field-test-17', 'Short text');
+    $assert_session->elementContains('css', '#field-test-18', 'Long text');
+    $assert_session->elementContains('css', '#field-test-20', 'Integer');
+    $assert_session->elementContains('css', '#field-test-22', 'Float');
+    $assert_session->elementContains('css', '#field-test-23', 'Integer');
 
     // Make sure our form mode exists.
     $this->drupalGet('admin/structure/display-modes/form');

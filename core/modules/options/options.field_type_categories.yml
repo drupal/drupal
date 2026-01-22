@@ -1,6 +1,7 @@
 selection_list:
   label: 'Selection list'
-  description: 'Field to select from predefined options.'
+  description: 'Create text or number based list with predefined options'
+  summary: 'Each list item has a Name, with limited formatting, and a Value. Values that are in use cannot be changed, since they are stored in the database. The Names can be edited later.</p><p>The field type examples use the format Name (Value): Name is displayed to the user, and Value is stored in the database.'
   weight: -15
   libraries:
     - options/drupal.options-icon

@@ -15,10 +15,12 @@ use Drupal\Core\TypedData\DataDefinition;
  */
 #[FieldType(
   id: "list_string",
-  label: new TranslatableMarkup("List (text)"),
+  label: new TranslatableMarkup("Text"),
   description: [
-    new TranslatableMarkup("Values stored are text values"),
-    new TranslatableMarkup("For example, 'US States': IL => Illinois, IA => Iowa, IN => Indiana"),
+    new TranslatableMarkup("Values are text strings"),
+    new TranslatableMarkup("Example: Apple ('apple'), Mango ('mango'), Black Cherry ('black_cherry')"),
+    new TranslatableMarkup("Example: Portrait ('1:2'), Square ('1:1'), Landscape ('4:3')"),
+    new TranslatableMarkup("Example: Most ('0.9'), Half ('0.5'), Some ('0.3')"),
   ],
   category: "selection_list",
   weight: -50,

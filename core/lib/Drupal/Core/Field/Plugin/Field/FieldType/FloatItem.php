@@ -14,11 +14,11 @@ use Drupal\Core\TypedData\DataDefinition;
  */
 #[FieldType(
   id: "float",
-  label: new TranslatableMarkup("Number (float)"),
+  label: new TranslatableMarkup("Float"),
   description: [
-    new TranslatableMarkup("In most instances, it is best to use Number (decimal) instead, as decimal numbers stored as floats may contain errors in precision"),
-    new TranslatableMarkup("This type of field offers faster processing and more compact storage, but the differences are typically negligible on modern sites"),
-    new TranslatableMarkup("For example, 123.4 km when used in imprecise contexts such as a walking trail distance"),
+    new TranslatableMarkup("Numbers with decimal parts and exponents"),
+    new TranslatableMarkup("Accuracy depends on limits from database and/or PHP"),
+    new TranslatableMarkup("Examples: 1.23, -1.23, 0.00e1, 1e100, 6.02214076e23"),
   ],
   category: "number",
   weight: -10,

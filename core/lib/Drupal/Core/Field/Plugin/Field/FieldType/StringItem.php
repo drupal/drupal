@@ -14,14 +14,16 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 #[FieldType(
   id: "string",
-  label: new TranslatableMarkup("Text (plain)"),
+  label: new TranslatableMarkup("Short text"),
   description: [
-    new TranslatableMarkup("Ideal for titles and names"),
-    new TranslatableMarkup("Efficient storage for short text"),
-    new TranslatableMarkup("Requires specifying a maximum length"),
-    new TranslatableMarkup("Good for fields with known or predictable length"),
+    new TranslatableMarkup("Uses a one-line text field for input"),
+    new TranslatableMarkup("Efficient storage"),
+    new TranslatableMarkup("Fixed maximum length (up to 16383 characters)"),
+    new TranslatableMarkup("May be faster for searching and sorting"),
+    new TranslatableMarkup("Recommended for titles and names"),
   ],
   category: "plain_text",
+  weight: -10,
   default_widget: "string_textfield",
   default_formatter: "string"
 )]
