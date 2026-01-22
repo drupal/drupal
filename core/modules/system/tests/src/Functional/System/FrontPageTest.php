@@ -95,6 +95,11 @@ class FrontPageTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('On front page.');
     $this->drupalGet($this->nodePath);
     $this->assertSession()->pageTextContains('On front page.');
+
+    // Test the form when page.front is null.
+    $this->config('system.site')->clear('page.front')->save();
+    $this->drupalGet('admin/config/system/site-information');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
