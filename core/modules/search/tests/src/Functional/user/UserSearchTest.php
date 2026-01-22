@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\user\Functional;
+namespace Drupal\Tests\search\Functional\user;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Verifies that sensitive information is hidden from unauthorized users.
  */
-#[Group('user')]
+#[Group('search')]
 #[RunTestsInSeparateProcesses]
 class UserSearchTest extends BrowserTestBase {
 
