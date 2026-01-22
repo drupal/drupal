@@ -479,16 +479,14 @@ class Renderer implements RendererInterface {
     // Assume that if #theme is set it represents an implemented hook.
     $theme_is_implemented = isset($elements['#theme']);
     // Check the elements for insecure HTML and pass through sanitization.
-    if (isset($elements)) {
-      $markup_keys = [
-        '#description',
-        '#field_prefix',
-        '#field_suffix',
-      ];
-      foreach ($markup_keys as $key) {
-        if (!empty($elements[$key]) && is_scalar($elements[$key])) {
-          $elements[$key] = $this->xssFilterAdminIfUnsafe($elements[$key]);
-        }
+    $markup_keys = [
+      '#description',
+      '#field_prefix',
+      '#field_suffix',
+    ];
+    foreach ($markup_keys as $key) {
+      if (!empty($elements[$key]) && is_scalar($elements[$key])) {
+        $elements[$key] = $this->xssFilterAdminIfUnsafe($elements[$key]);
       }
     }
 
