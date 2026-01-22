@@ -128,10 +128,11 @@ class SiteInformationForm extends ConfigFormBase {
       '#title' => $this->t('Front page'),
       '#open' => TRUE,
     ];
+    $frontPage = $site_config->get('page.front');
     $form['front_page']['site_frontpage'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default front page'),
-      '#default_value' => $this->aliasManager->getAliasByPath($site_config->get('page.front')),
+      '#default_value' => $frontPage ? $this->aliasManager->getAliasByPath($frontPage) : '',
       '#required' => TRUE,
       '#size' => 40,
       '#description' => $this->t('Specify a relative URL to display as the front page.'),
