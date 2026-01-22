@@ -133,7 +133,7 @@ class ThemeHookCollectorPass implements CompilerPassInterface {
     foreach ($implementationsByHookOrig as $hook => $hookImplementations) {
       if (is_string($hook) && str_starts_with($hook, 'preprocess_') && str_contains($hook, '__')) {
         foreach ($hookImplementations as $theme) {
-          $this->preprocessForSuggestions[$theme . '_' . $hook] = TRUE;
+          $this->preprocessForSuggestions[$theme . '_' . $hook] = 'theme';
         }
       }
     }

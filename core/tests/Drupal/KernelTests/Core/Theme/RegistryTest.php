@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Theme\Registry;
+use Drupal\Core\Theme\ThemeInitializationInterface;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -115,6 +116,8 @@ class RegistryTest extends KernelTestBase {
     $theme_handler = \Drupal::service('theme_handler');
     \Drupal::service('theme_installer')->install(['test_theme']);
 
+    \Drupal::theme()->setActiveTheme(\Drupal::service(ThemeInitializationInterface::class)->initTheme('test_theme'));
+
     $extension_list = $this->container->get('extension.list.module');
     assert($extension_list instanceof ModuleExtensionList);
     $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'), 'test_theme', \Drupal::service('keyvalue'));
@@ -131,7 +134,19 @@ class RegistryTest extends KernelTestBase {
       $expected_preprocess_functions[] = "test_theme_preprocess_$hook";
       $preprocess_functions = $registry_theme->get()[$hook]['preprocess functions'];
       $this->assertSame($expected_preprocess_functions, $preprocess_functions, "$hook has correct preprocess functions.");
+
+      // Ensure the invoke map has the expected structure.
+      $expected_invoke_map = [
+        'theme' => 'test_theme',
+        'hook' => "preprocess_$hook",
+      ];
+      $this->assertEquals($expected_invoke_map, $registry_theme->get()['preprocess invokes']["test_theme_preprocess_$hook"], "$hook has correct invokes.");
     } while ($suggestion = array_shift($suggestions));
+
+    // Ensure the theme preprocess for the suggestion runs and sets the bar
+    // variable.
+    $output = \Drupal::theme()->render('theme_test_preprocess_suggestions__kitten__flamingo', []);
+    $this->assertStringContainsString('Flamingo', (string) $output);
 
     $expected_preprocess_functions = [
       'theme_test_preprocess_theme_test_preprocess_suggestions',
