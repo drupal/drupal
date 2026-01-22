@@ -99,6 +99,18 @@ class Insert extends QueryInsert {
       if (isset($table_information->serial_fields[0])) {
         $last_insert_id = $stmt->fetchField();
       }
+
+      if (!empty($this->fromQuery) && !empty($table_information->serial_fields)) {
+        // Set the sequence value if the table has serial fields and the from
+        // query is either using all fields or includes a serial field.
+        $from_fields = $this->fromQuery->getFields();
+        foreach ($table_information->serial_fields as $index => $serial_field) {
+          if (empty($from_fields) || isset($from_fields[$serial_field])) {
+            $this->connection->query("SELECT setval('" . $table_information->sequences[$index] . "', MAX(" . $serial_field . ")) FROM {" . $this->table . "}");
+          }
+        }
+      }
+
       $this->connection->releaseSavepoint();
     }
     catch (\Exception $e) {
