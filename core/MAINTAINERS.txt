@@ -158,7 +158,7 @@ Content Moderation
 - Sam Becker 'Sam152' https://www.drupal.org/u/sam152
 
 Content Translation
-- ?
+- Christian López Espínola 'penyaskito' https://www.drupal.org/u/penyaskito
 
 Contextual
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
