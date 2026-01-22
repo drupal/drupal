@@ -300,7 +300,7 @@ Menu Link Content
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
 
 Menu UI
-- ?
+- Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
 Migrate
 - Benji Fisher 'benjifisher' https://www.drupal.org/u/benjifisher
