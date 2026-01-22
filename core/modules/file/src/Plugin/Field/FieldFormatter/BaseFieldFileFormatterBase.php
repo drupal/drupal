@@ -8,7 +8,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for file formatters, which allow to link to the file download URL.
@@ -45,22 +44,6 @@ abstract class BaseFieldFileFormatterBase extends FormatterBase {
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, FileUrlGeneratorInterface $file_url_generator) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->fileUrlGenerator = $file_url_generator;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('file_url_generator')
-    );
   }
 
   /**

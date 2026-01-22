@@ -18,7 +18,6 @@ use Drupal\layout_builder\Event\PrepareLayoutEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionStorageInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -56,18 +55,6 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EventDispatcherInterface $event_dispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->eventDispatcher = $event_dispatcher;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('event_dispatcher')
-    );
   }
 
   /**

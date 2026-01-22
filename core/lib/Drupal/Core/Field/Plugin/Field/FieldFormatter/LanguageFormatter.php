@@ -10,7 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'language' formatter.
@@ -57,23 +56,6 @@ class LanguageFormatter extends StringFormatter {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $entity_type_manager);
 
     $this->languageManager = $language_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('entity_type.manager'),
-      $container->get('language_manager')
-    );
   }
 
   /**

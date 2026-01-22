@@ -13,7 +13,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\views\Attribute\ViewsAccess;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -65,7 +65,14 @@ class Permission extends AccessPluginBase implements CacheableDependencyInterfac
    * @param \Drupal\Core\Extension\ModuleExtensionList|\Drupal\Core\Extension\ModuleHandlerInterface $module_extension_list
    *   The module extension list.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PermissionHandlerInterface $permission_handler, ModuleExtensionList|ModuleHandlerInterface $module_extension_list) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    PermissionHandlerInterface $permission_handler,
+    #[Autowire(service: 'extension.list.module')]
+    ModuleExtensionList|ModuleHandlerInterface $module_extension_list,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->permissionHandler = $permission_handler;
     if ($module_extension_list instanceof ModuleHandlerInterface) {
@@ -73,19 +80,6 @@ class Permission extends AccessPluginBase implements CacheableDependencyInterfac
       $module_extension_list = \Drupal::service('extension.list.module');
     }
     $this->moduleExtensionList = $module_extension_list;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('user.permissions'),
-      $container->get('extension.list.module'),
-    );
   }
 
   /**

@@ -9,7 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\ThemeManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'Current Theme' condition.
@@ -52,19 +51,6 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->themeManager = $theme_manager;
     $this->themeHandler = $theme_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('theme.manager'),
-      $container->get('theme_handler')
-    );
   }
 
   /**

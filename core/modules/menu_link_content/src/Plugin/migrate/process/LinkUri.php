@@ -10,7 +10,6 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Generates an internal URI from the source value.
@@ -68,18 +67,6 @@ class LinkUri extends ProcessPluginBase implements ContainerFactoryPluginInterfa
     ];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager')
-    );
   }
 
   /**

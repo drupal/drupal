@@ -6,7 +6,6 @@ use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Url;
 use Drupal\views\Attribute\ViewsArea;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines an area plugin to display a node/add link.
@@ -39,18 +38,6 @@ class ListingEmpty extends AreaPluginBase {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->accessManager = $access_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('access_manager')
-    );
   }
 
   /**

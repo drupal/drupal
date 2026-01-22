@@ -7,7 +7,6 @@ use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\user\Entity\Role;
 
 /**
@@ -41,13 +40,6 @@ class Roles extends PrerenderList {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->database = $database;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('database'));
   }
 
   /**

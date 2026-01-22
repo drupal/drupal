@@ -10,7 +10,6 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Alternate action plugin that can opt-out of modifying moderated entities.
@@ -63,19 +62,6 @@ class ModerationOptOutPublish extends PublishAction implements ContainerFactoryP
     $this->moderationInfo = $moderation_info;
     $this->bundleInfo = $bundle_info;
     $this->messenger = $messenger;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration, $plugin_id, $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('content_moderation.moderation_information'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('messenger')
-    );
   }
 
   /**

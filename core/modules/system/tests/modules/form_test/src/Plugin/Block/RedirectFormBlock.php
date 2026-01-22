@@ -9,7 +9,6 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block containing a simple redirect form.
@@ -46,18 +45,6 @@ class RedirectFormBlock extends BlockBase implements ContainerFactoryPluginInter
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->formBuilder = $form_builder;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('form_builder')
-    );
   }
 
   /**

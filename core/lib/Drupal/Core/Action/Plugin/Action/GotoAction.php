@@ -11,7 +11,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -59,13 +58,6 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
 
     $this->dispatcher = $dispatcher;
     $this->unroutedUrlAssembler = $url_assembler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('event_dispatcher'), $container->get('unrouted_url_assembler'));
   }
 
   /**

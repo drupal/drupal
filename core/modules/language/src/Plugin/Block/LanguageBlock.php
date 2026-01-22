@@ -13,7 +13,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\language\Plugin\Derivative\LanguageBlock as LanguageBlockDeriver;
 
 /**
@@ -59,19 +58,6 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->languageManager = $language_manager;
     $this->pathMatcher = $path_matcher;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('language_manager'),
-      $container->get('path.matcher')
-    );
   }
 
   /**

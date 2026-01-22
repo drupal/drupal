@@ -5,11 +5,9 @@ namespace Drupal\block\Plugin\migrate\process;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateLookupInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Gets the destination roles ID for an array of source roles IDs.
@@ -74,18 +72,6 @@ class RolesLookup extends ProcessPluginBase implements ContainerFactoryPluginInt
     if (isset($configuration['migration'])) {
       $this->migration = $configuration['migration'];
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('migrate.lookup')
-    );
   }
 
   /**

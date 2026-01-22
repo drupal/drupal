@@ -8,7 +8,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\PluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides filtering by language.
@@ -41,18 +40,6 @@ class LanguageFilter extends InOperator implements ContainerFactoryPluginInterfa
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->languageManager = $language_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('language_manager')
-    );
   }
 
   /**

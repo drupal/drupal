@@ -10,7 +10,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'entity reference rendered entity' formatter.
@@ -107,24 +106,6 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     $this->loggerFactory = $logger_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityDisplayRepository = $entity_display_repository;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('logger.factory'),
-      $container->get('entity_type.manager'),
-      $container->get('entity_display.repository')
-    );
   }
 
   /**

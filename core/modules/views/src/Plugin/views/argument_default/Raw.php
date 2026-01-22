@@ -9,7 +9,6 @@ use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\path_alias\AliasManagerInterface;
 use Drupal\views\Attribute\ViewsArgumentDefault;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default argument plugin to use the raw value from the URL.
@@ -55,19 +54,6 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->aliasManager = $alias_manager;
     $this->currentPath = $current_path;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('path_alias.manager'),
-      $container->get('path.current')
-    );
   }
 
   /**

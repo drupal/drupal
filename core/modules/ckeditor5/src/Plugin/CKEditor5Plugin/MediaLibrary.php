@@ -12,7 +12,6 @@ use Drupal\Core\Url;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\media_library\MediaLibraryState;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * CKEditor 5 Media Library plugin.
@@ -48,18 +47,6 @@ class MediaLibrary extends CKEditor5PluginDefault implements ContainerFactoryPlu
   public function __construct(array $configuration, string $plugin_id, CKEditor5PluginDefinition $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->mediaTypeStorage = $entity_type_manager->getStorage('media_type');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-    );
   }
 
   /**

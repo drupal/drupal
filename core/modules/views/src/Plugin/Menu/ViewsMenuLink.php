@@ -6,7 +6,6 @@ use Drupal\Core\Menu\MenuLinkBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\ViewExecutableFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines menu links provided by views.
@@ -68,19 +67,6 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
 
     $this->entityTypeManager = $entity_type_manager;
     $this->viewExecutableFactory = $view_executable_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('views.executable')
-    );
   }
 
   /**

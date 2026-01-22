@@ -6,10 +6,8 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateLookupInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Determines the bundle for a field.
@@ -83,18 +81,6 @@ class FieldBundle extends ProcessPluginBase implements ContainerFactoryPluginInt
     @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migrateLookup = $migrate_lookup;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('migrate.lookup')
-    );
   }
 
   /**

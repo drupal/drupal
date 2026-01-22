@@ -25,8 +25,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\FieldConfigInterface;
 use Drupal\layout_builder\Plugin\Derivative\FieldBlockDeriver;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\field\FieldLabelOptionsTrait;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a block that renders a field from an entity.
@@ -115,7 +115,17 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, FormatterPluginManager $formatter_manager, ModuleHandlerInterface $module_handler, LoggerInterface $logger) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityFieldManagerInterface $entity_field_manager,
+    #[Autowire(service: 'plugin.manager.field.formatter')]
+    FormatterPluginManager $formatter_manager,
+    ModuleHandlerInterface $module_handler,
+    #[Autowire(service: 'logger.channel.layout_builder')]
+    LoggerInterface $logger,
+  ) {
     $this->entityFieldManager = $entity_field_manager;
     $this->formatterManager = $formatter_manager;
     $this->moduleHandler = $module_handler;
@@ -128,21 +138,6 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     $this->fieldName = $field_name;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_field.manager'),
-      $container->get('plugin.manager.field.formatter'),
-      $container->get('module_handler'),
-      $container->get('logger.channel.layout_builder')
-    );
   }
 
   /**

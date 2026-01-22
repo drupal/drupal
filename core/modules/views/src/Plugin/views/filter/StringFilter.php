@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\views\filter;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Attribute\ViewsFilter;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Basic textfield filter to handle string filtering commands.
@@ -51,18 +50,6 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $connection) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->connection = $connection;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('database')
-    );
   }
 
   /**

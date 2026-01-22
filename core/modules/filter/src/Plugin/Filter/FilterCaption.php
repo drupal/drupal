@@ -11,7 +11,7 @@ use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\filter\Render\FilteredMarkup;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a filter to caption elements.
@@ -45,21 +45,15 @@ class FilterCaption extends FilterBase implements ContainerFactoryPluginInterfac
    * @param \Drupal\filter\FilterPluginManager $filter_manager
    *   Filter plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ?FilterPluginManager $filter_manager = NULL) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    #[Autowire(service: 'plugin.manager.filter')]
+    ?FilterPluginManager $filter_manager = NULL,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->filterManager = $filter_manager ?: \Drupal::service('plugin.manager.filter');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('plugin.manager.filter')
-    );
   }
 
   /**

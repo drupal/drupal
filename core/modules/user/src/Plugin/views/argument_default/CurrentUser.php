@@ -8,7 +8,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsArgumentDefault;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default argument plugin to extract the current user.
@@ -39,13 +38,6 @@ class CurrentUser extends ArgumentDefaultPluginBase implements CacheableDependen
       @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $currentUser argument is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3347878', E_USER_DEPRECATED);
       $this->currentUser = \Drupal::currentUser();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('current_user'));
   }
 
   /**

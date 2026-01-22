@@ -8,7 +8,7 @@ use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a process plugin for the user langcode.
@@ -35,21 +35,15 @@ class UserLangcode extends ProcessPluginBase implements ContainerFactoryPluginIn
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LanguageManager $language_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    #[Autowire(service: 'language_manager')]
+    LanguageManager $language_manager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->languageManager = $language_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('language_manager')
-    );
   }
 
   /**

@@ -12,7 +12,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\workspaces_ui\Form\WorkspaceSwitcherForm;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'Workspace switcher' block.
@@ -56,19 +55,6 @@ class WorkspaceSwitcherBlock extends BlockBase implements ContainerFactoryPlugin
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->formBuilder = $form_builder;
     $this->entityTypeManager = $entity_type_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('form_builder'),
-      $container->get('entity_type.manager')
-    );
   }
 
   /**

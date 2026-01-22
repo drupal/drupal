@@ -11,7 +11,6 @@ use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsWizard;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @todo Replace numbers with constants.
@@ -71,21 +70,6 @@ class Node extends WizardPluginBase {
 
     $this->entityDisplayRepository = $entity_display_repository;
     $this->entityFieldManager = $entity_field_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.bundle.info'),
-      $container->get('entity_display.repository'),
-      $container->get('entity_field.manager'),
-      $container->get('menu.parent_form_selector')
-    );
   }
 
   /**

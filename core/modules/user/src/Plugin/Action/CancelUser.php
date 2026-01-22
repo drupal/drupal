@@ -8,7 +8,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Cancels a user account.
@@ -54,19 +53,6 @@ class CancelUser extends ActionBase implements ContainerFactoryPluginInterface {
     $this->tempStoreFactory = $temp_store_factory;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('tempstore.private'),
-      $container->get('current_user')
-    );
   }
 
   /**

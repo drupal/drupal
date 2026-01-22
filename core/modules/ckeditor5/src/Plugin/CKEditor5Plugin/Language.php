@@ -16,7 +16,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * CKEditor 5 Language plugin.
@@ -44,19 +43,6 @@ class Language extends CKEditor5PluginDefault implements CKEditor5PluginConfigur
    */
   public function __construct(array $configuration, string $plugin_id, CKEditor5PluginDefinition $plugin_definition, protected LanguageManagerInterface $languageManager, protected RouteProviderInterface $routeProvider) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('language_manager'),
-      $container->get('router.route_provider'),
-    );
   }
 
   /**

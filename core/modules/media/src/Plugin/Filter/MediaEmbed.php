@@ -24,7 +24,6 @@ use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a filter to embed media items using a custom tag.
@@ -117,23 +116,6 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     $this->entityTypeBundleInfo = $bundle_info;
     $this->renderer = $renderer;
     $this->loggerFactory = $logger_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity.repository'),
-      $container->get('entity_type.manager'),
-      $container->get('entity_display.repository'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('renderer'),
-      $container->get('logger.factory')
-    );
   }
 
   /**

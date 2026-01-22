@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base implementation of media source plugin.
@@ -82,21 +81,6 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
 
     // Add the default configuration of the media source to the plugin.
     $this->setConfiguration($configuration);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
-      $container->get('plugin.manager.field.field_type'),
-      $container->get('config.factory')
-    );
   }
 
   /**

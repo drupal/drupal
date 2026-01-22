@@ -21,7 +21,6 @@ use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\DefaultsSectionStorageInterface;
 use Drupal\layout_builder\Entity\SampleEntityGeneratorInterface;
 use Drupal\layout_builder\LayoutBuilderEnabledInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -79,20 +78,6 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->sampleEntityGenerator = $sample_entity_generator;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('layout_builder.sample_entity_generator')
-    );
   }
 
   /**

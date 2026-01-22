@@ -11,7 +11,6 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsAccess;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -46,18 +45,6 @@ class CacheableMetadataCalculationTest extends AccessPluginBase implements Cache
   public function __construct(array $configuration, $plugin_id, $plugin_definition, StateInterface $state) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->state = $state;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('state')
-    );
   }
 
   /**

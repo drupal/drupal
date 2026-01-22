@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\views\row;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for Views RSS row plugins.
@@ -50,19 +49,6 @@ abstract class RssPluginBase extends RowPluginBase {
 
     $this->entityTypeManager = $entity_type_manager;
     $this->entityDisplayRepository = $entity_display_repository;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_display.repository')
-    );
   }
 
   /**

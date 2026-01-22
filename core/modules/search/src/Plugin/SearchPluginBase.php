@@ -8,7 +8,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Component\Utility\Unicode;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a base class for plugins wishing to support search.
@@ -37,13 +36,6 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
    * @var array
    */
   protected $searchAttributes;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition);
-  }
 
   /**
    * {@inheritdoc}

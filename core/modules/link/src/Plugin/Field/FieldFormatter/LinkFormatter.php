@@ -13,7 +13,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\link\AttributeXss;
 use Drupal\link\LinkItemInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'link' formatter.
@@ -33,22 +32,6 @@ class LinkFormatter extends FormatterBase {
    * @var \Drupal\Core\Path\PathValidatorInterface
    */
   protected $pathValidator;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('path.validator')
-    );
-  }
 
   /**
    * Constructs a new LinkFormatter.

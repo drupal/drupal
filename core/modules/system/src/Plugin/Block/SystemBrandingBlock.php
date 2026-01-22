@@ -12,7 +12,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\system\Form\SystemBrandingOffCanvasForm;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block to display 'Site branding' elements.
@@ -39,19 +38,6 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
       @trigger_error('Calling ' . __CLASS__ . ' constructor without the $themeSettingsProvider argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3035289', E_USER_DEPRECATED);
       $this->themeSettingsProvider = \Drupal::service(ThemeSettingsProvider::class);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('config.factory'),
-      $container->get(ThemeSettingsProvider::class),
-    );
   }
 
   /**

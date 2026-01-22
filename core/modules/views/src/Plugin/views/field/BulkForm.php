@@ -22,7 +22,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\style\Table;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines an actions-based bulk operation form element.
@@ -107,7 +107,17 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, MessengerInterface $messenger, EntityRepositoryInterface $entity_repository, ResettableStackedRouteMatchInterface $route_match) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    LanguageManagerInterface $language_manager,
+    MessengerInterface $messenger,
+    EntityRepositoryInterface $entity_repository,
+    #[Autowire(service: 'current_route_match')]
+    ResettableStackedRouteMatchInterface $route_match,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
@@ -116,22 +126,6 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
     $this->messenger = $messenger;
     $this->entityRepository = $entity_repository;
     $this->routeMatch = $route_match;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('language_manager'),
-      $container->get('messenger'),
-      $container->get('entity.repository'),
-      $container->get('current_route_match')
-    );
   }
 
   /**

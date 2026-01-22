@@ -16,7 +16,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\Views;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -91,21 +90,6 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
     $this->renderer = $renderer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('module_handler'),
-      $container->get('current_user'),
-      $container->get('renderer')
-    );
   }
 
   /**
