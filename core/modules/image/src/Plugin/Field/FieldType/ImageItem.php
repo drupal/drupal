@@ -25,11 +25,9 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
   id: "image",
   label: new TranslatableMarkup("Image"),
   description: [
-    new TranslatableMarkup("For uploading images"),
-    new TranslatableMarkup("Allows a user to upload an image with configurable extensions, image dimensions, upload size"),
-    new TranslatableMarkup(
-      "Can be configured with options such as allowed file extensions, maximum upload size and image dimensions minimums/maximums"
-    ),
+    new TranslatableMarkup("Displayed images"),
+    new TranslatableMarkup("Additional configuration: max/min image dimensions; default image, alt text, and title"),
+    new TranslatableMarkup("Examples: displayed image (jpeg, png, webp, gif)"),
   ],
   category: "file_upload",
   default_widget: "image_image",

@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\DataDefinition;
 #[FieldType(
   id: "telephone",
   label: new TranslatableMarkup("Telephone number"),
-  description: new TranslatableMarkup("This field stores a telephone number."),
+  description: new TranslatableMarkup("A telephone number, optionally displayed as a telephone link"),
   default_widget: "telephone_default",
   default_formatter: "basic_string"
 )]

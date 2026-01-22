@@ -1,18 +1,19 @@
 plain_text:
   label: 'Plain text'
-  description: 'Text field that does not support markup.'
+  description: 'Text without markup and formatting'
   weight: -50
 number:
   label: 'Number'
-  description: 'Field to store number. I.e. id, price, or quantity.'
+  description: 'Numeric value like quantity or radio frequency'
   weight: -40
 reference:
   label: 'Reference'
-  description: 'Field to reference other content.'
+  description: 'Reference other content'
   weight: -30
 date_time:
   label: 'Date and time'
-  description: 'Field to store date and time values.'
+  description: 'A date and/or time value'
+  summary: 'The field types use different formats to store date and time in the database. All field types can be displayed in various ways.'
   weight: -10
 general:
   label: 'General'

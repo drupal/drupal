@@ -13,13 +13,15 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 #[FieldType(
   id: "string_long",
-  label: new TranslatableMarkup("Text (plain, long)"),
+  label: new TranslatableMarkup("Long text"),
   description: [
-    new TranslatableMarkup("Ideal for longer texts, like body or description"),
-    new TranslatableMarkup("Supports long text without specifying a maximum length"),
-    new TranslatableMarkup("May use more storage and be slower for searching and sorting"),
+    new TranslatableMarkup("Uses a text area (multiple rows) for input"),
+    new TranslatableMarkup("No fixed maximum length"),
+    new TranslatableMarkup("May use more storage and be slower searching and sorting"),
+    new TranslatableMarkup("Use for longer text without formatting"),
   ],
   category: "plain_text",
+  weight: -5,
   default_widget: "string_textarea",
   default_formatter: "basic_string",
 )]

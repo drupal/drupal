@@ -11,11 +11,11 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 #[FieldType(
   id: "text_long",
-  label: new TranslatableMarkup("Text (formatted, long)"),
+  label: new TranslatableMarkup("Long text"),
   description: [
-    new TranslatableMarkup("Ideal for longer texts, like body or description without a summary"),
-    new TranslatableMarkup("Supports long text without specifying a maximum length"),
-    new TranslatableMarkup("May use more storage and be slower for searching and sorting"),
+    new TranslatableMarkup("Uses a text area (multiple rows) for input"),
+    new TranslatableMarkup("No fixed maximum length"),
+    new TranslatableMarkup("Recommended for styled longer texts, like body without summary"),
   ],
   category: "formatted_text",
   default_widget: "text_textarea",

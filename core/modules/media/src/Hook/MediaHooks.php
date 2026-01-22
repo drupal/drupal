@@ -4,6 +4,7 @@ namespace Drupal\media\Hook;
 
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
@@ -102,11 +103,29 @@ class MediaHooks {
     // Set the default formatter for media in entity reference fields to be the
     // "Rendered entity" formatter.
     if (!empty($options['media'])) {
-      $options['media']['description'] = $this->t('Field to reference media. Allows uploading and selecting from uploaded media.');
+      $options['media']['description'] = $this->t('Upload new media or select existing one');
       $options['media']['weight'] = -25;
       $options['media']['category'] = FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
       $options['media']['entity_view_display']['type'] = 'entity_reference_entity_view';
     }
+  }
+
+  /**
+   * Provides help text to choose between File and Media reference fields.
+   *
+   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
+   *   A suggestion of when to use Media fields instead of File or Image fields.
+   */
+  protected function fileMediaHelpText(): string|TranslatableMarkup {
+    $help_text = $this->t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before installing the Media module.');
+    if (\Drupal::moduleHandler()->moduleExists('help')) {
+      $help_text .= ' ' . $this->t('For more information, see the <a href="@help_url">Media help page</a>.', [
+        '@help_url' => Url::fromRoute('help.page', [
+          'name' => 'media',
+        ])->toString(),
+      ]);
+    }
+    return $help_text;
   }
 
   /**
@@ -116,17 +135,11 @@ class MediaHooks {
   public function formFieldUiFieldStorageAddFormAlter(&$form, FormStateInterface $form_state, $form_id) : void {
     // Provide some help text to aid users decide whether they need a Media,
     // File, or Image reference field.
-    $description_text = $this->t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before installing the Media module.');
-    if (\Drupal::moduleHandler()->moduleExists('help')) {
-      $description_text .= ' ' . $this->t('For more information, see the <a href="@help_url">Media help page</a>.', [
-        '@help_url' => Url::fromRoute('help.page', [
-          'name' => 'media',
-        ])->toString(),
-      ]);
-    }
-    $field_types = ['file_upload', 'field_ui:entity_reference:media'];
-    if (in_array($form_state->getStorage()['field_type'], $field_types)) {
-      $form['field_options_wrapper']['description_wrapper'] = ['#type' => 'item', '#markup' => $description_text];
+    if ($form_state->getStorage()['field_type'] === 'field_ui:entity_reference:media') {
+      $form['field_options_wrapper']['description_wrapper'] = [
+        '#type' => 'item',
+        '#markup' => $this->fileMediaHelpText(),
+      ];
     }
   }
 
@@ -275,6 +288,15 @@ class MediaHooks {
     // The `media` field type belongs in the `general` category, so the
     // libraries need to be attached using an alter hook.
     $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'media/drupal.media-icon';
+
+    // Provide some help text to aid users decide whether they need a Media,
+    // File, or Image reference field.
+    if (!empty($definitions['file_upload'])) {
+      $existing_summary = $definitions['file_upload']['summary'] ?? '';
+      $definitions['file_upload']['summary'] = empty($existing_summary)
+        ? $this->fileMediaHelpText()
+        : $existing_summary . ' ' . $this->fileMediaHelpText();
+    }
   }
 
 }

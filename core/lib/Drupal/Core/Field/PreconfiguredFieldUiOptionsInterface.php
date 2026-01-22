@@ -24,6 +24,7 @@ interface PreconfiguredFieldUiOptionsInterface {
    * @return mixed[][]
    *   A multi-dimensional array with string keys and the following structure:
    *   - label: The label to show in the field type selection list.
+   *   - description: (optional) A short description of the field.
    *   - category: (optional) The category in which to put the field label.
    *     Defaults to the category of the field type.
    *   - field_storage_config: An array with the following supported keys:

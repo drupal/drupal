@@ -56,4 +56,17 @@ class TextHooks {
     return NULL;
   }
 
+  /**
+   * Implements hook_field_type_category_info_alter().
+   */
+  #[Hook('field_type_category_info_alter')]
+  public function fieldTypeCategoryInfoAlter(&$definitions): void {
+    // The static text in the YAML file cannot provide the proper link, so do
+    // that here.
+    $definitions['formatted_text']['summary'] = $this->t(
+      'Formatted text fields allow HTML markup. The field can be configured to allow one or more of the <a href="@text_formats">configured text formats</a>.',
+      ['@text_formats' => Url::fromRoute('filter.admin_overview')->toString()],
+    );
+  }
+
 }

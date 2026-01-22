@@ -35,7 +35,9 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
 #[FieldType(
   id: "entity_reference",
   label: new TranslatableMarkup("Entity reference"),
-  description: new TranslatableMarkup("An entity field containing an entity reference."),
+  description: [
+    new TranslatableMarkup("Choose any content or configuration type to reference on the next screen"),
+  ],
   category: "reference",
   default_widget: "entity_reference_autocomplete",
   default_formatter: "entity_reference_label",
@@ -763,6 +765,9 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     foreach ($common_references as $entity_type) {
       $options[$entity_type->id()] = [
         'label' => $entity_type->getLabel(),
+        'description' => new TranslatableMarkup('A reference to a(n) @item', [
+          '@item' => $entity_type->getSingularLabel(),
+        ]),
         'field_storage_config' => [
           'settings' => [
             'target_type' => $entity_type->id(),

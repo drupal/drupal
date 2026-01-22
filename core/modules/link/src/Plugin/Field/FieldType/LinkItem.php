@@ -21,7 +21,7 @@ use Drupal\link\LinkTitleVisibility;
 #[FieldType(
   id: "link",
   label: new TranslatableMarkup("Link"),
-  description: new TranslatableMarkup("Stores a URL string, optional varchar link text, and optional blob of attributes to assemble a link."),
+  description: new TranslatableMarkup("A URL or internal path, with optional link text"),
   default_widget: "link_default",
   default_formatter: "link",
   constraints: [

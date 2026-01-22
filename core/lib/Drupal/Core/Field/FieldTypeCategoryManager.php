@@ -18,6 +18,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *   CATEGORY_NAME:
  *     label: STRING
  *     description: STRING
+ *     summary: STRING (optional)
  *     weight: INTEGER
  *     libraries:
  *       - STRING
@@ -44,6 +45,7 @@ class FieldTypeCategoryManager extends DefaultPluginManager implements FieldType
   protected $defaults = [
     'label' => '',
     'description' => '',
+    'summary' => '',
     'weight' => 0,
     'class' => FieldTypeCategory::class,
   ];
@@ -74,7 +76,8 @@ class FieldTypeCategoryManager extends DefaultPluginManager implements FieldType
       $this->discovery = new YamlDiscovery('field_type_categories', $directories);
       $this->discovery
         ->addTranslatableProperty('label')
-        ->addTranslatableProperty('description');
+        ->addTranslatableProperty('description')
+        ->addTranslatableProperty('summary');
     }
     return $this->discovery;
   }

@@ -28,6 +28,13 @@ class FieldTypeCategory extends PluginBase implements FieldTypeCategoryInterface
   /**
    * {@inheritdoc}
    */
+  public function getSummary(): string|\Stringable {
+    return $this->pluginDefinition['summary'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getWeight(): int {
     return $this->pluginDefinition['weight'];
   }

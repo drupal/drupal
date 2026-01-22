@@ -14,11 +14,11 @@ use Drupal\Core\TypedData\DataDefinition;
  */
 #[FieldType(
   id: "decimal",
-  label: new TranslatableMarkup("Number (decimal)"),
+  label: new TranslatableMarkup("Decimal"),
   description: [
-    new TranslatableMarkup("Ideal for exact counts and measures (prices, temperatures, distances, volumes, etc.)"),
-    new TranslatableMarkup("Stores a number in the database in a fixed decimal format"),
-    new TranslatableMarkup("For example, 12.34 km or € when used for further detailed calculations (such as summing many of these)"),
+    new TranslatableMarkup("Number with a decimal part"),
+    new TranslatableMarkup("Limit of 32 digits (precision) with 10 decimal places (scale)"),
+    new TranslatableMarkup("Examples: 1.23, -1.23, 0.00, 3.1415926542653 (pi)"),
   ],
   category: "number",
   weight: -30,
