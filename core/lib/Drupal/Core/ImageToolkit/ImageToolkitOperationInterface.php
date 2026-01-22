@@ -19,6 +19,14 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 interface ImageToolkitOperationInterface extends PluginInspectionInterface {
 
   /**
+   * Set the image toolkit instance for this operation.
+   *
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
+   *   The image toolkit in use.
+   */
+  public function setToolkit(ImageToolkitInterface $toolkit): void;
+
+  /**
    * Applies a toolkit specific operation to an image.
    *
    * @param array $arguments

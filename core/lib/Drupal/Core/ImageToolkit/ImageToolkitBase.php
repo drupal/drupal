@@ -5,6 +5,7 @@ namespace Drupal\Core\ImageToolkit;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
 
@@ -16,14 +17,7 @@ use Psr\Log\LoggerInterface;
  * @see \Drupal\Core\ImageToolkit\ImageToolkitManager
  * @see plugin_api
  */
-abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterface {
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
+abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterface, ContainerFactoryPluginInterface {
 
   /**
    * Path of the image file.
@@ -31,20 +25,6 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
    * @var string
    */
   protected $source = '';
-
-  /**
-   * The image toolkit operation manager.
-   *
-   * @var \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface
-   */
-  protected $operationManager;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
 
   /**
    * Constructs an ImageToolkitBase object.
@@ -55,18 +35,22 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
    *   The plugin ID for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface $operation_manager
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface $operationManager
    *   The toolkit operation manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitOperationManagerInterface $operation_manager, LoggerInterface $logger, ConfigFactoryInterface $config_factory) {
+  public function __construct(
+    array $configuration,
+    string $plugin_id,
+    array $plugin_definition,
+    protected readonly ImageToolkitOperationManagerInterface $operationManager,
+    protected readonly LoggerInterface $logger,
+    protected readonly ConfigFactoryInterface $configFactory,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->operationManager = $operation_manager;
-    $this->logger = $logger;
-    $this->configFactory = $config_factory;
   }
 
   /**

@@ -3,8 +3,10 @@
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a base class for image toolkit operation plugins.
@@ -14,21 +16,17 @@ use Psr\Log\LoggerInterface;
  * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationManager
  * @see plugin_api
  */
-abstract class ImageToolkitOperationBase extends PluginBase implements ImageToolkitOperationInterface {
+abstract class ImageToolkitOperationBase extends PluginBase implements ImageToolkitOperationInterface, ContainerFactoryPluginInterface {
 
   /**
    * The image toolkit.
-   *
-   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */
-  protected $toolkit;
+  protected ImageToolkitInterface $toolkit;
 
   /**
    * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
    */
-  protected $logger;
+  protected readonly LoggerInterface $logger;
 
   /**
    * Constructs an image toolkit operation plugin.
@@ -39,15 +37,36 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
    *   The plugin ID for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
-   *   The image toolkit.
-   * @param \Psr\Log\LoggerInterface $logger
+   * @param \Psr\Log\LoggerInterface|\Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
+   *   (deprecated) The image toolkit.
+   * @param \Psr\Log\LoggerInterface|null $logger
    *   A logger instance.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitInterface $toolkit, LoggerInterface $logger) {
+  public function __construct(
+    array $configuration,
+    string $plugin_id,
+    array $plugin_definition,
+    #[Autowire(service: 'logger.channel.image')]
+    LoggerInterface|ImageToolkitInterface $toolkit,
+    #[Autowire(service: 'logger.channel.image')]
+    ?LoggerInterface $logger = NULL,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    if ($toolkit instanceof ImageToolkitInterface) {
+      @trigger_error('The $toolkit argument of ' . __METHOD__ . ' is deprecated in drupal:11.4.0 and the argument is removed from drupal:13.0.0. Use ::setToolkit() instead. See https://www.drupal.org/node/3562304', E_USER_DEPRECATED);
+      $this->toolkit = $toolkit;
+      $this->logger = $logger;
+    }
+    else {
+      $this->logger = $toolkit;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setToolkit(ImageToolkitInterface $toolkit): void {
     $this->toolkit = $toolkit;
-    $this->logger = $logger;
   }
 
   /**

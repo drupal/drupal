@@ -147,4 +147,19 @@ class ToolkitTest extends KernelTestBase {
     $this->assertSame([], $calls['apply'][0][1]);
   }
 
+  /**
+   * Tests calling an autowiring image operation plugin.
+   */
+  public function testAutowiringOperation(): void {
+    $this->assertTrue($this->image->apply('autowiring'));
+
+    // Check that apply was called and with the correct parameters.
+    $this->assertToolkitOperationsCalled(['apply']);
+    $calls = $this->imageTestGetAllCalls();
+    $this->assertEquals('autowiring', $calls['apply'][0][0]);
+    $this->assertSame([], $calls['apply'][0][1]);
+
+    $this->assertSame('foo', \Drupal::state()->get('image_test.autowiring_operation', []));
+  }
+
 }

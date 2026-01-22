@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Image;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\Image;
-use Drupal\Core\ImageToolkit\ImageToolkitOperationInterface;
+use Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\system\Plugin\ImageToolkit\GDToolkit;
+use Drupal\system\Plugin\ImageToolkit\Operation\gd\GDImageToolkitOperationBase;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 /**
  * Tests the image class.
@@ -22,31 +26,23 @@ class ImageTest extends UnitTestCase {
 
   /**
    * Image source path.
-   *
-   * @var string
    */
-  protected $source;
+  protected string $source;
 
   /**
    * Image object.
-   *
-   * @var \Drupal\Core\Image\Image
    */
-  protected $image;
+  protected Image $image;
 
   /**
    * Mocked image toolkit.
-   *
-   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */
-  protected $toolkit;
+  protected GDToolkit&MockObject $toolkit;
 
   /**
    * Mocked image toolkit operation.
-   *
-   * @var \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface
    */
-  protected $toolkitOperation;
+  protected GDImageToolkitOperationBase&MockObject $toolkitOperation;
 
   /**
    * {@inheritdoc}
@@ -61,7 +57,7 @@ class ImageTest extends UnitTestCase {
   /**
    * Mocks a toolkit.
    *
-   * @param array $stubs
+   * @param list<string> $stubs
    *   (optional) Array containing methods to be replaced with stubs.
    *
    * @return \Drupal\system\Plugin\ImageToolkit\GDToolkit&\PHPUnit\Framework\MockObject\MockObject
@@ -71,7 +67,16 @@ class ImageTest extends UnitTestCase {
     $mock_builder = $this->getMockBuilder(GDToolkit::class);
     $stubs = array_merge(['getPluginId', 'save'], $stubs);
     return $mock_builder
-      ->disableOriginalConstructor()
+      ->setConstructorArgs([
+        [],
+        '',
+        [],
+        $this->createStub(ImageToolkitOperationManagerInterface::class),
+        $this->createStub(LoggerInterface::class),
+        $this->createStub(ConfigFactoryInterface::class),
+        $this->createStub(StreamWrapperManagerInterface::class),
+        $this->createStub(FileSystemInterface::class),
+      ])
       ->onlyMethods($stubs)
       ->getMock();
   }
@@ -80,20 +85,21 @@ class ImageTest extends UnitTestCase {
    * Mocks a toolkit operation.
    *
    * @param string $class_name
-   *   The name of the GD toolkit operation class to be mocked.
+   *   The short name of the GD toolkit operation class to be mocked.
    * @param \Drupal\system\Plugin\ImageToolkit\GDToolkit $toolkit
    *   The image toolkit object.
    *
-   * @return \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\system\Plugin\ImageToolkit\Operation\gd\GDImageToolkitOperationBase&\PHPUnit\Framework\MockObject\MockObject
    *   Mocked GDToolkit operation instance.
    */
-  protected function getToolkitOperationMock($class_name, GDToolkit $toolkit): ImageToolkitOperationInterface&MockObject {
+  protected function getToolkitOperationMock(string $class_name, GDToolkit $toolkit): GDImageToolkitOperationBase&MockObject {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);
-    $logger = $this->createMock('Psr\Log\LoggerInterface');
-    return $mock_builder
+    $operation = $mock_builder
       ->onlyMethods(['execute'])
-      ->setConstructorArgs([[], '', [], $toolkit, $logger])
+      ->setConstructorArgs([[], '', [], $this->createStub(LoggerInterface::class)])
       ->getMock();
+    $operation->setToolkit($toolkit);
+    return $operation;
   }
 
   /**
@@ -102,13 +108,13 @@ class ImageTest extends UnitTestCase {
    * @param bool $load_expected
    *   (optional) Whether the load() method is expected to be called. Defaults
    *   to TRUE.
-   * @param array $stubs
+   * @param list<string> $stubs
    *   (optional) Array containing toolkit methods to be replaced with stubs.
    *
    * @return \Drupal\Core\Image\Image
    *   An image object.
    */
-  protected function getTestImage($load_expected = TRUE, array $stubs = []) {
+  protected function getTestImage(bool $load_expected = TRUE, array $stubs = []): Image {
     if (!$load_expected && !in_array('load', $stubs)) {
       $stubs = array_merge(['load'], $stubs);
     }
@@ -138,7 +144,7 @@ class ImageTest extends UnitTestCase {
    * @return \Drupal\Core\Image\Image
    *   An image object.
    */
-  protected function getTestImageForOperation($class_name) {
+  protected function getTestImageForOperation(string $class_name): Image {
     $this->toolkit = $this->getToolkitMock(['getToolkitOperation']);
     $this->toolkitOperation = $this->getToolkitOperationMock($class_name, $this->toolkit);
 
