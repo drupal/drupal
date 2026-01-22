@@ -1,0 +1,12 @@
+<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M11 0L14 3V16H2V0H11Z" fill="#fff"/>
+  <path d="M11 0L14 3V16H2V0H11ZM3 15H13V4H10V1H3V15ZM11 3H12.5L11 1.5V3Z" fill="#7f7f7f"/>
+  <path d="M4 2H9V3H4V2Z" fill="#dadada"/>
+  <path d="M4 3H9V4H4V3Z" fill="#e0e0e0"/>
+  <path d="M4 4H9V5H4V4Z" fill="#ebebeb"/>
+  <path d="M4 5H12V6H4V5Z" fill="#eee"/>
+  <path d="M4 6H12V7H4V6Z" fill="#f5f5f5"/>
+  <path d="M4 7H12V8H4V7Z" fill="#f8f8f8"/>
+  <path d="M4 8H12V9H4V8Z" fill="#fcfcfc"/>
+  <path d="M5.25 4.89C6.09 4.89 6.71 5.51 6.71 6.36V8.44C6.71 8.96 7.22 8.98 7.62 8.98V10.08C7.23 10.08 6.71 10.11 6.71 10.62V12.72C6.71 13.53 6.07 14.20 5.25 14.20H4.40V13.09H5.25C5.51 13.09 5.60 12.98 5.60 12.72V10.62C5.60 10.17 5.87 9.72 6.29 9.53C5.86 9.32 5.60 8.92 5.60 8.44V6.36C5.60 6.10 5.51 6.00 5.25 6.00H4.40V4.89H5.25ZM10.06 13.18H8.86L9.70 10.90H11.16L10.06 13.18ZM11.10 9.06H9.67V7.63H11.10V9.06Z" fill="#602b6e"/>
+</svg>

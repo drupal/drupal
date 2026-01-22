@@ -1,0 +1,13 @@
+<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M11 0L14 3V16H2V0H11Z" fill="#fff"/>
+  <path d="M11 0L14 3V16H2V0H11ZM3 15H13V4H10V1H3V15ZM11 3H12.5L11 1.5V3Z" fill="#7f7f7f"/>
+  <path d="M4 2H9V3H4V2Z" fill="#dadada"/>
+  <path d="M4 3H9V4H4V3Z" fill="#e0e0e0"/>
+  <path d="M4 4H9V5H4V4Z" fill="#ebebeb"/>
+  <path d="M4 5H12V6H4V5Z" fill="#eee"/>
+  <path d="M4 6H12V7H4V6Z" fill="#f5f5f5"/>
+  <path d="M4 7H12V8H4V7Z" fill="#f8f8f8"/>
+  <path d="M4 8H12V9H4V8Z" fill="#fcfcfc"/>
+  <path d="M4 2H9V4H4V2Z" fill="#4e9a06"/>
+  <path d="M12 14H4V5H12V14ZM5 13H8V12H5V13ZM9 13H11V12H9V13ZM5 11H8V10H5V11ZM9 11H11V10H9V11ZM5 8V9H8V8H5ZM9 8V9H11V8H9ZM5 7H8V6H5V7ZM9 7H11V6H9V7Z" fill="#bfbfbf"/>
+</svg>

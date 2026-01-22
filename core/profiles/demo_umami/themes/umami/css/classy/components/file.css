@@ -19,44 +19,44 @@
 }
 .file--general,
 .file--application-octet-stream {
-  background-image: url(../../../images/classy/icons/application-octet-stream.png);
+  background-image: url(../../../images/classy/icons/application-octet-stream.svg);
 }
 .file--package-x-generic {
-  background-image: url(../../../images/classy/icons/package-x-generic.png);
+  background-image: url(../../../images/classy/icons/package-x-generic.svg);
 }
 .file--x-office-spreadsheet {
-  background-image: url(../../../images/classy/icons/x-office-spreadsheet.png);
+  background-image: url(../../../images/classy/icons/x-office-spreadsheet.svg);
 }
 .file--x-office-document {
-  background-image: url(../../../images/classy/icons/x-office-document.png);
+  background-image: url(../../../images/classy/icons/x-office-document.svg);
 }
 .file--x-office-presentation {
-  background-image: url(../../../images/classy/icons/x-office-presentation.png);
+  background-image: url(../../../images/classy/icons/x-office-presentation.svg);
 }
 .file--text-x-script {
-  background-image: url(../../../images/classy/icons/text-x-script.png);
+  background-image: url(../../../images/classy/icons/text-x-script.svg);
 }
 .file--text-html {
-  background-image: url(../../../images/classy/icons/text-html.png);
+  background-image: url(../../../images/classy/icons/text-html.svg);
 }
 .file--text-plain {
-  background-image: url(../../../images/classy/icons/text-plain.png);
+  background-image: url(../../../images/classy/icons/text-plain.svg);
 }
 .file--application-pdf {
-  background-image: url(../../../images/classy/icons/application-pdf.png);
+  background-image: url(../../../images/classy/icons/application-pdf.svg);
 }
 .file--application-x-executable {
-  background-image: url(../../../images/classy/icons/application-x-executable.png);
+  background-image: url(../../../images/classy/icons/application-x-executable.svg);
 }
 .file--audio {
-  background-image: url(../../../images/classy/icons/audio-x-generic.png);
+  background-image: url(../../../images/classy/icons/audio-x-generic.svg);
 }
 .file--video {
-  background-image: url(../../../images/classy/icons/video-x-generic.png);
+  background-image: url(../../../images/classy/icons/video-x-generic.svg);
 }
 .file--text {
-  background-image: url(../../../images/classy/icons/text-x-generic.png);
+  background-image: url(../../../images/classy/icons/text-x-generic.svg);
 }
 .file--image {
-  background-image: url(../../../images/classy/icons/image-x-generic.png);
+  background-image: url(../../../images/classy/icons/image-x-generic.svg);
 }
