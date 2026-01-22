@@ -287,7 +287,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       foreach ($moduleImplements as $module => $v) {
         if (is_string($hook) && str_starts_with($hook, 'preprocess_') && str_contains($hook, '__')) {
-          $this->preprocessForSuggestions[$module . '_' . $hook] = TRUE;
+          $this->preprocessForSuggestions[$module . '_' . $hook] = 'module';
         }
         foreach (array_keys($implementationsByHookOrig[$hook], $module, TRUE) as $identifier) {
           $implementationsByHook[$hook][$identifier] = $module;

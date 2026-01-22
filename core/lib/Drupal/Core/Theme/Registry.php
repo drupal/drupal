@@ -184,7 +184,7 @@ class Registry implements DestructableInterface {
    * These are stored to prevent adding preprocess suggestions to the invoke map
    * that are not discovered in modules.
    *
-   * @var array<string, true>
+   * @var array<string, string>
    */
   protected ?array $preprocessForSuggestions = NULL;
 
@@ -833,6 +833,8 @@ class Registry implements DestructableInterface {
     // Collect all variable preprocess functions in the correct order.
     $suggestion_level = [];
     $invokes = [];
+    $preprocess_extension_types = $this->getPreprocessForSuggestions();
+
     // Look for functions named according to the pattern and add them if they
     // have matching hooks in the registry.
     foreach ($prefixes as $prefix) {
@@ -849,9 +851,12 @@ class Registry implements DestructableInterface {
           if (isset($cache[$matches[2]])) {
             $level = substr_count($matches[1], '__');
             $suggestion_level[$level][$candidate] = $matches[1];
-            $module_preprocess_function = $prefix . '_preprocess_' . $matches[1];
-            if (isset($this->getPreprocessForSuggestions()[$module_preprocess_function])) {
-              $invokes[$candidate] = ['module' => $prefix, 'hook' => 'preprocess_' . $matches[1]];
+            $preprocess_function = $prefix . '_preprocess_' . $matches[1];
+            if (\array_key_exists($preprocess_function, $preprocess_extension_types)) {
+              $invokes[$candidate] = [
+                $preprocess_extension_types[$preprocess_function] => $prefix,
+                'hook' => 'preprocess_' . $matches[1],
+              ];
             }
           }
         }
@@ -1033,8 +1038,8 @@ class Registry implements DestructableInterface {
   /**
    * Returns discovered preprocess suggestions.
    *
-   * @return array<string, true>
-   *   Preprocess suggestions discovered in modules.
+   * @return array<string, string>
+   *   Preprocess suggestions discovered in themes and modules.
    */
   protected function getPreprocessForSuggestions(): array {
     if ($this->preprocessForSuggestions === NULL) {
