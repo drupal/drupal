@@ -1568,14 +1568,14 @@ services:
       - { name: stream_wrapper, scheme: theme }
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
-    arguments: ['@config.factory']
+    autowire: true
     parent: default_plugin_manager
     tags:
       - { name: plugin_manager_cache_clear }
   Drupal\Core\ImageToolkit\ImageToolkitManager: '@image.toolkit.manager'
   image.toolkit.operation.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitOperationManager
-    arguments: ['@logger.channel.image', '@image.toolkit.manager']
+    autowire: true
     parent: default_plugin_manager
     tags:
       - { name: plugin_manager_cache_clear }
