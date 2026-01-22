@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\ViewsHandlerManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Filter to show only the latest revision of an entity.
@@ -45,22 +45,18 @@ class LatestRevision extends FilterPluginBase implements ContainerFactoryPluginI
    * @param \Drupal\views\Plugin\ViewsHandlerManager $join_handler
    *   Views Handler Plugin Manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ViewsHandlerManager $join_handler) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    #[Autowire(service: 'plugin.manager.views.join')]
+    ViewsHandlerManager $join_handler,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->joinHandler = $join_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration, $plugin_id, $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.views.join')
-    );
   }
 
   /**

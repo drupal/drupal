@@ -17,7 +17,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\Plugin\Derivative\InlineBlockDeriver;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines an inline block plugin type.
@@ -95,20 +94,6 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     if (!empty($this->configuration['block_revision_id']) || !empty($this->configuration['block_serialized'])) {
       $this->isNew = FALSE;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_display.repository'),
-      $container->get('current_user')
-    );
   }
 
   /**

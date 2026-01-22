@@ -61,7 +61,14 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['third_party_settings']);
+    return static::createInstanceAutowired(
+      $container,
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+    );
   }
 
   /**

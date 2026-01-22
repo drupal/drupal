@@ -13,7 +13,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\media\Attribute\MediaSource;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Image entity media source.
@@ -85,23 +84,6 @@ class Image extends File {
 
     $this->imageFactory = $image_factory;
     $this->fileSystem = $file_system;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
-      $container->get('plugin.manager.field.field_type'),
-      $container->get('config.factory'),
-      $container->get('image.factory'),
-      $container->get('file_system')
-    );
   }
 
   /**

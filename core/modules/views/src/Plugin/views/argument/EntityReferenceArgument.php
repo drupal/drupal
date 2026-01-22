@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Attribute\ViewsArgument;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Argument handler to accept an entity reference ID value.
@@ -33,19 +32,6 @@ class EntityReferenceArgument extends NumericArgument implements ContainerFactor
     protected EntityTypeManagerInterface $entityTypeManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity.repository'),
-      $container->get('entity_type.manager')
-    );
   }
 
   /**

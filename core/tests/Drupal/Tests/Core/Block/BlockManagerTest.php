@@ -45,7 +45,9 @@ class BlockManagerTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $current_user = $this->prophesize(AccountInterface::class);
-    $container->set('current_user', $current_user->reveal());
+    // Set the service name as the fully qualified class name so that plugin
+    // autowiring works.
+    $container->set(AccountInterface::class, $current_user->reveal());
     $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
 

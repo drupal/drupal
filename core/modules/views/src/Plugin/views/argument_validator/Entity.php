@@ -10,7 +10,6 @@ use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\views\Attribute\ViewsArgumentValidator;
 use Drupal\views\Plugin\Derivative\ViewsEntityArgumentValidator;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines an argument validator plugin for each entity type.
@@ -61,19 +60,6 @@ class Entity extends ArgumentValidatorPluginBase {
 
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_type.bundle.info')
-    );
   }
 
   /**

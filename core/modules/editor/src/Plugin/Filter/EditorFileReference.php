@@ -12,7 +12,6 @@ use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a filter to track images uploaded via a Text Editor.
@@ -59,19 +58,6 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
     $this->entityRepository = $entity_repository;
     $this->imageFactory = $image_factory;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity.repository'),
-      $container->get('image.factory')
-    );
   }
 
   /**

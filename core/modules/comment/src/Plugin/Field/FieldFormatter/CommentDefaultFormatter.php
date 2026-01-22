@@ -15,7 +15,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a default comment formatter.
@@ -78,26 +77,6 @@ class CommentDefaultFormatter extends FormatterBase {
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   protected $routeMatch;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('current_user'),
-      $container->get('entity_type.manager'),
-      $container->get('entity.form_builder'),
-      $container->get('current_route_match'),
-      $container->get('entity_display.repository')
-    );
-  }
 
   /**
    * Constructs a new CommentDefaultFormatter.

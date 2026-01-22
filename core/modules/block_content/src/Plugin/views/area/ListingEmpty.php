@@ -7,7 +7,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\views\Attribute\ViewsArea;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines an area plugin to display a block add link.
@@ -53,19 +52,6 @@ class ListingEmpty extends AreaPluginBase {
     @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3336219', E_USER_DEPRECATED);
     $this->accessManager = $access_manager;
     $this->currentUser = $current_user;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('access_manager'),
-      $container->get('current_user')
-    );
   }
 
   /**

@@ -9,7 +9,6 @@ use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore whois
 
@@ -40,18 +39,6 @@ class BlockSettings extends ProcessPluginBase implements ContainerFactoryPluginI
     $this->blockManager = $blockManager;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get(BlockManagerInterface::class),
-    );
   }
 
   /**

@@ -22,7 +22,6 @@ use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\LayoutEntityHelperTrait;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -106,22 +105,6 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     $this->sectionStorageManager = $section_storage_manager;
     $this->entityRepository = $entity_repository;
     $this->currentUser = $current_user;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
-      $container->get('plugin.manager.layout_builder.section_storage'),
-      $container->get('entity.repository'),
-      $container->get('current_user')
-    );
   }
 
   /**

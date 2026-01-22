@@ -7,7 +7,6 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Filter class which allows filtering by entity bundles.
@@ -70,19 +69,6 @@ class Bundle extends InOperator {
 
     $this->entityTypeManager = $entity_type_manager;
     $this->bundleInfoService = $bundle_info_service;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_type.bundle.info')
-    );
   }
 
   /**

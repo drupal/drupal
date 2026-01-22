@@ -65,6 +65,7 @@ class FilterIdTest extends KernelTestBase {
         'baz' => 'php_code',
       ],
     ];
+    // @phpstan-ignore-next-line
     $plugin = FilterID::create($this->container, $configuration, 'filter_id', []);
 
     if ($stop_pipeline) {

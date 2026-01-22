@@ -11,7 +11,6 @@ use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
 use Drupal\views\ResultRow;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Renders all operations links for an entity.
@@ -74,20 +73,6 @@ class EntityOperations extends FieldPluginBase {
     $this->entityTypeManager = $entity_type_manager;
     $this->languageManager = $language_manager;
     $this->entityRepository = $entity_repository;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('language_manager'),
-      $container->get('entity.repository')
-    );
   }
 
   /**

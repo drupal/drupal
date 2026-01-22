@@ -14,7 +14,6 @@ use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\Plugin\Derivative\ExtraFieldBlockDeriver;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block that renders an extra field from an entity.
@@ -92,19 +91,6 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
         'third_party_settings' => [],
       ],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_field.manager')
-    );
   }
 
   /**

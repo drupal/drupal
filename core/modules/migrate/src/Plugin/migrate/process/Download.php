@@ -9,7 +9,6 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use GuzzleHttp\ClientInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Downloads a file from a HTTP(S) remote location into the local file system.
@@ -97,19 +96,6 @@ class Download extends FileProcessBase implements ContainerFactoryPluginInterfac
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->fileSystem = $file_system;
     $this->httpClient = $http_client;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('file_system'),
-      $container->get('http_client')
-    );
   }
 
   /**

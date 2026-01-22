@@ -17836,14 +17836,6 @@ in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
 	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/Plugin/migrate/process/FilterIdTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to method create\\(\\) of deprecated class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\FilterID\\:
-in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
-   replacement\\.$#',
-	'identifier' => 'staticMethod.deprecatedClass',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/Plugin/migrate/process/FilterIdTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to method transform\\(\\) of deprecated class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\FilterID\\:
 in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
    replacement\\.$#',

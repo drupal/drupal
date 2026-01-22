@@ -8,7 +8,6 @@ use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field handler to provide a list of permissions.
@@ -51,19 +50,6 @@ class Permissions extends PrerenderList {
 
     $this->roleStorage = $entity_type_manager->getStorage('user_role');
     $this->moduleHandler = $module_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('module_handler'),
-      $container->get('entity_type.manager')
-    );
   }
 
   /**

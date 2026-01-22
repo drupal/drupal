@@ -22,7 +22,6 @@ use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\navigation\Form\LayoutForm;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -67,18 +66,6 @@ final class NavigationSectionStorage extends PluginBase implements SectionStorag
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configFactory = $config_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('config.factory')
-    );
   }
 
   /**

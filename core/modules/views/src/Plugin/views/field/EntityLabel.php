@@ -10,7 +10,6 @@ use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field handler to display entity label optionally linked to entity page.
@@ -48,18 +47,6 @@ class EntityLabel extends FieldPluginBase {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager')
-    );
   }
 
   /**

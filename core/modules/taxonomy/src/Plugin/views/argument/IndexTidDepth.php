@@ -8,7 +8,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\taxonomy\TaxonomyIndexDepthQueryTrait;
 use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Argument handler for taxonomy terms with depth.
@@ -29,18 +28,6 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityRepositoryInterface $entityRepository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity.repository')
-    );
   }
 
   /**

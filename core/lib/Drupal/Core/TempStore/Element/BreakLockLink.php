@@ -8,7 +8,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Render\RendererInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a link to break a tempstore lock.
@@ -74,20 +73,6 @@ class BreakLockLink extends RenderElementBase implements ContainerFactoryPluginI
     $this->dateFormatter = $date_formatter;
     $this->entityTypeManager = $entity_type_manager;
     $this->renderer = $renderer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('date.formatter'),
-      $container->get('entity_type.manager'),
-      $container->get('renderer')
-    );
   }
 
   /**

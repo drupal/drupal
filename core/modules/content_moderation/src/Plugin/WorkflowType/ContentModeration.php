@@ -15,7 +15,6 @@ use Drupal\workflows\Attribute\WorkflowType;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\WorkflowInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Attaches workflows to content entity types and their bundles.
@@ -78,20 +77,6 @@ class ContentModeration extends WorkflowTypeBase implements ContentModerationInt
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->moderationInfo = $moderation_info;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('content_moderation.moderation_information')
-    );
   }
 
   /**

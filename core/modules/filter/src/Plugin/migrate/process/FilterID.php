@@ -11,7 +11,7 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\migrate\process\StaticMap;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 // cspell:ignore abbrfilter adsense autofloat biblio cincopa codefilter
 // cspell:ignore commonmark deepzoom emogrifier emptyparagraphkiller forena
@@ -51,24 +51,18 @@ class FilterID extends StaticMap implements ContainerFactoryPluginInterface {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translator
    *   (optional) The string translation service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $filter_manager, ?TranslationInterface $translator = NULL) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    #[Autowire(service: 'plugin.manager.filter')]
+    PluginManagerInterface $filter_manager,
+    ?TranslationInterface $translator = NULL,
+  ) {
     @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->filterManager = $filter_manager;
     $this->stringTranslation = $translator;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('plugin.manager.filter'),
-      $container->get('string_translation')
-    );
   }
 
   /**

@@ -12,7 +12,6 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Sends a message to the current user's screen.
@@ -67,13 +66,6 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
     $this->token = $token;
     $this->renderer = $renderer;
     $this->messenger = $messenger;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('token'), $container->get('renderer'), $container->get('messenger'));
   }
 
   /**

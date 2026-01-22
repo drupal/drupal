@@ -12,7 +12,6 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an 'Announcements Feed' block.
@@ -39,18 +38,6 @@ class AnnounceBlock extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, protected AnnounceRenderer $announceRenderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('announcements_feed.renderer')
-    );
   }
 
   /**

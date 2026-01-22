@@ -18,7 +18,6 @@ use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Filters a view by entity references.
@@ -103,20 +102,6 @@ class EntityReference extends ManyToOne {
     if (isset($this->definition['entity field'])) {
       $this->definition['field_name'] = $this->definition['entity field'];
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EntityReference {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('plugin.manager.entity_reference_selection'),
-      $container->get('entity_type.manager'),
-      $container->get('messenger'),
-    );
   }
 
   /**

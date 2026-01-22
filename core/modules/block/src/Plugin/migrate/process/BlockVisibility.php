@@ -6,12 +6,10 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateLookupInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Determines the visibility for a block.
@@ -70,19 +68,6 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
     if (isset($configuration['skip_php'])) {
       $this->skipPHP = $configuration['skip_php'];
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('module_handler'),
-      $container->get('migrate.lookup')
-    );
   }
 
   /**

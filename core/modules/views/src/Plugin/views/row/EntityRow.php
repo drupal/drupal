@@ -12,7 +12,6 @@ use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
 use Drupal\views\Plugin\Derivative\ViewsEntityRow;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Generic entity row plugin to provide a common base for all entity types.
@@ -111,21 +110,6 @@ class EntityRow extends RowPluginBase {
     $this->entityType = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $this->base_table = $this->entityType->getDataTable() ?: $this->entityType->getBaseTable();
     $this->base_field = $this->entityType->getKey('id');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('language_manager'),
-      $container->get('entity.repository'),
-      $container->get('entity_display.repository')
-    );
   }
 
   /**

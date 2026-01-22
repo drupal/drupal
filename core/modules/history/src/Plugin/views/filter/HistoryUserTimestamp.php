@@ -7,7 +7,6 @@ use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Filter for new content.
@@ -42,18 +41,6 @@ class HistoryUserTimestamp extends FilterPluginBase {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, protected TimeInterface $time) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('datetime.time'),
-    );
   }
 
   /**

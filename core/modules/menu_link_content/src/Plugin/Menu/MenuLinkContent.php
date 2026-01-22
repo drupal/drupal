@@ -9,7 +9,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuLinkBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the menu link plugin for content menu links.
@@ -106,20 +105,6 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
     $this->entityTypeManager = $entity_type_manager;
     $this->languageManager = $language_manager;
     $this->entityRepository = $entity_repository;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('language_manager'),
-      $container->get('entity.repository')
-    );
   }
 
   /**

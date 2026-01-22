@@ -13,7 +13,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 use Drupal\media\Entity\MediaType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 
@@ -52,17 +51,6 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
   public function __construct(array $configuration, string $plugin_id, CKEditor5PluginDefinition $plugin_definition, EntityDisplayRepositoryInterface $entity_display_repository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityDisplayRepository = $entity_display_repository;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_display.repository'));
   }
 
   /**

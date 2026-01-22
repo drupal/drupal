@@ -6,7 +6,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ConfigurablePluginBase;
 use Drupal\Core\Plugin\RemovableDependentPluginReturn;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a base class for image effects.
@@ -44,22 +44,16 @@ abstract class ImageEffectBase extends ConfigurablePluginBase implements ImageEf
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    #[Autowire(service: 'logger.channel.image')]
+    LoggerInterface $logger,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->logger = $logger;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('logger.factory')->get('image')
-    );
   }
 
   /**
