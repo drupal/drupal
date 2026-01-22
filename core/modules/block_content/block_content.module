@@ -8,7 +8,6 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Core\Database\Query\ConditionInterface;
 
 /**
  * Adds the default body field to a block type.
@@ -61,50 +60,6 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
   }
 
   return $field;
-}
-
-/**
- * Utility function to find nested conditions using the reusable field.
- *
- * @todo Replace this function with a call to the API in
- *   https://www.drupal.org/project/drupal/issues/2984930
- *
- * @param array $condition
- *   The condition or condition group to check.
- * @param array $tables
- *   The tables from the related select query.
- *
- * @see \Drupal\Core\Database\Query\SelectInterface::getTables
- *
- * @return bool
- *   Whether the conditions contain any condition using the reusable field.
- */
-function _block_content_has_reusable_condition(array $condition, array $tables) {
-  // If this is a condition group call this function recursively for each nested
-  // condition until a condition is found that return TRUE.
-  if (isset($condition['#conjunction'])) {
-    foreach (array_filter($condition, 'is_array') as $nested_condition) {
-      if (_block_content_has_reusable_condition($nested_condition, $tables)) {
-        return TRUE;
-      }
-    }
-    return FALSE;
-  }
-  if (isset($condition['field'])) {
-    $field = $condition['field'];
-    if (is_object($field) && $field instanceof ConditionInterface) {
-      return _block_content_has_reusable_condition($field->conditions(), $tables);
-    }
-    $field_parts = explode('.', $field);
-    $data_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getDataTable();
-    foreach ($tables as $table) {
-      if ($table['table'] === $data_table && $field_parts[0] === $table['alias'] && $field_parts[1] === 'reusable') {
-        return TRUE;
-      }
-    }
-
-  }
-  return FALSE;
 }
 
 /**

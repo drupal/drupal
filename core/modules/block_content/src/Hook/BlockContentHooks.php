@@ -5,6 +5,7 @@ namespace Drupal\block_content\Hook;
 use Drupal\block\BlockConfigUpdater;
 use Drupal\block\BlockInterface;
 use Drupal\block_content\Plugin\EntityReferenceSelection\BlockContentSelection;
+use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -118,7 +119,7 @@ class BlockContentHooks {
     }
     if ($query instanceof SelectInterface && $query->getMetaData('entity_type') === 'block_content' && $query->hasTag('block_content_access')) {
       $data_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getDataTable();
-      if (array_key_exists($data_table, $query->getTables()) && !_block_content_has_reusable_condition($query->conditions(), $query->getTables())) {
+      if (array_key_exists($data_table, $query->getTables()) && !$this->hasReusableConditions($query->conditions(), $query->getTables())) {
         @trigger_error('Automatically filtering block_content entity reference selection queries to only reusable blocks is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Either add the condition manually in buildEntityQuery, or extend \Drupal\block_content\Plugin\EntityReferenceSelection\BlockContentSelection. See https://www.drupal.org/node/3521459', E_USER_DEPRECATED);
         $query->condition("{$data_table}.reusable", TRUE);
       }
@@ -181,6 +182,50 @@ class BlockContentHooks {
     // in any Kernel test that installs block_content. This is BC code so will
     // be removed in Drupal 12 anyway.
     \Drupal::service(BlockConfigUpdater::class)->updateBlock($block);
+  }
+
+  /**
+   * Utility function to find nested conditions using the reusable field.
+   *
+   * @param array $condition
+   *   The condition or condition group to check.
+   * @param array $tables
+   *   The tables from the related select query.
+   *
+   * @return bool
+   *   Whether the conditions contain any condition using the reusable field.
+   *
+   * @see \Drupal\Core\Database\Query\SelectInterface::getTables()
+   *
+   * @todo Replace this function with a call to the API in
+   *   https://www.drupal.org/project/drupal/issues/2984930
+   */
+  protected function hasReusableConditions(array $condition, array $tables): bool {
+    // If this is a condition group call this function recursively for each
+    // nested condition until a condition is found that return TRUE.
+    if (isset($condition['#conjunction'])) {
+      foreach (array_filter($condition, 'is_array') as $nested_condition) {
+        if ($this->hasReusableConditions($nested_condition, $tables)) {
+          return TRUE;
+        }
+      }
+      return FALSE;
+    }
+
+    if (isset($condition['field'])) {
+      $field = $condition['field'];
+      if ($field instanceof ConditionInterface) {
+        return $this->hasReusableConditions($field->conditions(), $tables);
+      }
+      $field_parts = explode('.', $field);
+      $data_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getDataTable();
+      foreach ($tables as $table) {
+        if ($table['table'] === $data_table && $field_parts[0] === $table['alias'] && $field_parts[1] === 'reusable') {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
 }
