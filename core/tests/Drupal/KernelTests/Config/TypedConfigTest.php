@@ -112,6 +112,9 @@ class TypedConfigTest extends KernelTestBase {
       'block_id',
       'block_revision_id',
       'block_serialized',
+      'string_concat_value_1',
+      'string_concat_value_2',
+      'string_concat_values',
     ], array_keys($typed_config->getElements()));
     $this->assertSame('config_test.validation', $typed_config->getName());
     $this->assertSame('config_test.validation', $typed_config->getPropertyPath());

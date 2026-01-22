@@ -12,3 +12,6 @@ composite: null
 block_id: 1
 block_revision_id: 3
 block_serialized: 'a:2:{s:4:"type";s:6:"kitten";s:5:"count";i:2;}'
+string_concat_value_1: 'localhost'
+string_concat_value_2: 'llama'
+string_concat_values: 'localhost.llama'
