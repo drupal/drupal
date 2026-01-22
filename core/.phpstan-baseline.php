@@ -9792,12 +9792,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$elements in isset\\(\\) always exists and is not nullable\\.$#',
-	'identifier' => 'isset.variable',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$render_start might not be defined\\.$#',
 	'identifier' => 'variable.undefined',
 	'count' => 1,
