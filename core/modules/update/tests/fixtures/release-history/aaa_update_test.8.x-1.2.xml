@@ -5,7 +5,7 @@
  <dc:creator>Drupal</dc:creator>
  <supported_branches>8.x-1.</supported_branches>
  <project_status>published</project_status>
- <link>http://example.com/project/aaa_update_test</link>
+ <link>https://example.com/project/aaa_update_test</link>
  <terms>
   <term><name>Projects</name><value>Modules</value></term>
  </terms>
@@ -15,8 +15,8 @@
      <version>8.x-1.3-beta1</version>
      <core_compatibility>8.0.0 || 8.1.1</core_compatibility>
      <status>published</status>
-     <release_link>http://example.com/aaa_update_test-8-x-1-3-beta1-release</release_link>
-     <download_link>http://example.com/aaa_update_test-8-x-1-3-beta1.tar.gz</download_link>
+     <release_link>https://example.com/aaa_update_test-8-x-1-3-beta1-release</release_link>
+     <download_link>https://example.com/aaa_update_test-8-x-1-3-beta1.tar.gz</download_link>
      <date>1250624521</date>
      <terms>
        <term><name>Release type</name><value>New features</value></term>
@@ -28,8 +28,8 @@
    <version>8.x-1.2</version>
     <core_compatibility>^8</core_compatibility>
    <status>published</status>
-   <release_link>http://example.com/aaa_update_test-8-x-1-2-release</release_link>
-   <download_link>http://example.com/aaa_update_test-8-x-1-2.tar.gz</download_link>
+   <release_link>https://example.com/aaa_update_test-8-x-1-2-release</release_link>
+   <download_link>https://example.com/aaa_update_test-8-x-1-2.tar.gz</download_link>
    <date>1250424521</date>
    <terms>
     <term><name>Release type</name><value>New features</value></term>
@@ -40,8 +40,8 @@
    <name>aaa_update_test 8.x-1.1</name>
    <version>8.x-1.1</version>
    <status>published</status>
-   <release_link>http://example.com/aaa_update_test-8-x-1-1-release</release_link>
-   <download_link>http://example.com/aaa_update_test-8-x-1-1.tar.gz</download_link>
+   <release_link>https://example.com/aaa_update_test-8-x-1-1-release</release_link>
+   <download_link>https://example.com/aaa_update_test-8-x-1-1.tar.gz</download_link>
    <date>1250424521</date>
    <terms>
     <term><name>Release type</name><value>New features</value></term>
@@ -52,8 +52,8 @@
    <name>aaa_update_test 8.x-1.0</name>
    <version>8.x-1.0</version>
    <status>published</status>
-   <release_link>http://example.com/aaa_update_test-8-x-1-0-release</release_link>
-   <download_link>http://example.com/aaa_update_test-8-x-1-0.tar.gz</download_link>
+   <release_link>https://example.com/aaa_update_test-8-x-1-0-release</release_link>
+   <download_link>https://example.com/aaa_update_test-8-x-1-0.tar.gz</download_link>
    <date>1250424521</date>
    <terms>
     <term><name>Release type</name><value>New features</value></term>

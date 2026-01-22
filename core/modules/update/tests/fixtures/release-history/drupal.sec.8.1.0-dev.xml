@@ -17,7 +17,7 @@ version + 100 seconds.
 <dc:creator>Drupal</dc:creator>
 <supported_branches>8.0.,8.1.</supported_branches>
 <project_status>published</project_status>
-<link>http://example.com/project/drupal</link>
+<link>https://example.com/project/drupal</link>
   <terms>
    <term><name>Projects</name><value>Drupal project</value></term>
   </terms>
@@ -26,8 +26,8 @@ version + 100 seconds.
     <name>Drupal 8.1.2</name>
     <version>8.1.2</version>
     <status>published</status>
-    <release_link>http://example.com/drupal-8-1-2-release</release_link>
-    <download_link>http://example.com/drupal-8-1-2.tar.gz</download_link>
+    <release_link>https://example.com/drupal-8-1-2-release</release_link>
+    <download_link>https://example.com/drupal-8-1-2.tar.gz</download_link>
     <date>1280424741</date>
     <terms>
       <term><name>Release type</name><value>New features</value></term>
@@ -39,8 +39,8 @@ version + 100 seconds.
     <name>Drupal 8.1.1</name>
     <version>8.1.1</version>
     <status>published</status>
-    <release_link>http://example.com/drupal-8-1-1-release</release_link>
-    <download_link>http://example.com/drupal-8-1-1.tar.gz</download_link>
+    <release_link>https://example.com/drupal-8-1-1-release</release_link>
+    <download_link>https://example.com/drupal-8-1-1.tar.gz</download_link>
     <date>1280424740</date>
     <terms>
       <term><name>Release type</name><value>New features</value></term>
@@ -52,8 +52,8 @@ version + 100 seconds.
   <name>Drupal 8.1.0-dev</name>
   <version>8.1.0-dev</version>
   <status>published</status>
-  <release_link>http://example.com/drupal-8-1-0-dev-release</release_link>
-  <download_link>http://example.com/drupal-8-1-0-dev.tar.gz</download_link>
+  <release_link>https://example.com/drupal-8-1-0-dev-release</release_link>
+  <download_link>https://example.com/drupal-8-1-0-dev.tar.gz</download_link>
   <date>1250424581</date>
   <terms>
    <term><name>Release type</name><value>Bug fixes</value></term>

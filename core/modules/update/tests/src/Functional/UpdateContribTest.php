@@ -68,13 +68,13 @@ class UpdateContribTest extends UpdateTestBase {
     // 'No available releases found' string.
     $this->assertSession()->responseContains('<h3>Drupal core</h3>');
     $this->assertSession()->linkExists('Drupal');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/drupal');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/drupal');
     $this->assertSession()->pageTextContains('Up to date');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextNotContains('Update available');
     $this->assertSession()->pageTextContains('No available releases found');
     $this->assertSession()->linkNotExists('AAA Update test');
-    $this->assertSession()->linkByHrefNotExists('http://example.com/project/aaa_update_test');
+    $this->assertSession()->linkByHrefNotExists('https://example.com/project/aaa_update_test');
 
     $available = update_get_available();
     $this->assertFalse(isset($available['aaa_update_test']['fetch_status']), 'Results are cached even if no releases are available.');
@@ -104,7 +104,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextNotContains('Update available');
     $this->assertSession()->linkExists('AAA Update test');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/aaa_update_test');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/aaa_update_test');
 
     // Since aaa_update_test is installed the fact it is hidden and in the
     // Testing package means it should not appear.
@@ -118,7 +118,7 @@ class UpdateContribTest extends UpdateTestBase {
       ]
     );
     $this->assertSession()->linkNotExists('AAA Update test');
-    $this->assertSession()->linkByHrefNotExists('http://example.com/project/aaa_update_test');
+    $this->assertSession()->linkByHrefNotExists('https://example.com/project/aaa_update_test');
 
     // A hidden and installed project not in the Testing package should appear.
     $installed_extensions['aaa_update_test']['package'] = 'aaa_update_test';
@@ -131,7 +131,7 @@ class UpdateContribTest extends UpdateTestBase {
       ]
     );
     $this->assertSession()->linkExists('AAA Update test');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/aaa_update_test');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/aaa_update_test');
   }
 
   /**
@@ -189,19 +189,19 @@ class UpdateContribTest extends UpdateTestBase {
     // We want aaa_update_test included in the ccc_update_test project, not as
     // its own project on the report.
     $this->assertSession()->linkNotExists('AAA Update test');
-    $this->assertSession()->linkByHrefNotExists('http://example.com/project/aaa_update_test');
+    $this->assertSession()->linkByHrefNotExists('https://example.com/project/aaa_update_test');
     // The other two should be listed as projects.
     $this->assertSession()->linkExists('BBB Update test');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/bbb_update_test');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/bbb_update_test');
     $this->assertSession()->linkExists('CCC Update test');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/ccc_update_test');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/ccc_update_test');
 
     // We want to make sure we see the BBB project before the CCC project.
     // Instead of just searching for 'BBB Update test' or something, we want
     // to use the full markup that starts the project entry itself, so that
     // we're really testing that the project listings are in the right order.
-    $bbb_project_link = '<div class="project-update__title"><a href="http://example.com/project/bbb_update_test">BBB Update test</a>';
-    $ccc_project_link = '<div class="project-update__title"><a href="http://example.com/project/ccc_update_test">CCC Update test</a>';
+    $bbb_project_link = '<div class="project-update__title"><a href="https://example.com/project/bbb_update_test">BBB Update test</a>';
+    $ccc_project_link = '<div class="project-update__title"><a href="https://example.com/project/ccc_update_test">CCC Update test</a>';
     // Verify that the 'BBB Update test' project is listed before the
     // 'CCC Update test' project.
     $this->assertLessThan(strpos($this->getSession()->getPage()->getContent(), $ccc_project_link), strpos($this->getSession()->getPage()->getContent(), $bbb_project_link));
@@ -386,16 +386,16 @@ class UpdateContribTest extends UpdateTestBase {
       if ($check_disabled) {
         $this->assertSession()->pageTextContains('Uninstalled themes');
         $this->assertSession()->linkExists('Update test base theme');
-        $this->assertSession()->linkByHrefExists('http://example.com/project/update_test_base_theme');
+        $this->assertSession()->linkByHrefExists('https://example.com/project/update_test_base_theme');
         $this->assertSession()->linkExists('Update test subtheme');
-        $this->assertSession()->linkByHrefExists('http://example.com/project/update_test_subtheme');
+        $this->assertSession()->linkByHrefExists('https://example.com/project/update_test_subtheme');
       }
       else {
         $this->assertSession()->pageTextNotContains('Uninstalled themes');
         $this->assertSession()->linkNotExists('Update test base theme');
-        $this->assertSession()->linkByHrefNotExists('http://example.com/project/update_test_base_theme');
+        $this->assertSession()->linkByHrefNotExists('https://example.com/project/update_test_base_theme');
         $this->assertSession()->linkNotExists('Update test subtheme');
-        $this->assertSession()->linkByHrefNotExists('http://example.com/project/update_test_subtheme');
+        $this->assertSession()->linkByHrefNotExists('https://example.com/project/update_test_subtheme');
       }
     }
   }
@@ -481,11 +481,11 @@ class UpdateContribTest extends UpdateTestBase {
 
     // The other two should be listed as projects.
     $this->assertSession()->linkExists('AAA Update test');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/aaa_update_test');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/aaa_update_test');
     $this->assertSession()->linkNotExists('BBB Update test');
-    $this->assertSession()->linkByHrefNotExists('http://example.com/project/bbb_update_test');
+    $this->assertSession()->linkByHrefNotExists('https://example.com/project/bbb_update_test');
     $this->assertSession()->linkExists('CCC Update test');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/ccc_update_test');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/ccc_update_test');
   }
 
   /**
@@ -527,7 +527,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextContains('Security update required!');
     $this->assertSession()->linkExists('AAA Update test');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/aaa_update_test');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/aaa_update_test');
 
     // Visit the reports page again without the altering and make sure the
     // status is back to normal.
@@ -536,7 +536,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextNotContains('Security update required!');
     $this->assertSession()->linkExists('AAA Update test');
-    $this->assertSession()->linkByHrefExists('http://example.com/project/aaa_update_test');
+    $this->assertSession()->linkByHrefExists('https://example.com/project/aaa_update_test');
 
     // Turn the altering back on and visit the Update Status UI.
     $update_test_config->set('update_status', $update_status)->save();

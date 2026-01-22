@@ -11,7 +11,7 @@ supported.
 <dc:creator>Drupal</dc:creator>
 <supported_branches>8.0.,8.1.</supported_branches>
 <project_status>published</project_status>
-<link>http://example.com/project/semver_test</link>
+<link>https://example.com/project/semver_test</link>
 <terms>
   <term><name>Projects</name><value>Semver Test project</value></term>
 </terms>
@@ -21,8 +21,8 @@ supported.
       <name>Semver Test 8.2.0</name>
       <version>8.2.0</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-2-0-release</release_link>
-      <download_link>http://example.com/semver_test-8-2-0.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-2-0-release</release_link>
+      <download_link>https://example.com/semver_test-8-2-0.tar.gz</download_link>
       <date>1584195300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -33,8 +33,8 @@ supported.
       <name>Semver Test 8.1.0</name>
       <version>8.1.0</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-1-0-release</release_link>
-      <download_link>http://example.com/semver_test-8-1-0.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-1-0-release</release_link>
+      <download_link>https://example.com/semver_test-8-1-0.tar.gz</download_link>
       <date>1581603300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -45,8 +45,8 @@ supported.
       <name>Semver Test 8.1.0-beta1</name>
       <version>8.1.0-beta1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-1-0-beta1-release</release_link>
-      <download_link>http://example.com/semver_test-8-1-0-beta1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-1-0-beta1-release</release_link>
+      <download_link>https://example.com/semver_test-8-1-0-beta1.tar.gz</download_link>
       <date>1579011300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -57,8 +57,8 @@ supported.
       <name>Semver Test 8.1.0-alpha1</name>
       <version>8.1.0-alpha1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-1-0-alpha1-release</release_link>
-      <download_link>http://example.com/semver_test-8-1-0-alpha1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-1-0-alpha1-release</release_link>
+      <download_link>https://example.com/semver_test-8-1-0-alpha1.tar.gz</download_link>
       <date>1576419300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -69,8 +69,8 @@ supported.
       <name>Semver Test 8.0.3</name>
       <version>8.0.3</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-0-3-release</release_link>
-      <download_link>http://example.com/semver_test-8-0-3.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-0-3-release</release_link>
+      <download_link>https://example.com/semver_test-8-0-3.tar.gz</download_link>
       <date>1573827300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -82,8 +82,8 @@ supported.
       <name>Semver Test 8.0.2</name>
       <version>8.0.2</version>
       <status>unpublished</status>
-      <release_link>http://example.com/semver_test-8-0-2-release</release_link>
-      <download_link>http://example.com/semver_test-8-0-2.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-0-2-release</release_link>
+      <download_link>https://example.com/semver_test-8-0-2.tar.gz</download_link>
       <date>1571235300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -94,8 +94,8 @@ supported.
       <name>Semver Test 8.0.1</name>
       <version>8.0.1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-0-1-release</release_link>
-      <download_link>http://example.com/semver_test-8-0-1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-0-1-release</release_link>
+      <download_link>https://example.com/semver_test-8-0-1.tar.gz</download_link>
       <date>1568643300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -106,8 +106,8 @@ supported.
       <name>Semver Test 8.0.1-beta1</name>
       <version>8.0.1-beta1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-0-1-beta1-release</release_link>
-      <download_link>http://example.com/semver_test-8-0-1-beta1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-0-1-beta1-release</release_link>
+      <download_link>https://example.com/semver_test-8-0-1-beta1.tar.gz</download_link>
       <date>1566051300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -118,8 +118,8 @@ supported.
       <name>Semver Test 8.0.1-alpha1</name>
       <version>8.0.1-alpha1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-0-1-alpha1-release</release_link>
-      <download_link>http://example.com/semver_test-8-0-1-alpha1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-0-1-alpha1-release</release_link>
+      <download_link>https://example.com/semver_test-8-0-1-alpha1.tar.gz</download_link>
       <date>1563459300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -130,8 +130,8 @@ supported.
       <name>Semver Test 8.0.0</name>
       <version>8.0.0</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-0-0-release</release_link>
-      <download_link>http://example.com/semver_test-8-0-0.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-0-0-release</release_link>
+      <download_link>https://example.com/semver_test-8-0-0.tar.gz</download_link>
       <date>1560867300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -142,8 +142,8 @@ supported.
       <name>Semver Test 8.0.0-beta1</name>
       <version>8.0.0-beta1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-0-0-beta1-release</release_link>
-      <download_link>http://example.com/semver_test-8-0-0-beta1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-0-0-beta1-release</release_link>
+      <download_link>https://example.com/semver_test-8-0-0-beta1.tar.gz</download_link>
       <date>1558275300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -154,8 +154,8 @@ supported.
       <name>Semver Test 8.0.0-alpha1</name>
       <version>8.0.0-alpha1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-0-0-alpha1-release</release_link>
-      <download_link>http://example.com/semver_test-8-0-0-alpha1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-0-0-alpha1-release</release_link>
+      <download_link>https://example.com/semver_test-8-0-0-alpha1.tar.gz</download_link>
       <date>1555683300</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -166,8 +166,8 @@ supported.
       <name>Semver Test 8.x-7.1</name>
       <version>8.x-7.1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-x-7-1-release</release_link>
-      <download_link>http://example.com/semver_test-8-x-7-1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-x-7-1-release</release_link>
+      <download_link>https://example.com/semver_test-8-x-7-1.tar.gz</download_link>
       <date>1250424521</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -178,8 +178,8 @@ supported.
       <name>Semver Test 8.x-7.1-beta1</name>
       <version>8.x-7.1-beta1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-x-7-1-beta1-release</release_link>
-      <download_link>http://example.com/semver_test-8-x-7-1-beta1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-x-7-1-beta1-release</release_link>
+      <download_link>https://example.com/semver_test-8-x-7-1-beta1.tar.gz</download_link>
       <date>1250424521</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -190,8 +190,8 @@ supported.
       <name>Semver Test 8.x-7.1-alpha1</name>
       <version>8.x-7.1-alpha1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-x-7-1-alpha1-release</release_link>
-      <download_link>http://example.com/semver_test-8-x-7-1-alpha1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-x-7-1-alpha1-release</release_link>
+      <download_link>https://example.com/semver_test-8-x-7-1-alpha1.tar.gz</download_link>
       <date>1250424521</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -202,8 +202,8 @@ supported.
       <name>Semver Test 8.x-7.0</name>
       <version>8.x-7.0</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-x-7-0-release</release_link>
-      <download_link>http://example.com/semver_test-8-x-7-0.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-x-7-0-release</release_link>
+      <download_link>https://example.com/semver_test-8-x-7-0.tar.gz</download_link>
       <date>1250424521</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -214,8 +214,8 @@ supported.
       <name>Semver Test 8.x-7.0-beta1</name>
       <version>8.x-7.0-beta1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-x-7-0-beta1-release</release_link>
-      <download_link>http://example.com/semver_test-8-x-7-0-beta1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-x-7-0-beta1-release</release_link>
+      <download_link>https://example.com/semver_test-8-x-7-0-beta1.tar.gz</download_link>
       <date>1250424521</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
@@ -226,8 +226,8 @@ supported.
       <name>Semver Test 8.x-7.0-alpha1</name>
       <version>8.x-7.0-alpha1</version>
       <status>published</status>
-      <release_link>http://example.com/semver_test-8-x-7-0-alpha1-release</release_link>
-      <download_link>http://example.com/semver_test-8-x-7-0-alpha1.tar.gz</download_link>
+      <release_link>https://example.com/semver_test-8-x-7-0-alpha1-release</release_link>
+      <download_link>https://example.com/semver_test-8-x-7-0-alpha1.tar.gz</download_link>
       <date>1250424521</date>
       <terms>
         <term><name>Release type</name><value>New features</value></term>
