@@ -24,7 +24,7 @@ interface CacheableDependencyInterface {
    * request context (the current URL, language, and so on). They're converted
    * before storing an object in cache.
    *
-   * @return string[]
+   * @return list<string>
    *   An array of cache context tokens, used to generate a cache ID.
    *
    * @see \Drupal\Core\Cache\Context\CacheContextsManager::convertTokensToKeys()
