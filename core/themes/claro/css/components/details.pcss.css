@@ -172,31 +172,6 @@
 }
 
 /**
- * Safari (at least version 12.1) cannot handle our details marker
- * transition properly.
- *
- * Every additional pointer triggered toggle event freezes the transition,
- * and the transition is continued and finished after the pointer leaves
- * the Detail elements' summary.
- *
- * Even that it is possible to provide a JavaScript workaround for it (by
- * adding/removing a helper class with JavaScript if the Details is
- * toggled), that hack will make RTL details worse than without the hack.
- *
- * This weird query was found in
- * https://stackoverflow.com/questions/16348489#25975282 (based on the
- * answer it works for Safari 10.1+)
- */
-/* stylelint-disable-next-line unit-allowed-list */
-@media not all and (min-resolution: 0.001dpcm) {
-  @supports (-webkit-appearance: none) {
-    .claro-details__summary::before {
-      transition: none;
-    }
-  }
-}
-
-/**
  * Details summary focus.
  */
 .claro-details__summary::after {
@@ -318,18 +293,6 @@
 .claro-details__summary:focus::after,
 .claro-details__summary:active::after {
   opacity: 1;
-}
-
-/**
- * Safari workaround.
- */
-/* stylelint-disable-next-line unit-allowed-list */
-@media not all and (min-resolution: 0.001dpcm) {
-  @supports (-webkit-appearance: none) {
-    .claro-details__summary::after {
-      transition: none;
-    }
-  }
 }
 
 .claro-details[open] > .claro-details__summary:focus {
