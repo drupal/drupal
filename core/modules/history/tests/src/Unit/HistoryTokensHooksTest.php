@@ -12,12 +12,14 @@ use Drupal\history\Hook\HistoryTokensHooks;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests for HistoryTokensHooks.
  */
 #[CoversMethod(HistoryTokensHooks::class, 'tokenInfo')]
 #[Group('history')]
+#[IgnoreDeprecations]
 class HistoryTokensHooksTest extends UnitTestCase {
 
   /**

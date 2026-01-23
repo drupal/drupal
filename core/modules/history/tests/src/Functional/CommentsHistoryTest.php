@@ -6,12 +6,14 @@ namespace Drupal\Tests\history\Functional;
 
 use Drupal\Tests\comment\Functional\Views\CommentTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comments history.
  */
 #[Group('history')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class CommentsHistoryTest extends CommentTestBase {
 
