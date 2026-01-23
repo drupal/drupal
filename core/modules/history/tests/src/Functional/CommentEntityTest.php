@@ -12,12 +12,14 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\comment\Functional\CommentTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comments with other entities.
  */
 #[Group('history')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class CommentEntityTest extends CommentTestBase {
 

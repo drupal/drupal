@@ -15,6 +15,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * This is duplicated from CommentLinkBuilderTest with history additions.
@@ -23,6 +24,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[CoversClass(HistoryCommentLinkBuilder::class)]
 #[Group('history')]
+#[IgnoreDeprecations]
 class HistoryCommentLinkBuilderTest extends UnitTestCase {
 
   use GeneratePermutationsTrait;

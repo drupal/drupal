@@ -1,6 +1,8 @@
 name: History
 type: module
 description: 'Records which content users have viewed and marks it as new or updated.'
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-history
 package: Core
 version: VERSION
 dependencies:
