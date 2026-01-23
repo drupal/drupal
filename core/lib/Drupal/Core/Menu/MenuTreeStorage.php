@@ -78,6 +78,15 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected $serializedFields;
 
   /**
+   * Pre-loaded original link data for batch operations.
+   *
+   * Used during rebuild() to avoid per-link queries in doSave().
+   *
+   * @var array|null
+   */
+  protected ?array $preloadedOriginals = NULL;
+
+  /**
    * Constructs a new \Drupal\Core\Menu\MenuTreeStorage.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -120,6 +129,16 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $links = [];
     $children = [];
     $top_links = [];
+
+    // Pre-load all existing links that match the incoming definitions.
+    // This eliminates per-link SELECT queries in doSave().
+    if ($definitions) {
+      $this->preloadedOriginals = $this->loadAllOriginals(array_keys($definitions));
+    }
+    else {
+      $this->preloadedOriginals = [];
+    }
+
     // Fetch the list of existing menus, in case some are not longer populated
     // after the rebuild.
     $before_menus = $this->getMenuNames();
@@ -177,6 +196,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     // Every item in the cache bin should have one of the menu cache tags but it
     // is not guaranteed, so delete everything in the bin.
     $this->menuCacheBackend->deleteAll();
+
+    // Clear pre-loaded data after rebuild is complete.
+    $this->preloadedOriginals = NULL;
   }
 
   /**
@@ -259,14 +281,21 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected function doSave(array $link) {
     $affected_menus = [];
 
-    // Get the existing definition if it exists. This does not use
-    // self::loadFull() to avoid the unserialization of fields with 'serialize'
-    // equal to TRUE as defined in self::schemaDefinition(). The makes $original
-    // easier to compare with the return value of self::preSave().
-    $query = $this->connection->select($this->table, NULL, $this->options);
-    $query->fields($this->table);
-    $query->condition('id', $link['id']);
-    $original = $this->safeExecuteSelect($query)->fetchAssoc();
+    // Use pre-loaded data if available (during rebuild), otherwise query.
+    if ($this->preloadedOriginals !== NULL && array_key_exists($link['id'], $this->preloadedOriginals)) {
+      $original = $this->preloadedOriginals[$link['id']];
+    }
+    else {
+      // Get the existing definition if it exists. This does not use
+      // self::loadFull() to avoid the fields unserialization with 'serialize'
+      // equal to TRUE as defined in self::schemaDefinition().
+      // The makes $original easier to compare with the
+      // return value of self::preSave().
+      $query = $this->connection->select($this->table, NULL, $this->options);
+      $query->fields($this->table);
+      $query->condition('id', $link['id']);
+      $original = $this->safeExecuteSelect($query)->fetchAssoc();
+    }
 
     if ($original) {
       $link['mlid'] = $original['mlid'];
@@ -293,6 +322,11 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
           ->fields(['id' => $link['id'], 'menu_name' => $link['menu_name']])
           ->execute();
         $fields = $this->preSave($link, []);
+        // Update pre-loaded cache so duplicate processing of this link
+        // within the same rebuild cycle will find it and skip re-insert.
+        if ($this->preloadedOriginals !== NULL) {
+          $this->preloadedOriginals[$link['id']] = $fields + ['mlid' => $link['mlid']];
+        }
       }
       // We may be moving the link to a new menu.
       $affected_menus[$fields['menu_name']] = $fields['menu_name'];
@@ -815,6 +849,26 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     }
     // Remove processed link names so we can find stragglers.
     unset($children[$id]);
+  }
+
+  /**
+   * Loads all original link data for a set of IDs without unserialization.
+   *
+   * This is used during rebuild() to batch-load existing links instead of
+   * querying individually in doSave().
+   *
+   * @param array $ids
+   *   The link IDs to load.
+   *
+   * @return array
+   *   An array of link data keyed by ID. Values are raw database rows
+   *   (not unserialized) for comparison with preSave() output.
+   */
+  protected function loadAllOriginals(array $ids): array {
+    $query = $this->connection->select($this->table, NULL, $this->options);
+    $query->fields($this->table);
+    $query->condition('id', $ids, 'IN');
+    return $this->safeExecuteSelect($query)->fetchAllAssoc('id', FetchAs::Associative);
   }
 
   /**
