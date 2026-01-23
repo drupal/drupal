@@ -1,0 +1,7 @@
+dialog_test.form_add:
+  path: '/dialog-test/add'
+  defaults:
+    _entity_form: 'dialog_test_entity_form.add'
+    _title: 'Add dialog test entity form'
+  requirements:
+    _access: 'TRUE'
