@@ -163,10 +163,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    *   The prepared revision ready to be stored.
    */
   protected function prepareRevertedRevision(NodeInterface $revision, FormStateInterface $form_state) {
-    $revision->setNewRevision();
-    $revision->isDefaultRevision(TRUE);
-
-    return $revision;
+    return $this->nodeStorage->createRevision($revision);
   }
 
 }
