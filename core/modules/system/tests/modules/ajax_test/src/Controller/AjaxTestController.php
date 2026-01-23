@@ -300,7 +300,7 @@ class AjaxTestController {
         ],
         'link6' => [
           'title' => 'Link 6 (entity form)',
-          'url' => Url::fromRoute('contact.form_add'),
+          'url' => Url::fromRoute('dialog_test.form_add'),
           'attributes' => [
             'class' => ['use-ajax'],
             'data-dialog-type' => 'modal',
