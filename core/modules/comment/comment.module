@@ -60,8 +60,14 @@ function _comment_entity_uses_integer_id($entity_type_id) {
  *
  * @return array
  *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. The logic was
+ *   moved in \Drupal\comment\CommentForm::preview(), there is no replacement.
+ *
+ * @see https://www.drupal.org/node/3566882
  */
 function comment_preview(CommentInterface $comment, FormStateInterface $form_state): array {
+  @trigger_error(__FUNCTION__ . 'is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. The logic was moved in \Drupal\comment\CommentForm::preview(), there is no replacement. See https://www.drupal.org/node/3566882', E_USER_DEPRECATED);
   $preview_build = [];
   $entity = $comment->getCommentedEntity();
 
