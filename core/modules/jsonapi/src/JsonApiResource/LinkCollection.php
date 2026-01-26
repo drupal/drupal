@@ -7,6 +7,8 @@ use Drupal\Component\Assertion\Inspector;
 /**
  * Contains a set of JSON:API Link objects.
  *
+ * @implements \IteratorAggregate<string, \Drupal\jsonapi\JsonApiResource\Link>
+ *
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
@@ -18,7 +20,7 @@ final class LinkCollection implements \IteratorAggregate {
   /**
    * The links in the collection, keyed by unique strings.
    *
-   * @var \Drupal\jsonapi\JsonApiResource\Link[]
+   * @var array<string, \Drupal\jsonapi\JsonApiResource\Link>
    */
   protected $links;
 
@@ -60,7 +62,10 @@ final class LinkCollection implements \IteratorAggregate {
   }
 
   /**
-   * {@inheritdoc}
+   * Returns an iterator for links.
+   *
+   * @return \ArrayIterator<string, \Drupal\jsonapi\JsonApiResource\Link>
+   *   An \ArrayIterator instance.
    */
   public function getIterator(): \ArrayIterator {
     assert(!is_null($this->context), 'A LinkCollection is invalid unless a context has been established.');
