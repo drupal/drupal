@@ -6,13 +6,15 @@ use Drupal\Core\TypedData\ComplexDataInterface;
 
 /**
  * Defines a generic configuration element that contains multiple properties.
+ *
+ * @implements \IteratorAggregate<string, \Drupal\Core\TypedData\TypedDataInterface>
  */
 abstract class ArrayElement extends Element implements \IteratorAggregate, TypedConfigInterface, ComplexDataInterface {
 
   /**
    * Parsed elements.
    *
-   * @var array
+   * @var array<string, \Drupal\Core\TypedData\TypedDataInterface>
    */
   protected $elements;
 
@@ -134,7 +136,10 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
   }
 
   /**
-   * {@inheritdoc}
+   * Retrieves the iterator for the object.
+   *
+   * @return \ArrayIterator<string, \Drupal\Core\TypedData\TypedDataInterface>
+   *   The iterator.
    */
   public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->getElements());

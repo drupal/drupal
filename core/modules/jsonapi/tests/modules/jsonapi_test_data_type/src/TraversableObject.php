@@ -6,6 +6,8 @@ namespace Drupal\jsonapi_test_data_type;
 
 /**
  * An object which implements \IteratorAggregate.
+ *
+ * @implements \IteratorAggregate<int|string, mixed>
  */
 class TraversableObject implements \IteratorAggregate {
 
@@ -17,7 +19,10 @@ class TraversableObject implements \IteratorAggregate {
   public $property = "value";
 
   /**
-   * {@inheritdoc}
+   * Retrieves the iterator for the object.
+   *
+   * @return \ArrayIterator<int|string, mixed>
+   *   The iterator.
    */
   public function getIterator(): \ArrayIterator {
     return new \ArrayIterator();
