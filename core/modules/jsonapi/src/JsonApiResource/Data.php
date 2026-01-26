@@ -8,6 +8,8 @@ use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
 /**
  * Represents the `data` and `included` objects of a top-level object.
  *
+ * @implements \IteratorAggregate<int, \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface>
+ *
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
@@ -19,7 +21,7 @@ abstract class Data implements \IteratorAggregate, \Countable {
   /**
    * Various representations of JSON:API objects.
    *
-   * @var \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface[]
+   * @var list<\Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface>
    */
   protected $data;
 
@@ -66,8 +68,8 @@ abstract class Data implements \IteratorAggregate, \Countable {
   /**
    * Returns an iterator for entities.
    *
-   * @return \ArrayIterator
-   *   An \ArrayIterator instance
+   * @return \ArrayIterator<int, \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface>
+   *   An \ArrayIterator instance.
    */
   public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->data);

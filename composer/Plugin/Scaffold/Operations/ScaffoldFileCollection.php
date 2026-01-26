@@ -11,6 +11,8 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 /**
  * Collection of scaffold files.
  *
+ * @implements \IteratorAggregate<string, array<string, \Drupal\Composer\Plugin\Scaffold\ScaffoldFileInfo>>
+ *
  * @internal
  */
 class ScaffoldFileCollection implements \IteratorAggregate {
@@ -22,7 +24,7 @@ class ScaffoldFileCollection implements \IteratorAggregate {
    * scaffold files provided by that package. Each collection of scaffold files
    * is keyed by destination path.
    *
-   * @var \Drupal\Composer\Plugin\Scaffold\ScaffoldFileInfo[][]
+   * @var array<string, array<string, \Drupal\Composer\Plugin\Scaffold\ScaffoldFileInfo>>
    */
   protected $scaffoldFilesByProject = [];
 
@@ -113,7 +115,10 @@ class ScaffoldFileCollection implements \IteratorAggregate {
   }
 
   /**
-   * {@inheritdoc}
+   * Retrieves the iterator for the object.
+   *
+   * @return \ArrayIterator<string, array<string, \Drupal\Composer\Plugin\Scaffold\ScaffoldFileInfo>>
+   *   The iterator.
    */
   public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->scaffoldFilesByProject);

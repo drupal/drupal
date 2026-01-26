@@ -20,6 +20,8 @@ use Drupal\Core\TypedData\TypedData;
  * may want to override MapDataDefinition::getPropertyDefinitions() to define
  * it.
  *
+ * @implements \IteratorAggregate<string, \Drupal\Core\TypedData\TypedDataInterface>
+ *
  * @ingroup typed_data
  */
 #[DataType(
@@ -182,7 +184,10 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   }
 
   /**
-   * {@inheritdoc}
+   * Retrieves the iterator for the object.
+   *
+   * @return \ArrayIterator<string, \Drupal\Core\TypedData\TypedDataInterface>
+   *   The iterator.
    */
   public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->getProperties());

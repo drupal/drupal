@@ -99,6 +99,10 @@ class TemporaryArrayObjectThrowingExceptions extends \ArrayObject {
   /**
    * Gets the class name of the iterator used by \ArrayObject::getIterator().
    *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
+   * @return class-string
+   *   The class name.
+   *
    * @throws \Exception
    *   This class does not support this action but it must implement it, because
    *   it is extending \ArrayObject.
