@@ -46,9 +46,9 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
     array $configuration,
     string $plugin_id,
     array $plugin_definition,
-    protected readonly ImageToolkitOperationManagerInterface $operationManager,
-    protected readonly LoggerInterface $logger,
-    protected readonly ConfigFactoryInterface $configFactory,
+    protected ImageToolkitOperationManagerInterface $operationManager,
+    protected LoggerInterface $logger,
+    protected ConfigFactoryInterface $configFactory,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }

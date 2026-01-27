@@ -26,7 +26,7 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
   /**
    * A logger instance.
    */
-  protected readonly LoggerInterface $logger;
+  protected LoggerInterface $logger;
 
   /**
    * Constructs an image toolkit operation plugin.

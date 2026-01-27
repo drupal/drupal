@@ -85,8 +85,8 @@ class GDToolkit extends ImageToolkitBase {
     #[Autowire('logger.channel.image')]
     LoggerInterface $logger,
     ConfigFactoryInterface $config_factory,
-    protected readonly StreamWrapperManagerInterface $streamWrapperManager,
-    protected readonly FileSystemInterface $fileSystem,
+    protected StreamWrapperManagerInterface $streamWrapperManager,
+    protected FileSystemInterface $fileSystem,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $operation_manager, $logger, $config_factory);
   }
