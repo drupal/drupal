@@ -1220,6 +1220,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
     }
 
+    if (!$storage_definitions) {
+      return;
+    }
+
     // Load field data.
     $langcodes = array_keys($this->languageManager->getLanguages(LanguageInterface::STATE_ALL));
 
@@ -1234,24 +1238,26 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $multiple_cardinality_fields[$field_name] = $storage_definition;
       }
     }
+
+    $id_key = !$load_from_revision ? 'entity_id' : 'revision_id';
+    // Because any field could potentially have no data, we need to begin
+    // the query from a table that will reliably exist, which means the base,
+    // data, or revision table.
+    $base_table = !$load_from_revision ? ($this->dataTable ?? $this->baseTable) : $this->revisionDataTable ?? $this->revisionTable;
+    $base_id_key = !$load_from_revision ? $this->idKey : $this->revisionKey;
+    $base_query = $this->database->select($base_table, $base_table)
+      ->fields($base_table, [$base_id_key])
+      ->condition("[$base_table].[$base_id_key]", $ids, 'IN');
+
+    // If the entity is translatable, ensure only rows with valid langcodes
+    // are loaded.
+    if ($this->langcodeKey) {
+      $base_query->condition("[$base_table].[$this->langcodeKey]", $langcodes, 'IN');
+      $base_query->addField($base_table, $this->langcodeKey);
+    }
+
     if ($single_cardinality_fields) {
-      $id_key = !$load_from_revision ? 'entity_id' : 'revision_id';
-
-      // Because any field could potentially have no data, we need to begin
-      // the query from a table that will reliably exist, which means the base,
-      // data, or revision table.
-      $base_table = !$load_from_revision ? ($this->dataTable ?? $this->baseTable) : $this->revisionDataTable ?? $this->revisionTable;
-      $base_id_key = !$load_from_revision ? $this->idKey : $this->revisionKey;
-      $query = $this->database->select($base_table, $base_table)
-        ->fields($base_table, [$base_id_key])
-        ->condition("[$base_table].[$base_id_key]", $ids, 'IN');
-
-      // If the entity is translatable, ensure only rows with valid langcodes
-      // are loaded.
-      if ($this->langcodeKey) {
-        $query->condition("[$base_table].[$this->langcodeKey]", $langcodes, 'IN');
-        $query->addField($base_table, $this->langcodeKey);
-      }
+      $query = clone $base_query;
 
       // Add a left join for each single cardinality field.
       foreach ($single_cardinality_fields as $field_name => $storage_definition) {
@@ -1313,50 +1319,74 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
       }
     }
-    foreach ($multiple_cardinality_fields as $field_name => $storage_definition) {
-      $table = !$load_from_revision ? $table_mapping->getDedicatedDataTableName($storage_definition) : $table_mapping->getDedicatedRevisionTableName($storage_definition);
+    if ($multiple_cardinality_fields) {
+      $query = clone $base_query;
+      $delta_keys = [];
+      foreach ($multiple_cardinality_fields as $field_name => $storage_definition) {
+        $table = !$load_from_revision ? $table_mapping->getDedicatedDataTableName($storage_definition) : $table_mapping->getDedicatedRevisionTableName($storage_definition);
+        // If the entity is translatable, add the langcode to the join and
+        // a condition on valid langcodes.
+        if ($this->langcodeKey) {
+          $query->leftJoin($table, $table, "[$table].[$id_key] = [$base_table].[$base_id_key] AND [$table].[langcode] = [$base_table].[$this->langcodeKey] AND [$table].[deleted] = 0");
+        }
+        else {
+          $query->leftJoin($table, $table, "[$table].[$id_key] = [$base_table].[$base_id_key] AND [$table].[deleted] = 0");
+        }
+        $query->fields($table, $this->tableMapping->getColumnNames($field_name));
+        $delta_keys[$field_name] = $query->addField($table, 'delta', $field_name . '_delta');
+      }
 
-      // Ensure that only values having valid languages are retrieved. Since we
-      // are loading values for multiple entities, we cannot limit the query to
-      // the available translations.
-      $results = $this->database->select($table, 't')
-        ->fields('t')
-        ->condition(!$load_from_revision ? 'entity_id' : 'revision_id', $ids, 'IN')
-        ->condition('deleted', 0)
-        ->condition('langcode', $langcodes, 'IN')
-        ->orderBy('delta')
-        ->execute();
+      $results = $query->execute();
 
       foreach ($results as $row) {
-        $bundle = $row->bundle;
-
-        $value_key = !$load_from_revision ? $row->entity_id : $row->revision_id;
+        $row = (array) $row;
+        $value_key = $row[$base_id_key];
         // Field values in default language are stored with
         // LanguageInterface::LANGCODE_DEFAULT as key.
         $langcode = LanguageInterface::LANGCODE_DEFAULT;
-        if ($this->langcodeKey && isset($default_langcodes[$value_key]) && $row->langcode != $default_langcodes[$value_key]) {
-          $langcode = $row->langcode;
+        if ($this->langcodeKey && isset($default_langcodes[$value_key]) && $row[$this->langcodeKey] != $default_langcodes[$value_key]) {
+          $langcode = $row[$this->langcodeKey];
         }
 
-        if (!isset($values[$value_key][$field_name][$langcode])) {
-          $values[$value_key][$field_name][$langcode] = [];
-        }
+        foreach ($multiple_cardinality_fields as $field_name => $storage_definition) {
+          $delta_key = $delta_keys[$field_name];
+          $bundle = $this->bundleKey ? $values[$value_key][$this->bundleKey][LanguageInterface::LANGCODE_DEFAULT] : $this->entityTypeId;
 
-        // Ensure that records for non-translatable fields having invalid
-        // languages are skipped.
-        if ($langcode == LanguageInterface::LANGCODE_DEFAULT || $definitions[$bundle][$field_name]->isTranslatable()) {
-          if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
-            $item = [];
-            // For each column declared by the field, populate the item from the
-            // prefixed database column.
-            foreach ($storage_definition->getColumns() as $column => $attributes) {
-              $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
-              // Unserialize the value if specified in the column schema.
-              $item[$column] = (!empty($attributes['serialize'])) ? $this->handleNullableFieldUnserialize($row->$column_name) : $row->$column_name;
+          // If the delta is null then there are no values at this delta for
+          // this field.
+          if (!isset($row[$delta_key])) {
+            continue;
+          }
+          if (!isset($values[$value_key][$field_name][$langcode])) {
+            $values[$value_key][$field_name][$langcode] = [];
+          }
+
+          // Ensure that records for non-translatable fields having invalid
+          // languages are skipped.
+          if ($langcode == LanguageInterface::LANGCODE_DEFAULT || $definitions[$bundle][$field_name]->isTranslatable()) {
+            if (($storage_definition->getCardinality() === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || $row[$delta_key] < $storage_definition->getCardinality())) {
+              $item = [];
+              // For each column declared by the field, populate the item from
+              // the prefixed database column.
+              foreach ($storage_definition->getColumns() as $column => $attributes) {
+                $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
+                // Unserialize the value if specified in the column schema.
+                $item[$column] = (!empty($attributes['serialize'])) ? $this->handleNullableFieldUnserialize($row[$column_name]) : $row[$column_name];
+              }
+              // Add the item to the field values for the entity.
+              $values[$value_key][$field_name][$langcode][(int) $row[$delta_key]] = $item;
             }
-
-            // Add the item to the field values for the entity.
-            $values[$value_key][$field_name][$langcode][] = $item;
+          }
+        }
+      }
+      // Ensure that all of the deltas from all of the multiple cardinality
+      // fields are returned in the correct order.
+      foreach ($values as &$fields) {
+        foreach ($fields as $field_name => &$field_data) {
+          if (isset($multiple_cardinality_fields[$field_name])) {
+            foreach ($field_data as &$language_data) {
+              ksort($language_data);
+            }
           }
         }
       }
