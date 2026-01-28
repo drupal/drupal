@@ -49,6 +49,7 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
 
     switch ($operation) {
       case 'view':
+      case 'view linked label':
         // Only allow view access if the account is active.
         $result = AccessResult::allowedIfHasPermission($account, 'access user profiles');
 
@@ -66,6 +67,14 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
           }
         }
 
+        if ($operation === 'view linked label') {
+          // For cacheability and consistent user experience, the 'view linked
+          // label' operation can be used for checking access to view the user
+          // name as a link to the profile, in contexts such as displaying an
+          // entity's author information. This ignores whether the viewing user
+          // is the author.
+          return $result;
+        }
         // Users can view own profiles at all times.
         return $result->orIf(AccessResult::allowedIf($account->id() == $entity->id())->addCacheContexts(['user']));
 

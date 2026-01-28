@@ -4,8 +4,10 @@ namespace Drupal\user\Hook;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessibleInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -81,7 +83,11 @@ class UserThemeHooks {
    *   - account: The user account (\Drupal\Core\Session\AccountInterface).
    */
   public function preprocessUsername(array &$variables): void {
+    $metadata = BubbleableMetadata::createFromRenderArray($variables);
     $account = $variables['account'] ?: new AnonymousUserSession();
+    if ($account instanceof CacheableDependencyInterface) {
+      $metadata->addCacheableDependency($account);
+    }
 
     $variables['extra'] = '';
     $variables['uid'] = $account->id();
@@ -96,7 +102,7 @@ class UserThemeHooks {
     // unsanitized version, in case other preprocess functions want to implement
     // their own shortening logic or add markup. If they do so, they must ensure
     // that $variables['name'] is safe for printing.
-    $name = $account->getDisplayName();
+    $name = $account->getDisplayName() ?? '';
     $variables['name_raw'] = $account->getAccountName();
     if (mb_strlen($name) > 20) {
       $name = Unicode::truncate($name, 15, FALSE, TRUE);
@@ -106,11 +112,11 @@ class UserThemeHooks {
       $variables['truncated'] = FALSE;
     }
     $variables['name'] = $name;
+    $variables['profile_access'] = FALSE;
     if ($account instanceof AccessibleInterface) {
-      $variables['profile_access'] = $account->access('view');
-    }
-    else {
-      $variables['profile_access'] = $this->currentUser->hasPermission('access user profiles');
+      $profile_access = $account->access('view linked label', $this->currentUser, TRUE);
+      $metadata->addCacheableDependency($profile_access);
+      $variables['profile_access'] = $profile_access->isAllowed();
     }
 
     $external = FALSE;
@@ -141,6 +147,7 @@ class UserThemeHooks {
         ])->toString();
       }
     }
+    $metadata->applyTo($variables);
   }
 
   /**
