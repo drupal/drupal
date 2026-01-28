@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\jsonapi\EventSubscriber;
+declare(strict_types=1);
+
+namespace Drupal\jsonapi_response_validator\EventSubscriber;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -28,49 +30,24 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class ResourceResponseValidator implements EventSubscriberInterface {
 
   /**
-   * The JSON:API logger channel.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * The schema validator.
    *
-   * This property will only be set if the validator library is available.
-   *
-   * @var \JsonSchema\Validator|null
+   * @var \JsonSchema\Validator
    */
-  protected $validator;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The application's root file path.
-   *
-   * @var string
-   */
-  protected $appRoot;
+  protected Validator $validator;
 
   /**
    * Constructs a ResourceResponseValidator object.
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   The JSON:API logger channel.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param string $app_root
+   * @param string $appRoot
    *   The application's root file path.
    */
-  public function __construct(LoggerInterface $logger, ModuleHandlerInterface $module_handler, $app_root) {
-    $this->logger = $logger;
-    $this->moduleHandler = $module_handler;
-    $this->appRoot = $app_root;
+  public function __construct(protected LoggerInterface $logger, protected ModuleHandlerInterface $moduleHandler, protected string $appRoot) {
+    $this->validator = new Validator();
   }
 
   /**
@@ -82,24 +59,12 @@ class ResourceResponseValidator implements EventSubscriberInterface {
   }
 
   /**
-   * Sets the validator service if available.
-   */
-  public function setValidator(?Validator $validator = NULL) {
-    if ($validator) {
-      $this->validator = $validator;
-    }
-    elseif (class_exists(Validator::class)) {
-      $this->validator = new Validator();
-    }
-  }
-
-  /**
    * Validates JSON:API responses.
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onResponse(ResponseEvent $event) {
+  public function onResponse(ResponseEvent $event): void {
     $response = $event->getResponse();
     if (!str_contains($response->headers->get('Content-Type', ''), 'application/vnd.api+json')) {
       return;
@@ -120,12 +85,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    * @return bool
    *   FALSE if the response failed validation, otherwise TRUE.
    */
-  protected function validateResponse(Response $response, Request $request) {
-    // If the validator isn't set, then the validation library is not installed.
-    if (!$this->validator) {
-      return TRUE;
-    }
-
+  protected function validateResponse(Response $response, Request $request): bool {
     // Do not use Json::decode here since it coerces the response into an
     // associative array, which creates validation errors.
     $response_data = json_decode($response->getContent());
@@ -150,13 +110,14 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    *
    * @param object $schema
    *   The JSON Schema object.
-   * @param string $response_data
+   * @param mixed $response_data
    *   The JSON string to validate.
    *
    * @return bool
    *   TRUE if the string is a valid instance of the schema. FALSE otherwise.
    */
-  protected function validateSchema($schema, $response_data) {
+  protected function validateSchema(object $schema, mixed $response_data): bool {
+    // @phpstan-ignore method.deprecated
     $this->validator->check($response_data, $schema);
     $is_valid = $this->validator->isValid();
     if (!$is_valid) {
