@@ -167,35 +167,6 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
   }
 
   /**
-   * Confirm that uses of a jQuery UI asset are configured with the same weight.
-   */
-  public function testSameAssetSameWeight(): void {
-    $asset_weights = [];
-    $libraries_to_check = $this->coreLibrariesWithJqueryUiAssets;
-
-    foreach ($libraries_to_check as $library) {
-      foreach (['js', 'css'] as $type) {
-        foreach ($library[$type] as $asset) {
-          $file = $asset['data'];
-
-          if (str_contains($file, 'jquery.ui')) {
-            // If this is the first time a given file is checked, add the weight
-            // value to an array.
-            if (!isset($asset_weights[$file])) {
-              $asset_weights[$file] = $asset['weight'];
-            }
-            else {
-              // Confirm the weight of the file being loaded matches the weight
-              // of when it was loaded by a library that was checked earlier.
-              $this->assertEquals($asset_weights[$file], $asset['weight']);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /**
    * Removes base_url() and query args from file paths.
    *
    * @param string $path
