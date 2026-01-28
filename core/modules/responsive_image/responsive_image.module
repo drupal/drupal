@@ -16,7 +16,7 @@ use Drupal\breakpoint\BreakpointInterface;
  * @param array $variables
  *   An associative array containing:
  *   - item: An ImageItem object.
- *   - item_attributes: An optional associative array of HTML attributes to be
+ *   - attributes: An optional associative array of HTML attributes to be
  *     placed in the img tag.
  *   - responsive_image_style_id: A responsive image style.
  *   - url: An optional \Drupal\Core\Url object.

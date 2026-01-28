@@ -59,7 +59,7 @@ class ResponsiveImageThemeHooks {
    * @param array $variables
    *   An associative array containing:
    *   - item: An ImageItem object.
-   *   - item_attributes: An optional associative array of HTML attributes to be
+   *   - attributes: An optional associative array of HTML attributes to be
    *     placed in the img tag.
    *   - responsive_image_style_id: A responsive image style.
    *   - url: An optional \Drupal\Core\Url object.
@@ -88,6 +88,7 @@ class ResponsiveImageThemeHooks {
     $attributes['alt'] = $item->alt;
     // Need to check that item_attributes has a value since it can be NULL.
     if ($variables['item_attributes']) {
+      @trigger_error('Usage of #item_attributes is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use #attributes instead. See https://www.drupal.org/node/3554585', E_USER_DEPRECATED);
       $attributes += $variables['item_attributes'];
     }
     if (($entity = $item->entity) && empty($item->uri)) {
