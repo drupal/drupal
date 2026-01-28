@@ -1,0 +1,6 @@
+name: 'JSON:API Response Validator'
+type: module
+description: 'When enabled, this module validates JSON:API responses against the JSON:API specification. This is intended for testing purposes.'
+package: testing
+dependencies:
+  - drupal:jsonapi

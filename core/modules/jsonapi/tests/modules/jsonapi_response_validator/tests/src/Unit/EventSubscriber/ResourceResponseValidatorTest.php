@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\jsonapi\Unit\EventSubscriber;
+namespace Drupal\Tests\jsonapi_response_validator\Unit\EventSubscriber;
 
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Drupal\jsonapi\EventSubscriber\ResourceResponseValidator;
+use Drupal\jsonapi_response_validator\EventSubscriber\ResourceResponseValidator;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\Routing\Routes;
 use Drupal\node\Entity\Node;
@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests Drupal\jsonapi\EventSubscriber\ResourceResponseValidator.
+ * Tests Drupal\jsonapi_response_validator\EventSubscriber\ResourceResponseValidator.
  *
  * @internal
  */
@@ -31,9 +31,9 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   /**
    * The subscriber under test.
    *
-   * @var \Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber
+   * @var \Drupal\jsonapi_response_validator\EventSubscriber\ResourceResponseValidator
    */
-  protected $subscriber;
+  protected ResourceResponseValidator $subscriber;
 
   /**
    * {@inheritdoc}
@@ -47,7 +47,7 @@ class ResourceResponseValidatorTest extends UnitTestCase {
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $module = $this->prophesize(Extension::class);
-    $module_path = dirname(__DIR__, 4);
+    $module_path = dirname(__DIR__, 7);
     $module->getPath()->willReturn($module_path);
     $module_handler->getModule('jsonapi')->willReturn($module->reveal());
     $subscriber = new ResourceResponseValidator(
@@ -55,7 +55,6 @@ class ResourceResponseValidatorTest extends UnitTestCase {
       $module_handler->reveal(),
       ''
     );
-    $subscriber->setValidator();
     $this->subscriber = $subscriber;
   }
 
@@ -77,7 +76,7 @@ class ResourceResponseValidatorTest extends UnitTestCase {
    * @return array
    *   An array of test cases.
    */
-  public static function validateResponseProvider() {
+  public static function validateResponseProvider(): array {
     $defaults = [
       'route_name' => 'jsonapi.node--article.individual',
       'resource_type' => new ResourceType('node', 'article', Node::class),
