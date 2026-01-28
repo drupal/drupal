@@ -209,4 +209,17 @@ JS;
     $assert_session->elementExists('css', 'div.container-after');
   }
 
+  /**
+   * Tests that all occurrences of the same placeholder are replaced.
+   */
+  public function testMultipleOccurrences(): void {
+    \Drupal::service('module_installer')->install(['big_pipe_test']);
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+    $assert_session = $this->assertSession();
+    $this->drupalGet(Url::fromRoute('big_pipe_test_multi_occurrence'));
+    $this->assertNotNull($assert_session->waitForElement('css', 'script[data-big-pipe-event="stop"]'));
+    $assert_session->elementsCount('css', 'p.multiple-occurrence-instance', 3);
+  }
+
 }

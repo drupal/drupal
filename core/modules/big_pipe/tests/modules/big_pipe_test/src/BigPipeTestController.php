@@ -231,7 +231,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
     $count++;
 
     return [
-      '#markup' => BigPipeMarkup::create("<p>The count is $count.</p>"),
+      '#markup' => BigPipeMarkup::create("<p class=\"multiple-occurrence-instance\">The count is $count.</p>"),
       '#cache' => ['max-age' => 0],
     ];
   }
