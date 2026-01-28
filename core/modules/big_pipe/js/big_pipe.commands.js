@@ -54,16 +54,13 @@
      *   An optional selector string.
      */
     insert({ data, method, selector }) {
-      const target = htmx.find(selector);
+      const targets = htmx.findAll(selector);
 
-      // In rare circumstances, the target may not be found, such as if
-      // the target is in a noscript element.
-      if (target === null) {
+      // In rare circumstances, the targets may not be found, such as if
+      // the targets are in noscript elements.
+      if (!targets || !targets.length) {
         return;
       }
-
-      // Detach behaviors.
-      htmx.trigger(target, 'htmx:drupal:unload');
 
       // Map jQuery manipulation methods to the DOM equivalent.
       const styleMap = {
@@ -74,10 +71,14 @@
         append: 'beforeend',
         after: 'afterend',
       };
+      targets.forEach((target) => {
+        // Detach behaviors.
+        htmx.trigger(target, 'htmx:drupal:unload');
 
-      // Make the actual swap and initialize everything.
-      htmx.swap(target, data, {
-        swapStyle: styleMap[method] || 'outerHTML',
+        // Make the actual swap and initialize everything.
+        htmx.swap(target, data, {
+          swapStyle: styleMap[method] || 'outerHTML',
+        });
       });
     },
 
