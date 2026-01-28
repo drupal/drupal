@@ -45565,12 +45565,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/scripts/run-tests.sh',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function simpletest_script_run_phpunit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/scripts/run-tests.sh',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function simpletest_script_setup_test_run_results_storage\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

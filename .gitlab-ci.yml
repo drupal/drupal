@@ -212,7 +212,7 @@ default:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
   script:
-    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "PHPUnit-Unit" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --verbose --non-html --all || EXIT_CODE=$?
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "PHPUnit-Unit" --concurrency "$CONCURRENCY" --repeat "1" --sqlite ":memory:" --verbose --non-html --all || EXIT_CODE=$?
     # Allow failure for the next PHP major.
     - |
       [[ $EXIT_CODE != 0 && $_TARGET_PHP == $NEXT_PHP_MAJOR ]] && exit 100
