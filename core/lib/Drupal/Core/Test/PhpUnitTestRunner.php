@@ -67,6 +67,111 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   }
 
   /**
+   * Starts asynchronous execution of a PHPUnit process.
+   *
+   * This method executes the tests for a single test class.
+   *
+   * @param \Drupal\Core\Test\TestRun $test_run
+   *   The test run object.
+   * @param class-string $test_class
+   *   A fully qualified test class name.
+   * @param bool $colors
+   *   Whether to use colors in output.
+   * @param bool $suppressDeprecations
+   *   If TRUE, disables the deprecation reporting.
+   *
+   * @return \Symfony\Component\Process\Process
+   *   The spawned process object.
+   */
+  public function startPhpUnitOnSingleTestClass(
+    TestRun $test_run,
+    string $test_class,
+    bool $colors,
+    bool $suppressDeprecations,
+  ): Process {
+    $command = $this->prepareCommand($test_run, $test_class, $colors, $suppressDeprecations);
+    $test_run->start(microtime(TRUE));
+    $process = new Process($command['cli_command'], $command['work_dir'], $command['environment_vars']);
+    $process->setTimeout(NULL);
+    $process->start();
+    return $process;
+  }
+
+  /**
+   * Processes PHPUnit test execution output.
+   *
+   * @param \Symfony\Component\Process\Process $process
+   *   The PHPUnit CLI process - terminated.
+   * @param \Drupal\Core\Test\TestRun $test_run
+   *   The test run object.
+   * @param class-string $test_class
+   *   A fully qualified test class name.
+   *
+   * @return array
+   *   The results.
+   */
+  public function processPhpUnitOnSingleTestClassOutcome(
+    Process $process,
+    TestRun $test_run,
+    string $test_class,
+  ): array {
+    if (!$process->isTerminated()) {
+      throw new \RuntimeException('An error occurred: subprocess was not terminated before starting processing its output');
+    }
+
+    $out = $process->getOutput();
+    $err = $process->getErrorOutput();
+
+    $output = explode("\n", $out);
+    $errorOutput = $err;
+    if (!empty($errorOutput)) {
+      $error = explode("\n", $err);
+    }
+    $status = $process->getExitCode();
+
+    $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
+    if (file_exists($log_junit_file_path)) {
+      $phpunit_results = JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
+    }
+    else {
+      $phpunit_results = [];
+    }
+
+    // If not passed, add full PHPUnit run output since individual test cases
+    // messages may not give full clarity (deprecations, warnings, etc.).
+    if ($status > TestStatus::PASS) {
+      $message = $out;
+      if (!empty($error)) {
+        $message .= "\nERROR:\n";
+        $message .= $err;
+      }
+      $phpunit_results[] = [
+        'test_id' => $test_run->id(),
+        'test_class' => $test_class,
+        'status' => $status < TestStatus::SYSTEM ? 'cli_fail' : 'exception',
+        'exit_code' => $status,
+        'message' => $message,
+        'message_group' => 'Other',
+        'function' => '*** Process execution output ***',
+        'line' => '0',
+        'file' => $log_junit_file_path,
+        'time' => 0,
+      ];
+    }
+
+    $this->processPhpUnitResults($test_run, $phpunit_results);
+    $summaries = $this->summarizeResults($phpunit_results);
+
+    return [
+      'status' => $status,
+      'output' => $output,
+      'error_output' => $error ?? NULL,
+      'phpunit_results' => $phpunit_results,
+      'summaries' => $summaries,
+    ];
+  }
+
+  /**
    * Returns the path to use for PHPUnit's --log-junit option.
    *
    * @param int $test_id
@@ -109,35 +214,30 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   }
 
   /**
-   * Executes the PHPUnit command.
+   * Prepares the context to execute a PHPUnit process.
    *
-   * @param string $test_class_name
+   * This method prepares the command line arguments necessary to execute
+   * the tests for a single test class, as well as the necessary context of
+   * working directory and environment variables.
+   *
+   * @param \Drupal\Core\Test\TestRun $test_run
+   *   The test run object.
+   * @param class-string $test_class_name
    *   A fully qualified test class name.
-   * @param string $log_junit_file_path
-   *   A filepath to use for PHPUnit's --log-junit option.
-   * @param int|null $status
-   *   (optional) The exit status code of the PHPUnit process will be assigned
-   *   to this variable.
-   * @param string[]|null $output
-   *   (optional) The output by running the phpunit command. If provided, this
-   *   array will contain the lines output by the command.
-   * @param string[]|null $error
-   *   (optional) The error returned by running the phpunit command. If
-   *   provided, this array will contain the error lines output by the
-   *   command.
    * @param bool $colors
-   *   (optional) Whether to use colors in output. Defaults to FALSE.
+   *   Whether to use colors in output.
+   * @param bool $suppressDeprecations
+   *   If TRUE, disables the deprecation reporting.
    *
-   * @internal
+   * @return array{cli_command: list<string>, work_dir: string, environment_vars: array<string,string>}
+   *   The process execution context.
    */
-  protected function runCommand(
+  protected function prepareCommand(
+    TestRun $test_run,
     string $test_class_name,
-    string $log_junit_file_path,
-    ?int &$status = NULL,
-    ?array &$output = NULL,
-    ?array &$error = NULL,
     bool $colors = FALSE,
-  ): void {
+    bool $suppressDeprecations = FALSE,
+  ): array {
     global $base_url;
     $process_environment_variables = [];
 
@@ -158,6 +258,11 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $process_environment_variables['SIMPLETEST_BASE_URL'] = $base_url;
       $process_environment_variables['BROWSERTEST_OUTPUT_DIRECTORY'] = $this->workingDirectory;
     }
+
+    // Determine the JUnit file path.
+    $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
+
+    // PHPUnit whereabouts.
     $phpunit_bin = $this->phpUnitCommand();
 
     // Build the command line for the PHPUnit CLI invocation.
@@ -173,13 +278,18 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $command[] = '--colors=always';
     }
 
-    // If the deprecation handler bridge is active, we need to fail when there
-    // are deprecations that get reported (i.e. not ignored or expected).
-    $deprecationConfiguration = DeprecationHandler::getConfiguration();
-    if ($deprecationConfiguration !== FALSE) {
-      $command[] = '--fail-on-deprecation';
-      if ($deprecationConfiguration['failOnPhpunitDeprecation']) {
-        $command[] = '--fail-on-phpunit-deprecation';
+    if ($suppressDeprecations) {
+      $process_environment_variables['SYMFONY_DEPRECATIONS_HELPER'] = 'disabled';
+    }
+    else {
+      // If the deprecation handler bridge is active, we need to fail when there
+      // are deprecations that get reported (i.e. not ignored or expected).
+      $deprecationConfiguration = DeprecationHandler::getConfiguration();
+      if ($deprecationConfiguration !== FALSE) {
+        $command[] = '--fail-on-deprecation';
+        if ($deprecationConfiguration['failOnPhpunitDeprecation']) {
+          $command[] = '--fail-on-phpunit-deprecation';
+        }
       }
     }
 
@@ -187,79 +297,11 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     $reflectedClass = new \ReflectionClass($test_class_name);
     $command[] = $reflectedClass->getFileName();
 
-    // Invoke PHPUnit CLI with the built command line.
-    $process = new Process($command, \Drupal::root() . "/core", $process_environment_variables);
-    $process->setTimeout(NULL);
-    $process->run();
-    $output = explode("\n", $process->getOutput());
-    $errorOutput = $process->getErrorOutput();
-    if (!empty($errorOutput)) {
-      $error = explode("\n", $process->getErrorOutput());
-    }
-    $status = $process->getExitCode();
-  }
-
-  /**
-   * Executes PHPUnit tests and returns the results of the run.
-   *
-   * @param \Drupal\Core\Test\TestRun $test_run
-   *   The test run object.
-   * @param string $test_class_name
-   *   A fully qualified test class name.
-   * @param int|null $status
-   *   (optional) The exit status code of the PHPUnit process will be assigned
-   *   to this variable.
-   * @param bool $colors
-   *   (optional) Whether to use colors in output. Defaults to FALSE.
-   *
-   * @return array
-   *   The parsed results of PHPUnit's JUnit XML output, in the format of
-   *   {simpletest}'s schema.
-   *
-   * @internal
-   */
-  public function execute(
-    TestRun $test_run,
-    string $test_class_name,
-    ?int &$status = NULL,
-    bool $colors = FALSE,
-  ): array {
-    $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
-    // Store output from our test run.
-    $output = [];
-    $error = [];
-    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $error, $colors);
-
-    if (file_exists($log_junit_file_path)) {
-      $results = JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
-    }
-    else {
-      $results = [];
-    }
-
-    // If not passed, add full PHPUnit run output since individual test cases
-    // messages may not give full clarity (deprecations, warnings, etc.).
-    if ($status > TestStatus::PASS) {
-      $message = implode("\n", $output);
-      if (!empty($error)) {
-        $message .= "\nERROR:\n";
-        $message .= implode("\n", $error);
-      }
-      $results[] = [
-        'test_id' => $test_run->id(),
-        'test_class' => $test_class_name,
-        'status' => $status < TestStatus::SYSTEM ? 'cli_fail' : 'exception',
-        'exit_code' => $status,
-        'message' => $message,
-        'message_group' => 'Other',
-        'function' => '*** Process execution output ***',
-        'line' => '0',
-        'file' => $log_junit_file_path,
-        'time' => 0,
-      ];
-    }
-
-    return $results;
+    return [
+      'cli_command' => $command,
+      'work_dir' => DRUPAL_ROOT . "/core",
+      'environment_vars' => $process_environment_variables,
+    ];
   }
 
   /**
@@ -343,6 +385,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
 
       }
     }
+
     return $summaries;
   }
 

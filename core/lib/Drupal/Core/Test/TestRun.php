@@ -11,17 +11,23 @@ class TestRun {
 
   /**
    * The test database prefix.
-   *
-   * @var string
    */
-  protected $databasePrefix;
+  protected string $databasePrefix;
 
   /**
    * The latest class under test.
-   *
-   * @var string
    */
-  protected $testClass;
+  protected string $testClass;
+
+  /**
+   * The time the test run started.
+   */
+  protected float $startExecutionTime;
+
+  /**
+   * The time the test run ended.
+   */
+  protected float $endExecutionTime;
 
   /**
    * TestRun constructor.
@@ -97,12 +103,42 @@ class TestRun {
    *   The database prefix.
    */
   public function getDatabasePrefix(): string {
-    if (is_null($this->databasePrefix)) {
+    if (!isset($this->databasePrefix)) {
       $state = $this->testRunResultsStorage->getCurrentTestRunState($this);
       $this->databasePrefix = $state['db_prefix'];
       $this->testClass = $state['test_class'];
     }
     return $this->databasePrefix;
+  }
+
+  /**
+   * Mark start of the test run execution.
+   *
+   * @param float $time
+   *   The time the test run started.
+   */
+  public function start(float $time): void {
+    $this->startExecutionTime = $time;
+  }
+
+  /**
+   * Mark end of the test run execution.
+   *
+   * @param float $time
+   *   The time the test run ended.
+   */
+  public function end(float $time): void {
+    $this->endExecutionTime = $time;
+  }
+
+  /**
+   * Gets the test run execution elapsed time.
+   *
+   * @return float
+   *   The elapsed time.
+   */
+  public function duration(): float {
+    return $this->endExecutionTime - $this->startExecutionTime;
   }
 
   /**
@@ -112,11 +148,6 @@ class TestRun {
    *   The test class.
    */
   public function getTestClass(): string {
-    if (is_null($this->testClass)) {
-      $state = $this->testRunResultsStorage->getCurrentTestRunState($this);
-      $this->databasePrefix = $state['db_prefix'];
-      $this->testClass = $state['test_class'];
-    }
     return $this->testClass;
   }
 
