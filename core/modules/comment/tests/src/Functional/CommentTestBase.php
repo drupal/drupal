@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\AnonymousContact;
 use Drupal\comment\CommentPreviewMode;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Entity\CommentType;
@@ -290,14 +291,15 @@ abstract class CommentTestBase extends BrowserTestBase {
   /**
    * Sets the value governing restrictions on anonymous comments.
    *
-   * @param int $level
-   *   The level of the contact information allowed for anonymous comments:
-   *   - 0: No contact information allowed.
-   *   - 1: Contact information allowed but not required.
-   *   - 2: Contact information required.
+   * @param \Drupal\comment\AnonymousContact|int $level
+   *   The level of the contact information allowed for anonymous comments.
    */
-  protected function setCommentAnonymous($level) {
-    $this->setCommentSettings('anonymous', $level, new FormattableMarkup('Anonymous commenting set to level @level.', ['@level' => $level]));
+  protected function setCommentAnonymous(AnonymousContact|int $level) {
+    if (!$level instanceof AnonymousContact) {
+      @trigger_error('Calling ' . __METHOD__ . ' with an integer $level parameter is deprecated in drupal:11.4.0 and it will be removed in drupal:13.0.0. Use the \Drupal\comment\AnonymousContact enum instead. See https://www.drupal.org/node/3547352', E_USER_DEPRECATED);
+      $level = AnonymousContact::from($level);
+    }
+    $this->setCommentSettings('anonymous', $level->value, new FormattableMarkup('Anonymous commenting set to level @level.', ['@level' => $level->value]));
   }
 
   /**
