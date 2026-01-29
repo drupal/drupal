@@ -4,7 +4,7 @@
  * https://developer.mozilla.org/en-US/docs/Web/CSS/all
  */
 
-:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+:where(#extra-specificity-hack, [data-drupal-admin-styles]) {
   box-sizing: border-box;
 
   *:focus {
