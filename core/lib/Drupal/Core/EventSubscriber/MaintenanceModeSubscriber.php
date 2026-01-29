@@ -71,7 +71,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         if ($route_match->getRouteName() != 'system.site_maintenance_mode') {
           $show_message = $route_match->getRouteName() != 'system.site_maintenance_mode' &&
             !$event->getRequest()->isXmlHttpRequest() &&
-            $event->getRequest()->get('ajax_iframe_upload', FALSE) === FALSE;
+            $event->getRequest()->request->get('ajax_iframe_upload', FALSE) === FALSE;
 
           if ($show_message) {
             if ($this->account->hasPermission('administer site configuration')) {

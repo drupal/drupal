@@ -45,7 +45,7 @@ class CssAssetController extends AssetControllerBase {
    * {@inheritdoc}
    */
   protected function getGroups(AttachedAssetsInterface $attached_assets, Request $request): array {
-    $language = $this->languageManager()->getLanguage($request->get('language'));
+    $language = $this->languageManager()->getLanguage($request->query->get('language'));
     $assets = $this->assetResolver->getCssAssets($attached_assets, FALSE, $language);
     return $this->grouper->group($assets);
   }

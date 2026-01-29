@@ -1322,13 +1322,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Ajax/AfterCommand.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Ajax/AjaxResponseAttachmentsProcessor.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Ajax\\\\AlertCommand\\:\\:render\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -6093,13 +6086,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/ActiveLinkResponseFilter.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/AjaxResponseSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\EventSubscriber\\\\AjaxResponseSubscriber\\:\\:onRequest\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -6392,13 +6378,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/MainContentViewSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/MaintenanceModeSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\EventSubscriber\\\\MaintenanceModeSubscriber\\:\\:onKernelRequestMaintenance\\(\\) has no return type specified\\.$#',
@@ -8979,13 +8958,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Pager/PagerManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Pager/PagerPreprocess.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\ParamConverter\\\\ParamConverterManager\\:\\:setRouteParameterConverters\\(\\) has no return type specified\\.$#',
@@ -14194,13 +14166,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_moderation/src/EventSubscriber/ConfigImportSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/Form/ContentModerationConfigureEntityTypesForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\content_moderation\\\\Form\\\\ContentModerationConfigureEntityTypesForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14681,13 +14646,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/src/Routing/ContentTranslationRouteSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/modules/content_translation_test/src/Hook/ContentTranslationTestHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationLanguageChangeTest\\:\\:createImageField\\(\\) has no return type specified\\.$#',
@@ -16068,13 +16026,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/Access/ViewModeAccessCheck.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Controller/FieldStorageAddController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\FieldUI\\:\\:getOverviewRouteInfo\\(\\) should return Drupal\\\\Core\\\\Url but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
 	'count' => 1,
@@ -16271,13 +16222,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldConfigEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldStorageAddForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageAddForm\\:\\:create\\(\\) has no return type specified\\.$#',
@@ -18622,13 +18566,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/src/Context/FieldResolver.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/jsonapi/src/Controller/EntityResource.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Controller\\\\EntityResource\\:\\:doPatchIndividualRelationship\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20187,37 +20124,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Cache/ExtraFieldBlockCacheTagInvalidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Controller/AddSectionController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Controller\\\\AddSectionController\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Controller/AddSectionController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Controller/ChooseBlockController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Controller\\\\ChooseBlockController\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Controller/ChooseBlockController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Controller/ChooseSectionController.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Controller\\\\ChooseSectionController\\:\\:create\\(\\) has no return type specified\\.$#',
@@ -20230,13 +20146,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Controller/MoveBlockController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Element/LayoutBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Element\\\\LayoutBuilder\\:\\:preRender\\(\\) has no return type specified\\.$#',
@@ -20311,13 +20220,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Field/LayoutSectionItemList.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/ConfigureBlockFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\ConfigureBlockFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20334,13 +20236,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/ConfigureBlockFormBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/ConfigureSectionForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\ConfigureSectionForm\\:\\:create\\(\\) has no return type specified\\.$#',
@@ -20415,13 +20310,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutBuilderEntityViewDisplayForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutRebuildConfirmFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutRebuildConfirmFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20438,13 +20326,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutRebuildConfirmFormBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/MoveBlockForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\MoveBlockForm\\:\\:create\\(\\) has no return type specified\\.$#',
@@ -26927,13 +26808,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/options/tests/src/Kernel/Views/OptionsTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/package_manager/tests/modules/package_manager_test_api/src/ApiController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\page_cache\\\\StackMiddleware\\\\PageCache\\:\\:set\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28982,13 +28856,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/serialization/tests/src/Unit/Normalizer/TimestampNormalizerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/settings_tray/src/Block/BlockEntitySettingTrayForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\settings_tray\\\\Block\\\\BlockEntitySettingTrayForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29595,13 +29462,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Controller/CsrfTokenController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Controller/CssAssetController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Controller\\\\DbUpdateController\\:\\:batchFinished\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29612,13 +29472,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Controller/DbUpdateController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/system/src/Controller/JsAssetController.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Controller\\\\LinksetController\\:\\:processCustomLinkAttributes\\(\\) has no return type specified\\.$#',
@@ -31729,13 +31582,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStatePersistForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStorageForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStorageForm\\:\\:continueSubmitForm\\(\\) has no return type specified\\.$#',
@@ -36219,13 +36065,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Analyzer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/views/src/Controller/ViewAjaxController.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Controller\\\\ViewAjaxController\\:\\:create\\(\\) has no return type specified\\.$#',
@@ -45442,13 +45281,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceSwitcherForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method get\\(\\) of class Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:
-since Symfony 7\\.4, use properties `\\-\\>attributes`, `query` or `request` directly instead$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/WorkspaceListBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\WorkspaceListBuilder\\:\\:offCanvasRender\\(\\) has no return type specified\\.$#',

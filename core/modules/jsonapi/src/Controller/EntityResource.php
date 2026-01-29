@@ -431,7 +431,7 @@ class EntityResource {
     $query = $this->getCollectionQuery($resource_type, $params, $query_cacheability);
 
     // If the request is for the latest revision, toggle it on entity query.
-    if ($request->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE)) {
+    if ($request->attributes->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE)) {
       $query->latestRevision();
     }
 
@@ -467,7 +467,7 @@ class EntityResource {
     }
     // Each item of the collection data contains an array with 'entity' and
     // 'access' elements.
-    $collection_data = $this->loadEntitiesWithAccess($storage, $results, $request->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE));
+    $collection_data = $this->loadEntitiesWithAccess($storage, $results, $request->attributes->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE));
     $primary_data = new ResourceObjectData($collection_data);
     $primary_data->setHasNextPage($has_next_page);
 
