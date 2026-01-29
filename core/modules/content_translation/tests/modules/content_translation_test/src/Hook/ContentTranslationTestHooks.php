@@ -55,7 +55,7 @@ class ContentTranslationTestHooks {
   #[Hook('form_node_form_alter')]
   public function formNodeFormAlter(&$form, FormStateInterface $form_state, $form_id) : void {
     $langcode = $form_state->getFormObject()->getFormLangcode($form_state);
-    if (in_array($langcode, ['en', 'fr']) && \Drupal::request()->get('test_field_only_en_fr')) {
+    if (in_array($langcode, ['en', 'fr']) && \Drupal::request()->query->get('test_field_only_en_fr')) {
       $form['test_field_only_en_fr'] = [
         '#type' => 'textfield',
         '#title' => 'Field only available on the english and french form',

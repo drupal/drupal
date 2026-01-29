@@ -49,6 +49,14 @@ class AjaxPageState implements HttpKernelInterface {
         $request->request->set('ajax_page_state', $request_ajax_page_state);
         $request->query->set('ajax_page_state', $query_ajax_page_state);
       }
+
+      // Copy the final page state to a request attribute.
+      if (!empty($request_ajax_page_state)) {
+        $request->attributes->set('ajax_page_state', $request_ajax_page_state);
+      }
+      elseif (!empty($query_ajax_page_state)) {
+        $request->attributes->set('ajax_page_state', $query_ajax_page_state);
+      }
     }
     return $this->httpKernel->handle($request, $type, $catch);
   }

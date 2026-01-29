@@ -147,7 +147,7 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
     // Get unsupported features for this entity type.
     $warnings = $this->moderationInformation->getUnsupportedFeatures($this->entityType);
     // Display message into the Ajax form returned.
-    if ($this->getRequest()->get(MainContentViewSubscriber::WRAPPER_FORMAT) == 'drupal_modal' && !empty($warnings)) {
+    if ($this->getRequest()->query->get(MainContentViewSubscriber::WRAPPER_FORMAT) == 'drupal_modal' && !empty($warnings)) {
       $form['warnings'] = ['#type' => 'status_messages', '#weight' => -1];
     }
     // Set warning message.

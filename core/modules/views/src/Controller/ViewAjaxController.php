@@ -82,10 +82,10 @@ class ViewAjaxController implements ContainerInjectionInterface {
    *   Thrown when the view was not found.
    */
   public function ajaxView(Request $request) {
-    $name = $request->get('view_name');
-    $display_id = $request->get('view_display_id');
+    $name = $request->query->get('view_name', $request->request->get('view_name'));
+    $display_id = $request->query->get('view_display_id', $request->request->get('view_display_id'));
     if (isset($name) && isset($display_id)) {
-      $args = $request->get('view_args', '');
+      $args = $request->query->get('view_args', $request->request->get('view_args', ''));
       $args = $args !== '' ? explode('/', Html::decodeEntities($args)) : [];
 
       // Arguments can be empty, make sure they are passed on as NULL so that
@@ -94,11 +94,11 @@ class ViewAjaxController implements ContainerInjectionInterface {
         return ($arg == '' ? NULL : $arg);
       }, $args);
 
-      $path = $request->get('view_path');
+      $path = $request->query->get('view_path', $request->request->get('view_path'));
       $target_url = $this->pathValidator->getUrlIfValid($path ?? '');
-      $dom_id = $request->get('view_dom_id');
+      $dom_id = $request->query->get('view_dom_id', $request->request->get('view_dom_id'));
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
-      $pager_element = $request->get('pager_element');
+      $pager_element = $request->query->get('pager_element', $request->request->get('pager_element'));
       $pager_element = isset($pager_element) ? intval($pager_element) : NULL;
 
       $response = new ViewAjaxResponse();
@@ -109,7 +109,6 @@ class ViewAjaxController implements ContainerInjectionInterface {
       // the related listener can behave correctly.
       // @todo Remove this parsing once these are removed from the request in
       //   https://www.drupal.org/node/2504709.
-      $existing_page_state = $request->get('ajax_page_state');
       foreach (self::FILTERED_QUERY_PARAMETERS as $key) {
         $request->query->remove($key);
         $request->request->remove($key);
@@ -156,24 +155,12 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Reuse the same DOM id so it matches that in drupalSettings.
         $view->dom_id = $dom_id;
 
-        // Populate request attributes temporarily with ajax_page_state theme
-        // and theme_token for theme negotiation.
-        $theme_keys = [
-          'theme' => TRUE,
-          'theme_token' => TRUE,
-        ];
-        if (is_array($existing_page_state) &&
-            ($temp_attributes = array_intersect_key($existing_page_state, $theme_keys))) {
-          $request->attributes->set('ajax_page_state', $temp_attributes);
-        }
         $preview = $view->preview($display_id, $args);
-        $request->attributes->remove('ajax_page_state');
         if ($target_url) {
           $response->addCommand(new SetBrowserUrl($target_url->toString()));
         }
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
-        $request->query->set('ajax_page_state', $existing_page_state);
 
         if (!empty($preview['#attached'])) {
           $response->setAttachments($preview['#attached']);
