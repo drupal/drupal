@@ -14,7 +14,7 @@ bundle: page
 mode: teaser
 content:
   body:
-    type: text_summary_or_trimmed
+    type: text_trimmed
     label: hidden
     settings:
       trim_length: 600

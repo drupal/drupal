@@ -454,7 +454,7 @@ class JsonApiPatchRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertSame(422, $response->getStatusCode());
     $this->assertNotNull($data);
     // cSpell:disable-next-line
-    $this->assertSame("The properties 'form', 'sumary', 'foobar' do not exist on the 'body' field of type 'text_with_summary'. Writable properties are: 'value', 'format', 'summary'.", $data['errors'][0]['detail']);
+    $this->assertSame("The properties 'form', 'sumary', 'foobar' do not exist on the 'body' field of type 'text_long'. Writable properties are: 'value', 'format'.", $data['errors'][0]['detail']);
 
     $request_options = [
       RequestOptions::HEADERS => [
@@ -487,7 +487,7 @@ class JsonApiPatchRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertSame(422, $response->getStatusCode());
     $this->assertNotNull($data);
     // cSpell:disable-next-line
-    $this->assertSame("The properties 'form', 'sumary' do not exist on the 'body' field of type 'text_with_summary'. Did you mean 'format', 'summary'?", $data['errors'][0]['detail']);
+    $this->assertSame("The properties 'form', 'sumary' do not exist on the 'body' field of type 'text_long'. Writable properties are: 'value', 'format'.", $data['errors'][0]['detail']);
   }
 
 }

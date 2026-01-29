@@ -13,14 +13,12 @@ bundle: page
 mode: default
 content:
   body:
-    type: text_textarea_with_summary
+    type: text_textarea
     weight: 31
     region: content
     settings:
-      rows: 9
-      summary_rows: 3
+      rows: 5
       placeholder: ''
-      show_summary: false
     third_party_settings: {  }
   created:
     type: datetime_timestamp
