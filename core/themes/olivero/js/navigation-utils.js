@@ -98,7 +98,7 @@
    *   State to change the sticky header to.
    */
   function toggleStickyHeaderState(pinnedState) {
-    if (isDesktopNav()) {
+    if (siteHeaderFixable !== null) {
       siteHeaderFixable.classList.toggle('is-expanded', pinnedState);
       stickyHeaderToggleButton.setAttribute('aria-checked', pinnedState);
     }
