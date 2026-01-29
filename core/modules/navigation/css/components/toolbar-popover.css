@@ -5,6 +5,10 @@
  * @preserve
  */
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  .toolbar-popover__wrapper {
+    border: solid 1px transparent;
+  }
+
   .toolbar-popover {
     border-radius: var(--admin-toolbar-space-8);
   }

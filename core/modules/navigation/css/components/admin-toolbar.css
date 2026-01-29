@@ -257,6 +257,7 @@ body {
     overflow-y: auto;
     flex-direction: column;
     height: 100%;
+    border-inline-end: solid 1px transparent;
     background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)), radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0));
     background-color: var(--admin-toolbar-color-white);
     background-repeat: no-repeat;
@@ -370,6 +371,11 @@ body {
 
     :where([data-admin-toolbar="expanded"]) & {
       display: block;
+    }
+
+    @media (forced-colors: active) {
+      opacity: 0.14;
+      background-color: canvasText;
     }
 
     @media (min-width: 64rem) {

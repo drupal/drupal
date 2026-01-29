@@ -52,6 +52,24 @@
     &:has(+ .toolbar-popover__wrapper .is-active) {
       color: var(--toolbar-button-has-active-child-color);
       background-color: var(--toolbar-button-has-active-child-bg);
+
+      @media (forced-colors: active) {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          inset-block-start: 0;
+          inset-inline-end: calc(100% + 0.3125rem);
+          width: 0;
+          height: 100%;
+          content: "";
+          border-inline-start: solid 0.25rem canvasText;
+        }
+      }
+    }
+
+    .top-bar__actions & {
+      border: solid 1px transparent; /* For forced colors. */
     }
 
     &[class*="toolbar-button--icon"]:has(+ .ajax-progress--throbber),
@@ -85,6 +103,20 @@
     &.current {
       color: var(--toolbar-button-current-color);
       background-color: var(--toolbar-button-current-bg);
+
+      @media (forced-colors: active) {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          inset-block-start: 0;
+          inset-inline-end: calc(100% + 0.3125rem);
+          width: 0;
+          height: 100%;
+          content: "";
+          border-inline-start: solid 0.25rem canvasText;
+        }
+      }
     }
   }
 
@@ -224,9 +256,38 @@
   }
 
   .toolbar-button__icon {
-    fill: currentColor;
+    --icon-color: currentColor;
+
+    fill: var(--icon-color);
     flex-shrink: 0;
     inline-size: var(--toolbar-button-icon-size);
     block-size: var(--toolbar-button-icon-size);
+
+    @media (forced-colors: active) {
+      --icon-color: canvasText;
+
+      &,
+      path {
+        &[fill]:not([fill="none"]) {
+          fill: var(--icon-color);
+        }
+
+        &[stroke]:not([stroke="none"]) {
+          stroke: var(--icon-color);
+        }
+      }
+    }
+  }
+
+  button.toolbar-button .toolbar-button__icon {
+    @media (forced-colors: active) {
+      --icon-color: buttonText;
+    }
+  }
+
+  a.toolbar-button .toolbar-button__icon {
+    @media (forced-colors: active) {
+      --icon-color: linkText;
+    }
   }
 }

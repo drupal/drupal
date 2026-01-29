@@ -14,6 +14,7 @@
     display: flex;
     display: none;
     color: var(--admin-toolbar-color-gray-990);
+    border-bottom: solid 1px transparent; /* For forced colors. */
     background-color: white;
     box-shadow: 0 0 8px 0 var(--admin-toolbar-color-shadow-15);
     font-family: var(--admin-toolbar-font-family);

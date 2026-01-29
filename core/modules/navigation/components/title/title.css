@@ -38,5 +38,14 @@
     flex-shrink: 0;
     inline-size: var(--admin-toolbar-space-16);
     block-size: var(--admin-toolbar-space-16);
+
+    @media (forced-colors: active) {
+      &,
+      path {
+        &:not([fill="none"]) {
+          fill: canvasText;
+        }
+      }
+    }
   }
 }

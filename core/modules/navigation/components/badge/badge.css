@@ -12,6 +12,7 @@
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .toolbar-badge {
     padding: var(--admin-toolbar-space-4) var(--admin-toolbar-space-8);
+    border: solid 1px transparent; /* For forced colors. */
     border-radius: 1rem;
     background-color: var(--admin-toolbar-color-gray-100);
     font-size: var(--admin-toolbar-font-size-label-sm);
