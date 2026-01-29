@@ -78,7 +78,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'editor' => 2,
       'entity_form_display' => 13,
       'entity_form_mode' => 1,
-      'entity_view_display' => 20,
+      'entity_view_display' => 19,
       'entity_view_mode' => 11,
       'field_config' => 31,
       'field_storage_config' => 22,

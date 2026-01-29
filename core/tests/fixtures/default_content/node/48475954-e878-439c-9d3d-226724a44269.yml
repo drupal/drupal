@@ -45,4 +45,3 @@ default:
     -
       value: 'This page lives in a workspace! How neat!'
       format: plain_text
-      summary: ''

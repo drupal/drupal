@@ -43,7 +43,6 @@ default:
     -
       value: 'Crikey it works!'
       format: plain_text
-      summary: ''
   field_tags:
     -
       entity: 550f86ad-aa11-4047-953f-636d42889f85

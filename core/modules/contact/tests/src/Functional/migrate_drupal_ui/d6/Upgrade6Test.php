@@ -44,7 +44,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->loadFixture($this->getModulePath('contact') . '/tests/fixtures/drupal6.php');
-    $this->expectedLoggedErrors = 12;
+    $this->expectedLoggedErrors = 10;
     // If saving the logs, then set the admin user.
     if ($this->outputLogs) {
       $this->migratedAdminUserName = 'admin';
