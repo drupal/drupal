@@ -701,6 +701,12 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    */
   public function getLinkDisplay() {
     $display_id = $this->getOption('link_display');
+
+    // custom_url doesn't have a display handler.
+    if ($display_id === 'custom_url') {
+      return $display_id;
+    }
+
     // If unknown, pick the first one.
     if (empty($display_id) || !$this->view->displayHandlers->has($display_id)) {
       foreach ($this->view->displayHandlers as $display_id => $display) {
@@ -724,6 +730,12 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
 
     $display_id = $this->getLinkDisplay();
+
+    // custom_url is an exception as it doesn't have a specific display.
+    if ($display_id === 'custom_url' && $link_url = $this->getOption('link_url')) {
+      return $link_url;
+    }
+
     if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
       return $this->view->displayHandlers->get($display_id)->getPath();
     }
