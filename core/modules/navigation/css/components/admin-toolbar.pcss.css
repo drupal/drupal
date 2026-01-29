@@ -11,13 +11,17 @@
  * fallback value to the margin-inline-start property of the layout container.
  */
 body {
-  --admin-toolbar-sidebar-width: calc(4.5 * var(--admin-toolbar-rem));
+  --admin-toolbar-sidebar-width: 80vw;
   --admin-toolbar-sidebar-header: calc(3.5 * var(--admin-toolbar-rem));
 
-  [data-admin-toolbar="expanded"] & {
-    --admin-toolbar-sidebar-width: 80vw;
+  @media (--admin-toolbar-tablet) {
+    --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
+  }
 
-    @media (--admin-toolbar-tablet) {
+  @media (--admin-toolbar-desktop) {
+    --admin-toolbar-sidebar-width: calc(4.5 * var(--admin-toolbar-rem));
+
+    [data-admin-toolbar="expanded"] & {
       --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
     }
   }
@@ -27,7 +31,13 @@ body {
 [data-admin-toolbar-transitions] {
   :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
     &.admin-toolbar {
-      transition: transform var(--admin-toolbar-transition);
+      transition:
+        visibility var(--admin-toolbar-transition),
+        transform var(--admin-toolbar-transition);
+
+      @media not (--admin-toolbar-desktop) {
+        visibility: hidden;
+      }
 
       @media (--admin-toolbar-desktop) {
         transition: width var(--admin-toolbar-transition);
@@ -94,6 +104,7 @@ body {
     }
 
     [data-admin-toolbar="expanded"] & {
+      visibility: visible;
       transform: none;
     }
 
