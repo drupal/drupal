@@ -208,7 +208,7 @@ abstract class GdToolkitImageManipulationTestBase extends KernelTestBase {
           'arguments' => ['degrees' => 5, 'background' => '#FF00FF'],
           'width' => 40,
           'height' => 23,
-          'corners' => PHP_VERSION_ID < 80500 ? array_fill(0, 4, static::FUCHSIA) : [
+          'corners' => [
             [255, 0, 93, 0],
             static::FUCHSIA,
             static::FUCHSIA,
@@ -220,7 +220,7 @@ abstract class GdToolkitImageManipulationTestBase extends KernelTestBase {
           'arguments' => ['degrees' => 5],
           'width' => 40,
           'height' => 23,
-          'corners' => PHP_VERSION_ID < 80500 ? array_fill(0, 4, static::ROTATE_TRANSPARENT) : [
+          'corners' => [
             [255, 93, 93, 46],
             static::ROTATE_TRANSPARENT,
             static::ROTATE_TRANSPARENT,

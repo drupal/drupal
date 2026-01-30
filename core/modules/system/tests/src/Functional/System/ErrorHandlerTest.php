@@ -134,9 +134,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $message = str_replace(["\r", "\n"], ' ', $message);
     $error_pdo_exception = [
       '%type' => 'DatabaseExceptionWrapper',
-      '@message' => PHP_VERSION_ID >= 80400 ?
-      $message :
-      'SELECT "b".* FROM {bananas_are_awesome} "b"',
+      '@message' => $message,
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
       '%line' => 64,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
@@ -144,9 +142,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $error_renderer_exception = [
       '%type' => 'Exception',
       '@message' => 'This is an exception that occurs during rendering',
-      '%function' => PHP_VERSION_ID >= 80400 ?
-      'Drupal\error_test\Controller\ErrorTestController->{closure:Drupal\error_test\Controller\ErrorTestController::triggerRendererException():104}()' :
-      'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
+      '%function' => 'Drupal\error_test\Controller\ErrorTestController->{closure:Drupal\error_test\Controller\ErrorTestController::triggerRendererException():104}()',
       '%line' => 82,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];

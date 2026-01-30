@@ -1117,10 +1117,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // in the query string.
       ini_set('session.use_cookies', '1');
       ini_set('session.use_strict_mode', '1');
-      if (\PHP_VERSION_ID < 80400) {
-        ini_set('session.use_only_cookies', '1');
-        ini_set('session.use_trans_sid', '0');
-      }
       // Don't send HTTP headers using PHP's session handler.
       // Send an empty string to disable the cache limiter.
       ini_set('session.cache_limiter', '');

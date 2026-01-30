@@ -2,11 +2,11 @@
 variables:
   PRIMARY_PHP: "8.5-ubuntu"
   NEXT_PHP_MAJOR: "8.6-ubuntu"
-  MINIMUM_PHP: "8.3-ubuntu"
+  MINIMUM_PHP: "8.5-ubuntu"
 
 # Used in matrix jobs.
 #  parallel:
 #    matrix:
 #      - _TARGET_PHP: !reference [.php_versions]
 .php_versions:
-  [8.3-ubuntu, 8.4-ubuntu, 8.5-ubuntu]
+  [8.5-ubuntu]

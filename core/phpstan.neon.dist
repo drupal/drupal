@@ -46,8 +46,6 @@ parameters:
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/custom_annotation/UsingNonInstalledTraitClass.php
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/custom_annotation/ExtendingNonInstalledClass.php
-    # Needs to be skipped until PHPStan recognises the existence of Pdo\Sqlite
-    - modules/sqlite/src/Driver/Database/sqlite/SqliteConnection.php
 
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.

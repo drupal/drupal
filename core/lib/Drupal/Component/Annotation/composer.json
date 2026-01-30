@@ -7,7 +7,7 @@
     "homepage": "https://www.drupal.org/project/drupal",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": ">=8.3.0",
+        "php": ">=8.5.0",
         "doctrine/lexer": "^2 || ^3",
         "drupal/core-class-finder": "12.x-dev",
         "drupal/core-file-cache": "12.x-dev",

@@ -30,7 +30,7 @@ class GdToolkitGifImageManipulationTest extends GdToolkitImageManipulationTestBa
   public static function providerOperationTestCases(): array {
     $ret = parent::providerOperationTestCases();
 
-    if (PHP_VERSION_ID >= 80500 && array_key_exists('rotate_transparent_5', $ret)) {
+    if (array_key_exists('rotate_transparent_5', $ret)) {
       $ret['rotate_transparent_5'][3]['corners'][0] = [255, 93, 0, 46];
     }
 

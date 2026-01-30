@@ -32,8 +32,7 @@ class ConnectionTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->connection = $this->getMockBuilder(Connection::class)
-      // @phpstan-ignore class.notFound
-      ->setConstructorArgs([$this->createMock(\PHP_VERSION_ID >= 80400 ? Mysql::class : \PDO::class), []])
+      ->setConstructorArgs([$this->createMock(Mysql::class), []])
       ->onlyMethods(['getServerVersion'])
       ->getMock();
   }

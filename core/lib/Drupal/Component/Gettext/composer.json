@@ -8,7 +8,7 @@
         "source": "https://www.drupal.org/project/drupal/git-instructions"
     },
     "require": {
-        "php": ">=8.3.0",
+        "php": ">=8.5.0",
         "drupal/core-render": "12.x-dev"
     },
     "autoload": {
