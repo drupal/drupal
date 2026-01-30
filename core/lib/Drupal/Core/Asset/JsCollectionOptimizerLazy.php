@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -146,7 +147,16 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
    * {@inheritdoc}
    */
   public function deleteAll() {
-    $this->fileSystem->deleteRecursive('assets://js');
+    if (!\is_dir('assets://js')) {
+      return;
+    }
+    $directory_iterator = new \DirectoryIterator('assets://js');
+    $threshold = Settings::get('aggregate_gc_threshold', 86400 * 45);
+    foreach ($directory_iterator as $file) {
+      if ($file->isFile() && $this->time->getRequestTime() - $file->getMtime() > $threshold) {
+        $this->fileSystem->delete($file->getPathName());
+      }
+    }
   }
 
   /**

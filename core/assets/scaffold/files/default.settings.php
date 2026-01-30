@@ -493,6 +493,15 @@ $settings['update_free_access'] = FALSE;
 # $settings['file_assets_path'] = 'sites/default/files';
 
 /**
+ * Asset aggregate garbage collection threshold.
+ *
+ * During cache clears, JavaScript and CSS aggregates older than this threshold
+ * will be deleted. Set this to 0 to immediately delete all files, e.g. during
+ * development.
+ */
+# $settings['aggregate_gc_threshold'] = 86400 * 45;
+
+/**
  * Public file base URL:
  *
  * An alternative base URL to be used for serving public files. This must

@@ -116,6 +116,42 @@ class AssetOptimizationTest extends BrowserTestBase {
       $this->assertAggregate($url, FALSE);
       $this->assertInvalidAggregates($url);
     }
+
+    // The aggregates have just been created, so ::deleteAll() should avoid
+    // removing them.
+    \Drupal::service('asset.css.collection_optimizer')->deleteAll();
+    \Drupal::service('asset.js.collection_optimizer')->deleteAll();
+
+    foreach ($style_urls as $url) {
+      $this->assertAggregate($url, FALSE, 'text/css');
+    }
+
+    foreach ($script_urls as $url) {
+      $this->assertAggregate($url, FALSE);
+    }
+
+    // Now set the mtime of all the files in the directory to a year in the
+    // past, this is older than the threshold so they should be deleted.
+    foreach (['js', 'css'] as $type) {
+      $iterator = new \DirectoryIterator('assets://' . $type);
+      foreach ($iterator as $file) {
+        if ($file->isFile()) {
+          $mtime = $file->getMtime();
+          $return = touch($file->getPathName(), $mtime - (86400 * 365));
+          $this->assertTrue($return);
+        }
+      }
+    }
+
+    \Drupal::service('asset.css.collection_optimizer')->deleteAll();
+    \Drupal::service('asset.js.collection_optimizer')->deleteAll();
+    foreach ($style_urls as $url) {
+      $this->assertAggregate($url, TRUE, 'text/css');
+    }
+
+    foreach ($script_urls as $url) {
+      $this->assertAggregate($url, TRUE);
+    }
   }
 
   /**
@@ -141,8 +177,8 @@ class AssetOptimizationTest extends BrowserTestBase {
       $this->assertStringContainsString($content_type, $headers['Content-Type'][0]);
     }
     if ($from_php) {
-      $this->assertStringContainsString('no-store', $headers['Cache-Control'][0]);
       $this->assertArrayHasKey('X-Generator', $headers);
+      $this->assertStringContainsString('no-store', $headers['Cache-Control'][0]);
     }
     else {
       $this->assertArrayNotHasKey('X-Generator', $headers);
