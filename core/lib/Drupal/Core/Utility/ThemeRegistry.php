@@ -190,7 +190,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
    * @internal
    */
   public function getGlobalPreprocess(): array {
-    return $this->get('global preprocess');
+    return $this->get('global preprocess') ?? [];
   }
 
 }
