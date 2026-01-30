@@ -223,15 +223,37 @@ class ContentTranslationHooks {
    * Implements hook_entity_bundle_info_alter().
    */
   #[Hook('entity_bundle_info_alter', order: Order::First)]
-  public function entityBundleInfoAlter(&$bundles): void {
-    /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
+  public function entityBundleInfoAlter(&$entity_type_bundles): void {
+
+    // Inline the logic from ContentTranslationManager::isEnabled() to avoid
+    // having to load configuration entities one by one.
     $content_translation_manager = \Drupal::service('content_translation.manager');
-    foreach ($bundles as $entity_type_id => &$info) {
-      foreach ($info as $bundle => &$bundle_info) {
-        $bundle_info['translatable'] = $content_translation_manager->isEnabled($entity_type_id, $bundle);
-        if ($bundle_info['translatable'] && $content_translation_manager instanceof BundleTranslationSettingsInterface) {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $ids = [];
+    foreach ($entity_type_bundles as $entity_type => $bundles) {
+      if ($content_translation_manager->isSupported($entity_type)) {
+        foreach ($bundles as $bundle => $bundle_info) {
+          $ids[] = $entity_type . '.' . $bundle;
+        }
+      }
+    }
+    $language_content_settings = $entity_type_manager->getStorage('language_content_settings')->loadMultiple($ids);
+
+    foreach ($language_content_settings as $language_content_setting) {
+      if ($language_content_setting->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
+        $entity_type_id = $language_content_setting->get('target_entity_type_id');
+        $bundle = $language_content_setting->get('target_bundle');
+        $entity_type_bundles[$entity_type_id][$bundle]['translatable'] = TRUE;
+        if ($content_translation_manager instanceof BundleTranslationSettingsInterface) {
           $settings = $content_translation_manager->getBundleTranslationSettings($entity_type_id, $bundle);
-          $bundle_info['untranslatable_fields.default_translation_affected'] = !empty($settings['untranslatable_fields_hide']);
+          $entity_type_bundles[$entity_type_id][$bundle]['untranslatable_fields.default_translation_affected'] = !empty($settings['untranslatable_fields_hide']);
+        }
+      }
+    }
+    foreach ($entity_type_bundles as $entity_type => $info) {
+      foreach ($info as $bundle => $bundle_info) {
+        if (!isset($bundle_info['translatable'])) {
+          $entity_type_bundles[$entity_type][$bundle]['translatable'] = FALSE;
         }
       }
     }
@@ -248,8 +270,8 @@ class ContentTranslationHooks {
         $plugin = $workflow->getTypePlugin();
         foreach ($plugin->getEntityTypes() as $entity_type_id) {
           foreach ($plugin->getBundlesForEntityType($entity_type_id) as $bundle_id) {
-            if (isset($bundles[$entity_type_id][$bundle_id])) {
-              $bundles[$entity_type_id][$bundle_id]['untranslatable_fields.default_translation_affected'] = TRUE;
+            if (isset($entity_type_bundles[$entity_type_id][$bundle_id])) {
+              $entity_type_bundles[$entity_type_id][$bundle_id]['untranslatable_fields.default_translation_affected'] = TRUE;
             }
           }
         }
@@ -403,17 +425,28 @@ class ContentTranslationHooks {
    */
   #[Hook('entity_extra_field_info')]
   public function entityExtraFieldInfo(): array {
+    // Inline the logic from ContentTranslationManager::isEnabled() to avoid
+    // having to load configuration entities one by one.
     $extra = [];
-    $bundle_info_service = \Drupal::service('entity_type.bundle.info');
+    $content_translation_manager = \Drupal::service('content_translation.manager');
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $ids = [];
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $info) {
-      foreach ($bundle_info_service->getBundleInfo($entity_type) as $bundle => $bundle_info) {
-        if (\Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle)) {
-          $extra[$entity_type][$bundle]['form']['translation'] = [
-            'label' => $this->t('Translation'),
-            'description' => $this->t('Translation settings'),
-            'weight' => 10,
-          ];
+      if ($content_translation_manager->isSupported($entity_type)) {
+        foreach ($info as $bundle => $bundle_info) {
+          $ids[] = $entity_type . '.' . $bundle;
         }
+      }
+    }
+    $settings = $entity_type_manager->getStorage('language_content_settings')->loadMultiple($ids);
+
+    foreach ($settings as $config) {
+      if ($config->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
+        $extra[$config->get('target_entity_type_id')][$config->get('target_bundle')]['form']['translation'] = [
+          'label' => $this->t('Translation'),
+          'description' => $this->t('Translation settings'),
+          'weight' => 10,
+        ];
       }
     }
     return $extra;
