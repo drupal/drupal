@@ -54,6 +54,7 @@ class LinkWidget extends WidgetBase {
    */
   protected static function getUriAsDisplayableString($uri) {
     $scheme = parse_url($uri, PHP_URL_SCHEME);
+    $uri_reference = explode(':', $uri, 2)[1];
 
     // By default, the displayable string is the URI.
     $displayable_string = $uri;
@@ -61,8 +62,6 @@ class LinkWidget extends WidgetBase {
     // A different displayable string may be chosen in case of the 'internal:'
     // or 'entity:' built-in schemes.
     if ($scheme === 'internal') {
-      $uri_reference = explode(':', $uri, 2)[1];
-
       // @todo '<front>' is valid input for BC reasons, may be removed by
       //   https://www.drupal.org/node/2421941
       $path = parse_url($uri, PHP_URL_PATH);
@@ -81,8 +80,9 @@ class LinkWidget extends WidgetBase {
         $displayable_string = EntityAutocomplete::getEntityLabels([$entity]);
       }
     }
-    elseif ($scheme === 'route') {
-      $displayable_string = ltrim($displayable_string, 'route:');
+    // Strip the scheme from no-link routes, but leave it for all others.
+    elseif ($scheme === 'route' && self::isNoLinkRoute($uri_reference)) {
+      $displayable_string = $uri_reference;
     }
 
     return $displayable_string;
@@ -117,7 +117,7 @@ class LinkWidget extends WidgetBase {
       $uri = 'entity:node/' . $entity_id;
     }
     // Support linking to nothing.
-    elseif (in_array($string, ['<nolink>', '<none>', '<button>'], TRUE)) {
+    elseif (self::isNoLinkRoute($string)) {
       $uri = 'route:' . $string;
     }
     // Detect a schemeless string, map to 'internal:' URI.
@@ -505,6 +505,19 @@ class LinkWidget extends WidgetBase {
 
     $property_path_array = explode('.', $violation->getPropertyPath());
     return ($element === FALSE) ? FALSE : $element[$property_path_array[1]];
+  }
+
+  /**
+   * Checks if a given route name is one of Drupal's special no-link routes.
+   *
+   * @param string $route
+   *   The route name.
+   *
+   * @return bool
+   *   TRUE if the route is a no-link route, FALSE otherwise.
+   */
+  protected static function isNoLinkRoute(string $route): bool {
+    return in_array($route, ['<nolink>', '<none>', '<button>'], TRUE);
   }
 
 }
