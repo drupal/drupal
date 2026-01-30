@@ -96,11 +96,11 @@ class RoleSettingsForm extends FormBase {
         ->condition('is_admin', TRUE)
         ->execute();
       foreach ($admin_roles as $rid) {
-        $this->roleStorage->load($rid)->setIsAdmin(FALSE)->save();
+        $this->roleStorage->loadOverrideFree($rid)->setIsAdmin(FALSE)->save();
       }
       $new_admin_role = $form_state->getValue('user_admin_role');
       if ($new_admin_role) {
-        $this->roleStorage->load($new_admin_role)->setIsAdmin(TRUE)->save();
+        $this->roleStorage->loadOverrideFree($new_admin_role)->setIsAdmin(TRUE)->save();
       }
       $this->messenger()->addStatus($this->t('The role settings have been updated.'));
     }
