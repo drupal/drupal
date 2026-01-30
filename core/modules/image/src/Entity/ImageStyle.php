@@ -41,6 +41,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
   label_singular: new TranslatableMarkup('image style'),
   label_plural: new TranslatableMarkup('image styles'),
   config_prefix: 'style',
+  static_cache: TRUE,
   entity_keys: [
     'id' => 'name',
     'label' => 'label',
