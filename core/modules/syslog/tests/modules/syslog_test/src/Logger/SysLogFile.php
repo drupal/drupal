@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Redirects logging messages to error_log.
  */
-class SysLogTest extends SysLog implements LoggerInterface {
+class SysLogFile extends SysLog implements LoggerInterface {
 
   /**
    * {@inheritdoc}

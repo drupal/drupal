@@ -1,7 +1,7 @@
 services:
   logger.syslog_test:
     parent: logger.syslog
-    class: Drupal\syslog_test\Logger\SysLogTest
+    class: Drupal\syslog_test\Logger\SysLogFile
     arguments: ['@config.factory', '@logger.log_message_parser']
     tags:
       - { name: logger }
