@@ -2,6 +2,8 @@
 
 namespace Drupal\ckeditor5\Hook;
 
+use Drupal\Core\Asset\LibraryDependencyResolverInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\ckeditor5\LanguageMapper;
 use Drupal\Core\Hook\Order\OrderAfter;
@@ -26,6 +28,8 @@ class Ckeditor5Hooks {
 
   public function __construct(
     protected LanguageMapper $languageMapper,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected LibraryDependencyResolverInterface $libraryDependencyResolver,
   ) {
 
   }
@@ -221,7 +225,6 @@ class Ckeditor5Hooks {
     if ($extension === 'filter') {
       $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/internal.drupal.ckeditor5.filter.admin';
     }
-    $moduleHandler = \Drupal::moduleHandler();
     if ($extension === 'ckeditor5') {
       // Add paths to stylesheets specified by a theme's ckeditor5-stylesheets
       // config property.
@@ -238,7 +241,7 @@ class Ckeditor5Hooks {
       $libraries['drupal.dialog']['js']['modules/ckeditor5/js/ckeditor5.dialog.fix.js'] = [];
     }
     // Only add translation processing if the locale module is enabled.
-    if (!$moduleHandler->moduleExists('locale')) {
+    if (!$this->moduleHandler->moduleExists('locale')) {
       return;
     }
     // All possibles CKEditor 5 languages that can be used by Drupal.
@@ -266,7 +269,7 @@ class Ckeditor5Hooks {
       $path = 'core';
     }
     else {
-      if ($moduleHandler->moduleExists($extension)) {
+      if ($this->moduleHandler->moduleExists($extension)) {
         $extension_type = 'module';
       }
       else {
@@ -322,25 +325,31 @@ class Ckeditor5Hooks {
    */
   #[Hook('js_alter')]
   public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language): void {
-    // This file means CKEditor 5 translations are in use on the page.
-    // @see locale_js_alter()
     $placeholder_file = 'core/assets/vendor/ckeditor5/translation.js';
-    // This file is used to get a weight that will make it possible to aggregate
-    // all translation files in a single aggregate.
-    $ckeditor_dll_file = 'core/assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js';
-    if (isset($javascript[$placeholder_file])) {
+    // When the locale module isn't installed there are no translations.
+    if (!$this->moduleHandler->moduleExists('locale')) {
+      unset($javascript[$placeholder_file]);
+      return;
+    }
+    $translations_library = 'core/ckeditor5.translations';
+    if (in_array($translations_library, $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getLibraries()), TRUE)
+      || in_array($translations_library, $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()), TRUE)) {
+
+      // This file is used to get a weight that will make it possible to
+      // aggregate all translation files in a single aggregate.
+      $ckeditor_dll_file = 'core/assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js';
       // Use the placeholder file weight to set all the translations files
-      // weights so they can be aggregated together as expected.
-      $default_weight = $javascript[$placeholder_file]['weight'];
+      // weights so they can be aggregated together as expected. Account for
+      // requests where the library is not loaded such as when during an AJAX
+      // request when it was already loaded via the main request. In these cases
+      // it is unlikely that multiple JavaScript aggregates will be created
+      // anyway since AJAX requests generally result in very few libraries being
+      // loaded.
+      $default_weight = $javascript[$placeholder_file]['weight'] ?? 0;
       if (isset($javascript[$ckeditor_dll_file])) {
         $default_weight = $javascript[$ckeditor_dll_file]['weight'];
       }
-      // The placeholder file is not a real file, remove it from the list.
-      unset($javascript[$placeholder_file]);
-      // When the locale module isn't installed there are no translations.
-      if (!\Drupal::moduleHandler()->moduleExists('locale')) {
-        return;
-      }
+
       $ckeditor5_language = $this->languageMapper->getMapping($language->getId());
       // Remove all CKEditor 5 translations files that are not in the current
       // language.
@@ -361,6 +370,8 @@ class Ckeditor5Hooks {
         }
       }
     }
+    // The placeholder file is not a real file, remove it from the list.
+    unset($javascript[$placeholder_file]);
   }
 
   /**
