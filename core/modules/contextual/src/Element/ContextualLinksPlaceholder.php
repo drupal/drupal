@@ -42,7 +42,7 @@ class ContextualLinksPlaceholder extends RenderElementBase {
    * @return array
    *   The passed-in element with a contextual link placeholder in '#markup'.
    *
-   * @see _contextual_links_to_id()
+   * @see \Drupal\contextual\ContextualLinksSerializer::linksToId()
    */
   public static function preRenderPlaceholder(array $element) {
     $token = Crypt::hmacBase64($element['#id'], Settings::getHashSalt() . \Drupal::service('private_key')->get());
