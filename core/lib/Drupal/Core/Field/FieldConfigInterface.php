@@ -242,8 +242,12 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    *
    * @param string $constraint_name
    *   The name of the constraint to add, i.e. its plugin id.
+   * phpcs:disable Drupal.Commenting
+   * @todo Uncomment new method parameter signature before drupal:12.0.0.
+   * @see https://www.drupal.org/node/3554746
    * @param array|null $options
    *   The constraint options as required by the constraint plugin, or NULL.
+   * phpcs:enable
    *
    * @return static
    *   The object itself for chaining.
@@ -252,7 +256,7 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    * @see \Drupal\Core\Field\FieldConfigInterface::addPropertyConstraints()
    * @see hook_entity_bundle_field_info_alter()
    */
-  public function addConstraint($constraint_name, $options = NULL);
+  public function addConstraint($constraint_name, /* ?array */$options = NULL);
 
   /**
    * Sets the array of validation constraints for the FieldItemList.

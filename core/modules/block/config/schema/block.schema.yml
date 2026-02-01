@@ -22,7 +22,8 @@ block.block.*:
       constraints:
         NotBlank: []
         ExtensionName: []
-        ExtensionExists: theme
+        ExtensionExists:
+          type: theme
     region:
       type: string
       label: 'Region'

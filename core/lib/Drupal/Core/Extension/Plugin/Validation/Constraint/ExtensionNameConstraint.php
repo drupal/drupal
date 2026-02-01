@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 
 /**
  * Checks that the value is a valid extension name.
@@ -18,26 +19,21 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
 )]
 class ExtensionNameConstraint extends RegexConstraint {
 
-  /**
-   * The default violation message.
-   *
-   * @var string
-   */
-  public string $message = 'This value is not a valid extension name.';
-
-  /**
-   * Constructs an ExtensionNameConstraint object.
-   *
-   * @param string|array|null $pattern
-   *   The regular expression to test for.
-   * @param mixed ...$arguments
-   *   Arguments to pass to the parent constructor.
-   */
-  public function __construct(string|array|null $pattern, ...$arguments) {
+  #[HasNamedArguments]
+  public function __construct(
+    string|array|NULL $pattern,
+    ?string $message = 'This value is not a valid extension name.',
+    ?string $htmlPattern = NULL,
+    ?bool $match = NULL,
+    ?callable $normalizer = NULL,
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+    ?array $options = NULL,
+  ) {
     // Always use the regular expression that ExtensionDiscovery uses to find
     // valid extensions.
     $pattern = ExtensionDiscovery::PHP_FUNCTION_PATTERN;
-    parent::__construct($pattern, ...$arguments);
+    parent::__construct($pattern, $message, $htmlPattern, $match, $normalizer, $groups, $payload, $options);
   }
 
 }

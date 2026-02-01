@@ -468,9 +468,9 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    */
   public function testImmutableProperties(array $valid_values = []): void {
     $constraints = $this->entity->getEntityType()->getConstraints();
-    $this->assertNotEmpty($constraints['ImmutableProperties'], 'All config entities should have at least one immutable ID property.');
+    $this->assertNotEmpty($constraints['ImmutableProperties']['properties'], 'All config entities should have at least one immutable ID property.');
 
-    foreach ($constraints['ImmutableProperties'] as $property_name) {
+    foreach ($constraints['ImmutableProperties']['properties'] as $property_name) {
       $original_value = $this->entity->get($property_name);
       $this->entity->set($property_name, $valid_values[$property_name] ?? $this->randomMachineName());
       $this->assertValidationErrors([
@@ -557,7 +557,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     // Get the config entity properties that are immutable.
     // @see ::testImmutableProperties()
-    $immutable_properties = $this->entity->getEntityType()->getConstraints()['ImmutableProperties'];
+    $immutable_properties = $this->entity->getEntityType()->getConstraints()['ImmutableProperties']['properties'];
 
     // Config entity properties containing plugin collections are special cases:
     // setting them to NULL would cause them to get out of sync with the plugin

@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -20,18 +21,23 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 class ToolbarItemDependencyConstraint extends SymfonyConstraint {
 
   /**
-   * The default violation message.
-   *
-   * @var string
-   */
-  public $message = 'Depends on %toolbar_item, which is not enabled.';
-
-  /**
    * The toolbar item that this validation constraint requires to be enabled.
    *
    * @var null|string
    */
   public $toolbarItem = NULL;
+
+  #[HasNamedArguments]
+  public function __construct(
+    mixed $options = NULL,
+    ?string $toolbarItem = NULL,
+    public $message = 'Depends on %toolbar_item, which is not enabled.',
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+  ) {
+    parent::__construct($options, $groups, $payload);
+    $this->toolbarItem = $toolbarItem ?? $this->toolbarItem;
+  }
 
   /**
    * {@inheritdoc}

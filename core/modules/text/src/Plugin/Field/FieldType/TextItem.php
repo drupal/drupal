@@ -66,14 +66,16 @@ class TextItem extends TextItemBase {
 
     if ($max_length = $this->getSetting('max_length')) {
       $constraints[] = $constraint_manager->create('ComplexData', [
-        'value' => [
-          'Length' => [
-            'max' => $max_length,
-            'maxMessage' => $this->t('%name: the text may not be longer than @max characters.', [
-              '%name' => $this->getFieldDefinition()
-                ->getLabel(),
-              '@max' => $max_length,
-            ]),
+        'properties' => [
+          'value' => [
+            'Length' => [
+              'max' => $max_length,
+              'maxMessage' => $this->t('%name: the text may not be longer than @max characters.', [
+                '%name' => $this->getFieldDefinition()
+                  ->getLabel(),
+                '@max' => $max_length,
+              ]),
+            ],
           ],
         ],
       ]);

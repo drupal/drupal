@@ -121,9 +121,11 @@ class TextWithSummaryItem extends TextItemBase {
     if ($this->getSetting('required_summary')) {
       $manager = $this->getTypedDataManager()->getValidationConstraintManager();
       $constraints[] = $manager->create('ComplexData', [
-        'summary' => [
-          'NotNull' => [
-            'message' => $this->t('The summary field is required for @name', ['@name' => $this->getFieldDefinition()->getLabel()]),
+        'properties' => [
+          'summary' => [
+            'NotNull' => [
+              'message' => $this->t('The summary field is required for @name', ['@name' => $this->getFieldDefinition()->getLabel()]),
+            ],
           ],
         ],
       ]);

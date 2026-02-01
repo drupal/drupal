@@ -236,7 +236,7 @@ class ContextDefinition implements ContextDefinitionInterface {
   /**
    * {@inheritdoc}
    */
-  public function addConstraint($constraint_name, $options = NULL) {
+  public function addConstraint($constraint_name, /* ?array */$options = NULL) {
     $this->constraints[$constraint_name] = $options;
     return $this;
   }

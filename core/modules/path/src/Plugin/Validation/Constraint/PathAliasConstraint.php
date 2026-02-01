@@ -4,6 +4,7 @@ namespace Drupal\path\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -15,11 +16,14 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class PathAliasConstraint extends SymfonyConstraint {
 
-  /**
-   * The default violation message.
-   *
-   * @var string
-   */
-  public $message = 'You can only change the URL alias for the <em>published</em> version of this content.';
+  #[HasNamedArguments]
+  public function __construct(
+    mixed $options = NULL,
+    public $message = 'You can only change the URL alias for the <em>published</em> version of this content.',
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+  ) {
+    parent::__construct($options, $groups, $payload);
+  }
 
 }

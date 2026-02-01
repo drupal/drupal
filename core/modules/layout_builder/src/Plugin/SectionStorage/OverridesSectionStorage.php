@@ -44,7 +44,7 @@ use Symfony\Component\Routing\RouteCollection;
       data_type: 'entity',
       label: new TranslatableMarkup("Entity"),
       constraints: [
-        "EntityHasField" => OverridesSectionStorage::FIELD_NAME,
+        "EntityHasField" => ['field_name' => OverridesSectionStorage::FIELD_NAME],
       ],
     ),
     'view_mode' => new ContextDefinition(

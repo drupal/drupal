@@ -37,7 +37,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
    */
   public function testValidatorRequiresAConfigEntity(): void {
     $definition = DataDefinition::createFromDataType('any')
-      ->addConstraint('ImmutableProperties', ['read_only']);
+      ->addConstraint('ImmutableProperties', ['properties' => ['read_only']]);
     $data = $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, 39);
     $this->expectException(UnexpectedValueException::class);
@@ -58,7 +58,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     $this->assertFalse(property_exists($entity, 'non_existent'));
 
     $definition = DataDefinition::createFromDataType('entity:block_content_type')
-      ->addConstraint('ImmutableProperties', ['non_existent']);
+      ->addConstraint('ImmutableProperties', ['properties' => ['non_existent']]);
 
     $this->expectException(LogicException::class);
     $this->expectExceptionMessage("The entity does not have a 'non_existent' property.");
@@ -77,7 +77,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     $entity->id()->shouldBeCalled();
 
     $definition = DataDefinition::createFromDataType('any')
-      ->addConstraint('ImmutableProperties', ['read_only']);
+      ->addConstraint('ImmutableProperties', ['properties' => ['read_only']]);
     $data = $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, $entity->reveal());
     $this->expectException(LogicException::class);
@@ -97,7 +97,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     $entity->save();
 
     $definition = DataDefinition::createFromDataType('entity:block_content_type')
-      ->addConstraint('ImmutableProperties', ['id', 'description']);
+      ->addConstraint('ImmutableProperties', ['properties' => ['id', 'description']]);
 
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager */
     $typed_data_manager = $this->container->get(TypedDataManagerInterface::class);

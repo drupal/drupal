@@ -73,13 +73,15 @@ class IntegerItem extends NumericItemBase {
     if ($this->getSetting('unsigned')) {
       $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
       $constraints[] = $constraint_manager->create('ComplexData', [
-        'value' => [
-          'Range' => [
-            'min' => 0,
-            'minMessage' => $this->t('%name: The integer must be larger or equal to %min.', [
-              '%name' => $this->getFieldDefinition()->getLabel(),
-              '%min' => 0,
-            ]),
+        'properties' => [
+          'value' => [
+            'Range' => [
+              'min' => 0,
+              'minMessage' => $this->t('%name: The integer must be larger or equal to %min.', [
+                '%name' => $this->getFieldDefinition()->getLabel(),
+                '%min' => 0,
+              ]),
+            ],
           ],
         ],
       ]);

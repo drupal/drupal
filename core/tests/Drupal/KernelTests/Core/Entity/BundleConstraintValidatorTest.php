@@ -58,7 +58,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
   protected function assertValidation($bundle): void {
     // Create a typed data definition with a Bundle constraint.
     $definition = DataDefinition::create('entity_reference')
-      ->addConstraint('Bundle', $bundle);
+      ->addConstraint('Bundle', ['bundle' => $bundle]);
 
     // Test the validation.
     $node = $this->container->get('entity_type.manager')->getStorage('node')->create(['type' => 'foo']);

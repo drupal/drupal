@@ -43,7 +43,7 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
     $entity_type = 'node';
     $definition = DataDefinition::create('entity_reference')
       ->setConstraints([
-        'EntityType' => $entity_type,
+        'EntityType' => ['type' => $entity_type],
       ]
     );
 

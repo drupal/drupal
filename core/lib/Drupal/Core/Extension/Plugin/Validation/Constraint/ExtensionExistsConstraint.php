@@ -6,6 +6,7 @@ namespace Drupal\Core\Extension\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -18,25 +19,24 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 class ExtensionExistsConstraint extends SymfonyConstraint {
 
   /**
-   * The error message for a non-existent module.
-   *
-   * @var string
-   */
-  public string $moduleMessage = "Module '@name' is not installed.";
-
-  /**
-   * The error message for a non-existent theme.
-   *
-   * @var string
-   */
-  public string $themeMessage = "Theme '@name' is not installed.";
-
-  /**
    * The type of extension to look for. Can be 'module' or 'theme'.
    *
    * @var string
    */
   public string $type;
+
+  #[HasNamedArguments]
+  public function __construct(
+    mixed $options = NULL,
+    ?string $type = NULL,
+    public string $moduleMessage = "Module '@name' is not installed.",
+    public string $themeMessage = "Theme '@name' is not installed.",
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+  ) {
+    parent::__construct($options, $groups, $payload);
+    $this->type = $type ?? $this->type;
+  }
 
   /**
    * {@inheritdoc}

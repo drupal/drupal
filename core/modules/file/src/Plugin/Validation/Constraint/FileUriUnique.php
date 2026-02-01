@@ -16,22 +16,17 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldValueValidato
 )]
 class FileUriUnique extends UniqueFieldConstraint {
 
-  /**
-   * The error message.
-   *
-   * @var string
-   */
-  public $message = 'The file %value already exists. Enter a unique file URI.';
+  public function __construct(
+    mixed $options = NULL,
+    ?bool $caseSensitive = NULL,
+    $message = 'The file %value already exists. Enter a unique file URI.',
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+  ) {
+    $this->caseSensitive = $caseSensitive ?? TRUE;
+    parent::__construct($options, $caseSensitive, $message, $groups, $payload);
 
-  /**
-   * This constraint is case-sensitive.
-   *
-   * For example "public://foo.txt" and "public://FOO.txt" are treated as
-   * different values, and can co-exist.
-   *
-   * @var bool
-   */
-  public $caseSensitive = TRUE;
+  }
 
   /**
    * {@inheritdoc}

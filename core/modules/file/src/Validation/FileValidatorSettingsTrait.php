@@ -36,7 +36,7 @@ trait FileValidatorSettingsTrait {
     }
 
     // There is always a file size limit due to the PHP server limit.
-    $validators['FileSizeLimit'] = ['fileLimit' => $maxFilesize];
+    $validators['FileSizeLimit'] = ['fileLimit' => (int) $maxFilesize];
 
     // Add the extension check if necessary.
     if (!empty($settings['file_extensions'])) {

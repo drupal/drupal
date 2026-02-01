@@ -117,21 +117,32 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
    * {@inheritdoc}
    */
   public function getEntityTypeId() {
-    return $this->definition['constraints']['EntityType'] ?? NULL;
+    return $this->definition['constraints']['EntityType']['type'] ?? ($this->definition['constraints']['EntityType'] ?? NULL);
   }
 
   /**
    * {@inheritdoc}
    */
   public function setEntityTypeId($entity_type_id) {
-    return $this->addConstraint('EntityType', $entity_type_id);
+    return $this->addConstraint('EntityType', ['type' => $entity_type_id]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getBundles() {
-    $bundle = $this->definition['constraints']['Bundle'] ?? NULL;
+    $bundle = NULL;
+    // With the update to Symfony 7.4, a constraint should be added with options
+    // as an associative array, with the keys of the array matching names of
+    // properties in the constraint plugin class. The 'Bundle' constraint
+    // definition here is expected to be an associative array with 'bundle' as
+    // the key. For backwards-compatibility, if the 'bundle' key does not exist,
+    // get the bundle value from the parent 'Bundle' key.
+    $bundle = $this->definition['constraints']['Bundle']['bundle'] ?? NULL;
+    if (($bundle === NULL) && isset($this->definition['constraints']['Bundle'])) {
+      @trigger_error('Adding the "Bundle" constraint with options missing the "bundle" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
+      $bundle = $this->definition['constraints']['Bundle'];
+    }
     return is_string($bundle) ? [$bundle] : $bundle;
   }
 
@@ -140,7 +151,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
    */
   public function setBundles(?array $bundles = NULL) {
     if (isset($bundles)) {
-      $this->addConstraint('Bundle', $bundles);
+      $this->addConstraint('Bundle', ['bundle' => $bundles]);
     }
     else {
       // Remove the constraint.

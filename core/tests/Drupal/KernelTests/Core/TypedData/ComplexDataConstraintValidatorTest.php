@@ -74,8 +74,10 @@ class ComplexDataConstraintValidatorTest extends KernelTestBase {
     $definition = MapDataDefinition::create()
       ->setPropertyDefinition('key', DataDefinition::create('integer'))
       ->addConstraint('ComplexData', [
-        'key' => [
-          'NotNull' => [],
+        'properties' => [
+          'key' => [
+            'NotNull' => [],
+          ],
         ],
       ]);
 

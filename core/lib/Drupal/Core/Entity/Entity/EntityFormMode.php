@@ -34,8 +34,10 @@ use Drupal\Core\Entity\EntityFormModeInterface;
   ],
   constraints: [
     'ImmutableProperties' => [
-      'id',
-      'targetEntityType',
+      'properties' => [
+        'id',
+        'targetEntityType',
+      ],
     ],
   ],
   config_export: [

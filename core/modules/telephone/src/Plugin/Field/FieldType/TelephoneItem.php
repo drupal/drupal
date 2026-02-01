@@ -67,14 +67,16 @@ class TelephoneItem extends FieldItemBase {
     $constraints = parent::getConstraints();
 
     $constraints[] = $constraint_manager->create('ComplexData', [
-      'value' => [
-        'Length' => [
-          'max' => self::MAX_LENGTH,
-          'maxMessage' => $this->t('%name: the telephone number may not be longer than @max characters.', [
-            '%name' => $this->getFieldDefinition()
-              ->getLabel(),
-            '@max' => self::MAX_LENGTH,
-          ]),
+      'properties' => [
+        'value' => [
+          'Length' => [
+            'max' => self::MAX_LENGTH,
+            'maxMessage' => $this->t('%name: the telephone number may not be longer than @max characters.', [
+              '%name' => $this->getFieldDefinition()
+                ->getLabel(),
+              '@max' => self::MAX_LENGTH,
+            ]),
+          ],
         ],
       ],
     ]);

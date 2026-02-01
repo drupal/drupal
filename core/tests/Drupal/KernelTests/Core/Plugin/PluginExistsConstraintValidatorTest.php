@@ -36,7 +36,7 @@ class PluginExistsConstraintValidatorTest extends KernelTestBase {
    */
   public function testValidation(): void {
     $definition = DataDefinition::create('string')
-      ->addConstraint('PluginExists', 'plugin.manager.action');
+      ->addConstraint('PluginExists', ['manager' => 'plugin.manager.action']);
 
     // An existing action plugin should pass validation.
     $data = $this->container->get('typed_data_manager')->create($definition);

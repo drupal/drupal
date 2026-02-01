@@ -100,7 +100,7 @@ class ImportForm extends FormBase {
 
     $validators = [
       'FileExtension' => ['extensions' => 'po'],
-      'FileSizeLimit' => ['fileLimit' => Environment::getUploadMaxSize()],
+      'FileSizeLimit' => ['fileLimit' => (int) Environment::getUploadMaxSize()],
       'FileEncoding' => ['encodings' => ['UTF-8']],
     ];
     $form['file'] = [

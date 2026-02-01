@@ -107,7 +107,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
       // We can add a constraint for the target entity type. The list of
       // referenceable bundles is a field setting, so the corresponding
       // constraint is added dynamically in ::getConstraints().
-      ->addConstraint('EntityType', $settings['target_type']);
+      ->addConstraint('EntityType', ['type' => $settings['target_type']]);
 
     return $properties;
   }

@@ -143,7 +143,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
           $derivative['_block_ui_hidden'] = !$field_definition->isDisplayConfigurable('view');
 
           $context_definition = EntityContextDefinition::fromEntityTypeId($entity_type_id)->setLabel($entity_type_labels[$entity_type_id]);
-          $context_definition->addConstraint('Bundle', [$bundle]);
+          $context_definition->addConstraint('Bundle', ['bundle' => [$bundle]]);
           $derivative['context_definitions'] = [
             'entity' => $context_definition,
             'view_mode' => new ContextDefinition('string'),

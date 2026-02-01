@@ -126,14 +126,16 @@ class TestItem extends FieldItemBase {
     $constraints = parent::getConstraints();
 
     $constraints[] = $constraint_manager->create('ComplexData', [
-      'value' => [
-        'TestField' => [
-          'value' => -1,
-          'message' => $this->t('%name does not accept the value @value.', [
-            '%name' => $this->getFieldDefinition()
-              ->getLabel(),
-            '@value' => -1,
-          ]),
+      'properties' => [
+        'value' => [
+          'TestField' => [
+            'value' => -1,
+            'message' => $this->t('%name does not accept the value @value.', [
+              '%name' => $this->getFieldDefinition()
+                ->getLabel(),
+              '@value' => -1,
+            ]),
+          ],
         ],
       ],
     ]);

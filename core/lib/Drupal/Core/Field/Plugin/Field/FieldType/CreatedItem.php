@@ -17,10 +17,12 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   no_ui: TRUE,
   constraints: [
     "ComplexData" => [
-      "value" => [
-        "Range" => [
-          "min" => "-2147483648",
-          "max" => "2147483648",
+      'properties' => [
+        "value" => [
+          "Range" => [
+            "min" => "-2147483648",
+            "max" => "2147483648",
+          ],
         ],
       ],
     ],
