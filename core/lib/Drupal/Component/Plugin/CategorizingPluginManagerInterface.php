@@ -21,11 +21,18 @@ interface CategorizingPluginManagerInterface extends PluginManagerInterface {
    * @param array[]|null $definitions
    *   (optional) The plugin definitions to sort. If omitted, all plugin
    *   definitions are used.
+   * phpcs:ignore Drupal.Commenting.FunctionComment.ParamNameNoMatch
+   * @param string $label_key
+   *   (optional) The key to be used as a label for sorting.
    *
    * @return array[]
    *   An array of plugin definitions, sorted by category and label.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3354672
+   *
+   * @todo Uncomment the new $label_key method parameter before drupal:12.0.0.
    */
-  public function getSortedDefinitions(?array $definitions = NULL);
+  public function getSortedDefinitions(?array $definitions = NULL /*, string $label_key = 'label' */);
 
   /**
    * Gets sorted plugin definitions grouped by category.
@@ -36,11 +43,18 @@ interface CategorizingPluginManagerInterface extends PluginManagerInterface {
    * @param array[]|null $definitions
    *   (optional) The plugin definitions to group. If omitted, all plugin
    *   definitions are used.
+   * phpcs:ignore Drupal.Commenting.FunctionComment.ParamNameNoMatch
+   * @param string $label_key
+   *   (optional) The key to be used as a label for sorting.
    *
    * @return array[]
    *   Keys are category names, and values are arrays of which the keys are
    *   plugin IDs and the values are plugin definitions.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3354672
+   *
+   * @todo Uncomment the new $label_key method parameter before drupal:12.0.0.
    */
-  public function getGroupedDefinitions(?array $definitions = NULL);
+  public function getGroupedDefinitions(?array $definitions = NULL /*, string $label_key = 'label' */);
 
 }

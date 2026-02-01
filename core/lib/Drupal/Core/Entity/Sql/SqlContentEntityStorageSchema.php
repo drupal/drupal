@@ -1935,17 +1935,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $column_names = $table_mapping->getColumnNames($storage_definition->getName());
     }
 
-    $index_keys = [
-      'indexes' => 'addIndex',
-      'unique keys' => 'addUniqueKey',
-    ];
-
     foreach ($this->getEntitySchemaData($this->entityType, $entity_schema) as $table_name => $schema) {
       // Add fields schema because database driver may depend on this data to
       // perform index normalization.
       $schema['fields'] = $entity_schema[$table_name]['fields'];
 
-      foreach ($index_keys as $key => $add_method) {
+      foreach (['indexes', 'unique keys'] as $key) {
         if (!empty($schema[$key])) {
           foreach ($schema[$key] as $name => $specifier) {
             // If a set of field columns were specified we process only indexes
@@ -1968,7 +1963,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
               }
             }
             if ($create) {
-              $this->{$add_method}($table_name, $name, $specifier, $schema);
+              match ($key) {
+                'indexes' => $this->addIndex($table_name, $name, $specifier, $schema),
+                'unique keys' => $this->addUniqueKey($table_name, $name, $specifier),
+              };
             }
           }
         }
