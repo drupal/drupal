@@ -14966,12 +14966,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Unit/Menu/ContentTranslationLocalTasksTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\contextual\\\\ContextualController\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/src/ContextualController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\contextual\\\\Plugin\\\\views\\\\field\\\\ContextualLinks\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

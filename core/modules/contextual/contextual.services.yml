@@ -1,8 +1,12 @@
 parameters:
   contextual.skip_procedural_hook_scan: true
 services:
+  _defaults:
+    autowire: true
+
   theme.negotiator.contextual_links:
     class: Drupal\contextual\Theme\ContextualLinksNegotiator
-    autowire: true
     tags:
       - { name: theme_negotiator }
+
+  Drupal\contextual\ContextualLinksSerializer: {}
