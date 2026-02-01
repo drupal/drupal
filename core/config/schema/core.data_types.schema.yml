@@ -53,7 +53,8 @@ mapping:
   constraints:
     # By default, allow the explicitly listed mapping keys, and require their
     # presence unless `requiredKey: false` is specified.
-    ValidKeys: '<infer>'
+    ValidKeys:
+      allowedKeys: '<infer>'
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
@@ -175,7 +176,8 @@ bytes:
   type: string
   label: 'Bytes'
   constraints:
-    Callback: ['\Drupal\Component\Utility\Bytes', 'validateConstraint']
+    Callback:
+      callback: ['\Drupal\Component\Utility\Bytes', 'validateConstraint']
 
 weight:
   type: integer
@@ -208,7 +210,8 @@ _core_config_info:
         Length:
           exactly: 43
   constraints:
-    ValidKeys: ['default_config_hash']
+    ValidKeys:
+      allowedKeys: ['default_config_hash']
 
 config_object:
   type: mapping
@@ -384,7 +387,8 @@ config_dependencies_base:
         constraints:
           NotBlank: []
           ExtensionName: []
-          ExtensionExists: module
+          ExtensionExists:
+            type: module
     theme:
       # All dependency keys are optional: this might not depend on any themes.
       requiredKey: false
@@ -395,9 +399,11 @@ config_dependencies_base:
         constraints:
           NotBlank: []
           ExtensionName: []
-          ExtensionExists: theme
+          ExtensionExists:
+            type: theme
   constraints:
-    ValidKeys: '<infer>'
+    ValidKeys:
+      allowedKeys: '<infer>'
 
 config_dependencies:
   type: config_dependencies_base
@@ -409,7 +415,8 @@ config_dependencies:
       type: config_dependencies_base
       label: 'Enforced configuration dependencies'
   constraints:
-    ValidKeys: '<infer>'
+    ValidKeys:
+      allowedKeys: '<infer>'
 
 config_entity:
   type: mapping
@@ -470,7 +477,8 @@ block_settings:
       constraints:
         NotBlank: []
         ExtensionName: []
-        ExtensionExists: module
+        ExtensionExists:
+          type: module
     context_mapping:
       requiredKey: false
       type: sequence
@@ -575,7 +583,8 @@ field_config_base:
       type: string
       label: 'Bundle'
       constraints:
-        EntityBundleExists: '%parent.entity_type'
+        EntityBundleExists:
+          entityTypeId: '%parent.entity_type'
     label:
       type: required_label
       label: 'Label'

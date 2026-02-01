@@ -19,6 +19,9 @@ class ConstraintFactory extends ContainerFactory {
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = []) {
+    $options_not_passed_as_array = !empty($configuration['_options_not_passed_as_array']);
+    unset($configuration['_options_not_passed_as_array']);
+
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
 
@@ -44,11 +47,19 @@ class ConstraintFactory extends ContainerFactory {
 
     // If the plugin is a Symfony Constraint, use the correct constructor.
     if (is_subclass_of($plugin_class, Constraint::class)) {
+      $configuration_is_list = !empty($configuration) && array_is_list($configuration);
+      if ($options_not_passed_as_array || $configuration_is_list) {
+        @trigger_error(sprintf('Passing any non-associative-array options to configure constraint plugin "%s" is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746', $plugin_id), E_USER_DEPRECATED);
+        return new $plugin_class($configuration);
+      }
+
       $reflection_class = new \ReflectionClass($plugin_class);
       $reflection_constructor = $reflection_class->getConstructor();
       // If configuration is empty, an empty first parameter is passed to any
       // plugin class constructor that has a required parameter. Otherwise,
       // create a new plugin class instance without any constructor parameters.
+      // For an example of a constraint that has a required parameter:
+      // @see Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionNameConstraint
       if (empty($configuration)) {
         return ($reflection_constructor?->getNumberOfRequiredParameters() > 0) ? new $plugin_class($configuration) : new $plugin_class();
       }
@@ -60,8 +71,6 @@ class ConstraintFactory extends ContainerFactory {
       if ($has_named_arguments) {
         // If the configuration array is associative, use the spread operator to
         // pass the values as named parameters.
-        // @todo Trigger deprecation when $configuration is not an associative
-        //   array in https://www.drupal.org/project/drupal/issues/3555134.
         return array_is_list($configuration) ? new $plugin_class($configuration) : new $plugin_class(...$configuration);
       }
 

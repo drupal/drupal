@@ -70,8 +70,10 @@ class StringItem extends StringItemBase {
         ]);
       }
       $constraints[] = $constraint_manager->create('ComplexData', [
-        'value' => [
-          'Length' => $options,
+        'properties' => [
+          'value' => [
+            'Length' => $options,
+          ],
         ],
       ]);
     }

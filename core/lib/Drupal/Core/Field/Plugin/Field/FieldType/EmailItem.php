@@ -56,13 +56,15 @@ class EmailItem extends FieldItemBase {
     $constraints = parent::getConstraints();
 
     $constraints[] = $constraint_manager->create('ComplexData', [
-      'value' => [
-        'Length' => [
-          'max' => Email::EMAIL_MAX_LENGTH,
-          'maxMessage' => $this->t('%name: the email address can not be longer than @max characters.', [
-            '%name' => $this->getFieldDefinition()->getLabel(),
-            '@max' => Email::EMAIL_MAX_LENGTH,
-          ]),
+      'properties' => [
+        'value' => [
+          'Length' => [
+            'max' => Email::EMAIL_MAX_LENGTH,
+            'maxMessage' => $this->t('%name: the email address can not be longer than @max characters.', [
+              '%name' => $this->getFieldDefinition()->getLabel(),
+              '@max' => Email::EMAIL_MAX_LENGTH,
+            ]),
+          ],
         ],
       ],
     ]);

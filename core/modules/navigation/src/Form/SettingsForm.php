@@ -145,7 +145,7 @@ final class SettingsForm extends ConfigFormBase {
     $max_allowed = $max_navigation_allowed < $max_system_allowed ? $max_navigation_allowed : $max_system_allowed;
     $upload_validators = [
       'FileExtension' => ['extensions' => $allowed],
-      'FileSizeLimit' => ['fileLimit' => $max_allowed],
+      'FileSizeLimit' => ['fileLimit' => (int) $max_allowed],
     ];
     $file_upload_help = [
       '#theme' => 'file_upload_help',

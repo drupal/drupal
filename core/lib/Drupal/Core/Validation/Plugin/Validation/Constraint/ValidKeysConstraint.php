@@ -7,6 +7,7 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -22,46 +23,27 @@ use Symfony\Component\Validator\Exception\InvalidArgumentException;
 class ValidKeysConstraint extends SymfonyConstraint {
 
   /**
-   * The error message if a key is invalid.
-   *
-   * @var string
-   */
-  public string $invalidKeyMessage = "'@key' is not a supported key.";
-
-  /**
-   * The error message if a key is unknown for the resolved type.
-   *
-   * @var string
-   */
-  public string $dynamicInvalidKeyMessage = "'@key' is an unknown key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
-
-  /**
-   * The error message if a key is missing.
-   *
-   * @var string
-   */
-  public string $missingRequiredKeyMessage = "'@key' is a required key.";
-
-  /**
-   * The error message if a dynamically required key is missing.
-   *
-   * @var string
-   */
-  public string $dynamicMissingRequiredKeyMessage = "'@key' is a required key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).";
-
-  /**
-   * The error message if the array being validated is a list.
-   *
-   * @var string
-   */
-  public string $indexedArrayMessage = 'Numerically indexed arrays are not allowed.';
-
-  /**
    * Keys which are allowed in the validated array, or `<infer>` to auto-detect.
    *
    * @var array|string
    */
   public array|string $allowedKeys;
+
+  #[HasNamedArguments]
+  public function __construct(
+    mixed $options = NULL,
+    array|string|null $allowedKeys = NULL,
+    public string $invalidKeyMessage = "'@key' is not a supported key.",
+    public string $dynamicInvalidKeyMessage = "'@key' is an unknown key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).",
+    public string $missingRequiredKeyMessage = "'@key' is a required key.",
+    public string $dynamicMissingRequiredKeyMessage = "'@key' is a required key because @dynamic_type_property_path is @dynamic_type_property_value (see config schema type @resolved_dynamic_type).",
+    public string $indexedArrayMessage = 'Numerically indexed arrays are not allowed.',
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+  ) {
+    parent::__construct($options, $groups, $payload);
+    $this->allowedKeys = $allowedKeys ?? $this->allowedKeys;
+  }
 
   /**
    * {@inheritdoc}

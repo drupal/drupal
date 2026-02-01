@@ -23,7 +23,7 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  * type and bundle of the referenced entity can be created as following:
  * @code
  * $definition = \Drupal\Core\Entity\EntityDefinition::create($entity_type)
- *   ->addConstraint('Bundle', $bundle);
+ *   ->addConstraint('Bundle', ['bundle' => $bundle]);
  * \Drupal\Core\TypedData\DataReferenceDefinition::create('entity')
  *   ->setTargetDefinition($definition);
  * @endcode

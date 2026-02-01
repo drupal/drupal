@@ -305,7 +305,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    */
   public function setPropertyConstraints($name, array $constraints) {
     $item_constraints = $this->getItemDefinition()->getConstraints();
-    $item_constraints['ComplexData'][$name] = $constraints;
+    $item_constraints['ComplexData']['properties'][$name] = $constraints;
     $this->getItemDefinition()->setConstraints($item_constraints);
     return $this;
   }
@@ -343,7 +343,12 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @see \Drupal\Core\Field\BaseFieldDefinition::addConstraint()
    */
   public function addPropertyConstraints($name, array $constraints) {
-    $item_constraints = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
+    $complex_data_constraint = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
+    $item_constraints = $complex_data_constraint['properties'] ?? NULL;
+    if ($item_constraints === NULL) {
+      @trigger_error('Adding the "ComplexData" constraint with options missing the "properties" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
+      $item_constraints = $complex_data_constraint;
+    }
     if (isset($item_constraints[$name])) {
       // Add the new property constraints, overwriting as required.
       $item_constraints[$name] = $constraints + $item_constraints[$name];
@@ -351,7 +356,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     else {
       $item_constraints[$name] = $constraints;
     }
-    $this->getItemDefinition()->addConstraint('ComplexData', $item_constraints);
+    $this->getItemDefinition()->addConstraint('ComplexData', ['properties' => $item_constraints]);
     return $this;
   }
 

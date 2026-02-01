@@ -26,10 +26,12 @@ use Drupal\Core\TypedData\DataDefinition;
   default_formatter: "timestamp",
   constraints: [
     "ComplexData" => [
-      "value" => [
-        "Range" => [
-          "min" => "-2147483648",
-          "max" => "2147483648",
+      'properties' => [
+        "value" => [
+          "Range" => [
+            "min" => "-2147483648",
+            "max" => "2147483648",
+          ],
         ],
       ],
     ],

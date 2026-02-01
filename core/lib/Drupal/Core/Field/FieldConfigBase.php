@@ -557,7 +557,12 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
         ->setSettings($this->getSettings());
 
       // Add any custom property constraints, overwriting as required.
-      $item_constraints = $this->itemDefinition->getConstraint('ComplexData') ?: [];
+      $complex_data_constraint = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
+      $item_constraints = $complex_data_constraint['properties'] ?? NULL;
+      if ($item_constraints === NULL) {
+        @trigger_error('Adding the "ComplexData" constraint with options missing the "properties" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
+        $item_constraints = $complex_data_constraint;
+      }
       foreach ($this->propertyConstraints as $name => $constraints) {
         if (isset($item_constraints[$name])) {
           $item_constraints[$name] = $constraints + $item_constraints[$name];
@@ -565,7 +570,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
         else {
           $item_constraints[$name] = $constraints;
         }
-        $this->itemDefinition->addConstraint('ComplexData', $item_constraints);
+        $this->itemDefinition->addConstraint('ComplexData', ['properties' => $item_constraints]);
       }
     }
 
@@ -590,7 +595,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
-  public function addConstraint($constraint_name, $options = NULL) {
+  public function addConstraint($constraint_name, /* ?array */$options = NULL) {
     $this->constraints[$constraint_name] = $options;
     return $this;
   }

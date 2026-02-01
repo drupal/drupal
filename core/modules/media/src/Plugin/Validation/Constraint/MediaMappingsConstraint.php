@@ -4,6 +4,7 @@ namespace Drupal\media\Plugin\Validation\Constraint;
 
 use Drupal\Core\Validation\Attribute\Constraint;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -18,11 +19,14 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class MediaMappingsConstraint extends SymfonyConstraint {
 
-  /**
-   * The error message if source is used in media mapping.
-   *
-   * @var string
-   */
-  public string $invalidMappingMessage = 'It is not possible to map the source field @source_field_name of a media type.';
+  #[HasNamedArguments]
+  public function __construct(
+    mixed $options = NULL,
+    public string $invalidMappingMessage = 'It is not possible to map the source field @source_field_name of a media type.',
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+  ) {
+    parent::__construct($options, $groups, $payload);
+  }
 
 }

@@ -36,13 +36,15 @@ use Drupal\field\FieldConfigInterface;
     'plural' => '@count fields',
   ],
   constraints: [
-    'RequiredConfigDependencies' => ['field_storage_config'],
+    'RequiredConfigDependencies' => ['entityTypes' => ['field_storage_config']],
     'ImmutableProperties' => [
-      'id',
-      'entity_type',
-      'field_name',
-      'bundle',
-      'field_type',
+      'properties' => [
+        'id',
+        'entity_type',
+        'field_name',
+        'bundle',
+        'field_type',
+      ],
     ],
   ],
   config_export: [

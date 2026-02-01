@@ -38,7 +38,7 @@ class ExtensionAvailableConstraintValidatorTest extends KernelTestBase {
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
     $typed_data = $this->container->get('typed_data_manager');
 
-    $definition->setConstraints(['ExtensionAvailable' => 'profile']);
+    $definition->setConstraints(['ExtensionAvailable' => ['type' => 'profile']]);
     $data = $typed_data->create($definition, 'minimal');
 
     // Assuming 'minimal' profile is available.

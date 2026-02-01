@@ -59,8 +59,10 @@ use Drupal\user\Entity\EntityPermissionsRouteProvider;
   ],
   constraints: [
     'ImmutableProperties' => [
-      'id',
-      'source',
+      'properties' => [
+        'id',
+        'source',
+      ],
     ],
     'MediaMappingsConstraint' => [],
   ],

@@ -6,6 +6,7 @@ namespace Drupal\entity_test\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -17,9 +18,14 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class FieldWidgetConstraint extends SymfonyConstraint {
 
-  /**
-   * The default violation message.
-   */
-  public string $message = 'Widget constraint has failed.';
+  #[HasNamedArguments]
+  public function __construct(
+    mixed $options = NULL,
+    public string $message = 'Widget constraint has failed.',
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+  ) {
+    parent::__construct($options, $groups, $payload);
+  }
 
 }

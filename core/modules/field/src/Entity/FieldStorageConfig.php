@@ -41,10 +41,12 @@ use Drupal\field\FieldStorageConfigStorage;
   ],
   constraints: [
     'ImmutableProperties' => [
-      'id',
-      'entity_type',
-      'field_name',
-      'type',
+      'properties' => [
+        'id',
+        'entity_type',
+        'field_name',
+        'type',
+      ],
     ],
   ],
   config_export: [

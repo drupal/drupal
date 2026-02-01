@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -17,18 +18,23 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 class EntityTypeConstraint extends SymfonyConstraint {
 
   /**
-   * The default violation message.
-   *
-   * @var string
-   */
-  public $message = 'The entity must be of type %type.';
-
-  /**
    * The entity type option.
    *
    * @var string
    */
   public $type;
+
+  #[HasNamedArguments]
+  public function __construct(
+    mixed $options = NULL,
+    ?string $type = NULL,
+    public $message = 'The entity must be of type %type.',
+    ?array $groups = NULL,
+    mixed $payload = NULL,
+  ) {
+    parent::__construct($options, $groups, $payload);
+    $this->type = $type ?? $this->type;
+  }
 
   /**
    * {@inheritdoc}
