@@ -120,22 +120,31 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     ];
     $connection_options['pdo'] += [
       \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-      // So we don't have to mess around with cursors and unbuffered queries by
-      // default.
+    ];
+    // So we don't have to mess around with cursors and unbuffered queries by
+    // default.
+    $connection_options['pdo'] += [
       Mysql::ATTR_USE_BUFFERED_QUERY => TRUE,
-      // Make sure MySQL returns all matched rows on update queries including
-      // rows that actually didn't have to be updated because the values didn't
-      // change. This matches common behavior among other database systems.
+    ];
+    // Make sure MySQL returns all matched rows on update queries including
+    // rows that actually didn't have to be updated because the values didn't
+    // change. This matches common behavior among other database systems.
+    $connection_options['pdo'] += [
       Mysql::ATTR_FOUND_ROWS => TRUE,
-      // Because MySQL's prepared statements skip the query cache, because it's
-      // dumb.
+    ];
+    // Because MySQL's prepared statements skip the query cache.
+    $connection_options['pdo'] += [
       \PDO::ATTR_EMULATE_PREPARES => TRUE,
-      // Limit SQL to a single statement like mysqli.
+    ];
+    // Limit SQL to a single statement like mysqli.
+    $connection_options['pdo'] += [
       Mysql::ATTR_MULTI_STATEMENTS => FALSE,
-      // Convert numeric values to strings when fetching. In PHP 8.1,
-      // \PDO::ATTR_EMULATE_PREPARES now behaves the same way as non emulated
-      // prepares and returns integers. See https://externals.io/message/113294
-      // for further discussion.
+    ];
+    // Convert numeric values to strings when fetching. In PHP 8.1,
+    // \PDO::ATTR_EMULATE_PREPARES now behaves the same way as non emulated
+    // prepares and returns integers. See https://externals.io/message/113294
+    // for further discussion.
+    $connection_options['pdo'] += [
       \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     ];
 
