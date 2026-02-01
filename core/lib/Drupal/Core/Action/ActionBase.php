@@ -19,6 +19,7 @@ abstract class ActionBase extends PluginBase implements ActionInterface {
    */
   public function executeMultiple(array $entities) {
     foreach ($entities as $entity) {
+      // @phpstan-ignore arguments.count
       $this->execute($entity);
     }
   }
