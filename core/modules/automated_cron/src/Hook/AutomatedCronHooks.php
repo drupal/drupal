@@ -45,7 +45,6 @@ class AutomatedCronHooks {
    */
   #[Hook('form_system_cron_settings_alter')]
   public function formSystemCronSettingsAlter(&$form, &$form_state) : void {
-    $automated_cron_settings = \Drupal::config('automated_cron.settings');
     $options = [3600, 10800, 21600, 43200, 86400, 604800];
     $form['cron']['interval'] = [
       '#type' => 'select',
@@ -53,7 +52,7 @@ class AutomatedCronHooks {
       '#description' => $this->t('More information about setting up scheduled tasks can be found by <a href=":url">reading the cron tutorial on drupal.org</a>.', [
         ':url' => 'https://www.drupal.org/docs/8/administering-a-drupal-8-site/cron-automated-tasks',
       ]),
-      '#default_value' => $automated_cron_settings->get('interval'),
+      '#config_target' => 'automated_cron.settings:interval',
       '#options' => [
         0 => $this->t('Never'),
       ] + array_map([
@@ -61,10 +60,6 @@ class AutomatedCronHooks {
         'formatInterval',
       ], array_combine($options, $options)),
     ];
-    // Add submit callback.
-    $form['#submit'][] = 'automated_cron_settings_submit';
-    // Theme this form as a config form.
-    $form['#theme'] = 'system_config_form';
   }
 
 }

@@ -8,8 +8,15 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form submission handler for system_cron_settings().
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   AutomatedCronHooks::automatedCronSettingsSubmit() instead.
+ *
+ * @see https://www.drupal.org/node/3566774
+ * @see \Drupal\automated_cron\Hook\AutomatedCronHooks::automatedCronSettingsSubmit()
  */
 function automated_cron_settings_submit(array $form, FormStateInterface $form_state): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   \Drupal::configFactory()->getEditable('automated_cron.settings')
     ->set('interval', $form_state->getValue('interval'))
     ->save();
