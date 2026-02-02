@@ -248,9 +248,6 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
  * @param string $format_id
  *   The ID of the text format for which to retrieve tips, or -1 to return tips
  *   for all formats accessible to the current user.
- * @param bool $long
- *   (optional) Boolean indicating whether the long form of tips should be
- *   returned. Defaults to FALSE.
  *
  * @return array
  *   An associative array of filtering tips, keyed by filter name. Each
@@ -258,7 +255,11 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
  *   - tip: Tip text.
  *   - id: Filter ID.
  */
-function _filter_tips($format_id, $long = FALSE): array {
+function _filter_tips($format_id): array {
+  if (func_num_args() > 1) {
+    @trigger_error('The $long argument to _filter_tips() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Only short tips are used. See https://www.drupal.org/node/3567879', E_USER_DEPRECATED);
+  }
+
   $formats = filter_formats(\Drupal::currentUser());
 
   $tips = [];
@@ -271,7 +272,14 @@ function _filter_tips($format_id, $long = FALSE): array {
   foreach ($formats as $format) {
     foreach ($format->filters() as $name => $filter) {
       if ($filter->status) {
-        $tip = $filter->tips($long);
+        $method = new \ReflectionMethod($filter, 'tips');
+        if ($method->getNumberOfParameters() > 0) {
+          @trigger_error(sprintf('The $long argument to %s::tips() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Only short tips are used. See https://www.drupal.org/node/3567879', $filter::class), E_USER_DEPRECATED);
+          $tip = $filter->tips(func_num_args() > 1 ? func_get_arg(1) : FALSE);
+        }
+        else {
+          $tip = $filter->tips();
+        }
         if (isset($tip)) {
           $tips[$format->label()][$name] = [
             'tip' => ['#markup' => $tip],

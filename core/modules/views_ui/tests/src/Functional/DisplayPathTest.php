@@ -196,7 +196,6 @@ class DisplayPathTest extends UITestBase {
       '<Footer>',
       '<Main navigation>',
       '<Tools>',
-      '-- Compose tips (disabled)',
       '-- Test menu link',
     ], $menu_options);
 
