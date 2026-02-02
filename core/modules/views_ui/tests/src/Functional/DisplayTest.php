@@ -116,7 +116,7 @@ class DisplayTest extends UITestBase {
    * Tests views_ui_views_plugins_display_alter is altering plugin definitions.
    */
   public function testDisplayPluginsAlter(): void {
-    $definitions = Views::pluginManager('display')->getDefinitions();
+    $definitions = \Drupal::service('plugin.manager.views.display')->getDefinitions();
 
     $expected = [
       'route_name' => 'entity.view.edit_form',

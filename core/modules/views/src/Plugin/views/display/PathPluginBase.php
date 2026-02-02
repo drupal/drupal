@@ -10,7 +10,6 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Url;
-use Drupal\views\Views;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
@@ -186,7 +185,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $access_plugin = $this->getPlugin('access');
     if (!isset($access_plugin)) {
       // @todo Do we want to support a default plugin in getPlugin itself?
-      $access_plugin = Views::pluginManager('access')->createInstance('none');
+      $access_plugin = \Drupal::service('plugin.manager.views.access')->createInstance('none');
     }
     $access_plugin->alterRouteDefinition($route);
 

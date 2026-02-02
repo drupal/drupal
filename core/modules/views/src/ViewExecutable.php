@@ -1472,7 +1472,7 @@ class ViewExecutable {
     // Check for already-cached results.
     /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
     if (!empty($this->live_preview)) {
-      $cache = Views::pluginManager('cache')->createInstance('none');
+      $cache = \Drupal::service('plugin.manager.views.cache')->createInstance('none');
     }
     else {
       $cache = $this->display_handler->getPlugin('cache');
@@ -1537,7 +1537,7 @@ class ViewExecutable {
     // Check for already-cached output.
     /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
     if (!empty($this->live_preview)) {
-      $cache = Views::pluginManager('cache')->createInstance('none');
+      $cache = \Drupal::service('plugin.manager.views.cache')->createInstance('none');
     }
     else {
       $cache = $this->display_handler->getPlugin('cache');

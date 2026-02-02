@@ -7,7 +7,6 @@ use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Views;
 
 /**
  * Argument handler for search keywords.
@@ -95,7 +94,7 @@ class Search extends ArgumentPluginBase {
         'left_table' => $search_index,
         'left_field' => 'word',
       ];
-      $join = Views::pluginManager('join')->createInstance('standard', $definition);
+      $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $definition);
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
       // Add the search score field to the query.

@@ -368,7 +368,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
    * @internal
    */
   protected function assertPluginStates(array $states): void {
-    $plugin = Views::pluginManager('filter')->createInstance('moderation_state_filter', []);
+    $plugin = \Drupal::service('plugin.manager.views.filter')->createInstance('moderation_state_filter', []);
     $view = Views::getView('test_content_moderation_state_filter_base_table');
     $plugin->init($view, $view->getDisplay());
     $this->assertEquals($states, $plugin->getValueOptions());

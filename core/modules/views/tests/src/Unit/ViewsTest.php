@@ -9,11 +9,14 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
+use Drupal\views\Plugin\ViewsHandlerManager;
+use Drupal\views\Plugin\ViewsPluginManager;
 use Drupal\views\ViewExecutableFactory;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -204,6 +207,13 @@ class ViewsTest extends UnitTestCase {
       ->willReturn($definitions);
     $this->container->set('plugin.manager.views.display', $display_manager);
 
+    $locator = $this->createMock('\Symfony\Component\DependencyInjection\ServiceLocator');
+    $locator->expects($this->any())
+      ->method('get')
+      ->with('display')
+      ->willReturn($display_manager);
+    $this->container->set('views.plugin_managers', $locator);
+
     $result = Views::getApplicableViews($applicable_type);
     $this->assertEquals($expected, $result);
   }
@@ -220,6 +230,48 @@ class ViewsTest extends UnitTestCase {
       ['type_b', [['test_view_2', 'type_b']]],
       ['type_c', []],
     ];
+  }
+
+  /**
+   * Tests the ::pluginManager() deprecation.
+   */
+  #[Group('legacy')]
+  public function testPluginManagerDeprecation(): void {
+    $this->expectDeprecation('Drupal\views\Views::pluginManager() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'plugin.manager.views.{type}\') for specific plugin types or \Drupal::service(\'views.plugin_managers\')->get($type) for dynamic types. See https://www.drupal.org/node/3566982');
+
+    $plugin_manager = $this->createMock(ViewsPluginManager::class);
+
+    $locator = $this->createMock(ServiceLocator::class);
+    $locator->expects($this->once())
+      ->method('get')
+      ->with('display')
+      ->willReturn($plugin_manager);
+    $this->container->set('views.plugin_managers', $locator);
+
+    // @phpstan-ignore staticMethod.deprecated
+    $result = Views::pluginManager('display');
+    $this->assertSame($plugin_manager, $result);
+  }
+
+  /**
+   * Tests the ::handlerManager() deprecation.
+   */
+  #[Group('legacy')]
+  public function testHandlerManagerDeprecation(): void {
+    $this->expectDeprecation('Drupal\views\Views::handlerManager() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'plugin.manager.views.{type}\') for specific handler types or \Drupal::service(\'views.plugin_managers\')->get($type) for dynamic types. See https://www.drupal.org/node/3566982');
+
+    $handler_manager = $this->createMock(ViewsHandlerManager::class);
+
+    $locator = $this->createMock(ServiceLocator::class);
+    $locator->expects($this->once())
+      ->method('get')
+      ->with('filter')
+      ->willReturn($handler_manager);
+    $this->container->set('views.plugin_managers', $locator);
+
+    // @phpstan-ignore staticMethod.deprecated
+    $result = Views::handlerManager('filter');
+    $this->assertSame($handler_manager, $result);
   }
 
 }

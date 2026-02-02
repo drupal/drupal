@@ -72,6 +72,13 @@ class PathPluginBaseTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('plugin.manager.views.access', $this->accessPluginManager);
 
+    $locator = $this->createMock('\Symfony\Component\DependencyInjection\ServiceLocator');
+    $locator->expects($this->any())
+      ->method('get')
+      ->with('access')
+      ->willReturn($this->accessPluginManager);
+    $container->set('views.plugin_managers', $locator);
+
     $config = [
       'views.settings' => [
         'display_extenders' => [],

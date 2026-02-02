@@ -3,7 +3,6 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Views;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 
@@ -107,7 +106,7 @@ class ConfigHandlerGroup extends ViewsFormBase {
     $item = &$form_state->get('handler')->options;
     $type = $form_state->get('type');
 
-    $handler = Views::handlerManager($type)->getHandler($item);
+    $handler = \Drupal::service('views.plugin_managers')->get($type)->getHandler($item);
     $executable = $view->getExecutable();
     $handler->init($executable, $executable->display_handler, $item);
 

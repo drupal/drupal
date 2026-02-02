@@ -97,7 +97,7 @@ abstract class RowPluginBase extends PluginBase {
       $relationship_options = [];
 
       foreach ($relationships as $relationship) {
-        $relationship_handler = Views::handlerManager('relationship')->getHandler($relationship);
+        $relationship_handler = \Drupal::service('plugin.manager.views.relationship')->getHandler($relationship);
 
         // If this relationship is valid for this type, add it to the list.
         $data = Views::viewsData()->get($relationship['table']);
