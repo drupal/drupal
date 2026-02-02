@@ -320,7 +320,6 @@ class HookCollectorPass implements CompilerPassInterface {
         }
       }
       $operations_by_hook[$hook] = array_values($order_operations);
-
     }
     return $operations_by_hook;
   }
