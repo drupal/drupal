@@ -19,7 +19,6 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides the add-page and title callbacks for entities.
@@ -47,7 +46,6 @@ class EntityController implements ContainerInjectionInterface {
     TranslationInterface $stringTranslation,
     protected readonly UrlGeneratorInterface $urlGenerator,
     protected readonly RouteMatchInterface $routeMatch,
-    protected readonly RequestStack $requestStack,
   ) {
     $this->stringTranslation = $stringTranslation;
   }
@@ -64,7 +62,6 @@ class EntityController implements ContainerInjectionInterface {
       $container->get('string_translation'),
       $container->get('url_generator'),
       $container->get('current_route_match'),
-      $container->get('request_stack'),
     );
   }
 
@@ -106,7 +103,7 @@ class EntityController implements ContainerInjectionInterface {
   public function addPage($entity_type_id, ?Request $request = NULL) {
     if ($request === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $request parameter is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3467748', E_USER_DEPRECATED);
-      $request = $this->requestStack->getCurrentRequest();
+      $request = \Drupal::requestStack()->getCurrentRequest();
     }
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
