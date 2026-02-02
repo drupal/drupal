@@ -5,7 +5,7 @@ namespace Drupal\user;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 
 /**
- * Controller class for user roles.
+ * Defines the storage handler class for user roles.
  */
 class RoleStorage extends ConfigEntityStorage implements RoleStorageInterface {
 
