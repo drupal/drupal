@@ -18,7 +18,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\TableSort;
-use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -127,7 +126,7 @@ class ViewsThemeHooks {
     $plugin_types = ['display', 'pager', 'row', 'style', 'exposed_form'];
     $plugins = [];
     foreach ($plugin_types as $plugin_type) {
-      $plugins[$plugin_type] = Views::pluginManager($plugin_type)->getDefinitions();
+      $plugins[$plugin_type] = \Drupal::service('views.plugin_managers')->get($plugin_type)->getDefinitions();
     }
     // Register theme functions for all style plugins. It provides a basic auto
     // implementation of template files by using the plugin

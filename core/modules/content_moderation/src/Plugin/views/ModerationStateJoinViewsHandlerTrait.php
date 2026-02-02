@@ -2,8 +2,6 @@
 
 namespace Drupal\content_moderation\Plugin\views;
 
-use Drupal\views\Views;
-
 /**
  * Assist views handler plugins to join to the content_moderation_state entity.
  *
@@ -47,7 +45,7 @@ trait ModerationStateJoinViewsHandlerTrait {
           'left_field' => $left_entity_type->getKey('langcode'),
         ];
       }
-      $join = Views::pluginManager('join')->createInstance('standard', $configuration);
+      $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $configuration);
       $this->tableAlias = $this->query->addRelationship('content_moderation_state', $join, 'content_moderation_state_field_revision');
     }
 

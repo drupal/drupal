@@ -157,7 +157,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     else {
       $id = 'standard';
     }
-    $join = Views::pluginManager('join')->createInstance($id, $def);
+    $join = \Drupal::service('plugin.manager.views.join')->createInstance($id, $def);
 
     // Use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;

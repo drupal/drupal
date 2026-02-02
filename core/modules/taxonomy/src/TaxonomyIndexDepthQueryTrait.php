@@ -2,8 +2,6 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\views\Views;
-
 /**
  * Builds a performant depth subquery and adds it as a join to the query.
  *
@@ -85,7 +83,7 @@ trait TaxonomyIndexDepthQueryTrait {
     $definition['type'] = 'INNER';
     $definition['adjusted'] = TRUE;
     $definition['table formula'] = $subquery;
-    $join = Views::pluginManager('join')->createInstance('standard', $definition);
+    $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $definition);
 
     // There is no $base as we are joining to a query.
     $this->query->addRelationship('taxonomy_index_depth', $join, NULL, $this->relationship);

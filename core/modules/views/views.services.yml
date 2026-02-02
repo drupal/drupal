@@ -4,6 +4,31 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+  views.plugin_managers:
+    class: Symfony\Component\DependencyInjection\ServiceLocator
+    arguments:
+      -
+        access: '@plugin.manager.views.access'
+        area: '@plugin.manager.views.area'
+        argument: '@plugin.manager.views.argument'
+        argument_default: '@plugin.manager.views.argument_default'
+        argument_validator: '@plugin.manager.views.argument_validator'
+        cache: '@plugin.manager.views.cache'
+        display_extender: '@plugin.manager.views.display_extender'
+        display: '@plugin.manager.views.display'
+        exposed_form: '@plugin.manager.views.exposed_form'
+        field: '@plugin.manager.views.field'
+        filter: '@plugin.manager.views.filter'
+        join: '@plugin.manager.views.join'
+        pager: '@plugin.manager.views.pager'
+        query: '@plugin.manager.views.query'
+        relationship: '@plugin.manager.views.relationship'
+        row: '@plugin.manager.views.row'
+        sort: '@plugin.manager.views.sort'
+        style: '@plugin.manager.views.style'
+        wizard: '@plugin.manager.views.wizard'
+    tags:
+      - { name: container.service_locator }
   plugin.manager.views.access:
     class: Drupal\views\Plugin\ViewsPluginManager
     arguments: [access, '@container.namespaces', '@cache.discovery', '@module_handler']

@@ -174,6 +174,14 @@ class ViewExecutableTest extends UnitTestCase {
     $container->set('views.executable', $this->viewExecutableFactory);
     $container->set('module_handler', $module_handler);
     $container->set('plugin.manager.views.cache', $cache_manager->reveal());
+
+    $locator = $this->createMock('\Symfony\Component\DependencyInjection\ServiceLocator');
+    $locator->expects($this->any())
+      ->method('get')
+      ->with('cache')
+      ->willReturn($cache_manager->reveal());
+    $container->set('views.plugin_managers', $locator);
+
     \Drupal::setContainer($container);
   }
 

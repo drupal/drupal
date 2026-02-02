@@ -811,7 +811,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
         }
       }
 
-      $join = Views::pluginManager('join')->createInstance($id, $configuration);
+      $join = \Drupal::service('plugin.manager.views.join')->createInstance($id, $configuration);
 
       return $join;
     }
@@ -937,7 +937,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
     // Create a new handler and unpack the options from the form onto it. We
     // can use that for storage.
-    $handler = Views::handlerManager($handler_type)->getHandler($item, $override);
+    $handler = \Drupal::service('views.plugin_managers')->get($handler_type)->getHandler($item, $override);
     $handler->init($executable, $executable->display_handler, $item);
 
     // Add the incoming options to existing options because items using

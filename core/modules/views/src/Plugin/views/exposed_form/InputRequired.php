@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\views\exposed_form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsExposedForm;
-use Drupal\views\Views;
 
 /**
  * Exposed form plugin that provides an exposed form with required input.
@@ -105,7 +104,7 @@ class InputRequired extends ExposedFormPluginBase {
           'format' => $this->options['text_input_required_format'],
         ],
       ];
-      $handler = Views::handlerManager('area')->getHandler($options);
+      $handler = \Drupal::service('plugin.manager.views.area')->getHandler($options);
       $handler->init($this->view, $this->displayHandler, $options);
       $this->displayHandler->handlers['empty'] = [
         'area' => $handler,
