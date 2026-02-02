@@ -151,7 +151,7 @@ Contact
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Content Moderation
-- ?
+- Derek Wright 'dww' https://www.drupal.org/u/dww
 
 Content Translation
 - Christian López Espínola 'penyaskito' https://www.drupal.org/u/penyaskito
