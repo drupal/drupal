@@ -61,7 +61,7 @@ class FilterThemeHooks {
     $format = $variables['format'];
     $variables['tips'] = [
       '#theme' => 'filter_tips',
-      '#tips' => _filter_tips($format->id(), FALSE),
+      '#tips' => _filter_tips($format->id()),
     ];
 
     // Add format id for filter.js.
@@ -112,6 +112,11 @@ class FilterThemeHooks {
    *     explanations, i.e. intended to be output on the path 'filter/tips'
    *     (TRUE), or are in a short format, i.e. suitable to be displayed below a
    *     form element. Defaults to FALSE.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3567879
    */
   public function preprocessFilterTips(array &$variables): void {
     $tips = $variables['tips'];

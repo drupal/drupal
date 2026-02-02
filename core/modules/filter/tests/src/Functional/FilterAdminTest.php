@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -386,6 +387,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests whether filter tips page is not HTML escaped.
    */
+  #[IgnoreDeprecations]
   public function testFilterTipHtmlEscape(): void {
     $this->drupalLogin($this->adminUser);
     global $base_url;

@@ -92,6 +92,7 @@
 %Drupal\\shortcut\\Plugin\\migrate\\destination\\EntityShortcutSet\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
 %Drupal\\system\\Plugin\\migrate\\destination\\d7\\ThemeSettings\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
 %Drupal\\user\\Plugin\\migrate\\destination\\EntityUserRole\(\) is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565%
+%The \$long argument to Drupal\\filter\\Plugin\\Filter\\Filter(Align|AutoP|Caption|Html|HtmlEscape|HtmlImageSecure|Url)::tips\(\) is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Only short tips are used. See https://www.drupal.org/node/3567879%
 
 # Drupal 13.
 %The "cache.backend.memory" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use cache.backend.memory.memory instead. See https://www.drupal.org/node/3546856%

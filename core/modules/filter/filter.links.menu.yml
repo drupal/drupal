@@ -1,7 +1,3 @@
-filter.tips_all:
-  title: 'Compose tips'
-  enabled: 0
-  route_name: filter.tips_all
 filter.admin_overview:
   title: 'Text formats'
   parent: system.admin_config_content

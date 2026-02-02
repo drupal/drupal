@@ -5,6 +5,10 @@ filter.tips_all:
     _title: 'Compose tips'
   requirements:
     _access: 'TRUE'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.4.0'
+    message: 'The route "filter.tips_all" is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3567879'
 
 filter.tips:
   path: '/filter/tips/{filter_format}'
@@ -13,6 +17,10 @@ filter.tips:
     _title: 'Compose tips'
   requirements:
     _entity_access: 'filter_format.use'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.4.0'
+    message: 'The route "filter.tips" is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3567879'
 
 filter.admin_overview:
   path: '/admin/config/content/formats'
