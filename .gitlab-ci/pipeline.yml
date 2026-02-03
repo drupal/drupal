@@ -86,7 +86,7 @@ variables:
   name: selenium/standalone-chrome:127.0
   alias: selenium
   variables:
-    JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
+    # JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
     SE_NODE_MAX_SESSIONS: "16"
     SE_SESSION_RETRY_INTERVAL: "1"
