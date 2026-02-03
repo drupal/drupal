@@ -17102,12 +17102,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileManagedTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonBasicAuthTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonBasicAuthTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonBasicAuthTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -17118,12 +17112,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonCookieTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonCookieTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\Rest\\\\FileJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
@@ -35753,12 +35741,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserPictureTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserRegistrationRestTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserRegistrationRestTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserRegistrationRestTest\\:\\:assertMailPattern\\(\\) has no return type specified\\.$#',

@@ -40,11 +40,13 @@ trait BasicAuthResourceTestTrait {
 
     $expected_page_cache_header_value = $method === 'GET' ? 'MISS' : FALSE;
     $expected_cacheability = $this->getExpectedUnauthorizedAccessCacheability()
-      ->addCacheableDependency($this->getExpectedUnauthorizedEntityAccessCacheability(FALSE))
       // @see \Drupal\basic_auth\Authentication\Provider\BasicAuth::challengeException()
       ->addCacheableDependency($this->config('system.site'))
       // @see \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber::onRespond()
       ->addCacheTags(['config:user.role.anonymous']);
+    if (method_exists($this, 'getExpectedUnauthorizedEntityAccessCacheability')) {
+      $expected_cacheability->addCacheableDependency($this->getExpectedUnauthorizedEntityAccessCacheability(FALSE));
+    }
     // Only add the 'user.roles:anonymous' cache context if its parent cache
     // context is not already present.
     if (!in_array('user.roles', $expected_cacheability->getCacheContexts(), TRUE)) {
