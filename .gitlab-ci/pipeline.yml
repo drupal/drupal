@@ -279,3 +279,30 @@ variables:
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+
+'🚲 Performance tests (kubernetes)':
+  <<: [ *default-job-settings ]
+  rules:
+    - if: $PERFORMANCE_TEST == "1"
+    - when: manual
+      allow_failure: true
+  variables:
+    CI_DEBUG_SERVICES: "true"
+    KUBERNETES_CPU_REQUEST: "24"
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
+  script:
+    #  Determine DB driver.
+    - |
+      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
+      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
+      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+    - composer install --optimize-autoloader
+    - export OTEL_COLLECTOR="$OPENTELEMETRY_COLLECTOR"
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
