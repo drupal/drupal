@@ -42,7 +42,6 @@ class ResponsiveImageThemeHooks {
         'variables' => [
           'attributes' => [],
           'item' => NULL,
-          'item_attributes' => NULL,
           'url' => NULL,
           'responsive_image_style_id' => NULL,
         ],
@@ -86,11 +85,6 @@ class ResponsiveImageThemeHooks {
       $attributes['title'] = $item->title;
     }
     $attributes['alt'] = $item->alt;
-    // Need to check that item_attributes has a value since it can be NULL.
-    if ($variables['item_attributes']) {
-      @trigger_error('Usage of #item_attributes is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use #attributes instead. See https://www.drupal.org/node/3554585', E_USER_DEPRECATED);
-      $attributes += $variables['item_attributes'];
-    }
     if (($entity = $item->entity) && empty($item->uri)) {
       $variables['responsive_image']['#uri'] = $entity->getFileUri();
     }
