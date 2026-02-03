@@ -64,6 +64,7 @@ variables:
   POSTGRES_PASSWORD: drupaltestbotpw
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
   MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
+  SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
@@ -86,15 +87,13 @@ variables:
   name: selenium/standalone-chrome:127.0
   alias: selenium
   variables:
-    # JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
+    JAVA_OPTS: $SELENIUM_JAVA_OPTS
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
     SE_NODE_MAX_SESSIONS: "16"
     SE_SESSION_RETRY_INTERVAL: "1"
     SE_SESSION_REQUEST_TIMEOUT: "60"
     SE_START_XVFB: "true"
     SE_START_VNC: "false"
-    SE_LOG_LEVEL: "fine"
-    SE_ENABLE_TRACING: "false"
 
 .run-tests: &run-tests
   script:
@@ -258,44 +257,16 @@ variables:
     - when: manual
       allow_failure: true
   variables:
-    CI_DEBUG_SERVICES: "true"
     KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable", "--shm-size=2G"]}}, "http://selenium:4444"]'
+    # Disable -Dwebdriver.chrome.logfile=/builds/chromedriver.log as it causes
+    # the job to fail on the Docker runner.
+    SELENIUM_JAVA_OPTS: ""
   tags:
     - performance-test-runner
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
   script:
-    - pwd
-    #  Determine DB driver.
-    - |
-      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
-      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
-      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-    - composer install --optimize-autoloader
-    - export OTEL_COLLECTOR="$OPENTELEMETRY_COLLECTOR"
-    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
-
-'🚲 Performance tests (kubernetes)':
-  <<: [ *default-job-settings ]
-  rules:
-    - if: $PERFORMANCE_TEST == "1"
-    - when: manual
-      allow_failure: true
-  variables:
-    CI_DEBUG_SERVICES: "true"
-    KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable", "--shm-size=2G"]}}, "http://selenium:4444"]'
-  services:
-    - <<: *with-database
-    - <<: *with-selenium-chrome
-  script:
-    - pwd
     #  Determine DB driver.
     - |
       [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
