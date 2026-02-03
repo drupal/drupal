@@ -2,8 +2,11 @@
 
 namespace Drupal\editor\Hook;
 
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\editor\Entity\Editor;
+use Drupal\file\FileInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -14,6 +17,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 
 /**
  * Hook implementations for editor.
@@ -194,9 +198,9 @@ class EditorHooks {
     if (!$entity instanceof FieldableEntityInterface) {
       return;
     }
-    $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+    $referenced_files_by_field = $this->getFileUuidsByField($entity);
     foreach ($referenced_files_by_field as $uuids) {
-      _editor_record_file_usage($uuids, $entity);
+      $this->recordFileUsage($uuids, $entity);
     }
   }
 
@@ -212,25 +216,25 @@ class EditorHooks {
     // On new revisions, all files are considered to be a new usage and no
     // deletion of previous file usages are necessary.
     if ($entity->getOriginal() && $entity->getRevisionId() != $entity->getOriginal()->getRevisionId()) {
-      $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+      $referenced_files_by_field = $this->getFileUuidsByField($entity);
       foreach ($referenced_files_by_field as $uuids) {
-        _editor_record_file_usage($uuids, $entity);
+        $this->recordFileUsage($uuids, $entity);
       }
     }
     else {
-      $original_uuids_by_field = !$entity->getOriginal() ? [] : _editor_get_file_uuids_by_field($entity->getOriginal());
-      $uuids_by_field = _editor_get_file_uuids_by_field($entity);
+      $original_uuids_by_field = !$entity->getOriginal() ? [] : $this->getFileUuidsByField($entity->getOriginal());
+      $uuids_by_field = $this->getFileUuidsByField($entity);
       // Detect file usages that should be incremented.
       foreach ($uuids_by_field as $field => $uuids) {
         $original_uuids = $original_uuids_by_field[$field] ?? [];
         if ($added_files = array_diff($uuids_by_field[$field], $original_uuids)) {
-          _editor_record_file_usage($added_files, $entity);
+          $this->recordFileUsage($added_files, $entity);
         }
       }
       // Detect file usages that should be decremented.
       foreach ($original_uuids_by_field as $field => $uuids) {
         $removed_files = array_diff($original_uuids_by_field[$field], $uuids_by_field[$field]);
-        _editor_delete_file_usage($removed_files, $entity, 1);
+        $this->deleteFileUsage($removed_files, $entity, 1);
       }
     }
   }
@@ -244,9 +248,9 @@ class EditorHooks {
     if (!$entity instanceof FieldableEntityInterface) {
       return;
     }
-    $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+    $referenced_files_by_field = $this->getFileUuidsByField($entity);
     foreach ($referenced_files_by_field as $uuids) {
-      _editor_delete_file_usage($uuids, $entity, 0);
+      $this->deleteFileUsage($uuids, $entity, 0);
     }
   }
 
@@ -259,9 +263,9 @@ class EditorHooks {
     if (!$entity instanceof FieldableEntityInterface) {
       return;
     }
-    $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+    $referenced_files_by_field = $this->getFileUuidsByField($entity);
     foreach ($referenced_files_by_field as $uuids) {
-      _editor_delete_file_usage($uuids, $entity, 1);
+      $this->deleteFileUsage($uuids, $entity, 1);
     }
   }
 
@@ -346,6 +350,139 @@ class EditorHooks {
     if ($editor = Editor::load($format->id())) {
       $editor->setStatus($status)->save();
     }
+  }
+
+  /**
+   * Records file usage of files referenced by formatted text fields.
+   *
+   * Each referenced file that is temporally saved will be resaved as permanent.
+   *
+   * @param array $uuids
+   *   An array of file entity UUIDs.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   An entity whose fields to inspect for file references.
+   */
+  protected function recordFileUsage(array $uuids, EntityInterface $entity): void {
+    if (!\Drupal::getContainer()->has('file.usage')) {
+      return;
+    }
+
+    $entity_repository = \Drupal::service('entity.repository');
+    $file_usage = \Drupal::service('file.usage');
+
+    foreach ($uuids as $uuid) {
+      if ($file = $entity_repository->loadEntityByUuid('file', $uuid)) {
+        assert($file instanceof FileInterface);
+        if ($file->isTemporary()) {
+          $file->setPermanent();
+          $file->save();
+        }
+        $file_usage->add($file, 'editor', $entity->getEntityTypeId(), $entity->id());
+      }
+    }
+  }
+
+  /**
+   * Deletes file usage of files referenced by formatted text fields.
+   *
+   * @param array $uuids
+   *   An array of file entity UUIDs.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   An entity whose fields to inspect for file references.
+   * @param int $count
+   *   The number of references to delete. Should be 1 when deleting a single
+   *   revision and 0 when deleting an entity entirely.
+   *
+   * @see \Drupal\file\FileUsage\FileUsageInterface::delete()
+   */
+  protected function deleteFileUsage(array $uuids, EntityInterface $entity, int $count): void {
+    if (!\Drupal::getContainer()->has('file.usage')) {
+      return;
+    }
+
+    $entity_repository = \Drupal::service('entity.repository');
+    $file_usage = \Drupal::service('file.usage');
+
+    foreach ($uuids as $uuid) {
+      if ($file = $entity_repository->loadEntityByUuid('file', $uuid)) {
+        $file_usage->delete($file, 'editor', $entity->getEntityTypeId(), $entity->id(), $count);
+      }
+    }
+  }
+
+  /**
+   * Finds all files referenced (data-entity-uuid) by formatted text fields.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   An entity whose fields to analyze.
+   *
+   * @return array
+   *   An array of file entity UUIDs.
+   */
+  protected function getFileUuidsByField(FieldableEntityInterface $entity): array {
+    $uuids = [];
+
+    $formatted_text_fields = $this->getFormattedTextFields($entity);
+    foreach ($formatted_text_fields as $formatted_text_field) {
+      $text = '';
+      $field_items = $entity->get($formatted_text_field);
+      foreach ($field_items as $field_item) {
+        $text .= $field_item->value;
+        if ($field_item->getFieldDefinition()->getType() == 'text_with_summary') {
+          $text .= $field_item->summary;
+        }
+      }
+      $uuids[$formatted_text_field] = $this->parseFileUuids($text);
+    }
+    return $uuids;
+  }
+
+  /**
+   * Determines the formatted text fields on an entity.
+   *
+   * A field type is considered to provide formatted text if its class is a
+   * subclass of Drupal\text\Plugin\Field\FieldType\TextItemBase.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   An entity whose fields to analyze.
+   *
+   * @return array
+   *   The names of the fields on this entity that support formatted text.
+   */
+  protected function getFormattedTextFields(FieldableEntityInterface $entity): array {
+    $field_definitions = $entity->getFieldDefinitions();
+    if (empty($field_definitions)) {
+      return [];
+    }
+
+    // Only return formatted text fields.
+    // @todo improve as part of https://www.drupal.org/node/2732429
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    return array_keys(array_filter($field_definitions, function (FieldDefinitionInterface $definition) use ($field_type_manager) {
+      $type = $definition->getType();
+      $plugin_class = $field_type_manager->getPluginClass($type);
+      return is_subclass_of($plugin_class, TextItemBase::class);
+    }));
+  }
+
+  /**
+   * Parse an HTML snippet for any linked file with data-entity-uuid attributes.
+   *
+   * @param string $text
+   *   The partial (X)HTML snippet to load. Invalid markup will be corrected on
+   *   import.
+   *
+   * @return array
+   *   An array of all found UUIDs.
+   */
+  protected function parseFileUuids(string $text): array {
+    $dom = Html::load($text);
+    $xpath = new \DOMXPath($dom);
+    $uuids = [];
+    foreach ($xpath->query('//*[@data-entity-type="file" and @data-entity-uuid]') as $node) {
+      $uuids[] = $node->getAttribute('data-entity-uuid');
+    }
+    return $uuids;
   }
 
 }
