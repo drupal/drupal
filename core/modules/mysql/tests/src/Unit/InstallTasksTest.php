@@ -151,7 +151,7 @@ class InstallTasksTest extends UnitTestCase {
       ],
       [
         FALSE,
-        'MySQL, Percona Server, or equivalent',
+        'MySQL or equivalent',
         Tasks::MYSQL_MINIMUM_VERSION,
       ],
     ];
@@ -164,7 +164,7 @@ class InstallTasksTest extends UnitTestCase {
    */
   public function testNameWithNoConnection(): void {
     $tasks = $this->createTasksNoConnection();
-    $this->assertSame('MySQL, MariaDB, Percona Server, or equivalent', $tasks->name());
+    $this->assertSame('MySQL, MariaDB, or equivalent', $tasks->name());
   }
 
 }
