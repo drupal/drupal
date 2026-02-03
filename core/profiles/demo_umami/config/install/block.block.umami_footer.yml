@@ -19,6 +19,7 @@ settings:
   label_display: 'visible'
   provider: system
   level: 1
-  depth: null
+  depth: 1
   expand_all_items: false
+  ignore_active_trail: true
 visibility: {  }
