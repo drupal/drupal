@@ -435,6 +435,7 @@ block.settings.system_menu_block:*:
   label: 'Menu block'
   constraints:
     FullyValidatable: ~
+    IgnoreActiveTrail: ~
   mapping:
     level:
       type: integer
@@ -453,6 +454,10 @@ block.settings.system_menu_block:*:
     expand_all_items:
       type: boolean
       label: 'Expand all items'
+    ignore_active_trail:
+      type: boolean
+      label: 'Ignore active trail'
+      requiredKey: false
 
 block.settings.local_tasks_block:
   type: block_settings

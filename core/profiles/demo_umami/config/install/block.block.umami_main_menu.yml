@@ -21,4 +21,5 @@ settings:
   level: 1
   depth: 1
   expand_all_items: false
+  ignore_active_trail: true
 visibility: {  }

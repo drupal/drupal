@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel\Block;
 
 use Drupal\block\Entity\Block;
+use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -342,7 +343,7 @@ class SystemMenuBlockTest extends KernelTestBase {
    * Tests the config expanded option.
    */
   #[DataProvider('configExpandedTestCases')]
-  public function testConfigExpanded($active_route, $menu_block_level, $expected_items): void {
+  public function testConfigExpanded(string $active_route, int $menu_block_level, array $expected_items, array $expected_active_trail_items): void {
     // Replace the path.matcher service so it always returns FALSE when
     // checking whether a route is the front page. Otherwise, the default
     // service throws an exception when checking routes because all of these
@@ -366,9 +367,30 @@ class SystemMenuBlockTest extends KernelTestBase {
     $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
 
+    \Drupal::service('menu.active_trail')->clear();
     $block_build = $block->build();
     $items = $block_build['#items'] ?? [];
     $this->assertEquals($expected_items, $this->convertBuiltMenuToIdTree($items));
+    $active_trail_items = $this->getActiveTrailItems($items);
+    $this->assertEquals($expected_active_trail_items, $active_trail_items);
+    $this->assertContains("route.menu_active_trails:{$this->menu->id()}", $block->getCacheContexts());
+
+    $block->setConfigurationValue('ignore_active_trail', TRUE);
+    $block_build = $block->build();
+    $items = $block_build['#items'] ?? [];
+    $this->assertEquals($expected_items, $this->convertBuiltMenuToIdTree($items));
+    $active_trail_items = $this->getActiveTrailItems($items);
+    // Setting "ignore_active_trail" to TRUE when the menu block level is not 1
+    // technically fails configuration validation, but test that logic for
+    // adding the active trail cache context is correct regardless.
+    if ($menu_block_level === 1) {
+      $this->assertEmpty($active_trail_items);
+      $this->assertNotContains("route.menu_active_trails:{$this->menu->id()}", $block->getCacheContexts());
+    }
+    else {
+      $this->assertEquals($expected_active_trail_items, $active_trail_items);
+      $this->assertContains("route.menu_active_trails:{$this->menu->id()}", $block->getCacheContexts());
+    }
   }
 
   /**
@@ -393,6 +415,25 @@ class SystemMenuBlockTest extends KernelTestBase {
           'test.example6' => [],
           'test.example8' => [],
         ],
+        ['test.example5'],
+      ],
+      'All levels viewed from second level in "example 5" branch' => [
+        'example7',
+        1,
+        [
+          'test.example1' => [],
+          'test.example2' => [
+            'test.example3' => [
+              'test.example4' => [],
+            ],
+          ],
+          'test.example5' => [
+            'test.example7' => [],
+          ],
+          'test.example6' => [],
+          'test.example8' => [],
+        ],
+        ['test.example5', 'test.example7'],
       ],
       'Level two in "example 5" branch' => [
         'example5',
@@ -400,10 +441,12 @@ class SystemMenuBlockTest extends KernelTestBase {
         [
           'test.example7' => [],
         ],
+        [],
       ],
       'Level three in "example 5" branch' => [
         'example5',
         3,
+        [],
         [],
       ],
       'Level three in "example 4" branch' => [
@@ -412,6 +455,83 @@ class SystemMenuBlockTest extends KernelTestBase {
         [
           'test.example4' => [],
         ],
+        ['test.example4'],
+      ],
+    ];
+  }
+
+  /**
+   * Tests configuration schema validation for IgnoreActiveTrail constraint.
+   */
+  #[DataProvider('providerIgnoreActiveTrailConstraint')]
+  public function testIgnoreActiveTrailConstraint(int $level, int $depth, bool $expand_all_items, ?bool $ignore_active_trail, bool $expect_exception): void {
+    if ($expect_exception) {
+      $this->expectException(SchemaIncompleteException::class);
+      $this->expectExceptionMessage('Schema errors for block.block.machine_name with the following errors: 0 [settings] The &quot;ignore_active_trail&quot; setting on a system menu block cannot be enabled if &quot;level&quot; is greater than 1 or &quot;expand_all_items&quot; is not enabled and &quot;depth&quot; is greater than 1.');
+    }
+    \Drupal::service('theme_installer')->install(['stark']);
+    $settings = [
+      'label' => 'Menu block',
+      'level' => $level,
+      'depth' => $depth,
+      'expand_all_items' => $expand_all_items,
+    ];
+    if ($ignore_active_trail) {
+      $settings['ignore_active_trail'] = TRUE;
+    }
+    /** @var \Drupal\block\BlockInterface $block */
+    $block = Block::create([
+      'id' => 'machine_name',
+      'theme' => 'stark',
+      'plugin' => 'system_menu_block:' . $this->menu->id(),
+      'region' => 'footer',
+      'settings' => $settings,
+    ]);
+    $block->save();
+  }
+
+  /**
+   * Provider for testIgnoreActiveTrailConstraint().
+   *
+   * @return array[]
+   *   Array of test cases for the IgnoreActiveTrail constraint.
+   */
+  public static function providerIgnoreActiveTrailConstraint(): array {
+    return [
+      'Valid ignoring active trail' => [
+        1,
+        1,
+        TRUE,
+        TRUE,
+        FALSE,
+      ],
+      'Valid not ignoring active trail' => [
+        1,
+        1,
+        TRUE,
+        NULL,
+        FALSE,
+      ],
+      'Invalid level ignoring active trail' => [
+        2,
+        1,
+        TRUE,
+        TRUE,
+        TRUE,
+      ],
+      'Invalid expand_all_items ignoring active trail' => [
+        2,
+        1,
+        FALSE,
+        TRUE,
+        TRUE,
+      ],
+      'Invalid depth > 1' => [
+        1,
+        2,
+        FALSE,
+        TRUE,
+        TRUE,
       ],
     ];
   }
@@ -436,6 +556,28 @@ class SystemMenuBlockTest extends KernelTestBase {
       }
     }
     return $level;
+  }
+
+  /**
+   * Helper method to get the IDs of the menu items in the active trail.
+   *
+   * @param array $items
+   *   The #items from the return value of MenuLinkTree::build().
+   *
+   * @return list<string>
+   *   List of menu item IDs in the active trail.
+   */
+  protected function getActiveTrailItems(array $items): array {
+    $active_trail_items = [];
+    foreach ($items as $key => $item) {
+      if ($item['in_active_trail']) {
+        $active_trail_items[] = $key;
+        if ($item['below']) {
+          $active_trail_items = array_merge($active_trail_items, $this->getActiveTrailItems($item['below']));
+        }
+      }
+    }
+    return $active_trail_items;
   }
 
 }
