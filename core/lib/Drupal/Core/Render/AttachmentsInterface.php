@@ -28,6 +28,8 @@ namespace Drupal\Core\Render;
  *   response attachment
  * - library: (optional) Asset libraries.
  * - placeholders: (optional) Any placeholders.
+ * - page_top: (optional) Inject content into the top of the page.
+ * - page_bottom: (optional) Inject content into the bottom of the page.
  *
  * @todo If in Drupal 9, we remove attachments other than assets (libraries +
  *   drupalSettings), then we can look into unifying this with
