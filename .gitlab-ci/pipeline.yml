@@ -267,6 +267,7 @@ variables:
     - <<: *with-database
     - <<: *with-selenium-chrome
   script:
+    - pwd
     #  Determine DB driver.
     - |
       [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
@@ -294,6 +295,7 @@ variables:
     - <<: *with-database
     - <<: *with-selenium-chrome
   script:
+    - pwd
     #  Determine DB driver.
     - |
       [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
