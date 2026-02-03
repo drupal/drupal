@@ -614,4 +614,14 @@ class User extends ContentEntityBase implements UserInterface {
     return array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_CONFIGURABLE));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function &__get($name): mixed {
+    if ($name == 'password') {
+      @trigger_error("Getting the password property is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3569185", E_USER_DEPRECATED);
+    }
+    return parent::__get($name);
+  }
+
 }
