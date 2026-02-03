@@ -13,13 +13,13 @@ use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Link;
+use Drupal\dblog\DbLogFilters;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -48,21 +48,13 @@ class DbLogController extends ControllerBase {
    */
   protected $userStorage;
 
-  /**
-   * Constructs a DbLogController object.
-   *
-   * @param \Drupal\Core\Database\Connection $database
-   *   A database connection.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   A module handler.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
-   *   The date formatter service.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
-   *   The form builder service.
-   */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, DateFormatterInterface $date_formatter, FormBuilderInterface $form_builder) {
+  public function __construct(
+    Connection $database,
+    DateFormatterInterface $date_formatter,
+    FormBuilderInterface $form_builder,
+    protected readonly DbLogFilters $dbLogFilters,
+  ) {
     $this->database = $database;
-    $this->moduleHandler = $module_handler;
     $this->dateFormatter = $date_formatter;
     $this->formBuilder = $form_builder;
     $this->userStorage = $this->entityTypeManager()->getStorage('user');
@@ -108,8 +100,6 @@ class DbLogController extends ControllerBase {
     $rows = [];
 
     $classes = static::getLogLevelClassMap();
-
-    $this->moduleHandler()->loadInclude('dblog', 'admin.inc');
 
     $build['dblog_filter_form'] = $this->formBuilder()->getForm('Drupal\dblog\Form\DblogFilterForm');
 
@@ -320,9 +310,7 @@ class DbLogController extends ControllerBase {
       return;
     }
 
-    $this->moduleHandler()->loadInclude('dblog', 'admin.inc');
-
-    $filters = dblog_filters();
+    $filters = $this->dbLogFilters->filters();
 
     // Build the condition.
     $condition_and = $query->getConnection()->condition('AND');

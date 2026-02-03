@@ -10,3 +10,5 @@ services:
     tags:
       - { name: logger }
       - { name: backend_overridable }
+  Drupal\dblog\DbLogFilters:
+    autowire: true
