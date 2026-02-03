@@ -234,15 +234,9 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
         continue;
       }
       $file = $result->getFile();
-      // If the filename has been modified, let the user know.
-      if ($result->isRenamed()) {
-        if ($result->isSecurityRename()) {
-          $message = t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]);
-        }
-        else {
-          $message = t('Your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]);
-        }
-        \Drupal::messenger()->addStatus($message);
+      // Log security renames to help detect potential malicious uploads.
+      if ($result->isSecurityRename()) {
+        \Drupal::logger('file')->notice('For security reasons, the uploaded file %original_filename has been renamed to %filename.', ['%original_filename' => $result->getOriginalFilename(), '%filename' => $file->getFilename()]);
       }
       $files[$i] = $file;
     }
