@@ -338,8 +338,13 @@ abstract class CachePluginBase extends PluginBase {
    *
    * @return string[]
    *   The row cache keys.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+   * is no replacement.
+   * @see https://www.drupal.org/node/3564958
    */
   public function getRowCacheKeys(ResultRow $row) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3564958', E_USER_DEPRECATED);
     return [
       'views',
       'fields',
@@ -357,8 +362,13 @@ abstract class CachePluginBase extends PluginBase {
    *
    * @return string
    *   The row identifier.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+   * is no replacement.
+   * @see https://www.drupal.org/node/3564958
    */
   public function getRowId(ResultRow $row) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3564958', E_USER_DEPRECATED);
     // Here we compute a unique identifier for the row by computing the hash of
     // its data. We exclude the current index, since the same row could have a
     // different result index depending on the user permissions. We exclude also

@@ -33,9 +33,8 @@ class TestViewsTest extends KernelTestBase {
   protected static $modules = [
     // For NodeType config entities to exist, its module must be installed.
     'node',
-    // `system.menu.tools` is a config dependency. It is one of the default
-    // config of the System module.
-    // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_row_render_cache_none.yml
+    // For node configuration to be installed, system module must be installed
+    // because it provides schema for actions.
     'system',
     // There are a number of `field.storage.*.*` config dependencies. For these
     // to be created, the Field module must be installed.
@@ -115,10 +114,6 @@ class TestViewsTest extends KernelTestBase {
     // default config of the User module.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_feed_icon.yml
     $this->installConfig('user');
-    // `system.menu.tools` is a config dependency. It is one of the default
-    // config of the System module.
-    // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_row_render_cache_none.yml
-    $this->installConfig('system');
     // `node.type.article` is a config dependency.
     // @see core/modules/options/tests/options_test_views/test_views/views.view.test_options_list_argument_numeric.yml
     NodeType::create(['type' => 'article', 'name' => 'Article'])->save();
