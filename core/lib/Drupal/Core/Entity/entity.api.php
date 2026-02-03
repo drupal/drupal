@@ -1509,10 +1509,10 @@ function hook_ENTITY_TYPE_delete(\Drupal\Core\Entity\EntityInterface $entity): v
  * @see hook_ENTITY_TYPE_revision_delete()
  */
 function hook_entity_revision_delete(\Drupal\Core\Entity\EntityInterface $entity): void {
-  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-  foreach ($referenced_files_by_field as $field => $uuids) {
-    _editor_delete_file_usage($uuids, $entity, 1);
-  }
+  \Drupal::messenger()->addStatus(t('Deleted revision @revision from @type entity type', [
+    '@revision' => $entity->getRevisionId(),
+    '@type' => $entity->getEntityType()->getLabel(),
+  ]));
 }
 
 /**
@@ -1527,10 +1527,9 @@ function hook_entity_revision_delete(\Drupal\Core\Entity\EntityInterface $entity
  * @see hook_entity_revision_delete()
  */
 function hook_ENTITY_TYPE_revision_delete(\Drupal\Core\Entity\EntityInterface $entity): void {
-  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-  foreach ($referenced_files_by_field as $field => $uuids) {
-    _editor_delete_file_usage($uuids, $entity, 1);
-  }
+  \Drupal::messenger()->addStatus(t('Deleted revision @revision from Content entity type', [
+    '@revision' => $entity->getRevisionId(),
+  ]));
 }
 
 /**

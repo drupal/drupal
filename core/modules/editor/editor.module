@@ -220,8 +220,14 @@ function editor_filter_xss($html, ?FilterFormatInterface $format = NULL, ?Filter
  *   An array of file entity UUIDs.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   An entity whose fields to inspect for file references.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3568136
  */
 function _editor_record_file_usage(array $uuids, EntityInterface $entity): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3568136', E_USER_DEPRECATED);
   foreach ($uuids as $uuid) {
     if ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid)) {
       /** @var \Drupal\file\FileInterface $file */
@@ -245,9 +251,14 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity): void 
  *   The number of references to delete. Should be 1 when deleting a single
  *   revision and 0 when deleting an entity entirely.
  *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3568136
  * @see \Drupal\file\FileUsage\FileUsageInterface::delete()
  */
 function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3568136', E_USER_DEPRECATED);
   foreach ($uuids as $uuid) {
     if ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid)) {
       \Drupal::service('file.usage')->delete($file, 'editor', $entity->getEntityTypeId(), $entity->id(), $count);
@@ -263,8 +274,14 @@ function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count
  *
  * @return array
  *   An array of file entity UUIDs.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No
+ *    replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3568136
  */
 function _editor_get_file_uuids_by_field(EntityInterface $entity): array {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3568136', E_USER_DEPRECATED);
   $uuids = [];
 
   $formatted_text_fields = _editor_get_formatted_text_fields($entity);
@@ -293,8 +310,14 @@ function _editor_get_file_uuids_by_field(EntityInterface $entity): array {
  *
  * @return array
  *   The names of the fields on this entity that support formatted text.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No
+ *    replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3568136
  */
 function _editor_get_formatted_text_fields(FieldableEntityInterface $entity) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3568136', E_USER_DEPRECATED);
   $field_definitions = $entity->getFieldDefinitions();
   if (empty($field_definitions)) {
     return [];
@@ -319,8 +342,14 @@ function _editor_get_formatted_text_fields(FieldableEntityInterface $entity) {
  *
  * @return array
  *   An array of all found UUIDs.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No
+ *     replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3568136
  */
 function _editor_parse_file_uuids($text): array {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3568136', E_USER_DEPRECATED);
   $dom = Html::load($text);
   $xpath = new \DOMXPath($dom);
   $uuids = [];
