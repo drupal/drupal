@@ -54,10 +54,10 @@ class Tasks extends InstallTasks {
       if ($this->getConnection()->isMariaDb()) {
         return $this->t('MariaDB');
       }
-      return $this->t('MySQL, Percona Server, or equivalent');
+      return $this->t('MySQL or equivalent');
     }
     catch (ConnectionNotDefinedException) {
-      return $this->t('MySQL, MariaDB, Percona Server, or equivalent');
+      return $this->t('MySQL, MariaDB, or equivalent');
     }
   }
 
