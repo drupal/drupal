@@ -260,6 +260,14 @@ variables:
     CI_DEBUG_SERVICES: "true"
     KUBERNETES_CPU_REQUEST: "24"
     MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
+    JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
+    SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+    SE_NODE_MAX_SESSIONS: "16"
+    SE_SESSION_RETRY_INTERVAL: "1"
+    SE_SESSION_REQUEST_TIMEOUT: "60"
+    SE_START_XVFB: "true"
+    SE_START_VNC: "false"
+    SE_LOG_LEVEL: "fine"
   tags:
     - performance-test-runner
   services:
@@ -273,8 +281,7 @@ variables:
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - composer install --optimize-autoloader
-    # - export OTEL_COLLECTOR="$OPENTELEMETRY_COLLECTOR"
-    - export OTEL_COLLECTOR=""
+    - export OTEL_COLLECTOR="$OPENTELEMETRY_COLLECTOR"
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR

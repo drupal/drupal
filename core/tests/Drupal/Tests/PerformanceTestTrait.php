@@ -76,8 +76,6 @@ trait PerformanceTestTrait {
       'performance' => 'ALL',
       'performanceTimeline' => 'ALL',
     ];
-    // Let's see if it is this.
-    unset($driver_args[1]['goog:loggingPrefs']);
 
     return json_encode($driver_args);
   }
