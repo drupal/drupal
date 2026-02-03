@@ -208,38 +208,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function addModule($name, $path) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. This method does nothing. There is no direct replacement. See https://www.drupal.org/node/3491200', E_USER_DEPRECATED);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addProfile($name, $path) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. This method does nothing. There is no direct replacement. See https://www.drupal.org/node/3491200', E_USER_DEPRECATED);
-  }
-
-  /**
-   * Adds a module or profile to the list of currently active modules.
-   *
-   * @param string $type
-   *   The extension type; either 'module' or 'profile'.
-   * @param string $name
-   *   The module name; e.g., 'node'.
-   * @param string $path
-   *   The module path; e.g., 'core/modules/node'.
-   *
-   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0.
-   * There is no direct replacement.
-   * @see https://www.drupal.org/node/3491200
-   */
-  protected function add($type, $name, $path) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. This method does nothing. There is no direct replacement. See https://www.drupal.org/node/3491200', E_USER_DEPRECATED);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildModuleDependencies(array $modules) {
     foreach ($modules as $module) {
       $graph[$module->getName()]['edges'] = [];
@@ -303,13 +271,6 @@ class ModuleHandler implements ModuleHandlerInterface {
       }
     }
     return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getHookInfo() {
-    return [];
   }
 
   /**
@@ -673,21 +634,6 @@ class ModuleHandler implements ModuleHandlerInterface {
       $dirs[$name] = $this->root . '/' . $module->getPath();
     }
     return $dirs;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getName($module) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
-    return \Drupal::service('extension.list.module')->getName($module);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function writeCache() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no need to call this method so there is no replacement. See https://www.drupal.org/node/3442349', E_USER_DEPRECATED);
   }
 
   /**
