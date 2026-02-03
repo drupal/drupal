@@ -147,7 +147,7 @@ class HtmlRenderer implements MainContentRendererInterface {
     // The special page regions will appear directly in html.html.twig, not in
     // page.html.twig, hence add them here, just before rendering
     // html.html.twig.
-    $this->buildPageTopAndBottom($html);
+    $this->buildPageTopAndBottom($html, $main_content['#attached']['page_top'] ?? [], $main_content['#attached']['page_bottom'] ?? []);
 
     // Render, but don't replace placeholders yet, because that happens later in
     // the render pipeline. To not replace placeholders yet, we use
@@ -337,6 +337,10 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   A #type 'html' render array, for which the page top and bottom hooks will
    *   be invoked, and to which the 'page_top' and 'page_bottom' children (also
    *   render arrays) will be added (if non-empty).
+   * @param array $page_top
+   *   (optional) The render array representing the initial page top content.
+   * @param array $page_bottom
+   *   (optional) The render array representing the initial page bottom content.
    *
    * @throws \LogicException
    *
@@ -346,10 +350,8 @@ class HtmlRenderer implements MainContentRendererInterface {
    * @see hook_page_bottom()
    * @see html.html.twig
    */
-  public function buildPageTopAndBottom(array &$html) {
+  public function buildPageTopAndBottom(array &$html, array $page_top = [], array $page_bottom = []) {
     // Modules can add render arrays to the top and bottom of the page.
-    $page_top = [];
-    $page_bottom = [];
     $this->moduleHandler->invokeAllWith(
       'page_top',
       function (callable $hook, string $module) use (&$page_top) {
