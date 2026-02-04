@@ -126,10 +126,12 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
     $this->pressInsertSelected(NULL, FALSE);
     $this->waitForElementTextContains('.messages--error', 'There are currently 5 items selected. The maximum number of items for the field is 2. Remove 3 items from the selection.');
     $assert_session->elementNotExists('css', '.messages--warning');
-    // Once the extra items are deselected, all should be well.
+    // Once the extra items are deselected, the error message should be
+    // automatically cleared.
     $this->deselectMediaItem(2);
     $this->deselectMediaItem(3);
     $this->deselectMediaItem(4);
+    $assert_session->elementNotExists('css', '.messages--error');
     $this->pressInsertSelected('Added 2 media items.');
   }
 
