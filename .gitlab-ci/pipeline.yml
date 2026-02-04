@@ -86,6 +86,8 @@ variables:
 .with-selenium-chrome: &with-selenium-chrome
   name: selenium/standalone-chrome:127.0
   alias: selenium
+  entrypoint: [ "" ]
+  command: [ "/bin/sh", "-c", "ls -al /builds && /opt/bin/entry_point.sh" ]
   variables:
     JAVA_OPTS: $SELENIUM_JAVA_OPTS
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
