@@ -86,8 +86,6 @@ variables:
 .with-selenium-chrome: &with-selenium-chrome
   name: selenium/standalone-chrome:127.0
   alias: selenium
-  entrypoint: [ "" ]
-  command: [ "/bin/sh", "-c", "ls -al /builds && /opt/bin/entry_point.sh" ]
   variables:
     JAVA_OPTS: $SELENIUM_JAVA_OPTS
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
@@ -260,10 +258,7 @@ variables:
       allow_failure: true
   variables:
     KUBERNETES_CPU_REQUEST: "24"
-    # Disable -Dwebdriver.chrome.logfile=/builds/chromedriver.log as it causes
-    # the job to fail on the Docker runner.
-    SELENIUM_JAVA_OPTS: ""
-    CI_DEBUG_SERVICES: "true"
+    SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver-selenium.log"
   tags:
     - performance-test-runner
   services:
@@ -282,3 +277,5 @@ variables:
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
     - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+  after_script:
+    - cp /builds/chromedriver-selenium.log ./
