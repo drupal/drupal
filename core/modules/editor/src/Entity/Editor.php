@@ -125,7 +125,14 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   public function calculateDependencies() {
     parent::calculateDependencies();
     // Create a dependency on the associated FilterFormat.
-    $this->addDependency('config', $this->getFilterFormat()->getConfigDependencyName());
+    $text_format = $this->getFilterFormat();
+    if ($text_format) {
+      $this->addDependency('config', $text_format->getConfigDependencyName());
+    }
+    else {
+      trigger_error("The editor {$this->id()} is configured for text format {$this->id()} which does not exist. Review whether it is still needed and delete if not.", E_USER_WARNING);
+    }
+
     // @todo use EntityWithPluginCollectionInterface so configuration between
     //   config entity and dependency on provider is managed automatically.
     $definition = $this->editorPluginManager()->createInstance($this->editor)->getPluginDefinition();

@@ -135,4 +135,54 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
     $this->assertContains('filter.format.test', $dependencies['config']);
   }
 
+  /**
+   * @covers ::calculateDependencies
+   *
+   * @group legacy
+   */
+  public function testCalculateDependenciesWithNull(): void {
+    $format_id = 'filter.format.test';
+    $values = ['editor' => $this->editorId, 'format' => $format_id];
+
+    $plugin = $this->getMockBuilder('Drupal\editor\Plugin\EditorPluginInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $plugin->expects($this->never())
+      ->method('getPluginDefinition')
+      ->willReturn(['provider' => 'test_module']);
+    $plugin->expects($this->once())
+      ->method('getDefaultSettings')
+      ->willReturn([]);
+
+    $this->editorPluginManager->expects($this->once())
+      ->method('createInstance')
+      ->with($this->editorId)
+      ->willReturn($plugin);
+
+    $entity = new Editor($values, $this->entityTypeId);
+
+    $filter_format = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
+    $storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
+
+    $filter_format->expects($this->never())
+      ->method('getConfigDependencyName')
+      ->willReturn('filter.format.test');
+
+    $storage->expects($this->once())
+      ->method('load')
+      ->with($format_id)
+      ->willReturn(NULL);
+
+    $this->entityTypeManager->expects($this->once())
+      ->method('getStorage')
+      ->with('filter_format')
+      ->willReturn($storage);
+
+    $this->expectWarning();
+    $this->expectWarningMessage('The editor filter.format.test is configured for text format filter.format.test which does not exist. Review whether it is still needed and delete if not.');
+    $dependencies = $entity->calculateDependencies()->getDependencies();
+    $this->assertContains('test_module', $dependencies['module']);
+    $this->assertArrayNotHasKey('config', $dependencies);
+  }
+
 }
