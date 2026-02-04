@@ -31,7 +31,7 @@
         "symfony/routing": "^7.4",
         "symfony/serializer": "^7.4",
         "symfony/validator": "^7.4",
-        "symfony/process": "^7.4",
+        "symfony/process": "^7.4.5",
         "symfony/polyfill-iconv": "^1.32",
         "symfony/polyfill-php84": "^1.32",
         "symfony/polyfill-php85": "^1.32",
