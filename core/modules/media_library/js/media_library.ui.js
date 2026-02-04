@@ -311,6 +311,14 @@
 
       function checkEnabled() {
         updateSelectionCount(settings.media_library.selection_remaining);
+        // Clear any error messages when the selection is within the allowed
+        // limit. A negative remaining value means unlimited selection.
+        if (
+          settings.media_library.selection_remaining < 0 ||
+          currentSelection.length <= settings.media_library.selection_remaining
+        ) {
+          $('#media-library-messages').empty();
+        }
         if (
           currentSelection.length === settings.media_library.selection_remaining
         ) {
