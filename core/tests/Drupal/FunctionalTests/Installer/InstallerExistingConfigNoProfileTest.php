@@ -19,4 +19,10 @@ class InstallerExistingConfigNoProfileTest extends InstallerExistingConfigTest {
    */
   protected $profile = FALSE;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpRequirementsProblem(): void {
+  }
+
 }
