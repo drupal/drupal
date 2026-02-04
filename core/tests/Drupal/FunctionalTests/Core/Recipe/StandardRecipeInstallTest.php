@@ -37,6 +37,12 @@ class StandardRecipeInstallTest extends InstallerTestBase {
       'value' => TRUE,
       'required' => TRUE,
     ];
+    // Do not compress css so we can detect claro correctly. See
+    // \Drupal\Tests\RequirementsPageTrait::assertRequirementSummaries().
+    $this->settings['config']['system.performance']['css']['preprocess'] = (object) [
+      'value' => FALSE,
+      'required' => TRUE,
+    ];
 
     parent::setUp();
   }
@@ -96,6 +102,13 @@ class StandardRecipeInstallTest extends InstallerTestBase {
    */
   protected function setUpProfile(): void {
     // Noop. This form is skipped due the parameters set on the URL.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpRequirementsProblem(): void {
+    // Recipe installation is not affected by requirements.
   }
 
   protected function installDefaultThemeFromClassProperty(ContainerInterface $container): void {
