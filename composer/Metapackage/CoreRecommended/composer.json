@@ -49,7 +49,7 @@
         "symfony/polyfill-mbstring": "~v1.33.0",
         "symfony/polyfill-php84": "~v1.33.0",
         "symfony/polyfill-php85": "~v1.33.0",
-        "symfony/process": "~v7.4.5",
+        "symfony/process": "~v7.4.0",
         "symfony/psr-http-message-bridge": "~v7.4.0",
         "symfony/routing": "~v7.4.0",
         "symfony/serializer": "~v7.4.0",
