@@ -263,6 +263,7 @@ variables:
     # Disable -Dwebdriver.chrome.logfile=/builds/chromedriver.log as it causes
     # the job to fail on the Docker runner.
     SELENIUM_JAVA_OPTS: ""
+    CI_DEBUG_SERVICES: "true"
   tags:
     - performance-test-runner
   services:
