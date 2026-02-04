@@ -30,7 +30,7 @@
         "symfony/routing": "^6.4",
         "symfony/serializer": "^6.4",
         "symfony/validator": "^6.4",
-        "symfony/process": "^6.4",
+        "symfony/process": "^6.4.33",
         "symfony/polyfill-iconv": "^1.26",
         "symfony/yaml": "^6.4",
         "twig/twig": "^3.22.0",
