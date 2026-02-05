@@ -64,6 +64,7 @@ variables:
   POSTGRES_PASSWORD: drupaltestbotpw
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
   MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
+  SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
@@ -86,7 +87,7 @@ variables:
   name: selenium/standalone-chrome:127.0
   alias: selenium
   variables:
-    JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
+    JAVA_OPTS: $SELENIUM_JAVA_OPTS
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
     SE_NODE_MAX_SESSIONS: "16"
     SE_SESSION_RETRY_INTERVAL: "1"
@@ -257,12 +258,12 @@ variables:
       allow_failure: true
   variables:
     KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
+    SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver-selenium.log"
   tags:
     - performance-test-runner
   services:
     - <<: *with-database
-    - <<: *with-chrome
+    - <<: *with-selenium-chrome
   script:
     #  Determine DB driver.
     - |
@@ -275,4 +276,6 @@ variables:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit --display-all-issues -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+  after_script:
+    - cp /builds/chromedriver-selenium.log ./
