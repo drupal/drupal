@@ -156,6 +156,7 @@ Contact
 
 Content Moderation
 - Sam Becker 'Sam152' https://www.drupal.org/u/sam152
+- Derek Wright 'dww' https://www.drupal.org/u/dww
 
 Content Translation
 - Christian López Espínola 'penyaskito' https://www.drupal.org/u/penyaskito
