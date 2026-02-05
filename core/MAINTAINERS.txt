@@ -79,7 +79,7 @@ Asset Library API
 - Florent Torregrosa 'grimreaper' https://www.drupal.org/u/grimreaper
 
 Authentication and Authorization
-- ?
+- Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
 
 Automated Cron
 - ?
