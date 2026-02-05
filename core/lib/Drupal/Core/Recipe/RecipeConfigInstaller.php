@@ -46,7 +46,7 @@ final class RecipeConfigInstaller extends ConfigInstaller {
 
     // Validation during the installer is hard. For example:
     // Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
-    // ends up calling _ckeditor5_theme_css() via
+    // ends up calling \Drupal\ckeditor5\Hook\Ckeditor5Hooks::themeCss() via
     // Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition->validateDrupalAspects()
     // and this expects the theme system to be set up correctly but we're in the
     // installer so this cannot happen.
