@@ -23,7 +23,7 @@
         "doctrine/deprecations": "1.1.5",
         "doctrine/instantiator": "2.0.0",
         "drupal/coder": "8.3.31",
-        "google/protobuf": "v4.33.1",
+        "google/protobuf": "v4.33.5",
         "lullabot/mink-selenium2-driver": "v1.7.4",
         "lullabot/php-webdriver": "v2.0.7",
         "mglaman/phpstan-drupal": "2.0.10",
