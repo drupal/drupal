@@ -45,6 +45,7 @@ class SystemRequirements implements InstallRequirementsInterface {
     'aggregator' => 'Aggregator',
     'ckeditor' => 'CKEditor',
     'color' => 'Color',
+    'field_layout' => 'Field Layout',
     'forum' => 'Forum',
     'hal' => 'HAL',
     'quickedit' => 'Quick Edit',

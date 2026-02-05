@@ -1,7 +1,0 @@
-name: 'Field Layout test'
-type: module
-description: 'Support module for Field Layout tests.'
-package: Testing
-version: VERSION
-dependencies:
-  - drupal:entity_test

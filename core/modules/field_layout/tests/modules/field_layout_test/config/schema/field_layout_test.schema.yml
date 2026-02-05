@@ -1,7 +1,0 @@
-layout_plugin.settings.test_layout_main_and_footer:
-  type: layout_plugin.settings
-  label: 'Layout test plugin settings'
-  mapping:
-    setting_1:
-      type: string
-      label: 'Setting 1'
