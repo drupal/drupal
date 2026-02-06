@@ -55,7 +55,12 @@ class EntityRouteHelper {
   }
 
   public function getContentEntityFromRoute(): ?ContentEntityInterface {
-    $path = $this->routeMatch->getRouteObject()->getPath();
+    $route = $this->routeMatch->getRouteObject();
+    if (!$route) {
+      return NULL;
+    }
+
+    $path = $route->getPath();
     if (!$entity_type = $this->getContentEntityPaths()[$path] ?? NULL) {
       return NULL;
     }
