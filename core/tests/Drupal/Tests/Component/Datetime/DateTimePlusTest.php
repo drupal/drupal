@@ -631,6 +631,18 @@ class DateTimePlusTest extends TestCase {
       ],
       'Missing day' => [['year' => 2059, 'month' => 1, 'second' => 1], FALSE],
       'Zero day' => [['year' => 2059, 'month' => 1, 'day' => 0], FALSE],
+      'Non-numeric year' => [
+        ['year' => 'invalid', 'month' => 11, 'day' => 2],
+        FALSE,
+      ],
+      'Non-numeric month' => [
+        ['year' => 2025, 'month' => 'invalid', 'day' => 2],
+        FALSE,
+      ],
+      'Non-numeric day' => [
+        ['year' => 2025, 'month' => 11, 'day' => 'invalid'],
+        FALSE,
+      ],
     ];
   }
 
