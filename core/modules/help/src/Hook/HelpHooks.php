@@ -128,16 +128,7 @@ class HelpHooks {
    */
   #[Hook('modules_uninstalled')]
   public function modulesUninstalled(array $modules): void {
-    _help_search_update($modules);
-  }
-
-  /**
-   * Implements hook_themes_uninstalled().
-   */
-  #[Hook('themes_uninstalled')]
-  public function themesUninstalled(array $themes): void {
-    \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
-    _help_search_update();
+    $this->searchUpdate($modules);
   }
 
   /**
@@ -145,16 +136,44 @@ class HelpHooks {
    */
   #[Hook('modules_installed')]
   public function modulesInstalled(array $modules, $is_syncing): void {
-    _help_search_update();
+    $this->searchUpdate();
   }
 
   /**
    * Implements hook_themes_installed().
+   *
+   * Implements hook_themes_uninstalled().
    */
   #[Hook('themes_installed')]
-  public function themesInstalled(array $themes): void {
+  #[Hook('themes_uninstalled')]
+  public function themesInstallOrUninstall(array $themes): void {
     \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
-    _help_search_update();
+    $this->searchUpdate();
+  }
+
+  /**
+   * Ensure that search is updated when extensions are installed or uninstalled.
+   *
+   * @param string[] $extensions
+   *   (optional) If modules are being uninstalled, the names of the modules
+   *   being uninstalled. For themes being installed/uninstalled, or modules
+   *   being installed, omit this parameter.
+   */
+  protected function searchUpdate(array $extensions = []): void {
+    // Early return if search is not installed or if we're uninstalling this
+    // module.
+    if (
+      !\Drupal::hasService('plugin.manager.search') ||
+      in_array('help', $extensions)
+    ) {
+      return;
+    }
+
+    // Ensure that topics for extensions that have been uninstalled are removed
+    // and that the index state variable is updated.
+    $help_search = \Drupal::service('plugin.manager.search')->createInstance('help_search');
+    $help_search->updateTopicList();
+    $help_search->updateIndexState();
   }
 
 }
