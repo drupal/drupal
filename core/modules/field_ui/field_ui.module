@@ -6,7 +6,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Theme\ThemePreprocess;
-use Drupal\field_ui\FieldUI;
+use Drupal\field_ui\Hook\FieldUiHooks;
 
 /**
  * Prepares variables for field UI overview table templates.
@@ -31,12 +31,13 @@ function template_preprocess_field_ui_table(&$variables): void {
 /**
  * Form submission handler for the 'Save and manage fields' button.
  *
- * @see field_ui_form_alter()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\field_ui\Hook\FieldUiHooks::manageFieldFormSubmit()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function field_ui_form_manage_field_form_submit($form, FormStateInterface $form_state): void {
-  $provider = $form_state->getFormObject()->getEntity()->getEntityType()->getProvider();
-  $id = $form_state->getFormObject()->getEntity()->id();
-  if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo($provider, $id)) {
-    $form_state->setRedirectUrl($route_info);
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\field_ui\Hook\FieldUiHooks::manageFieldFormSubmit() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  \Drupal::service(FieldUiHooks::class)->manageFieldFormSubmit($form, $form_state);
 }
