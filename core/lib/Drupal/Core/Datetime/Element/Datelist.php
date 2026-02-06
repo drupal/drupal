@@ -24,6 +24,8 @@ class Datelist extends DateElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
+    // Note that since this information is cached, the #date_timezone property
+    // is not set here, as this needs to vary potentially by-user.
     return [
       '#input' => TRUE,
       '#element_validate' => [
@@ -38,7 +40,6 @@ class Datelist extends DateElementBase {
       '#date_year_range' => '1900:2050',
       '#date_increment' => 1,
       '#date_date_callbacks' => [],
-      '#date_timezone' => date_default_timezone_get(),
     ];
   }
 
@@ -49,6 +50,8 @@ class Datelist extends DateElementBase {
    * If the date is valid, the date is set in the form.
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+    $element += ['#date_timezone' => date_default_timezone_get()];
+
     $parts = $element['#date_part_order'];
     $increment = $element['#date_increment'];
 
