@@ -126,6 +126,23 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   }
 
   /**
+   * Tests proper timezone handling of the Datelist element.
+   */
+  public function testTimezoneHandling(): void {
+    // Render the form once with the site's timezone.
+    $form = \Drupal::formBuilder()->getForm($this);
+    $this->render($form);
+    $this->assertEquals('Australia/Sydney', $form['datelist_element']['#date_timezone']);
+
+    // Mimic a user with a different timezone than Australia/Sydney.
+    date_default_timezone_set('UTC');
+
+    $form = \Drupal::formBuilder()->getForm($this);
+    $this->render($form);
+    $this->assertEquals('UTC', $form['datelist_element']['#date_timezone']);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks(): array {
