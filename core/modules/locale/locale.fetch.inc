@@ -9,9 +9,6 @@ use Drupal\Core\Batch\BatchBuilder;
 /**
  * Load the common translation API.
  */
-// @todo Combine functions differently in files to avoid unnecessary includes.
-// Follow-up issue: https://www.drupal.org/node/1834298.
-require_once __DIR__ . '/locale.translation.inc';
 
 /**
  * Builds a batch to check, download and import project translations.
@@ -29,7 +26,7 @@ require_once __DIR__ . '/locale.translation.inc';
  */
 function locale_translation_batch_update_build($projects = [], $langcodes = [], $options = []) {
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
-  $projects = $projects ?: array_keys(locale_translation_get_projects());
+  $projects = $projects ?: array_keys(\Drupal::service('locale.project')->getProjects());
   $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
   $status_options = $options;
   $status_options['finish_feedback'] = FALSE;
@@ -65,7 +62,7 @@ function locale_translation_batch_update_build($projects = [], $langcodes = [], 
  *   Batch definition array.
  */
 function locale_translation_batch_fetch_build($projects = [], $langcodes = [], $options = []) {
-  $projects = $projects ?: array_keys(locale_translation_get_projects());
+  $projects = $projects ?: array_keys(\Drupal::service('locale.project')->getProjects());
   $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   $batch_builder = (new BatchBuilder())

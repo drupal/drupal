@@ -355,7 +355,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Check if the file data is removed from the database.
     $history = locale_translation_get_file_history();
     $this->assertFalse(isset($history['locale_test_translate']), 'Project removed from the file history');
-    $projects = locale_translation_get_projects();
+    $projects = \Drupal::service('locale.project')->getProjects();
     $this->assertFalse(isset($projects['locale_test_translate']), 'Project removed from the project list');
   }
 

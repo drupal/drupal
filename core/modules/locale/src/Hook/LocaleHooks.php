@@ -11,6 +11,7 @@ use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\locale\LocaleDefaultOptions;
 
 /**
  * Hook implementations for locale.
@@ -183,8 +184,48 @@ class LocaleHooks {
     // and a translatable language was set.
     // Update tasks are added to the queue here but processed by Drupal's cron.
     if (\Drupal::config('locale.settings')->get('translation.update_interval_days') && locale_translatable_language_list()) {
-      \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
-      locale_cron_fill_queue();
+      $updates = [];
+      $config = \Drupal::config('locale.settings');
+
+      // Determine which project+language should be updated.
+      $request_time = \Drupal::time()->getRequestTime();
+      $last = $request_time - $config->get('translation.update_interval_days') * 3600 * 24;
+      $projects = \Drupal::service('locale.project')->getAll();
+      $projects = array_filter($projects, function ($project) {
+        return $project['status'] == 1;
+      });
+      $connection = \Drupal::database();
+      $files = $connection->select('locale_file', 'f')
+        ->condition('f.project', array_keys($projects), 'IN')
+        ->condition('f.last_checked', $last, '<')
+        ->fields('f', ['project', 'langcode'])
+        ->execute()->fetchAll();
+      foreach ($files as $file) {
+        $updates[$file->project][] = $file->langcode;
+
+        // Update the last_checked timestamp of the project+language that will
+        // be checked for updates.
+        $connection->update('locale_file')
+          ->fields(['last_checked' => $request_time])
+          ->condition('project', $file->project)
+          ->condition('langcode', $file->langcode)
+          ->execute();
+      }
+
+      // For each project+language combination a number of tasks are added to
+      // the queue.
+      if ($updates) {
+        \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.fetch');
+        $options = LocaleDefaultOptions::updateOptions();
+        $queue = \Drupal::queue('locale_translation', TRUE);
+
+        foreach ($updates as $project => $languages) {
+          $batch = locale_translation_batch_update_build([$project], $languages, $options);
+          foreach ($batch['operations'] as $item) {
+            $queue->createItem($item);
+          }
+        }
+      }
     }
   }
 

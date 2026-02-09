@@ -24,6 +24,13 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
   protected $cache = [];
 
   /**
+   * Memory cache for projects.
+   *
+   * @var object[]
+   */
+  protected $projectCache = [];
+
+  /**
    * Cache status flag.
    *
    * @var bool
@@ -37,13 +44,9 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
    */
   protected bool $sorted = FALSE;
 
-  /**
-   * Constructs a State object.
-   *
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
-   *   The key value store to use.
-   */
-  public function __construct(KeyValueFactoryInterface $key_value_factory) {
+  public function __construct(
+    KeyValueFactoryInterface $key_value_factory,
+  ) {
     $this->keyValueStore = $key_value_factory->get('locale.project');
   }
 
@@ -105,6 +108,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
       $this->cache[$key] = $value;
     }
     $this->keyValueStore->setMultiple($data);
+    $this->projectCache = [];
     $this->sorted = FALSE;
   }
 
@@ -123,6 +127,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
       $this->cache[$key] = NULL;
     }
     $this->keyValueStore->deleteMultiple($keys);
+    $this->projectCache = [];
   }
 
   /**
@@ -130,6 +135,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
    */
   public function resetCache() {
     $this->cache = [];
+    $this->projectCache = [];
     $this->sorted = $this->all = FALSE;
   }
 
@@ -187,6 +193,34 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
     }
     // Remove any NULL values as these are not valid projects.
     return array_filter($this->cache, fn ($value) => $value !== NULL);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProjects(array $project_names = []): array {
+    if (empty($this->projectCache)) {
+      // Get project data from the database.
+      $row_count = $this->countProjects();
+      // https://www.drupal.org/node/1777106 is a follow-up issue to make the
+      // check for possible out-of-date project information more robust.
+      if ($row_count == 0) {
+        \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
+        // At least the core project should be in the database, so we build the
+        // data if none are found.
+        locale_translation_build_projects();
+      }
+      $this->projectCache = $this->getAll();
+      array_walk($this->projectCache, function (&$project) {
+        $project = (object) $project;
+      });
+    }
+
+    // Return the requested project names or all projects.
+    if ($project_names) {
+      return array_intersect_key($this->projectCache, array_combine($project_names, $project_names));
+    }
+    return $this->projectCache;
   }
 
 }

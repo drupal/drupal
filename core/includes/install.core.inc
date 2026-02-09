@@ -38,6 +38,7 @@ use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\locale\LocaleDefaultOptions;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -1763,7 +1764,6 @@ function install_download_additional_translations_operations(&$install_state): a
  */
 function install_import_translations(&$install_state) {
   $module_handler = \Drupal::moduleHandler();
-  $module_handler->loadInclude('locale', 'inc', 'locale.translation');
 
   // If there is more than one language or the single one is not English, we
   // should import translations.
@@ -1843,9 +1843,6 @@ function _install_prepare_import($langcodes, $server_pattern): void {
           ];
           \Drupal::service('locale.project')->set($data['name'], $data);
           $module_handler->loadInclude('locale', 'inc', 'locale.compare');
-          // Reset project information static cache so that it uses the data
-          // set above.
-          locale_translation_clear_cache_projects();
           locale_translation_check_projects_local(['drupal'], [$langcode]);
         }
       }
@@ -1877,7 +1874,7 @@ function install_finish_translations(&$install_state): array {
   $languages = \Drupal::languageManager()->getLanguages();
   $batches = [];
   if (count($projects) > 1) {
-    $options = _locale_translation_default_update_options();
+    $options = LocaleDefaultOptions::updateOptions();
     if ($batch = locale_translation_batch_update_build([], array_keys($languages), $options)) {
       $batches[] = $batch;
     }

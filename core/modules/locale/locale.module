@@ -16,8 +16,10 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\locale\Hook\LocaleThemeHooks;
+use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
+use Drupal\locale\LocaleSource;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -242,7 +244,7 @@ function locale_system_update(array $components): void {
         $module_handler->loadInclude('locale', 'inc', 'locale.fetch');
         // Get translation status of the projects, download and update
         // translations.
-        $options = _locale_translation_default_update_options();
+        $options = LocaleDefaultOptions::updateOptions();
         $batch = locale_translation_batch_update_build($list, [], $options);
         batch_set($batch);
       }
@@ -281,7 +283,7 @@ function locale_system_remove($components): void {
     // Only when projects are removed, the translation files and records will be
     // deleted. Not each disabled module will remove a project, e.g., sub
     // modules.
-    $projects = array_keys(locale_translation_get_projects());
+    $projects = array_keys(\Drupal::service('locale.project')->getProjects());
     if ($list = array_intersect($list, $projects)) {
       locale_translation_file_history_delete($list);
 
@@ -377,7 +379,7 @@ function locale_js_translate(array $files = [], $language_interface = NULL) {
  */
 function locale_form_language_admin_add_form_alter_submit($form, FormStateInterface $form_state): void {
   \Drupal::moduleHandler()->loadInclude('locale', 'fetch.inc');
-  $options = _locale_translation_default_update_options();
+  $options = LocaleDefaultOptions::updateOptions();
 
   if ($form_state->isValueEmpty('predefined_langcode') || $form_state->getValue('predefined_langcode') == 'custom') {
     $langcode = $form_state->getValue('langcode');
@@ -518,8 +520,7 @@ function locale_translation_file_history_delete($projects = [], $langcodes = [])
 function locale_translation_get_status($projects = NULL, $langcodes = NULL): array {
   $result = [];
   $status = \Drupal::keyValue('locale.translation_status')->getAll();
-  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
-  $projects = $projects ?: array_keys(locale_translation_get_projects());
+  $projects = $projects ?: array_keys(\Drupal::service('locale.project')->getProjects());
   $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   // Get the translation status of each project-language combination. If no
@@ -530,7 +531,7 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL): arr
         $result[$project][$langcode] = $status[$project][$langcode];
       }
       else {
-        $sources = locale_translation_build_sources([$project], [$langcode]);
+        $sources = \Drupal::service(LocaleSource::class)->buildSources([$project], [$langcode]);
         if (isset($sources[$project][$langcode])) {
           $result[$project][$langcode] = $sources[$project][$langcode];
         }
@@ -554,12 +555,11 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL): arr
  */
 function locale_translation_status_save($project, $langcode, $type, $data): void {
   // Load the translation status or build it if not already available.
-  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
   $status = locale_translation_get_status([$project]);
   if (empty($status)) {
-    $projects = locale_translation_get_projects([$project]);
+    $projects = \Drupal::service('locale.project')->getProjects([$project]);
     if (isset($projects[$project])) {
-      $status[$project][$langcode] = locale_translation_source_build($projects[$project], $langcode);
+      $status[$project][$langcode] = \Drupal::service(LocaleSource::class)->sourceBuild($projects[$project], $langcode);
     }
   }
 
