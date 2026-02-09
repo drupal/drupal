@@ -87,7 +87,7 @@ function locale_translate_batch_import_files(array $options, $force = FALSE) {
 function locale_translate_get_interface_translation_files(array $projects = [], array $langcodes = []): array {
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
   $files = [];
-  $projects = $projects ?: array_keys(locale_translation_get_projects());
+  $projects = $projects ?: array_keys(\Drupal::service('locale.project')->getProjects());
   $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   // Scan the translations directory for files matching a name pattern

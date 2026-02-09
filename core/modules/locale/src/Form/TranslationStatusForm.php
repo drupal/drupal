@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
+use Drupal\locale\LocaleDefaultOptions;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -201,7 +202,9 @@ class TranslationStatusForm extends FormBase {
         elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE) {
           $local = $project_info->files[LOCALE_TRANSLATION_LOCAL] ?? NULL;
           $remote = $project_info->files[LOCALE_TRANSLATION_REMOTE] ?? NULL;
-          $recent = _locale_translation_source_compare($local, $remote) == LOCALE_TRANSLATION_SOURCE_COMPARE_LT ? $remote : $local;
+          $local_timestamp = $local->timestamp ?? 0;
+          $remote_timestamp = $remote->timestamp ?? 0;
+          $recent = $local_timestamp < $remote_timestamp ? $remote : $local;
           $updates[$langcode]['updates'][] = [
             'name' => $project_info->name == 'drupal' ? $this->t('Drupal core') : $project_data[$project_info->name]->info['name'],
             'version' => $project_info->version,
@@ -266,7 +269,7 @@ class TranslationStatusForm extends FormBase {
 
     // Set the translation import options. This determines if existing
     // translations will be overwritten by imported strings.
-    $options = _locale_translation_default_update_options();
+    $options = LocaleDefaultOptions::updateOptions();
 
     // If the status was updated recently we can immediately start fetching the
     // translation updates. If the status is expired we clear it and run a batch

@@ -45,3 +45,5 @@ services:
     arguments: ['@cache_tags.invalidator']
   Drupal\locale\EventSubscriber\ConfigSubscriber:
     autowire: true
+  Drupal\locale\LocaleSource:
+    autowire: true
