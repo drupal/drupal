@@ -456,7 +456,24 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
-   * {@inheritdoc}
+   * Sets a default value for the field.
+   *
+   * If a default value callback is set, it will take precedence over any value
+   * set here.
+   *
+   * @param mixed $value
+   *   The default value for the field. This can be either:
+   *   - a literal, in which case it will be assigned to the first property of
+   *     the first item.
+   *   - a numerically indexed array of items, each item being a property/value
+   *     array.
+   *   - a non-numerically indexed array, in which case the array is assumed to
+   *     be a property/value array and used as the first item
+   *   - NULL or [] for no default value.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Field\BaseFieldDefinition::setDefaultValueCallback()
    */
   public function setDefaultValue($value) {
     if ($value === NULL) {
@@ -476,7 +493,24 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
-   * {@inheritdoc}
+   * Sets the default value callback for the field.
+   *
+   * If set, the callback overrides any set default value.
+   *
+   * @param callable|null $callback
+   *   The callback to invoke for getting the default value. The callback will
+   *   be invoked with the
+   *   following arguments:
+   *   - \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *     The entity being created.
+   *   - \Drupal\Core\Field\FieldDefinitionInterface $definition
+   *     The field definition.
+   *   It should return the default value in the format accepted by the
+   *   static::setDefaultValue() method.
+   *
+   *   Pass NULL to unset a callback that was set previously.
+   *
+   * @return $this
    */
   public function setDefaultValueCallback($callback) {
     if (isset($callback) && !is_string($callback)) {
