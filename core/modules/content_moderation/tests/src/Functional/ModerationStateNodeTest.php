@@ -181,4 +181,27 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $session_assert->pageTextContains('You do not have access to transition from Draft to Draft');
   }
 
+  /**
+   * Tests content on the latest version tab for nodes.
+   */
+  public function testNodeLatestVersionContent(): void {
+    $node = $this->drupalCreateNode([
+      'type' => 'moderated_content',
+      'title' => 'Test moderated node content',
+      'status' => 1,
+      'moderation_state' => 'published',
+    ]);
+    $node->setNewRevision(TRUE);
+    $node->set('moderation_state', 'draft')
+      ->setTitle('Test moderated node content - draft')
+      ->save();
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet($node->toUrl('latest-version'));
+    $this->assertSession()->statusCodeEquals(200);
+    // The node title should only appear twice - once in the title tag, and once
+    // in the h1 tag.
+    $this->assertSession()->pageTextMatchesCount(2, '/Test moderated node content - draft/ui');
+    $this->assertSession()->elementNotExists('css', 'article h2');
+  }
+
 }
