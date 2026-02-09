@@ -156,6 +156,7 @@ Contact
 
 Content Moderation
 - Sam Becker 'Sam152' https://www.drupal.org/u/sam152
+- Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 - Derek Wright 'dww' https://www.drupal.org/u/dww
 
 Content Translation
