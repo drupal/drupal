@@ -151,6 +151,7 @@ Contact
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Content Moderation
+- Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 - Derek Wright 'dww' https://www.drupal.org/u/dww
 
 Content Translation
