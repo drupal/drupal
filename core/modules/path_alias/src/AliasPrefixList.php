@@ -71,6 +71,8 @@ class AliasPrefixList extends CacheCollector implements AliasPrefixListInterface
   protected function loadMenuPathRoots() {
     if ($roots = $this->state->get('router.path_roots')) {
       foreach ($roots as $root) {
+        // Paths in Drupal are case-insensitive.
+        $root = mb_strtolower($root);
         $this->storage[$root] = NULL;
         $this->persist($root);
       }
@@ -82,6 +84,8 @@ class AliasPrefixList extends CacheCollector implements AliasPrefixListInterface
    */
   public function get($offset) {
     $this->lazyLoadCache();
+    // Paths in Drupal are case-insensitive.
+    $offset = mb_strtolower($offset);
     // This may be called with paths that are not represented by menu router
     // items such as paths that will be rewritten by hook_url_outbound_alter().
     // Therefore internally TRUE is used to indicate valid paths. FALSE is
@@ -100,7 +104,25 @@ class AliasPrefixList extends CacheCollector implements AliasPrefixListInterface
   /**
    * {@inheritdoc}
    */
+  public function has($key) {
+    // Paths in Drupal are case-insensitive.
+    return parent::has(mb_strtolower($key));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function set($key, $value) {
+    // Paths in Drupal are case-insensitive.
+    parent::set(mb_strtolower($key), $value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function resolveCacheMiss($root) {
+    // Paths in Drupal are case-insensitive.
+    $root = mb_strtolower($root);
     $exists = $this->pathAliasRepository->pathHasMatchingAlias('/' . $root);
     $this->storage[$root] = $exists;
     $this->persist($root);

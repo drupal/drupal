@@ -26996,6 +26996,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/path_alias/src/AliasPrefixList.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\path_alias\\\\AliasPrefixList\\:\\:has\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/path_alias/src/AliasPrefixList.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\path_alias\\\\AliasPrefixList\\:\\:lazyLoadCache\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -27003,6 +27009,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\path_alias\\\\AliasPrefixList\\:\\:loadMenuPathRoots\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/path_alias/src/AliasPrefixList.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\path_alias\\\\AliasPrefixList\\:\\:set\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path_alias/src/AliasPrefixList.php',
