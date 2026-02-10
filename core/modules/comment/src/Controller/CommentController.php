@@ -317,33 +317,4 @@ class CommentController extends ControllerBase {
     return $access;
   }
 
-  /**
-   * Returns a set of nodes' last read timestamps.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request of the page.
-   *
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
-   *   The JSON response.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-   *
-   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\history\Controller\HistoryController::renderNewCommentsNodeLinks
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3543039
-   */
-  public function renderNewCommentsNodeLinks(Request $request) {
-    @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\history\Controller\HistoryController::renderNewCommentsNodeLinks instead. See https://www.drupal.org/node/3543039', E_USER_DEPRECATED);
-    if (!$this->moduleHandler()->moduleExists('history')) {
-      throw new NotFoundHttpException();
-    }
-    /** @var \Drupal\Core\Controller\ControllerResolver $resolver */
-    $resolver = \Drupal::service('controller_resolver');
-    $controller = $resolver->getControllerFromDefinition('\Drupal\history\Controller\HistoryController::renderNewCommentsNodeLinks');
-    return $controller($request);
-  }
-
 }

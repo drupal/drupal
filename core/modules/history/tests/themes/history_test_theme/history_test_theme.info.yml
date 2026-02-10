@@ -1,5 +1,0 @@
-name: 'History Test Theme'
-type: theme
-description: 'Theme for history tests.'
-version: VERSION
-base theme: stark

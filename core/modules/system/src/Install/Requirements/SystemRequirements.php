@@ -48,6 +48,7 @@ class SystemRequirements implements InstallRequirementsInterface {
     'field_layout' => 'Field Layout',
     'forum' => 'Forum',
     'hal' => 'HAL',
+    'history' => 'History',
     'quickedit' => 'Quick Edit',
     'rdf' => 'RDF',
     'statistics' => 'Statistics',

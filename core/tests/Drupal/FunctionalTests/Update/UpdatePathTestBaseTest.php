@@ -26,6 +26,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-10.3.0.bare.standard.php.gz';
+    $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/uninstall-history.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-8.update-test-schema-enabled.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-8.update-test-semver-update-n-enabled.php';
   }
@@ -182,7 +183,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    * Tests that setup is done correctly.
    */
   public function testSetup(): void {
-    $this->assertCount(3, $this->databaseDumpFiles);
+    $this->assertCount(4, $this->databaseDumpFiles);
     $this->assertSame(1, Settings::get('entity_update_batch_size'));
   }
 

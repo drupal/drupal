@@ -59,26 +59,4 @@ interface CommentManagerInterface {
    */
   public function forbiddenMessage(EntityInterface $entity, $field_name);
 
-  /**
-   * Returns the number of new comments on a given entity for the current user.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to which the comments are attached to.
-   * @param string $field_name
-   *   (optional) The field_name to count comments for. Defaults to any field.
-   * @param int $timestamp
-   *   (optional) Time to count from. Defaults to time of last user access the
-   *   entity.
-   *
-   * @return int|false
-   *   The number of new comments or FALSE if the user is not authenticated or
-   *   if the History module is not installed.
-   *
-   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\history\HistoryManager::getCountNewComments instead.
-   *
-   * @see https://www.drupal.org/node/3551729
-   */
-  public function getCountNewComments(EntityInterface $entity, $field_name = NULL, $timestamp = 0);
-
 }

@@ -230,9 +230,6 @@ Form API
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
-History
-- Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
-
 Help
 - Amber Matz 'Amber Himes Matz' https://www.drupal.org/u/amber-himes-matz
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
