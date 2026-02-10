@@ -45,7 +45,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   /**
    * Constructs a new instance.
    *
-   * @param string[] $pluginNamespaces
+   * @param array<string, list<string>> $pluginNamespaces
    *   (optional) An array of namespace that may contain plugin implementations.
    *   Defaults to an empty array.
    * @param string $pluginDefinitionAttributeName

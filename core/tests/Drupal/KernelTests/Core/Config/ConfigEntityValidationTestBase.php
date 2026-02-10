@@ -483,7 +483,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * A property that is required must have a value (i.e. not NULL).
    *
-   * @param string[]|null $additional_expected_validation_errors_when_missing
+   * @param array<string, array<string, list<string>|string>>|null $additional_expected_validation_errors_when_missing
    *   Some required config entity properties have additional validation
    *   constraints that cause additional messages to appear. Keys must be
    *   config entity properties, values must be arrays as expected by
@@ -529,7 +529,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * A property that is required must have a value (i.e. not NULL).
    *
-   * @param string[]|null $additional_expected_validation_errors_when_missing
+   * @param array<string, array<string, list<string>|string>>|null $additional_expected_validation_errors_when_missing
    *   Some required config entity properties have additional validation
    *   constraints that cause additional messages to appear. Keys must be
    *   config entity properties, values must be arrays as expected by
