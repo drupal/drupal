@@ -286,6 +286,17 @@ class AliasTest extends KernelTestBase {
         'xx-lolspeak'
       )
     );
+
+    // Test preloading using the same path in different cases.
+    $this->createPathAlias('/test-source-Case', '/test-alias');
+    $path_alias_repository = $this->container->get('path_alias.repository');
+    $this->assertEquals([
+      '/test-source-Case' => '/test-alias',
+    ], $path_alias_repository->preloadPathAlias(['/test-source-Case'], LanguageInterface::LANGCODE_NOT_SPECIFIED));
+    $this->assertEquals([
+      '/test-source-Case' => '/test-alias',
+      '/test-source-case' => '/test-alias',
+    ], $path_alias_repository->preloadPathAlias(['/test-source-case'], LanguageInterface::LANGCODE_NOT_SPECIFIED));
   }
 
   /**
@@ -323,6 +334,14 @@ class AliasTest extends KernelTestBase {
     // Test the situation where the source is the same for multiple aliases.
     // Start with a language-neutral alias, which we will override.
     $path_alias = $this->createPathAlias('/user/1', '/foo');
+    $this->assertEquals($path_alias->getAlias(), $aliasManager->getAliasByPath($path_alias->getPath()), 'Basic alias lookup works.');
+    $this->assertEquals($path_alias->getAlias(), $aliasManager->getAliasByPath(strtoupper($path_alias->getPath())), 'Basic alias lookup is case-insensitive.');
+    $this->assertEquals($path_alias->getPath(), $aliasManager->getPathByAlias($path_alias->getAlias()), 'Basic source lookup works.');
+
+    // Ensure that ::getPathByAlias() returns the stored path and not the user
+    // provided path if path with a different case was looked up first.
+    $aliasManager->cacheClear();
+    $this->assertEquals($path_alias->getAlias(), $aliasManager->getAliasByPath(strtoupper($path_alias->getPath())), 'Basic alias lookup is case-insensitive.');
     $this->assertEquals($path_alias->getAlias(), $aliasManager->getAliasByPath($path_alias->getPath()), 'Basic alias lookup works.');
     $this->assertEquals($path_alias->getPath(), $aliasManager->getPathByAlias($path_alias->getAlias()), 'Basic source lookup works.');
 
@@ -389,7 +408,9 @@ class AliasTest extends KernelTestBase {
     $this->createPathAlias('/user/1', '/' . $this->randomMachineName());
     $aliasManager->cacheClear();
     $this->assertTrue($prefix_list->get('user'));
+    $this->assertTrue($prefix_list->get('User'), 'Prefix list should be case insensitive.');
     $this->assertNull($prefix_list->get('admin'));
+    $this->assertNull($prefix_list->get('Admin'), 'Prefix list should be case insensitive.');
     $this->assertNull($prefix_list->get($this->randomMachineName()));
 
     // Add an alias for admin, both should get cached now.
