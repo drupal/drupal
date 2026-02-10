@@ -6,6 +6,7 @@ namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Access\PermissionAccessCheck;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -88,8 +89,8 @@ class PermissionAccessCheckTest extends UnitTestCase {
     if (!empty($message)) {
       $access_result->setReason($message);
     }
-    $user = $this->createMock('Drupal\Core\Session\AccountInterface');
-    $user->expects($this->any())
+    $user = $this->createStub(AccountInterface::class);
+    $user
       ->method('hasPermission')
       ->willReturnMap([
         ['allowed', TRUE],

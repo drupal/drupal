@@ -33,8 +33,8 @@ class PermissionsTest extends UnitTestCase {
     parent::setUp();
     $this->setUpMockLoggerWithMissingEntity();
     $container = \Drupal::getContainer();
-    $container->set('string_translation', $this->createMock(TranslationInterface::class));
-    $container->set('user.permissions', $this->createMock(PermissionHandlerInterface::class));
+    $container->set('string_translation', $this->createStub(TranslationInterface::class));
+    $container->set('user.permissions', $this->createStub(PermissionHandlerInterface::class));
     \Drupal::setContainer($container);
   }
 
@@ -43,9 +43,9 @@ class PermissionsTest extends UnitTestCase {
    */
   public function testPreRenderNullEntity(): void {
     $values = [new ResultRow()];
-    $field = new Permissions(['entity_type' => 'foo', 'entity field' => 'bar'], '', [], $this->createMock(ModuleHandlerInterface::class), $this->createMock(EntityTypeManagerInterface::class));
-    $view = $this->createMock(ViewExecutable::class);
-    $display = $this->createMock(DisplayPluginBase::class);
+    $field = new Permissions(['entity_type' => 'foo', 'entity field' => 'bar'], '', [], $this->createStub(ModuleHandlerInterface::class), $this->createStub(EntityTypeManagerInterface::class));
+    $view = $this->createStub(ViewExecutable::class);
+    $display = $this->createStub(DisplayPluginBase::class);
     $field->init($view, $display);
     $field->preRender($values);
     $this->assertEmpty($field->items);

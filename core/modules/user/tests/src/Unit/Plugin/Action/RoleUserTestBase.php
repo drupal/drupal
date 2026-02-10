@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\Action;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -21,7 +22,7 @@ abstract class RoleUserTestBase extends UnitTestCase {
   /**
    * The user role entity type.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\Stub
    */
   protected $userRoleEntityType;
 
@@ -35,7 +36,7 @@ abstract class RoleUserTestBase extends UnitTestCase {
       ->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->userRoleEntityType = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
+    $this->userRoleEntityType = $this->createStub(EntityTypeInterface::class);
   }
 
 }

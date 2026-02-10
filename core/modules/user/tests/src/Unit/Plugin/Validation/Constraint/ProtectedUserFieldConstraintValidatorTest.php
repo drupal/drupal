@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\Validation\Constraint;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 use Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraint;
 use Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraintValidator;
+use Drupal\user\UserInterface;
+use Drupal\user\UserStorageInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -24,21 +29,21 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
    */
   protected function createValidator() {
     // Setup mocks that don't need to change.
-    $unchanged_field = $this->createMock('Drupal\Core\Field\FieldItemListInterface');
-    $unchanged_field->expects($this->any())
+    $unchanged_field = $this->createStub(FieldItemListInterface::class);
+    $unchanged_field
       ->method('getValue')
       ->willReturn('unchanged-value');
 
-    $unchanged_account = $this->createMock('Drupal\user\UserInterface');
-    $unchanged_account->expects($this->any())
+    $unchanged_account = $this->createStub(UserInterface::class);
+    $unchanged_account
       ->method('get')
       ->willReturn($unchanged_field);
-    $user_storage = $this->createMock('Drupal\user\UserStorageInterface');
-    $user_storage->expects($this->any())
+    $user_storage = $this->createStub(UserStorageInterface::class);
+    $user_storage
       ->method('loadUnchanged')
       ->willReturn($unchanged_account);
-    $current_user = $this->createMock('Drupal\Core\Session\AccountProxyInterface');
-    $current_user->expects($this->any())
+    $current_user = $this->createStub(AccountProxyInterface::class);
+    $current_user
       ->method('id')
       ->willReturn('current-user');
     return new ProtectedUserFieldConstraintValidator($user_storage, $current_user);
@@ -77,7 +82,7 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     $this->validate(NULL);
 
     // Case 2: Empty user should be ignored.
-    $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $field_definition = $this->createStub(FieldDefinitionInterface::class);
     $items = $this->createMock('Drupal\Core\Field\FieldItemListInterface');
     $items->expects($this->once())
       ->method('getFieldDefinition')
@@ -88,8 +93,8 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     $this->validate($items);
 
     // Case 3: Account flagged to skip protected user should be ignored.
-    $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
-    $account = $this->createMock(User::class);
+    $field_definition = $this->createStub(FieldDefinitionInterface::class);
+    $account = $this->createStub(User::class);
     $account->_skipProtectedUserFieldConstraint = TRUE;
     $items = $this->createMock('Drupal\Core\Field\FieldItemListInterface');
     $items->expects($this->once())
@@ -101,7 +106,7 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     $this->validate($items);
 
     // Case 4: New user should be ignored.
-    $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $field_definition = $this->createStub(FieldDefinitionInterface::class);
     $account = $this->createMock('Drupal\user\UserInterface');
     $account->expects($this->once())
       ->method('isNew')
@@ -231,7 +236,7 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     $items->expects($this->once())
       ->method('getEntity')
       ->willReturn($account);
-    $items->expects($this->any())
+    $items
       ->method('getValue')
       ->willReturn('changed-value');
     $items->expects($this->once())
@@ -247,7 +252,7 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     $field_definition->expects($this->exactly(2))
       ->method('getName')
       ->willReturn('pass');
-    $field_definition->expects($this->any())
+    $field_definition
       ->method('getLabel')
       ->willReturn('Password');
     $account = $this->createMock('Drupal\user\UserInterface');
@@ -281,7 +286,7 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     $field_definition->expects($this->exactly(2))
       ->method('getName')
       ->willReturn('field_not_password');
-    $field_definition->expects($this->any())
+    $field_definition
       ->method('getLabel')
       ->willReturn('Protected field');
     $account = $this->createMock('Drupal\user\UserInterface');

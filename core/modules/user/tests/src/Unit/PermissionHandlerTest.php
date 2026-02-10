@@ -126,14 +126,14 @@ EOF
     );
     $modules = ['module_a', 'module_b', 'module_c'];
 
-    $this->moduleHandler->expects($this->any())
+    $this->moduleHandler
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
     $this->callableResolver->expects($this->never())
       ->method('getCallableFromDefinition');
 
-    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+    $module_extension_list = $this->createStub(ModuleExtensionList::class);
 
     $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
 
@@ -155,6 +155,9 @@ EOF
    * @legacy-covers ::sortPermissions
    */
   public function testBuildPermissionsSortPerModule(): void {
+    $this->callableResolver->expects($this->never())
+      ->method('getCallableFromDefinition');
+
     vfsStreamWrapper::register();
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
@@ -247,7 +250,7 @@ EOF
 
     $modules = ['module_a', 'module_b', 'module_c'];
 
-    $this->moduleHandler->expects($this->any())
+    $this->moduleHandler
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
@@ -272,7 +275,7 @@ EOF
         ],
       ]);
 
-    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+    $module_extension_list = $this->createStub(ModuleExtensionList::class);
 
     $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
 
@@ -308,7 +311,7 @@ EOF
 
     $modules = ['module_a'];
 
-    $this->moduleHandler->expects($this->any())
+    $this->moduleHandler
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
@@ -317,7 +320,7 @@ EOF
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
       ->willReturn([new TestPermissionCallbacks(), 'titleDescription']);
 
-    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+    $module_extension_list = $this->createStub(ModuleExtensionList::class);
 
     $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
 
