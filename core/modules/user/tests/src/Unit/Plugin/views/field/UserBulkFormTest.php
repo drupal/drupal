@@ -6,10 +6,18 @@ namespace Drupal\Tests\user\Unit\Plugin\views\field;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\ResettableStackedRouteMatchInterface;
+use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\views\field\UserBulkForm;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ViewEntityInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\views\ViewsData;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -36,42 +44,40 @@ class UserBulkFormTest extends UnitTestCase {
     $actions = [];
 
     for ($i = 1; $i <= 2; $i++) {
-      $action = $this->createMock('\Drupal\system\ActionConfigEntityInterface');
-      $action->expects($this->any())
+      $action = $this->createStub(ActionConfigEntityInterface::class);
+      $action
         ->method('getType')
         ->willReturn('user');
       $actions[$i] = $action;
     }
 
-    $action = $this->createMock('\Drupal\system\ActionConfigEntityInterface');
-    $action->expects($this->any())
+    $action = $this->createStub(ActionConfigEntityInterface::class);
+    $action
       ->method('getType')
       ->willReturn('node');
     $actions[] = $action;
 
-    $entity_storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
-    $entity_storage->expects($this->any())
+    $entity_storage = $this->createStub(EntityStorageInterface::class);
+    $entity_storage
       ->method('loadMultiple')
       ->willReturn($actions);
 
-    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
-    $entity_type_manager->expects($this->once())
+    $entity_type_manager = $this->createStub(EntityTypeManagerInterface::class);
+    $entity_type_manager
       ->method('getStorage')
       ->with('action')
       ->willReturn($entity_storage);
 
-    $entity_repository = $this->createMock(EntityRepositoryInterface::class);
+    $entity_repository = $this->createStub(EntityRepositoryInterface::class);
 
-    $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
+    $language_manager = $this->createStub(LanguageManagerInterface::class);
 
-    $messenger = $this->createMock('Drupal\Core\Messenger\MessengerInterface');
+    $messenger = $this->createStub(MessengerInterface::class);
 
-    $route_match = $this->createMock(ResettableStackedRouteMatchInterface::class);
+    $route_match = $this->createStub(ResettableStackedRouteMatchInterface::class);
 
-    $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $views_data->expects($this->any())
+    $views_data = $this->createStub(ViewsData::class);
+    $views_data
       ->method('get')
       ->with('users')
       ->willReturn(['table' => ['entity type' => 'user']]);
@@ -80,20 +86,16 @@ class UserBulkFormTest extends UnitTestCase {
     $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
 
-    $storage = $this->createMock('Drupal\views\ViewEntityInterface');
-    $storage->expects($this->any())
+    $storage = $this->createStub(ViewEntityInterface::class);
+    $storage
       ->method('get')
       ->with('base_table')
       ->willReturn('users');
 
-    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $executable = $this->createStub(ViewExecutable::class);
     $executable->storage = $storage;
 
-    $display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $display = $this->createStub(DisplayPluginBase::class);
 
     $definition['title'] = '';
     $options = [];

@@ -23,8 +23,8 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
     parent::setUp();
 
     // Add services required for user local tasks.
-    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
-    $entity_type_manager->expects($this->any())
+    $entity_type_manager = $this->createStub(EntityTypeManagerInterface::class);
+    $entity_type_manager
       ->method('getDefinitions')
       ->willReturn([]);
     $this->container->set('entity_type.manager', $entity_type_manager);

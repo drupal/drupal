@@ -4,28 +4,29 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\Core\Entity;
 
-use Drupal\Tests\Core\Session\UserSessionTest;
+use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\user\Entity\User.
  */
 #[CoversClass(User::class)]
 #[Group('user')]
-class UserTest extends UserSessionTest {
+class UserTest extends UnitTestCase {
 
   /**
    * {@inheritdoc}
    */
-  protected function createUserSession(array $rids = [], $authenticated = FALSE) {
+  protected function createUserSession(array $rids = [], $authenticated = FALSE): User&MockObject {
     $user = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->onlyMethods(['get', 'id'])
       ->getMock();
-    $user->expects($this->any())
+    $user->expects($this->once())
       ->method('id')
       // @todo Also test the uid = 1 handling.
       ->willReturn($authenticated ? 2 : 0);
@@ -35,7 +36,7 @@ class UserTest extends UserSessionTest {
         'target_id' => $rid,
       ];
     }
-    $user->expects($this->any())
+    $user->expects($this->atLeastOnce())
       ->method('get')
       ->with('roles')
       ->willReturn($roles);

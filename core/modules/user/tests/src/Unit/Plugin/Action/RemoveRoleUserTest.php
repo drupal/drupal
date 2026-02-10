@@ -23,7 +23,7 @@ class RemoveRoleUserTest extends RoleUserTestBase {
       ->method('removeRole')
       ->willReturn($this->account);
 
-    $this->account->expects($this->any())
+    $this->account
       ->method('hasRole')
       ->with($this->equalTo('test_role_1'))
       ->willReturn(TRUE);
@@ -42,7 +42,7 @@ class RemoveRoleUserTest extends RoleUserTestBase {
       ->method('removeRole')
       ->willReturn($this->account);
 
-    $this->account->expects($this->any())
+    $this->account
       ->method('hasRole')
       ->with($this->equalTo('test_role_1'))
       ->willReturn(FALSE);
