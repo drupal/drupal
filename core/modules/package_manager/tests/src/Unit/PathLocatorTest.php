@@ -122,7 +122,7 @@ class PathLocatorTest extends UnitTestCase {
       ])
       ->getMock();
 
-    $path_locator->method('getProjectRoot')->willReturn($project_root);
+    $path_locator->expects($this->atLeastOnce())->method('getProjectRoot')->willReturn($project_root);
     $this->assertSame($expected_web_root, $path_locator->getWebRoot());
   }
 
