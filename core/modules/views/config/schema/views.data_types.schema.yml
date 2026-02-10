@@ -263,7 +263,7 @@ views_display:
       sequence:
         type: views.area.[plugin_id]
     display_comment:
-      type: label
+      type: text
       label: 'Display comment'
     hide_attachment_summary:
       type: boolean
