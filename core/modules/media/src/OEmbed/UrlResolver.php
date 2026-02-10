@@ -100,6 +100,12 @@ class UrlResolver implements UrlResolverInterface {
       return FALSE;
     }
 
+    // Only care about HTML responses.
+    $response_type = strtolower($response->getHeaderLine('Content-Type'));
+    if (!str_contains($response_type, 'text/html')) {
+      return FALSE;
+    }
+
     $document = Html::load((string) $response->getBody());
     $xpath = new \DOMXPath($document);
 
