@@ -51,7 +51,7 @@ class SandboxDirectoryValidatorTest extends UnitTestCase {
 
     $stage_not_in_active_validator = new SandboxDirectoryValidator($path_locator);
     $stage_not_in_active_validator->setStringTranslation($this->getStringTranslationStub());
-    $event = new PreCreateEvent($stage, $this->createMock(PathListInterface::class));
+    $event = new PreCreateEvent($stage, $this->createStub(PathListInterface::class));
     $stage_not_in_active_validator->validate($event);
     $this->assertValidationResultsEqual($expected, $event->getResults(), $path_locator);
   }
