@@ -22,7 +22,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   /**
    * The namespaces within which to find plugin classes.
    *
-   * @var string[]
+   * @var array<string, list<string>>
    */
   protected $pluginNamespaces;
 
@@ -60,7 +60,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   /**
    * Constructs a new instance.
    *
-   * @param string[] $plugin_namespaces
+   * @param array<string, list<string>> $plugin_namespaces
    *   (optional) An array of namespace that may contain plugin implementations.
    *   Defaults to an empty array.
    * @param string $plugin_definition_annotation_name
