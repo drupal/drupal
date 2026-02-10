@@ -48,7 +48,7 @@ trait UpdateTestTrait {
   /**
    * Sets default information about installed extensions.
    *
-   * @param string[] $default_info
+   * @param array<string, string|int> $default_info
    *   The *.info.yml key-value pairs to be mocked across all
    *   extensions. Hence, these can be seen as default/fallback values.
    */

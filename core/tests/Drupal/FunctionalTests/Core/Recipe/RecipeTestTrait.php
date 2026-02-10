@@ -85,7 +85,7 @@ trait RecipeTestTrait {
   /**
    * Runs the `core/scripts/drupal` script with the given arguments.
    *
-   * @param string[] $arguments
+   * @param array<string|int> $arguments
    *   The arguments and options to pass to the script.
    * @param int $timeout
    *   (optional) How long the command should run before timing out, in seconds.
