@@ -11,8 +11,7 @@ use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\system\Form\ThemeExperimentalConfirmForm;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 
 /**
  * Controller for theme handling.
@@ -62,101 +61,82 @@ class ThemeController extends ControllerBase {
   /**
    * Uninstalls a theme.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   A request object containing a theme name and a valid token.
+   * @param string $theme
+   *   The theme name.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Redirects back to the appearance admin page.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   Throws access denied when no theme or token is set in the request or when
-   *   the token is invalid.
    */
-  public function uninstall(Request $request) {
-    $theme = $request->query->get('theme');
+  public function uninstall(#[MapQueryParameter] string $theme) {
     $config = $this->config('system.theme');
 
-    if (isset($theme)) {
-      // Get current list of themes.
-      $themes = $this->themeHandler->listInfo();
+    // Get current list of themes.
+    $themes = $this->themeHandler->listInfo();
 
-      // Check if the specified theme is one recognized by the system.
-      if (!empty($themes[$theme])) {
-        // Do not uninstall the default or admin theme.
-        if ($theme === $config->get('default') || $theme === $config->get('admin')) {
-          $this->messenger()->addError($this->t('%theme is the default theme and cannot be uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
-        }
-        else {
-          $this->themeInstaller->uninstall([$theme]);
-          $this->messenger()->addStatus($this->t('The %theme theme has been uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
-        }
+    // Check if the specified theme is one recognized by the system.
+    if (!empty($themes[$theme])) {
+      // Do not uninstall the default or admin theme.
+      if ($theme === $config->get('default') || $theme === $config->get('admin')) {
+        $this->messenger()->addError($this->t('%theme is the default theme and cannot be uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
       }
       else {
-        $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
+        $this->themeInstaller->uninstall([$theme]);
+        $this->messenger()->addStatus($this->t('The %theme theme has been uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
       }
-
-      return $this->redirect('system.themes_page');
+    }
+    else {
+      $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
     }
 
-    throw new AccessDeniedHttpException();
+    return $this->redirect('system.themes_page');
   }
 
   /**
    * Installs a theme.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   A request object containing a theme name and a valid token.
+   * @param string $theme
+   *   The theme name.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
    *   Redirects back to the appearance admin page or the confirmation form
    *   if an experimental theme will be installed.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   Throws access denied when no theme or token is set in the request or when
-   *   the token is invalid.
    */
-  public function install(Request $request) {
-    $theme = $request->query->get('theme');
-
-    if (isset($theme)) {
-      // Display confirmation form in case of experimental theme.
-      if ($this->willInstallExperimentalTheme($theme)) {
-        return $this->formBuilder()->getForm(ThemeExperimentalConfirmForm::class, $theme);
-      }
-
-      try {
-        if ($this->themeInstaller->install([$theme])) {
-          $themes = $this->themeHandler->listInfo();
-          $this->messenger()->addStatus($this->t('The %theme theme has been installed.', ['%theme' => $themes[$theme]->info['name']]));
-        }
-        else {
-          $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
-        }
-      }
-      catch (PreExistingConfigException $e) {
-        $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
-        $this->messenger()->addError(
-          $this->formatPlural(
-            count($config_objects),
-            'Unable to install @extension, %config_names already exists in active configuration.',
-            'Unable to install @extension, %config_names already exist in active configuration.',
-            [
-              '%config_names' => implode(', ', $config_objects),
-              '@extension' => $theme,
-            ])
-        );
-      }
-      catch (UnmetDependenciesException $e) {
-        $this->messenger()->addError($e->getTranslatedMessage($this->getStringTranslation(), $theme));
-      }
-      catch (MissingDependencyException) {
-        $this->messenger()->addError($this->t('Unable to install @theme due to missing module dependencies.', ['@theme' => $theme]));
-      }
-
-      return $this->redirect('system.themes_page');
+  public function install(#[MapQueryParameter] string $theme) {
+    // Display confirmation form in case of experimental theme.
+    if ($this->willInstallExperimentalTheme($theme)) {
+      return $this->formBuilder()->getForm(ThemeExperimentalConfirmForm::class, $theme);
     }
 
-    throw new AccessDeniedHttpException();
+    try {
+      if ($this->themeInstaller->install([$theme])) {
+        $themes = $this->themeHandler->listInfo();
+        $this->messenger()->addStatus($this->t('The %theme theme has been installed.', ['%theme' => $themes[$theme]->info['name']]));
+      }
+      else {
+        $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
+      }
+    }
+    catch (PreExistingConfigException $e) {
+      $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
+      $this->messenger()->addError(
+        $this->formatPlural(
+          count($config_objects),
+          'Unable to install @extension, %config_names already exists in active configuration.',
+          'Unable to install @extension, %config_names already exist in active configuration.',
+          [
+            '%config_names' => implode(', ', $config_objects),
+            '@extension' => $theme,
+          ])
+      );
+    }
+    catch (UnmetDependenciesException $e) {
+      $this->messenger()->addError($e->getTranslatedMessage($this->getStringTranslation(), $theme));
+    }
+    catch (MissingDependencyException) {
+      $this->messenger()->addError($this->t('Unable to install @theme due to missing module dependencies.', ['@theme' => $theme]));
+    }
+
+    return $this->redirect('system.themes_page');
   }
 
   /**
@@ -185,59 +165,51 @@ class ThemeController extends ControllerBase {
   /**
    * Set the default theme.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   A request object containing a theme name.
+   * @param string $theme
+   *   The theme name.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
    *   Redirects back to the appearance admin page or the confirmation form
    *   if an experimental theme will be installed.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   Throws access denied when no theme is set in the request.
    */
-  public function setDefaultTheme(Request $request) {
+  public function setDefaultTheme(#[MapQueryParameter] string $theme) {
     $config = $this->configFactory->getEditable('system.theme');
-    $theme = $request->query->get('theme');
 
-    if (isset($theme)) {
-      // Get current list of themes.
+    // Get current list of themes.
+    $themes = $this->themeHandler->listInfo();
+    // Display confirmation form if an experimental theme is being installed.
+    if ($this->willInstallExperimentalTheme($theme)) {
+      return $this->formBuilder()->getForm(ThemeExperimentalConfirmForm::class, $theme, TRUE);
+    }
+
+    // Check if the specified theme is one recognized by the system.
+    // Or try to install the theme.
+    if (isset($themes[$theme]) || $this->themeInstaller->install([$theme])) {
       $themes = $this->themeHandler->listInfo();
-      // Display confirmation form if an experimental theme is being installed.
-      if ($this->willInstallExperimentalTheme($theme)) {
-        return $this->formBuilder()->getForm(ThemeExperimentalConfirmForm::class, $theme, TRUE);
-      }
 
-      // Check if the specified theme is one recognized by the system.
-      // Or try to install the theme.
-      if (isset($themes[$theme]) || $this->themeInstaller->install([$theme])) {
-        $themes = $this->themeHandler->listInfo();
+      // Set the default theme.
+      $config->set('default', $theme)->save();
 
-        // Set the default theme.
-        $config->set('default', $theme)->save();
-
-        // The status message depends on whether an admin theme is currently in
-        // use: a value of 0 means the admin theme is set to be the default
-        // theme.
-        $admin_theme = $config->get('admin');
-        if (!empty($admin_theme) && $admin_theme != $theme) {
-          $this->messenger()
-            ->addStatus($this->t('Note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', [
-              '%admin_theme' => $themes[$admin_theme]->info['name'],
-              '%selected_theme' => $themes[$theme]->info['name'],
-            ]));
-        }
-        else {
-          $this->messenger()->addStatus($this->t('%theme is now the default theme.', ['%theme' => $themes[$theme]->info['name']]));
-        }
+      // The status message depends on whether an admin theme is currently in
+      // use: a value of 0 means the admin theme is set to be the default
+      // theme.
+      $admin_theme = $config->get('admin');
+      if (!empty($admin_theme) && $admin_theme != $theme) {
+        $this->messenger()
+          ->addStatus($this->t('Note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', [
+            '%admin_theme' => $themes[$admin_theme]->info['name'],
+            '%selected_theme' => $themes[$theme]->info['name'],
+          ]));
       }
       else {
-        $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
+        $this->messenger()->addStatus($this->t('%theme is now the default theme.', ['%theme' => $themes[$theme]->info['name']]));
       }
-
-      return $this->redirect('system.themes_page');
-
     }
-    throw new AccessDeniedHttpException();
+    else {
+      $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
+    }
+
+    return $this->redirect('system.themes_page');
   }
 
 }

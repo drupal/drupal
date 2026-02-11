@@ -959,7 +959,7 @@ services:
     arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack', '@http_kernel.controller.argument_resolver', true]
   http_kernel.controller.argument_resolver:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver
-    arguments: ['@http_kernel.controller.argument_metadata_factory', ['@argument_resolver.request_attribute', '@argument_resolver.request', '@argument_resolver.psr7_request', '@argument_resolver.route_match', '@argument_resolver.default']]
+    arguments: ['@http_kernel.controller.argument_metadata_factory', ['@argument_resolver.request_attribute', '@argument_resolver.request', '@argument_resolver.psr7_request', '@argument_resolver.route_match', '@argument_resolver.query_parameter', '@argument_resolver.default']]
   Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface: '@http_kernel.controller.argument_resolver'
   http_kernel.controller.argument_metadata_factory:
     class: Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory
@@ -980,6 +980,9 @@ services:
     public: false
   argument_resolver.default:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver
+    public: false
+  argument_resolver.query_parameter:
+    class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\QueryParameterValueResolver
     public: false
   http_middleware.content_length:
     class: Drupal\Core\StackMiddleware\ContentLength
