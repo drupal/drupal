@@ -599,6 +599,51 @@ EDITED, file_get_contents($theme_path_absolute . '/src/TestCustomThemePreRender.
     self::assertFileExists($theme_path_absolute . '/.gitignore');
   }
 
+  public function testIgnoredDotFiles(): void {
+    $this->writeStarterkitConfig([
+      'ignore' => [
+        '/.npmrc',
+      ],
+    ]);
+
+    file_put_contents($this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/.npmrc', '*.map');
+    $tester = $this->runCommand(
+      [
+        'machine-name' => 'test_custom_theme',
+        '--name' => 'Test custom starterkit theme',
+        '--description' => 'Custom theme generated from a starterkit theme',
+      ]
+    );
+
+    $tester->assertCommandIsSuccessful($tester->getErrorOutput());
+    $this->assertThemeExists('themes/test_custom_theme');
+
+    // Verify that the .npmrc file is not present in the generated theme.
+    $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
+    self::assertFileDoesNotExist($theme_path_absolute . '/.npmrc');
+  }
+
+  public function testExcludedGitFolder(): void {
+    $path = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/.git';
+    mkdir($path);
+    file_put_contents($path . '/config', '*.map');
+
+    $tester = $this->runCommand(
+      [
+        'machine-name' => 'test_custom_theme',
+        '--name' => 'Test custom starterkit theme',
+        '--description' => 'Custom theme generated from a starterkit theme',
+      ]
+    );
+
+    $tester->assertCommandIsSuccessful($tester->getErrorOutput());
+    $this->assertThemeExists('themes/test_custom_theme');
+
+    // Verify that the .git folder is not present in the generated theme.
+    $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
+    self::assertFileDoesNotExist($theme_path_absolute . '/.git');
+  }
+
   private function writeStarterkitConfig(array $config): void {
     $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
     $starterkit_config = Yaml::decode(file_get_contents($starterkit_yml));
