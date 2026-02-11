@@ -34,3 +34,7 @@ services:
       - { name: needs_destruction }
     arguments: [path_alias_prefix_list, '@cache.bootstrap', '@lock', '@state', '@path_alias.repository']
   Drupal\path_alias\AliasPrefixListInterface: '@path_alias.prefix_list'
+  Drupal\path_alias\AliasPathMatcher:
+    public: false
+    autowire: true
+    decorates: path.matcher

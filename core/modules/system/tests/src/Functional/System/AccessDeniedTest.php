@@ -22,7 +22,7 @@ class AccessDeniedTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'node', 'system_test'];
+  protected static $modules = ['block', 'node', 'path', 'system_test'];
 
   /**
    * {@inheritdoc}
@@ -155,6 +155,22 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     // Verify the access cacheability metadata for custom 403 is bubbled.
     $this->assertCacheContext('user.roles');
+
+    // Create a custom 403 page with a path alias.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalCreateNode([
+      'body' => "Sorry Dave, I'm afraid you can't do that.",
+      'path' => '/custom-access-denied',
+    ]);
+    $edit = ['site_403' => '/custom-access-denied'];
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
+    $assert_session = $this->assertSession();
+    $assert_session->statusMessageContains('The configuration options have been saved.');
+    $this->assertSame('/custom-access-denied', $this->config('system.site')->get('page.403'));
+    $this->drupalGet('/system-test/always-denied');
+    $assert_session->statusCodeEquals(403);
+    $assert_session->pageTextContains("Sorry Dave, I'm afraid you can't do that.");
   }
 
 }
