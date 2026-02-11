@@ -31,9 +31,15 @@ exports.command = function drupalCreateUser(
       this.drupalCreateRole({ permissions, name: roleName }, done);
     }
   }).drupalLoginAsAdmin(async () => {
-    this.drupalRelativeURL('/admin/people/create')
-      .setValue('input[name="name"]', name)
-      .setValue('input[name="pass[pass1]"]', password)
+    this.drupalRelativeURL('/admin/people/create').setValue(
+      'input[name="name"]',
+      name,
+    );
+
+    this.element('input[name="notify"]').uncheck();
+    this.waitForElementVisible('input[name="pass[pass1]"]', 1000);
+
+    this.setValue('input[name="pass[pass1]"]', password)
       .setValue('input[name="pass[pass2]"]', password)
       .perform((client, done) => {
         if (permissions.length) {

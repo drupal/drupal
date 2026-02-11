@@ -66,6 +66,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
       'pass[pass1]' => $pass = $this->randomString(),
       'pass[pass2]' => $pass,
       "roles[$rid]" => $rid,
+      'notify' => FALSE,
     ];
     $this->drupalGet('admin/people/create');
     $this->submitForm($edit, 'Create new account');
