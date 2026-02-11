@@ -295,7 +295,9 @@ class GenerateTheme extends Command {
       );
 
       if (count($starterkit_config[$key]) > 0) {
-        $files = self::createFilesFinder($theme->getPath())->path($starterkit_config[$key]);
+        $files = self::createFilesFinder($theme->getPath())->path($starterkit_config[$key])
+          ->ignoreDotFiles(FALSE)
+          ->ignoreVCS(TRUE);
         $starterkit_config[$key] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
         if (count($starterkit_config[$key]) === 0) {
           throw new \RuntimeException("Paths were defined `$key` but no files found.");
