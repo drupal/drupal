@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
 use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\workspaces\Entity\Workspace;
@@ -129,11 +130,9 @@ class FormOperations {
       }
     }
 
-    if (isset($element['#ajax']) && !isset($element['#ajax']['options']['query']['workspace'])) {
-      $element['#ajax']['options']['query'] = array_merge_recursive(
-        $url_query_options,
-        $element['#ajax']['options']['query'] ?? [],
-      );
+    if (isset($element['#ajax'])) {
+      $existing_query = $element['#ajax']['options']['query'] ?? [];
+      $element['#ajax']['options']['query'] = NestedArray::mergeDeep($existing_query, $url_query_options);
     }
   }
 
