@@ -76,6 +76,13 @@ class WorkspaceFormPersistenceTest extends KernelTestBase {
     $form_state_1 = new FormState();
     $form_1 = $this->formBuilder->buildForm($form_arg, $form_state_1);
 
+    $this->assertSame([
+      'media_library_opener_id' => 'test',
+      'workspace' => 'ham',
+      'token' => $form_1['collision_test']['#ajax']['options']['query']['token'],
+      'persist' => FALSE,
+    ], $form_1['collision_test']['#ajax']['options']['query']);
+
     $this->switchToWorkspace('cheese');
     $form_state_2 = new FormState();
     $this->formBuilder->buildForm($form_arg, $form_state_2);

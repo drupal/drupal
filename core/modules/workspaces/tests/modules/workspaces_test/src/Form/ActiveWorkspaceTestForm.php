@@ -61,6 +61,17 @@ class ActiveWorkspaceTestForm extends FormBase implements WorkspaceSafeFormInter
         },
       ],
     ];
+    $form['collision_test'] = [
+      '#type' => 'textfield',
+      '#ajax' => [
+        'url' => Url::fromRoute('workspaces_test.get_form'),
+        'options' => [
+          'query' => [
+            'media_library_opener_id' => 'test',
+          ],
+        ],
+      ],
+    ];
     return $form;
   }
 
