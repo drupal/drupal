@@ -61,7 +61,7 @@ class TestDiscovery {
    *
    * @param string $root
    *   The app root.
-   * @param class-string $class_loader
+   * @param \Composer\Autoload\ClassLoader $class_loader
    *   The class loader. Normally Composer's ClassLoader, as included by the
    *   front controller, but may also be decorated.
    */

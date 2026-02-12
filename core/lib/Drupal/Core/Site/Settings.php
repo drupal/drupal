@@ -129,7 +129,7 @@ final class Settings {
    *   The app root.
    * @param string $site_path
    *   The current site path.
-   * @param \Composer\Autoload\ClassLoader $class_loader
+   * @param \Composer\Autoload\ClassLoader|null $class_loader
    *   The class loader that is used for this request. Passed by reference and
    *   exposed to the local scope of settings.php, so as to allow it to be
    *   decorated.
