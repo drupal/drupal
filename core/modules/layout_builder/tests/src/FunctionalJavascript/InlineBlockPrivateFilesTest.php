@@ -212,7 +212,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    * @param string $file_name
    *   The file name.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\file\Entity\File
+   * @return \Drupal\file\Entity\File
    *   The file entity.
    */
   protected function createPrivateFile($file_name) {

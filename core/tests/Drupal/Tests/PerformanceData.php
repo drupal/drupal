@@ -59,7 +59,7 @@ class PerformanceData {
   /**
    * List of cids keyed by operation and bin.
    *
-   * @var string[][]
+   * @var string[][][]
    */
   protected array $cacheOperations = [];
 
@@ -226,7 +226,7 @@ class PerformanceData {
   /**
    * Sets the cache operations.
    *
-   * @param string[][] $cacheOperations
+   * @param string[][][] $cacheOperations
    *   List of cids keyed by operation and bin.
    *
    * @return void

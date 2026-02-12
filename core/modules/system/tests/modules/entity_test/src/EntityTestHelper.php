@@ -20,7 +20,7 @@ class EntityTestHelper {
    * - The entity_test_mulrev type supports both revisions and multilingual
    *   properties.
    *
-   * @param int $filter
+   * @param \Drupal\entity_test\EntityTestTypesFilter|null $filter
    *   Either EntityTestTypesFilter::Revisable to only return revisable entity types or
    *   EntityTestTypesFilter::Multilingual to only return multilingual ones. Defaults
    *   to NULL, which returns all.

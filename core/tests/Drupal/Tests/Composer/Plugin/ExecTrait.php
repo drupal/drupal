@@ -16,7 +16,7 @@ trait ExecTrait {
    *
    * @param string $cmd
    *   The command to execute (escaped as required)
-   * @param string $cwd
+   * @param string|null $cwd
    *   The current working directory to run the command from.
    * @param array $env
    *   Environment variables to define for the subprocess.

@@ -80,7 +80,7 @@ class PhpTransliteration implements TransliterationInterface {
   /**
    * Constructs a transliteration object.
    *
-   * @param string $data_directory
+   * @param string|null $data_directory
    *   (optional) The directory where data files reside. If omitted, defaults
    *   to subdirectory 'data' underneath the directory where the class's PHP
    *   file resides.
