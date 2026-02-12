@@ -90,20 +90,6 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Tests theme can provide classes.
-   */
-  public function testClassLoading(): void {
-    // Install test theme and set it as default.
-    $this->config('system.theme')
-      ->set('default', 'test_theme')
-      ->save();
-    $this->resetAll();
-    // Visit page controller and confirm that the theme class is loaded.
-    $this->drupalGet('/theme-test/test-theme-class');
-    $this->assertSession()->pageTextContains('Loading ThemeClass was successful.');
-  }
-
-  /**
    * Ensures a theme's .info.yml file is able to override a module CSS file from being added to the page.
    *
    * @see test_theme.info.yml

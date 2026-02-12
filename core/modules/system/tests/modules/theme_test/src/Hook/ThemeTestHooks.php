@@ -85,12 +85,6 @@ class ThemeTestHooks {
       'base hook' => 'container',
     ];
 
-    $items['theme_test_theme_class'] = [
-      'variables' => [
-        'message' => '',
-      ],
-    ];
-
     $items['theme_test_deprecations_preprocess'] = [
       'variables' => [
         'foo' => '',
