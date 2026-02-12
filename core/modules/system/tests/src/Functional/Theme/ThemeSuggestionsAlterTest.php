@@ -176,8 +176,8 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
       'theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter() executed.',
       'theme_test_theme_suggestions_alter() executed for theme_test_suggestions.',
       'theme_test_theme_suggestions_theme_test_suggestions_alter() executed.',
-      'test_theme_theme_suggestions_alter() executed.',
-      'test_theme_theme_suggestions_theme_test_suggestions_alter() executed.',
+      'Drupal\test_theme\Hook\TestThemeHooks::themeSuggestionsAlter() executed.',
+      'Drupal\test_theme\Hook\TestThemeHooks::themeSuggestionsThemeTestSuggestionsAlter() executed.',
     ];
     $content = preg_replace('/\s+/', ' ', Xss::filter($this->getSession()->getPage()->getContent(), []));
     $order = 0;

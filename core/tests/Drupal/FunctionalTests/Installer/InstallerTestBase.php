@@ -191,7 +191,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
       // BrowserTestBase::tearDown() will delete the entire test site directory.
       // Not using File API; a potential error must trigger a PHP warning.
       chmod($this->container->getParameter('app.root') . '/' . $this->siteDirectory, 0777);
-      $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
+      $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod');
       $this->kernel->boot();
       $this->kernel->preHandle($request);
       $this->container = $this->kernel->getContainer();
