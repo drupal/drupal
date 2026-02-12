@@ -12,7 +12,7 @@
  */
 body {
   --admin-toolbar-sidebar-width: 80vw;
-  --admin-toolbar-sidebar-header: calc(3.5 * var(--admin-toolbar-rem));
+  --admin-toolbar-sidebar-header: calc(3.75 * var(--admin-toolbar-rem));
 
   @media (--admin-toolbar-tablet) {
     --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
@@ -209,15 +209,8 @@ body {
     justify-content: space-between;
     margin-block-start: calc(var(--admin-toolbar-sidebar-header) * -1);
     padding-block-start: var(--admin-toolbar-space-16);
+    padding-block-end: var(--admin-toolbar-space-4);
     background-color: var(--admin-toolbar-color-white);
-
-    & + .toolbar-block {
-      margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
-
-      @media (--admin-toolbar-desktop) {
-        margin-block-start: 0;
-      }
-    }
 
     &:not(:has(.admin-toolbar__logo)) {
       @media (--admin-toolbar-desktop) {
@@ -230,7 +223,6 @@ body {
       align-items: start;
       margin-block-start: revert;
       padding-block-start: revert;
-      padding-block-end: 0;
     }
   }
 
