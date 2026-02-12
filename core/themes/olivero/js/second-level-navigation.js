@@ -5,9 +5,11 @@
 
 ((Drupal) => {
   const { isDesktopNav } = Drupal.olivero;
-  const secondLevelNavMenus = document.querySelectorAll(
-    '[data-drupal-selector="primary-nav-menu-item-has-children"]',
-  );
+
+  /**
+   * NodeList of second level navigation <ul>'s.
+   */
+  let secondLevelNavMenus;
 
   /**
    * Shows and hides the specified menu item's second level submenu.
@@ -77,59 +79,6 @@
     }, 200);
   }
 
-  // Add event listeners onto each sub navigation parent and button.
-  secondLevelNavMenus.forEach((el) => {
-    const button = el.querySelector(
-      '[data-drupal-selector="primary-nav-submenu-toggle-button"]',
-    );
-
-    button.removeAttribute('aria-hidden');
-    button.removeAttribute('tabindex');
-
-    // If touch event, prevent mouseover event from triggering the submenu.
-    el.addEventListener(
-      'touchstart',
-      () => {
-        el.classList.add('is-touch-event');
-      },
-      { passive: true },
-    );
-
-    el.addEventListener('mouseover', () => {
-      if (isDesktopNav() && !el.classList.contains('is-touch-event')) {
-        el.classList.add('is-active-mouseover-event');
-        toggleSubNav(el, true);
-
-        // Timeout is added to ensure that users of assistive devices (such as
-        // mouse grid tools) do not simultaneously trigger both the mouseover
-        // and click events. When these events are triggered together, the
-        // submenu to appear to not open.
-        setTimeout(() => {
-          el.classList.remove('is-active-mouseover-event');
-        }, 500);
-      }
-    });
-
-    button.addEventListener('click', () => {
-      if (!el.classList.contains('is-active-mouseover-event')) {
-        toggleSubNav(el);
-      }
-    });
-
-    el.addEventListener('mouseout', () => {
-      if (
-        isDesktopNav() &&
-        !document.activeElement.matches(
-          '[aria-expanded="true"], .is-active-menu-parent *',
-        )
-      ) {
-        toggleSubNav(el, false);
-      }
-    });
-
-    el.addEventListener('blur', handleBlur, true);
-  });
-
   /**
    * Close all second level sub navigation menus.
    */
@@ -172,26 +121,111 @@
 
   Drupal.olivero.areAnySubNavsOpen = areAnySubNavsOpen;
 
-  // Ensure that desktop submenus close when escape key is pressed.
-  document.addEventListener('keyup', (e) => {
-    if (e.key === 'Escape') {
-      if (isDesktopNav()) closeAllSubNav();
-    }
-  });
+  /**
+   * Initializes second level navigation behavior.
+   *
+   * @param {Element} navElement
+   *   The primary navigation menu element.
+   */
+  function init(navElement) {
+    secondLevelNavMenus = navElement.querySelectorAll(
+      '[data-drupal-selector="primary-nav-menu-item-has-children"]',
+    );
 
-  // If user taps outside of menu, close all menus.
-  document.addEventListener(
-    'touchstart',
-    (e) => {
-      if (
-        areAnySubNavsOpen() &&
-        !e.target.matches(
-          '[data-drupal-selector="header-nav"], [data-drupal-selector="header-nav"] *',
-        )
-      ) {
-        closeAllSubNav();
-      }
+    // Add event listeners onto each sub navigation parent and button.
+    secondLevelNavMenus.forEach((el) => {
+      const button = el.querySelector(
+        '[data-drupal-selector="primary-nav-submenu-toggle-button"]',
+      );
+
+      button.removeAttribute('aria-hidden');
+      button.removeAttribute('tabindex');
+
+      // If touch event, prevent mouseover event from triggering the submenu.
+      el.addEventListener(
+        'touchstart',
+        () => {
+          el.classList.add('is-touch-event');
+        },
+        { passive: true },
+      );
+
+      el.addEventListener('mouseover', () => {
+        if (isDesktopNav() && !el.classList.contains('is-touch-event')) {
+          el.classList.add('is-active-mouseover-event');
+          toggleSubNav(el, true);
+
+          // Timeout is added to ensure that users of assistive devices (such as
+          // mouse grid tools) do not simultaneously trigger both the mouseover
+          // and click events. When these events are triggered together, the
+          // submenu to appear to not open.
+          setTimeout(() => {
+            el.classList.remove('is-active-mouseover-event');
+          }, 500);
+        }
+      });
+
+      button.addEventListener('click', () => {
+        if (!el.classList.contains('is-active-mouseover-event')) {
+          toggleSubNav(el);
+        }
+      });
+
+      el.addEventListener('mouseout', () => {
+        if (
+          isDesktopNav() &&
+          !document.activeElement.matches(
+            '[aria-expanded="true"], .is-active-menu-parent *',
+          )
+        ) {
+          toggleSubNav(el, false);
+        }
+      });
+
+      el.addEventListener('blur', handleBlur, true);
+    });
+
+    // Add document-level listeners only once to prevent duplication.
+    once('olivero-second-level-nav-document', document).forEach(() => {
+      // Ensure that desktop submenus close when escape key is pressed.
+      document.addEventListener('keyup', (e) => {
+        if (e.key === 'Escape') {
+          if (isDesktopNav()) closeAllSubNav();
+        }
+      });
+
+      // If user taps outside of menu, close all menus.
+      document.addEventListener(
+        'touchstart',
+        (e) => {
+          if (
+            areAnySubNavsOpen() &&
+            !e.target.matches(
+              '[data-drupal-selector="header-nav"], [data-drupal-selector="header-nav"] *',
+            )
+          ) {
+            closeAllSubNav();
+          }
+        },
+        { passive: true },
+      );
+    });
+  }
+
+  /**
+   * Attaches the primary navigation behavior to the primary navigation list.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   */
+  Drupal.behaviors.secondLevelNav = {
+    attach(context) {
+      once(
+        'second-level-navigation',
+        '[data-drupal-selector="primary-nav-menu--level-1"]',
+        context,
+      ).forEach(init);
     },
-    { passive: true },
-  );
+  };
 })(Drupal);
