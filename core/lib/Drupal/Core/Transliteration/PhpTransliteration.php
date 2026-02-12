@@ -23,7 +23,7 @@ class PhpTransliteration extends BaseTransliteration {
   /**
    * Constructs a PhpTransliteration object.
    *
-   * @param string $data_directory
+   * @param string|null $data_directory
    *   The directory where data files reside. If NULL, defaults to subdirectory
    *   'data' underneath the directory where the class's PHP file resides.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler

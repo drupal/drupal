@@ -91,9 +91,9 @@ trait EntityDefinitionTestTrait {
    * @param string $op
    *   The operation to perform, possible values are static::DEFINITION_CREATED,
    *   static::DEFINITION_UPDATED or static::DEFINITION_DELETED.
-   * @param array|null $storage_definition
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The new field storage definition.
-   * @param array|null $original_storage_definition
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $original_storage_definition
    *   The original field storage definition.
    */
   protected function doFieldUpdate($op, $storage_definition = NULL, $original_storage_definition = NULL): void {

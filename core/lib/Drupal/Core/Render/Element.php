@@ -16,7 +16,7 @@ class Element {
   /**
    * Checks if the key is a property.
    *
-   * @param string $key
+   * @param array-key $key
    *   The key to check.
    *
    * @return bool

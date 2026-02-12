@@ -17,7 +17,7 @@ trait FieldInputValueNormalizerTrait {
    *
    * @param mixed $value
    *   The raw field value to normalize.
-   * @param string $main_property_name
+   * @param string|null $main_property_name
    *   The main field property name.
    *
    * @return array

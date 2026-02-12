@@ -14,7 +14,7 @@ trait FieldUiTestTrait {
   /**
    * Creates a new field through the Field UI.
    *
-   * @param string $bundle_path
+   * @param string|null $bundle_path
    *   Admin path of the bundle that the new field is to be attached to.
    * @param string $field_name
    *   The field name of the new field storage.
