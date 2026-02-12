@@ -14,9 +14,10 @@ use Drupal\Core\Database\Transaction\TransactionManagerBase;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore Tinky Winky Dipsy
+// cspell:ignore Tinky Winky Dipsy phpggc
 /**
  * Tests the transactions, using the explicit ::commitOrRelease method.
  *
@@ -1288,6 +1289,22 @@ class TransactionTest extends DatabaseTestBase {
       ->setConstructorArgs([$connection, '', ''])
       ->getMock();
     $this->assertTrue(TRUE);
+  }
+
+  /**
+   * Tests defense against Object Injection in Transaction class.
+   */
+  #[IgnoreDeprecations]
+  public function testTransactionGadgetChain(): void {
+    // e.g. ./phpggc -pub Drupal/RCE4 system id
+    $payload = 'O:32:"Drupal\Core\Database\Transaction":3:{s:10:"connection";O:45:"Drupal\mysql\Driver\Database\mysql\Connection":1:{s:18:"transactionManager";O:53:"Drupal\mysql\Driver\Database\mysql\TransactionManager":6:{s:6:"rootId";s:1:"x";s:5:"stack";a:0:{}s:11:"voidedItems";a:1:{s:1:"x";O:42:"Drupal\Core\Database\Transaction\StackItem":2:{s:4:"name";s:8:"whatever";s:4:"type";E:51:"Drupal\Core\Database\Transaction\StackItemType:Root";}}s:24:"postTransactionCallbacks";a:1:{i:0;a:2:{i:0;O:46:"Drupal\Component\DependencyInjection\Container":7:{s:10:"parameters";a:0:{}s:7:"aliases";a:0:{}s:18:"serviceDefinitions";a:1:{i:1;a:2:{s:7:"factory";s:6:"system";s:9:"arguments";a:1:{i:0;s:2:"id";}}}s:8:"services";a:0:{}s:15:"privateServices";a:0:{}s:7:"loading";a:0:{}s:6:"frozen";b:0;}i:1;s:3:"get";}}s:26:"connectionTransactionState";E:75:"Drupal\Core\Database\Transaction\ClientConnectionTransactionState:Committed";s:9:"container";N;}}s:4:"name";s:1:"a";s:2:"id";s:1:"x";}';
+
+    // The Gadget Chain itself may trigger a deprecation before the Exception
+    // that prevents the payload from executing is thrown, so we ignore
+    // deprecations for this test.
+    $this->expectException(\BadMethodCallException::class);
+    $this->expectExceptionMessage('Cannot unserialize Drupal\Core\Database\Transaction');
+    unserialize($payload);
   }
 
 }
