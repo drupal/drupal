@@ -11,7 +11,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Tests RequestSanitizer class.
@@ -303,6 +305,29 @@ class RequestSanitizerTest extends UnitTestCase {
     $this->assertArrayNotHasKey('destination', $_REQUEST);
     $this->assertArrayNotHasKey('destination', $_GET);
     $this->assertError('Potentially unsafe destination removed from query parameter bag because it points to an external URL.', E_USER_NOTICE);
+  }
+
+  /**
+   * Tests unacceptable destinations are removed from GET requests.
+   */
+  #[TestWith(["POST", FALSE])]
+  #[TestWith(["GET", TRUE])]
+  #[TestWith(["HEAD", TRUE])]
+  #[TestWith(["PUT", FALSE])]
+  #[TestWith(["DELETE", FALSE])]
+  #[TestWith(["CONNECT", FALSE])]
+  #[TestWith(["OPTIONS", TRUE])]
+  #[TestWith(["TRACE", TRUE])]
+  #[TestWith(["PATCH", FALSE])]
+  public function testRequestMethodOverride(string $override, bool $exception): void {
+    $request = $this->createRequestForTesting();
+    $request->server->set('REQUEST_METHOD', 'POST');
+    $request->headers->set('X-HTTP-Method-Override', $override);
+    if ($exception) {
+      $this->expectException(BadRequestHttpException::class);
+    }
+    $request = RequestSanitizer::sanitize($request, []);
+    $this->assertEquals($override, $request->getMethod());
   }
 
   /**
