@@ -63,7 +63,6 @@ variables:
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
-  MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
   SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
@@ -72,16 +71,6 @@ variables:
 .with-database: &with-database
   name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
   alias: database
-
-.with-chrome: &with-chrome
-  name: $_CONFIG_DOCKERHUB_ROOT/webdriver-chromedriver:production
-  alias: chrome
-  entrypoint:
-    - chromedriver
-    - "--no-sandbox"
-    - "--log-path=/builds/chromedriver.log"
-    - "--allowed-ips="
-    - "--allowed-origins=*"
 
 .with-selenium-chrome: &with-selenium-chrome
   name: selenium/standalone-chrome:127.0
@@ -218,26 +207,6 @@ variables:
     paths:
       - ./core/.yarn/cache
     policy: pull
-
-'🖱️️️ PHPUnit Functional Javascript (non W3C legacy)':
-  <<: [ *with-composer, *default-job-settings ]
-  parallel: 1
-  variables:
-    TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 6
-    KUBERNETES_CPU_REQUEST: "16"
-    MINK_DRIVER_ARGS_WEBDRIVER: $MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C
-  services:
-    - <<: *with-database
-    - <<: *with-chrome
-  script:
-    - sudo -u www-data -E -H composer run-script drupal-phpunit-upgrade-check
-    # Run a small subset of tests to prove non W3C testing still works.
-    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --suppress-deprecations --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --debug-discovery --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite ":memory:" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
-
-  after_script:
-    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
-    - cp /builds/chromedriver.log ./
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
