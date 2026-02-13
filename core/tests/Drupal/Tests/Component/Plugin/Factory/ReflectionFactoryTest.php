@@ -116,9 +116,7 @@ class ReflectionFactoryTest extends TestCase {
    */
   #[DataProvider('providerGetInstanceArguments')]
   public function testGetInstanceArguments($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {
-    $reflection_factory = $this->getMockBuilder('Drupal\Component\Plugin\Factory\ReflectionFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $reflection_factory = $this->createStub(ReflectionFactory::class);
     $get_instance_arguments_ref = new \ReflectionMethod($reflection_factory, 'getInstanceArguments');
 
     // Special case for plugin class without a constructor.

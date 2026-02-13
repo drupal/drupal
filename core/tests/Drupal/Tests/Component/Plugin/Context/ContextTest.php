@@ -46,6 +46,9 @@ class ContextTest extends TestCase {
       $ref_context_value = new \ReflectionProperty($mock_context, 'contextValue');
       // Set contextValue to a testable state.
       $ref_context_value->setValue($mock_context, $context_value);
+      // Set expectation for getContextDefinition().
+      $mock_context->expects($this->never())
+        ->method('getContextDefinition');
       // Exercise getContextValue().
       $this->assertEquals($context_value, $mock_context->getContextValue());
     }

@@ -58,11 +58,9 @@ class DefaultFactoryTest extends TestCase {
    * Tests getPluginClass() with a missing class definition.
    */
   public function testGetPluginClassWithMissingClassWithObjectPluginDefinition(): void {
-    $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)
-      ->getMock();
     $this->expectException(PluginException::class);
     $this->expectExceptionMessage('The plugin (corn) did not specify an instance class.');
-    DefaultFactory::getPluginClass('corn', $plugin_definition);
+    DefaultFactory::getPluginClass('corn', $this->createStub(PluginDefinitionInterface::class));
   }
 
   /**
