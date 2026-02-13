@@ -14,19 +14,19 @@
 #}
 <div class="layout-container">
 
-  <header role="banner">
+  <header>
     {% if site_name %}
       <h2 class="site-name site-name--subtle">{{ site_name }}</h2>
     {% endif %}
   </header>
 
   {% if page.sidebar_first %}
-    <aside class="layout-sidebar-first" role="complementary">
+    <aside class="layout-sidebar-first">
       {{ page.sidebar_first }}
     </aside>{# /.layout-sidebar-first #}
   {% endif %}
 
-  <main role="main" class="main-content main-content--attached">
+  <main class="main-content main-content--attached">
     {% if title %}
       <h1 class="title title--broad">{{ title }}</h1>
     {% endif %}
@@ -37,7 +37,7 @@
   </main>
 
   {% if page.page_bottom %}
-    <footer role="contentinfo">
+    <footer>
       {{ page.page_bottom }}
     </footer>
   {% endif %}

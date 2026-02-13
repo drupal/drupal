@@ -11,7 +11,7 @@
 #}
 <div class="layout-container">
 
-  <header role="banner">
+  <header>
     {% if logo %}
       <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">
         <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
@@ -34,7 +34,7 @@
 
   </header>
 
-  <main role="main">
+  <main>
     {% if title %}
       <h1>{{ title }}</h1>
     {% endif %}
@@ -45,19 +45,19 @@
   </main>
 
   {% if page.sidebar_first %}
-    <aside class="layout-sidebar-first" role="complementary">
+    <aside class="layout-sidebar-first">
       {{ page.sidebar_first }}
     </aside>{# /.layout-sidebar-first #}
   {% endif %}
 
   {% if page.sidebar_second %}
-    <aside class="layout-sidebar-second" role="complementary">
+    <aside class="layout-sidebar-second" >
       {{ page.sidebar_second }}
     </aside>{# /.layout-sidebar-second #}
   {% endif %}
 
   {% if page.footer %}
-    <footer role="contentinfo">
+    <footer>
       {{ page.footer }}
     </footer>
   {% endif %}

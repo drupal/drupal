@@ -46,7 +46,7 @@
 
   {% if page.pre_header|render|trim is not empty or
      page.header|render|trim is not empty %}
-    <header class="layout-header" role="banner">
+    <header class="layout-header">
       <div class="container">
         {% if page.pre_header|render|trim is not empty %}
           {{ page.pre_header }}
@@ -113,7 +113,7 @@
       </div>{# /.layout-content #}
 
       {% if page.sidebar|render|trim is not empty %}
-        <aside class="layout-sidebar" role="complementary">
+        <aside class="layout-sidebar">
           {{ page.sidebar }}
         </aside>
       {% endif %}
@@ -126,7 +126,7 @@
     {% endif %}
   </main>
 
-  <footer class="footer" role="contentinfo">
+  <footer class="footer">
     {% if page.footer|render|trim is not empty %}
     <div class="layout-footer">
       <div class="container">

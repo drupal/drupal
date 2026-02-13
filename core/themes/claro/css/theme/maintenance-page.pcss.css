@@ -64,7 +64,7 @@ h3 {
  */
 @media all and (max-width: 48em) {
   /* 768px */
-  header[role="banner"] {
+  header {
     position: relative;
   }
   .step-indicator {

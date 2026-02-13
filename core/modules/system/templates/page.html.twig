@@ -47,7 +47,7 @@
 #}
 <div class="layout-container">
 
-  <header role="banner">
+  <header>
     {{ page.header }}
   </header>
 
@@ -60,7 +60,7 @@
 
   {{ page.help }}
 
-  <main role="main">
+  <main>
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
 
     <div class="layout-content">
@@ -68,13 +68,13 @@
     </div>{# /.layout-content #}
 
     {% if page.sidebar_first %}
-      <aside class="layout-sidebar-first" role="complementary">
+      <aside class="layout-sidebar-first">
         {{ page.sidebar_first }}
       </aside>
     {% endif %}
 
     {% if page.sidebar_second %}
-      <aside class="layout-sidebar-second" role="complementary">
+      <aside class="layout-sidebar-second" >
         {{ page.sidebar_second }}
       </aside>
     {% endif %}
@@ -82,7 +82,7 @@
   </main>
 
   {% if page.footer %}
-    <footer role="contentinfo">
+    <footer>
       {{ page.footer }}
     </footer>
   {% endif %}

@@ -11,7 +11,7 @@
  * @ingroup themeable
  */
 #}
-<header role="banner">
+<header>
   {% if logo %}
     <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">
       <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
@@ -31,7 +31,7 @@
   {% endif %}
 </header>
 
-<main role="main">
+<main>
   {% if title %}
     <h1>{{ title }}</h1>
   {% endif %}
@@ -42,19 +42,19 @@
 </main>
 
 {% if page.sidebar_first %}
-  <aside role="complementary">
+  <aside>
     {{ page.sidebar_first }}
   </aside>
 {% endif %}
 
 {% if page.sidebar_second %}
-  <aside role="complementary">
+  <aside>
     {{ page.sidebar_second }}
   </aside>
 {% endif %}
 
 {% if page.footer %}
-  <footer role="contentinfo">
+  <footer>
     {{ page.footer }}
   </footer>
 {% endif %}

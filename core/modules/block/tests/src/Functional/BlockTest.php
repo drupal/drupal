@@ -407,11 +407,11 @@ class BlockTest extends BlockTestBase {
     $this->assertSession()->pageTextContains($block['settings[label]']);
 
     $region_xpath = [
-      'header' => '//header[@role = "banner"]',
+      'header' => '//header',
       'sidebar_first' => '//aside[contains(@class, "layout-sidebar-first")]',
       'content' => '//div[contains(@class, "layout-content")]',
       'sidebar_second' => '//aside[contains(@class, "layout-sidebar-second")]',
-      'footer' => '//footer[@role = "contentinfo"]',
+      'footer' => '//footer',
     ];
 
     // Confirm that the content block was found at the proper region.
