@@ -210,23 +210,27 @@ class VersionHistoryController extends ControllerBase {
     $entityStorage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
     assert($entityStorage instanceof RevisionableStorageInterface);
 
-    $result = $entityStorage->getQuery()
+    $query = $entityStorage->getQuery()
       ->accessCheck(FALSE)
       ->allRevisions()
       ->condition($entityType->getKey('id'), $entity->id())
       ->sort($entityType->getKey('revision'), 'DESC')
-      ->pager(self::REVISIONS_PER_PAGE)
-      ->execute();
+      ->pager(self::REVISIONS_PER_PAGE);
+
+    // Only show revisions that are affected by the language that is being
+    // displayed.
+    if ($translatable) {
+      $query->condition($entityType->getKey('langcode'), $entity->language()->getId())
+        ->condition($entityType->getKey('revision_translation_affected'), '1');
+    }
+
+    $result = $query->execute();
 
     $currentLangcode = $this->languageManager
       ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
       ->getId();
     foreach ($entityStorage->loadMultipleRevisions(array_keys($result)) as $revision) {
-      // Only show revisions that are affected by the language that is being
-      // displayed.
-      if (!$translatable || ($revision->hasTranslation($currentLangcode) && $revision->getTranslation($currentLangcode)->isRevisionTranslationAffected())) {
-        yield ($translatable ? $revision->getTranslation($currentLangcode) : $revision);
-      }
+      yield ($translatable ? $revision->getTranslation($currentLangcode) : $revision);
     }
   }
 
