@@ -20,9 +20,9 @@ class TokenHooks {
   use StringTranslationTrait;
 
   public function __construct(
-    private readonly Token $token,
-    private readonly DateFormatterInterface $dateFormatter,
-    private readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly Token $token,
+    protected readonly DateFormatterInterface $dateFormatter,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
   ) {}
 
   /**

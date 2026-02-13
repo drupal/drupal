@@ -17,9 +17,9 @@ use Drupal\file\FileUsage\FileUsageInterface;
 class FileDownloadHook {
 
   public function __construct(
-    private readonly FileRepositoryInterface $fileRepository,
-    private readonly FileUsageInterface $fileUsage,
-    private readonly AccountInterface $currentUser,
+    protected readonly FileRepositoryInterface $fileRepository,
+    protected readonly FileUsageInterface $fileUsage,
+    protected readonly AccountInterface $currentUser,
   ) {}
 
   /**
