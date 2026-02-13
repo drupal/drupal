@@ -95,7 +95,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertSession()->addressEquals('admin/structure/comment/manage/' . $edit['id'] . '/fields');
 
     // Asserts that the comment type is visible in breadcrumb.
-    $this->assertTrue($this->assertSession()->elementExists('css', 'nav[role="navigation"]')->hasLink('title for foo'));
+    $this->assertTrue($this->assertSession()->elementExists('css', 'nav')->hasLink('title for foo'));
 
     $comment_type = CommentType::load('foo');
     $this->assertInstanceOf(CommentType::class, $comment_type);

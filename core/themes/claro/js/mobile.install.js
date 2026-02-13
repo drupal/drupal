@@ -15,7 +15,7 @@
   function installStepsSetup() {
     const steps = document.querySelectorAll('.task-list li');
     if (steps.length) {
-      const header = document.querySelector('header[role="banner"]');
+      const header = document.querySelector('header');
       const stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
       stepIndicator.innerHTML = `${findActiveStep(steps)}/${steps.length}`;

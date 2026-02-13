@@ -50,7 +50,7 @@
   <div id="page">
 
     {% if page.header or page.primary_menu or page.secondary_menu %}
-      <header id="header" class="site-header" data-drupal-selector="site-header" role="banner">
+      <header id="header" class="site-header" data-drupal-selector="site-header">
 
         {# Gets fixed by JavaScript at wide widths. #}
         <div class="site-header__fixable" data-drupal-selector="site-header-fixable">
@@ -100,7 +100,7 @@
 
             {% if page.sidebar %}
               <div class="sidebar-grid grid-full">
-                <main role="main" class="site-main">
+                <main class="site-main">
                   {{ page.content_above }}
                   {{ page.content }}
                 </main>
@@ -108,7 +108,7 @@
                 {{ page.sidebar }}
               </div>
             {% else %}
-              <main role="main">
+              <main>
                 {{ page.content_above }}
                 {{ page.content }}
               </main>

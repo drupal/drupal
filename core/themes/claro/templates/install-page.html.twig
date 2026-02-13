@@ -11,7 +11,7 @@
 #}
 <div class="layout-container">
 
-  <header role="banner">
+  <header>
     {% if site_name %}
       <h1 class="site-name">
         {{ site_name }}
@@ -23,12 +23,12 @@
   </header>
 
   {% if page.sidebar_first %}
-    <aside class="layout-sidebar-first" role="complementary">
+    <aside class="layout-sidebar-first">
       {{ page.sidebar_first }}
     </aside>{# /.layout-sidebar-first #}
   {% endif %}
 
-  <main role="main" class="main-content">
+  <main class="main-content">
     {% if title %}
       <h2 class="heading-c">{{ title }}</h2>
     {% endif %}
@@ -37,13 +37,13 @@
   </main>
 
   {% if page.sidebar_second %}
-    <aside class="layout-sidebar-second" role="complementary">
+    <aside class="layout-sidebar-second" >
       {{ page.sidebar_second }}
     </aside>{# /.layout-sidebar-second #}
   {% endif %}
 
   {% if page.page_bottom %}
-    <footer role="contentinfo">
+    <footer>
       {{ page.page_bottom }}
     </footer>
   {% endif %}
