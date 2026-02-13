@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @see \Drupal\contact\Plugin\views\field\ContactLink.
  */
 #[Group('contact')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class ContactLinkTest extends ViewTestBase {
 

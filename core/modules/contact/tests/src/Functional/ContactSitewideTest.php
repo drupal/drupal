@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @see \Drupal\Tests\contact\Functional\ContactStorageTest
  */
 #[Group('contact')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class ContactSitewideTest extends BrowserTestBase {
 

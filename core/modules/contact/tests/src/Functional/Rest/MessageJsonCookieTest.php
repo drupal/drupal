@@ -6,12 +6,14 @@ namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Message Json Cookie.
  */
 #[Group('rest')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class MessageJsonCookieTest extends MessageResourceTestBase {
 

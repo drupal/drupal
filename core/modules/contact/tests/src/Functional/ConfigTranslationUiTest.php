@@ -7,12 +7,14 @@ namespace Drupal\Tests\contact\Functional;
 use Drupal\Tests\config_translation\Functional\ConfigTranslationUiTestBase;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Translate settings and entities to various languages.
  */
 #[Group('contact')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
 
