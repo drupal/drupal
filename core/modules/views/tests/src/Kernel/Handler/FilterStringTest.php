@@ -364,7 +364,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    // Change the filtering to a sting containing only illegal characters.
+    // Change the filtering to a sting containing only invalid characters.
     $view->displayHandlers->get('default')->overrideOption('filters', [
       'description' => [
         'id' => 'description',

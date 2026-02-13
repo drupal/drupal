@@ -70,7 +70,7 @@ class CallableResolver {
     }
 
     if (!is_string($definition)) {
-      throw new \InvalidArgumentException(sprintf('The callable definition provided was invalid. Illegal format of type: %s', gettype($definition)));
+      throw new \InvalidArgumentException(sprintf('The callable definition provided was invalid. Invalid format of type: %s', gettype($definition)));
     }
 
     // Callable with __invoke().

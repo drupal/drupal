@@ -1,5 +1,5 @@
 {
-  "name": "fixtures/project-with-illegal-dir-scaffold",
+  "name": "fixtures/project-with-invalid-dir-scaffold",
   "extra": {
     "drupal-scaffold": {
       "locations": {

@@ -272,16 +272,16 @@ class ConfigTest extends UnitTestCase {
   }
 
   /**
-   * Tests set illegal offset value.
+   * Tests set invalid offset value.
    */
-  public function testSetIllegalOffsetValue(): void {
+  public function testSetInvalidOffsetValue(): void {
     // Set a single value.
     $this->config->set('testData', 1);
 
     // Attempt to treat the single value as a nested item.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Cannot create key "illegalOffset" on non-array value.');
-    $this->config->set('testData.illegalOffset', 1);
+    $this->expectExceptionMessage('Cannot create key "invalidOffset" on non-array value.');
+    $this->config->set('testData.invalidOffset', 1);
   }
 
   /**

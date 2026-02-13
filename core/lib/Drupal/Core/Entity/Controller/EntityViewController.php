@@ -59,7 +59,7 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    * entity type property 'enable_page_title_template'.
    * - FALSE (default): use the output of the related field formatter if it
    *   exists. This approach only works correctly for the node entity type and
-   *   with the 'string' formatter. In other cases it likely produces illegal
+   *   with the 'string' formatter. In other cases it likely produces invalid
    *   markup and possibly incorrect display. This option has been retained for
    *   backward-compatibility to support sites that expect attributes set on
    *   the field to propagate to the page title.

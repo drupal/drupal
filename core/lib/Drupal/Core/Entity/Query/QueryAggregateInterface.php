@@ -117,8 +117,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @param string $field
    *   The name of a field.
    * @param string $function
-   *   The aggregate function. This is only marked optional for interface
-   *   compatibility, it is illegal to leave it out.
+   *   The aggregate function.
    * @param string $direction
    *   The order of sorting, either DESC for descending of ASC for ascending.
    * @param string $langcode
