@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -18,6 +19,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * JSON:API integration test for the "Message" content entity type.
  */
 #[Group('contact')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class MessageTest extends ResourceTestBase {
 

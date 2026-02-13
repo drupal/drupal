@@ -8,12 +8,14 @@ use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Config Actions.
  */
 #[Group('contact')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class ConfigActionsTest extends KernelTestBase {
 

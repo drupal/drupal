@@ -7,6 +7,7 @@ namespace Drupal\Tests\contact\Functional;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @see \Drupal\Tests\config_translation\Functional\ConfigTranslationListUiTest
  */
 #[Group('contact')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class ConfigTranslationListUiTest extends BrowserTestBase {
 
