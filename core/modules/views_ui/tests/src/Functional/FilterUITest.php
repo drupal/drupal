@@ -135,7 +135,7 @@ class FilterUITest extends UITestBase {
       ];
       $this->drupalGet($path);
       $this->submitForm($edit, 'Apply');
-      $this->assertSession()->pageTextContains('This identifier has illegal characters.');
+      $this->assertSession()->pageTextContains('This identifier has invalid characters.');
     }
   }
 

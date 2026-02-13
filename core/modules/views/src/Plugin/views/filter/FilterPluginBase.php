@@ -900,7 +900,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       $error = $this->t('This identifier is not allowed.');
     }
     elseif (preg_match('/[^a-zA-Z0-9_~\.\-]+/', $identifier)) {
-      $error = $this->t('This identifier has illegal characters.');
+      $error = $this->t('This identifier has invalid characters.');
     }
 
     if ($form_state && !$this->view->display_handler->isIdentifierUnique($form_state->get('id'), $identifier)) {

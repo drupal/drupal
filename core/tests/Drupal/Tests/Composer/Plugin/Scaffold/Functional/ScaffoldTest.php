@@ -151,8 +151,8 @@ class ScaffoldTest extends TestCase {
       ],
 
       [
-        'project-with-illegal-dir-scaffold',
-        'Scaffold file assets in package fixtures/project-with-illegal-dir-scaffold is a directory; only files may be scaffolded',
+        'project-with-invalid-dir-scaffold',
+        'Scaffold file assets in package fixtures/project-with-invalid-dir-scaffold is a directory; only files may be scaffolded',
         FALSE,
       ],
     ];

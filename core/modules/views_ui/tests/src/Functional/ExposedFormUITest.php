@@ -157,10 +157,10 @@ class ExposedFormUITest extends UITestBase {
     // Try with an invalid identifiers.
     $edit['options[expose][field_identifier]'] = 'abc&! ###08.';
     $this->submitForm($edit, 'Apply');
-    $this->assertSession()->pageTextContains('This identifier has illegal characters.');
+    $this->assertSession()->pageTextContains('This identifier has invalid characters.');
     $edit['options[expose][field_identifier]'] = '^abcde';
     $this->submitForm($edit, 'Apply');
-    $this->assertSession()->pageTextContains('This identifier has illegal characters.');
+    $this->assertSession()->pageTextContains('This identifier has invalid characters.');
 
     // Use a valid identifier.
     $edit['options[expose][field_identifier]'] = $this->randomMachineName() . '_-~.';

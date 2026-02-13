@@ -104,7 +104,7 @@ class DrupalComponentTest extends TestCase {
       // Filter references that don't really matter.
       return preg_match('/@see|E_USER_DEPRECATED|expectDeprecation/', $line) === 0;
     });
-    $this->assertEmpty($matches, "Checking for illegal reference to 'Drupal\\Core' namespace in $class_path");
+    $this->assertEmpty($matches, "Checking for invalid reference to 'Drupal\\Core' namespace in $class_path");
   }
 
   /**

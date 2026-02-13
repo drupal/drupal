@@ -23,7 +23,7 @@ class UserNameConstraint extends SymfonyConstraint {
     public $spaceBeginMessage = 'The username cannot begin with a space.',
     public $spaceEndMessage = 'The username cannot end with a space.',
     public $multipleSpacesMessage = 'The username cannot contain multiple spaces in a row.',
-    public $illegalMessage = 'The username contains an illegal character.',
+    public $invalidMessage = 'The username contains an invalid character.',
     public $tooLongMessage = 'The username %name is too long: it must be %max characters or less.',
     ?array $groups = NULL,
     mixed $payload = NULL,

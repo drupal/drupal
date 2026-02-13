@@ -270,7 +270,7 @@ class MenuUiHooks {
     ];
     // @todo See if we can avoid pre-loading all options by changing the form or
     //   using a #process callback. https://www.drupal.org/node/2310319 To avoid
-    //   an 'illegal option' error after saving the form we have to load all
+    //   an 'invalid option' error after saving the form we have to load all
     //   available menu parents. Otherwise, it is not possible to dynamically
     //   add options to the list using ajax.
     $options_cacheability = new CacheableMetadata();

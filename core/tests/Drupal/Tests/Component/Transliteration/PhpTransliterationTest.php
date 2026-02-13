@@ -170,16 +170,16 @@ class PhpTransliterationTest extends TestCase {
       'Do not split up the transliteration of a single character' => [
         'de', $two_byte, 'Ae Oe Ue A O aeoe', '?', 18,
       ],
-      'Illegal/unknown unicode' => [
+      'Invalid/unknown unicode' => [
         'en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?????',
       ],
-      'Illegal/unknown unicode with non default replacement' => [
+      'Invalid/unknown unicode with non default replacement' => [
         'en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '-----', '-',
       ],
-      'Contains Illegal/unknown unicode' => [
+      'Contains Invalid/unknown unicode' => [
         'en', 'Hel' . chr(0x80) . 'o World', 'Hel?o World',
       ],
-      'Illegal/unknown unicode at end' => [
+      'Invalid/unknown unicode at end' => [
         'en', 'Hell' . chr(0x80) . ' World', 'Hell? World',
       ],
       'Non default replacement' => [

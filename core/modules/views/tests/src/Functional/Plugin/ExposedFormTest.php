@@ -168,8 +168,8 @@ class ExposedFormTest extends ViewTestBase {
 
     $errors = $view->validate();
     $expected = [
-      'default' => ['This identifier has illegal characters.'],
-      'page_1' => ['This identifier has illegal characters.'],
+      'default' => ['This identifier has invalid characters.'],
+      'page_1' => ['This identifier has invalid characters.'],
     ];
     $this->assertEquals($expected, $errors);
 

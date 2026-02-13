@@ -64,7 +64,7 @@ class RenderTest extends KernelTestBase {
   }
 
   /**
-   * Tests that we get an exception when we try to attach an illegal type.
+   * Tests that we get an exception when we try to attach an invalid type.
    */
   public function testProcessAttached(): void {
     // Specify invalid attachments in a render array.

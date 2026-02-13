@@ -16,7 +16,7 @@ namespace Drupal\Component\Transliteration;
  * there is no language-specific override for a character, the generic
  * transliteration character tables are searched (see
  * PhpTransliteration::readGenericData()). If looking up the character in the
- * generic table results in a NULL value, or an illegal character is
+ * generic table results in a NULL value, or an invalid character is
  * encountered, then a substitute character is returned.
  *
  * Some parts of this code were derived from the MediaWiki project's UtfNormal
@@ -184,7 +184,7 @@ class PhpTransliteration implements TransliterationInterface {
    *   A single UTF-8 character.
    *
    * @return int
-   *   The character code, or -1 if an illegal character is found.
+   *   The character code, or -1 if an invalid character is found.
    */
   protected static function ordUTF8($character) {
     $first_byte = ord($character[0]);
