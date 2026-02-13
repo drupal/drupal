@@ -746,6 +746,18 @@ ckeditor5_showBlocks:
         label: Show blocks
     elements: false
 
+ckeditor5_fullscreen:
+  ckeditor5:
+    plugins: [fullscreen.Fullscreen]
+  drupal:
+    label: Fullscreen
+    library: core/ckeditor5.fullscreen
+    admin_library: ckeditor5/internal.admin.fullscreen
+    toolbar_items:
+      fullscreen:
+        label: Fullscreen
+    elements: false
+
 media_media:
   provider: media
   ckeditor5:

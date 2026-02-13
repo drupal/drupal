@@ -239,3 +239,8 @@ internal.admin.image:
   dependencies:
     - core/jquery
     - core/drupal
+
+internal.admin.fullscreen:
+  css:
+    theme:
+      css/fullscreen.admin.css: { }
