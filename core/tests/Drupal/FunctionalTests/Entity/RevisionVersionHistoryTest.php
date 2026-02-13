@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Entity;
 
 use Drupal\Core\Entity\Controller\VersionHistoryController;
+use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog;
 use Drupal\Tests\BrowserTestBase;
@@ -316,9 +317,9 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
    * Test revisions are paginated.
    */
   public function testRevisionsPagination(): void {
-    /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
-    $entity = EntityTestRev::create([
-      'type' => 'entity_test_rev',
+    /** @var \Drupal\entity_test\Entity\EntityTestMulRev $entity */
+    $entity = EntityTestMulRev::create([
+      'type' => 'entity_test_mulrev',
       'name' => 'view all revisions,view revision',
     ]);
     $entity->save();
@@ -331,6 +332,13 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
       // revision to display. We need "view all revisions" and "view revision"
       // in a comma separated string to grant access.
       $entity->setName('view all revisions,view revision,' . $i)->save();
+    }
+
+    // Create revisions without translation changes to ensure these do not
+    // affect pagination.
+    for ($i = 0; $i < VersionHistoryController::REVISIONS_PER_PAGE; $i++) {
+      $entity->setNewRevision(TRUE);
+      $entity->save();
     }
 
     $this->drupalGet($entity->toUrl('version-history'));

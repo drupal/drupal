@@ -144,36 +144,31 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Create the node.
     $node = $this->drupalCreateNode();
-    $storage = \Drupal::entityTypeManager()->getStorage($node->getEntityTypeId());
 
     // Create a new revision based on the default revision.
     // Revision 2.
-    $node = $storage->load($node->id());
     $node->setNewRevision(TRUE);
     $node->save();
 
     // Revision 3.
-    $node = $storage->load($node->id());
     $node->setNewRevision(TRUE);
     $node->save();
 
     // Revision 4.
     // Trigger translation changes in order to show the revision.
-    $node = $storage->load($node->id());
     $node->setTitle($this->randomString());
     $node->isDefaultRevision(FALSE);
     $node->setNewRevision(TRUE);
     $node->save();
 
     // Revision 5.
-    $node = $storage->load($node->id());
     $node->isDefaultRevision(FALSE);
     $node->setNewRevision(TRUE);
     $node->save();
 
     $node_id = $node->id();
 
-    $this->drupalGet('node/' . $node_id . '/revisions');
+    $this->drupalGet($node->toUrl('version-history'));
 
     // Verify that the latest affected revision having been a default revision
     // is displayed as the current one.
@@ -192,6 +187,55 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/2/revert');
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/3/revert');
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/5/revert');
+  }
+
+  /**
+   * Tests the revision tab paginates correctly with affected translations.
+   */
+  public function testNodeRevisionsTabPagerAffectedTranslations(): void {
+    $this->drupalLogin($this->editor);
+
+    $node = $this->drupalCreateNode();
+
+    // Create 49 revisions with translation changes so there are a total of 50
+    // including the initial revision.
+    for ($i = 1; $i < 50; $i++) {
+      $node->setTitle($this->randomString())
+        ->setRevisionLogMessage('translation change ' . $i);
+      $node->isDefaultRevision(FALSE);
+      $node->setNewRevision(TRUE);
+      $node->save();
+    }
+    // Create 50 revisions without translation changes.
+    for ($i = 0; $i < 50; $i++) {
+      $node->isDefaultRevision(FALSE);
+      $node->setNewRevision(TRUE);
+      $node->save();
+    }
+
+    // There should be the initial 50 revisions and no pager as the
+    // non-affecting revisions are filtered out before pagination.
+    $this->drupalGet($node->toUrl('version-history'));
+    $assert = $this->assertSession();
+    $assert->pageTextContains('translation change 49');
+    $assert->elementsCount('css', '.node-revision-table tbody tr', 50);
+    $assert->elementNotExists('css', '.pager');
+
+    // Create another translation affecting revision.
+    $node->setTitle($this->randomString())
+      ->setRevisionLogMessage('translation change 50');
+    $node->isDefaultRevision(FALSE);
+    $node->setNewRevision(TRUE);
+    $node->save();
+
+    // There should now be a pager, and the current revision should be on the
+    // second page.
+    $this->drupalGet($node->toUrl('version-history'));
+    $assert->elementExists('css', '.pager');
+    $assert->elementNotExists('css', '.revision-current');
+    $this->clickLink('Page 2');
+    $assert->elementsCount('css', '.node-revision-table tbody tr', 1);
+    $assert->elementExists('css', '.revision-current');
   }
 
   /**
