@@ -343,12 +343,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @see \Drupal\Core\Field\BaseFieldDefinition::addConstraint()
    */
   public function addPropertyConstraints($name, array $constraints) {
-    $complex_data_constraint = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
-    $item_constraints = $complex_data_constraint['properties'] ?? NULL;
-    if ($item_constraints === NULL) {
-      @trigger_error('Adding the "ComplexData" constraint with options missing the "properties" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
-      $item_constraints = $complex_data_constraint;
-    }
+    $item_constraints = $this->getItemDefinition()->getConstraint('ComplexData')['properties'] ?? [];
     if (isset($item_constraints[$name])) {
       // Add the new property constraints, overwriting as required.
       $item_constraints[$name] = $constraints + $item_constraints[$name];
@@ -612,10 +607,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinition(/* string */ $name) {
-    if (!is_string($name)) {
-      @trigger_error('Calling ' . __CLASS__ . '::getPropertyDefinition() with a non-string $name is deprecated in drupal:11.3.0 and throws an exception in drupal:12.0.0. See https://www.drupal.org/node/3557373', E_USER_DEPRECATED);
-    }
+  public function getPropertyDefinition(string $name) {
     if (!isset($this->propertyDefinitions)) {
       $this->getPropertyDefinitions();
     }

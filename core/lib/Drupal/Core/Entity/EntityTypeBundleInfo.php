@@ -76,11 +76,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
   /**
    * {@inheritdoc}
    */
-  public function getBundleInfo(/* string */ $entity_type_id) {
-    if (!is_string($entity_type_id)) {
-      @trigger_error('Calling ' . __CLASS__ . '::getBundleInfo() with a non-string $entity_type_id is deprecated in drupal:11.3.0 and throws an exception in drupal:12.0.0. See https://www.drupal.org/node/3557136', E_USER_DEPRECATED);
-      return [];
-    }
+  public function getBundleInfo(string $entity_type_id) {
     $bundle_info = $this->getAllBundleInfo();
     return $bundle_info[$entity_type_id] ?? [];
   }

@@ -557,12 +557,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
         ->setSettings($this->getSettings());
 
       // Add any custom property constraints, overwriting as required.
-      $complex_data_constraint = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
-      $item_constraints = $complex_data_constraint['properties'] ?? NULL;
-      if ($item_constraints === NULL) {
-        @trigger_error('Adding the "ComplexData" constraint with options missing the "properties" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
-        $item_constraints = $complex_data_constraint;
-      }
+      $item_constraints = $this->getItemDefinition()->getConstraint('ComplexData')['properties'] ?? [];
       foreach ($this->propertyConstraints as $name => $constraints) {
         if (isset($item_constraints[$name])) {
           $item_constraints[$name] = $constraints + $item_constraints[$name];

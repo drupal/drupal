@@ -5,7 +5,6 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
 
@@ -190,12 +189,6 @@ class EntityRepository implements EntityRepositoryInterface {
       $contexts = [];
     }
 
-    $key = '@entity.repository:legacy_context_operation';
-    if (isset($contexts[$key])) {
-      @trigger_error('Providing an \Drupal\Core\Entity\EntityRepositoryInterface::CONTEXT_ID_LEGACY_CONTEXT_OPERATION context to EntityRepository::getCanonicalMultiple() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3437685', E_USER_DEPRECATED);
-      $contexts['operation'] = $contexts[$key]->getContextValue();
-    }
-
     $canonical = [];
     $langcode = $this->getContentLanguageFromContexts($contexts);
     foreach ($entities as $id => $entity) {
@@ -225,15 +218,6 @@ class EntityRepository implements EntityRepositoryInterface {
       return $contexts['langcode'];
     }
 
-    // Content language might not be configurable, in which case we need to fall
-    // back to a configurable language type.
-    foreach ([LanguageInterface::TYPE_CONTENT, LanguageInterface::TYPE_INTERFACE] as $language_type) {
-      $context_id = '@language.current_language_context:' . $language_type;
-      if (isset($contexts[$context_id]) && $contexts[$context_id] instanceof ContextInterface) {
-        @trigger_error('Providing the language as ' . $context_id . ' context to EntityRepository is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use the langcode key instead. See https://www.drupal.org/node/3437685', E_USER_DEPRECATED);
-        return $contexts[$context_id]->getContextValue()->getId();
-      }
-    }
     return $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
   }
 
