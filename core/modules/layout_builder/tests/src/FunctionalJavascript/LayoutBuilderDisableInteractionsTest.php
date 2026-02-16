@@ -319,22 +319,4 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     return (int) $this->getSession()->evaluateScript("document.querySelector('$css_selector').getBoundingClientRect().$position_type + window.pageYOffset");
   }
 
-  /**
-   * Moves mouse pointer to location of $selector.
-   *
-   * @param string $selector
-   *   CSS selector.
-   *
-   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
-   *   $this->getSession()->getDriver()->mouseOver() instead.
-   *
-   * @see https://www.drupal.org/node/3460567
-   */
-  protected function movePointerTo($selector): void {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use $this->getSession()->getDriver()->mouseOver() instead. See https://www.drupal.org/node/3460567', E_USER_DEPRECATED);
-    $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
-    $element = $driver_session->element('css selector', $selector);
-    $driver_session->moveto(['element' => $element->getID()]);
-  }
-
 }
