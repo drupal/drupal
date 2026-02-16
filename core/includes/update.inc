@@ -554,6 +554,11 @@ function update_build_dependency_graph($update_functions): array {
   // dependencies between update functions.
   $graph = [];
 
+  // Helper variables used to to manipulate the graph so that system updates run
+  // as early as possible.
+  $max_system_update = 0;
+  $min_non_system_updates = [];
+
   // Go through each update function and build an initial list of dependencies.
   foreach ($update_functions as $module => $functions) {
     $previous_function = NULL;
@@ -569,13 +574,25 @@ function update_build_dependency_graph($update_functions): array {
       // Define the module and update number associated with this function.
       $graph[$function]['module'] = $module;
       $graph[$function]['number'] = $number;
+      if ($module == 'system') {
+        // Save the maximum system update number so independent update functions
+        // can be run after all system updates.
+        $max_system_update = max($max_system_update, $number);
+      }
+      else {
+        $min_non_system_updates[$module] = min($min_non_system_updates[$module] ?? \PHP_INT_MAX, $number);
+      }
     }
   }
 
+  $has_non_system_updates_that_must_run_before_system_updates = FALSE;
   // Now add any explicit update dependencies declared by modules.
   $update_dependencies = update_retrieve_dependencies();
   foreach ($graph as $function => $data) {
     if (!empty($update_dependencies[$data['module']][$data['number']])) {
+      if ($data['module'] === 'system') {
+        $has_non_system_updates_that_must_run_before_system_updates = TRUE;
+      }
       foreach ($update_dependencies[$data['module']][$data['number']] as $module => $number) {
         $dependency = $module . '_update_' . $number;
         $graph[$dependency]['edges'][$function] = TRUE;
@@ -585,6 +602,51 @@ function update_build_dependency_graph($update_functions): array {
     }
   }
 
+  if ($max_system_update === 0) {
+    // There are no system updates, so there is nothing else to do.
+    return $graph;
+  }
+
+  if (!$has_non_system_updates_that_must_run_before_system_updates) {
+    // This is the simple case where all non-system updates run after all
+    // system updates.
+    foreach ($min_non_system_updates as $module => $min_number) {
+      $function = $module . '_update_' . $min_number;
+      $graph['system_update_' . $max_system_update]['edges'][$function] = TRUE;
+    }
+    return $graph;
+  }
+
+  // In this case, there are non-system updates that must run before a system
+  // update. These updates must run after any system updates that are not
+  // dependent on them. Build the current graph to work this out.
+  $processed_graph = (new Graph($graph))->searchAndSort();
+  foreach ($processed_graph as $function => $data) {
+    if ($data['module'] !== 'system') {
+      $min_system_update = NULL;
+      // The paths key contains the full list of update functions that must run
+      // after.
+      foreach (array_keys($data['paths']) as $dependent) {
+        if (str_starts_with($dependent, 'system_update_')) {
+          $system_update_number = (int) substr($dependent, 14);
+          $min_system_update = $min_system_update !== NULL ? min($min_system_update, $system_update_number) : $system_update_number;
+        }
+      }
+      if ($min_system_update === NULL) {
+        // If there are no system updates in the paths key, then ensure this
+        // update function runs after all system updates.
+        $graph['system_update_' . $max_system_update]['edges'][$function] = TRUE;
+      }
+      else {
+        // If there are system updates in the paths key, then ensure this update
+        // runs after the previous system update.
+        $previous_system_update = 'system_update_' . ($min_system_update - 1);
+        if (isset($graph[$previous_system_update])) {
+          $graph[$previous_system_update]['edges'][$function] = TRUE;
+        }
+      }
+    }
+  }
   return $graph;
 }
 
