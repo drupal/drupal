@@ -325,7 +325,7 @@ Olivero
 - Andy Blum 'andy-blum' https://www.drupal.org/u/andy-blum
 
 Options
-- ?
+- Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
 Page Cache
 - Lorenz Schori 'znerol' https://www.drupal.org/u/znerol
