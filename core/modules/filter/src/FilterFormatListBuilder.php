@@ -2,6 +2,7 @@
 
 namespace Drupal\filter;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
@@ -129,7 +130,9 @@ class FilterFormatListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   protected function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
-    $operations = parent::getDefaultOperations($entity);
+    $args = func_get_args();
+    $cacheability = $args[1] ?? new CacheableMetadata();
+    $operations = parent::getDefaultOperations($entity, $cacheability);
 
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = $this->t('Configure');
