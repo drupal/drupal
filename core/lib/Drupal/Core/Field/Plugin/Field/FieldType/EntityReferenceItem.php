@@ -77,13 +77,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
       throw new FieldException('Entity type "' . $target_type_info->id() . '" has no ID key and cannot be targeted by entity reference field "' . $field_definition->getName() . '"');
     }
 
-    $target_id_data_type = 'string';
-    if ($target_type_info->entityClassImplements(FieldableEntityInterface::class)) {
-      $id_definition = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($settings['target_type'])[$target_type_info->getKey('id')];
-      if ($id_definition->getType() === 'integer') {
-        $target_id_data_type = 'integer';
-      }
-    }
+    $target_id_data_type = $target_type_info->hasIntegerId() ? 'integer' : 'string';
 
     if ($target_id_data_type === 'integer') {
       $target_id_definition = DataReferenceTargetDefinition::create('integer')

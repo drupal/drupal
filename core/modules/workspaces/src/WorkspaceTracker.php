@@ -551,13 +551,8 @@ class WorkspaceTracker implements WorkspaceTrackerInterface, EventSubscriberInte
     static $id_field_map = [];
 
     if (!isset($id_field_map[$entity_type_id])) {
-      $id_field = \Drupal::entityTypeManager()->getDefinition($entity_type_id)
-        ->getKey('id');
-      $field_map = \Drupal::service('entity_field.manager')->getFieldMap()[$entity_type_id];
-
-      $id_field_map[$entity_type_id] = $field_map[$id_field]['type'] !== 'integer'
-        ? 'target_entity_id_string'
-        : 'target_entity_id';
+      $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+      $id_field_map[$entity_type_id] = $entity_type->hasIntegerId() ? 'target_entity_id' : 'target_entity_id_string';
     }
 
     return $id_field_map[$entity_type_id];

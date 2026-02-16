@@ -90,4 +90,15 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasIntegerId(): ?bool {
+    if ($this->hasKey('id') && $this->entityClassImplements(FieldableEntityInterface::class)) {
+      $definitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($this->id());
+      return $definitions[$this->getKey('id')]->getType() === 'integer';
+    }
+    return NULL;
+  }
+
 }

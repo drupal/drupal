@@ -5,7 +5,6 @@ namespace Drupal\comment;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Psr\Log\LoggerInterface;
@@ -110,7 +109,7 @@ class CommentTypeForm extends EntityForm {
       // get comment fields added in the UI. Also, ensure to include only
       // entities that have integer id.
       foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
-        if ($this->entityTypeSupportsComments($entity_type)) {
+        if ($entity_type->hasIntegerId()) {
           if ($entity_type->get('field_ui_base_route')) {
             $options[$entity_type->id()] = $entity_type->getLabel();
           }
@@ -171,9 +170,15 @@ class CommentTypeForm extends EntityForm {
    *
    * @return bool
    *   TRUE if entity-type uses integer IDs.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+   *   \Drupal\Core\Entity\EntityTypeInterface::hasIntegerId() instead.
+   *
+   * @see https://www.drupal.org/node/3566814
    */
   protected function entityTypeSupportsComments(EntityTypeInterface $entity_type) {
-    return $entity_type->entityClassImplements(FieldableEntityInterface::class) && _comment_entity_uses_integer_id($entity_type->id());
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\Core\Entity\EntityTypeInterface::hasIntegerId() instead. See https://www.drupal.org/node/3566814', E_USER_DEPRECATED);
+    return $entity_type->hasIntegerId();
   }
 
   /**

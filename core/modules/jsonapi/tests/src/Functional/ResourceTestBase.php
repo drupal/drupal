@@ -433,11 +433,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $id_key = $duplicate->getEntityType()->getKey('id');
     $needs_manual_id = $duplicate instanceof ConfigEntityInterface && $id_key;
 
-    if ($duplicate instanceof FieldableEntityInterface && $id_key) {
-      $id_field = $duplicate->getFieldDefinition($id_key);
-      if ($id_field->getType() !== 'integer') {
-        $needs_manual_id = TRUE;
-      }
+    if (!$duplicate->getEntityType()->hasIntegerId()) {
+      $needs_manual_id = TRUE;
     }
 
     if ($needs_manual_id) {

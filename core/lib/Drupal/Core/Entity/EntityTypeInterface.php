@@ -838,4 +838,15 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    */
   public function getBundleConfigDependency($bundle);
 
+  /**
+   * Checks if this entity type has an integer ID.
+   *
+   * @return bool|null
+   *   Returns:
+   *     - TRUE if the entity type ID is defined as integer;
+   *     - FALSE if the entity type ID is defined as string;
+   *     - NULL if the entity type lacks an ID key.
+   */
+  public function hasIntegerId(): ?bool;
+
 }

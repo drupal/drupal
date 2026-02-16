@@ -136,8 +136,8 @@ class CommentHooks {
   public function fieldStorageConfigInsert(FieldStorageConfigInterface $field_storage): void {
     if ($field_storage->getType() == 'comment') {
       // Check that the target entity type uses an integer ID.
-      $entity_type_id = $field_storage->getTargetEntityTypeId();
-      if (!_comment_entity_uses_integer_id($entity_type_id)) {
+      $entity_type = \Drupal::entityTypeManager()->getDefinition($field_storage->getTargetEntityTypeId());
+      if (!$entity_type->hasIntegerId()) {
         throw new \UnexpectedValueException('You cannot attach a comment field to an entity with a non-integer ID field');
       }
     }
@@ -202,7 +202,8 @@ class CommentHooks {
    */
   #[Hook('field_info_entity_type_ui_definitions_alter')]
   public function fieldInfoEntityTypeUiDefinitionsAlter(array &$ui_definitions, string $entity_type_id): void {
-    if (!_comment_entity_uses_integer_id($entity_type_id)) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    if (!$entity_type->hasIntegerId()) {
       unset($ui_definitions['comment']);
     }
   }

@@ -245,10 +245,15 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    *
    * @return bool
    *   TRUE if this entity type's ID key is always an integer, FALSE otherwise.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+   *   \Drupal\Core\Entity\EntityTypeInterface::hasIntegerId() instead.
+   *
+   * @see https://www.drupal.org/node/3566814
    */
   protected function hasIntegerId(EntityTypeInterface $entity_type) {
-    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id());
-    return $field_storage_definitions[$entity_type->getKey('id')]->getType() === 'integer';
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\Core\Entity\EntityTypeInterface::hasIntegerId() instead. See https://www.drupal.org/node/3566814", E_USER_DEPRECATED);
+    return $entity_type->hasIntegerId();
   }
 
   /**

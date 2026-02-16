@@ -5,7 +5,6 @@ namespace Drupal\content_moderation\Entity\Routing;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
@@ -94,30 +93,11 @@ class EntityModerationRouteProvider implements EntityRouteProviderInterface, Ent
 
       // Entity types with serial IDs can specify this in their route
       // requirements, improving the matching process.
-      if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
+      if ($entity_type->hasIntegerId()) {
         $route->setRequirement($entity_type_id, '\d+');
       }
       return $route;
     }
-  }
-
-  /**
-   * Gets the type of the ID key for a given entity type.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   An entity type.
-   *
-   * @return string|null
-   *   The type of the ID key for a given entity type, or NULL if the entity
-   *   type does not support fields.
-   */
-  protected function getEntityTypeIdKeyType(EntityTypeInterface $entity_type) {
-    if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
-      return NULL;
-    }
-
-    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id());
-    return $field_storage_definitions[$entity_type->getKey('id')]->getType();
   }
 
 }

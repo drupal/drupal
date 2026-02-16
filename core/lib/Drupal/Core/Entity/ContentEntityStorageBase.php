@@ -1197,9 +1197,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   The sanitized list of entity key values.
    */
   protected function cleanIds(array $ids, $entity_key = 'id') {
-    $definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($this->entityTypeId);
-    $field_name = $this->entityType->getKey($entity_key);
-    if ($field_name && $definitions[$field_name]->getType() == 'integer') {
+    if ($entity_key === 'revision' || $this->entityType->hasIntegerId()) {
       $ids = array_filter($ids, function ($id) {
         return is_numeric($id) && $id == (int) $id;
       });
