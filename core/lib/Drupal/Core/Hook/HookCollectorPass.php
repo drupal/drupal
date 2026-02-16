@@ -33,9 +33,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * contains:
  *  - hook_list a mapping from [hook,class,method] to the module name.
  *  - preprocess_for_suggestions preprocess hooks with double underscores.
- *  - includes files that contain hooks that are not defined by hook_hook_info
- *    or in .module files
- *  - group_includes files identified by hook_hook_info
  *  - packed_order_operations ordering rules for runtime evaluation
  *
  * The parameter hook_data is processed in HookCollectorKeyValueWritePass and
@@ -81,15 +78,6 @@ class HookCollectorPass implements CompilerPassInterface {
   protected array $removeHookIdentifiers = [];
 
   /**
-   * A map of include files by function name.
-   *
-   * (This is required only for BC.)
-   *
-   * @var array<callable-string, string>
-   */
-  protected array $includes = [];
-
-  /**
    * A list of functions implementing hook_module_implements_alter().
    *
    * (This is required only for BC.)
@@ -97,15 +85,6 @@ class HookCollectorPass implements CompilerPassInterface {
    * @var list<callable-string>
    */
   protected array $moduleImplementsAlters = [];
-
-  /**
-   * A list of functions implementing hook_hook_info().
-   *
-   * (This is required only for BC.)
-   *
-   * @var list<callable-string>
-   */
-  private array $hookInfo = [];
 
   /**
    * Preprocess suggestions discovered in modules.
@@ -116,13 +95,6 @@ class HookCollectorPass implements CompilerPassInterface {
    * @var array<string, true>
    */
   protected array $preprocessForSuggestions;
-
-  /**
-   * Include files, keyed by the $group part of "/$module.$group.inc".
-   *
-   * @var array<string, list<string>>
-   */
-  private array $groupIncludes = [];
 
   /**
    * Constructor.
@@ -151,23 +123,8 @@ class HookCollectorPass implements CompilerPassInterface {
    *   Container builder.
    */
   protected function writeToContainer(ContainerBuilder $container): void {
-    // Gather includes for each hook_hook_info group. Store this in
-    // $groupIncludes so the module handler includes the files at runtime when
-    // the hooks are invoked.
-    $groupIncludes = [];
-    foreach ($this->hookInfo as $function) {
-      foreach ($function() as $hook => $info) {
-        if (isset($this->groupIncludes[$info['group']])) {
-          $groupIncludes[$hook] = $this->groupIncludes[$info['group']];
-        }
-      }
-    }
-
     $implementationsByHook = $this->calculateImplementations();
-
     static::registerHookServices($container, $implementationsByHook);
-
-    $includes = $this->collectIncludesPerHook($implementationsByHook, $groupIncludes);
 
     $packed_order_operations = [];
     $order_operations = $this->getOrderOperations();
@@ -185,41 +142,8 @@ class HookCollectorPass implements CompilerPassInterface {
     $container->setParameter('.hook_data', [
       'hook_list' => $implementationsByHook,
       'preprocess_for_suggestions' => $this->preprocessForSuggestions ?? [],
-      'includes' => $includes,
-      'group_includes' => $groupIncludes,
       'packed_order_operations' => $packed_order_operations,
     ]);
-  }
-
-  /**
-   * Collects include files by hook name.
-   *
-   * @param array<string, array<string, string>> $implementationsByHook
-   *   Implementations by hook.
-   * @param array<string, list<string>> $groupIncludes
-   *   Explicitly defined group includes to filter out.
-   *
-   * @return array<string, list<string>>
-   *   Lists of include files by hook name.
-   */
-  protected function collectIncludesPerHook(array $implementationsByHook, array $groupIncludes): array {
-    $includesMap = [];
-    foreach ($implementationsByHook as $hook => $hookImplementations) {
-      foreach ($hookImplementations as $identifier => $module) {
-        if (str_contains($identifier, '::')) {
-          continue;
-        }
-        $include = $this->includes[$identifier] ?? NULL;
-        if ($include !== NULL) {
-          // Do not add includes that are already in group includes.
-          if (isset($groupIncludes[$hook]) && in_array($include, $groupIncludes[$hook])) {
-            continue;
-          }
-          $includesMap[$hook][$include] = TRUE;
-        }
-      }
-    }
-    return array_map(array_keys(...), $includesMap);
   }
 
   /**
@@ -546,12 +470,6 @@ class HookCollectorPass implements CompilerPassInterface {
           $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module']);
         }
       }
-      if ($extension === 'inc') {
-        $parts = explode('.', $fileinfo->getFilename());
-        if (count($parts) === 3 && $parts[0] === $module) {
-          $this->groupIncludes[$parts[1]][] = $filename;
-        }
-      }
     }
   }
 
@@ -610,11 +528,7 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   protected function addProceduralImplementation(\SplFileInfo $fileinfo, string $hook, string $module): void {
     $function = $module . '_' . $hook;
-    if ($hook === 'hook_info') {
-      $this->hookInfo[] = $function;
-      include_once $fileinfo->getPathname();
-    }
-    elseif ($hook === 'module_implements_alter') {
+    if ($hook === 'module_implements_alter') {
       $message = "$function without a #[LegacyModuleImplementsAlter] attribute is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3496788";
       @trigger_error($message, E_USER_DEPRECATED);
       $this->moduleImplementsAlters[] = $function;
@@ -625,9 +539,6 @@ class HookCollectorPass implements CompilerPassInterface {
       @trigger_error($message, E_USER_DEPRECATED);
     }
     $this->proceduralImplementations[$hook][] = $module;
-    if ($fileinfo->getExtension() !== 'module') {
-      $this->includes[$function] = $fileinfo->getPathname();
-    }
   }
 
   /**
@@ -640,7 +551,6 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   public static function checkForProceduralOnlyHooks(Hook $hookAttribute, string $class): void {
     $staticDenyHooks = [
-      'hook_info',
       'install',
       'install_tasks',
       'install_tasks_alter',

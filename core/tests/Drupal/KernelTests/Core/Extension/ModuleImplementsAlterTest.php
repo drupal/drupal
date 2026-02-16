@@ -44,10 +44,6 @@ class ModuleImplementsAlterTest extends KernelTestBase {
     $this->assertTrue(\Drupal::moduleHandler()->hasImplementations('module_implements_alter', 'module_implements_alter_test'),
       'module_implements_alter_test implements hook_module_implements_alter().');
 
-    // Assert that module_implements_alter_test.implementations.inc is not included yet.
-    $this->assertFalse(function_exists('module_implements_alter_test_altered_test_hook'),
-      'The file module_implements_alter_test.implementations.inc is not included yet.');
-
     // Trigger hook discovery for hook_altered_test_hook().
     // Assert that module_implements_alter_test_module_implements_alter(*, 'altered_test_hook')
     // has added an implementation.

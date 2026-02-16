@@ -1673,7 +1673,6 @@
  * implemented as procedural:
  *
  * Legacy meta hooks:
- * - hook_hook_info()
  * - hook_module_implements_alter()
  * @see \Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter
  *

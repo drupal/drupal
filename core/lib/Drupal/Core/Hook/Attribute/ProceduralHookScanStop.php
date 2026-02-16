@@ -11,7 +11,6 @@ namespace Drupal\Core\Hook\Attribute;
  * procedural hooks to be gathered. Any procedural hooks in the file should
  * be placed before the function with this attribute. This includes all hooks
  * that can be converted to object oriented hooks and also includes:
- * - hook_hook_info()
  * - hook_module_implements_alter()
  * - hook_requirements()
  * - hook_preprocess()

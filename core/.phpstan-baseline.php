@@ -47674,12 +47674,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function module_handler_test_added_hook\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added/module_handler_test_added.hook.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function module_handler_test_added_helper\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

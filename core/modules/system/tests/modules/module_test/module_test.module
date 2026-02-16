@@ -8,16 +8,6 @@
 declare(strict_types=1);
 
 /**
- * Implements hook_hook_info().
- */
-function module_test_hook_info(): array {
-  $hooks['test_hook'] = [
-    'group' => 'file',
-  ];
-  return $hooks;
-}
-
-/**
  * Load function used by module_test_hook_dynamic_loading_invoke_all_during_load().
  *
  * @see module_test_menu()

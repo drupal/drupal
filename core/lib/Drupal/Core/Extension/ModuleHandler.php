@@ -75,20 +75,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected ?array $hookLists = NULL;
 
   /**
-   * List of include files keyed by hook.
-   *
-   * @var array<string, list<string>>|null
-   */
-  protected ?array $hookIncludes = NULL;
-
-  /**
-   * List of group include files keyed by hook.
-   *
-   * @var array<string, list<string>>|null
-   */
-  protected ?array $hookGroupIncludes = NULL;
-
-  /**
    * Ordering rules by hook name, packed.
    *
    * @param array<string, list<string>>
@@ -654,29 +640,17 @@ class ModuleHandler implements ModuleHandlerInterface {
         else {
           $hook_data = $this->keyValueFactory->get('hook_data')->getMultiple([
             'hook_list',
-            'includes',
-            'group_includes',
             'packed_order_operations',
           ]);
           $this->cache->set('hook_data', $hook_data);
         }
         $this->hookLists = $hook_data['hook_list'] ?? [];
-        $this->hookIncludes = $hook_data['includes'] ?? [];
-        $this->hookGroupIncludes = $hook_data['group_includes'] ?? [];
         $this->packedOrderOperations = $hook_data['packed_order_operations'] ?? [];
       }
       $hook_list = $this->hookLists[$hook] ?? [];
       if ($hook_list) {
         $listeners = [];
         $modules = [];
-
-        foreach ($this->hookIncludes[$hook] ?? [] as $include) {
-          include_once $include;
-        }
-        foreach ($this->hookGroupIncludes[$hook] ?? [] as $include) {
-          @trigger_error('Autoloading hooks in the file (' . $include . ') is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765', E_USER_DEPRECATED);
-          include_once $include;
-        }
 
         foreach ($hook_list as $identifier => $module) {
           // Remove implementations from "other" modules.
