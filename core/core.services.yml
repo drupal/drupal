@@ -421,7 +421,6 @@ services:
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
     arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher', '%install_profile%', '@extension.path.resolver']
-    lazy: true
   Drupal\Core\Config\ConfigInstallerInterface: '@config.installer'
   config.storage:
     class: Drupal\Core\Config\CachedStorage
@@ -689,7 +688,6 @@ services:
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller
     autowire: true
-    lazy: true
   Drupal\Core\Extension\ModuleInstallerInterface: '@module_installer'
   module_installer.uninstall_validators:
     class: \IteratorIterator
