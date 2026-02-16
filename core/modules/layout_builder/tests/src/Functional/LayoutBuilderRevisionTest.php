@@ -7,6 +7,7 @@ namespace Drupal\Tests\layout_builder\Functional;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -18,12 +19,17 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[RunTestsInSeparateProcesses]
 class LayoutBuilderRevisionTest extends BrowserTestBase {
 
+  use BlockContentCreationTrait;
+
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'layout_builder',
     'node',
+    'field_ui',
+    'block',
+    'block_content',
   ];
 
   /**
@@ -49,6 +55,12 @@ class LayoutBuilderRevisionTest extends BrowserTestBase {
       'type' => 'bundle_with_section_field',
       'title' => 'The first node title',
     ]);
+    $this->createBlockContentType([
+      'id' => 'basic',
+      'label' => 'Basic block',
+      'revision' => 1,
+    ], TRUE);
+
   }
 
   /**
@@ -108,6 +120,86 @@ class LayoutBuilderRevisionTest extends BrowserTestBase {
     $page->pressButton('Revert');
     $page->clickLink('View');
     $assert_session->pageTextContains('This is an override');
+  }
+
+  /**
+   * Tests entity blocks revisioning.
+   */
+  public function testInlineBlocksRevisioning(): void {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
+      'configure any layout',
+      'administer node display',
+      'administer node fields',
+      'administer nodes',
+      'bypass node access',
+      'create and edit custom blocks',
+    ]));
+
+    $this->drupalGet('node/1/layout');
+    $this->clickLink('Add block');
+    $this->clickLink('Create content block');
+    $this->submitForm([
+      'settings[label]' => 'Block title',
+      'settings[block_form][body][0][value]' => 'The DEFAULT block body',
+    ], 'Add block');
+    $this->submitForm([], 'Save layout');
+
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The DEFAULT block body');
+
+    /** @var \Drupal\node\NodeStorageInterface $node_storage */
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $original_revision_id = $node_storage->getLatestRevisionId(1);
+
+    // Create a new revision.
+    $this->drupalGet('node/1/edit');
+    $page->findField('title[0][value]')->setValue('Node updated');
+    $page->pressButton('Save');
+
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The DEFAULT block body');
+
+    $assert_session->linkExists('Revisions');
+
+    // Update the block.
+    $components = Node::load(1)->get(OverridesSectionStorage::FIELD_NAME)->getSection(0)->getComponents();
+    end($components);
+    $uuid = key($components);
+    $this->drupalGet('layout_builder/update/block/overrides/node.1/0/content/' . $uuid);
+    $this->submitForm([
+      'settings[label]' => 'Block title',
+      'settings[block_form][body][0][value]' => 'The NEW block body',
+    ], 'Update');
+    $this->drupalGet('node/1/layout');
+    $this->submitForm([], 'Save layout');
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The NEW block body');
+    $assert_session->pageTextNotContains('The DEFAULT block body');
+
+    $revision_url = "node/1/revisions/$original_revision_id";
+
+    // Ensure viewing the previous revision shows the previous block revision.
+    $this->drupalGet("$revision_url/view");
+    $assert_session->pageTextContains('The DEFAULT block body');
+    $assert_session->pageTextNotContains('The NEW block body');
+
+    // Revert to first revision.
+    $revision_url = "$revision_url/revert";
+    $this->drupalGet($revision_url);
+    $page->pressButton('Revert');
+
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('The DEFAULT block body');
+    $assert_session->pageTextNotContains('The NEW block body');
   }
 
 }
