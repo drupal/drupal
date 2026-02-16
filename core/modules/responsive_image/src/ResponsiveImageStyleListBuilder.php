@@ -2,6 +2,7 @@
 
 namespace Drupal\responsive_image;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -30,7 +31,9 @@ class ResponsiveImageStyleListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   protected function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
-    $operations = parent::getDefaultOperations($entity);
+    $args = func_get_args();
+    $cacheability = $args[1] ?? new CacheableMetadata();
+    $operations = parent::getDefaultOperations($entity, $cacheability);
     $operations['duplicate'] = [
       'title' => $this->t('Duplicate'),
       'weight' => 15,

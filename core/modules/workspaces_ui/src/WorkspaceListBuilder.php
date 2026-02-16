@@ -4,6 +4,7 @@ namespace Drupal\workspaces_ui;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxHelperTrait;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -157,13 +158,16 @@ class WorkspaceListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   protected function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
+    $args = func_get_args();
+    $cacheability = $args[1] ?? new CacheableMetadata();
     /** @var \Drupal\workspaces\WorkspaceInterface $entity */
-    $operations = parent::getDefaultOperations($entity);
+    $operations = parent::getDefaultOperations($entity, $cacheability);
     if (isset($operations['edit'])) {
       $operations['edit']['query']['destination'] = $entity->toUrl('collection')->toString();
     }
 
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
+    $cacheability->addCacheContexts(['workspace']);
     if (!$active_workspace || $entity->id() != $active_workspace->id()) {
       $operations['activate'] = [
         'title' => $this->t('Switch to @workspace', ['@workspace' => $entity->label()]),
@@ -215,7 +219,10 @@ class WorkspaceListBuilder extends EntityListBuilder {
     // Because the listing page is viewable by various levels of access,
     // including read-only users, filter out disallowed URLs.
     foreach ($operations as $key => $operation) {
-      if (!$operation['url']->access(NULL, TRUE)->isAllowed()) {
+      assert($operation['url'] instanceof Url);
+      $access = $operation['url']->access(return_as_object: TRUE);
+      $cacheability->addCacheableDependency($access);
+      if (!$access->isAllowed()) {
         unset($operations[$key]);
       }
     }
