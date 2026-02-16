@@ -214,4 +214,16 @@ class ConfigEntityTypeTest extends UnitTestCase {
     $this->assertNull($config_entity_type->getPropertiesToExport());
   }
 
+  /**
+   * Tests get ConfigEntityType::hasIntegerId() method.
+   *
+   * @legacy-covers ::hasIntegerId
+   */
+  public function testHasIntegerId(): void {
+    $config_entity_type = new ConfigEntityType([
+      'id' => 'example_config_entity_type',
+    ]);
+    $this->assertFalse($config_entity_type->hasIntegerId());
+  }
+
 }

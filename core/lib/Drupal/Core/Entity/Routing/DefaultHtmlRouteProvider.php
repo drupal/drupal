@@ -169,7 +169,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
           // Entity types with serial IDs can specify this in their route
           // requirements, improving the matching process.
-          if ($this->getEntityTypeIdKeyType($bundle_entity_type) === 'integer') {
+          if ($bundle_entity_type->hasIntegerId()) {
             $route->setRequirement($entity_type_id, '\d+');
           }
 
@@ -226,7 +226,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       // Entity types with serial IDs can specify this in their route
       // requirements, improving the matching process.
-      if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
+      if ($entity_type->hasIntegerId()) {
         $route->setRequirement($entity_type_id, '\d+');
       }
       return $route;
@@ -263,7 +263,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       // Entity types with serial IDs can specify this in their route
       // requirements, improving the matching process.
-      if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
+      if ($entity_type->hasIntegerId()) {
         $route->setRequirement($entity_type_id, '\d+');
       }
       return $route;
@@ -295,7 +295,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       // Entity types with serial IDs can specify this in their route
       // requirements, improving the matching process.
-      if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
+      if ($entity_type->hasIntegerId()) {
         $route->setRequirement($entity_type_id, '\d+');
       }
       return $route;
@@ -346,8 +346,15 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    * @return string|null
    *   The type of the ID key for a given entity type, or NULL if the entity
    *   type does not support fields.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. To
+   *   determine if an entity type has an integer ID key, use
+   *   \Drupal\Core\Entity\EntityTypeInterface::hasIntegerId().
+   *
+   * @see https://www.drupal.org/node/3566814
    */
   protected function getEntityTypeIdKeyType(EntityTypeInterface $entity_type) {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. To determine if an entity type has an integer ID key, use \Drupal\Core\Entity\EntityTypeInterface::hasIntegerId(). See https://www.drupal.org/node/3566814", E_USER_DEPRECATED);
     if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       return NULL;
     }

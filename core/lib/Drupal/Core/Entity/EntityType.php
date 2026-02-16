@@ -959,4 +959,11 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
     return $config_dependency;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasIntegerId(): ?bool {
+    return FALSE;
+  }
+
 }

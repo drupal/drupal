@@ -1487,6 +1487,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getKey')
       ->willReturnMap([['id', 'id']]);
 
+    $this->entityType->expects($this->any())
+      ->method('hasIntegerId')
+      ->willReturn(TRUE);
+
     $method = new \ReflectionMethod($this->entityStorage, 'cleanIds');
     $this->assertEquals($valid_ids, $method->invoke($this->entityStorage, $valid_ids));
 
