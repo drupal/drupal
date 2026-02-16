@@ -3,12 +3,15 @@
 namespace Drupal\menu_link_content\Hook;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\path_alias\PathAliasInterface;
 use Drupal\system\MenuInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Menu\MenuLinkManagerInterface;
 
 /**
  * Hook implementations for menu_link_content.
@@ -16,6 +19,12 @@ use Drupal\Core\Hook\Attribute\Hook;
 class MenuLinkContentHooks {
 
   use StringTranslationTrait;
+
+  public function __construct(
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly ModuleHandlerInterface $moduleHandler,
+    protected readonly MenuLinkManagerInterface $menuLinkManager,
+  ) {}
 
   /**
    * Implements hook_help().
@@ -27,7 +36,7 @@ class MenuLinkContentHooks {
         $output = '';
         $output .= '<h2>' . $this->t('About') . '</h2>';
         $output .= '<p>' . $this->t('The Custom Menu Links module allows users to create menu links. These links can be translated if multiple languages are used for the site.');
-        if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
+        if ($this->moduleHandler->moduleExists('menu_ui')) {
           $output .= ' ' . $this->t('It is required by the Menu UI module, which provides an interface for managing menus and menu links. For more information, see the <a href=":menu-help">Menu UI module help page</a> and the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>.', [
             ':menu-help' => Url::fromRoute('help.page', [
               'name' => 'menu_ui',
@@ -60,7 +69,7 @@ class MenuLinkContentHooks {
    */
   #[Hook('menu_delete')]
   public function menuDelete(MenuInterface $menu): void {
-    $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+    $storage = $this->entityTypeManager->getStorage('menu_link_content');
     $menu_links = $storage->loadByProperties(['menu_name' => $menu->id()]);
     $storage->delete($menu_links);
   }
@@ -70,7 +79,7 @@ class MenuLinkContentHooks {
    */
   #[Hook('path_alias_insert')]
   public function pathAliasInsert(PathAliasInterface $path_alias): void {
-    _menu_link_content_update_path_alias($path_alias->getAlias());
+    $this->updatePathAlias($path_alias->getAlias());
   }
 
   /**
@@ -79,11 +88,11 @@ class MenuLinkContentHooks {
   #[Hook('path_alias_update')]
   public function pathAliasUpdate(PathAliasInterface $path_alias): void {
     if ($path_alias->getAlias() != $path_alias->getOriginal()->getAlias()) {
-      _menu_link_content_update_path_alias($path_alias->getAlias());
-      _menu_link_content_update_path_alias($path_alias->getOriginal()->getAlias());
+      $this->updatePathAlias($path_alias->getAlias());
+      $this->updatePathAlias($path_alias->getOriginal()->getAlias());
     }
     elseif ($path_alias->getPath() != $path_alias->getOriginal()->getPath()) {
-      _menu_link_content_update_path_alias($path_alias->getAlias());
+      $this->updatePathAlias($path_alias->getAlias());
     }
   }
 
@@ -92,7 +101,7 @@ class MenuLinkContentHooks {
    */
   #[Hook('path_alias_delete')]
   public function pathAliasDelete(PathAliasInterface $path_alias): void {
-    _menu_link_content_update_path_alias($path_alias->getAlias());
+    $this->updatePathAlias($path_alias->getAlias());
   }
 
   /**
@@ -100,8 +109,6 @@ class MenuLinkContentHooks {
    */
   #[Hook('entity_predelete')]
   public function entityPredelete(EntityInterface $entity): void {
-    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
-    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
     $entity_type_id = $entity->getEntityTypeId();
     foreach ($entity->uriRelationships() as $rel) {
       $url = $entity->toUrl($rel);
@@ -117,7 +124,7 @@ class MenuLinkContentHooks {
         continue;
       }
       // Delete all MenuLinkContent links that point to this entity route.
-      $result = $menu_link_manager->loadLinksByRoute($url->getRouteName(), $route_parameters);
+      $result = $this->menuLinkManager->loadLinksByRoute($url->getRouteName(), $route_parameters);
       if ($result) {
         foreach ($result as $id => $instance) {
           if ($instance->isDeletable() && str_starts_with($id, 'menu_link_content:')) {
@@ -125,6 +132,22 @@ class MenuLinkContentHooks {
           }
         }
       }
+    }
+  }
+
+  /**
+   * Helper function to update plugin definition using internal scheme.
+   *
+   * @param string $path
+   *   The path alias.
+   */
+  protected function updatePathAlias(string $path): void {
+    /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */
+    $entities = $this->entityTypeManager
+      ->getStorage('menu_link_content')
+      ->loadByProperties(['link.uri' => 'internal:' . $path]);
+    foreach ($entities as $menu_link) {
+      $this->menuLinkManager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
     }
   }
 
