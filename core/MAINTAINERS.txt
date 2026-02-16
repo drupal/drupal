@@ -123,7 +123,6 @@ Cache
 - Kristiaan Van den Eynde 'kristiaanvandeneynde' https://www.drupal.org/u/kristiaanvandeneynde
 
 CKEditor 5
-- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Claro
@@ -207,7 +206,6 @@ Dynamic Page Cache
 
 Editor
 - Henrik Danielsson 'TwoD' https://www.drupal.org/u/TwoD
-- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Entity API
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
@@ -263,7 +261,6 @@ JavaScript
 JSON:API
 - Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
 - Björn Brala 'bbrala' https://www.drupal.org/u/bbrala
-- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Language
 - Christian López Espínola 'penyaskito' https://www.drupal.org/u/penyaskito
@@ -365,7 +362,7 @@ Request Processing
 - ?
 
 REST
-- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- ?
 
 Responsive Image
 - Peter Droogmans 'attiks' https://www.drupal.org/u/attiks
