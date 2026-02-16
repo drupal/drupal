@@ -29,6 +29,8 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
    *
    * @return \Drupal\Core\Entity\RevisionableInterface|null
    *   The specified entity revision or NULL if not found.
+   *
+   * @not-deprecated
    */
   public function loadRevision($revision_id);
 
