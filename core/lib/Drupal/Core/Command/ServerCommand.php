@@ -46,7 +46,7 @@ class ServerCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function configure() {
+  protected function configure(): void {
     $this->setDescription('Starts up a webserver for a site.')
       ->addOption('host', NULL, InputOption::VALUE_OPTIONAL, 'Provide a host for the server to run on.', '127.0.0.1')
       ->addOption('port', NULL, InputOption::VALUE_OPTIONAL, 'Provide a port for the server to run on. Will be determined automatically if none supplied.')

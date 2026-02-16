@@ -19,7 +19,7 @@ class ComposerScaffoldCommand extends BaseCommand {
   /**
    * {@inheritdoc}
    */
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setName('drupal:scaffold')
       ->setAliases(['scaffold'])

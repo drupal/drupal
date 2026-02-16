@@ -24,7 +24,7 @@ class TestSiteTearDownCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function configure() {
+  protected function configure(): void {
     $this->setName('tear-down')
       ->setDescription('Removes a test site added by the install command')
       ->setHelp('All the database tables and files will be removed.')
