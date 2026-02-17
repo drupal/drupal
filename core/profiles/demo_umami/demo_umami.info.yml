@@ -29,7 +29,7 @@ install:
   - dblog
   - search
   - shortcut
-  - toolbar
+  - navigation
   - field_ui
   - file
   - views
