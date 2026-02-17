@@ -47,13 +47,6 @@ class SystemManager {
   protected $menuActiveTrail;
 
   /**
-   * A static cache of menu items.
-   *
-   * @var array
-   */
-  protected $menuItems;
-
-  /**
    * Requirement severity -- Requirement successfully met.
    *
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
