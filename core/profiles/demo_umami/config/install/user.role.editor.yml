@@ -17,12 +17,12 @@ dependencies:
     - contextual
     - file
     - layout_builder
+    - navigation
     - node
     - path
     - shortcut
     - system
     - taxonomy
-    - toolbar
 id: editor
 label: Editor
 weight: 4
@@ -32,8 +32,8 @@ permissions:
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
+  - 'access navigation'
   - 'access taxonomy overview'
-  - 'access toolbar'
   - 'administer shortcuts'
   - 'cancel account'
   - 'change own username'
