@@ -261,13 +261,15 @@ class SiteConfigureForm extends ConfigFormBase {
     $update_status_module = $form_state->getValue('enable_update_status_module');
     if (empty($install_state['config_install_path']) && $update_status_module) {
       $this->moduleInstaller->install(['update']);
+      // After a module is installed, there is a new container, so all class
+      // properties dependent on the container need to be reset.
+      $this->resetPropertiesFromContainer();
 
       // Add the site maintenance account's email address to the list of
       // addresses to be notified when updates are available, if selected.
       $email_update_status_emails = $form_state->getValue('enable_update_status_emails');
       if ($email_update_status_emails) {
-        // Reset the configuration factory so it is updated with the new module.
-        $this->resetConfigFactory();
+        // Reset the configuration so it is updated with the new module.
         $this->config('update.settings')->set('notification.emails', [$account_values['mail']])->save(TRUE);
       }
     }
@@ -313,6 +315,20 @@ class SiteConfigureForm extends ConfigFormBase {
    */
   protected function getAdminRoles(): array {
     return $this->entityTypeManager->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
+  }
+
+  /**
+   * Repopulate class properties from container.
+   */
+  protected function resetPropertiesFromContainer(): void {
+    $this->resetConfigFactory();
+    $container = \Drupal::getContainer();
+    $this->root = $container->getParameter('app.root');
+    $this->sitePath = $container->getParameter('site.path');
+    $this->entityTypeManager = $container->get('entity_type.manager');
+    $this->moduleInstaller = $container->get('module_installer');
+    $this->userNameValidator = $container->get('user.name_validator');
+    $this->superUserAccessPolicy = $container->getParameter('security.enable_super_user') ?? TRUE;
   }
 
 }
