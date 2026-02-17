@@ -89,6 +89,7 @@ if [[ "$DRUPALCI" == "1" ]]; then
   GIT="sudo -u www-data git"
 else
   red=$(tput setaf 1 && tput bold)
+  blue=$(tput setaf 4 && tput bold)
   green=$(tput setaf 2)
   reset=$(tput sgr0)
   GIT="git"
@@ -194,6 +195,11 @@ for FILE in $FILES; do
   if [[ $FILE == "core/misc/cspell/dictionary.txt" || $FILE == "core/misc/cspell/drupal-dictionary.txt" || $FILE == "core/.cspell.json" ]]; then
     CSPELL_DICTIONARY_FILE_CHANGED=1;
   fi
+
+  if [[ $FILE == "core/MAINTAINERS.txt" ]]; then
+    MAINTAINERS_TXT_CHANGED=1;
+  fi
+
 done
 
 # Exit early if there are no files.
@@ -513,6 +519,17 @@ for FILE in $FILES; do
   printf -- '-%.0s' {1..100}
   printf "\n"
 done
+
+if [[ "$MAINTAINERS_TXT_CHANGED" == "1" ]]; then
+  printf "\n${blue}INFO: MAINTAINERS.TXT changed"
+  printf "\n      Make sure follow up changes are made to documentation, Slack channel, email group etc."
+  printf "\n      See https://www.drupal.org/about/core/policies/maintainers/add-or-remove-a-subsystem-or-topic-maintainer.${reset}\n\n"
+
+  # Add a separator line to make the output easier to read.
+  printf "\n"
+  printf -- '-%.0s' {1..100}
+  printf "\n"
+fi
 
 if [[ "$FINAL_STATUS" == "1" ]] && [[ "$DRUPALCI" == "1" ]]; then
   printf "${red}Drupal code quality checks failed.${reset}\n"
