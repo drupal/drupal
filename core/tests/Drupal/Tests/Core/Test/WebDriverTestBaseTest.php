@@ -53,7 +53,12 @@ class WebDriverTestBaseTest extends UnitTestCase {
     $this->putEnv("MINK_DRIVER_ARGS", $mink_driver_args);
 
     // @phpstan-ignore testClass.missingAttribute.Group, testClass.missingAttribute.RunInSeparateProcesses
-    $object = new class('test') extends WebDriverTestBase {
+    $object = new #[IgnoreDeprecations] class('test') extends WebDriverTestBase {
+
+      public function test(): void {
+        $this->assertEquals(1, 1);
+      }
+
     };
     $method = new \ReflectionMethod($object, 'getMinkDriverArgs');
     $this->assertSame($expected, $method->invoke($object));
