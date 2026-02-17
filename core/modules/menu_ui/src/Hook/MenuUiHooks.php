@@ -164,7 +164,6 @@ class MenuUiHooks {
       '#type' => 'details',
       '#title' => $this->t('Menu settings'),
       '#access' => $this->getMenuLinkContentAccess($defaults),
-      '#open' => (bool) $defaults['id'],
       '#group' => 'advanced',
       '#attached' => [
         'library' => [

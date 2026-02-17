@@ -231,7 +231,13 @@ class PathAliasTest extends PathTestBase {
     $edit = [];
     $edit['path[0][alias]'] = '/' . $this->randomMachineName(8);
     $this->drupalGet('node/' . $node1->id() . '/edit');
+    // Assert that the details form is closed.
+    $this->assertSession()->elementAttributeNotExists('css', 'details.path-form', 'open');
     $this->submitForm($edit, 'Save');
+
+    $this->drupalGet('node/' . $node1->id() . '/edit');
+    // Assert that the details form is still closed even though it has a url.
+    $this->assertSession()->elementAttributeNotExists('css', 'details.path-form', 'open');
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[0][alias]']);

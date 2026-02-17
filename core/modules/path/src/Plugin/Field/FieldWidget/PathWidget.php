@@ -56,7 +56,6 @@ class PathWidget extends WidgetBase {
       $element += [
         '#type' => 'details',
         '#title' => $this->t('URL path settings'),
-        '#open' => !empty($items[$delta]->alias),
         '#group' => 'advanced',
         '#access' => $entity->get('path')->access('edit'),
         '#attributes' => [
