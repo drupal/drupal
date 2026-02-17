@@ -17,9 +17,9 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  * @see jsonapi.api.php
  *
  * (The spec says the top-level `data` and `errors` members MUST NOT coexist.)
- * @see http://jsonapi.org/format/#document-top-level
+ * @see https://jsonapi.org/format/#document-top-level
  *
- * @see http://jsonapi.org/format/#error-objects
+ * @see https://jsonapi.org/format/#error-objects
  */
 class ErrorCollection implements \IteratorAggregate {
 

@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  *
- * @see http://jsonapi.org/format/#error-objects
+ * @see https://jsonapi.org/format/#error-objects
  */
 class HttpExceptionNormalizer extends NormalizerBase {
 

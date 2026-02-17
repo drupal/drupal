@@ -252,7 +252,7 @@ class FieldResolver {
    * any aliases and/or abbreviations into a field expression that will be
    * compatible with the entity query system.
    *
-   * @link http://jsonapi.org/recommendations/#urls-reference-document
+   * @link https://jsonapi.org/recommendations/#urls-reference-document
    *
    * Example:
    *   'uid.field_first_name' -> 'uid.entity.field_first_name'.

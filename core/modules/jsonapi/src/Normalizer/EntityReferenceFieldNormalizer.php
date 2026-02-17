@@ -48,7 +48,7 @@ class EntityReferenceFieldNormalizer extends FieldNormalizer {
     $normalization = [
       // Empty 'to-one' relationships must be NULL.
       // Empty 'to-many' relationships must be an empty array.
-      // @link http://jsonapi.org/format/#document-resource-object-linkage
+      // @link https://jsonapi.org/format/#document-resource-object-linkage
       'data' => $resource_relationship->hasOne() ? array_shift($data_normalization) : $data_normalization,
     ];
     if (!empty($links)) {

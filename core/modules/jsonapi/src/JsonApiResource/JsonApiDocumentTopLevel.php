@@ -11,7 +11,7 @@ namespace Drupal\jsonapi\JsonApiResource;
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  *
- * @see http://jsonapi.org/format/#document-top-level
+ * @see https://jsonapi.org/format/#document-top-level
  *
  * @todo Add support for the missing optional 'jsonapi' member or document why not.
  */

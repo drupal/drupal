@@ -32,7 +32,7 @@ class JsonApiSpecTest extends UnitTestCase {
    * Data provider for testIsValidMemberName.
    */
   public static function providerTestIsValidMemberName() {
-    // Copied from http://jsonapi.org/format/upcoming/#document-member-names.
+    // Copied from https://jsonapi.org/format/upcoming/#document-member-names.
     $data = [];
     $data['alphanumeric-lowercase'] = ['12kittens', TRUE];
     $data['alphanumeric-uppercase'] = ['12KITTENS', TRUE];

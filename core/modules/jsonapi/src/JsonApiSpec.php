@@ -11,21 +11,21 @@ namespace Drupal\jsonapi;
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  *
- * @see http://jsonapi.org/format
+ * @see https://jsonapi.org/format
  */
 class JsonApiSpec {
 
   /**
    * The minimum supported specification version.
    *
-   * @see http://jsonapi.org/format/#document-jsonapi-object
+   * @see https://jsonapi.org/format/#document-jsonapi-object
    */
   const SUPPORTED_SPECIFICATION_VERSION = '1.1';
 
   /**
    * The URI of the supported specification document.
    */
-  const SUPPORTED_SPECIFICATION_PERMALINK = 'http://jsonapi.org/format/1.1/';
+  const SUPPORTED_SPECIFICATION_PERMALINK = 'https://jsonapi.org/format/1.1/';
 
   /**
    * The URI of the supported specification's JSON Schema.
@@ -40,7 +40,7 @@ class JsonApiSpec {
    *
    * A character class, for use in regular expressions.
    *
-   * @see http://jsonapi.org/format/#document-member-names-allowed-characters
+   * @see https://jsonapi.org/format/#document-member-names-allowed-characters
    * @see http://php.net/manual/en/regexp.reference.character-classes.php
    */
   const MEMBER_NAME_GLOBALLY_ALLOWED_CHARACTER_CLASS = '[a-zA-Z0-9\x{80}-\x{10FFFF}]';
@@ -53,7 +53,7 @@ class JsonApiSpec {
    *
    * A character class, for use in regular expressions.
    *
-   * @see http://jsonapi.org/format/#document-member-names-allowed-characters
+   * @see https://jsonapi.org/format/#document-member-names-allowed-characters
    * @see http://php.net/manual/en/regexp.reference.character-classes.php
    */
   const MEMBER_NAME_INNER_ALLOWED_CHARACTERS = "[a-zA-Z0-9\x{80}-\x{10FFFF}\-_ ]";
@@ -86,7 +86,7 @@ class JsonApiSpec {
    *   Whether the given member name is in compliance with the JSON:API
    *   specification.
    *
-   * @see http://jsonapi.org/format/#document-member-names
+   * @see https://jsonapi.org/format/#document-member-names
    */
   public static function isValidMemberName($member_name) {
     return preg_match(static::MEMBER_NAME_REGEXP, $member_name) === 1;
@@ -142,7 +142,7 @@ class JsonApiSpec {
    *   Whether the given query parameter is in compliance with the JSON:API
    *   specification.
    *
-   * @see http://jsonapi.org/format/#query-parameters
+   * @see https://jsonapi.org/format/#query-parameters
    */
   public static function isValidCustomQueryParameter($custom_query_parameter_name) {
     return static::isValidMemberName($custom_query_parameter_name) && preg_match('/[^a-z]/u', $custom_query_parameter_name) === 1;

@@ -31,7 +31,7 @@ use Drupal\jsonapi\ResourceType\ResourceType;
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  *
- * @see http://jsonapi.org/format/#document-resource-object-relationships
+ * @see https://jsonapi.org/format/#document-resource-object-relationships
  * @see https://github.com/json-api/json-api/pull/1156#issuecomment-325377995
  * @see https://www.drupal.org/project/drupal/issues/2864680
  */

@@ -31,7 +31,7 @@ use Drupal\jsonapi\JsonApiFilter;
  * reconciled with the specification, the module will always choose the
  * implementation most faithful to the specification.
  *
- * @see http://jsonapi.org/
+ * @see https://jsonapi.org/
  *
  * @section resources Resources
  * Every unit of data in the specification is a "resource". The specification
@@ -201,7 +201,7 @@ use Drupal\jsonapi\JsonApiFilter;
  * versions *will* remain backwards-compatible as only additions may be
  * released.
  *
- * @see http://jsonapi.org/faq/#what-is-the-meaning-of-json-apis-version
+ * @see https://jsonapi.org/faq/#what-is-the-meaning-of-json-apis-version
  *
  * Tests: subclasses of base test classes may contain BC breaks between minor
  * releases, to allow minor releases to A) comply better with the JSON:API spec,

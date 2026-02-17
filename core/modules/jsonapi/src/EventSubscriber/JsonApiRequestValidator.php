@@ -69,7 +69,7 @@ class JsonApiRequestValidator implements EventSubscriberInterface {
    * @return \Drupal\jsonapi\ResourceResponse|null
    *   A JSON:API resource response.
    *
-   * @see http://jsonapi.org/format/#query-parameters
+   * @see https://jsonapi.org/format/#query-parameters
    */
   protected function validateQueryParams(Request $request) {
     $invalid_query_params = [];
@@ -100,7 +100,7 @@ class JsonApiRequestValidator implements EventSubscriberInterface {
 
     $message = sprintf('The following query parameters violate the JSON:API spec: \'%s\'.', implode("', '", $invalid_query_params));
     $exception = new CacheableBadRequestHttpException((new CacheableMetadata())->addCacheContexts(['url.query_args']), $message);
-    $exception->setHeaders(['Link' => 'http://jsonapi.org/format/#query-parameters']);
+    $exception->setHeaders(['Link' => 'https://jsonapi.org/format/#query-parameters']);
     throw $exception;
   }
 
