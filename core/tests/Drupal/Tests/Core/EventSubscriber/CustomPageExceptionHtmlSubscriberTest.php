@@ -134,6 +134,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
    */
   protected function tearDown(): void {
     ini_set('error_log', $this->errorLog);
+    parent::tearDown();
   }
 
   /**

@@ -54,6 +54,7 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 abstract class BrowserTestBase extends TestCase {
 
+  use DrupalTestCaseTrait;
   use FunctionalTestSetupTrait;
   use UiHelperTrait {
     FunctionalTestSetupTrait::refreshVariables insteadof UiHelperTrait;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -17,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Unicode::class)]
 #[Group('Utility')]
 class UnicodeTest extends TestCase {
-  use ExpectDeprecationTrait;
 
   /**
    * Tests multibyte ucfirst.

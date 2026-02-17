@@ -13,10 +13,8 @@ use PHPUnit\Runner\ErrorHandler as PhpUnitErrorHandler;
  *
  * This code works in coordination with DeprecationHandler.
  *
- * This error handler is registered during PHPUnit's runner bootstrap, and is
- * essentially used to capture deprecations occurring before tests are run (for
- * example, deprecations triggered by the DebugClassloader). When test runs
- * are prepared, a test specific TestErrorHandler is activated instead.
+ * This error handler is registered during PHPUnit's runner bootstrap, and
+ * overrides PHPUnit's own error handler.
  *
  * @see \Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler
  *
@@ -53,12 +51,6 @@ final class BootstrapErrorHandler {
   public function __invoke(int $errorNumber, string $errorString, string $errorFile, int $errorLine): bool {
     if (!DeprecationHandler::isEnabled()) {
       throw new \RuntimeException(__METHOD__ . '() must not be called if the deprecation handler is not enabled.');
-    }
-
-    // We collect a deprecation no matter what.
-    if (E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) {
-      $prefix = (error_reporting() & $errorNumber) ? 'Unsilenced deprecation: ' : '';
-      DeprecationHandler::collectActualDeprecation($prefix . $errorString);
     }
 
     // If the deprecation handled is one of those in the ignore list, we keep

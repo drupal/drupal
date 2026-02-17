@@ -7,7 +7,6 @@ namespace Drupal\Tests\Component\PhpStorage;
 use Drupal\Component\PhpStorage\FileReadOnlyStorage;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Random;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -18,8 +17,6 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Drupal')]
 #[Group('PhpStorage')]
 class FileStorageReadOnlyTest extends PhpStorageTestBase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * Standard test settings to pass to storage instances.

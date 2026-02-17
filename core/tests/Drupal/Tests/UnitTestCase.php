@@ -36,6 +36,7 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 abstract class UnitTestCase extends TestCase {
 
+  use DrupalTestCaseTrait;
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;

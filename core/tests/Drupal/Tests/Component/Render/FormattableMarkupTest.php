@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -17,8 +16,6 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(FormattableMarkup::class)]
 #[Group('utility')]
 class FormattableMarkupTest extends TestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * The error message of the last error in the error handler.
