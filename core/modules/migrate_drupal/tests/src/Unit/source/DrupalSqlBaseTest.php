@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal\Unit\source;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase.
@@ -44,17 +47,13 @@ class DrupalSqlBaseTest extends MigrateTestCase {
 
   /**
    * Mock StateInterface.
-   *
-   * @var \PHPUnit\Framework\MockObject\MockObject
    */
-  protected $state;
+  protected StateInterface&MockObject $state;
 
   /**
    * Mock entity type manager.
-   *
-   * @var \PHPUnit\Framework\MockObject\MockObject
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface&MockObject $entityTypeManager;
 
   /**
    * Minimum database contents needed to test DrupalSqlBase.
