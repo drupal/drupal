@@ -53,7 +53,7 @@
         "phpstan/phpdoc-parser": "2.3.0",
         "phpstan/phpstan": "2.1.38",
         "phpstan/phpstan-deprecation-rules": "2.0.3",
-        "phpstan/phpstan-phpunit": "2.0.11",
+        "phpstan/phpstan-phpunit": "2.0.12",
         "phpunit/php-code-coverage": "11.0.12",
         "phpunit/php-file-iterator": "5.1.0",
         "phpunit/php-invoker": "5.0.1",
