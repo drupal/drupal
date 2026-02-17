@@ -346,7 +346,7 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
       );
     $normalized = $jsonapi_doc_object->getNormalization();
 
-    // @see http://jsonapi.org/format/#document-jsonapi-object
+    // @see https://jsonapi.org/format/#document-jsonapi-object
     $this->assertEquals(JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION, $normalized['jsonapi']['version']);
     $this->assertEquals(JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK, $normalized['jsonapi']['meta']['links']['self']['href']);
 

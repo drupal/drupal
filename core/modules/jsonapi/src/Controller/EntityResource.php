@@ -282,7 +282,7 @@ class EntityResource {
     static::validate($parsed_entity);
 
     // Return a 409 Conflict response in accordance with the JSON:API spec. See
-    // http://jsonapi.org/format/#crud-creating-responses-409.
+    // https://jsonapi.org/format/#crud-creating-responses-409.
     if ($this->entityExists($parsed_entity)) {
       throw new ConflictHttpException('Conflict: Entity already exists.');
     }
