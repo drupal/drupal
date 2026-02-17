@@ -6,7 +6,6 @@ namespace Drupal\Tests\Component\DependencyInjection;
 
 use Drupal\Component\DependencyInjection\Container;
 use Drupal\Component\Utility\Crypt;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +25,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 #[CoversClass(Container::class)]
 #[Group('DependencyInjection')]
 class ContainerTest extends TestCase {
-  use ExpectDeprecationTrait;
+
   use ProphecyTrait;
 
   /**

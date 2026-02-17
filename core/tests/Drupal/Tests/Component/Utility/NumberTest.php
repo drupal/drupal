@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Number;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -20,8 +19,6 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Number::class)]
 #[Group('Utility')]
 class NumberTest extends TestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * Tests Number::validStep() without offset.
@@ -179,9 +176,9 @@ class NumberTest extends TestCase {
   #[IgnoreDeprecations]
   public function testAlphadecimalToIntReturnsZeroWithNullAndEmptyString(): void {
     $deprecationMessage = 'Passing NULL or an empty string to Drupal\Component\Utility\Number::alphadecimalToInt() is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3494472';
-    $this->expectDeprecation($deprecationMessage);
+    $this->expectUserDeprecationMessage($deprecationMessage);
     $this->assertSame(0, Number::alphadecimalToInt(NULL));
-    $this->expectDeprecation($deprecationMessage);
+    $this->expectUserDeprecationMessage($deprecationMessage);
     $this->assertSame(0, Number::alphadecimalToInt(''));
   }
 

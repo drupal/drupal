@@ -218,6 +218,7 @@ abstract class FormTestBase extends UnitTestCase {
   protected function tearDown(): void {
     Html::resetSeenIds();
     (new FormState())->clearErrors();
+    parent::tearDown();
   }
 
   /**

@@ -25,6 +25,8 @@
 %Method "Iterator::[^"]+" might add "void" as a native return type declaration in the future. Do the same in implementation "org\\bovigo\\vfs\\vfsStreamContainerIterator" now to avoid errors or add an explicit @return annotation to suppress this message%
 
 # Drupal 12.
+%expectDeprecation\(\) is deprecated in drupal:11\.4\.0%
+%ExpectDeprecationTrait is deprecated in drupal:11\.4\.0%
 %The "Drupal\\Core\\Database\\Query\\Select::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 %The "Drupal\\Core\\Database\\Query\\Select::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 %The "Drupal\\Core\\Database\\Query\\SelectExtender::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%

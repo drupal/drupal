@@ -33,6 +33,7 @@ use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Test coverage for various classes in the \Drupal\Core\Ajax namespace.
@@ -496,7 +497,7 @@ class AjaxCommandsTest extends UnitTestCase {
    * @legacy-covers \Drupal\Core\Ajax\OpenDialogCommand
    * @legacy-covers \Drupal\Core\Ajax\OpenOffCanvasDialogCommand
    */
-  #[Group('legacy')]
+  #[IgnoreDeprecations]
   #[DataProvider('dialogCommandProvider')]
   public function testOpenDialogCommandClass(string $class, array $args, array $expected): void {
     $short = (new \ReflectionClass($class))->getShortName();

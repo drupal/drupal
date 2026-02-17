@@ -16,6 +16,7 @@ use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -235,7 +236,7 @@ class ViewsTest extends UnitTestCase {
   /**
    * Tests the ::pluginManager() deprecation.
    */
-  #[Group('legacy')]
+  #[IgnoreDeprecations]
   public function testPluginManagerDeprecation(): void {
     $this->expectDeprecation('Drupal\views\Views::pluginManager() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'plugin.manager.views.{type}\') for specific plugin types or \Drupal::service(\'views.plugin_managers\')->get($type) for dynamic types. See https://www.drupal.org/node/3566982');
 
@@ -248,7 +249,6 @@ class ViewsTest extends UnitTestCase {
       ->willReturn($plugin_manager);
     $this->container->set('views.plugin_managers', $locator);
 
-    // @phpstan-ignore staticMethod.deprecated
     $result = Views::pluginManager('display');
     $this->assertSame($plugin_manager, $result);
   }
@@ -256,7 +256,7 @@ class ViewsTest extends UnitTestCase {
   /**
    * Tests the ::handlerManager() deprecation.
    */
-  #[Group('legacy')]
+  #[IgnoreDeprecations]
   public function testHandlerManagerDeprecation(): void {
     $this->expectDeprecation('Drupal\views\Views::handlerManager() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'plugin.manager.views.{type}\') for specific handler types or \Drupal::service(\'views.plugin_managers\')->get($type) for dynamic types. See https://www.drupal.org/node/3566982');
 
@@ -269,7 +269,6 @@ class ViewsTest extends UnitTestCase {
       ->willReturn($handler_manager);
     $this->container->set('views.plugin_managers', $locator);
 
-    // @phpstan-ignore staticMethod.deprecated
     $result = Views::handlerManager('filter');
     $this->assertSame($handler_manager, $result);
   }

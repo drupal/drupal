@@ -230,4 +230,25 @@ JS);
     return $this->getWebDriverSession()->execute($options);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function executeScript(string $script): void {
+    parent::executeScript($script);
+    $this->processJavascriptDeprecations();
+  }
+
+  /**
+   * Re-triggers within PHPUnit Javascript deprecations from the front-end.
+   */
+  public function processJavascriptDeprecations(): void {
+    $warnings = $this->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]))");
+    foreach ($warnings as $warning) {
+      if (str_starts_with($warning, '[Deprecation]')) {
+        // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+        @trigger_error('Javascript Deprecation:' . substr($warning, 13), E_USER_DEPRECATED);
+      }
+    }
+  }
+
 }

@@ -12,11 +12,12 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Ensures Drupal has test coverage of Symfony's deprecation testing.
+ * Ensures test coverage for deprecation testing.
  */
 #[Group('Test')]
 #[IgnoreDeprecations]
 class ExpectDeprecationTest extends TestCase {
+
   use ExpectDeprecationTrait;
 
   /**
