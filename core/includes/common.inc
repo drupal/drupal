@@ -8,7 +8,6 @@
  * a cached page are instead located in bootstrap.inc.
  */
 
-use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheTagsPurgeInterface;
 use Drupal\Core\DrupalKernel;
@@ -479,52 +478,4 @@ function drupal_flush_all_caches($kernel = NULL): void {
     \Drupal::theme()->resetActiveTheme();
     drupal_maintenance_theme();
   }
-}
-
-/**
- * Assembles the Drupal Updater registry.
- *
- * An Updater is a class that knows how to update various parts of the Drupal
- * file system, for example to update modules that have newer releases, or to
- * install a new theme.
- *
- * @return array
- *   The Drupal Updater class registry.
- *
- * @see \Drupal\Core\Updater\Updater
- * @see hook_updater_info()
- * @see hook_updater_info_alter()
- */
-function drupal_get_updaters() {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
-
-  $updaters = &drupal_static(__FUNCTION__);
-  if (!isset($updaters)) {
-    $updaters = \Drupal::moduleHandler()->invokeAllDeprecated('There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', 'updater_info');
-    \Drupal::moduleHandler()->alterDeprecated('There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', 'updater_info', $updaters);
-    uasort($updaters, [SortArray::class, 'sortByWeightElement']);
-  }
-  return $updaters;
-}
-
-/**
- * Assembles the Drupal FileTransfer registry.
- *
- * @return array
- *   The Drupal FileTransfer class registry.
- *
- * @see \Drupal\Core\FileTransfer\FileTransfer
- * @see hook_filetransfer_info()
- * @see hook_filetransfer_info_alter()
- */
-function drupal_get_filetransfer_info() {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
-
-  $info = &drupal_static(__FUNCTION__);
-  if (!isset($info)) {
-    $info = \Drupal::moduleHandler()->invokeAllDeprecated('There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', 'filetransfer_info');
-    \Drupal::moduleHandler()->alterDeprecated('There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', 'filetransfer_info', $info);
-    uasort($info, [SortArray::class, 'sortByWeightElement']);
-  }
-  return $info;
 }

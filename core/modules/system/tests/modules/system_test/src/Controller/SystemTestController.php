@@ -17,9 +17,7 @@ use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -284,17 +282,6 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   public static function preRenderCacheTags($elements) {
     $elements['#cache']['tags'][] = 'pre_render';
     return $elements;
-  }
-
-  /**
-   * Initialize authorize.php during testing.
-   *
-   * @see system_authorized_init()
-   */
-  public function authorizeInit($page_title) {
-    $authorize_url = Url::fromUri('base:core/authorize.php', ['absolute' => TRUE])->toString();
-    system_authorized_init('system_test_authorize_run', __DIR__ . '/../../system_test.module', [], $page_title);
-    return new RedirectResponse($authorize_url);
   }
 
   /**

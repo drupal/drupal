@@ -4,11 +4,6 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
-  access_check.update.manager_access:
-    class: Drupal\update\Access\UpdateManagerAccessCheck
-    arguments: ['@settings']
-    tags:
-      - { name: access_check, applies_to: _access_update_manager }
   update.manager:
     class: Drupal\update\UpdateManager
     arguments: ['@config.factory', '@module_handler', '@update.processor', '@string_translation', '@keyvalue.expirable', '@theme_handler', '@extension.list.module', '@extension.list.theme']
@@ -21,10 +16,6 @@ services:
     class: Drupal\update\UpdateFetcher
     arguments: ['@config.factory', '@http_client', '@settings', '@logger.channel.update']
   Drupal\update\UpdateFetcherInterface: '@update.fetcher'
-  update.root:
-    class: Drupal\update\UpdateRoot
-    arguments: ['@kernel', '@request_stack']
-    deprecated: The "%service_id%" service is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3522119
   logger.channel.update:
     parent: logger.channel_base
     arguments: [ 'update' ]

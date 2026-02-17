@@ -236,10 +236,6 @@ class SystemThemeHooks {
   }
 
   /**
-   * @} End of "defgroup authorize".
-   */
-
-  /**
    * Implements hook_preprocess_HOOK() for block templates.
    */
   #[Hook('preprocess_block')]

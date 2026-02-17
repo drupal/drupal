@@ -15,7 +15,6 @@ namespace Drupal\Core\Render;
  * Examples of bare HTML pages are:
  * - install.php
  * - update.php
- * - authorize.php
  * - maintenance mode
  * - exception handlers
  *
