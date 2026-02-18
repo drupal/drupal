@@ -59,6 +59,11 @@ class ViewsData {
   protected $fullyLoaded = FALSE;
 
   /**
+   * Flag that indicates whether views data are currently being loaded.
+   */
+  protected bool $loading = FALSE;
+
+  /**
    * The current language code.
    *
    * @var string
@@ -103,6 +108,14 @@ class ViewsData {
    *   An array of table data.
    */
   public function getAll() {
+    if ($this->loading && \Fiber::getCurrent() !== NULL) {
+      // The loading flag is set in ::getData(). If 'loading' is TRUE when
+      // entering here, that indicates a separate fiber started loading views
+      // data but has not completed. Suspend this fiber once to give the other
+      // fiber a chance to complete loading.
+      \Fiber::suspend();
+    }
+
     if (!$this->fullyLoaded) {
       $this->allStorage = $this->getData();
     }
@@ -127,6 +140,15 @@ class ViewsData {
     if (!$key) {
       throw new \InvalidArgumentException('A valid cache entry key is required. Use getAll() to get all table data.');
     }
+
+    if ($this->loading && \Fiber::getCurrent() !== NULL) {
+      // The loading flag is set in ::getData(). If 'loading' is TRUE when
+      // entering here, that indicates a separate fiber started loading views
+      // data but has not completed. Suspend this fiber once to give the other
+      // fiber a chance to complete loading.
+      \Fiber::suspend();
+    }
+
     if (!isset($this->storage[$key])) {
       // Prepare a cache ID for get and set.
       $cid = $this->baseCid . ':' . $key;
@@ -208,12 +230,16 @@ class ViewsData {
    *   An array of all data.
    */
   protected function getData() {
-    $this->fullyLoaded = TRUE;
-
-    if ($data = $this->cacheGet($this->baseCid)) {
-      return $data->data;
+    if ($cache = $this->cacheGet($this->baseCid)) {
+      $data = $cache->data;
     }
     else {
+      // Set the loading flag in case this is running in a fiber and gets
+      // suspended before the views data is fully loaded. Other code that calls
+      // this method and runs in a separate fiber can check the loading flag
+      // and suspend its fiber once to allow the original fiber a chance to
+      // finish loading.
+      $this->loading = TRUE;
       $data = [];
       $this->moduleHandler->invokeAllWith('views_data', function (callable $hook, string $module) use (&$data) {
         $views_data = $hook();
@@ -231,9 +257,12 @@ class ViewsData {
 
       // Keep a record with all data.
       $this->cacheSet($this->baseCid, $data);
-
-      return $data;
     }
+
+    $this->fullyLoaded = TRUE;
+    $this->loading = FALSE;
+
+    return $data;
   }
 
   /**

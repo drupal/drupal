@@ -11,6 +11,7 @@ use Drupal\views\ViewsData;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests Drupal\views\ViewsData.
@@ -660,6 +661,313 @@ class ViewsDataTest extends UnitTestCase {
       [''],
       [0],
     ];
+  }
+
+  /**
+   * Tests that fullyLoaded is only set to TRUE after data is completely loaded.
+   *
+   * This test ensures that the fullyLoaded property is not set prematurely.
+   */
+  public function testFullyLoadedPropertySetAfterDataLoad(): void {
+    $expected_views_data = $this->viewsDataWithProvider();
+
+    // Use reflection to access the protected fullyLoaded property.
+    $reflection = new \ReflectionClass($this->viewsData);
+    $fullyLoaded_property = $reflection->getProperty('fullyLoaded');
+
+    // Verify fullyLoaded starts as FALSE.
+    $this->assertFalse($fullyLoaded_property->getValue($this->viewsData));
+
+    $this->setupMockedModuleHandler();
+
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('views_data', $expected_views_data);
+
+    $this->cacheBackend->expects($this->once())
+      ->method('get')
+      ->with("views_data:en")
+      ->willReturn(FALSE);
+
+    // Request all views data.
+    $views_data = $this->viewsData->getAll();
+
+    // After getAll() completes, fullyLoaded should be TRUE.
+    $this->assertTrue($fullyLoaded_property->getValue($this->viewsData));
+    $this->assertSame($expected_views_data, $views_data);
+  }
+
+  /**
+   * Tests that fullyLoaded is TRUE when data is loaded from cache.
+   *
+   * When views data is retrieved from cache, fullyLoaded should still be
+   * set to TRUE after the data retrieval is complete.
+   */
+  public function testFullyLoadedPropertySetAfterCacheLoad(): void {
+    $expected_views_data = $this->viewsDataWithProvider();
+
+    // Use reflection to access the protected fullyLoaded property.
+    $reflection = new \ReflectionClass($this->viewsData);
+    $fullyLoaded_property = $reflection->getProperty('fullyLoaded');
+
+    // Verify fullyLoaded starts as FALSE.
+    $this->assertFalse($fullyLoaded_property->getValue($this->viewsData));
+
+    // Mock that data is already cached.
+    $this->cacheBackend->expects($this->once())
+      ->method('get')
+      ->with("views_data:en")
+      ->willReturn((object) ['data' => $expected_views_data]);
+
+    // No module hooks should be invoked since data comes from cache.
+    $this->moduleHandler->expects($this->never())
+      ->method('invokeAllWith');
+
+    // Request all views data from cache.
+    $views_data = $this->viewsData->getAll();
+
+    // After getAll() completes with cached data, fullyLoaded should be TRUE.
+    $this->assertTrue($fullyLoaded_property->getValue($this->viewsData));
+    $this->assertSame($expected_views_data, $views_data);
+  }
+
+  /**
+   * Tests that fullyLoaded prevents redundant data loading.
+   *
+   * Once fullyLoaded is TRUE, the subsequent calls to getAll() should not
+   * trigger data rebuilding or cache lookups.
+   */
+  public function testFullyLoadedPreventsRedundantLoading(): void {
+    $expected_views_data = $this->viewsDataWithProvider();
+
+    $this->setupMockedModuleHandler();
+
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('views_data', $expected_views_data);
+
+    // Cache should only be checked once.
+    $this->cacheBackend->expects($this->once())
+      ->method('get')
+      ->with("views_data:en")
+      ->willReturn(FALSE);
+
+    // First call loads the data.
+    $views_data = $this->viewsData->getAll();
+    $this->assertSame($expected_views_data, $views_data);
+
+    // Use reflection to verify fullyLoaded is now TRUE.
+    $reflection = new \ReflectionClass($this->viewsData);
+    $fullyLoaded_property = $reflection->getProperty('fullyLoaded');
+    $this->assertTrue($fullyLoaded_property->getValue($this->viewsData));
+
+    // The Second call should use stored data without cache checks.
+    $views_data = $this->viewsData->getAll();
+    $this->assertSame($expected_views_data, $views_data);
+
+    // Third call to verify consistency.
+    $views_data = $this->viewsData->getAll();
+    $this->assertSame($expected_views_data, $views_data);
+  }
+
+  /**
+   * Tests that clear() resets the fullyLoaded property.
+   *
+   * After calling clear(), fullyLoaded should be reset to FALSE so that
+   * data can be reloaded on the next request.
+   */
+  public function testClearResetsFullyLoaded(): void {
+    $expected_views_data = $this->viewsDataWithProvider();
+
+    $this->setupMockedModuleHandler();
+
+    $this->moduleHandler->expects($this->exactly(2))
+      ->method('alter')
+      ->with('views_data', $expected_views_data);
+
+    // Cache will be checked twice (before and after clear).
+    $this->cacheBackend->expects($this->exactly(2))
+      ->method('get')
+      ->with("views_data:en")
+      ->willReturn(FALSE);
+
+    $this->cacheTagsInvalidator->expects($this->once())
+      ->method('invalidateTags')
+      ->with(['views_data']);
+
+    // Use reflection to access the protected fullyLoaded property.
+    $reflection = new \ReflectionClass($this->viewsData);
+    $fullyLoaded_property = $reflection->getProperty('fullyLoaded');
+
+    // Load data initially.
+    $this->viewsData->getAll();
+    $this->assertTrue($fullyLoaded_property->getValue($this->viewsData));
+
+    // Clear the data.
+    $this->viewsData->clear();
+
+    // After clear, fullyLoaded should be FALSE again.
+    $this->assertFalse($fullyLoaded_property->getValue($this->viewsData));
+
+    // Load data again to verify it works after clear.
+    $views_data = $this->viewsData->getAll();
+    $this->assertSame($expected_views_data, $views_data);
+    $this->assertTrue($fullyLoaded_property->getValue($this->viewsData));
+  }
+
+  /**
+   * Tests fullyLoaded with get() method triggering full data load.
+   *
+   * When get() is called for a specific table and no cache exists,
+   * it triggers getData() which should set fullyLoaded to TRUE.
+   */
+  public function testFullyLoadedSetByGetMethod(): void {
+    $table_name = 'views_test_data';
+    $expected_views_data = $this->viewsDataWithProvider();
+
+    // Use reflection to access the protected fullyLoaded property.
+    $reflection = new \ReflectionClass($this->viewsData);
+    $fullyLoaded_property = $reflection->getProperty('fullyLoaded');
+
+    $this->assertFalse($fullyLoaded_property->getValue($this->viewsData));
+
+    $this->setupMockedModuleHandler();
+
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('views_data', $expected_views_data);
+
+    // No table-specific or full cache exists.
+    $gets = ["views_data:$table_name:en", 'views_data:en'];
+    $this->cacheBackend->expects($this->exactly(count($gets)))
+      ->method('get')
+      ->with($this->callback(function (string $key) use (&$gets): bool {
+        return $key === array_shift($gets);
+      }))
+      ->willReturn(FALSE);
+
+    // Get specific table data, which triggers full data load.
+    $views_data = $this->viewsData->get($table_name);
+
+    // After get() triggers getData(), fullyLoaded should be TRUE.
+    $this->assertTrue($fullyLoaded_property->getValue($this->viewsData));
+    $this->assertSame($expected_views_data[$table_name], $views_data);
+  }
+
+  /**
+   * Tests that concurrent fibers retrieving views data cache entries correctly.
+   *
+   * This tests the fix for the fiber race condition where:
+   * 1. Fiber A calls get($table) or getAll(), which triggers getData()
+   * 2. getData() invokes module hooks which may suspend the fiber
+   * 3. Fiber B calls get($table) or getAll(), sees fullyLoaded is FALSE
+   * 4. Fiber B correctly calls getData() again (not skipping it)
+   * 5. Both fibers get correct data, no empty cache entries written
+   *
+   * The fix ensures fullyLoaded is set to TRUE only AFTER data is obtained,
+   * not at the start of getData().
+   *
+   * This test also covers combinations of get() and getAll() in the two
+   * fibers.
+   */
+  #[TestWith(['get', 'get', 2, 2])]
+  #[TestWith(['getAll', 'getAll', 1, 1])]
+  #[TestWith(['get', 'getAll', 2, 2])]
+  #[TestWith(['getAll', 'get', 1, 1])]
+  public function testConcurrentFiberAccess(
+    string $first_fiber_method,
+    string $second_fiber_method,
+    int $expected_cache_get_count,
+    int $expected_cache_set_count,
+  ): void {
+    $expected_views_data = $this->viewsDataWithProvider();
+    $table_name = 'views_test_data';
+
+    // In getData(), the module handler will suspend the fiber during hook
+    // invocation. This should happen only once, because the 'loading' property
+    // being TRUE will suspend the second fiber before it can enter getData().
+    $cache_sets = [];
+    $this->moduleHandler->expects($this->once())
+      ->method('invokeAllWith')
+      ->with('views_data')
+      ->willReturnCallback(function ($hook, $callback) {
+        // Suspend the fiber to simulate async operation during hook.
+        if (\Fiber::getCurrent() !== NULL) {
+          \Fiber::suspend();
+        }
+        $callback(\Closure::fromCallable([$this, 'viewsData']), 'views_test_data');
+      });
+
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('views_data', $this->anything());
+
+    // Cache operation counts for fiber method combinations (first, second):
+    // (get, get): First fiber calls cacheGet() once in get(), once in
+    // getData(), and cacheSet() once in get(), once in getData().
+    // (getAll, getAll): First fiber calls cacheGet() once in getData() and
+    // cacheSet() once in getData().
+    // (get, getAll): First fiber calls cacheGet once in get(), once in
+    // getData(), and cacheSet() once in get(), once in getData().
+    // (getAll, get): First fiber calls cacheGet() once in getData() and
+    // cacheSet once in getData().
+    // For all combinations, the second fiber does not make any cache operation
+    // calls, because views data has been loaded into the allStorage and storage
+    // properties.
+    $this->cacheBackend->expects($this->exactly($expected_cache_get_count))
+      ->method('get')
+      ->willReturnCallback(function (string $cid) use (&$cache_sets) {
+        return $cache_sets[$cid] ?? NULL;
+      });
+
+    $this->cacheBackend->expects($this->exactly($expected_cache_set_count))
+      ->method('set')
+      ->willReturnCallback(function ($cid, $data) use (&$cache_sets) {
+        $cache_sets[$cid] = (object) ['data' => $data];
+      });
+
+    // Create two fibers simulating concurrent requests to get views data.
+    $first_fiber = new \Fiber(fn () => $this->viewsData->$first_fiber_method($table_name));
+    $second_fiber = new \Fiber(fn () => $this->viewsData->$second_fiber_method($table_name));
+
+    $fibers = [$first_fiber, $second_fiber];
+    $suspended = FALSE;
+
+    // Process fibers until all complete.
+    do {
+      foreach ($fibers as $key => $fiber) {
+        if (!$fiber->isStarted()) {
+          $fiber->start();
+        }
+        elseif ($fiber->isSuspended()) {
+          $suspended = TRUE;
+          $fiber->resume();
+        }
+        elseif ($fiber->isTerminated()) {
+          unset($fibers[$key]);
+        }
+      }
+    } while (!empty($fibers));
+
+    // Ensure fibers were actually suspended to validate the test scenario.
+    $this->assertTrue($suspended);
+
+    // Both fibers should return the correct data. If get() is running in the
+    // fiber, the expected data is for one table. If getAll() is running in
+    // the fiber, the expected data is for all tables.
+    foreach ([$first_fiber_method, $second_fiber_method] as $method) {
+      $expected_results[] = $method === 'get' ? $expected_views_data[$table_name] : $expected_views_data;
+    }
+
+    $this->assertSame($expected_results[0], $first_fiber->getReturn());
+    $this->assertSame($expected_results[1], $second_fiber->getReturn());
+
+    // Verify no empty cache entries were written.
+    foreach ($cache_sets as $cid => $data) {
+      if (str_contains($cid, $table_name)) {
+        $this->assertNotEmpty($data);
+      }
+    }
   }
 
 }
