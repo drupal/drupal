@@ -57,12 +57,11 @@
         {% if not settings.hide_logo %}
           <a class="admin-toolbar__logo" href="{{ path('<front>') }}">
             {% if settings.logo_path is not null %}
-              <img alt="{{ 'Navigation logo'|t }}" src="{{ settings.logo_path }}" loading="eager" width="{{ settings.logo_width|default(40) }}" height="{{ settings.logo_height|default(40) }}">
+              <img src="{{ file_url(settings.logo_path) }}" loading="eager" width="{{ settings.logo_width|default(40) }}" height="{{ settings.logo_height|default(40) }}" role="presentation" aria-hidden="true" focusable="false">
             {% else %}
-              {% include '@navigation/logo.svg.twig' with {
-                label: 'Navigation logo'|t
-              } only %}
+              {% include '@navigation/logo.svg.twig' only %}
             {% endif %}
+            <span class="visually-hidden">{{ 'Home page'|t }}</span>
           </a>
         {% endif %}
         {% include 'navigation:toolbar-button' with {
