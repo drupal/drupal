@@ -369,6 +369,7 @@ Serialization
 
 Settings Tray
 - Mark Conroy 'markconroy' https://www.drupal.org/u/markconroy
+- Chris Weber 'cosmicdreams' https://www.drupal.org/u/cosmicdreams
 
 Shortcut
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
