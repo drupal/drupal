@@ -75,15 +75,15 @@ class SelectExtender implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasAllTags() {
-    return call_user_func_array([$this->query, 'hasAllTags'], func_get_args());
+  public function hasAllTags(string ...$tags) {
+    return call_user_func_array([$this->query, 'hasAllTags'], $tags);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasAnyTag() {
-    return call_user_func_array([$this->query, 'hasAnyTag'], func_get_args());
+  public function hasAnyTag(string ...$tags) {
+    return call_user_func_array([$this->query, 'hasAnyTag'], $tags);
   }
 
   /**

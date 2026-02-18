@@ -9,7 +9,6 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\Core\Database\RowCountException.
@@ -49,10 +48,7 @@ class RowCountExceptionTest extends UnitTestCase {
 
   /**
    * Tests exception message null.
-   *
-   * @legacy-covers ::__construct
    */
-  #[IgnoreDeprecations]
   public function testExceptionMessageNull(): void {
     $e = new RowCountException(NULL);
     $this->assertSame(self::DEFAULT_EXCEPTION_MESSAGE, $e->getMessage());

@@ -34,7 +34,6 @@ use Drupal\Core\Database\StatementIteratorTrait;
 abstract class StatementBase implements \Iterator, StatementInterface {
 
   use FetchModeTrait;
-  use PdoTrait;
   use StatementIteratorTrait;
 
   /**
@@ -209,10 +208,6 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    if (is_int($mode)) {
-      @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $mode = $this->pdoToFetchAs($mode);
-    }
     assert($mode instanceof FetchAs);
 
     $this->fetchMode = $mode;
@@ -246,10 +241,6 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetch($mode = NULL, $cursorOrientation = NULL, $cursorOffset = NULL) {
-    if (is_int($mode)) {
-      @trigger_error("Passing the \$mode argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $mode = $this->pdoToFetchAs($mode);
-    }
     assert($mode === NULL || $mode instanceof FetchAs);
 
     $fetchOptions = match(func_num_args()) {
@@ -321,11 +312,6 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $columnIndex = NULL, $constructorArguments = NULL) {
-    if (is_int($mode)) {
-      @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $mode = $this->pdoToFetchAs($mode);
-    }
-
     assert($mode === NULL || $mode instanceof FetchAs);
 
     $fetchMode = $mode ?? $this->fetchMode;
@@ -354,10 +340,6 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllAssoc($key, $fetch = NULL) {
-    if (is_int($fetch)) {
-      @trigger_error("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $fetch = $this->pdoToFetchAs($fetch);
-    }
     assert($fetch === NULL || $fetch instanceof FetchAs);
 
     $result = $this->result->fetchAllAssoc($key, $fetch ?? $this->fetchMode, $this->fetchOptions);

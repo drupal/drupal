@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\PrefetchedResult;
 use Drupal\Core\Database\Statement\StatementBase;
 
@@ -15,62 +16,7 @@ use Drupal\Core\Database\Statement\StatementBase;
  */
 class StatementPrefetchIterator extends StatementBase {
 
-  /**
-   * Main data store.
-   *
-   * The resultset is stored as a FetchAs::Associative array.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
-   * instead.
-   *
-   * @see https://www.drupal.org/node/3510455
-   */
-  protected array $data = [];
-
-  /**
-   * The list of column names in this result set.
-   *
-   * @var string[]
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
-   * instead.
-   *
-   * @see https://www.drupal.org/node/3510455
-   */
-  protected ?array $columnNames = NULL;
-
-  /**
-   * The number of rows matched by the last query.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
-   * instead.
-   *
-   * @see https://www.drupal.org/node/3510455
-   */
-  protected ?int $rowCount = NULL;
-
-  /**
-   * Holds the default fetch style.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * $fetchMode instead.
-   *
-   * @see https://www.drupal.org/node/3488338
-   */
-  protected int $defaultFetchStyle = \PDO::FETCH_OBJ;
-
-  /**
-   * Holds the default fetch mode.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * $fetchMode instead.
-   *
-   * @see https://www.drupal.org/node/3510455
-   */
-  protected FetchAs $defaultFetchMode = FetchAs::Object;
+  use PdoTrait;
 
   /**
    * Constructs a StatementPrefetchIterator object.
@@ -119,9 +65,7 @@ class StatementPrefetchIterator extends StatementBase {
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
-    if (isset($options['fetch']) && is_int($options['fetch'])) {
-      @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-    }
+    assert(!isset($options['fetch']) || $options['fetch'] instanceof FetchAs || is_string($options['fetch']), 'The "fetch" option passed to execute() must contain a FetchAs enum case or a string. See https://www.drupal.org/node/3488338');
 
     $startEvent = $this->dispatchStatementExecutionStartEvent($args ?? []);
 
@@ -132,6 +76,7 @@ class StatementPrefetchIterator extends StatementBase {
     }
     catch (\Exception $e) {
       $this->dispatchStatementExecutionFailureEvent($startEvent, $e);
+      // @phpstan-ignore unset.possiblyHookedProperty
       unset($this->clientStatement);
       throw $e;
     }
@@ -145,6 +90,7 @@ class StatementPrefetchIterator extends StatementBase {
       $this->clientFetchAll(FetchAs::Associative),
       $this->rowCountEnabled ? $this->clientRowCount() : NULL,
     );
+    // @phpstan-ignore unset.possiblyHookedProperty
     unset($this->clientStatement);
     $this->markResultsetIterable($return);
 
@@ -181,17 +127,6 @@ class StatementPrefetchIterator extends StatementBase {
    */
   protected function getStatement(string $query, ?array &$args = []): object {
     return $this->connection->prepare($query, $this->driverOptions);
-  }
-
-  /**
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   *   ::fetchField() instead.
-   *
-   * @see https://www.drupal.org/node/3490312
-   */
-  public function fetchColumn($index = 0) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ::fetchField() instead. See https://www.drupal.org/node/3490312', E_USER_DEPRECATED);
-    return $this->fetchField($index);
   }
 
 }

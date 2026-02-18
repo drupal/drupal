@@ -497,8 +497,6 @@ abstract class Database {
    *
    * @param string $url
    *   The URL.
-   * @param string|bool|null $root
-   *   (deprecated) The root directory of the Drupal installation.
    * @param bool|null $include_test_drivers
    *   (optional) Whether to include test extensions. If FALSE, all 'tests'
    *   directories are excluded in the search. When NULL will be determined by
@@ -513,16 +511,7 @@ abstract class Database {
    * @throws \RuntimeException
    *   Exception thrown when a module provided database driver does not exist.
    */
-  public static function convertDbUrlToConnectionInfo(string $url, $root = NULL, ?bool $include_test_drivers = NULL): array {
-    if ($root !== NULL) {
-      if (is_bool($root)) {
-        $include_test_drivers = $root;
-      }
-      else {
-        @trigger_error("Passing a string \$root value to " . __METHOD__ . "() is deprecated in drupal:11.3.0 and will be removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3511287", E_USER_DEPRECATED);
-      }
-    }
-
+  public static function convertDbUrlToConnectionInfo(string $url, ?bool $include_test_drivers = NULL): array {
     // Check that the URL is well formed, starting with 'scheme://', where
     // 'scheme' is a database driver name.
     if (preg_match('/^(.*):\/\//', $url, $matches) !== 1) {
@@ -570,7 +559,7 @@ abstract class Database {
 
     $additional_class_loader->register(TRUE);
 
-    $options = $connection_class::createConnectionOptionsFromUrl($url, NULL);
+    $options = $connection_class::createConnectionOptionsFromUrl($url);
 
     // Add the necessary information to autoload code.
     // @see \Drupal\Core\Site\Settings::initialize()

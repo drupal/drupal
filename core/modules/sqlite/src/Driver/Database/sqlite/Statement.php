@@ -4,6 +4,7 @@ namespace Drupal\sqlite\Driver\Database\sqlite;
 
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementPrefetchIterator;
+use Drupal\Core\Database\Statement\FetchAs;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Statement.
@@ -86,9 +87,7 @@ class Statement extends StatementPrefetchIterator implements StatementInterface 
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
-    if (isset($options['fetch']) && is_int($options['fetch'])) {
-      @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-    }
+    assert(!isset($options['fetch']) || $options['fetch'] instanceof FetchAs || is_string($options['fetch']), 'The "fetch" option passed to execute() must contain a FetchAs enum case or a string. See https://www.drupal.org/node/3488338');
 
     try {
       $return = parent::execute($args, $options);

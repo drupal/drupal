@@ -27,12 +27,6 @@
 # Drupal 12.
 %expectDeprecation\(\) is deprecated in drupal:11\.4\.0%
 %ExpectDeprecationTrait is deprecated in drupal:11\.4\.0%
-%The "Drupal\\Core\\Database\\Query\\Select::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
-%The "Drupal\\Core\\Database\\Query\\Select::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
-%The "Drupal\\Core\\Database\\Query\\SelectExtender::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
-%The "Drupal\\Core\\Database\\Query\\SelectExtender::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
-%The "Drupal\\Core\\Entity\\Query\\QueryBase::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
-%The "Drupal\\Core\\Entity\\Query\\QueryBase::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
 %The "Drupal\\workspaces\\WorkspaceManager::setActiveWorkspace\(\)" method will require a new "bool \$persist" argument in the next major version of its interface%
 %The "Drupal\\(?:Core\\(?:Action|Field|Condition)|(?:user|action_test|action_bulk_test|user_batch_action_test)\\Plugin\\Action)\\.*::execute\(\)" method will require a new "object\|null \$object" argument in the next major version of its interface "Drupal\\Core\\Executable\\ExecutableInterface"%
 %The "(?:Drupal\\Core\\Layout\\LayoutPluginManagerInterface|Drupal\\Core\\Block\\BlockManager)::get(?:Sorted|Grouped)Definitions\(\)" method will require a new "string \$label_key" argument in the next major version of its interface "Drupal\\Component\\Plugin\\CategorizingPluginManagerInterface"%

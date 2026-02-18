@@ -4,6 +4,7 @@ namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoResult;
+use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\StatementBase;
 
 /**
@@ -11,15 +12,7 @@ use Drupal\Core\Database\Statement\StatementBase;
  */
 class StatementWrapperIterator extends StatementBase {
 
-  /**
-   * Holds the default fetch mode.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * $fetchMode instead.
-   *
-   * @see https://www.drupal.org/node/3510455
-   */
-  protected FetchAs $defaultFetchMode = FetchAs::Object;
+  use PdoTrait;
 
   /**
    * Constructs a StatementWrapperIterator object.
@@ -70,9 +63,7 @@ class StatementWrapperIterator extends StatementBase {
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
-    if (isset($options['fetch']) && is_int($options['fetch'])) {
-      @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-    }
+    assert(!isset($options['fetch']) || $options['fetch'] instanceof FetchAs || is_string($options['fetch']), 'The "fetch" option passed to execute() must contain a FetchAs enum case or a string. See https://www.drupal.org/node/3488338');
 
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
