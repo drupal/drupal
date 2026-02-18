@@ -3,20 +3,12 @@
 namespace Drupal\workspaces;
 
 use Drupal\workspaces\Event\WorkspaceSwitchEvent;
-use Drupal\workspaces\Hook\WorkspacesHooks;
-use Drupal\workspaces\Negotiator\WorkspaceNegotiatorInterface;
-use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides the workspace manager.
- *
- * @property iterable $negotiators
- * @property \Closure $entityTypeManager
- * @property \Closure $eventDispatcher
  */
 class WorkspaceManager implements WorkspaceManagerInterface {
 
@@ -28,35 +20,15 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    */
   protected WorkspaceInterface|false|null $activeWorkspace = NULL;
 
-  /**
-   * An array of workspace negotiator services.
-   *
-   * @todo Remove in drupal:12.0.0.
-   */
-  private array $collectedNegotiators = [];
-
   public function __construct(
     protected RequestStack $requestStack,
     #[AutowireIterator(tag: 'workspace_negotiator')]
-    protected $negotiators,
+    protected iterable $negotiators,
     #[AutowireServiceClosure('entity_type.manager')]
-    protected $entityTypeManager,
+    protected \Closure $entityTypeManager,
     #[AutowireServiceClosure('event_dispatcher')]
-    protected $eventDispatcher,
-  ) {
-    if (!$negotiators instanceof \IteratorAggregate) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $negotiators argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3532939', E_USER_DEPRECATED);
-      $this->negotiators = $this->collectedNegotiators;
-    }
-    if (!$entityTypeManager instanceof \Closure) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3532939', E_USER_DEPRECATED);
-      $this->eventDispatcher = new ServiceClosureArgument(new Reference('entity_type.manager'));
-    }
-    if (!$eventDispatcher instanceof \Closure) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $eventDispatcher argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3532939', E_USER_DEPRECATED);
-      $this->eventDispatcher = new ServiceClosureArgument(new Reference('event_dispatcher'));
-    }
-  }
+    protected \Closure $eventDispatcher,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -105,9 +77,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function setActiveWorkspace(WorkspaceInterface $workspace, /* bool $persist = TRUE */) {
-    $persist = func_num_args() < 2 || func_get_arg(1);
-
+  public function setActiveWorkspace(WorkspaceInterface $workspace, bool $persist = TRUE) {
     $this->doSwitchWorkspace($workspace);
 
     // Set the workspace on the first applicable negotiator.
@@ -209,28 +179,6 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     }
 
     return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function purgeDeletedWorkspacesBatch() {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3553582', E_USER_DEPRECATED);
-    \Drupal::service(WorkspacesHooks::class)->cron();
-  }
-
-  /**
-   * Adds a workspace negotiator service.
-   *
-   * @param \Drupal\workspaces\Negotiator\WorkspaceNegotiatorInterface $negotiator
-   *   The negotiator to be added.
-   *
-   * @todo Remove in drupal:12.0.0.
-   *
-   * @internal
-   */
-  public function addNegotiator(WorkspaceNegotiatorInterface $negotiator): void {
-    $this->collectedNegotiators[] = $negotiator;
   }
 
 }

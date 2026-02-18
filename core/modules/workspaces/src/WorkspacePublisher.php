@@ -33,13 +33,8 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
     protected EventDispatcherInterface $eventDispatcher,
     protected WorkspaceInterface $sourceWorkspace,
     protected LoggerInterface $logger,
-    protected ?TimeInterface $time = NULL,
-  ) {
-    if ($time === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $time argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3531039', E_USER_DEPRECATED);
-      $this->time = \Drupal::time();
-    }
-  }
+    protected TimeInterface $time,
+  ) {}
 
   /**
    * {@inheritdoc}

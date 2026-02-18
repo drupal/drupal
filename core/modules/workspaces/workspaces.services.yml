@@ -1,28 +1,5 @@
 parameters:
   workspaces.skip_procedural_hook_scan: true
-  workspaces.moved_classes:
-    'Drupal\workspaces\Form\SwitchToLiveForm':
-      class: 'Drupal\workspaces_ui\Form\SwitchToLiveForm'
-    'Drupal\workspaces\Form\WorkspaceActivateForm':
-      class: 'Drupal\workspaces_ui\Form\WorkspaceActivateForm'
-    'Drupal\workspaces\Form\WorkspaceDeleteForm':
-      class: 'Drupal\workspaces_ui\Form\WorkspaceDeleteForm'
-    'Drupal\workspaces\Form\WorkspaceForm':
-      class: 'Drupal\workspaces_ui\Form\WorkspaceForm'
-    'Drupal\workspaces\Form\WorkspaceMergeForm':
-      class: 'Drupal\workspaces_ui\Form\WorkspaceMergeForm'
-    'Drupal\workspaces\Form\WorkspacePublishForm':
-      class: 'Drupal\workspaces_ui\Form\WorkspacePublishForm'
-    'Drupal\workspaces\Form\WorkspaceSwitcherForm':
-      class: 'Drupal\workspaces_ui\Form\WorkspaceSwitcherForm'
-    'Drupal\workspaces\WorkspaceViewBuilder':
-      class: 'Drupal\workspaces_ui\WorkspaceViewBuilder'
-    'Drupal\workspaces\WorkspaceListBuilder':
-      class: 'Drupal\workspaces_ui\WorkspaceListBuilder'
-    'Drupal\workspaces\WorkspacesLazyBuilders':
-      class: 'Drupal\workspaces_ui\WorkspacesUiLazyBuilders'
-    'Drupal\workspaces\Plugin\Block\WorkspaceSwitcherBlock':
-      class: 'Drupal\workspaces_ui\Plugin\Block\WorkspaceSwitcherBlock'
 
 services:
   _defaults:
@@ -30,8 +7,6 @@ services:
   workspaces.manager:
     class: Drupal\workspaces\WorkspaceManager
     autowire: true
-    tags:
-      - { name: service_collector, call: addNegotiator, tag: workspace_negotiator }
   Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
   workspaces.information:
     class: Drupal\workspaces\WorkspaceInformation
@@ -41,11 +16,6 @@ services:
     class: Drupal\workspaces\WorkspaceOperationFactory
     autowire: true
   Drupal\workspaces\WorkspaceOperationFactory: '@workspaces.operation_factory'
-  workspaces.association:
-    class: Drupal\workspaces\WorkspaceAssociation
-    arguments: ['@workspaces.tracker']
-    deprecated: The "%service_id%" service is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use the 'workspaces.tracker' service instead. See https://www.drupal.org/node/3551450
-  Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.tracker:
     class: Drupal\workspaces\WorkspaceTracker
     autowire: true

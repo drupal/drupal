@@ -28,7 +28,6 @@ interface WorkspaceManagerInterface {
    *
    * @param \Drupal\workspaces\WorkspaceInterface $workspace
    *   The workspace to set as active.
-   * phpcs:ignore
    * @param bool $persist
    *   (optional) Whether to persist this workspace in the first applicable
    *   negotiator. Defaults to TRUE.
@@ -38,7 +37,7 @@ interface WorkspaceManagerInterface {
    * @throws \Drupal\workspaces\WorkspaceAccessException
    *   Thrown when the current user doesn't have access to view the workspace.
    */
-  public function setActiveWorkspace(WorkspaceInterface $workspace, /* bool $persist = TRUE */);
+  public function setActiveWorkspace(WorkspaceInterface $workspace, bool $persist = TRUE);
 
   /**
    * Unsets the active workspace.
@@ -70,15 +69,5 @@ interface WorkspaceManagerInterface {
    *   The callable's return value.
    */
   public function executeOutsideWorkspace(callable $function);
-
-  /**
-   * Deletes the revisions associated with deleted workspaces.
-   *
-   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is
-   *   no replacement.
-   *
-   * @see https://www.drupal.org/node/3553582
-   */
-  public function purgeDeletedWorkspacesBatch();
 
 }
