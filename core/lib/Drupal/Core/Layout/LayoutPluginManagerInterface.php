@@ -52,7 +52,7 @@ interface LayoutPluginManagerInterface extends CategorizingPluginManagerInterfac
    * @return \Drupal\Core\Layout\LayoutDefinition[]
    *   An array of plugin definitions, sorted by category and label.
    */
-  public function getSortedDefinitions(?array $definitions = NULL);
+  public function getSortedDefinitions(?array $definitions = NULL, string $label_key = 'label');
 
   /**
    * {@inheritdoc}
@@ -61,7 +61,7 @@ interface LayoutPluginManagerInterface extends CategorizingPluginManagerInterfac
    *   Keys are category names, and values are arrays of which the keys are
    *   plugin IDs and the values are plugin definitions.
    */
-  public function getGroupedDefinitions(?array $definitions = NULL);
+  public function getGroupedDefinitions(?array $definitions = NULL, string $label_key = 'label');
 
   /**
    * Returns an array of layout labels grouped by category.

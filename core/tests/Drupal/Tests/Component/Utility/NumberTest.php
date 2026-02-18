@@ -8,7 +8,6 @@ use Drupal\Component\Utility\Number;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -165,21 +164,6 @@ class NumberTest extends TestCase {
     $this->expectException(\InvalidArgumentException::class);
     $nonAlphanumericChar = '#';
     Number::alphadecimalToInt($nonAlphanumericChar);
-  }
-
-  /**
-   * Tests the alphadecimal conversion function keeps backward compatibility.
-   *
-   * Many tests and code rely on Number::alphadecimalToInt() returning 0
-   * for degenerate values '' and NULL. We must ensure they are accepted.
-   */
-  #[IgnoreDeprecations]
-  public function testAlphadecimalToIntReturnsZeroWithNullAndEmptyString(): void {
-    $deprecationMessage = 'Passing NULL or an empty string to Drupal\Component\Utility\Number::alphadecimalToInt() is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3494472';
-    $this->expectUserDeprecationMessage($deprecationMessage);
-    $this->assertSame(0, Number::alphadecimalToInt(NULL));
-    $this->expectUserDeprecationMessage($deprecationMessage);
-    $this->assertSame(0, Number::alphadecimalToInt(''));
   }
 
 }
