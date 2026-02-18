@@ -28,6 +28,28 @@
      */
     const SIDEBAR_CONTENT_EVENT = 'toggle-admin-toolbar-content';
 
+    /**
+     * Mobile mediaQuery
+     */
+    const mobileMediaQuery = window.matchMedia('(max-width: 1023px)');
+
+    /**
+     * Creates a focus trap for the admin toolbar by adding an `inert` attribute
+     * to direct children of the `<body>` other than the admin toolbar.
+     *
+     * @param {boolean} toState The new state of the sidebar.
+     */
+    function toggleFocusTrap(newState) {
+      const contentElements = document.querySelectorAll(
+        'body > *:not(:is(.admin-toolbar, .admin-toolbar-overlay))',
+      );
+
+      contentElements.forEach((el) => {
+        el.toggleAttribute('inert', newState === true);
+        el.toggleAttribute('data-admin-toolbar-inert', newState === true);
+      });
+    }
+
     if (
       once('admin-toolbar-document-triggers-listener', document.documentElement)
         .length
@@ -39,6 +61,15 @@
       setTimeout(() => {
         doc.setAttribute('data-admin-toolbar-transitions', true);
       }, 100);
+
+      // If window is resized, ensure focus trap is placed or removed.
+      mobileMediaQuery.addEventListener('change', () => {
+        if (!mobileMediaQuery.matches) {
+          toggleFocusTrap(false);
+        } else if (doc.getAttribute('data-admin-toolbar') === 'expanded') {
+          toggleFocusTrap(true);
+        }
+      });
 
       doc.addEventListener(HTML_TRIGGER_EVENT, (e) => {
         // Prevents multiple triggering while transitioning.
@@ -57,6 +88,10 @@
           'data-admin-toolbar-body-scroll',
           newState ? 'locked' : 'unlocked',
         );
+
+        if (mobileMediaQuery.matches) {
+          toggleFocusTrap(newState);
+        }
 
         doc.querySelector('.admin-toolbar')?.dispatchEvent(
           new CustomEvent(SIDEBAR_CONTENT_EVENT, {
@@ -142,7 +177,7 @@
             'false';
 
           // We need to display closed sidebar on init on mobile.
-          if (window.matchMedia('(max-width: 1023px)').matches) {
+          if (mobileMediaQuery.matches) {
             firstState = false;
           }
 
