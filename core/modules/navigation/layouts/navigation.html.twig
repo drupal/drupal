@@ -70,9 +70,10 @@
           icon: { icon_id: 'arrow-left' },
           text: 'Back'|t,
         } only %}
+        {# The close button should be in the tab sequence. Therefore, `tabindex` is omitted here. #}
         {% include 'navigation:toolbar-button' with {
           action: 'Collapse sidebar'|t,
-          attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'tabindex': '-1', 'type': 'button' }),
+          attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'type': 'button' }),
           extra_classes: ['admin-toolbar__close-button'],
           icon: { icon_id: 'cross' },
         } only %}
