@@ -5,9 +5,11 @@ namespace Drupal\taxonomy\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\node\NodeInterface;
 
 /**
  * Hook implementations for taxonomy.
@@ -135,7 +137,7 @@ class TaxonomyHooks {
   #[Hook('node_insert')]
   public function nodeInsert(EntityInterface $node): void {
     // Add taxonomy index entries for the node.
-    taxonomy_build_node_index($node);
+    $this->buildNodeIndex($node);
   }
 
   /**
@@ -148,8 +150,8 @@ class TaxonomyHooks {
     if (!$node->isDefaultRevision()) {
       return;
     }
-    taxonomy_delete_node_index($node);
-    taxonomy_build_node_index($node);
+    $this->deleteNodeIndex($node);
+    $this->buildNodeIndex($node);
   }
 
   /**
@@ -158,7 +160,7 @@ class TaxonomyHooks {
   #[Hook('node_predelete')]
   public function nodePredelete(EntityInterface $node): void {
     // Clean up the {taxonomy_index} table when nodes are deleted.
-    taxonomy_delete_node_index($node);
+    $this->deleteNodeIndex($node);
   }
 
   /**
@@ -174,7 +176,75 @@ class TaxonomyHooks {
 
   // phpcs:ignore Drupal.Commenting.InlineComment.DocBlock
   /**
-   * @} End of "defgroup taxonomy_index".
+   * @addtogroup taxonomy_index
+   * @{
+   */
+
+  /**
+   * Builds and inserts taxonomy index entries for a given node.
+   *
+   * The index lists all terms that are related to a given node entity, and is
+   * therefore maintained at the entity level.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node entity.
+   */
+  protected function buildNodeIndex(NodeInterface $node): void {
+    // We maintain a denormalized table of term/node relationships, containing
+    // only data for current, published nodes.
+    if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(\Drupal::entityTypeManager()->getStorage('node') instanceof SqlContentEntityStorage)) {
+      return;
+    }
+
+    $status = $node->isPublished();
+    $sticky = (int) $node->isSticky();
+    // We only maintain the taxonomy index for published nodes.
+    if ($status && $node->isDefaultRevision()) {
+      // Collect a unique list of all the term IDs from all node fields.
+      $tid_all = [];
+      $entity_reference_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+      foreach ($node->getFieldDefinitions() as $field) {
+        $field_name = $field->getName();
+        $class = $field->getItemDefinition()->getClass();
+        $is_entity_reference_class = ($class === $entity_reference_class) || is_subclass_of($class, $entity_reference_class);
+        if ($is_entity_reference_class && $field->getSetting('target_type') == 'taxonomy_term') {
+          foreach ($node->getTranslationLanguages() as $language) {
+            foreach ($node->getTranslation($language->getId())->$field_name as $item) {
+              if (!$item->isEmpty()) {
+                $tid_all[$item->target_id] = $item->target_id;
+              }
+            }
+          }
+        }
+      }
+      // Insert index entries for all the node's terms.
+      if (!empty($tid_all)) {
+        $connection = \Drupal::database();
+        foreach ($tid_all as $tid) {
+          $connection->merge('taxonomy_index')
+            ->keys(['nid' => $node->id(), 'tid' => $tid, 'status' => $node->isPublished()])
+            ->fields(['sticky' => $sticky, 'created' => $node->getCreatedTime()])
+            ->execute();
+        }
+      }
+    }
+  }
+
+  /**
+   * Deletes taxonomy index entries for a given node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node entity.
+   */
+  protected function deleteNodeIndex(EntityInterface $node): void {
+    if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+      \Drupal::database()->delete('taxonomy_index')->condition('nid', $node->id())->execute();
+    }
+  }
+
+  // phpcs:ignore Drupal.Commenting.InlineComment.DocBlock
+  /**
+   * @} End of "addtogroup taxonomy_index".
    */
 
 }
