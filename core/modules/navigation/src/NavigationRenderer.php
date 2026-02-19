@@ -2,6 +2,7 @@
 
 namespace Drupal\navigation;
 
+use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Block\BlockPluginInterface;
@@ -212,6 +213,9 @@ final class NavigationRenderer {
           'max-age' => CacheBackendInterface::CACHE_PERMANENT,
         ],
         '#lazy_builder' => ['navigation.renderer:doBuildTopBar', []],
+        '#placeholder_strategy_denylist' => [
+          BigPipeStrategy::class => TRUE,
+        ],
         '#create_placeholder' => TRUE,
       ];
     }
