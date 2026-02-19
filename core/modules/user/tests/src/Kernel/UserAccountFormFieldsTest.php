@@ -105,18 +105,25 @@ class UserAccountFormFieldsTest extends KernelTestBase {
    * @internal
    */
   protected function assertFieldOrder(array $elements): void {
+    $name_index = 0;
     $name_weight = 0;
+    $pass_index = 0;
     $pass_weight = 0;
+    $index = 0;
     foreach ($elements as $key => $element) {
       if ($key === 'name') {
+        $name_index = $index;
         $name_weight = $element['#weight'];
         $this->assertTrue($element['#sorted'], "'name' field is #sorted.");
       }
       elseif ($key === 'pass') {
+        $pass_index = $index;
         $pass_weight = $element['#weight'];
         $this->assertTrue($element['#sorted'], "'pass' field is #sorted.");
       }
+      $index++;
     }
+    $this->assertEquals($pass_index - 1, $name_index, "'name' field ({$name_index}) appears before 'pass' field ({$pass_index}).");
     $this->assertLessThan($pass_weight, $name_weight, "'name' field weight ($name_weight) should be smaller than 'pass' field weight ($pass_weight).");
   }
 
