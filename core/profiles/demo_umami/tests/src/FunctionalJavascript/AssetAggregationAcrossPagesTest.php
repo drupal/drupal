@@ -71,7 +71,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     }, 'umamiFrontAndRecipePagesEditor');
     $expected = [
       'ScriptCount' => 5,
-      'ScriptBytes' => 206500,
+      'ScriptBytes' => 206000,
       'StylesheetCount' => 6,
       'StylesheetBytes' => 165250,
     ];
@@ -98,9 +98,9 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
       $this->drupalGet('node/add/page');
     }, 'umamiNodeAddEditor');
     $expected = [
-      'ScriptCount' => 15,
-      'ScriptBytes' => 3769883,
-      'StylesheetCount' => 8,
+      'ScriptCount' => 16,
+      'ScriptBytes' => 3768185,
+      'StylesheetCount' => 9,
       'StylesheetBytes' => 619086,
     ];
     $this->assertMetrics($expected, $performance_data);
