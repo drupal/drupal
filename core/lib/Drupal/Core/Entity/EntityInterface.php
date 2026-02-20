@@ -112,7 +112,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @endcode
    * or specified in a callback function set like:
    * @code
-   * uri_callback = "comment_uri",
+   * uri_callback = "my_entity_uri",
    * @endcode
    * If the path is not set in the links array, the uri_callback function is
    * used for setting the path. If this does not exist and the link relationship

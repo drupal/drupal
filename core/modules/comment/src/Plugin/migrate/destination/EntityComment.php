@@ -87,26 +87,6 @@ class EntityComment extends EntityContentBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3533565
-   */
-  public function import(Row $row, array $old_destination_id_values = []) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533565', E_USER_DEPRECATED);
-    if ($row->isStub() && ($state = $this->state->get('comment.maintain_entity_statistics', 0))) {
-      $this->state->set('comment.maintain_entity_statistics', 0);
-    }
-    $return = parent::import($row, $old_destination_id_values);
-    if ($row->isStub() && $state) {
-      $this->state->set('comment.maintain_entity_statistics', $state);
-    }
-    return $return;
-  }
-
-  /**
-   * {@inheritdoc}
    */
   protected function processStubRow(Row $row) {
     parent::processStubRow($row);
