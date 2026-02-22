@@ -3,6 +3,16 @@
 includes:
   - .phpstan-baseline.php
 
+services:
+  errorFormatter.multiplex:
+    class: Drupal\PHPStan\ErrorFormatter\MultiplexErrorFormatter
+    arguments:
+      basePath: ::getenv(_ARTIFACTS_DIR)
+      outputs:
+        gitlab: phpstan-gitlab.json
+        junit: phpstan-junit.xml
+        table: php://stdout
+
 parameters:
 
   tmpDir: phpstan-tmp
