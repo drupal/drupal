@@ -488,17 +488,6 @@ class SystemHooks {
   }
 
   /**
-   * Implements hook_archiver_info_alter().
-   */
-  #[Hook('archiver_info_alter')]
-  public function archiverInfoAlter(&$info): void {
-    if (!class_exists(\ZipArchive::class)) {
-      // PHP Zip extension is missing.
-      unset($info['Zip']);
-    }
-  }
-
-  /**
    * Implements hook_entity_form_mode_presave().
    *
    * Transforms empty description into null.

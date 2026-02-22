@@ -844,11 +844,6 @@ services:
   plugin.manager.field.formatter:
     class: Drupal\Core\Field\FormatterPluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@plugin.manager.field.field_type']
-  plugin.manager.archiver:
-    class: Drupal\Core\Archiver\ArchiverManager
-    parent: default_plugin_manager
-    arguments: ['@file_system']
-    deprecated: 'The "%service_id%" service is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3556927'
   plugin.manager.action:
     class: Drupal\Core\Action\ActionManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']

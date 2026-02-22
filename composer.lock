@@ -368,7 +368,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "427dcc44caf1e2bb69247bd4948f3d78f83c19e0"
+                "reference": "46a0d3c12f83e9727b3d556d54bb107c24053306"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -451,9 +451,6 @@
                 "drupal/core-utility": "self.version",
                 "drupal/core-uuid": "self.version",
                 "drupal/core-version": "self.version"
-            },
-            "suggest": {
-                "ext-zip": "Needed to extend the plugin.manager.archiver service capability with the handling of files in the ZIP format."
             },
             "type": "drupal-core",
             "extra": {

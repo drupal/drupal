@@ -27,7 +27,7 @@ class TestModalController extends ControllerBase {
         'class' => ['use-ajax'],
         'data-dialog-type' => 'modal',
         'data-dialog-options' => Json::encode([
-          'dialogClass' => 'pager-test-modal',
+          'classes' => 'pager-test-modal',
           'height' => '50%',
           'width' => '50%',
           'title' => $this->t('Pagers in modal'),
