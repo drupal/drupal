@@ -85,11 +85,3 @@ action.configuration.node_make_sticky_action:
 action.configuration.node_make_unsticky_action:
   type: action_configuration_default
   label: 'Make selected content unsticky configuration'
-
-block.settings.node_syndicate_block:
-  type: block_settings
-  label: 'Syndicate block'
-  mapping:
-    block_count:
-      type: integer
-      label: 'Block count'

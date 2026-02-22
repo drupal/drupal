@@ -53,7 +53,6 @@
  * - title_suffix: Additional output populated by modules, intended to be
  *   displayed after the main title tag that appears in the template.
  * - view_mode: View mode; for example, "teaser" or "full".
- * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
  *
  * @see \Drupal\node\Hook\NodeThemeHooks::preprocessNode()
  *
@@ -85,7 +84,6 @@
       {{ author_picture }}
       <div{{ author_attributes.addClass('node__submitted') }}>
         {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-        {{ metadata }}
       </div>
     </footer>
   {% endif %}

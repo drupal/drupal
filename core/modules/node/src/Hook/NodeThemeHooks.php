@@ -134,15 +134,6 @@ class NodeThemeHooks {
   public function preprocessNode(&$variables): void {
     $variables['view_mode'] = $variables['elements']['#view_mode'];
 
-    // The teaser variable is deprecated.
-    $variables['deprecations']['teaser'] = "'teaser' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3458185";
-    $variables['teaser'] = $variables['view_mode'] == 'teaser';
-
-    // The 'metadata' variable was originally added to support RDF, which has
-    // now been moved to contrib. It was needed because it is not possible to
-    // extend the markup of the 'submitted' variable generically.
-    $variables['deprecations']['metadata'] = "'metadata' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3458638";
-
     $variables['node'] = $variables['elements']['#node'];
     /** @var \Drupal\node\NodeInterface $node */
     $node = $variables['node'];
@@ -247,20 +238,6 @@ class NodeThemeHooks {
     if (($node = $this->routeMatch->getParameter('node')) || ($node = $this->routeMatch->getParameter('node_preview'))) {
       if ($node instanceof NodeInterface) {
         $variables['node_type'] = $node->getType();
-      }
-    }
-  }
-
-  /**
-   * Implements hook_preprocess_HOOK() for block templates.
-   */
-  #[Hook('preprocess_block')]
-  public function preprocessBlock(&$variables): void {
-    if ($variables['configuration']['provider'] == 'node') {
-      switch ($variables['elements']['#plugin_id']) {
-        case 'node_syndicate_block':
-          $variables['attributes']['role'] = 'complementary';
-          break;
       }
     }
   }

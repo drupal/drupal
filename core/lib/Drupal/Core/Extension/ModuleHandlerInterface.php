@@ -126,10 +126,8 @@ interface ModuleHandlerInterface {
    *
    * Examples:
    * @code
-   *   // Load node.admin.inc from the node module.
-   *   $this->loadInclude('node', 'inc', 'node.admin');
-   *   // Load content_types.inc from the node module.
-   *   $this->loadInclude('node', 'inc', 'content_types');
+   *   // Load system.post_update.php from the System module.
+   *   $this->loadInclude('system', 'php', 'post_update');
    * @endcode
    *
    * @param string $module

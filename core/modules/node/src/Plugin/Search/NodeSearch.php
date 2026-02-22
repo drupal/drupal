@@ -39,7 +39,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInterface, SearchIndexingInterface, TrustedCallbackInterface {
 
   /**
-   * An array of additional rankings from hook_ranking().
+   * An array of additional rankings from hook_node_search_ranking().
    *
    * @var array
    */
@@ -720,7 +720,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   }
 
   /**
-   * Gathers ranking definitions from hook_ranking().
+   * Gathers ranking definitions from hook_node_search_ranking().
    *
    * @return array
    *   An array of ranking definitions.
@@ -728,7 +728,6 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   protected function getRankings() {
     if (!$this->rankings) {
       $this->rankings = $this->moduleHandler->invokeAll('node_search_ranking');
-      $this->rankings += $this->moduleHandler->invokeAllDeprecated('Use hook_node_search_ranking() instead. See https://www.drupal.org/node/2690393.', 'ranking');
     }
     return $this->rankings;
   }

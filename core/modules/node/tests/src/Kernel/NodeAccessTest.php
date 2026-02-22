@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel;
 
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -184,24 +183,6 @@ class NodeAccessTest extends NodeAccessTestBase {
     // Call as batch so rebuild is not run immediately.
     node_access_rebuild(TRUE);
     $this->assertTrue(node_access_needs_rebuild());
-  }
-
-  /**
-   * Tests node access view all nodes deprecation.
-   *
-   * @see node_access_view_all_nodes()
-   * @see drupal_static_reset()
-   */
-  #[IgnoreDeprecations]
-  public function testNodeAccessViewAllNodesDeprecation(): void {
-    $this->expectDeprecation('node_access_view_all_nodes() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use  \Drupal::entityTypeManager()->getAccessControlHandler(\'node\')->checkAllGrants(). See https://www.drupal.org/node/3038909');
-    $this->assertTrue(node_access_view_all_nodes());
-    $this->expectDeprecation('Calling drupal_static_reset() with "node_access_view_all_nodes" as argument is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(\'node.view_all_nodes_memory_cache\')->deleteAll(); instead. See https://www.drupal.org/node/3038909');
-    drupal_static_reset('node_access_view_all_nodes');
-
-    // Enable a node access module.
-    $this->enableModules(['node_access_test']);
-    $this->assertSame('0', node_access_view_all_nodes());
   }
 
 }

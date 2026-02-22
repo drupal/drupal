@@ -427,11 +427,6 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  */
 function drupal_static_reset($name = NULL): void {
   switch ($name) {
-    case 'node_access_view_all_nodes':
-      @trigger_error('Calling drupal_static_reset() with "node_access_view_all_nodes" as argument is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(\'node.view_all_nodes_memory_cache\')->deleteAll(); instead. See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
-      \Drupal::service('node.view_all_nodes_memory_cache')->deleteAll();
-      break;
-
     case 'locale_translation_get_projects':
       @trigger_error('Calling drupal_static_reset() with "locale_translation_get_projects" as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'locale.project\')->resetCache() instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
       if (\Drupal::hasService('locale.project')) {

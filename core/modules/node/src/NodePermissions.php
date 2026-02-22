@@ -19,13 +19,8 @@ class NodePermissions implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   public function __construct(
-    protected ?EntityTypeManagerInterface $entityTypeManager = NULL,
-  ) {
-    if ($entityTypeManager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $entityTypeManager argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3515921', E_USER_DEPRECATED);
-      $this->entityTypeManager = \Drupal::entityTypeManager();
-    }
-  }
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * Returns an array of node type permissions.

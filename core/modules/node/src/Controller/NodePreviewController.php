@@ -23,13 +23,9 @@ class NodePreviewController extends EntityViewController {
     EntityTypeManagerInterface $entity_type_manager,
     RendererInterface $renderer,
     protected readonly EntityRepositoryInterface $entityRepository,
-    protected ?FormBuilderInterface $formBuilder = NULL,
+    protected readonly FormBuilderInterface $formBuilder,
   ) {
     parent::__construct($entity_type_manager, $renderer);
-    if ($this->formBuilder === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $formBuilder argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3339905', E_USER_DEPRECATED);
-      $this->formBuilder = \Drupal::service('form_builder');
-    }
   }
 
   /**
@@ -66,24 +62,6 @@ class NodePreviewController extends EntityViewController {
     unset($build['#cache']);
 
     return $build;
-  }
-
-  /**
-   * The _title_callback for the page that renders a single node in preview.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $node_preview
-   *   The current node.
-   *
-   * @return string
-   *   The page title.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
-   * replacement.
-   * @see https://www.drupal.org/project/drupal/issues/3024386
-   */
-  public function title(EntityInterface $node_preview) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3024386', E_USER_DEPRECATED);
-    return $this->entityRepository->getTranslationFromContext($node_preview)->label();
   }
 
 }

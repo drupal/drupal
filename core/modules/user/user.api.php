@@ -44,7 +44,6 @@ function hook_user_cancel($edit, UserInterface $account, $method): void {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
-      \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       $nodes = \Drupal::entityQuery('node')
         ->accessCheck(FALSE)
         ->condition('uid', $account->id())
@@ -54,7 +53,6 @@ function hook_user_cancel($edit, UserInterface $account, $method): void {
 
     case 'user_cancel_reassign':
       // Anonymize nodes (current revisions).
-      \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       $nodes = \Drupal::entityQuery('node')
         ->accessCheck(FALSE)
         ->condition('uid', $account->id())

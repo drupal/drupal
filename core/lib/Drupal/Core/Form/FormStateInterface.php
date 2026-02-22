@@ -45,8 +45,8 @@ interface FormStateInterface {
    *
    * Example:
    * @code
-   *   // Load node.admin.inc from Node module.
-   *   $form_state->loadInclude('node', 'inc', 'node.admin');
+   *   // Load system.post_update.php from System module.
+   *   $form_state->loadInclude('system', 'php', 'post_update');
    * @endcode
    *
    * Use this function instead of \Drupal::moduleHandler()->loadInclude()

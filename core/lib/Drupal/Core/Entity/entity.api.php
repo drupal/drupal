@@ -316,7 +316,7 @@ use Drupal\node\Entity\NodeType;
  * @section misc Other entity hooks
  * Some types of entities invoke hooks for specific operations:
  * - Searching nodes:
- *   - hook_ranking()
+ *   - hook_node_search_ranking()
  *   - Query is executed to find matching nodes
  *   - Resulting node is loaded
  *   - Node render array is built

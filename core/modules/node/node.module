@@ -6,54 +6,11 @@
 
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Database\StatementInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\node\Hook\NodeThemeHooks;
+use Drupal\node\NodeBulkUpdate;
 use Drupal\node\NodeInterface;
-use Drupal\node\NodeTypeInterface;
-
-/**
- * Gathers a listing of links to nodes.
- *
- * @param \Drupal\Core\Database\StatementInterface $result
- *   A database result object from a query to fetch node entities. If your
- *   query joins the {comment_entity_statistics} table so that the comment_count
- *   field is available, a title attribute will be added to show the number of
- *   comments.
- * @param string|null $title
- *   (optional) A heading for the resulting list. NULL results in no heading.
- *   Defaults to NULL.
- *
- * @return array|false
- *   A renderable array containing a list of linked node titles fetched from
- *   $result, or FALSE if there are no rows in $result.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.
- * @see https://www.drupal.org/node/3531959
- */
-function node_title_list(StatementInterface $result, $title = NULL) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3531959', E_USER_DEPRECATED);
-  $items = [];
-  $num_rows = FALSE;
-  $nids = [];
-  foreach ($result as $row) {
-    // Do not use $node->label() or $node->toUrl() here, because we only have
-    // database rows, not actual nodes.
-    $nids[] = $row->nid;
-    $options = !empty($row->comment_count) ? ['attributes' => ['title' => \Drupal::translation()->formatPlural($row->comment_count, '1 comment', '@count comments')]] : [];
-    $items[] = Link::fromTextAndUrl($row->title, Url::fromRoute('entity.node.canonical', ['node' => $row->nid], $options))->toString();
-    $num_rows = TRUE;
-  }
-
-  return $num_rows ? ['#theme' => 'item_list__node', '#items' => $items, '#title' => $title, '#cache' => ['tags' => Cache::mergeTags(['node_list'], Cache::buildTags('node', $nids))]] : FALSE;
-}
 
 /**
  * Returns a list of available node type names.
@@ -90,88 +47,6 @@ function node_get_type_label(NodeInterface $node) {
 }
 
 /**
- * Description callback: Returns the node type description.
- *
- * @param \Drupal\node\NodeTypeInterface $node_type
- *   The node type object.
- *
- * @return string
- *   The node type description.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use $node_type->getDescription() instead.
- * @see https://www.drupal.org/node/3531945
- */
-function node_type_get_description(NodeTypeInterface $node_type) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use $node_type->getDescription() instead. See https://www.drupal.org/node/3531945', E_USER_DEPRECATED);
-  return $node_type->getDescription();
-}
-
-/**
- * Adds the default body field to a node type.
- *
- * @param \Drupal\node\NodeTypeInterface $type
- *   A node type object.
- * @param string $label
- *   (optional) The label for the body instance.
- *
- * @return \Drupal\field\Entity\FieldConfig
- *   A Body field object.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement.
- * @see https://www.drupal.org/node/3516778
- */
-function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3516778', E_USER_DEPRECATED);
-  // Add or remove the body field, as needed.
-  $field_storage = FieldStorageConfig::loadByName('node', 'body');
-  $field = FieldConfig::loadByName('node', $type->id(), 'body');
-  if (empty($field)) {
-    $field = FieldConfig::create([
-      'field_storage' => $field_storage,
-      'bundle' => $type->id(),
-      'label' => $label,
-      'settings' => [
-        'display_summary' => TRUE,
-        'allowed_formats' => [],
-      ],
-    ]);
-    $field->save();
-
-    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
-    $display_repository = \Drupal::service('entity_display.repository');
-
-    // Assign widget settings for the default form mode.
-    $display_repository->getFormDisplay('node', $type->id())
-      ->setComponent('body', [
-        'type' => 'text_textarea_with_summary',
-      ])
-      ->save();
-
-    // Assign display settings for the 'default' and 'teaser' view modes.
-    $display_repository->getViewDisplay('node', $type->id())
-      ->setComponent('body', [
-        'label' => 'hidden',
-        'type' => 'text_default',
-      ])
-      ->save();
-
-    // The teaser view mode is created by the Standard profile and therefore
-    // might not exist.
-    $view_modes = \Drupal::service('entity_display.repository')->getViewModes('node');
-    if (isset($view_modes['teaser'])) {
-      $display_repository->getViewDisplay('node', $type->id(), 'teaser')
-        ->setComponent('body', [
-          'label' => 'hidden',
-          'type' => 'text_summary_or_trimmed',
-        ])
-        ->save();
-    }
-  }
-
-  return $field;
-}
-
-/**
  * Checks whether the current page is the full page view of the passed-in node.
  *
  * @param \Drupal\node\NodeInterface $node
@@ -195,54 +70,33 @@ function node_is_page(NodeInterface $node) {
 }
 
 /**
- * Prepares variables for list of available node type templates.
+ * Updates all nodes in the passed-in array with the passed-in field values.
  *
- * Default template: node-add-list.html.twig.
+ * IMPORTANT NOTE: This function is intended to work when called from a form
+ * submission handler. Calling it outside of the form submission process may not
+ * work correctly.
  *
- * @param array $variables
- *   An associative array containing:
- *   - content: An array of content types.
+ * @param array $nodes
+ *   Array of node nids or nodes to update.
+ * @param array $updates
+ *   Array of key/value pairs with node field names and the value to update that
+ *   field to.
+ * @param string $langcode
+ *   (optional) The language updates should be applied to. If none is specified
+ *   all available languages are processed.
+ * @param bool $load
+ *   (optional) TRUE if $nodes contains an array of node IDs to be loaded, FALSE
+ *   if it contains fully loaded nodes. Defaults to FALSE.
+ * @param bool $revisions
+ *   (optional) TRUE if $nodes contains an array of revision IDs instead of
+ *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNodeAddList($variables) instead.
- * @see https://www.drupal.org/node/3533060
+ * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\node\NodeBulkUpdate::class)->process() instead.
+ * @see https://www.drupal.org/node/3533315
  */
-function template_preprocess_node_add_list(&$variables): void {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNodeAddList($variables); instead. See https://www.drupal.org/node/3533060', E_USER_DEPRECATED);
-  \Drupal::service(NodeThemeHooks::class)->preprocessNodeAddList($variables);
-}
-
-/**
- * Prepares variables for node templates.
- *
- * Default template: node.html.twig.
- *
- * Most themes use their own copy of node.html.twig. The default is located
- * inside "/core/modules/node/templates/node.html.twig". Look in there for the
- * full list of variables.
- *
- * By default this function performs special preprocessing of some base fields
- * so they are available as variables in the template. For example 'title'
- * appears as 'label'. This preprocessing is skipped if:
- * - a module makes the field's display configurable via the field UI by means
- *   of BaseFieldDefinition::setDisplayConfigurable()
- * - AND the additional entity type property
- *   'enable_base_field_custom_preprocess_skipping' has been set using
- *   hook_entity_type_build().
- *
- * @param array $variables
- *   An associative array containing:
- *   - elements: An array of elements to display in view mode.
- *   - node: The node object.
- *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNode($variables) instead.
- * @see https://www.drupal.org/node/3533060
- * @see hook_entity_type_build()
- * @see \Drupal\Core\Field\BaseFieldDefinition::setDisplayConfigurable()
- */
-function template_preprocess_node(&$variables): void {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNode($variables); instead. See https://www.drupal.org/node/3533060', E_USER_DEPRECATED);
-  \Drupal::service(NodeThemeHooks::class)->preprocessNode($variables);
+function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\node\NodeBulkUpdate::class)->process() instead. See https://www.drupal.org/node/3533315', E_USER_DEPRECATED);
+  \Drupal::service(NodeBulkUpdate::class)->process($nodes, $updates, $langcode, $load, $revisions);
 }
 
 /**
@@ -277,42 +131,6 @@ function node_access_grants($operation, AccountInterface $account) {
   \Drupal::moduleHandler()->alter('node_grants', $grants, $account, $operation);
 
   return array_merge(['all' => [0]], $grants);
-}
-
-/**
- * Determines whether the user has a global viewing grant for all nodes.
- *
- * Checks to see whether any module grants global 'view' access to a user
- * account; global 'view' access is encoded in the {node_access} table as a
- * grant with nid=0. If no node access modules are enabled, node.module defines
- * such a global 'view' access grant.
- *
- * This function is called when a node listing query is tagged with
- * 'node_access'; when this function returns TRUE, no node access joins are
- * added to the query.
- *
- * @param \Drupal\Core\Session\AccountProxyInterface|null $account
- *   (optional) The user object for the user whose access is being checked. If
- *   omitted, the current user is used. Defaults to NULL.
- *
- * @return bool
- *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
- *   \Drupal::entityTypeManager()->getAccessControlHandler('node')->checkAllGrants()
- *   instead.
- *
- * @see https://www.drupal.org/node/3038909
- * @see hook_node_grants()
- * @see node_query_node_access_alter()
- */
-function node_access_view_all_nodes($account = NULL) {
-  @trigger_error('node_access_view_all_nodes() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use  \Drupal::entityTypeManager()->getAccessControlHandler(\'node\')->checkAllGrants(). See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
-  // If no modules implement the node access system, access is always TRUE.
-  if (!\Drupal::moduleHandler()->hasImplementations('node_grants')) {
-    return TRUE;
-  }
-  return \Drupal::entityTypeManager()->getAccessControlHandler('node')->checkAllGrants($account ?? \Drupal::currentUser());
 }
 
 /**
@@ -515,21 +333,3 @@ function _node_access_rebuild_batch_finished($success, $results, $operations): v
 /**
  * @} End of "addtogroup node_access".
  */
-
-/**
- * Marks a node to be re-indexed by the node_search plugin.
- *
- * @param int $nid
- *   The node ID.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service('search.index')->markForReindex('node_search', $nid) instead.
- * @see https://www.drupal.org/node/3533632
- */
-function node_reindex_node_search($nid): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(\'search.index\')->markForReindex(\'node_search\', $nid); instead. See https://www.drupal.org/node/3533632', E_USER_DEPRECATED);
-
-  if (\Drupal::moduleHandler()->moduleExists('search')) {
-    // Reindex node context indexed by the node module search plugin.
-    \Drupal::service('search.index')->markForReindex('node_search', $nid);
-  }
-}
