@@ -8,6 +8,7 @@
     "license": "GPL-2.0-or-later",
     "autoload": {
         "psr-4": {
+            "Drupal\\PHPStan\\ErrorFormatter\\": "ErrorFormatter/",
             "Drupal\\PHPStan\\Rules\\": "Rules/",
             "Drupal\\BuildTests\\": "../Drupal/BuildTests/",
             "Drupal\\FunctionalJavascriptTests\\": "../Drupal/FunctionalJavascriptTests",

@@ -119,6 +119,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Drupal\\PHPStan\\ErrorFormatter\\": "core/tests/PHPStan/ErrorFormatter",
             "Drupal\\PHPStan\\Rules\\": "core/tests/PHPStan/Rules"
         }
     },

@@ -549,20 +549,13 @@ default:
       fi
   script:
     - vendor/bin/phpstan --version
-    # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
-    # Output a copy in junit.
-    - php vendor/bin/phpstan -vvv analyze --configuration=$_PHPSTAN_NEON --error-format=gitlab > $_ARTIFACTS_DIR/phpstan-quality-report.json || EXIT_CODE=$?
-    - php vendor/bin/phpstan -vvv analyze --configuration=$_PHPSTAN_NEON --no-progress --error-format=junit > $_ARTIFACTS_DIR/phpstan-junit.xml || true
-    # When the PHPStan scan fails, output a human readable copy of the errors,
-    # and regenerate a full baseline.
+    - php vendor/bin/phpstan -vvv analyze --configuration=$_PHPSTAN_NEON --error-format=multiplex || EXIT_CODE=$?
+    # When the PHPStan scan fails, regenerate a full baseline.
     # In order to regenerate a baseline artifact that can be copied and pasted
     # to a MR branch, we first need to void the current baseline file, then
-    # run PHPStan with the --generate-baseline option, and finally edit the
-    # generated file to convert absolute paths into relative ones.
+    # run PHPStan with the --generate-baseline option.
     - |
       if [ -n "$EXIT_CODE" ]; then
-        # Output a copy in plain text for human logs.
-        php vendor/bin/phpstan analyze --configuration=$_PHPSTAN_NEON --no-progress || true
         # Generate a new baseline.
         echo "Generating a PHPStan baseline file (available as job artifact)."
         cp $CI_PROJECT_DIR/.gitlab-ci/scripts/.empty-phpstan-baseline.php $_PHPSTAN_BASELINE
@@ -577,7 +570,7 @@ default:
     - php $CI_PROJECT_DIR/.gitlab-ci/scripts/phpstan-baseline-statistics.php $_PHPSTAN_BASELINE $_ARTIFACTS_DIR/phpstan-metrics.txt
   artifacts:
     reports:
-      codequality: $_ARTIFACTS_DIR/phpstan-quality-report.json
+      codequality: $_ARTIFACTS_DIR/phpstan-gitlab.json
       junit: $_ARTIFACTS_DIR/phpstan-junit.xml
       metrics: $_ARTIFACTS_DIR/phpstan-metrics.txt
     when: always
