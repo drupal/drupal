@@ -48,45 +48,29 @@ trait BlockContentCreationTrait {
   /**
    * Creates a block type (bundle).
    *
-   * @param array|string $values
-   *   (deprecated) The variable $values as string is deprecated. Provide as an
-   *   array as parameter. The value to create the block content type. If
-   *   $values is an array it should be like: ['id' => 'foo', 'label' => 'Foo'].
-   *   If $values is a string, it will be considered that it represents the
-   *   label.
+   * @param array{id?: string, label?: string} $values
+   *   The values to create the block content type.
    * @param bool $create_body
    *   Whether or not to create the body field.
    *
    * @return \Drupal\block_content\Entity\BlockContentType
    *   Created block type.
    */
-  protected function createBlockContentType(array|string $values, bool $create_body = FALSE): BlockContentType {
-    if (is_string($values)) {
-      @trigger_error('Using the variable $values as string is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Provide an array as parameter. See https://www.drupal.org/node/3473739', E_USER_DEPRECATED);
-    }
-    if (is_array($values)) {
-      if (!isset($values['id'])) {
-        do {
-          $id = $this->randomMachineName(8);
-        } while (BlockContentType::load($id));
-      }
-      else {
-        $id = $values['id'];
-      }
-      $values += [
-        'id' => $id,
-        'label' => $id,
-        'revision' => FALSE,
-      ];
-      $bundle = BlockContentType::create($values);
+  protected function createBlockContentType(array $values, bool $create_body = FALSE): BlockContentType {
+    if (!isset($values['id'])) {
+      do {
+        $id = $this->randomMachineName(8);
+      } while (BlockContentType::load($id));
     }
     else {
-      $bundle = BlockContentType::create([
-        'id' => $values,
-        'label' => $values,
-        'revision' => FALSE,
-      ]);
+      $id = $values['id'];
     }
+    $values += [
+      'id' => $id,
+      'label' => $values['label'] ?? $id,
+      'revision' => FALSE,
+    ];
+    $bundle = BlockContentType::create($values);
     $bundle->save();
     if ($create_body) {
       $this->createBodyField('block_content', $bundle->id());

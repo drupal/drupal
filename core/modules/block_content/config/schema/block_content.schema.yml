@@ -31,15 +31,6 @@ block.settings.block_content:*:
   constraints:
     FullyValidatable: ~
   mapping:
-    # @see \Drupal\block_content\Plugin\Block\BlockContentBlock::defaultConfiguration()
-    status:
-      deprecated: "The 'status' setting for content blocks is deprecated in drupal:11.3.0 and is removed from drupal 12.0.0. It was unused, so there is no replacement. See https://www.drupal.org/node/3499836."
-      type: boolean
-      label: 'Status'
-    info:
-      deprecated: "The 'info' setting for content blocks is deprecated in drupal:11.3.0 and is removed from drupal 12.0.0. It was unused, so there is no replacement. See https://www.drupal.org/node/3499836."
-      type: label
-      label: 'Admin info'
     view_mode:
       type: string
       label: 'View mode'
