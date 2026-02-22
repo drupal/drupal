@@ -34,6 +34,13 @@
   background-color: var(--color--white);
   box-shadow: 0 0 72px rgb(0, 0, 0, 0.1);
 
+  /* When Navigation module's mobile top bar is present, add padding to ensure no overlap. */
+  body:has(> .admin-toolbar-control-bar) & {
+    @media (max-width: 63.9375rem) {
+      padding-top: 3rem;
+    }
+  }
+
   &.is-active {
     visibility: visible;
     transform: translateX(calc(-100% - var(--drupal-displace-offset-right, 0px))); /* LTR */
