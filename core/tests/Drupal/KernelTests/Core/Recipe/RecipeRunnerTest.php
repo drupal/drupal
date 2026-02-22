@@ -15,7 +15,6 @@ use Drupal\node\Entity\NodeType;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -278,26 +277,6 @@ YAML;
     $recipe = $this->createRecipe($recipe_data);
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage('The "config_test" entity does not support the "setBody" config action.');
-    RecipeRunner::processRecipe($recipe);
-  }
-
-  /**
-   * Tests that renamed plugins are marked as deprecated.
-   */
-  #[IgnoreDeprecations]
-  public function testRenamedConfigActions(): void {
-    $recipe_data = <<<YAML
-name: Renamed config action
-install:
-  - config_test
-config:
-  actions:
-    config_test.dynamic.recipe:
-      ensure_exists:
-        label: 'Created by recipe'
-YAML;
-    $recipe = $this->createRecipe($recipe_data);
-    $this->expectDeprecation('The plugin ID "entity_create:ensure_exists" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/node/3458273.');
     RecipeRunner::processRecipe($recipe);
   }
 

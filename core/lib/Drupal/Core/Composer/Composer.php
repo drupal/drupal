@@ -4,7 +4,6 @@ namespace Drupal\Core\Composer;
 
 use Composer\Script\Event;
 use Composer\Semver\Constraint\Constraint;
-use Drupal\Composer\Plugin\Scaffold\Plugin;
 
 /**
  * Provides static functions for composer script events.
@@ -12,22 +11,6 @@ use Drupal\Composer\Plugin\Scaffold\Plugin;
  * @see https://getcomposer.org/doc/articles/scripts.md
  */
 class Composer {
-
-  /**
-   * Add vendor classes to Composer's static classmap.
-   *
-   * @param \Composer\Script\Event $event
-   *   The event.
-   *
-   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\Composer\Plugin\Scaffold\Plugin::preAutoloadDump() instead.
-   *
-   * @see https://www.drupal.org/node/3531162
-   */
-  public static function preAutoloadDump(Event $event) {
-    @trigger_error('\Drupal\Core\Composer\Composer::preAutoloadDump() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\Composer\Plugin\Scaffold\Plugin::preAutoloadDump() instead. See https://www.drupal.org/node/3531162', E_USER_DEPRECATED);
-    Plugin::preAutoloadDump($event);
-  }
 
   /**
    * Fires the drupal-phpunit-upgrade script event if necessary.

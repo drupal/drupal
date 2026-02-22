@@ -59,16 +59,7 @@ class ConfigActionManager extends DefaultPluginManager {
    *
    * @var string[]
    */
-  private static array $deprecatedPluginIds = [
-    'entity_create:ensure_exists' => [
-      'replacement' => 'entity_create:createIfNotExists',
-      'message' => 'The plugin ID "entity_create:ensure_exists" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/node/3458273.',
-    ],
-    'simple_config_update' => [
-      'replacement' => 'simpleConfigUpdate',
-      'message' => 'The plugin ID "simple_config_update" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "simpleConfigUpdate" instead. See https://www.drupal.org/node/3458273.',
-    ],
-  ];
+  private static array $deprecatedPluginIds = [];
 
   /**
    * Constructs a new \Drupal\Core\Config\Action\ConfigActionManager object.

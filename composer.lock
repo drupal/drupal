@@ -368,7 +368,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "46a0d3c12f83e9727b3d556d54bb107c24053306"
+                "reference": "03e77defebe97a6c6e23a34f1cb4493020caa2f1"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -520,7 +520,7 @@
             },
             "scripts": {
                 "pre-autoload-dump": [
-                    "Drupal\\Core\\Composer\\Composer::preAutoloadDump"
+                    "Drupal\\Composer\\Plugin\\Scaffold\\Plugin::preAutoloadDump"
                 ]
             },
             "license": [
@@ -10177,5 +10177,5 @@
     "platform-overrides": {
         "php": "8.5.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

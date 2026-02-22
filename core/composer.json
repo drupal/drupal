@@ -156,6 +156,6 @@
         }
     },
     "scripts": {
-        "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump"
+        "pre-autoload-dump": "Drupal\\Composer\\Plugin\\Scaffold\\Plugin::preAutoloadDump"
     }
 }
