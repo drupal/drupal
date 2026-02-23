@@ -278,13 +278,6 @@ $connection->insert('actions')
   'description' => 'Unpublish post',
 ))
 ->values(array(
-  'aid' => 'user_block_ip_action',
-  'type' => 'user',
-  'callback' => 'user_block_ip_action',
-  'parameters' => '',
-  'description' => 'Ban IP address of current user',
-))
-->values(array(
   'aid' => 'user_block_user_action',
   'type' => 'user',
   'callback' => 'user_block_user_action',
@@ -17962,13 +17955,6 @@ $connection->insert('locales_source')
   'location' => '/?q=fr/admin/settings/actions',
   'textgroup' => 'default',
   'source' => 'Block current user',
-  'version' => '6.38-dev',
-))
-->values(array(
-  'lid' => '957',
-  'location' => '/?q=fr/admin/settings/actions',
-  'textgroup' => 'default',
-  'source' => 'Ban IP address of current user',
   'version' => '6.38-dev',
 ))
 ->values(array(

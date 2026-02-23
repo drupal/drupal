@@ -413,7 +413,7 @@ class ConfigImporter {
     // @code
     // [
     //   'actions' => 0,
-    //   'ban' => 0,
+    //   'block' => 0,
     //   'options' => -2,
     //   'text' => -1,
     // ];
@@ -421,7 +421,7 @@ class ConfigImporter {
     // Will result in the following sort order:
     // 1. -2   options
     // 2. -1   text
-    // 3.  0 0 ban
+    // 3.  0 0 block
     // 4.  0 1 actions
     // @todo Move this sorting functionality to the extension system.
     array_multisort(array_values($module_list), SORT_ASC, array_keys($module_list), SORT_DESC, $module_list);

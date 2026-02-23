@@ -237,13 +237,6 @@ $connection->insert('actions')
   'label' => 'Unpublish content',
 ))
 ->values(array(
-  'aid' => 'system_block_ip_action',
-  'type' => 'user',
-  'callback' => 'system_block_ip_action',
-  'parameters' => '',
-  'label' => 'Ban IP address of current user',
-))
-->values(array(
   'aid' => 'user_block_user_action',
   'type' => 'user',
   'callback' => 'user_block_user_action',

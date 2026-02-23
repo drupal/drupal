@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate;
 
-use Drupal\ban\Plugin\migrate\destination\BlockedIp;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\migrate\Plugin\migrate\destination\ComponentEntityDisplayBase;
 use Drupal\migrate\Plugin\migrate\destination\Config;
@@ -122,8 +121,6 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
   protected function getContentClasses(): array {
     return [
       EntityContentBase::class,
-      // @todo Remove BlockedIp in https://www.drupal.org/project/drupal/issues/3488827
-      BlockedIp::class,
       UserData::class,
     ];
   }

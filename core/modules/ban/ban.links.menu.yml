@@ -1,6 +1,0 @@
-ban.admin_page:
-  title: 'IP address bans'
-  description: 'Ban visits from specific IP addresses.'
-  route_name: ban.admin_page
-  weight: 10
-  parent: user.admin_index

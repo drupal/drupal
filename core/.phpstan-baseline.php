@@ -10634,68 +10634,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Validation/Plugin/Validation/Constraint/UniqueFieldValueValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\BanIpManager\\:\\:banIp\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/BanIpManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\BanIpManager\\:\\:unbanIp\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/BanIpManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\BanIpManagerInterface\\:\\:banIp\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/BanIpManagerInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\BanIpManagerInterface\\:\\:unbanIp\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/BanIpManagerInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanAdmin\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/Form/BanAdmin.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanAdmin\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/Form/BanAdmin.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanAdmin\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/Form/BanAdmin.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanDelete\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/Form/BanDelete.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanDelete\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/Form/BanDelete.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\ban\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\BlockedIps extends deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:
-in drupal\\:11\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. There is no
-replacement\\.$#',
-	'identifier' => 'class.extendsDeprecatedClass',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/Plugin/migrate/source/d7/BlockedIps.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\basic_auth_test\\\\BasicAuthTestController\\:\\:modifyState\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

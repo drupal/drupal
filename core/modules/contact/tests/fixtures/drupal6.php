@@ -284,13 +284,6 @@ $connection->insert('actions')
   'description' => 'Unpublish post',
 ])
 ->values([
-  'aid' => 'user_block_ip_action',
-  'type' => 'user',
-  'callback' => 'user_block_ip_action',
-  'parameters' => '',
-  'description' => 'Ban IP address of current user',
-])
-->values([
   'aid' => 'user_block_user_action',
   'type' => 'user',
   'callback' => 'user_block_user_action',

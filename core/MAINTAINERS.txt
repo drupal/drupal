@@ -84,9 +84,6 @@ Authentication and Authorization
 Automated Cron
 - ?
 
-Ban
-- ?
-
 Base system
 - See "Framework managers" above.
 
