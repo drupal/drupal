@@ -18,12 +18,16 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\ExpectationFailedException;
 
 // cspell:ignore htkey
+
 /**
  * Tests BrowserTestBase functionality.
+ *
+ * @final
  */
 #[Group('browsertestbase')]
 #[RunTestsInSeparateProcesses]
 class BrowserTestBaseTest extends BrowserTestBase {
+
   use PathAliasTestTrait;
   use CronRunTrait;
 
@@ -35,6 +39,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     'form_test',
     'system_test',
     'node',
+    'deprecation_test',
   ];
 
   /**
@@ -601,6 +606,22 @@ class BrowserTestBaseTest extends BrowserTestBase {
       return $message === 'Test deprecation message';
     });
     $this->assertCount(1, $test_deprecation_messages);
+  }
+
+  /**
+   * Tests deprecation message from deprecated route.
+   *
+   * This test verifies that TestHttpClientMiddleware is properly re-throwing
+   * deprecations occurred in the SUT and collected in the response header.
+   *
+   * @see \Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware
+   * @see _drupal_error_handler
+   * @see _drupal_error_handler_real
+   */
+  #[IgnoreDeprecations]
+  public function testDeprecationTriggeredInSystemUnderTest(): void {
+    $this->expectUserDeprecationMessage('This is the deprecation message for deprecation_test_function().');
+    $this->drupalGet(Url::fromRoute('deprecation_test.route'));
   }
 
   /**
