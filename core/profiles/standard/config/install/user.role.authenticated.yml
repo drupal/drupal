@@ -8,7 +8,6 @@ dependencies:
     - file
     - filter
     - search
-    - shortcut
     - system
 id: authenticated
 label: 'Authenticated user'
@@ -17,7 +16,6 @@ is_admin: false
 permissions:
   - 'access comments'
   - 'access content'
-  - 'access shortcuts'
   - 'delete own files'
   - 'post comments'
   - 'search content'

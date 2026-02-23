@@ -5,8 +5,6 @@
  * Install, update and uninstall functions for the demo_umami profile.
  */
 
-use Drupal\shortcut\Entity\Shortcut;
-
 /**
  * Implements hook_install().
  *
@@ -18,23 +16,6 @@ function demo_umami_install(): void {
   // We install some menu links, so we have to rebuild the router, to ensure the
   // menu links are valid.
   \Drupal::service('router.builder')->rebuildIfNeeded();
-
-  // Populate the default shortcut set.
-  $shortcut = Shortcut::create([
-    'shortcut_set' => 'default',
-    'title' => t('Add content'),
-    'weight' => -20,
-    'link' => ['uri' => 'internal:/node/add'],
-  ]);
-  $shortcut->save();
-
-  $shortcut = Shortcut::create([
-    'shortcut_set' => 'default',
-    'title' => t('All content'),
-    'weight' => -19,
-    'link' => ['uri' => 'internal:/admin/content'],
-  ]);
-  $shortcut->save();
 
   // Enable the demo content module. This can't be specified as a dependency
   // in the demo_umami.info.yml file, as it requires configuration provided by

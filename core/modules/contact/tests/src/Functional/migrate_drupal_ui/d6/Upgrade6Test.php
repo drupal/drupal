@@ -29,6 +29,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'content_translation',
     'migrate_drupal_ui',
     'update',
+    'shortcut',
   ];
 
   /**
@@ -91,7 +92,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'node_type' => 2,
       'path_alias' => 0,
       'search_page' => 3,
-      'shortcut' => 2,
+      'shortcut' => 0,
       'shortcut_set' => 1,
       'taxonomy_term' => 1,
       'taxonomy_vocabulary' => 1,

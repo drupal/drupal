@@ -3,7 +3,6 @@ description: 'Provides a standard site with commonly used features pre-configure
 type: 'Site'
 recipes:
   - basic_block_type
-  - basic_shortcuts
   - article_comment
   - article_tags
   - article_content_type
@@ -32,7 +31,6 @@ install:
   - toolbar
   - field_ui
   - views_ui
-  - shortcut
 config:
   # This recipe is intended to set up a full site from scratch, fulfilling certain
   # expectations. It's not really designed to be a building block. Therefore, treat
