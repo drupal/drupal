@@ -732,6 +732,26 @@ default:
          exit((int) (min($impact) < 0));
       '
 
+'📦 Yarn install on minimum Node.js version':
+  stage: 🪄 Lint
+  image: node:20
+  variables:
+    KUBERNETES_CPU_REQUEST: "1"
+  # Run on push, or on MRs if package.json or yarn.lock have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - core/package.json
+        - core/yarn.lock
+    - when: manual
+      allow_failure: true
+  script:
+    - cd core
+    - corepack enable
+    - echo -e "Node version $(node --version)\nYarn version $(corepack yarn --version)"
+    - yarn install
+
 # This job should be real quick and run at the very end of the pipeline.
 'Write lint caches':
   <<: [ *lint-cache-artifacts ]
