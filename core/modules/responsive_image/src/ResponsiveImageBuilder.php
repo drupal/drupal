@@ -25,7 +25,7 @@ class ResponsiveImageBuilder {
   }
 
   /**
-   * Helper function for template_preprocess_responsive_image().
+   * Helper function for \Drupal\responsive_image\Hook\ResponsiveImageThemeHooks::preprocessResponsiveImage().
    *
    * Builds an array of attributes for <source> tags to be used in a <picture>
    * tag. In other words, this function provides the attributes for each

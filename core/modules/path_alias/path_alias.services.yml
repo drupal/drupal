@@ -20,14 +20,6 @@ services:
     tags:
       - { name: backend_overridable }
   Drupal\path_alias\AliasRepositoryInterface: '@path_alias.repository'
-  # cspell:ignore whitelist
-  path_alias.whitelist:
-    class: Drupal\path_alias\AliasWhitelist
-    tags:
-      - { name: needs_destruction }
-    arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path_alias.repository']
-    deprecated:  The "%service_id%" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the 'router.prefix_list' service instead. See https://www.drupal.org/node/3467559
-  Drupal\path_alias\AliasWhitelistInterface: '@path_alias.whitelist'
   path_alias.prefix_list:
     class: Drupal\path_alias\AliasPrefixList
     tags:
