@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\migrate_source_annotation_bc_test\Plugin\migrate\source;
 
-use Drupal\migrate_drupal\Plugin\migrate\source\EmptySource;
+use Drupal\migrate_multiple_provider_test\Plugin\migrate\source\EmptySource;
 
 /**
  * A migration source plugin with annotations and multiple providers.
