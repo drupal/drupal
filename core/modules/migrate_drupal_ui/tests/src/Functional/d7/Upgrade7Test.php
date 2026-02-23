@@ -34,6 +34,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     'language',
     'migrate_drupal_ui',
     'telephone',
+    'shortcut',
   ];
 
   /**
@@ -102,7 +103,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'node' => 7,
       'node_type' => 8,
       'search_page' => 3,
-      'shortcut' => 6,
+      'shortcut' => 4,
       'shortcut_set' => 2,
       'action' => 24,
       'menu' => 7,

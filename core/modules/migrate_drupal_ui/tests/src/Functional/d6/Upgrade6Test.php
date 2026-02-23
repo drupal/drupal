@@ -33,6 +33,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'migrate_drupal_ui',
     'telephone',
     'update',
+    'shortcut',
   ];
 
   /**
@@ -100,7 +101,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // creates 12 node types.
       'node_type' => 13,
       'search_page' => 3,
-      'shortcut' => 2,
+      'shortcut' => 0,
       'shortcut_set' => 1,
       'action' => 30,
       'menu' => 8,
