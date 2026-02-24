@@ -43,17 +43,17 @@ class ResourceObjectNormalizer extends NormalizerBase {
   protected $cacher;
 
   /**
-   * @var mixed|\Symfony\Component\EventDispatcher\EventDispatcherInterface|null
+   * @var mixed|\Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   private EventDispatcherInterface $eventDispatcher;
 
   /**
-   * @var mixed|\Drupal\Core\Entity\EntityFieldManagerInterface|null
+   * @var mixed|\Drupal\Core\Entity\EntityFieldManagerInterface
    */
   private EntityFieldManagerInterface $entityFieldManager;
 
   /**
-   * @var mixed|\Drupal\Core\Entity\EntityTypeManagerInterface|null
+   * @var mixed|\Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private EntityTypeManagerInterface $entityTypeManager;
 
@@ -69,25 +69,10 @@ class ResourceObjectNormalizer extends NormalizerBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(ResourceObjectNormalizationCacher $cacher, ?EventDispatcherInterface $event_dispatcher = NULL, ?EntityFieldManagerInterface $entity_field_manager = NULL, ?EntityTypeManagerInterface $entity_type_manager = NULL) {
+  public function __construct(ResourceObjectNormalizationCacher $cacher, EventDispatcherInterface $event_dispatcher, EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->cacher = $cacher;
-
-    if ($event_dispatcher === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3280569', E_USER_DEPRECATED);
-      $event_dispatcher = \Drupal::service('event_dispatcher');
-    }
     $this->eventDispatcher = $event_dispatcher;
-
-    if ($entity_field_manager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $entity_field_manager argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3031367', E_USER_DEPRECATED);
-      $entity_field_manager = \Drupal::service('entity_field_manager');
-    }
     $this->entityFieldManager = $entity_field_manager;
-
-    if ($entity_type_manager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $entity_type_manager argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3031367', E_USER_DEPRECATED);
-      $entity_type_manager = \Drupal::service('entity_type_manager');
-    }
     $this->entityTypeManager = $entity_type_manager;
   }
 

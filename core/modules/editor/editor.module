@@ -109,29 +109,6 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
 }
 
 /**
- * Loads an individual configured text editor based on text format ID.
- *
- * @param string $format_id
- *   A text format ID.
- *
- * @return \Drupal\editor\Entity\Editor|null
- *   A text editor object, or NULL.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- *   \Drupal::entityTypeManager()->getStorage('editor')->load($format_id)
- *   instead.
- * @see https://www.drupal.org/node/3509245
- */
-function editor_load($format_id) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal::entityTypeManager()->getStorage(\'editor\')->load($format_id) instead. See https://www.drupal.org/node/3509245', E_USER_DEPRECATED);
-  // While loading multiple editors at once is a more efficient query, on warm
-  // caches, loading editor configuration from APCu is fast and avoids a call to
-  // ConfigFactory::listAll() in a loadMultiple() call with no IDs passed.
-  // @see Drupal\Core\Config\Entity\ConfigEntityStorage::doLoadMultiple()
-  return $format_id ? Editor::load($format_id) : NULL;
-}
-
-/**
  * Applies text editor XSS filtering.
  *
  * @param string $html

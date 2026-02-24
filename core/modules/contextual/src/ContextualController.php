@@ -20,12 +20,8 @@ class ContextualController implements ContainerInjectionInterface {
 
   public function __construct(
     protected RendererInterface $renderer,
-    protected ?ContextualLinksSerializer $serializer = NULL,
+    protected ContextualLinksSerializer $serializer,
   ) {
-    if (!$serializer) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $serializer argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3568088', E_USER_DEPRECATED);
-      $this->serializer = \Drupal::service(ContextualLinksSerializer::class);
-    }
   }
 
   /**

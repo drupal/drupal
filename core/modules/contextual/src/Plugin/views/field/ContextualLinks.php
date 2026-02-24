@@ -32,14 +32,9 @@ class ContextualLinks extends FieldPluginBase {
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    ?ContextualLinksSerializer $contextual_links_serializer = NULL,
+    ContextualLinksSerializer $contextual_links_serializer ,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    if (!$contextual_links_serializer) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $contextual_links_serializer argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3568088', E_USER_DEPRECATED);
-      $contextual_links_serializer = \Drupal::service(ContextualLinksSerializer::class);
-    }
     $this->contextualLinksSerializer = $contextual_links_serializer;
   }
 

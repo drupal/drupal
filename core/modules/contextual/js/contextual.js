@@ -234,27 +234,6 @@
    * @private
    */
   Drupal.contextual = {
-    /**
-     * The {@link Drupal.contextual.View} instances associated with each list
-     * element of contextual links.
-     *
-     * @type {Array}
-     *
-     * @deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is no
-     *  replacement.
-     */
-    views: [],
-
-    /**
-     * The {@link Drupal.contextual.RegionView} instances associated with each
-     * contextual region element.
-     *
-     * @type {Array}
-     *
-     * @deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is no
-     *  replacement.
-     */
-    regionViews: [],
     instances: new Proxy([], {
       set: function set(obj, prop, value) {
         obj[prop] = value;

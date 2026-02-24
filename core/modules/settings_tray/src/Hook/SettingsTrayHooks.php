@@ -80,7 +80,7 @@ class SettingsTrayHooks {
     if (isset($build['#contextual_links']['block'])) {
       // Ensure that contextual links vary by whether the block has config
       // overrides or not.
-      // @see _contextual_links_to_id()
+      // @see \Drupal\contextual\ContextualLinksSerializer::linksToId().
       $build['#contextual_links']['block']['metadata']['has_overrides'] = _settings_tray_has_block_overrides($build['#block']) ? 1 : 0;
     }
     // Force a new 'data-contextual-id' attribute on blocks when this module is

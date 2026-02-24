@@ -2,7 +2,6 @@
 
 namespace Drupal\search\Hook;
 
-use Drupal\block\BlockInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -104,22 +103,6 @@ class SearchHooks {
     $form['form_build_id']['#access'] = FALSE;
     $form['form_token']['#access'] = FALSE;
     $form['form_id']['#access'] = FALSE;
-  }
-
-  /**
-   * Implements hook_ENTITY_TYPE_presave() for block entities.
-   */
-  #[Hook('block_presave')]
-  public function blockPresave(BlockInterface $block): void {
-    // @see \Drupal\search\Plugin\Block\SearchBlock
-    if ($block->getPluginId() === 'search_form_block') {
-      $settings = $block->get('settings');
-      if ($settings['page_id'] === '') {
-        @trigger_error('Saving a search block with an empty page ID is deprecated in drupal:11.1.0 and removed in drupal:12.0.0. To use the default search page, use NULL. See https://www.drupal.org/node/3463132', E_USER_DEPRECATED);
-        $settings['page_id'] = NULL;
-        $block->set('settings', $settings);
-      }
-    }
   }
 
 }
