@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide testdox updatedb stylelintrc fastzip phpcscache Ksection
+# cspell:ignore codequality Micheh micheh webide testdox updatedb stylelintrc fastzip phpcscache Ksection drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB
 
 ################
 # Drupal GitLabCI template.
@@ -35,7 +35,7 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     # Run when called from an upstream pipeline https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html?tab=Multi-project+pipeline#use-rules-to-control-downstream-pipeline-jobs
     - if: $CI_PIPELINE_SOURCE == 'pipeline'
-    # Run when called from a parent pipeline (e.g. updated dependencies job)
+    # Run when called from a parent pipeline
     - if: $CI_PIPELINE_SOURCE == 'parent_pipeline'
     # Run on commits.
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
@@ -59,6 +59,7 @@ workflow:
 
 variables:
   FF_USE_FASTZIP: 1
+  FF_NETWORK_PER_BUILD: 1
   _CONFIG_DOCKERHUB_ROOT: "registry.gitlab.com/drupal-infrastructure/drupalci/drupalci-environments"
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: dev-main
@@ -69,10 +70,21 @@ variables:
   # Setting GIT_CLONE_PATH forces a consistent working directory,
   # and on Kubernetes there is no risk of conflict between jobs.
   GIT_CLONE_PATH: $CI_BUILDS_DIR
-  PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   PHPUNIT_CONFIGURATION_FILE_PATH: $CI_PROJECT_DIR/core
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
   _TARGET_PHP: "${PRIMARY_PHP}"
+  _TARGET_DB: "mysql-8.4"
+  _TARGET_DB_DRIVER: "mysql"
+  _TARGET_DB_DRIVER_MODULE: "mysql"
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: mysql
+  MYSQL_USER: drupaltestbot
+  MYSQL_PASSWORD: drupaltestbotpw
+  POSTGRES_DB: drupaltestbot
+  POSTGRES_USER: drupaltestbot
+  POSTGRES_PASSWORD: drupaltestbotpw
+  SIMPLETEST_BASE_URL: http://localhost/subdirectory
+  SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
   # Use local cache for yarn, see .yarn-install-from-cache.
   YARN_ENABLE_GLOBAL_CACHE: false
   YARN_ENABLE_MIRROR: false
@@ -82,8 +94,8 @@ variables:
 #############
 stages:
   - 🪄 Lint
-  - ⚡️ Unit tests
-  - 🗜️ Test
+  - ⚡️ Tests
+  - 🗜️ Additional tests
 
 #############
 # Defaults  #
@@ -108,10 +120,31 @@ default:
 
 .with-composer: &with-composer
   needs:
-    - '🧹 PHP Coding standards (PHPCS)'
+    - job: '🧹 PHP Coding standards (PHPCS)'
+      optional: true
+    - job: '📦 Composer'
+      optional: true
+
+.with-database: &with-database
+  name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
+  alias: database
+
+.with-selenium-chrome: &with-selenium-chrome
+  name: selenium/standalone-chrome:127.0
+  alias: selenium
+  variables:
+    JAVA_OPTS: $SELENIUM_JAVA_OPTS
+    SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+    SE_NODE_MAX_SESSIONS: "16"
+    SE_SESSION_RETRY_INTERVAL: "1"
+    SE_SESSION_REQUEST_TIMEOUT: "60"
+    SE_START_XVFB: "true"
+    SE_START_VNC: "false"
 
 .default-job-settings-lint: &default-job-settings-lint
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     - if: $PERFORMANCE_TEST != "1"
 
 .composer-setup: &composer-setup
@@ -153,6 +186,38 @@ default:
       - ./core/.yarn/cache
     policy: pull
 
+.test-setup: &test-setup
+  stage: ⚡️ Tests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+      allow_failure: true
+  before_script:
+    - |
+      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
+      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
+      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+    - echo "SIMPLETEST_DB = $SIMPLETEST_DB"
+    - export PHPUNIT_CONFIGURATION_FILE_PATH=$CI_PROJECT_DIR/core
+    - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
+  script:
+    - sudo -u www-data -E -H composer run-script drupal-phpunit-upgrade-check
+    # Need to pass this along directly.
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --debug-discovery --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite ":memory:" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_NODE_INDEX --ci-parallel-node-total $CI_NODE_TOTAL
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/phpunit-*.xml
+    paths:
+      - ./sites/default/files/simpletest/phpunit-*.xml
+      - ./sites/simpletest/browser_output
+      - '*.log'
+
 ################
 # Stages
 #
@@ -163,13 +228,12 @@ default:
 # If any job in the stage fails, the pipeline will exit early.
 ################
 
-.default-stage: &default-stage
-  stage: 🗜️ Test
+.recursive-trigger: &recursive-trigger
+  stage: 🗜️ Additional tests
   trigger:
     # Rely on the status of the child pipeline.
     strategy: depend
-    include:
-      - local: .gitlab-ci/pipeline.yml
+    include: .gitlab-ci.yml
 
 .run-on-commit: &run-on-commit
   rules:
@@ -182,18 +246,44 @@ default:
       allow_failure: true
 
 .run-on-mr: &run-on-mr
+  needs: [ '🧹 PHP Coding standards (PHPCS)' ]
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
       allow_failure: true
 
+################
+# Composer Job
+################
+
+'📦 Composer':
+  stage: 🪄 Lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+  needs: []
+  script:
+    - *composer-setup
+    - if [ -n "$COMPOSER_UPDATE" ]; then
+        composer update --optimize-autoloader;
+        composer outdated;
+      fi
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - vendor/
+      - composer.lock
+      - composer/Metapackage/
+
 ##################
 # Unit test Jobs
 ##################
 
-'Unit tests Core':
-  <<: [ *default-job-settings-lint ]
-  stage: ⚡️ Unit tests
+'📋 PHPUnit Unit (Core)':
+  stage: ⚡️ Tests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    - if: $PERFORMANCE_TEST != "1"
   needs: []
   parallel:
     matrix:
@@ -227,12 +317,14 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
 
-'Unit tests Component':
+'📋 PHPUnit Unit (Component)':
   # Jobs that produce metrics must run on performance test pipelines so MRs show
   # the correct information.
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     - if: $PERFORMANCE_TEST != "1" || $_TARGET_PHP == $PRIMARY_PHP
-  stage: ⚡️ Unit tests
+  stage: ⚡️ Tests
   needs: []
   parallel:
     matrix:
@@ -283,12 +375,14 @@ default:
     paths:
       - $_ARTIFACTS_DIR
 
-'Unit tests PHPStan rules':
-  stage: ⚡️ Unit tests
+'📋 PHPUnit Unit (PHPStan rules)':
+  stage: ⚡️ Tests
   needs: []
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     # Run if PHPStan files have changed, or manually.
     - if: $PERFORMANCE_TEST != "1"
       changes:
@@ -309,28 +403,165 @@ default:
         coverage_format: cobertura
         path: core/tests/PHPStan/coverage.cobertura.xml
 
-# Default configuration.
-'DEFAULT: PHP 8.5 MySQL 8.4':
-  <<: *default-stage
+################
+# Test Jobs
+################
+
+'🖱️️️ PHPUnit Functional Javascript':
+  <<: [ *with-composer, *test-setup ]
+  parallel: 3
   variables:
-    _TARGET_DB: "mysql-8.4"
-    _TARGET_DB_DRIVER: "mysql"
-    _TARGET_DB_DRIVER_MODULE: "mysql"
-    PERFORMANCE_TEST: $PERFORMANCE_TEST
-    OPENTELEMETRY_COLLECTOR: $OPENTELEMETRY_COLLECTOR
-  # Run on MR, schedule, push, parent pipeline and performance test.
+    TESTSUITE: PHPUnit-FunctionalJavascript
+    CONCURRENCY: 5
+    KUBERNETES_CPU_REQUEST: "16"
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
+  after_script:
+    - echo $MINK_DRIVER_ARGS_WEBDRIVER
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+    - cp /builds/chromedriver.log ./
+
+'👷️️️ PHPUnit Build':
+  <<: [ *with-composer, *test-setup ]
+  retry: 1
+  variables:
+    TESTSUITE: PHPUnit-Build
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: "5"
+  services:
+    - <<: *with-database
+
+'🌐️️ PHPUnit Functional':
+  <<: [ *with-composer, *test-setup ]
+  parallel: 8
+  variables:
+    TESTSUITE: PHPUnit-Functional
+    CONCURRENCY: "5"
+    KUBERNETES_CPU_REQUEST: "16"
+  services:
+    - <<: *with-database
+
+'⚙️️ PHPUnit Kernel':
+  <<: [ *with-composer, *test-setup ]
+  parallel: 5
+  variables:
+    TESTSUITE: PHPUnit-Kernel
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 12
+  services:
+    - <<: *with-database
+
+'🦉️️️ Nightwatch':
+  <<: [ *with-composer, *test-setup ]
+  retry: 1
+  variables:
+    KUBERNETES_CPU_REQUEST: "16"
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
+  script:
+    - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
+    - cp ./core/.env.example ./core/.env
+    # dotenv-safe/config does not support environment variables
+    # @see https://github.com/rolodato/dotenv-safe/issues/126
+    # @todo move this to `variables` when the above is resolved
+    - echo "DRUPAL_TEST_BASE_URL='http://localhost/subdirectory'" >> ./core/.env
+    - echo "DRUPAL_TEST_CHROMEDRIVER_AUTOSTART=false" >> ./core/.env
+    - echo "DRUPAL_TEST_DB_URL='${DRUPAL_TEST_DB_URL}'" >> ./core/.env
+    - echo "DRUPAL_TEST_WEBDRIVER_HOSTNAME='selenium'" >> ./core/.env
+    - echo "DRUPAL_TEST_WEBDRIVER_CHROME_ARGS='--disable-dev-shm-usage --disable-gpu --headless --dns-prefetch-disable'" >> ./core/.env
+    - echo "DRUPAL_TEST_WEBDRIVER_W3C=true" >> ./core/.env
+    - echo "DRUPAL_TEST_WEBDRIVER_PORT='4444'" >> ./core/.env
+    - echo "DRUPAL_NIGHTWATCH_OUTPUT='"../nightwatch_output"'" >> ./core/.env
+    - echo "COLUMNS=1000" >> ./core/.env
+    - chown -R www-data:www-data ./sites /var/www
+    - cd core
+    - corepack enable
+    - yarn install
+    - echo -e "Node version $(node --version)\nYarn version $(yarn --version)"
+    - sudo -u www-data -E -H yarn run test:nightwatch --workers=3
+  after_script:
+    - cp /builds/chromedriver.log ./
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./nightwatch_output/**/*.xml
+    paths:
+      - ./nightwatch_output
+      - '*.log'
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/.yarn/cache
+    policy: pull
+
+'🔁 Repeat Class Test':
+  <<: [ *with-composer, *test-setup ]
+  stage: 🗜️ Additional tests
+  when: manual
+  allow_failure: true
+  variables:
+    REPEAT_TEST_CLASS: 'Drupal\Tests\Change\Me'
+    REPEAT_COUNT: 100
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
+  script:
+    - echo "ℹ️ Running class ${REPEAT_TEST_CLASS}"
+    - |
+      if [[ $REPEAT_TEST_CLASS == "Drupal\Tests\Change\Me" ]]; then
+        echo '❗ You need to change the REPEAT_TEST_CLASS variable to an existing class before running the job.'
+        echo '   You just need to click on the job that you want to run (do not press the play button straight away) and then set the following:'
+        echo '   "Key" to "REPEAT_TEST_CLASS" and "Value" to "Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest"';
+        exit 1;
+      else
+        sudo -u www-data -E -H php ./core/scripts/run-tests.sh --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --color --keep-results --concurrency "$CONCURRENCY" --repeat "$REPEAT_COUNT" --sqlite ":memory:" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
+      fi
+
+'🚲 Performance tests':
+  <<: [ *test-setup ]
+  stage: 🗜️ Additional tests
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-      allow_failure: true
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
-      allow_failure: true
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
     - if: $PERFORMANCE_TEST == "1"
+    - when: manual
+      allow_failure: true
+  variables:
+    KUBERNETES_CPU_REQUEST: "24"
+    SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver-selenium.log"
+  tags:
+    - performance-test-runner
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
+  script:
+    #  Determine DB driver.
+    - |
+      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
+      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=$_TARGET_DB_DRIVER://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=$_TARGET_DB_DRIVER_MODULE
+      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+    - composer install --optimize-autoloader
+    - export OTEL_COLLECTOR="$OPENTELEMETRY_COLLECTOR"
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit --display-all-issues -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+  after_script:
+    - cp /builds/chromedriver-selenium.log ./
+
+################
+# Variant trigger jobs
+################
 
 # Re-run the pipeline, but with Composer updates.
-'DEFAULT: Updated dependencies (PHP 8.5 MySQL 8.4)':
-  <<: *default-stage
+'Updated dependencies':
+  <<: *recursive-trigger
   # Run daily and allow manual runs on MRs.
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
@@ -340,28 +571,28 @@ default:
       allow_failure: true
   variables:
     COMPOSER_UPDATE: "1"
-  trigger:
-    include: .gitlab-ci.yml
 
-# Special job for MRs for test-only checks. The name starts with a space to be
-# listed before the other jobs.
-' 🩹 TEST-ONLY':
-  <<: [ *default-stage, *with-composer ]
-  when: manual
-  allow_failure: true
-  variables:
-    _TARGET_DB: "mysql-8.4"
+# Runs only the tests affected by changes in the MR.
+# The name starts with a space to be listed before the other jobs.
+' 🩹 Test-only changes':
+  <<: [ *with-composer, *test-setup ]
+  stage: 🗜️ Additional tests
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-  trigger:
-    # Rely on the status of the child pipeline.
-    strategy: mirror
-    include:
-      - local: .gitlab-ci/pipeline-test-only.yml
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $PERFORMANCE_TEST != "1"
+      when: manual
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
+      when: manual
+      allow_failure: true
+  script:
+    - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
 
 # Main listing of jobs. All of these are available on Merge Requests.
 'MariaDB (via PDO)':
-  <<: [ *default-stage, *run-on-mr ]
+  <<: [ *recursive-trigger, *run-on-mr ]
   parallel:
     matrix:
       - _TARGET_PHP: !reference [.php_versions]
@@ -371,7 +602,7 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'MySQL (via PDO)':
-  <<: [ *default-stage, *run-on-mr ]
+  <<: [ *recursive-trigger, *run-on-mr ]
   parallel:
     matrix:
       - _TARGET_PHP: !reference [.php_versions]
@@ -381,7 +612,7 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'MySQL (via mysqli)':
-  <<: [ *default-stage, *run-on-mr ]
+  <<: [ *recursive-trigger, *run-on-mr ]
   parallel:
     matrix:
       - _TARGET_PHP: !reference [.php_versions]
@@ -391,14 +622,14 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
 'PostgreSQL':
-  <<: [ *default-stage, *run-on-mr ]
+  <<: [ *recursive-trigger, *run-on-mr ]
   parallel:
     matrix:
       - _TARGET_PHP: !reference [.php_versions]
         _TARGET_DB: [pgsql-16, pgsql-17, pgsql-18]
 
 'SQLite':
-  <<: [ *default-stage, *run-on-mr ]
+  <<: [ *recursive-trigger, *run-on-mr ]
   parallel:
     matrix:
       - _TARGET_PHP: !reference [.php_versions]
@@ -407,14 +638,13 @@ default:
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.5 PostgreSQL 16':
-  <<: [ *default-stage, *run-on-commit ]
-  needs: [ 'DEFAULT: PHP 8.5 MySQL 8.4' ]
+  <<: [ *recursive-trigger, *run-on-commit ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "pgsql-16"
 
 '[Commit] PHP 8.5 MySQL 9 via mysqli':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: [ *recursive-trigger, *run-on-commit ]
   needs: [ '[Commit] PHP 8.5 PostgreSQL 16' ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
@@ -423,7 +653,7 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
 '[Commit] PHP 8.5 SQLite 3.45':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: [ *recursive-trigger, *run-on-commit ]
   needs: [ '[Commit] PHP 8.5 MySQL 9 via mysqli' ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
@@ -432,14 +662,13 @@ default:
 # Jobs running daily.
 # The value set in the "needs" property will determine the order in the sequence.
 '[Daily] PHP minimum PostgreSQL 16':
-  <<: [ *default-stage, *run-daily ]
-  needs: [ 'DEFAULT: PHP 8.5 MySQL 8.4' ]
+  <<: [ *recursive-trigger, *run-daily ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "pgsql-16"
 
 '[Daily] PHP 8.5 MySQL 9 via mysqli':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *recursive-trigger, *run-daily ]
   needs: [ '[Daily] PHP minimum PostgreSQL 16' ]
   variables:
     _TARGET_PHP: "8.5-ubuntu"
@@ -448,14 +677,14 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysqli"
 
 '[Daily] PHP minimum SQLite 3.45':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *recursive-trigger, *run-daily ]
   needs: [ '[Daily] PHP 8.5 MySQL 9 via mysqli' ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "sqlite-3"
 
 '[Daily] MariaDB 10.6':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *recursive-trigger, *run-daily ]
   needs: [ '[Daily] PHP minimum SQLite 3.45' ]
   variables:
     _TARGET_DB: "mariadb-10.6"
@@ -463,7 +692,7 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
 '[Daily] MySQL 9.3':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *recursive-trigger, *run-daily ]
   needs: [ '[Daily] MariaDB 10.6' ]
   variables:
     _TARGET_DB: "mysql-9"
@@ -471,7 +700,7 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
 '[Daily] PostgreSQL 18':
-  <<: [ *default-stage, *run-daily ]
+  <<: [ *recursive-trigger, *run-daily ]
   needs: [ '[Daily] MySQL 9.3' ]
   variables:
     _TARGET_DB: "pgsql-18"
@@ -498,6 +727,8 @@ default:
   <<: [ *lint-cache-artifacts ]
   stage: 🪄 Lint
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
@@ -532,6 +763,7 @@ default:
       - core/.cspellcache
 
 '🧹 PHP Static Analysis (phpstan)':
+  <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "4"
@@ -623,6 +855,8 @@ default:
     CACHE_FILE: "core/.eslintcache"
   # Run on push, or on MRs if CSS files have changed, or manually.
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
@@ -655,6 +889,8 @@ default:
     CACHE_FILE: "core/.stylelintcache"
   # Run on push, or on MRs if CSS files have changed, or manually.
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
@@ -685,6 +921,8 @@ default:
     KUBERNETES_CPU_REQUEST: "2"
   # Run on MRs if config schema files have changed, or manually.
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     - when: manual
       allow_failure: true
   artifacts:
@@ -739,6 +977,8 @@ default:
     KUBERNETES_CPU_REQUEST: "1"
   # Run on push, or on MRs if package.json or yarn.lock have changed, or manually.
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
@@ -756,11 +996,13 @@ default:
 'Write lint caches':
   <<: [ *lint-cache-artifacts ]
   rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
     - if: $PERFORMANCE_TEST == "1"
-  stage: 🗜️ Test
+  stage: ⚡️ Tests
   script:
     # Exit with an error if any of the lint cache files do not exist.
     - if [ ! -f core/phpstan-tmp/resultCache.php ]; then exit 1; fi
