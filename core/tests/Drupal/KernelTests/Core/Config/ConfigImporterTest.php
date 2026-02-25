@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -946,6 +947,30 @@ class ConfigImporterTest extends KernelTestBase {
     \Drupal::configFactory()->reset($cronName);
     $this->assertEquals('Foo', $this->config($systemSiteName)->get('name'));
     $this->assertEquals(0, $this->config($cronName)->get('logging'));
+  }
+
+  /**
+   * Tests that installing a theme will reload all service dependencies.
+   */
+  public function testThemeInstallReloadsServices(): void {
+    $this->assertFalse(\Drupal::service(ThemeHandlerInterface::class)->themeExists('test_base_theme'));
+
+    $sync = $this->container->get('config.storage.sync');
+    // Ensure that the config import will install the theme.
+    $extensions = $sync->read('core.extension');
+    $extensions['theme']['test_base_theme'] = 0;
+    $sync->write('core.extension', $extensions);
+
+    $importer = $this->configImporter();
+    $property = new \ReflectionProperty($importer, 'themeHandler');
+    $old_theme_handler = $property->getValue($importer);
+    $this->assertIsObject($old_theme_handler);
+
+    $importer->import();
+    $this->assertTrue(\Drupal::service(ThemeHandlerInterface::class)->themeExists('test_base_theme'));
+    $new_theme_handler = $property->getValue($importer);
+    $this->assertIsObject($new_theme_handler);
+    $this->assertNotSame($old_theme_handler, $new_theme_handler);
   }
 
   /**
