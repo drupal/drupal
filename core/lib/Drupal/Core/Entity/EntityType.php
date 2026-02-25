@@ -252,6 +252,11 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * A callable that can be used to provide the entity URI.
    *
    * @var callable|null
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link
+   *   templates or a route provider to specify entity URIs.
+   *
+   * @see https://www.drupal.org/node/3575062
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $uri_callback = NULL;
@@ -847,6 +852,9 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getUriCallback() {
+    if ($this->uri_callback) {
+      @trigger_error('The "uri_callback" property on entity types is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link templates or a route provider to specify entity URIs. See https://www.drupal.org/node/3575062', E_USER_DEPRECATED);
+    }
     return $this->uri_callback;
   }
 
@@ -854,6 +862,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function setUriCallback($callback) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link templates or a route provider to specify entity URIs. See https://www.drupal.org/node/3575062', E_USER_DEPRECATED);
     $this->uri_callback = $callback;
     return $this;
   }
