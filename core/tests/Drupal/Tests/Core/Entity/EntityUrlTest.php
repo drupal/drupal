@@ -111,6 +111,7 @@ class EntityUrlTest extends UnitTestCase {
   public function testToUrlDefaultException(): void {
     $values = ['id' => static::ENTITY_ID];
     $entity = $this->getEntity(StubEntityBase::class, $values);
+    // @phpstan-ignore method.deprecated
     $this->entityType->getUriCallback()->willReturn(NULL);
 
     $this->expectException(UndefinedLinkTemplateException::class);
@@ -364,6 +365,7 @@ class EntityUrlTest extends UnitTestCase {
     $entity = $this->getEntity(StubEntityBase::class, ['id' => static::ENTITY_ID]);
 
     $this->registerBundleInfo($bundle_info);
+    // @phpstan-ignore method.deprecated
     $this->entityType->getUriCallback()->willReturn($uri_callback);
 
     $link_template = 'canonical';
@@ -404,6 +406,7 @@ class EntityUrlTest extends UnitTestCase {
     $entity = $this->getEntity(StubEntityBase::class, ['id' => static::ENTITY_ID, 'langcode' => $this->langcode]);
 
     $this->registerBundleInfo($bundle_info);
+    // @phpstan-ignore method.deprecated
     $this->entityType->getUriCallback()->willReturn($uri_callback);
 
     /** @var \Drupal\Core\Url $url */

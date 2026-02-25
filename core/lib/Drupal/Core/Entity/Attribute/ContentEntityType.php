@@ -51,6 +51,14 @@ class ContentEntityType extends EntityType {
     public readonly bool $translatable = FALSE,
     public readonly bool $show_revision_ui = FALSE,
     public readonly array $label_count = [],
+    /**
+     * A callable that can be used to provide the entity URI.
+     *
+     * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link
+     *   templates or a route provider to specify entity URIs.
+     *
+     * @see https://www.drupal.org/node/3575062
+     */
     public readonly ?string $uri_callback = NULL,
     public readonly ?string $field_ui_base_route = NULL,
     public readonly bool $common_reference_target = FALSE,
@@ -60,6 +68,10 @@ class ContentEntityType extends EntityType {
     public readonly array $revision_metadata_keys = [],
     public readonly array $additional = [],
   ) {
+    // @phpstan-ignore property.deprecated
+    if ($this->uri_callback !== NULL) {
+      @trigger_error('The "uri_callback" property on entity types is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link templates or a route provider to specify entity URIs. See https://www.drupal.org/node/3575062', E_USER_DEPRECATED);
+    }
   }
 
 }

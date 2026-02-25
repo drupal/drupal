@@ -43,6 +43,14 @@ class ConfigEntityType extends EntityType {
     public readonly ?TranslatableMarkup $bundle_label = NULL,
     public readonly bool $internal = FALSE,
     public readonly array $label_count = [],
+    /**
+     * A callable that can be used to provide the entity URI.
+     *
+     * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link
+     *   templates or a route provider to specify entity URIs.
+     *
+     * @see https://www.drupal.org/node/3575062
+     */
     public readonly ?string $uri_callback = NULL,
     public readonly bool $common_reference_target = FALSE,
     public readonly array $list_cache_contexts = [],
@@ -52,6 +60,10 @@ class ConfigEntityType extends EntityType {
     public readonly array $lookup_keys = [],
     public readonly array $config_export = [],
   ) {
+    // @phpstan-ignore property.deprecated
+    if ($this->uri_callback !== NULL) {
+      @trigger_error('The "uri_callback" property on entity types is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link templates or a route provider to specify entity URIs. See https://www.drupal.org/node/3575062', E_USER_DEPRECATED);
+    }
   }
 
 }

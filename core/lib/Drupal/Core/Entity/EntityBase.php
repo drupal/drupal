@@ -214,6 +214,7 @@ abstract class EntityBase implements EntityInterface {
       if (isset($bundles[$bundle]['uri_callback'])) {
         $uri_callback = $bundles[$bundle]['uri_callback'];
       }
+      // @phpstan-ignore method.deprecated
       elseif ($entity_uri_callback = $this->getEntityType()->getUriCallback()) {
         $uri_callback = $entity_uri_callback;
       }

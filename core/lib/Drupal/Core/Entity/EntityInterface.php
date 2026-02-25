@@ -110,13 +110,13 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    *   "version-history" = "/node/{node}/revisions"
    * }
    * @endcode
-   * or specified in a callback function set like:
+   * or specified in a callback function set like (deprecated):
    * @code
    * uri_callback = "comment_uri",
    * @endcode
    * If the path is not set in the links array, the uri_callback function is
-   * used for setting the path. If this does not exist and the link relationship
-   * type is canonical, the path is set using the default template:
+   * used for setting the path (deprecated). If this does not exist and the link
+   * relationship type is canonical, the path is set using the default template:
    * entity/entityType/id.
    *
    * @param string $rel
