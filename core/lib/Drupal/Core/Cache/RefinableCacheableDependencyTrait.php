@@ -13,16 +13,9 @@ trait RefinableCacheableDependencyTrait {
    * {@inheritdoc}
    */
   public function addCacheableDependency($other_object) {
-    if ($other_object instanceof CacheableDependencyInterface) {
-      $this->addCacheContexts($other_object->getCacheContexts());
-      $this->addCacheTags($other_object->getCacheTags());
-      $this->mergeCacheMaxAge($other_object->getCacheMaxAge());
-    }
-    else {
-      // Not a cacheable dependency, this can not be cached.
-      @trigger_error(sprintf("Calling %s() with an object that doesn't implement %s is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3232020", __METHOD__, CacheableDependencyInterface::class), E_USER_DEPRECATED);
-      $this->cacheMaxAge = 0;
-    }
+    $this->addCacheContexts($other_object->getCacheContexts());
+    $this->addCacheTags($other_object->getCacheTags());
+    $this->mergeCacheMaxAge($other_object->getCacheMaxAge());
     return $this;
   }
 

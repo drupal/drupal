@@ -77,11 +77,6 @@ class NullBackend implements CacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function invalidateAll() {}
-
-  /**
-   * {@inheritdoc}
-   */
   public function garbageCollection() {}
 
   /**

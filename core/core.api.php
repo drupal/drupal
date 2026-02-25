@@ -499,7 +499,7 @@
  * There are two ways to remove an item from the cache:
  * - Deletion (using delete(), deleteMultiple() or deleteAll()) permanently
  *   removes the item from the cache.
- * - Invalidation (using invalidate(), invalidateMultiple() or invalidateAll())
+ * - Invalidation (using invalidate() or invalidateMultiple())
  *   is a "soft" delete that only marks items as "invalid", meaning "not fresh"
  *   or "not fresh enough". Invalid items are not usually returned from the
  *   cache, so in most ways they behave as if they have been deleted. However,

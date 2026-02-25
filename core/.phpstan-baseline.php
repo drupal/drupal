@@ -1556,28 +1556,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Asset/JsCollectionOptimizerLazy.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Asset\\\\LibraryDiscovery\\:\\:clearCachedDefinitions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Asset/LibraryDiscovery.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Asset\\\\LibraryDiscoveryCollector\\:\\:clearCachedDefinitions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Asset/LibraryDiscoveryCollector.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Asset\\\\LibraryDiscoveryCollector\\:\\:reset\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Asset/LibraryDiscoveryCollector.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Asset\\\\LibraryDiscoveryInterface\\:\\:clearCachedDefinitions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Asset/LibraryDiscoveryInterface.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Asset\\\\LibraryDiscoveryParser\\:\\:isValidUri\\(\\) has no return type specified\\.$#',
@@ -1898,12 +1880,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/ApcuBackend.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\ApcuBackend\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/ApcuBackend.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\ApcuBackend\\:\\:invalidateMultiple\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -1953,12 +1929,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\BackendChain\\:\\:invalidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/BackendChain.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\BackendChain\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/BackendChain.php',
@@ -2025,12 +1995,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\CacheBackendInterface\\:\\:invalidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/CacheBackendInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\CacheBackendInterface\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/CacheBackendInterface.php',
@@ -2222,12 +2186,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/ChainedFastBackend.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\ChainedFastBackend\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/ChainedFastBackend.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\ChainedFastBackend\\:\\:invalidateMultiple\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -2354,12 +2312,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseBackend.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\DatabaseBackend\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseBackend.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\DatabaseBackend\\:\\:invalidateMultiple\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -2451,12 +2403,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\MemoryBackend\\:\\:invalidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/MemoryBackend.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\MemoryBackend\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/MemoryBackend.php',
@@ -2564,12 +2510,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/NullBackend.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\NullBackend\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/NullBackend.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\NullBackend\\:\\:invalidateMultiple\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -2619,12 +2559,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\PhpBackend\\:\\:invalidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/PhpBackend.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\PhpBackend\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/PhpBackend.php',
@@ -30996,12 +30930,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:invalidateMultiple\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -46391,14 +46319,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Asset/LibraryDiscoveryParserTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to constant on deprecated class Drupal\\\\Core\\\\Asset\\\\LibraryDiscovery\\:
-in drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use
-\\\\Drupal\\\\Core\\\\Asset\\\\LibraryDiscoveryCollector instead\\.$#',
-	'identifier' => 'classConstant.deprecatedClass',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Asset/LibraryDiscoveryTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Batch\\\\BatchBuilderTest\\:\\:finishedCallback\\(\\) has no return type specified\\.$#',

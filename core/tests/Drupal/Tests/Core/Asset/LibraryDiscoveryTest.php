@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Asset;
 
-use Drupal\Core\Asset\LibraryDiscovery;
+use Drupal\Core\Asset\LibraryDiscoveryCollector;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Asset\LibraryDiscovery.
+ * Tests Drupal\Core\Asset\LibraryDiscoveryCollector.
  */
-#[CoversClass(LibraryDiscovery::class)]
+#[CoversClass(LibraryDiscoveryCollector::class)]
 #[Group('Asset')]
 class LibraryDiscoveryTest extends UnitTestCase {
 

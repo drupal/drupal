@@ -191,19 +191,6 @@ interface CacheBackendInterface {
   public function invalidateMultiple(array $cids);
 
   /**
-   * Marks all cache items as invalid.
-   *
-   * Invalid items may be returned in later calls to get(), if the
-   * $allow_invalid argument is TRUE.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   *   CacheBackendInterface::deleteAll() or cache tag invalidation instead.
-   *
-   * @see https://www.drupal.org/node/3500622
-   */
-  public function invalidateAll();
-
-  /**
    * Performs garbage collection on a cache bin.
    *
    * The backend may choose to delete expired or invalidated items.

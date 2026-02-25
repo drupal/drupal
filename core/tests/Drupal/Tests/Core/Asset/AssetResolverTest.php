@@ -100,7 +100,7 @@ class AssetResolverTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->libraryDiscovery = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscovery')
+    $this->libraryDiscovery = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscoveryCollector')
       ->disableOriginalConstructor()
       ->getMock();
     $this->libraryDiscovery->expects($this->any())

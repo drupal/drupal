@@ -7,7 +7,6 @@ namespace Drupal\KernelTests\Core\Cache;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests any cache backend.
@@ -647,29 +646,6 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertFalse($this->getCacheBackend($bin)->get('test_cid_invalidate2'), 'Cache items matching tag were invalidated.');
     // Test that the cache entry with without a matching tag still exists.
     $this->assertNotEmpty($this->getCacheBackend($bin)->get('test_cid_invalidate1'), 'Cache items not matching tag were not invalidated.');
-  }
-
-  /**
-   * Tests Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
-   */
-  #[IgnoreDeprecations]
-  public function testInvalidateAll(): void {
-    $backend_a = $this->getCacheBackend();
-    $backend_b = $this->getCacheBackend('bootstrap');
-
-    // Set both expiring and permanent keys.
-    $backend_a->set('test1', 1, Cache::PERMANENT);
-    $backend_a->set('test2', 3, time() + 1000);
-    $backend_b->set('test3', 4, Cache::PERMANENT);
-
-    $this->expectDeprecation('CacheBackendInterface::invalidateAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use CacheBackendInterface::deleteAll() or cache tag invalidation instead. See https://www.drupal.org/node/3500622');
-    $backend_a->invalidateAll();
-
-    $this->assertFalse($backend_a->get('test1'), 'First key has been invalidated.');
-    $this->assertFalse($backend_a->get('test2'), 'Second key has been invalidated.');
-    $this->assertNotEmpty($backend_b->get('test3'), 'Item in other bin is preserved.');
-    $this->assertNotEmpty($backend_a->get('test1', TRUE), 'First key has not been deleted.');
-    $this->assertNotEmpty($backend_a->get('test2', TRUE), 'Second key has not been deleted.');
   }
 
   /**

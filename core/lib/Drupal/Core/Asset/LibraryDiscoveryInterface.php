@@ -45,13 +45,4 @@ interface LibraryDiscoveryInterface {
    */
   public function getLibraryByName($extension, $name);
 
-  /**
-   * Clears static and persistent library definition caches.
-   *
-   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
-   * LibraryDiscoveryCollector::clear() instead.
-   * @see https://www.drupal.org/node/3462970
-   */
-  public function clearCachedDefinitions();
-
 }
