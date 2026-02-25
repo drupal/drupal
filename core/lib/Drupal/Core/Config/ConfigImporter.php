@@ -927,6 +927,9 @@ class ConfigImporter {
         $this->processedSystemTheme = TRUE;
       }
       \Drupal::service('theme_installer')->$op($names);
+      // Installing a theme can also cause a kernel boot, so re-inject services
+      // as is done with modules.
+      $this->reInjectMe();
     }
     $this->setProcessedExtension($type, $op, $names);
   }
