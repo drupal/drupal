@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Unit\Breadcrumbs;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Link;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
@@ -421,7 +422,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the applied method.
    */
   public function testApplies(): void {
-    $this->assertTrue($this->builder->applies($this->createMock('Drupal\Core\Routing\RouteMatchInterface')));
+    $this->assertTrue($this->builder->applies($this->createMock('Drupal\Core\Routing\RouteMatchInterface'), new CacheableMetadata()));
   }
 
   /**

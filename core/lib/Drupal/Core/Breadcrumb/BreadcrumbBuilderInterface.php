@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Breadcrumb;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -14,7 +15,6 @@ interface BreadcrumbBuilderInterface {
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
-   * phpcs:ignore Drupal.Commenting.FunctionComment.ParamNameNoMatch
    * @param \Drupal\Core\Cache\CacheableMetadata $cacheable_metadata
    *   The cacheable metadata to add to if your check varies by or depends
    *   on something. Anything you specify here does not have to be repeated in
@@ -23,11 +23,8 @@ interface BreadcrumbBuilderInterface {
    * @return bool
    *   TRUE if this builder should be used or FALSE to let other builders
    *   decide.
-   *
-   * @todo Uncomment new method parameters before drupal:12.0.0, see
-   *   https://www.drupal.org/project/drupal/issues/3459277.
    */
-  public function applies(RouteMatchInterface $route_match /* , CacheableMetadata $cacheable_metadata */);
+  public function applies(RouteMatchInterface $route_match, CacheableMetadata $cacheable_metadata);
 
   /**
    * Builds the breadcrumb.

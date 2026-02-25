@@ -63,7 +63,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(RouteMatchInterface $route_match, ?CacheableMetadata $cacheable_metadata = NULL) {
+  public function applies(RouteMatchInterface $route_match, CacheableMetadata $cacheable_metadata) {
     return TRUE;
   }
 

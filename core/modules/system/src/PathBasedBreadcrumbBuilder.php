@@ -135,7 +135,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(RouteMatchInterface $route_match, ?CacheableMetadata $cacheable_metadata = NULL) {
+  public function applies(RouteMatchInterface $route_match, CacheableMetadata $cacheable_metadata) {
     return TRUE;
   }
 
