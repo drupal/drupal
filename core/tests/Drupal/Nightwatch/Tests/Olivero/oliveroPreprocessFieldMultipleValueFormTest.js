@@ -14,7 +14,7 @@ module.exports = {
       .drupalCreateUser({
         name: 'user',
         password: '123',
-        permissions: ['access site-wide contact form'],
+        permissions: ['create article content'],
       })
       .drupalLogin({ name: 'user', password: '123' });
   },
@@ -24,7 +24,7 @@ module.exports = {
   'correct classes added to table and header': (browser) => {
     browser
       .setWindowSize(1400, 800)
-      .drupalRelativeURL('/contact/olivero_test_contact_form')
+      .drupalRelativeURL('/node/add/article')
       .waitForElementVisible(tableSelector, 1000)
       .assert.hasClass(tableSelector, [
         'tabledrag-disabled',

@@ -26,7 +26,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected static $modules = [
     'config_translation',
-    'contact',
     'content_translation',
     'datetime_range',
     'language',
@@ -86,8 +85,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 12 comment types, one per node type.
       'comment_type' => 14,
-      'contact_form' => 4,
-      'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
       'field_config' => 102,
@@ -145,7 +142,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Block translation',
       'CCK translation',
       'Comment',
-      'Contact',
       'Content',
       'Content translation',
       'Content type translation',
@@ -196,6 +192,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     return [
       'Aggregator',
       'Book',
+      'Contact',
       'Forum',
       'Statistics',
     ];

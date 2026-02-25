@@ -27,6 +27,7 @@ class LocalesLocationAddIndexUpdateTest extends UpdatePathTestBase {
     $this->databaseDumpFiles[] = $this->root . '/core/modules/system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz';
     $this->databaseDumpFiles[] = $this->root . '/core/modules/system/tests/fixtures/update/uninstall-history.php';
     $this->databaseDumpFiles[] = $this->root . '/core/modules/system/tests/fixtures/update/uninstall-ban.php';
+    $this->databaseDumpFiles[] = $this->root . '/core/modules/system/tests/fixtures/update/uninstall-contact.php';
   }
 
   /**

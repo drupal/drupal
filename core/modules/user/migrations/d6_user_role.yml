@@ -20,7 +20,6 @@ process:
       bypass: true
       map:
         'use PHP for block visibility': 'use PHP for settings'
-        'administer site-wide contact form': 'administer contact forms'
         'post comments without approval': 'skip comment approval'
         'edit own blog entries': 'edit own blog content'
         'edit any blog entry': 'edit any blog content'
@@ -43,7 +42,6 @@ migration_dependencies:
     - d6_filter_format
   optional:
     - block_content_type
-    - contact_category
     - d6_comment_type
     - d6_node_type
     - d6_taxonomy_vocabulary

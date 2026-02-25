@@ -34,7 +34,6 @@ class MigrationPluginListTest extends KernelTestBase {
     'block',
     'block_content',
     'comment',
-    'contact',
     'content_translation',
     'dblog',
     'field',

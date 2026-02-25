@@ -235,6 +235,7 @@ class BreadcrumbTest extends BrowserTestBase {
 
     $edit = [
       'menu[menu_parent]' => $link->getMenuName() . ':' . $link->getPluginId(),
+      'field_multiple_value_form_field[0][value]' => 'test',
     ];
     $this->drupalGet('node/' . $parent->id() . '/edit');
     $this->submitForm($edit, 'Save');
@@ -247,6 +248,7 @@ class BreadcrumbTest extends BrowserTestBase {
     ];
     $edit = [
       'field_tags[target_id]' => implode(',', array_keys($tags)),
+      'field_multiple_value_form_field[0][value]' => 'test',
     ];
     $this->drupalGet('node/' . $parent->id() . '/edit');
     $this->submitForm($edit, 'Save');

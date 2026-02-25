@@ -147,9 +147,6 @@ class UserTest extends MigrateSqlSourceTestBase {
         'picture' => '0',
         'init' => 'odo@local.host',
         'roles' => [2],
-        'data' => [
-          'contact' => 1,
-        ],
         'field_file' => [
           [
             'fid' => 99,

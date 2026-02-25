@@ -31,6 +31,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/uninstall-history.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/uninstall-ban.php';
+    $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/uninstall-contact.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-8.update-test-schema-enabled.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-8.update-test-semver-update-n-enabled.php';
   }
@@ -220,9 +221,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     $this->drupalGet('admin/structure/comment/manage/test_comment_type/fields');
     $this->assertSession()->pageTextContains('comment_body');
 
-    // Make sure our contact form exists.
-    $this->drupalGet('admin/structure/contact');
-    $this->assertSession()->pageTextContains('Test contact form');
     $this->drupalGet('admin/structure/types');
     $this->assertSession()->pageTextContains('Test content type description');
     $this->drupalGet('admin/structure/types/manage/test_content_type/fields');
@@ -318,16 +316,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     $this->drupalGet('taxonomy/term/2/translations');
     $this->assertSession()->linkExists('Test root term - Spanish');
 
-    // Make sure our contact form exists.
-    $this->drupalGet('admin/structure/contact');
-    $this->assertSession()->pageTextContains('Test contact form');
-    $this->drupalGet('admin/structure/contact/manage/test_contact_form');
-    $this->assertSession()->pageTextContains('test@example.com');
-    $this->assertSession()->pageTextContains('Hello');
-    $this->drupalGet('admin/structure/contact/manage/test_contact_form/translate/es/edit');
-    $this->assertSession()->pageTextContains('Hola');
-    $this->assertSession()->responseContains('Test contact form Spanish');
-
     // Make sure our modules are still enabled.
     $expected_enabled_modules = [
       'basic_auth',
@@ -338,7 +326,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
       'comment',
       'config',
       'config_translation',
-      'contact',
       'content_translation',
       'contextual',
       'datetime',

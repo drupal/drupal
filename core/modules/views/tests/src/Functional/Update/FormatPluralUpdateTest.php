@@ -26,6 +26,7 @@ class FormatPluralUpdateTest extends UpdatePathTestBase {
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz',
       __DIR__ . '/../../../../../system/tests/fixtures/update/uninstall-history.php',
       __DIR__ . '/../../../../../system/tests/fixtures/update/uninstall-ban.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/uninstall-contact.php',
       __DIR__ . '/../../../fixtures/update/format-plural.php',
     ];
   }

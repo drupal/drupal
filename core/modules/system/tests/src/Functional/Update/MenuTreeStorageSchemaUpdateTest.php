@@ -40,6 +40,7 @@ class MenuTreeStorageSchemaUpdateTest extends UpdatePathTestBase {
       // Start with a bare installation of Drupal 10.3.0.
       DRUPAL_ROOT . '/core/modules/system/tests/fixtures/update/drupal-10.3.0.bare.standard.php.gz',
       DRUPAL_ROOT . '/core/modules/system/tests/fixtures/update/uninstall-history.php',
+      DRUPAL_ROOT . '/core/modules/system/tests/fixtures/update/uninstall-contact.php',
     ];
   }
 

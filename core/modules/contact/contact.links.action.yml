@@ -1,6 +1,0 @@
-contact.form_add:
-  route_name: contact.form_add
-  title: 'Add contact form'
-  weight: 1
-  appears_on:
-    - entity.contact_form.collection

@@ -5,7 +5,6 @@ package: Testing
 version: VERSION
 dependencies:
   - drupal:comment
-  - drupal:contact
   - drupal:form_test
   - drupal:image
   - drupal:path

@@ -44,7 +44,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'block_content',
     'comment',
     'config_translation',
-    'contact',
     'content_translation',
     'datetime',
     'dblog',
