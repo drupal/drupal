@@ -8,6 +8,7 @@
 
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\locale\LocaleDefaultOptions;
+use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleSource;
 
 /**
@@ -300,7 +301,7 @@ function locale_cron_fill_queue(): void {
     $queue = \Drupal::queue('locale_translation', TRUE);
 
     foreach ($updates as $project => $languages) {
-      $batch = locale_translation_batch_update_build([$project], $languages, $options);
+      $batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild([$project], $languages, $options);
       foreach ($batch['operations'] as $item) {
         $queue->createItem($item);
       }

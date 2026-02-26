@@ -12,6 +12,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\locale\LocaleDefaultOptions;
+use Drupal\locale\LocaleFetch;
 
 /**
  * Hook implementations for locale.
@@ -220,7 +221,7 @@ class LocaleHooks {
         $queue = \Drupal::queue('locale_translation', TRUE);
 
         foreach ($updates as $project => $languages) {
-          $batch = locale_translation_batch_update_build([$project], $languages, $options);
+          $batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild([$project], $languages, $options);
           foreach ($batch['operations'] as $item) {
             $queue->createItem($item);
           }
