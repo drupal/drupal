@@ -1,5 +1,0 @@
-base:
-  version: VERSION
-  css:
-    component:
-      css/components/upgrade-analysis-report-tables.css: {}

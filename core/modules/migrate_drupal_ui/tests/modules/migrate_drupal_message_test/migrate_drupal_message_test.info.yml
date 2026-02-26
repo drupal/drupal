@@ -1,5 +1,0 @@
-name: Test display of migrate message
-type: module
-description: Tests the display of migrate messages.
-package: Testing
-version: VERSION
