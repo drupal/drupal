@@ -72,7 +72,8 @@ class ConfigImportAllTest extends ModuleTestBase {
         || !empty($module->info['hidden'])
         || $module->status == TRUE
         || $module->info['package'] == 'Testing'
-        || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+        || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED
+        || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
         return FALSE;
       }
       return TRUE;

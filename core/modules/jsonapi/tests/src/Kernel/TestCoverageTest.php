@@ -48,7 +48,8 @@ class TestCoverageTest extends KernelTestBase {
         && $module->status == FALSE
         && $module->info['package'] !== 'Testing'
         && $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL
-        && $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::DEPRECATED;
+        && $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::DEPRECATED
+        && $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::OBSOLETE;
     });
 
     $this->container->get('module_installer')->install(array_keys($stable_core_modules));
