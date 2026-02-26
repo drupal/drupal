@@ -71,10 +71,10 @@ trait InstallerRedirectTrait {
       return TRUE;
     }
 
-    // Redirect if the database is empty.
+    // Redirect if Drupal is not installed (key_value table missing).
     if ($connection) {
       try {
-        return !$connection->schema()->tableExists('sequences');
+        return !$connection->schema()->tableExists('key_value');
       }
       catch (\Exception) {
         // If we still have an exception at this point, we need to be careful

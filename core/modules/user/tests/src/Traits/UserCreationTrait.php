@@ -51,13 +51,6 @@ trait UserCreationTrait {
       'name' => $this->randomMachineName(),
     ];
 
-    // In many cases the anonymous user account is fine for testing purposes,
-    // however, if we need to create a user with a non-empty ID, we need also
-    // the "sequences" table.
-    if (!\Drupal::moduleHandler()->moduleExists('system')) {
-      $values['uid'] = 0;
-    }
-
     // Creating an administrator or assigning custom permissions would result in
     // creating and assigning a new role to the user. This is not possible with
     // the anonymous user account.

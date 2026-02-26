@@ -30,29 +30,6 @@ function system_install(): void {
 }
 
 /**
- * Implements hook_schema().
- */
-function system_schema(): array {
-  // @deprecated The sequences table has been deprecated in drupal:10.2.0 and is
-  // removed from drupal:12.0.0. See https://www.drupal.org/node/3220378.
-  // @todo Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
-  $schema['sequences'] = [
-    'description' => 'Stores IDs.',
-    'fields' => [
-      'value' => [
-        'description' => 'The value of the sequence.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ],
-    ],
-    'primary key' => ['value'],
-  ];
-
-  return $schema;
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function system_update_last_removed(): int {
@@ -165,4 +142,14 @@ function system_update_11300(): TranslatableMarkup|null {
     return $equivalent_update->toSkipMessage();
   }
   return NULL;
+}
+
+/**
+ * Remove the deprecated sequences table.
+ */
+function system_update_12000(): void {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('sequences')) {
+    $schema->dropTable('sequences');
+  }
 }
