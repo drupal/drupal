@@ -7,6 +7,7 @@
 @trigger_error(__FILE__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. All functions and constants have been deprecated. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
 
 use Drupal\locale\LocaleDefaultOptions;
+use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleSource;
 
 /**
@@ -296,7 +297,7 @@ function locale_cron_fill_queue(): void {
     $queue = \Drupal::queue('locale_translation', TRUE);
 
     foreach ($updates as $project => $languages) {
-      $batch = locale_translation_batch_update_build([$project], $languages, $options);
+      $batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild([$project], $languages, $options);
       foreach ($batch['operations'] as $item) {
         $queue->createItem($item);
       }

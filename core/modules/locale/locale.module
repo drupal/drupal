@@ -18,6 +18,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
+use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleSource;
 
 /**
@@ -233,7 +234,7 @@ function locale_system_update(array $components): void {
         // Get translation status of the projects, download and update
         // translations.
         $options = LocaleDefaultOptions::updateOptions();
-        $batch = locale_translation_batch_update_build($list, [], $options);
+        $batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild($list, [], $options);
         batch_set($batch);
       }
     }
@@ -378,7 +379,7 @@ function locale_form_language_admin_add_form_alter_submit($form, FormStateInterf
 
   if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
     // Download and import translations for the newly added language.
-    $batch = locale_translation_batch_update_build([], [$langcode], $options);
+    $batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild([], [$langcode], $options);
     batch_set($batch);
   }
 
