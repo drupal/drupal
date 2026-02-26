@@ -84,6 +84,7 @@ variables:
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
+  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
   SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
   # Use local cache for yarn, see .yarn-install-from-cache.
   YARN_ENABLE_GLOBAL_CACHE: false
@@ -414,12 +415,10 @@ default:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 5
     KUBERNETES_CPU_REQUEST: "16"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
   after_script:
-    - echo $MINK_DRIVER_ARGS_WEBDRIVER
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
     - cp /builds/chromedriver.log ./
 
