@@ -47,36 +47,6 @@ class SystemManager {
   protected $menuActiveTrail;
 
   /**
-   * Requirement severity -- Requirement successfully met.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   *    \Drupal\Core\Extension\Requirement\RequirementSeverity::OK instead.
-   *
-   * @see https://www.drupal.org/node/3410939
-   */
-  const REQUIREMENT_OK = 0;
-
-  /**
-   * Requirement severity -- Warning condition; proceed but flag warning.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\Core\Extension\Requirement\RequirementSeverity::Warning instead.
-   *
-   * @see https://www.drupal.org/node/3410939
-   */
-  const REQUIREMENT_WARNING = 1;
-
-  /**
-   * Requirement severity -- Error condition; abort installation.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   *  \Drupal\Core\Extension\Requirement\RequirementSeverity::Error instead.
-   *
-   * @see https://www.drupal.org/node/3410939
-   */
-  const REQUIREMENT_ERROR = 2;
-
-  /**
    * Constructs a SystemManager object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler

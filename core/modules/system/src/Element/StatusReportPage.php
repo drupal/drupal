@@ -36,8 +36,6 @@ class StatusReportPage extends RenderElementBase {
     $element['#general_info'] = [
       '#theme' => 'status_report_general_info',
     ];
-    // Loop through requirements and pull out items.
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     foreach ($element['#requirements'] as $key => $requirement) {
       switch ($key) {
         case 'cron':
@@ -95,7 +93,6 @@ class StatusReportPage extends RenderElementBase {
       ],
     ];
 
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     foreach ($element['#requirements'] as $key => &$requirement) {
       $severity = RequirementSeverity::Info;
       if (isset($requirement['severity'])) {

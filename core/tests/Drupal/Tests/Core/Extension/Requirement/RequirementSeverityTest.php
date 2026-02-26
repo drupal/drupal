@@ -7,12 +7,10 @@ namespace Drupal\Tests\Core\Extension\Requirement;
 include_once \DRUPAL_ROOT . '/core/includes/install.inc';
 
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\Core\Extension\Requirement\RequirementSeverity.
@@ -20,35 +18,6 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[CoversClass(RequirementSeverity::class)]
 #[Group('Extension')]
 class RequirementSeverityTest extends UnitTestCase {
-
-  /**
-   * Tests convert legacy severities.
-   *
-   * @legacy-covers ::convertLegacyIntSeveritiesToEnums
-   */
-  #[IgnoreDeprecations]
-  public function testConvertLegacySeverities(): void {
-    $requirements['foo'] = [
-      'title' => new TranslatableMarkup('Foo'),
-      'severity' => \REQUIREMENT_INFO,
-    ];
-    $requirements['bar'] = [
-      'title' => new TranslatableMarkup('Bar'),
-      'severity' => \REQUIREMENT_ERROR,
-    ];
-    $this->expectDeprecation(
-      'Calling ' . __METHOD__ . '() with an array of $requirements with \'severity\' with values not of type Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3410939'
-    );
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($requirements, __METHOD__);
-    $this->assertEquals(
-      RequirementSeverity::Info,
-      $requirements['foo']['severity']
-    );
-    $this->assertEquals(
-      RequirementSeverity::Error,
-      $requirements['bar']['severity']
-    );
-  }
 
   /**
    * Tests get max severity.

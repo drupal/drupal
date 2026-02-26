@@ -1045,7 +1045,8 @@ function hook_update_last_removed(): int {
  *     install phase, this should only be used for version numbers, do not set
  *     it if not applicable.
  *   - description: The description of the requirement/status.
- *     - REQUIREMENT_ERROR: The requirement failed with an error.
+ *     - \Drupal\Core\Extension\Requirement\RequirementSeverity::Error
+ *       The requirement failed with an error.
  *   - severity: The requirement's severity. Defaults to RequirementSeverity::OK
  *     when installing, or RequirementSeverity::Info otherwise.
  */

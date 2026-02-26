@@ -17,46 +17,6 @@ use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Requirement severity -- Informational message only.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- * \Drupal\Core\Extension\Requirement\RequirementSeverity::Info instead.
- *
- * @see https://www.drupal.org/node/3410939
- */
-const REQUIREMENT_INFO = -1;
-
-/**
- * Requirement severity -- Requirement successfully met.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- *   \Drupal\Core\Extension\Requirement\RequirementSeverity::OK instead.
- *
- * @see https://www.drupal.org/node/3410939
- */
-const REQUIREMENT_OK = 0;
-
-/**
- * Requirement severity -- Warning condition; proceed but flag warning.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- * \Drupal\Core\Extension\Requirement\RequirementSeverity::Warning instead.
- *
- * @see https://www.drupal.org/node/3410939
- */
-const REQUIREMENT_WARNING = 1;
-
-/**
- * Requirement severity -- Error condition; abort installation.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- * \Drupal\Core\Extension\Requirement\RequirementSeverity::Error instead.
- *
- * @see https://www.drupal.org/node/3410939
- */
-const REQUIREMENT_ERROR = 2;
-
-/**
  * File permission check -- File exists.
  */
 const FILE_EXIST = 1;
@@ -581,9 +541,9 @@ function drupal_current_script_url($query = []) {
  * update.php) and returns a URL that can be used to attempt to proceed to the
  * next step of the script.
  *
- * @param int|\Drupal\Core\Extension\Requirement\RequirementSeverity $severity
+ * @param \Drupal\Core\Extension\Requirement\RequirementSeverity $severity
  *   The severity of the requirements problem, as returned by
- *   drupal_requirements_severity().
+ *   \Drupal\Core\Extension\Requirement\RequirementSeverity::maxSeverityFromRequirements().
  *
  * @return string
  *   A URL for attempting to proceed to the next step of the script. The URL is
@@ -594,14 +554,7 @@ function drupal_current_script_url($query = []) {
  * @see drupal_current_script_url()
  * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
  */
-function drupal_requirements_url(/* int|RequirementSeverity */ $severity): string {
-  if (!$severity instanceof RequirementSeverity) {
-    @trigger_error('Passing a type other than ' . RequirementSeverity::class . ' to ' . __FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a ' . RequirementSeverity::class . ' enum instead. See https://www.drupal.org/node/3410939', E_USER_DEPRECATED);
-    $severity = RequirementSeverity::from($severity);
-  }
-  if (is_null($severity)) {
-    $severity = RequirementSeverity::Info;
-  }
+function drupal_requirements_url(RequirementSeverity $severity): string {
   $query = [];
   // If there are no errors, only warnings, append 'continue=1' to the URL so
   // the user can bypass this screen on the next page load.
@@ -661,27 +614,6 @@ function drupal_check_profile($profile): array {
   $requirements = array_merge($requirements, install_check_class_requirements($extension));
 
   return $requirements;
-}
-
-/**
- * Extracts the highest severity from the requirements array.
- *
- * @param array $requirements
- *   An array of requirements, in the same format as is returned by
- *   hook_requirements().
- *
- * @return int
- *   The highest severity in the array.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- *   \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity()
- *   instead.
- *
- * @see https://www.drupal.org/node/3410939
- */
-function drupal_requirements_severity(&$requirements) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . RequirementSeverity::class . '::maxSeverityFromRequirements() instead. See https://www.drupal.org/node/3410939', E_USER_DEPRECATED);
-  return RequirementSeverity::maxSeverityFromRequirements($requirements)->value;
 }
 
 /**

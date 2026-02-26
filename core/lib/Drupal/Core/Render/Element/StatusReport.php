@@ -36,7 +36,6 @@ class StatusReport extends RenderElementBase {
    */
   public static function preRenderGroupRequirements($element) {
     $grouped_requirements = [];
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     /** @var array{title: \Drupal\Core\StringTranslation\TranslatableMarkup, value: mixed, description: \Drupal\Core\StringTranslation\TranslatableMarkup, severity: \Drupal\Core\Extension\Requirement\RequirementSeverity} $requirement */
     foreach ($element['#requirements'] as $key => $requirement) {
       $severity = RequirementSeverity::Info;

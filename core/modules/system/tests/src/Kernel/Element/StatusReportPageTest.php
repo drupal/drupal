@@ -29,7 +29,7 @@ class StatusReportPageTest extends KernelTestBase {
       '#requirements' => [
         'foo' => [
           'title' => 'Foo',
-          'severity' => \REQUIREMENT_INFO,
+          'severity' => RequirementSeverity::Info,
         ],
         'baz' => [
           'title' => 'Baz',
@@ -41,7 +41,6 @@ class StatusReportPageTest extends KernelTestBase {
         ],
       ],
     ];
-    $this->expectDeprecation('Calling Drupal\system\Element\StatusReportPage::preRenderCounters() with an array of $requirements with \'severity\' with values not of type Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3410939');
     $element = StatusReportPage::preRenderCounters($element);
 
     $error = $element['#counters']['error'];
@@ -55,7 +54,6 @@ class StatusReportPageTest extends KernelTestBase {
     $checked = $element['#counters']['checked'];
     $this->assertEquals(1, $checked['#amount']);
     $this->assertEquals('checked', $checked['#severity']);
-
   }
 
 }

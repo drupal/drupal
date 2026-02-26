@@ -78,7 +78,6 @@ enum RequirementSeverity: int {
    * @see \hook_update_requirements()
    */
   public static function maxSeverityFromRequirements(array $requirements): RequirementSeverity {
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($requirements, __METHOD__);
     return array_reduce(
       $requirements,
       function (RequirementSeverity $severity, $requirement) {
@@ -87,34 +86,6 @@ enum RequirementSeverity: int {
       },
       RequirementSeverity::OK
     );
-  }
-
-  /**
-   * Converts legacy int value severities to enums.
-   *
-   * @param array<string, array{'title': \Drupal\Core\StringTranslation\TranslatableMarkup, 'value': mixed, description: \Drupal\Core\StringTranslation\TranslatableMarkup, 'severity': \Drupal\Core\Extension\Requirement\RequirementSeverity}> $requirements
-   *   An array of requirements, in the same format as is returned by
-   *   hook_requirements(), hook_runtime_requirements(),
-   *   hook_update_requirements(), and
-   *   \Drupal\Core\Extension\InstallRequirementsInterface.
-   * @param string $deprecationMethod
-   *   The method name to pass to the deprecation message.
-   *
-   * @see \Drupal\Core\Extension\InstallRequirementsInterface::getRequirements()
-   * @see \hook_requirements()
-   * @see \hook_runtime_requirements()
-   * @see \hook_update_requirements()
-   */
-  public static function convertLegacyIntSeveritiesToEnums(array &$requirements, string $deprecationMethod): void {
-    foreach ($requirements as &$requirement) {
-      if (isset($requirement['severity'])) {
-        $severity = $requirement['severity'];
-        if (!$severity instanceof RequirementSeverity) {
-          @trigger_error("Calling {$deprecationMethod}() with an array of \$requirements with 'severity' with values not of type " . RequirementSeverity::class . " enums is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3410939", \E_USER_DEPRECATED);
-          $requirement['severity'] = RequirementSeverity::from($requirement['severity']);
-        }
-      }
-    }
   }
 
 }

@@ -54,16 +54,6 @@ const SAVED_NEW = 1;
 const SAVED_UPDATED = 2;
 
 /**
- * Return status for saving which deleted an existing item.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
- *   There is no replacement.
- *
- * @see https://www.drupal.org/node/3328750
- */
-const SAVED_DELETED = 3;
-
-/**
  * The default aggregation group for CSS files added to the page.
  */
 const CSS_AGGREGATE_DEFAULT = 0;

@@ -8,7 +8,6 @@ use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Render\Element\StatusReport;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 include_once \DRUPAL_ROOT . '/core/includes/install.inc';
@@ -17,7 +16,6 @@ include_once \DRUPAL_ROOT . '/core/includes/install.inc';
  * Tests the status report element.
  */
 #[Group('Render')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class StatusReportTest extends KernelTestBase {
 
@@ -49,14 +47,8 @@ class StatusReportTest extends KernelTestBase {
           'title' => 'Bar',
           'severity' => RequirementSeverity::OK,
         ],
-        'legacy' => [
-          'title' => 'Legacy',
-          'severity' => \REQUIREMENT_OK,
-        ],
       ],
     ];
-
-    $this->expectDeprecation('Calling Drupal\Core\Render\Element\StatusReport::preRenderGroupRequirements() with an array of $requirements with \'severity\' with values not of type Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3410939');
 
     $element = StatusReport::preRenderGroupRequirements($element);
     $groups = $element['#grouped_requirements'];
@@ -79,10 +71,9 @@ class StatusReportTest extends KernelTestBase {
     $this->assertEquals('Checked', (string) $checked['title']);
     $this->assertEquals('checked', $checked['type']);
     $checkedItems = $checked['items'];
-    $this->assertCount(3, $checkedItems);
+    $this->assertCount(2, $checkedItems);
     $this->assertArrayHasKey('foo', $checkedItems);
     $this->assertArrayHasKey('bar', $checkedItems);
-    $this->assertArrayHasKey('legacy', $checkedItems);
   }
 
 }
