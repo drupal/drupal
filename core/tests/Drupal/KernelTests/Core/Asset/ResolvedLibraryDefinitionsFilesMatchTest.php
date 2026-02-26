@@ -128,7 +128,8 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
         || $module->status == TRUE
         || $module->info['package'] == 'Testing'
         || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL
-        || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+        || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED
+        || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
         return FALSE;
       }
       return TRUE;

@@ -69,7 +69,7 @@ class ModuleConfigureRouteTest extends KernelTestBase {
       return;
     }
     $module_lifecycle = $module_info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
-    if (isset($module_lifecycle) && $module_lifecycle === ExtensionLifecycle::DEPRECATED) {
+    if (isset($module_lifecycle) && ($module_lifecycle === ExtensionLifecycle::DEPRECATED || $module_lifecycle === ExtensionLifecycle::OBSOLETE)) {
       return;
     }
     $this->container->get('module_installer')->install([$module_name]);
