@@ -7,13 +7,6 @@ drupal.filter.admin:
     - core/drupal
     - core/once
     - core/drupal.form
-  moved_files:
-    filter/filter.admin.js:
-      deprecation_version: drupal:11.1.0
-      removed_version: drupal:12.0.0
-      deprecation_link: https://www.drupal.org/node/3471539
-      js:
-        filter.admin.js: 'js/filter.admin.js'
 
 drupal.filter:
   version: VERSION
@@ -23,13 +16,6 @@ drupal.filter:
     - core/jquery
     - core/drupal
     - core/once
-  moved_files:
-    filter/filter.js:
-      deprecation_version: drupal:11.1.0
-      removed_version: drupal:12.0.0
-      deprecation_link: https://www.drupal.org/node/3471539
-      js:
-        filter.js: 'js/filter.js'
 
 caption:
   version: VERSION

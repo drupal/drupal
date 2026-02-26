@@ -256,7 +256,7 @@ class FieldUiHooks {
    * @see \Drupal\comment\CommentTypeForm
    * @see \Drupal\media\MediaTypeForm
    * @see \Drupal\block_content\BlockContentTypeForm
-   * @see field_ui_form_manage_field_form_submit()
+   * @see \Drupal\field_ui\Hook\FieldUiHooks::manageFieldFormSubmit()
    */
   #[Hook('form_alter')]
   public function formAlter(&$form, FormStateInterface $form_state, $form_id) : void {

@@ -346,11 +346,6 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if (!is_int($this->weight)) {
-      @trigger_error('Saving a block with a non-integer weight is deprecated in drupal:11.1.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3462474', E_USER_DEPRECATED);
-      $this->setWeight((int) $this->weight);
-    }
-
     // Ensure the region is valid to mirror the behavior of block_rebuild().
     // This is done primarily for backwards compatibility support of
     // \Drupal\block\BlockInterface::BLOCK_REGION_NONE.

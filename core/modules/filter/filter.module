@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\filter\FilterFormatInterface;
-use Drupal\filter\Hook\FilterThemeHooks;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -256,10 +255,6 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
  *   - id: Filter ID.
  */
 function _filter_tips($format_id): array {
-  if (func_num_args() > 1) {
-    @trigger_error('The $long argument to _filter_tips() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Only short tips are used. See https://www.drupal.org/node/3567879', E_USER_DEPRECATED);
-  }
-
   $formats = filter_formats(\Drupal::currentUser());
 
   $tips = [];
@@ -272,14 +267,7 @@ function _filter_tips($format_id): array {
   foreach ($formats as $format) {
     foreach ($format->filters() as $name => $filter) {
       if ($filter->status) {
-        $method = new \ReflectionMethod($filter, 'tips');
-        if ($method->getNumberOfParameters() > 0) {
-          @trigger_error(sprintf('The $long argument to %s::tips() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Only short tips are used. See https://www.drupal.org/node/3567879', $filter::class), E_USER_DEPRECATED);
-          $tip = $filter->tips(func_num_args() > 1 ? func_get_arg(1) : FALSE);
-        }
-        else {
-          $tip = $filter->tips();
-        }
+        $tip = $filter->tips();
         if (isset($tip)) {
           $tips[$format->label()][$name] = [
             'tip' => ['#markup' => $tip],
@@ -291,79 +279,6 @@ function _filter_tips($format_id): array {
   }
 
   return $tips;
-}
-
-/**
- * Prepares variables for text format guideline templates.
- *
- * Default template: filter-guidelines.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - format: An object representing a text format.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
- *   template_preprocess functions are registered directly in hook_theme().
- *
- * @see https://www.drupal.org/node/3504125
- */
-function template_preprocess_filter_guidelines(&$variables): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
-  \Drupal::service(FilterThemeHooks::class)->preprocessFilterGuidelines($variables);
-}
-
-/**
- * Prepares variables for text format wrapper templates.
- *
- * Default template: text-format-wrapper.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - attributes: An associative array containing properties of the element.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
- *   template_preprocess functions are registered directly in hook_theme().
- *
- * @see https://www.drupal.org/node/3504125
- */
-function template_preprocess_text_format_wrapper(&$variables): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
-  \Drupal::service(FilterThemeHooks::class)->preprocessTextFormatWrapper($variables);
-}
-
-/**
- * Prepares variables for filter tips templates.
- *
- * Default template: filter-tips.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - tips: An array containing descriptions and a CSS ID in the form of
- *     'module-name/filter-id' (only used when $long is TRUE) for each
- *     filter in one or more text formats. Example:
- *     @code
- *       [
- *         'Full HTML' => [
- *           0 => [
- *             'tip' => 'Web page addresses and email addresses turn into links automatically.',
- *             'id' => 'filter/2',
- *           ],
- *         ],
- *       ];
- *     @endcode
- *   - long: (optional) Whether the passed-in filter tips contain extended
- *     explanations, i.e. intended to be output on the path 'filter/tips'
- *     (TRUE), or are in a short format, i.e. suitable to be displayed below a
- *     form element. Defaults to FALSE.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
- *   template_preprocess functions are registered directly in hook_theme().
- *
- * @see https://www.drupal.org/node/3504125
- */
-function template_preprocess_filter_tips(&$variables): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
-  \Drupal::service(FilterThemeHooks::class)->preprocessFilterTips($variables);
 }
 
 /**

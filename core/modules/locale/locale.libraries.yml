@@ -10,13 +10,6 @@ drupal.locale.admin:
     - core/drupal
     - core/drupal.form
     - core/once
-  moved_files:
-    locale/locale.admin.js:
-      deprecation_version: drupal:11.1.0
-      removed_version: drupal:12.0.0
-      deprecation_link: https://www.drupal.org/node/3471539
-      js:
-        locale.admin.js: 'js/locale.admin.js'
 
 translations:
   # No sensible version can be specified, since the translations may change at

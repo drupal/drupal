@@ -11396,12 +11396,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/breakpoint/src/BreakpointManager.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function _update_ckeditor5_html_filter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/ckeditor5.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ckeditor5\\\\Annotation\\\\CKEditor5Plugin\\:\\:setClass\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20085,12 +20079,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\link\\\\Plugin\\\\Field\\\\FieldWidget\\\\LinkWidget\\:\\:flagErrors\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/link/src/Plugin/Field/FieldWidget/LinkWidget.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\link\\\\Plugin\\\\Field\\\\FieldWidget\\\\LinkWidget\\:\\:validateTitleElement\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/link/src/Plugin/Field/FieldWidget/LinkWidget.php',

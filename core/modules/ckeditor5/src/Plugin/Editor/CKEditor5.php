@@ -158,10 +158,6 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $this->smartDefaultSettings = $smart_default_settings;
     $this->cache = $cache;
     $this->logger = $logger;
-    if (!$languageMapper) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $languageMapper argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3551652', E_USER_DEPRECATED);
-      $languageMapper = \Drupal::service(LanguageMapper::class);
-    }
     $this->languageMapper = $languageMapper;
   }
 

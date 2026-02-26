@@ -49,7 +49,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
       $cache_tags = Cache::mergeTags($cache_tags, $plugin->getCacheTags());
 
       // Create the render array for the block as a whole.
-      // @see template_preprocess_block().
+      // @see \Drupal\block\Hook\BlockHooks::preprocessBlock().
       $build[$entity_id] = [
         '#cache' => [
           'contexts' => Cache::mergeContexts(
@@ -143,7 +143,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
     }
 
     // Create the render array for the block as a whole.
-    // @see template_preprocess_block().
+    // @see \Drupal\block\Hook\BlockHooks::preprocessBlock().
     $build = [
       '#theme' => 'block',
       '#attributes' => [],

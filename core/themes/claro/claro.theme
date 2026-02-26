@@ -312,7 +312,7 @@ function claro_element_info_alter(&$type): void {
 }
 
 /**
- * Implements template_preprocess_text_format_wrapper().
+ * Implements FilterThemeHooks::preprocessTextFormatWrapper().
  *
  * @todo Remove when https://www.drupal.org/node/3016343 is fixed.
  */

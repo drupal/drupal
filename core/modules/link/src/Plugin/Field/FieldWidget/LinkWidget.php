@@ -172,29 +172,6 @@ class LinkWidget extends WidgetBase {
   /**
    * Form element validation handler for the 'title' element.
    *
-   * Conditionally requires the link title if a URL value was filled in.
-   *
-   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Instead,
-   * validation is performed by the LinkTitleRequiredConstraint on the LinkItem
-   * field type.
-   * @see https://www.drupal.org/node/3554139
-   */
-  public static function validateTitleElement(&$element, FormStateInterface $form_state, $form) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Instead, validation is performed by the LinkTitleRequiredConstraint on the LinkItem field type. See https://www.drupal.org/node/3554139', E_USER_DEPRECATED);
-    if ($element['uri']['#value'] !== '' && $element['title']['#value'] === '') {
-      // We expect the field name placeholder value to be wrapped in $this->t()
-      // here, so it won't be escaped again as it's already marked safe.
-      $form_state->setError($element['title'],
-        new TranslatableMarkup('@title field is required if there is @uri input.', [
-          '@title' => $element['title']['#title'],
-          '@uri' => $element['uri']['#title'],
-        ]));
-    }
-  }
-
-  /**
-   * Form element validation handler for the 'title' element.
-   *
    * Requires the URL value if a link title was filled in.
    */
   public static function validateTitleNoLink(&$element, FormStateInterface $form_state, $form) {

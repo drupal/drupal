@@ -60,7 +60,7 @@ class PageCache implements HttpKernelInterface {
   /**
    * Constructs a PageCache object.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface|\Closure $http_kernel
+   * @param \Closure $http_kernel
    *   The decorated kernel.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache bin.
@@ -69,11 +69,7 @@ class PageCache implements HttpKernelInterface {
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of the response.
    */
-  public function __construct(HttpKernelInterface|\Closure $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
-    if ($http_kernel instanceof HttpKernelInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() without a service closure $http_kernel argument is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. See https://www.drupal.org/node/3538740', E_USER_DEPRECATED);
-      $http_kernel = static fn() => $http_kernel;
-    }
+  public function __construct(\Closure $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
     $this->httpKernel = $http_kernel;
     $this->cache = $cache;
     $this->requestPolicy = $request_policy;
