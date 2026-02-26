@@ -21,36 +21,3 @@
 .update-results .failure strong {
   color: #b63300;
 }
-
-/**
- * Authorize.php styles
- */
-#edit-submit-connection {
-  clear: both;
-}
-#edit-submit-process,
-.filetransfer {
-  display: none;
-  clear: both;
-}
-.js #edit-submit-connection {
-  display: none;
-}
-.js #edit-submit-process {
-  display: block;
-}
-
-#edit-connection-settings-change-connection-type {
-  margin: 2.6em 0.5em 0 1em; /* LTR */
-}
-[dir="rtl"] #edit-connection-settings-change-connection-type {
-  margin-right: 1em;
-  margin-left: 0.5em;
-}
-
-/**
- * Theme maintenance styles
- */
-.authorize-results__failure {
-  font-weight: bold;
-}
