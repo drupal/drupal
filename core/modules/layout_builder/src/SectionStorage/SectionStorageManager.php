@@ -116,7 +116,12 @@ class SectionStorageManager extends DefaultPluginManager implements SupportAware
     foreach ($storage_types as $storage_type) {
       $storage = $this->loadEmpty($storage_type);
 
-      if ((!$storage instanceof SupportAwareSectionStorageInterface) || $storage->isSupported($entity_type_id, $bundle, $view_mode)) {
+      if (!$storage instanceof SupportAwareSectionStorageInterface) {
+        @trigger_error('Section storage ' . get_class($storage) . ' not implementing \Drupal\layout_builder\SupportAwareSectionStorageInterface is deprecated in drupal:11.4.0 and is required from drupal:13.0.0. See https://www.drupal.org/node/3574738', E_USER_DEPRECATED);
+        return FALSE;
+      }
+
+      if ($storage->isSupported($entity_type_id, $bundle, $view_mode)) {
         return FALSE;
       }
     }

@@ -21,6 +21,7 @@ use Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListTrait;
 use Drupal\layout_builder\SectionStorageInterface;
+use Drupal\layout_builder\SupportAwareSectionStorageInterface;
 use Drupal\navigation\Form\LayoutForm;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -39,7 +40,7 @@ use Symfony\Component\Routing\RouteCollection;
   handles_permission_check: TRUE,
   allow_inline_blocks: FALSE,
 )]
-final class NavigationSectionStorage extends PluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
+final class NavigationSectionStorage extends PluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface, SupportAwareSectionStorageInterface {
 
   const STORAGE_ID = 'navigation.block_layout';
   use ContextAwarePluginTrait;
@@ -198,6 +199,14 @@ final class NavigationSectionStorage extends PluginBase implements SectionStorag
    */
   public function getContextMapping(): array {
     return ['navigation' => 'navigation'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSupported(string $entity_type_id, string $bundle, string $view_mode): bool {
+    // Navigation section storage does not support any entity type.
+    return FALSE;
   }
 
 }
