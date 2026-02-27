@@ -10,13 +10,14 @@ use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
+use Drupal\layout_builder\SupportAwareSectionStorageInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides a test section storage that is controlled by state.
  */
 #[SectionStorage(id: "layout_builder_test_state")]
-class TestStateBasedSectionStorage extends SectionStorageBase {
+class TestStateBasedSectionStorage extends SectionStorageBase implements SupportAwareSectionStorageInterface {
 
   /**
    * {@inheritdoc}
@@ -114,6 +115,13 @@ class TestStateBasedSectionStorage extends SectionStorageBase {
    */
   public function save() {
     throw new \RuntimeException(__METHOD__ . " not implemented for " . __CLASS__);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSupported(string $entity_type_id, string $bundle, string $view_mode): bool {
+    return \Drupal::state()->get('layout_builder_test_state', FALSE);
   }
 
 }

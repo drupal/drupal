@@ -118,9 +118,9 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $this->assertSession()->pageTextContains('quiche');
 
     $expected = [
-      'QueryCount' => 73,
+      'QueryCount' => 77,
       'CacheGetCount' => 171,
-      'CacheSetCount' => 57,
+      'CacheSetCount' => 59,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 20,
@@ -252,7 +252,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
         ['config:views.view.related_recipes', 'node:10', 'node:3', 'node:6', 'node:7', 'node_list'],
         ['breakpoints'],
         [
-          'config:core.entity_view_display.media.image.responsive_3x2',
           'config:image.style.large_3_2_2x',
           'config:image.style.large_3_2_768x512',
           'config:image.style.medium_3_2_2x',
@@ -264,7 +263,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
         ],
         ['media:21'],
         [
-          'config:core.entity_view_display.node.recipe.card',
           'node_view',
           'user:6',
         ],
@@ -295,8 +293,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
         [
           'config:system.menu.account',
           'block_content_view',
-          'config:core.entity_view_display.block_content.footer_promo_block.default',
-          'config:core.entity_view_display.media.image.medium_8_7',
           'config:image.style.medium_8_7',
           'file:37',
           'media:19',
