@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Select input elements.
+ */
+
+.form-element--type-select {
+  padding-inline-end: calc(2rem - var(--input-border-size));
+  background-image: url(../../images/icons/545560/chevron-down.svg);
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+  background-size: 2.75rem 0.5625rem; /* w: 14px + (2 * 15px), h: 9px */
+
+  /**
+   * Select states.
+   */
+  &:focus {
+    background-image: url(../../images/icons/003ecc/chevron-down.svg);
+  }
+  &[disabled] {
+    background-image: url(../../images/icons/8e929c/chevron-down.svg);
+  }
+
+  [dir="rtl"] & {
+    background-position: 0 50%;
+  }
+
+  .no-touchevents & {
+    &.form-element--extrasmall,
+    &[name$="][_weight]"] {
+      padding-inline-end: calc(1.5rem - var(--input-border-size));
+      background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .form-element--type-select,
+  .form-element--type-select:focus,
+  .form-element--type-select[disabled] {
+    padding-inline-end: var(--input-padding-horizontal);
+    background-image: none;
+    appearance: revert; /* Revert <select> appearance value for modern browsers. */
+  }
+}

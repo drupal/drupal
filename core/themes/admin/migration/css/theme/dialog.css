@@ -1,0 +1,654 @@
+/* cspell:ignore tablesaw */
+
+.ui-dialog a,
+.ui-dialog .link,
+.ui-dialog button.link,
+.ui-dialog .tabs__link.is-active,
+.ui-dialog [open] .gin-details__summary--accordion,
+.ui-dialog [open] .gin-details__summary--accordion-item,
+.ui-dialog [open] .gin-details__summary--vertical-tabs-item,
+.ui-dialog .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
+  color: var(--gin-color-primary);
+  text-decoration-style: var(--gin-link-decoration-style);
+}
+
+.ui-dialog a:hover,
+.ui-dialog .link:hover,
+.ui-dialog button.link:hover,
+.ui-dialog .tabs__link.is-active:hover,
+.ui-dialog [open] .gin-details__summary--accordion:hover,
+.ui-dialog [open] .gin-details__summary--accordion-item:hover,
+.ui-dialog [open] .gin-details__summary--vertical-tabs-item:hover,
+.ui-dialog .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover {
+  color: var(--gin-color-primary-hover);
+}
+
+.ui-dialog a:active,
+.ui-dialog .link:active,
+.ui-dialog button.link:active,
+.ui-dialog .tabs__link.is-active:active,
+.ui-dialog [open] .gin-details__summary--accordion:active,
+.ui-dialog [open] .gin-details__summary--accordion-item:active,
+.ui-dialog [open] .gin-details__summary--vertical-tabs-item:active,
+.ui-dialog .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:active {
+  color: var(--gin-color-primary-active);
+}
+
+.ui-dialog *|*:any-link:not(svg|a) {
+  text-decoration: underline;
+  text-decoration-style: var(--gin-link-decoration-style);
+}
+
+.ui-dialog .is-horizontal .tabs__link:hover,
+.ui-dialog .gin-details__summary:hover,
+.ui-dialog .action-link:hover {
+  color: var(--gin-color-primary-hover);
+}
+
+.ui-dialog .gin-details[open] > .gin-details__summary:focus {
+  color: var(--gin-color-primary-active);
+}
+
+.ui-dialog .form-boolean--type-checkbox:checked,
+.ui-dialog .form-boolean--type-radio:checked:not(:disabled),
+.ui-dialog .is-horizontal .tabs__link.is-active::before,
+.ui-dialog .tabs__tab.is-active::before,
+.ui-dialog [open] > .gin-details__summary--accordion:not(:focus, :active)::after,
+.ui-dialog [open] > .gin-details__summary--accordion-item:not(:focus, :active)::after,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--accordion .details-title:not(:focus)::after,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--accordion-item .details-title:not(:focus)::after,
+.ui-dialog [open] > .gin-details__summary--vertical-tabs-item:not(:focus, :active)::after,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--vertical-tabs-item .details-title:not(:focus)::after,
+.ui-dialog .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+  border-color: var(--gin-color-primary);
+}
+
+.ui-dialog .form-boolean--type-checkbox:checked:hover,
+.ui-dialog .form-boolean--type-radio:checked:not(:disabled):hover,
+.ui-dialog .is-horizontal .tabs__link.is-active::before:hover,
+.ui-dialog .tabs__tab.is-active::before:hover,
+.ui-dialog [open] > .gin-details__summary--accordion:not(:focus, :active)::after:hover,
+.ui-dialog [open] > .gin-details__summary--accordion-item:not(:focus, :active)::after:hover,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--accordion .details-title:not(:focus)::after:hover,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--accordion-item .details-title:not(:focus)::after:hover,
+.ui-dialog [open] > .gin-details__summary--vertical-tabs-item:not(:focus, :active)::after:hover,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--vertical-tabs-item .details-title:not(:focus)::after:hover,
+.ui-dialog .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before:hover {
+  border-color: var(--gin-color-primary-hover);
+}
+
+.ui-dialog .form-boolean--type-checkbox:checked:active,
+.ui-dialog .form-boolean--type-radio:checked:not(:disabled):active,
+.ui-dialog .is-horizontal .tabs__link.is-active::before:active,
+.ui-dialog .tabs__tab.is-active::before:active,
+.ui-dialog [open] > .gin-details__summary--accordion:not(:focus, :active)::after:active,
+.ui-dialog [open] > .gin-details__summary--accordion-item:not(:focus, :active)::after:active,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--accordion .details-title:not(:focus)::after:active,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--accordion-item .details-title:not(:focus)::after:active,
+.ui-dialog [open] > .gin-details__summary--vertical-tabs-item:not(:focus, :active)::after:active,
+.ui-dialog .collapse-processed[open] > .gin-details__summary--vertical-tabs-item .details-title:not(:focus)::after:active,
+.ui-dialog .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before:active {
+  border-color: var(--gin-color-primary-active);
+}
+
+.ui-dialog .form-element {
+  box-sizing: border-box;
+  min-height: calc(var(--input-padding-vertical) * 2 + var(--input-line-height));
+  color: var(--gin-color-text);
+  border: 1px solid var(--gin-border-color-form-element);
+  border-radius: var(--gin-border-m);
+  background-color: var(--gin-bg-input);
+  line-height: var(--input-line-height);
+  padding-block: calc(var(--input-padding-vertical) - 1px);
+  padding-inline: var(--input-padding-horizontal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ui-dialog .form-element {
+    transition: var(--gin-transition);
+  }
+}
+
+.ui-dialog .form-element:hover {
+  border-color: var(--gin-color-text);
+  box-shadow: inset 0 0 0 1px var(--gin-color-text);
+}
+
+.ui-dialog .form-element--small,
+.ui-dialog .form-element--extrasmall {
+  border-radius: var(--gin-border-s);
+  font-size: var(--gin-font-size-s);
+  line-height: 1.5;
+}
+
+.ui-dialog .form-element[disabled],
+.ui-dialog .form-element[disabled]:hover {
+  cursor: not-allowed;
+  color: var(--gin-color-disabled);
+  border-color: var(--gin-color-disabled-border);
+  background-color: var(--gin-color-disabled-bg) !important;
+  box-shadow: none;
+}
+
+.gin--dark-mode .ui-dialog .form-element {
+  color-scheme: dark;
+}
+
+.ui-dialog .form-textarea-wrapper {
+  border-radius: var(--gin-border-m);
+}
+
+.ui-dialog .form-textarea-wrapper textarea {
+  max-width: 100%;
+}
+
+.ui-dialog .form-item--editor-format,
+.ui-dialog .form-element--editor-format {
+  width: auto;
+}
+
+.ui-dialog .form-item--editor-format .form-item__label,
+.ui-dialog .form-element--editor-format .form-item__label {
+  inset-block-start: 3px;
+  padding-block-end: 0;
+}
+
+.ui-dialog .password-field {
+  width: 100%;
+}
+
+.ui-dialog .password-confirm {
+  width: 100%;
+  max-width: var(--gin-max-line-length);
+}
+
+.ui-dialog .password-strength__title {
+  color: var(--gin-color-text-light);
+}
+
+.ui-dialog .password-strength__text {
+  color: var(--gin-color-title);
+}
+
+.ui-dialog .password-suggestions {
+  color: var(--gin-color-text-light);
+  border: 1px solid var(--gin-border-color-layer2);
+  background-color: transparent;
+}
+
+.ui-dialog .form-element--type-select {
+  padding-inline-end: calc(var(--gin-spacing-xs) + var(--gin-spacing-xl) - 1px);
+}
+
+.gin--dark-mode .ui-dialog .form-element--type-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath fill='none' stroke-width='1.5' d='M1 1L7 7L13 1' stroke='%23ffffff'/%3E%3C/svg%3E%0A");
+}
+
+.ui-dialog .form-element--type-select--small {
+  min-height: 2.25rem;
+  font-size: var(--gin-font-size-xs);
+  line-height: 1.4;
+  padding-block: 0.474rem;
+}
+
+[dir="ltr"] .ui-dialog .form-element--type-select--small {
+  background-position: 100% 52%;
+}
+
+[dir="rtl"] .ui-dialog .form-element--type-select--small {
+  background-position: 0% 52%;
+}
+
+.ui-dialog .form-boolean {
+  width: 21px;
+  height: 21px;
+  border-color: var(--gin-border-color-form-element);
+  border-radius: var(--gin-border-xs);
+}
+
+.gin--dark-mode .ui-dialog .form-boolean--type-checkbox:not(:checked) {
+  background: var(--gin-bg-input);
+}
+
+.ui-dialog .form-boolean--type-checkbox:checked {
+  background-color: var(--gin-color-primary);
+}
+
+.gin--dark-mode .ui-dialog .form-boolean--type-checkbox:checked:not(:disabled) {
+  background-image: url("../../media/sprite.svg#checked-view");
+}
+
+.ui-dialog .form-boolean--type-checkbox:checked:hover {
+  background-color: var(--gin-color-primary-hover);
+}
+
+.ui-dialog .form-boolean--type-checkbox:checked:active {
+  background-color: var(--gin-color-primary-active);
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox {
+  position: relative;
+  margin-inline-start: 0;
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 2.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  vertical-align: top;
+  border: 3px solid transparent;
+  border-radius: var(--gin-border-l);
+  background-color: var(--gin-color-disabled);
+  all: unset;
+  appearance: none;
+  clip-path: circle(var(--gin-spacing-l) at 50% 50%);
+}
+
+.gin--dark-mode .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input {
+  background-color: var(--gin-bg-input);
+}
+
+@media (forced-colors: active) {
+  .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input {
+    border-width: 2px;
+  }
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::before {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  content: "";
+  border-radius: 21px;
+  background-color: #fff;
+}
+
+[dir="ltr"] .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::before {
+  transform: translateX(-16px);
+}
+
+[dir="rtl"] .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::before {
+  transform: translateX(16px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::before {
+    transition: transform 0.3s;
+  }
+}
+
+.gin--dark-mode .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::before {
+  background-color: var(--gin-border-color-form-element);
+}
+
+@media (forced-colors: active) {
+  .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::before {
+    background-color: CanvasText;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::after {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    content: "";
+    transition: transform 0.3s;
+    background-color: Canvas;
+    -webkit-mask-image: url("../../media/sprite.svg#toggle-unchecked-view");
+    mask-image: url("../../media/sprite.svg#toggle-unchecked-view");
+    -webkit-mask-size: 16px 16px;
+    mask-size: 16px 16px;
+    -webkit-mask-position: 17px 2px;
+    mask-position: 17px 2px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+
+  [dir="ltr"] .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::after {
+    transform: translateX(-16px);
+  }
+
+  [dir="rtl"] .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input::after {
+    transform: translateX(16px);
+  }
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:disabled {
+  cursor: not-allowed;
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 2px rgb(0, 0, 0, 0.2);
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:active,
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:focus {
+  box-shadow:
+    0 0 0 1px var(--gin-color-focus-border),
+    0 0 0 4px var(--gin-color-focus);
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked {
+  background-color: var(--gin-switch);
+}
+
+.gin--dark-mode .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked {
+  background-color: var(--gin-color-primary-light-active);
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::before {
+  background-color: #fff;
+}
+
+[dir="ltr"] .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::before {
+  transform: translateX(16px);
+}
+
+[dir="rtl"] .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::before {
+  transform: translateX(-16px);
+}
+
+.gin--dark-mode .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::before {
+  background-color: var(--gin-color-primary-hover);
+}
+
+.gin--high-contrast-mode .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::before {
+  background-color: var(--gin-border-color);
+}
+
+@media (forced-colors: active) {
+  .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::before {
+    padding-inline-start: var(--gin-spacing-xs);
+    background-color: LinkText !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::after {
+    -webkit-mask-image: url("../../media/sprite.svg#checked-view");
+    mask-image: url("../../media/sprite.svg#checked-view");
+    -webkit-mask-position: 2px 2px;
+    mask-position: 2px 2px;
+  }
+
+  [dir="ltr"] .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::after {
+    transform: translateX(16px);
+  }
+
+  [dir="rtl"] .ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:checked::after {
+    transform: translateX(-16px);
+  }
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:disabled {
+  opacity: 0.75;
+  background-color: var(--gin-color-disabled);
+  box-shadow: none;
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox input:disabled::before {
+  opacity: 0.6;
+  background-color: #fff;
+}
+
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox label {
+  position: relative;
+  z-index: 1;
+  padding-block-end: 0;
+  padding-inline-start: var(--gin-spacing-xxs);
+  color: var(--gin-color-text);
+}
+
+.ui-dialog table:has(.tabledrag-cell-content__item .form-checkbox) th.select-all .form-checkbox {
+  margin-inline-start: calc(var(--tabledrag-handle-icon-size, 1.0625rem) + var(--gin-spacing-m));
+}
+
+.gin--dark-mode .ui-dialog .form-boolean:hover,
+.gin--dark-mode .ui-dialog .form-boolean:active {
+  border-color: var(--gin-color-text);
+  box-shadow: none;
+}
+
+.ui-dialog .form-boolean--type-radio,
+.ui-dialog .form-boolean--type-radio:hover,
+.ui-dialog .form-boolean--type-radio:active,
+.ui-dialog .form-boolean--type-radio:focus,
+.ui-dialog .form-boolean--type-radio:hover:focus {
+  border-color: var(--gin-border-color-form-element);
+  border-radius: 50%;
+  background-color: var(--gin-bg-input);
+  background-image: none;
+}
+
+.ui-dialog .form-boolean--type-radio:hover {
+  box-shadow: inset 0 0 0 1px var(--gin-border-color-layer2);
+}
+
+.ui-dialog .form-boolean--type-radio:hover,
+.gin--dark-mode .ui-dialog .form-boolean--type-radio:hover {
+  border-color: var(--gin-color-text);
+}
+
+.ui-dialog .form-boolean--type-radio:active,
+.ui-dialog .form-boolean--type-radio:focus {
+  box-shadow:
+    inset 0 0 0 1px var(--gin-border-color-layer2),
+    0 0 0 1px var(--gin-color-focus-border),
+    0 0 0 4px var(--gin-color-focus);
+}
+
+.ui-dialog .form-boolean--type-radio:checked:not(:disabled),
+.ui-dialog .form-boolean--type-radio:checked:not(:disabled):hover {
+  background-color: var(--gin-bg-layer);
+  background-image: none;
+  box-shadow: inset 0 0 0 5px var(--gin-color-primary);
+}
+
+.ui-dialog .form-boolean--type-radio:checked:not(:disabled):active,
+.ui-dialog .form-boolean--type-radio:checked:not(:disabled):focus,
+.ui-dialog .form-boolean--type-radio:checked:not(:disabled):hover:focus {
+  border-color: var(--gin-color-focus-border);
+  box-shadow:
+    inset 0 0 0 5px var(--gin-color-primary),
+    0 0 0 1px var(--gin-color-focus-border),
+    0 0 0 4px var(--gin-color-focus);
+}
+
+.ui-dialog .form-boolean--type-radio:disabled,
+.ui-dialog .form-boolean--type-radio:disabled:hover {
+  cursor: not-allowed;
+  border-color: var(--gin-color-disabled-border);
+  background: var(--gin-color-disabled-bg);
+}
+
+.ui-dialog .form-boolean--type-radio:checked:disabled,
+.ui-dialog .form-boolean--type-radio:checked:disabled:hover {
+  background: var(--gin-color-disabled);
+  box-shadow: inset 0 0 0 5px var(--gin-color-disabled-bg);
+}
+
+.ui-dialog .form-boolean--type-checkbox[disabled],
+.ui-dialog .form-boolean--type-checkbox[disabled]:hover {
+  cursor: not-allowed;
+  border-color: var(--gin-color-disabled-border);
+  background-color: var(--gin-color-disabled-bg);
+}
+
+.ui-dialog .form-boolean--type-checkbox[disabled]:checked,
+.ui-dialog .form-boolean--type-checkbox[disabled]:hover:checked {
+  border-color: var(--gin-color-disabled-border);
+  background-color: var(--gin-color-disabled-bg);
+  box-shadow: none;
+}
+
+.ui-dialog .form-radios .form-type--boolean,
+.ui-dialog .form-checkboxes .form-type--boolean {
+  margin-block: var(--gin-spacing-xs);
+}
+
+.ui-dialog .form-actions {
+  margin-block-end: 0;
+}
+
+.ui-dialog .form-edit .form-actions {
+  margin-block-end: 0;
+  padding: 0;
+  border: 0 none;
+  background-color: transparent;
+}
+
+.ui-dialog fieldset:not(.fieldgroup) {
+  padding-block-start: var(--gin-spacing-xs);
+  color: var(--gin-color-text-light);
+  border-color: var(--gin-border-color);
+  border-radius: var(--gin-border-m);
+  background: transparent;
+  box-shadow: none;
+  padding-inline: 0;
+}
+
+.ui-dialog fieldset:not(.fieldgroup) > legend {
+  inset-block-start: 20px;
+}
+
+.ui-dialog fieldset:not(.fieldgroup) > .fieldset-wrapper {
+  margin-block-start: 20px;
+}
+
+.ui-dialog fieldset:not(.fieldgroup).error {
+  border: 2px solid var(--gin-color-danger);
+}
+
+.ui-dialog .fieldset__label,
+.ui-dialog .fieldset__label--group,
+.ui-dialog .form-item__label {
+  margin-block-start: 0;
+  margin-block-end: var(--gin-spacing-xs);
+  color: var(--gin-color-title);
+  font-size: var(--gin-font-size-s);
+  font-weight: var(--gin-font-weight-semibold);
+}
+
+.ui-dialog .form-item__label.has-error,
+.ui-dialog .form-item__error-message {
+  color: var(--gin-color-danger);
+}
+
+.ui-dialog .form-item__description,
+.ui-dialog .fieldset__description,
+.ui-dialog .filter-guidelines__item {
+  max-width: var(--gin-max-line-length);
+  color: var(--gin-color-text-light);
+}
+
+.ui-dialog .form-item__label.form-required::after,
+.ui-dialog .fieldset__label.form-required::after,
+.ui-dialog .form-required > .fieldset__label::after,
+.ui-dialog .horizontal-tab-button .form-required::after,
+.ui-dialog .vertical-tabs__menu-link .form-required::after {
+  content: "*";
+  vertical-align: text-top;
+  color: var(--gin-color-danger);
+  background: none;
+  line-height: 1;
+  margin-inline: 0.15em;
+}
+
+.ui-dialog .gin-details.error {
+  border: 2px solid var(--gin-color-danger);
+}
+
+.ui-dialog .gin-details__summary:not(.form-required) .required-mark {
+  display: none;
+}
+
+.ui-dialog .form-item__warning {
+  display: inline-block;
+  margin-block-start: var(--gin-spacing-xs);
+}
+
+.ui-dialog html.js .form-autocomplete {
+  padding-inline-end: 36px;
+}
+
+.ui-dialog .entity-form-display-form > .form-actions {
+  margin-block: 0;
+}
+
+.ui-dialog .required-mark::after {
+  background: var(--gin-color-danger);
+  -webkit-mask-image: url("../../media/sprite.svg#asterisk-view");
+  mask-image: url("../../media/sprite.svg#asterisk-view");
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.ui-dialog .form-wrapper .form-item__label,
+.ui-dialog .form-composite .form-item__label {
+  position: relative;
+}
+
+.ui-dialog .field--type-text-with-summary .form-item,
+.ui-dialog .field--widget-text-textarea .form-item {
+  margin-block-end: 0;
+}
+
+.ui-dialog .field--type-text-with-summary .filter-wrapper,
+.ui-dialog .field--widget-text-textarea .filter-wrapper {
+  border: 0 none;
+  padding-inline: 0;
+}
+
+.ui-dialog .gin-autocomplete {
+  width: calc(100% - var(--gin-spacing-m));
+}
+
+.ui-dialog .gin-autocomplete .form-autocomplete {
+  width: 100%;
+}
+
+.ui-dialog .no-touchevents .form-element--type-select.form-element--extrasmall {
+  min-height: 1.75rem;
+  font-size: var(--gin-font-size-s);
+  line-height: 1.5;
+}
+
+.ui-dialog #block-gin-content > form > .form-item:first-of-type {
+  margin-block-start: 0;
+}
+
+.ui-dialog .image-style-new .form-item {
+  margin-inline-end: var(--gin-spacing-xxs);
+}
+
+.ui-dialog tr .form-item {
+  margin-block: 0;
+}
+
+.ui-dialog .container-inline .form-item {
+  margin-block: var(--gin-spacing-density-s);
+}
+
+.ui-dialog .field-plugin-settings-edit-form {
+  margin-block-start: var(--gin-spacing-s);
+}
+
+.ui-dialog .field-plugin-settings-edit-form .form-item {
+  margin-block: var(--gin-spacing-m);
+}
+
+.ui-dialog .field-plugin-settings-edit-form .form-boolean-group .form-item {
+  margin-block: var(--gin-spacing-xs);
+}
+
+.ui-dialog .length-indicator {
+  margin-block-end: var(--gin-spacing-l);
+}

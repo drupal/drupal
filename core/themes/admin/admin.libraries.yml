@@ -1,0 +1,555 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      css/base/accents.css: {}
+      css/base/variables.css: {}
+      css/base/elements.css: {}
+      css/base/typography.css: {}
+      css/base/print.css: {}
+    component:
+      css/components/accordion.css: {}
+      css/components/action-link.css: {}
+      css/components/content-header.css: {}
+      css/components/ckeditor5.css: {}
+      css/components/container-inline.css: {}
+      css/components/container-inline.module.css: {}
+      css/components/breadcrumb.css: {}
+      css/components/button.css: {}
+      css/components/details.css: {}
+      css/components/divider.css: {}
+      css/components/messages.css: {}
+      css/components/entity-meta.css: {}
+      css/components/fieldset.css: {}
+      css/components/form.css: {}
+      css/components/form--checkbox-radio.css: {}
+      css/components/form--field-multiple.css: {}
+      css/components/form--managed-file.css: {}
+      css/components/form--text.css: {}
+      css/components/form--select.css: {}
+      css/components/help.css: {}
+      css/components/image-preview.css: {}
+      css/components/menus-and-lists.css: {}
+      css/components/modules-page.css: {}
+      css/components/node.css: {}
+      css/components/page-title.css: {}
+      css/components/pager.css: {}
+      css/components/skip-link.css: {}
+      css/components/tables.css: {}
+      css/components/table--file-multiple-widget.css: {}
+      css/components/search-admin-settings.css: {}
+      css/components/tableselect.css: {}
+      css/components/tabs.css: {}
+    theme:
+      css/theme/colors.css: {}
+      migration/css/base/gin.css: { minified: false }
+    layout:
+      css/layout/breadcrumb.css: {}
+      css/layout/local-actions.css: {}
+      css/layout/layout.css: {}
+  dependencies:
+    - system/admin
+    - core/jquery
+    - core/drupal
+    # Admin has small and extra small variation for most control elements
+    # such as inputs, action links, buttons, dropbuttons. For usability and
+    # accessibility reasons, we keep target sizes big enough on touch screen
+    # devices (by not making these elements smaller than their default size).
+    # This library allows conditionally rendering small variations of the
+    # control elements on non-touch devices. In some cases, such as when
+    # rendering links, it is hard to recognize when this detection should be
+    # attached, therefore it is always attached.
+    - core/drupal.touchevents-test
+    - admin/base
+
+form-two-columns:
+  version: VERSION
+  css:
+    layout:
+      css/layout/form-two-columns.css: {}
+
+maintenance-page:
+  version: VERSION
+  js:
+    js/mobile.install.js: {}
+  css:
+    theme:
+      css/theme/maintenance-page.css: {}
+  dependencies:
+    - system/maintenance
+    - admin/global-styling
+
+install-page:
+  version: VERSION
+  js:
+    js/mobile.install.js: {}
+  css:
+    theme:
+      css/theme/install-page.css: {}
+  dependencies:
+    - admin/maintenance-page
+
+drupal.nav-tabs:
+  version: VERSION
+  js:
+    js/nav-tabs.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/drupal.debounce
+
+admin.jquery.ui:
+  version: VERSION
+  css:
+    component:
+      css/components/jquery.ui/theme.css: { weight: -1 }
+
+admin.drupal.dialog:
+  version: VERSION
+  css:
+    theme:
+      css/components/dialog.css: {}
+  dependencies:
+    - admin/admin.jquery.ui
+
+admin.tabledrag:
+  version: VERSION
+  js:
+    js/tabledrag.js: {}
+
+drupal.node.preview:
+  version: VERSION
+  css:
+    theme:
+      css/components/node-preview.css: {}
+
+drupal.tablesort:
+  version: VERSION
+  css:
+    component:
+      css/components/tablesort-indicator.css: {}
+
+media-form:
+  version: VERSION
+  css:
+    layout:
+      css/components/media.css: {}
+  dependencies:
+    - media/form
+
+image.admin:
+  version: VERSION
+  css:
+    component:
+      css/components/image.admin.css: {}
+
+system.admin:
+  version: VERSION
+  css:
+    component:
+      css/components/system-admin--admin-list.css: { weight: -10 }
+      css/components/system-admin--links.css: { weight: -10 }
+      css/components/system-admin--modules.css: { weight: -10 }
+      css/components/system-admin--panel.css: { weight: -10 }
+    layout:
+      css/layout/system-admin--layout.css: { weight: -10 }
+  dependencies:
+    - admin/card
+
+checkbox:
+  version: VERSION
+  js:
+    js/checkbox.js: {}
+  dependencies:
+    - core/drupal
+
+icon-link:
+  version: VERSION
+  css:
+    component:
+      css/components/icon-link.css: {}
+
+dropbutton:
+  version: VERSION
+  js:
+    js/dropbutton.js: { minified: false }
+    migration/js/dropbutton.js: { minified: false }
+  dependencies:
+    - core/drupal
+    - core/once
+
+
+autocomplete:
+  version: VERSION
+  css:
+    theme:
+      migration/css/components/autocomplete.css: { minified: false }
+  js:
+    js/autocomplete.js: {}
+  dependencies:
+    - core/once
+    - admin/admin.jquery.ui
+
+drupal.shortcut:
+  version: VERSION
+  css:
+    # @todo move this to components after
+    #   https://www.drupal.org/project/drupal/issues/3045467 is in.
+    theme:
+      css/components/shortcut.css: {}
+
+details-focus:
+  js:
+    js/details.js: {}
+
+ajax:
+  css:
+    theme:
+      migration/css/components/ajax.css: { minified: false, weight: 99 }
+  js:
+    js/ajax.js: {}
+
+form.password-confirm:
+  css:
+    component:
+      css/components/form--password-confirm.css: {}
+  js:
+    js/user.theme.js: {}
+  dependencies:
+    - core/drupal
+    - admin/global-styling
+
+
+status.report:
+  version: VERSION
+  css:
+    component:
+      css/components/system-status-report-general-info.css: {}
+      css/components/system-status-report.css: {}
+      css/components/system-status-report-counters.css: {}
+      css/components/system-status-counter.css: {}
+
+views:
+  css:
+    component:
+      css/components/views-exposed-form.css: {}
+
+views_ui:
+  css:
+    component:
+      css/components/views-ui.css: {}
+
+messages:
+  js:
+    migration/js/messages.js: { minified: false }
+  dependencies:
+    - core/once
+
+card:
+  css:
+    component:
+      css/layout/card-list.css: {}
+      css/components/card.css: {}
+
+vertical-tabs:
+  css:
+    component:
+      css/components/vertical-tabs.css: {}
+  js:
+    js/vertical-tabs.js: {}
+  dependencies:
+    - admin/global-styling
+
+file:
+  css:
+    component:
+      css/components/file.css: {}
+
+media_library.theme:
+  version: VERSION
+  css:
+    theme:
+      css/theme/media-library.css: {}
+  dependencies:
+    - admin/icon-link
+
+media_library.ui:
+  version: VERSION
+  css:
+    component:
+      css/components/media-library.ui.css : {}
+  js:
+    js/media-library.ui.js: { weight: -1 }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+
+progress:
+  version: VERSION
+  css:
+    component:
+      css/components/progress.css: {}
+
+tabbingmanager:
+  version: VERSION
+  dependencies:
+    - admin/admin.jquery.ui
+
+filter:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.theme.css: {}
+
+tableselect:
+  version: VERSION
+  css:
+    component:
+      migration/css/components/tableselect.css: { minified: false }
+  js:
+    js/tableselect.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.announce
+    - core/drupal.debounce
+    - core/tabbable
+    - core/once
+
+# Base
+
+base:
+  css:
+    component:
+      migration/css/theme/font.css: { minified: false }
+      migration/css/theme/variables.css: { minified: false }
+  dependencies:
+    - admin/tabs
+    - admin/admin_dialog
+    - admin/status
+
+# Init
+
+init:
+  header: true
+  js:
+    migration/js/init.js: { minified: false, preprocess: false, weight: -99 }
+  dependencies:
+    - core/drupalSettings
+
+# Top bar
+
+top_bar:
+  css:
+    component:
+      migration/css/layout/top_bar.css: { minified: false }
+  dependencies:
+    - admin/status
+
+# Navigation
+
+navigation:
+  css:
+    theme:
+      migration/css/layout/navigation.css: { minified: false }
+  js:
+    migration/js/navigation.js: { minified: false }
+  dependencies:
+    - admin/escape_admin
+    - admin/node_preview
+    - admin/contextual_links
+    - admin/breadcrumb
+    - admin/settings_tray
+    - admin/settings_tray_edit
+
+# Toolbar
+
+toolbar:
+  css:
+    component:
+      migration/css/components/toolbar.css: { minified: false }
+    theme:
+      migration/css/layout/toolbar.css: { minified: false }
+  dependencies:
+    - admin/escape_admin
+    - admin/node_preview
+    - admin/contextual_links
+    - admin/breadcrumb
+    - admin/settings_tray_edit
+    - core/once
+
+# Accent
+
+accent:
+  css:
+    theme:
+      migration/css/theme/accent.css: { minified: false }
+  js:
+    migration/js/accent.js: { minified: false }
+  dependencies:
+    - core/drupalSettings
+    - core/once
+
+# Libraries
+
+admin_dialog:
+  css:
+    theme:
+      migration/css/theme/dialog.css: { minified: false }
+  dependencies:
+    - admin/dialog
+    - admin/accent
+
+description_toggle:
+  css:
+    theme:
+      migration/css/components/description_toggle.css: { minified: false }
+  js:
+    migration/js/description_toggle.js: { minified: false }
+
+escape_admin:
+  js:
+    migration/js/escape_admin.js: { minified: false }
+  dependencies:
+    - core/once
+
+# Custom CSS
+
+admin_custom_css:
+  css:
+    theme:
+      public://admin-custom.css: { preprocess: false, minified: false, weight: 50 }
+
+# Libs
+
+scroll_sync:
+  js:
+    migration/js/scroll_sync.js: { minified: true, weight: -1 }
+
+# Overrides
+
+media_embed_ckeditor_theme:
+  js:
+    migration/js/media_embed_ckeditor.theme.js: { minified: false }
+
+# Components
+
+sticky:
+  js:
+    migration/js/sticky.js: { minified: false }
+  dependencies:
+    - admin/tooltip
+    - core/drupal.displace
+    - core/once
+
+sidebar:
+  css:
+    theme:
+      migration/css/components/sidebar.css: { minified: false }
+  js:
+    migration/js/sidebar.js: { minified: false }
+  dependencies:
+    - core/once
+
+settings:
+  js:
+    migration/js/settings.js: { minified: false }
+  css:
+    component:
+      migration/css/components/settings.css: { minified: false }
+  dependencies:
+    - core/drupalSettings
+
+tableheader:
+  js:
+    migration/js/tableheader.js: { minified: false }
+  dependencies:
+    - core/once
+    - admin/scroll_sync
+
+tabs:
+  css:
+    component:
+      migration/css/components/tabs.css: { minified: false, weight: 99 }
+
+tooltip:
+  css:
+    component:
+      migration/css/components/tooltip.css: { minified: false }
+  dependencies:
+    - core/once
+
+status:
+  css:
+    component:
+      migration/css/components/status.css: { minified: false }
+
+more_actions:
+  js:
+    migration/js/more_actions.js: { minified: false }
+  css:
+    layout:
+      migration/css/components/more_actions.css: { minified: false }
+  dependencies:
+    - core/once
+
+edit_form:
+  css:
+    layout:
+      migration/css/components/edit_form.css: { minified: false }
+
+media_library:
+  css:
+    theme:
+      migration/css/components/media_library.css: { minified: false, weight: 99 }
+
+contextual_links:
+  css:
+    theme:
+      migration/css/components/contextual_links.css: { minified: false, weight: 99 }
+
+dialog:
+  css:
+    theme:
+      migration/css/components/dialog.css: { minified: false, weight: 99 }
+
+ckeditor5:
+  css:
+    theme:
+      migration/css/components/ckeditor5.css: { minified: false }
+
+revisions:
+  css:
+    theme:
+      migration/css/components/revisions.css: { minified: false }
+
+breadcrumb:
+  css:
+    theme:
+      migration/css/components/breadcrumb.css: { minified: false }
+
+node_preview:
+  css:
+    component:
+      migration/css/components/node_preview.css: { minified: false }
+
+settings_tray:
+  css:
+    component:
+      migration/css/components/settings_tray.css: { minified: false }
+
+settings_tray_edit:
+  css:
+    component:
+      migration/css/components/settings_tray_edit.css: { minified: false }
+
+maintenance_page:
+  css:
+    theme:
+      migration/css/components/maintenance_page.css: { minified: false }
+  dependencies:
+    - system/maintenance
+    - admin/accent
+    - admin/init

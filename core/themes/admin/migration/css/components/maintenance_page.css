@@ -1,0 +1,42 @@
+.maintenance-page {
+  --color-absolutezero: var(--gin-color-primary);
+  --color-absolutezero-hover: var(--gin-color-primary-hover);
+  --color-absolutezero-active: var(--gin-color-primary-active);
+  --color-gray: var(--gin-color-text);
+  --color-gray-700: var(--gin-color-text-disabled);
+  --color-bgblue-active: var(--gin-color-primary-light);
+  --font-size-h1: var(--gin-font-size-h1);
+  --font-size-h2: var(--gin-font-size-h2);
+  --font-size-h3: var(--gin-font-size-h3);
+  --shadow-z3: var(--gin-shadow-l1);
+
+  background: var(--gin-bg-app);
+}
+
+.layout-container {
+  border: 1px solid var(--gin-border-color-layer);
+  border-radius: var(--gin-border-l);
+  background: var(--gin-bg-layer);
+  padding-block: var(--gin-spacing-l);
+}
+
+.site-name {
+  letter-spacing: -0.05em;
+  color: var(--gin-color-title);
+  font-size: var(--gin-font-size-h1);
+  font-weight: var(--gin-font-weight-bold);
+  line-height: normal;
+}
+
+.title {
+  margin-block-start: var(--gin-spacing-m);
+  margin-block-end: var(--gin-spacing-s);
+}
+
+.button {
+  margin-block-end: 0;
+}
+
+.task-list li.is-active {
+  font-weight: var(--gin-font-weight-bold);
+}

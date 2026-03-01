@@ -1,0 +1,84 @@
+.help-icon {
+  display: flex;
+}
+
+.help-icon__description-toggle {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  all: unset;
+  margin-block: 0.1rem 0;
+  margin-inline: 0.3rem var(--gin-spacing-m);
+}
+
+.help-icon__description-toggle::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background-color: var(--gin-icon-color);
+  -webkit-mask-image: url("../../media/sprite.svg#help-view");
+  mask-image: url("../../media/sprite.svg#help-view");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.help-icon__description-toggle:hover::before {
+  background-color: var(--gin-color-primary);
+}
+
+.form-type--checkbox > .help-icon__element-has-description,
+.form-type--radio > .help-icon__element-has-description {
+  display: flex;
+  align-items: normal;
+}
+
+.form-type--checkbox > .help-icon__element-has-description > label,
+.form-type--radio > .help-icon__element-has-description > label {
+  margin-inline-start: 6px;
+}
+
+.field-group-details.help-icon__description-container .help-icon__description-toggle {
+  margin-block-start: 0;
+}
+
+fieldset:not(.fieldgroup) .help-icon > .fieldset__legend .fieldset__label {
+  padding-inline-end: 0;
+}
+
+.field-group-fieldset > .help-icon > .help-icon__description-toggle,
+fieldset.media-library-widget .help-icon > .help-icon__description-toggle,
+.field--type-datetime fieldset .help-icon > .help-icon__description-toggle {
+  margin-block-start: 1rem;
+}
+
+.field-group-fieldset > .fieldset__description,
+fieldset.media-library-widget .fieldset__description,
+.field--type-datetime fieldset .fieldset__description {
+  padding-inline-start: var(--gin-spacing-m);
+}
+
+@media (min-width: 48em) {
+  .field-group-fieldset > .fieldset__description,
+  fieldset.media-library-widget .fieldset__description,
+  .field--type-datetime fieldset .fieldset__description {
+    padding-inline-start: var(--gin-spacing-l);
+  }
+}
+
+.system-modules .table-filter .form-type--search,
+.system-modules-uninstall .table-filter .form-type--search {
+  position: relative;
+}
+
+.system-modules .table-filter .form-type--search .help-icon__description-toggle,
+.system-modules-uninstall .table-filter .form-type--search .help-icon__description-toggle {
+  position: absolute;
+  inset-inline-end: calc(var(--gin-spacing-xs) * -1);
+  inset-block-start: var(--gin-spacing-m);
+}

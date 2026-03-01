@@ -1,0 +1,119 @@
+/**
+ * Messages.
+ *
+ * @todo revisit this after https://www.drupal.org/project/drupal/issues/3078400
+ *   has been resolved.
+ */
+
+:root {
+  --messages-bg-color: #353641;
+  --messages-fg-color: var(--color-white);
+  --messages-border-radius: 2px;
+  --messages-border-width: 5px;
+  --messages--status-color: #42a877;
+  --messages--warning-color: #e0ac00;
+  --messages--error-color: #e34f4f;
+  --messages__link-color: var(--color-sunglow);
+  --messages__link--hover-color: var(--color-white);
+  --messages__icon-size: 1rem;
+  --messages__text-margin: calc(var(--messages__icon-size) + var(--space-l));
+}
+
+.messages-list {
+  margin-block: calc(var(--space-m) + var(--space-l));
+  padding: 0;
+  list-style: none;
+}
+
+.field .messages-list,
+.form-wrapper .messages-list {
+  margin-block-end: 0;
+}
+
+.messages {
+  overflow: auto; /* Required to prevent text clipping. */
+  box-sizing: border-box;
+  margin-block: var(--space-m);
+  padding-block: var(--space-l) 2rem;
+  padding-inline: calc(var(--space-l) - 5px) var(--space-l);
+  color: var(--messages-fg-color);
+  border-width: 0 0 0 var(--messages-border-width); /* LTR */
+  border-style: solid;
+  border-color: var(--messages-bg-color);
+  border-radius: var(--messages-border-radius);
+  background-color: var(--messages-bg-color);
+
+  & a {
+    text-decoration: underline;
+    color: var(--messages__link-color);
+
+    &:hover {
+      color: var(--messages__link--hover-color);
+    }
+  }
+
+  & pre {
+    margin: 0;
+  }
+
+  [dir="rtl"] & {
+    border-right-width: var(--messages-border-width);
+    border-left-width: 0;
+  }
+}
+
+.messages--error {
+  border-color: var(--messages--error-color);
+
+  & .messages__header {
+    background: url(../../images/icons/e34f4f/crossout.svg) no-repeat center left;
+  }
+}
+
+.messages--status {
+  border-color: var(--messages--status-color);
+
+  & .messages__header {
+    background: url(../../images/icons/42a877/checkmark.svg) no-repeat center left;
+  }
+}
+
+.messages--warning {
+  border-color: var(--messages--warning-color);
+
+  & .messages__header {
+    background: url(../../images/icons/e0ac00/exclamation.svg) no-repeat center left;
+  }
+}
+
+.messages__title {
+  margin-block: 0;
+  margin-inline: var(--messages__text-margin) 0;
+  font-size: var(--font-size-base);
+}
+
+.messages__header {
+  display: flex;
+  align-items: center;
+  margin-block-end: var(--space-m);
+
+  [dir="rtl"] & {
+    background-position: center right;
+  }
+}
+
+@media screen and (min-width: 48rem) {
+  .messages__content {
+    margin-inline-start: var(--messages__text-margin);
+  }
+}
+
+.messages__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.messages__item + .messages__item {
+  margin-block-start: var(--space-s);
+}

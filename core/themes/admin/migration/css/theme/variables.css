@@ -1,0 +1,265 @@
+/* cspell:ignore blinkmacsystemfont, ginter, xxxs */
+:root {
+  --gin-color-title: #222330;
+  --gin-color-text: #222330;
+  --gin-color-text-light: #545560;
+  --gin-color-focus: rgb(0, 125, 250, 0.6);
+  --gin-color-focus-border: rgb(0, 0, 0, 0.2);
+  --gin-color-focus-neutral-rgb: rgb(0, 0, 0, 0.4);
+  --gin-color-disabled: #767676;
+  --gin-color-disabled-bg: #eaeaea;
+  --gin-color-disabled-border: #c2c2c2;
+  --gin-color-warning: #d8b234;
+  --gin-color-warning-light: #efcf64;
+  --gin-bg-warning: #483e1e;
+  --gin-bg-warning-light: rgb(226, 151, 0, 0.08);
+  --gin-color-danger: #cc3d3d;
+  --gin-color-danger-lightest: #fdd9d9;
+  --gin-color-danger-light: #f39b9d;
+  --gin-bg-danger: #583333;
+  --gin-bg-danger-light: rgb(222, 117, 96, 0.1);
+  --gin-color-green: #058260;
+  --gin-color-green-light: #32cea4;
+  --gin-color-green-lightest: #adebdb;
+  --gin-bg-green: #145242;
+  --gin-bg-green-light: rgb(72, 171, 123, 0.1);
+  --gin-color-info: #082538;
+  --gin-color-info-light: #589ac5;
+  --gin-bg-info: #122b3c;
+  --gin-status-text: #626262;
+  --gin-status-bg: #eee;
+  --gin-status-success-text: #1d6844;
+  --gin-status-success-bg: #26a76930;
+  --gin-status-warning-text: #826b1f;
+  --gin-status-warning-bg: rgb(226, 151, 0, 0.15);
+  --gin-status-danger-text: #cc3d3d;
+  --gin-status-danger-bg: rgb(222, 117, 96, 0.15);
+  --gin-color-contextual: var(--gin-color-text);
+  --gin-color-contextual-text: #eee;
+  --gin-bg-input: #fff;
+  --gin-bg-layer: #fff;
+  --gin-bg-layer2: #edeff5;
+  --gin-bg-layer3: #fff;
+  --gin-bg-layer4: #e2e5ec;
+  --gin-bg-secondary: var(--gin-bg-layer);
+  --gin-bg-header: #eeeff3;
+  --gin-bg-unpublished: var(--gin-bg-danger-light);
+  --gin-pattern: var(--gin-border-color);
+  --gin-pattern-fallback: var(--gin-bg-layer2);
+  --gin-pattern-square: 0.5rem;
+  --gin-font: ginter, inter, "Helvetica Neue", blinkmacsystemfont, -apple-system, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
+  --gin-font-size-xxs: 0.75rem;
+  --gin-font-size-xs: small;
+  --gin-font-size-s: 0.875rem;
+  --gin-font-size: 1rem;
+  --gin-font-size-m: var(--gin-font-size);
+  --gin-font-size-l: 1.125rem;
+  --gin-font-size-xl: 1.25rem;
+  --gin-font-size-h3: 1.5rem;
+  --gin-font-size-h2: 1.75rem;
+  --gin-font-size-h1: 1.6rem;
+  --gin-font-size-quote: 1.1em;
+  --gin-font-weight-normal: 400;
+  --gin-font-weight-semibold: 525;
+  --gin-font-weight-bold: 575;
+  --gin-font-weight-heavy: 625;
+  --gin-spacing-xxxs: var(--space-xxxs);
+  --gin-spacing-xxs: var(--space-xxs);
+  --gin-spacing-xs: var(--space-xs);
+  --gin-spacing-s: var(--space-s);
+  --gin-spacing-m: var(--space-m);
+  --gin-spacing-l: var(--space-l);
+  --gin-spacing-xl: var(--space-xl);
+  --gin-spacing-xxl: var(--space-xxl);
+  --gin-spacing-xxxl: var(--space-xxxl);
+  --gin-icon-color: #414247;
+  --gin-icon-size-close: 20px;
+  --gin-icon-size-toolbar-secondary: 17px;
+  --gin-icon-size-toolbar: 17px;
+  --gin-icon-size-sidebar-toggle: 21px;
+  --gin-border-xxs: 0.125rem;
+  --gin-border-xs: 0.25rem;
+  --gin-border-s: 0.375rem;
+  --gin-border-m: 0.5rem;
+  --gin-border-l: 0.75rem;
+  --gin-border-xl: 1rem;
+  --gin-border-color: #d4d4d8;
+  --gin-border-color-secondary: rgb(0, 0, 0, 0.08);
+  --gin-border-color-layer: rgb(0, 0, 0, 0.08);
+  --gin-border-color-layer2: #d4d4d8;
+  --gin-border-color-table: rgb(0, 0, 0, 0.1);
+  --gin-border-color-table-header: rgb(0, 0, 0, 0.3);
+  --gin-border-color-form-element: #8e929c;
+  --size-summary-border-radius: calc(var(--gin-border-m) - 1px);
+  --gin-easing: cubic-bezier(0.19, 1, 0.22, 1);
+  --gin-transition: 0.15s var(--gin-easing);
+  --gin-transition-fast: 0.3s var(--gin-easing);
+  /* stylelint-disable-next-line color-function-notation */
+  --gin-shadow-l1: 0 1px 2px rgb(20 45 82 / 0.02), 0 3px 4px rgb(20 45 82 / 0.03), 0 5px 8px rgb(20 45 82 / 0.04);
+  /* stylelint-disable-next-line color-function-notation */
+  --gin-shadow-l2: 0 1px 2px rgb(20 45 82 / 0.02), 0 3px 4px rgb(20 45 82 / 0.03), 0 5px 8px rgb(20 45 82 / 0.04), 0 20px 24px rgb(20 45 82 / 0.12);
+  --gin-height-sticky: 60px;
+  --gin-toolbar-width-collapsed: 66px;
+  --gin-toolbar-width: 256px;
+  --gin-toolbar-height: 0px;
+  --gin-toolbar-secondary-height: 0px;
+  --gin-toolbar-bg-level2: #edeff5;
+  --gin-toolbar-bg-level3: rgb(44, 45, 47, 0.05);
+  --gin-toolbar-y-offset: 0px;
+  --gin-toolbar-x-offset: 0px;
+  --gin-scroll-offset: 0px;
+  --gin-sticky-offset: 0px;
+  --gin-sidebar-small-width: 320px;
+  --gin-sidebar-min-width: 240px;
+  --gin-sidebar-width: 320px;
+  --gin-sidebar-max-width: 560px;
+  --gin-sidebar-offset: var(--gin-sidebar-width);
+  --gin-switch: #26a769;
+  --gin-shadow-button: #0003;
+  --gin-color-button-text: #fff;
+  --gin-offset-x: var(--gin-toolbar-x-offset);
+  --gin-offset-y: calc(var(--gin-toolbar-y-offset) + var(--gin-sticky-offset));
+  --gin-link-decoration-style: dotted;
+  --gin-max-line-length: 80ch;
+  --input-line-height: var(--gin-spacing-l);
+  --input-padding-horizontal: var(--gin-spacing-s);
+  --input-padding-vertical: var(--gin-spacing-xs);
+  --gin-tooltip-bg: #232429;
+  --jui-dialog-z-index: 1260;
+}
+
+@media (min-width: 61em) {
+  :root {
+    --gin-font-size-h1: 1.8125rem;
+    --gin-font-size-quote: 1.2em;
+  }
+}
+
+@media (min-width: 90em) {
+  :root {
+    --gin-font-size-h1: 2.125rem;
+  }
+}
+
+@media (min-width: 61em) {
+  :root {
+    --gin-icon-size-toolbar: 20px;
+  }
+}
+
+@media (min-width: 64em) {
+  :root {
+    --gin-sticky-offset: var(--gin-height-sticky);
+  }
+}
+
+@media (min-width: 80em) {
+  :root {
+    --gin-sidebar-width: 360px;
+  }
+}
+
+:root[data-gin-layout-density="small"],
+[data-gin-layout-density="small"] {
+  --gin-spacing-density-xxs: 0.15625rem;
+  --gin-spacing-density-xs: 0.3125rem;
+  --gin-spacing-density-s: 0.46875rem;
+  --gin-spacing-density-m: 0.625rem;
+  --gin-spacing-density-l: 0.9375rem;
+  --gin-spacing-density-xl: 1.25rem;
+  --gin-spacing-density-xxl: 1.875rem;
+  --gin-spacing-density-xxxl: 2.5rem;
+}
+
+:root[data-gin-layout-density="medium"],
+[data-gin-layout-density="medium"] {
+  --gin-spacing-density-xxs: 0.1875rem;
+  --gin-spacing-density-xs: 0.375rem;
+  --gin-spacing-density-s: 0.5625rem;
+  --gin-spacing-density-m: 0.75rem;
+  --gin-spacing-density-l: 1.125rem;
+  --gin-spacing-density-xl: 1.5rem;
+  --gin-spacing-density-xxl: 2.25rem;
+  --gin-spacing-density-xxxl: 3rem;
+}
+
+:root {
+  --gin-spacing-density-xxs: 0.25rem;
+  --gin-spacing-density-xs: 0.5rem;
+  --gin-spacing-density-s: 0.75rem;
+  --gin-spacing-density-m: 1rem;
+  --gin-spacing-density-l: 1.5rem;
+  --gin-spacing-density-xl: 2rem;
+  --gin-spacing-density-xxl: 3rem;
+  --gin-spacing-density-xxxl: 4rem;
+}
+
+.gin--dark-mode {
+  --gin-color-title: #fff;
+  --gin-color-text: #d2d3d3;
+  --gin-color-text-light: #9e9fa0;
+  --gin-shadow-button: rgba(#111, 0.9);
+  --gin-color-button-text: #111;
+  --gin-color-focus: rgb(81, 168, 255);
+  --gin-color-focus-border: rgb(0, 0, 0, 0.8);
+  --gin-color-focus-neutral-rgb: rgb(255, 255, 255, 0.8);
+  --gin-color-disabled: #919191;
+  --gin-color-disabled-border: #646464;
+  --gin-color-disabled-bg: #47474c;
+  --gin-color-warning: #dec15f;
+  --gin-bg-warning-light: rgb(222, 193, 95, 0.1);
+  --gin-color-danger: #ce6060;
+  --gin-color-danger-lightest: #483439;
+  --gin-color-green: #32cea4;
+  --gin-color-info: #559bca;
+  --gin-bg-input: var(--gin-bg-layer2);
+  --gin-bg-app: #1b1b1d;
+  --gin-bg-layer: #2a2a2d;
+  --gin-bg-layer2: #3b3b3f;
+  --gin-bg-layer3: #47474c;
+  --gin-bg-layer4: #19191b;
+  --gin-bg-secondary: var(--gin-bg-app);
+  --gin-bg-unpublished: var(--gin-bg-warning-light);
+  --gin-color-contextual: var(--gin-bg-layer3);
+  --gin-border-color: #43454a;
+  --gin-border-color-secondary: rgb(255, 255, 255, 0.075);
+  --gin-border-color-layer: rgb(0, 0, 0, 0.05);
+  --gin-border-color-layer2: #76777b;
+  --gin-border-color-table: #43454a;
+  --gin-border-color-table-header: rgb(255, 255, 255, 0.4);
+  --gin-border-color-form-element: var(--gin-border-color-layer2);
+  --gin-bg-header: #1b1b1d;
+  --gin-switch: var(--gin-color-primary);
+  --gin-status-text: #c3cbd0;
+  --gin-status-bg: rgb(255, 255, 255, 0.12);
+  --gin-status-success-text: #8bd3b1;
+  --gin-status-success-bg: #26a76940;
+  --gin-status-warning-text: #e8d185;
+  --gin-status-warning-bg: rgb(226, 151, 0, 0.15);
+  --gin-status-danger-text: #e69e9e;
+  --gin-status-danger-bg: rgb(222, 117, 96, 0.15);
+  /* stylelint-disable-next-line color-function-notation */
+  --gin-shadow-l1: 0 1px 2px rgb(0 0 0 / 0.02), 0 3px 4px rgb(0 0 0 / 0.03), 0 5px 8px rgb(0 0 0 / 0.04);
+  /* stylelint-disable-next-line color-function-notation */
+  --gin-shadow-l2: 0 1px 2px rgb(0 0 0 / 0.02), 0 3px 4px rgb(0 0 0 / 0.03), 0 5px 8px rgb(0 0 0 / 0.04), 0 20px 24px rgb(0 0 0 / 0.12);
+  --gin-icon-color: #888;
+  --gin-pattern-fallback: var(--gin-bg-layer2);
+  --gin-pattern: var(--gin-border-color);
+  --gin-tooltip-bg: var(--gin-bg-layer3);
+}
+
+@media (forced-colors: active) {
+  :root {
+    --gin-icon-color: CanvasText;
+  }
+}
+
+.entity-meta {
+  --entity-meta-color-bg: transparent;
+  --entity-meta-border-color: var(--gin-border-color);
+}
+
+.accordion {
+  --accordion-bg-color: transparent;
+  --accordion-border-color: var(--gin-border-color);
+}

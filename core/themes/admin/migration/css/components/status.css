@@ -1,0 +1,77 @@
+.gin-status,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
+.views-field .marker,
+.gin-beta-flag,
+.gin-experimental-flag,
+.gin-new-flag {
+  display: inline-block;
+  padding: 0.125em 0.75em;
+  vertical-align: 0.125em;
+  border: 1px solid transparent;
+  border-radius: var(--gin-border-l);
+  font-size: var(--gin-font-size-xxs);
+  font-weight: var(--gin-font-weight-semibold);
+  font-variation-settings: initial;
+}
+
+.gin-status,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
+.views-field .marker,
+.gin-beta-flag,
+.gin-experimental-flag,
+.pb-project-categories__item,
+.pb-module-page__categories-list-item {
+  color: var(--gin-status-text);
+  background: var(--gin-status-bg);
+}
+
+.gin-status--success,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--success,
+.gin-new-flag,
+.views-field .marker--published,
+.pb-actions .project_status-indicator {
+  color: var(--gin-status-success-text);
+  background-color: var(--gin-status-success-bg);
+}
+
+.gin-status--success .gin-status-icon {
+  background-color: currentColor;
+  -webkit-mask-image: url("../../media/sprite.svg#status-view");
+  mask-image: url("../../media/sprite.svg#status-view");
+}
+
+.gin-status--warning,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning {
+  color: var(--gin-status-warning-text);
+  background: var(--gin-status-warning-bg);
+}
+
+.gin-status--warning .gin-status-icon,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning .gin-status-icon {
+  background-color: currentColor;
+  -webkit-mask-image: url("../../media/sprite.svg#warning-view");
+  mask-image: url("../../media/sprite.svg#warning-view");
+}
+
+.gin-status--danger,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger {
+  color: var(--gin-status-danger-text);
+  background: var(--gin-status-danger-bg);
+}
+
+.gin-status--danger .gin-status-icon,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger .gin-status-icon {
+  background-color: currentColor;
+  -webkit-mask-image: url("../../media/sprite.svg#error-view");
+  mask-image: url("../../media/sprite.svg#error-view");
+}
+
+.gin-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gin-spacing-xxs);
+}
+
+.gin-status-icon {
+  margin-inline-start: -0.5em;
+}

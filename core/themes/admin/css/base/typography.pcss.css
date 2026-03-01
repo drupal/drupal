@@ -1,0 +1,28 @@
+/**
+* Reusable utility classes that apply vertical spacing consistency and inline
+* with the base line height of Claro.
+*/
+.leader {
+  margin-top: 1.538rem;
+}
+.leader-double {
+  margin-top: 3.076rem;
+}
+.leader-triple {
+  margin-top: 4.614rem;
+}
+.leader-quadruple {
+  margin-top: 6.152rem;
+}
+.trailer {
+  margin-bottom: 1.538rem;
+}
+.trailer-double {
+  margin-bottom: 3.076rem;
+}
+.trailer-triple {
+  margin-bottom: 4.614rem;
+}
+.trailer-quadruple {
+  margin-bottom: 6.152rem;
+}

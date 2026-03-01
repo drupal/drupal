@@ -1,0 +1,71 @@
+/**
+ * @file
+ * Admin list and admin item modules.
+ */
+
+/**
+ * Admin list (wrapper of admin items).
+ */
+.admin-list {
+  margin-block: 1em 2em;
+  padding: 0;
+}
+.admin-list--panel {
+  margin: -1em -1.5em;
+}
+
+/**
+ * Admin item.
+ */
+.admin-item {
+  padding-block: 0.75em;
+  padding-inline: 3em 1.5em;
+  &:not(:last-child) {
+    border-bottom: calc(1em / 16) solid var(--color-gray-200);
+  }
+}
+
+.admin-item__title {
+  font-weight: bold;
+}
+
+.admin-item__link {
+  position: relative;
+  display: inline-block;
+  margin-inline-start: -1.5em;
+  padding-inline-start: 1.5em;
+  text-decoration: none;
+}
+
+/**
+ * Admin item link icon.
+ */
+.admin-item__link::before {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: block;
+  width: 1em;
+  height: 1.5em;
+  content: "";
+  background: transparent no-repeat 50% 50%;
+  background-image: url(../../images/icons/003ecc/arrow-right.svg);
+
+  [dir="rtl"] & {
+    transform: scaleX(-1);
+  }
+
+  @media (forced-colors: active) {
+    mask-image: url(../../images/icons/003ecc/arrow-right.svg);
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    background-color: linktext;
+    background-image: none;
+  }
+}
+
+.admin-item__description {
+  margin-block: 0.5em 0.25em;
+  margin-inline: 0;
+  color: var(--color-gray-800);
+}

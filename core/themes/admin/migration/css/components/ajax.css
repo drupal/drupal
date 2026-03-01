@@ -1,0 +1,95 @@
+@keyframes gin-throbber {
+  0% {
+    transform: rotateZ(0);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+.ajax-progress__throbber,
+.ajax-progress__throbber--fullscreen,
+.ui-dialog .ajax-progress__throbber,
+.media-library-item .ajax-progress__throbber {
+  border: 3px solid var(--gin-color-primary);
+  border-inline-end: 3px dotted transparent;
+}
+
+.ajax-progress .ajax-progress__message {
+  color: var(--gin-color-text);
+}
+
+[dir].gin--dark-mode .ajax-progress--fullscreen {
+  border-color: transparent;
+  background-color: var(--gin-color-primary);
+  box-shadow: 0 2px 6px 0 var(--gin-bg-app);
+}
+
+[dir].gin--dark-mode .ajax-progress--fullscreen .ajax-progress__throbber,
+[dir].gin--dark-mode .ajax-progress--fullscreen .ajax-progress__throbber--fullscreen {
+  border: 3px solid var(--gin-bg-app);
+  border-inline-end: 3px dotted transparent;
+}
+
+.media-library-widget .ajax-progress__throbber,
+.media-library-widget .ajax-progress__throbber--fullscreen {
+  border: 2px solid var(--gin-color-primary);
+  border-inline-end: 2px dotted transparent;
+}
+
+.ui-dialog .ajax-progress-throbber {
+  padding: var(--gin-spacing-xs);
+  border: 1px solid rgb(216, 217, 224, 0.8);
+  border-radius: 50%;
+  background: var(--gin-bg-app);
+  box-shadow: 0 2px 6px 0 rgb(34, 35, 48, 0.1);
+}
+
+.gin--dark-mode .ui-dialog .ajax-progress-throbber {
+  border-color: transparent;
+  background-color: var(--gin-color-primary);
+  box-shadow: 0 2px 6px 0 var(--gin-bg-app);
+}
+
+.ui-dialog .ajax-progress-throbber::before,
+.contextual-links .ajax-progress-throbber::before {
+  position: absolute;
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+  content: "";
+  animation: gin-throbber 0.75s linear infinite;
+  border: 2px solid var(--gin-color-primary);
+  border-inline-end: 2px dotted transparent;
+  border-radius: 50%;
+  inset-block-start: var(--gin-spacing-xs);
+  inset-inline-start: var(--gin-spacing-xs);
+}
+
+.gin--dark-mode .ui-dialog .ajax-progress,
+.gin--dark-mode .media-library-item .ajax-progress.ajax-progress.ajax-progress {
+  border-color: var(--gin-bg-app);
+  background-color: var(--gin-bg-app);
+}
+
+.contextual-links li {
+  position: relative;
+}
+
+.contextual-links .ajax-progress-throbber {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: var(--gin-spacing-xxs);
+  width: 24px;
+  height: 24px;
+}
+
+.contextual-links .ajax-progress-throbber::before {
+  inset-block-start: 0;
+  inset-inline-start: 0.25em;
+}
+
+.gin-autocomplete__message {
+  color: var(--gin-color-primary);
+}

@@ -1,0 +1,143 @@
+/* cspell:ignore fullscreeneditor */
+.ck {
+  --ck-color-text: var(--gin-color-text);
+  --ck-content-font-color: var(--gin-color-text);
+  --ck-color-toolbar-background: var(--gin-bg-layer3);
+  --ck-color-toolbar-border: var(--gin-border-color-form-element);
+  --ck-color-base-foreground: var(--gin-bg-layer3);
+  --ck-color-base-background: var(--gin-bg-input);
+  --ck-color-base-border: var(--ck-color-toolbar-border);
+  --ck-color-list-button-on-text: var(--gin-color-button-text);
+  --ck-color-list-button-on-background: var(--gin-color-primary);
+  --ck-color-list-button-on-background-focus: var(--gin-color-primary-hover);
+  --ck-color-list-button-hover-background: var(--gin-color-primary-light-hover);
+  --ck-color-panel-background: var(--gin-bg-layer3);
+  --ck-color-panel-border: transparent;
+  --ck-color-dialog-background: var(--gin-bg-layer3);
+  --ck-color-dialog-form-header-border: var(--gin-border-color-form-element);
+  --ck-accessibility-help-dialog-code-background-color: var(--gin-bg-layer4);
+  --ck-color-button-default-background: transparent;
+  --ck-color-button-default-hover-background: var(--gin-color-primary-light);
+  --ck-color-button-default-active-background: var(--gin-color-primary-light-active);
+  --ck-color-button-default-disabled-background: transparent;
+  --ck-color-button-on-color: var(--gin-color-primary);
+  --ck-color-button-on-background: var(--gin-color-primary-light);
+  --ck-color-button-on-hover-background: var(--gin-color-primary-light-hover);
+  --ck-color-button-on-active-background: var(--gin-color-primary-active);
+  --ck-color-split-button-hover-background: var(--gin-bg-layer2);
+  --ck-color-split-button-hover-border: var(--gin-border-color-layer);
+  --ck-color-button-save: var(--gin-color-green);
+  --ck-color-button-cancel: var(--gin-color-danger);
+  --ck-color-link-default: var(--gin-color-primary);
+  --ck-color-link-selected-background: var(--gin-bg-item-hover);
+  --ck-color-input-background: var(--gin-bg-input);
+  --ck-color-input-border: var(--gin-border-color-form-element);
+  --ck-color-labeled-field-label-background: var(--gin-bg-layer3);
+  --ck-color-list-background: var(--gin-bg-layer3);
+  --ck-focus-ring: 1px solid var(--gin-color-focus);
+  --ck-focus-outer-shadow: 0 0 0 1px var(--gin-color-focus-border), 0 0 0 4px var(--gin-color-focus);
+  --ck-inner-shadow: var(--ck-focus-outer-shadow);
+  --ck-drop-shadow: var(--gin-shadow-l2);
+  --ck-color-focus-border: var(--gin-color-primary);
+  --ck-color-widget-type-around-button-active: var(--gin-color-primary);
+  --ck-color-widget-blurred-border: var(--gin-color-primary-hover);
+  --ck-color-widget-hover-border: var(--gin-color-text);
+  --ck-color-widget-type-around-button-hover: var(--gin-color-text);
+  --ck-color-image-caption-text: var(--gin-color-text-light);
+  --ck-color-image-caption-background: transparent;
+  --ck-border-radius: var(--gin-border-m);
+  --ck-style-panel-button-label-background: var(--gin-bg-layer4);
+  --ck-style-panel-button-hover-label-background: var(--gin-bg-layer4);
+  --ck-style-panel-button-hover-border-color: var(--gin-color-primary);
+
+  .ck-style-grid__button__preview {
+    border-top-left-radius: var(--ck-border-radius);
+    border-top-right-radius: var(--ck-border-radius);
+  }
+
+  .ck-style-panel .ck-style-grid .ck-style-grid__button:not(.ck-on) .ck-button__label {
+    border-bottom-right-radius: var(--ck-border-radius);
+    border-bottom-left-radius: var(--ck-border-radius);
+  }
+
+  .ck-dropdown__panel {
+    --ck-color-dropdown-panel-background: var(--gin-bg-input);
+  }
+}
+
+.ck .ck-content blockquote,
+.ck .ck.ck-dropdown__panel {
+  border: none;
+}
+
+.ck.ck-sticky-panel .ck-sticky-panel__content.ck-sticky-panel__content_sticky {
+  z-index: 2;
+  inset-block-start: calc(var(--gin-toolbar-y-offset) + var(--gin-sticky-offset)) !important;
+}
+
+.ck[data-fullscreen="fullscreeneditor"] .ck-sticky-panel__content.ck-sticky-panel__content_sticky {
+  inset-block-start: 0 !important;
+}
+
+.ck .ck-toolbar__separator {
+  opacity: 0.3;
+}
+
+.ck .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content .ck-toolbar {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.ck .ck-toolbar_grouping:focus,
+.ck .ck-toolbar__items:focus {
+  box-shadow: none;
+}
+
+.ck .ck.ck-editor__editable_inline {
+  padding: 0 var(--gin-spacing-s);
+}
+
+.ck .ck.ck-content {
+  padding-bottom: var(--gin-spacing-l);
+}
+
+.ck .ck-button[aria-pressed="true"] {
+  color: var(--gin-color-primary-active);
+  border: 2px solid var(--gin-color-primary);
+}
+
+.ck .ck-button.ck-source-editing-button {
+  padding-inline-start: var(--gin-spacing-m);
+}
+
+.ck.ck-button:not(.ck-disabled):hover {
+  color: var(--gin-color-primary-active);
+}
+
+.ck .ck-source-editing-area {
+  overflow: inherit;
+}
+
+.ck textarea {
+  color: var(--ck-color-text);
+  background: var(--ck-color-base-background);
+}
+
+.ck textarea:focus {
+  outline: none;
+  box-shadow: var(--ck-focus-outer-shadow);
+}
+
+.ck .ck.ck-media-alternative-text-form .ck-button {
+  border: none;
+}
+
+.ck .ck-content .drupal-media > figcaption {
+  color: var(--ck-color-image-caption-text);
+  background: var(--ck-color-image-caption-background);
+}
+
+.ck .ck.ck.ck-balloon-panel.ck-powered-by-balloon {
+  z-index: 2;
+  transform: translateY(-13px);
+}

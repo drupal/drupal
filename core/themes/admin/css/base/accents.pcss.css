@@ -1,0 +1,71 @@
+[data-gin-accent] {
+  /*
+   * Default accent color.
+   */
+  --accent-base: #015efe;
+
+  /*
+   * Mix base.
+   */
+  --accent-color-base: var(--accent-base);
+  --accent-mix-base: color-mix(in lch, var(--accent-base), #fff 97%);
+  --accent-mix-base-dark: black;
+  --app-bg-color: color-mix(in lch, var(--accent-base), #fff 97%);
+  --layer-background: #fff;
+
+  /*
+   * Base accent colors.
+   */
+  --accent-color-010: color-mix(in lch, var(--accent-mix-base) 95%, var(--accent-color-base));
+  --accent-color-020: color-mix(in lch, var(--accent-mix-base) 90%, var(--accent-color-base));
+  --accent-color-030: color-mix(in lch, var(--accent-mix-base) 85%, var(--accent-color-base));
+  --accent-color-040: color-mix(in lch, var(--accent-mix-base) 80%, var(--accent-color-base));
+  --accent-color-050: color-mix(in lch, var(--accent-mix-base) 75%, var(--accent-color-base));
+  --accent-color-100: color-mix(in lch, var(--accent-mix-base) 60%, var(--accent-color-base));
+  --accent-color-200: color-mix(in lch, var(--accent-mix-base) 45%, var(--accent-color-base));
+  --accent-color-300: color-mix(in lch, var(--accent-mix-base) 30%, var(--accent-color-base));
+  --accent-color-400: color-mix(in lch, var(--accent-mix-base) 15%, var(--accent-color-base));
+  --accent-color-500: var(--accent-color-base);
+  --accent-color-550: color-mix(in lch, var(--accent-mix-base-dark) 8%, var(--accent-color-base));
+  --accent-color-600: color-mix(in lch, var(--accent-mix-base-dark) 15%, var(--accent-color-base));
+  --accent-color-700: color-mix(in lch, var(--accent-mix-base-dark) 30%, var(--accent-color-base));
+  --accent-color-800: color-mix(in lch, var(--accent-mix-base-dark) 45%, var(--accent-color-base));
+  --accent-color-900: color-mix(in lch, var(--accent-mix-base-dark) 60%, var(--accent-color-base));
+
+  /*
+   * Polyfill for Admin theme.
+   */
+  --gin-bg-app: var(--app-bg-color);
+  --gin-color-primary: var(--accent-color-500);
+  --gin-color-primary-hover: var(--accent-color-550);
+  --gin-color-primary-active: var(--accent-color-600);
+  --gin-color-primary-light: var(--accent-color-030);
+  --gin-color-primary-light-hover: var(--accent-color-040);
+  --gin-color-primary-light-active: var(--accent-color-050);
+  --gin-bg-item: var(--accent-color-020);
+  --gin-bg-item-hover: var(--accent-color-030);
+  --gin-shadow-primary-light: var(--accent-color-030);
+  --gin-bg-header: color-mix(var(--layer-background), var(--accent-color-500) 87.5%);
+}
+
+@supports (color: lab(from red l 1 1% / calc(alpha + 0.1))) {
+  [data-gin-accent] {
+    /* stylelint-disable-next-line color-function-notation */
+    --accent-color-010: rgb(from var(--accent-color-base) r g b / 0.05);
+    /* stylelint-disable-next-line color-function-notation */
+    --accent-color-020: rgb(from var(--accent-color-base) r g b / 0.1);
+    /* stylelint-disable-next-line color-function-notation */
+    --accent-color-030: rgb(from var(--accent-color-base) r g b / 0.15);
+    /* stylelint-disable-next-line color-function-notation */
+    --accent-color-040: rgb(from var(--accent-color-base) r g b / 0.2);
+  }
+}
+
+.gin--dark-mode [data-gin-accent],
+.gin--dark-mode[data-gin-accent] {
+  --accent-color-base: color-mix(in lch, lch(from var(--accent-base) calc(l * 20) c h), #000 12%);
+  --accent-mix-base: color-mix(in lch, var(--accent-base), #000 80%);
+  --accent-mix-base-dark: white;
+  --app-bg-color: #1b1b1d;
+  --layer-background: #2a2a2d;
+}

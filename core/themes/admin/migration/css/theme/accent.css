@@ -1,0 +1,99 @@
+[data-gin-accent="blue"] {
+  --gin-color-sticky-rgb: 235, 241, 253;
+}
+
+[data-gin-accent="light_blue"] {
+  --gin-color-sticky-rgb: 238, 243, 251;
+}
+
+[data-gin-accent="dark_purple"] {
+  --gin-color-sticky-rgb: 240, 235, 250;
+}
+
+[data-gin-accent="purple"] {
+  --gin-color-sticky-rgb: 242, 235, 255;
+}
+
+[data-gin-accent="teal"] {
+  --gin-color-sticky-rgb: 236, 245, 245;
+}
+
+[data-gin-accent="green"] {
+  --gin-color-sticky-rgb: 235, 245, 242;
+}
+
+[data-gin-accent="red"] {
+  --gin-color-sticky-rgb: 252, 235, 238;
+}
+
+[data-gin-accent="orange"] {
+  --gin-color-sticky-rgb: 252, 243, 235;
+}
+
+[data-gin-accent="yellow"] {
+  --gin-color-sticky-rgb: 249, 244, 235;
+}
+
+[data-gin-accent="pink"] {
+  --gin-color-sticky-rgb: 251, 238, 244;
+}
+
+[data-gin-accent="neutral"] {
+  --gin-color-sticky-rgb: 236, 236, 236;
+}
+
+[data-gin-accent="custom"] {
+  --gin-color-sticky-rgb: 236, 236, 236;
+}
+
+@media (forced-colors: none) {
+  .gin--high-contrast-mode {
+    --gin-bg-app: #d9dbde;
+    --gin-color-text: rgb(0, 0, 0, 0.8);
+    --gin-color-text-light: rgb(0, 0, 0, 0.8);
+    --gin-icon-color: rgb(0, 0, 0, 0.8);
+    --gin-color-focus: rgb(0, 0, 0, 0.8);
+    --gin-border-color: rgb(0, 0, 0, 0.8);
+    --gin-border-color-secondary: rgb(0, 0, 0, 0.6);
+    --gin-border-color-layer: rgb(0, 0, 0, 0.6);
+    --gin-border-color-layer2: rgb(0, 0, 0, 0.8);
+    --gin-border-color-table: rgb(0, 0, 0, 0.8);
+    --gin-border-color-table-header: rgb(0, 0, 0, 0.8);
+    --gin-border-color-form-element: rgb(0, 0, 0, 0.8);
+  }
+
+  .gin--dark-mode .gin--high-contrast-mode {
+    --gin-bg-app: #000;
+    --gin-color-text: rgb(255, 255, 255, 0.8);
+    --gin-color-text-light: rgb(255, 255, 255, 0.8);
+    --gin-icon-color: rgb(255, 255, 255, 0.8);
+    --gin-color-focus: rgb(255, 255, 255, 0.8);
+    --gin-border-color: rgb(255, 255, 255, 0.8);
+    --gin-border-color-secondary: rgb(255, 255, 255, 0.6);
+    --gin-border-color-layer: rgb(255, 255, 255, 0.6);
+    --gin-border-color-layer2: rgb(255, 255, 255, 0.8);
+    --gin-border-color-table: rgb(255, 255, 255, 0.8);
+    --gin-border-color-table-header: rgb(255, 255, 255, 0.8);
+    --gin-border-color-form-element: rgb(255, 255, 255, 0.8);
+  }
+}
+
+[data-gin-focus="green"] {
+  --gin-color-focus: rgb(8, 163, 144, 0.6);
+}
+
+[data-gin-focus="claro"] {
+  --gin-color-focus: rgb(38, 167, 105, 0.6);
+}
+
+[data-gin-focus="orange"] {
+  --gin-color-focus: rgb(236, 124, 87, 0.6);
+}
+
+[data-gin-focus="dark"] {
+  --gin-color-focus: var(--gin-color-focus-neutral-rgb);
+}
+
+[data-gin-focus="accent"] {
+  --gin-color-focus: rgb(var(--gin-color-primary-rgb), 0.6);
+}

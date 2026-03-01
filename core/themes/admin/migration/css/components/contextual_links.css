@@ -1,0 +1,115 @@
+.contextual {
+  z-index: 100;
+}
+
+.contextual .trigger {
+  box-sizing: border-box;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgb(0, 0, 0, 0.15);
+}
+
+.contextual .trigger::before {
+  position: absolute;
+  display: block;
+  width: 0.75rem;
+  height: 0.75rem;
+  content: "";
+  background: var(--gin-color-primary);
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  -webkit-mask-image: url("../../media/sprite.svg#media-edit-view");
+  mask-image: url("../../media/sprite.svg#media-edit-view");
+  -webkit-mask-size: var(--gin-spacing-s) var(--gin-spacing-s);
+  mask-size: var(--gin-spacing-s) var(--gin-spacing-s);
+  -webkit-mask-position: 100% 100%;
+  mask-position: 100% 100%;
+}
+
+[dir="ltr"] .contextual .trigger::before {
+  transform: translate(-50%, -50%);
+}
+
+[dir="rtl"] .contextual .trigger::before {
+  transform: translate(50%, -50%);
+}
+
+.contextual .trigger,
+.contextual .trigger:hover,
+.contextual .trigger:focus {
+  border: 1px solid var(--gin-border-color-layer2);
+  background: var(--gin-bg-layer3);
+}
+
+.contextual .trigger:hover,
+.contextual .trigger:focus {
+  box-shadow:
+    0 0 0 1px var(--gin-color-focus-border),
+    0 0 0 4px var(--gin-color-focus);
+}
+
+.contextual.open .trigger {
+  border-block-end: 0 none;
+  border-radius: 50%;
+}
+
+.contextual-region .contextual .contextual-links {
+  min-width: 120px;
+  margin: 0;
+  padding: 0.5em;
+  border: 0 none;
+  border-radius: var(--gin-border-l);
+  background: var(--gin-bg-layer3);
+  box-shadow: var(--gin-shadow-l2);
+  inset-block-start: var(--gin-spacing-xxs);
+}
+
+.contextual-region .contextual .contextual-links li {
+  background: transparent;
+}
+
+.contextual-region .contextual .contextual-links li a {
+  margin: 0;
+  padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+  white-space: nowrap;
+  color: var(--gin-color-primary);
+  border-radius: var(--gin-border-s);
+  background: transparent;
+  font-family: var(--gin-font);
+  line-height: 1;
+}
+
+.contextual-region .contextual .contextual-links li a:hover,
+.contextual-region .contextual .contextual-links li a:active {
+  color: var(--gin-color-button-text);
+  background: var(--gin-color-primary);
+}
+
+.contextual-region .contextual .contextual-links li a:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--gin-color-focus-border),
+    0 0 0 4px var(--gin-color-focus);
+}
+
+.contextual-region .contextual .contextual-links .ajax-progress-throbber {
+  border-radius: 50%;
+  background: var(--gin-color-primary);
+  inset-block-start: 0.125rem;
+}
+
+.contextual-region .contextual .contextual-links .ajax-progress-throbber::before {
+  inset-block-start: var(--gin-spacing-xxs);
+  inset-inline-start: var(--gin-spacing-xxs);
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--gin-color-button-text);
+  border-inline-end: 2px dotted transparent;
+}
+
+.no-touchevents .contextual-region .contextual .contextual-links li a:hover,
+.no-touchevents .contextual-region .contextual .contextual-links li a:active {
+  color: var(--gin-color-button-text);
+  background: var(--gin-color-primary);
+}

@@ -1,0 +1,18 @@
+.revision-current {
+  background-color: transparent;
+}
+
+.revision-current td:first-of-type {
+  position: relative;
+}
+
+.revision-current td:first-of-type::before {
+  position: absolute;
+  display: block;
+  width: 1px;
+  height: 100%;
+  content: "";
+  border-inline-start: 6px solid var(--gin-color-green);
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}

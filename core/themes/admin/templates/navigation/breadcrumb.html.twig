@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Gin override for a breadcrumb trail.
+ *
+ * Available variables:
+ * - breadcrumb: Breadcrumb trail items.
+ */
+#}
+{% if breadcrumb %}
+  <nav class="gin-breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
+    <h2 id="system-breadcrumb" class="visually-hidden">{{ 'Breadcrumb'|t }}</h2>
+    <ol class="gin-breadcrumb__list">
+    {% for item in breadcrumb %}
+      {% if item.text %}
+      <li class="gin-breadcrumb__item">
+        {% if item.url %}
+          <a href="{{ item.url }}" class="gin-breadcrumb__link"{% if item.attributes.title %} title="{{ item.attributes.title }}"{% endif %}{% if item.attributes.data %} {{ item.attributes.data }}{% endif %}>{{ item.text }}</a>
+        {% else %}
+          <span class="gin-breadcrumb__text">{{ item.text }}</span>
+        {% endif %}
+      </li>
+      {% endif %}
+    {% endfor %}
+    </ol>
+  </nav>
+{% endif %}

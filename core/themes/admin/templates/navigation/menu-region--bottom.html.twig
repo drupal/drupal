@@ -1,0 +1,43 @@
+{% set item_id = 'item-' ~ title|clean_class %}
+
+<div class="admin-toolbar__item toolbar-block">
+  <ul class="toolbar-menu">
+    {% if help_enabled %}
+    <li class="toolbar-menu__item toolbar-menu__item--level-1">
+      <a href="{{ path('help.main') }}" class="toolbar-link toolbar-link--has-icon toolbar-link--help">
+        <span>{{ 'Help'|t }}</span>
+      </a>
+    </li>
+    {% endif %}
+    <li class="toolbar-menu__item toolbar-menu__item--level-1">
+      <button aria-controls="admin-toolbar" aria-expanded="true" class="toolbar-link toolbar-link--has-icon toolbar-link--sidebar-toggle sidebar-toggle">
+        {# @todo refactor ID out this <span>. #}
+        <span id="sidebar-state" class="toolbar-link__label">{{ 'Collapse sidebar'|t }}</span>
+      </button>
+    </li>
+    <li class="toolbar-menu__item toolbar-menu__item--has-dropdown toolbar-menu__item--user toolbar-menu__item--level-1">
+      <button class="toolbar-link toolbar-link--has-icon toolbar-link--{{ menu_name|clean_class }}" data-url="{{ url }}">
+        <span class="toolbar-link__action">{{ 'Extend'|t }}</span>
+        <span class="toolbar-link__label">{{ title }}</span>
+      </button>
+      <div class="toolbar-menu__submenu">
+        <div class="toolbar-menu__arrow-ref"></div>
+        <ul class="toolbar-menu">
+          <li class="toolbar-menu__item toolbar-menu__item--to-title">
+            <button class="toolbar-link toolbar-link--has-icon toolbar-link--{{ menu_name|clean_class }}" tabindex="-1">
+              <span class="toolbar-link__action">{{ 'Extend'|t }}</span>
+              <span class="toolbar-link__label">{{ title }}</span>
+            </button>
+          </li>
+          {% for item in items %}
+            <li class="toolbar-menu__item toolbar-menu__item--level-2">
+              <a href="{{ item.url }}" class="toolbar-link">
+                <span>{{ item.title }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>

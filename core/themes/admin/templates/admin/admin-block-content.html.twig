@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Admin theme implementation for the content of an administrative block.
+ *
+ * Available variables:
+ * - content: List of administrative menu items. Each menu item contains:
+ *   - link: Link to the admin section.
+ *   - title: Short name of the section.
+ *   - description: Description of the administrative menu item.
+ * - attributes: HTML attributes to be added to the element.
+ * - compact: Boolean indicating whether compact mode is turned on or not.
+ *
+ * @see template_preprocess_admin_block_content()
+ * @see gin_preprocess_admin_block_content()
+ */
+#}
+{%
+  set item_classes = [
+    'admin-item',
+  ]
+%}
+{% if content %}
+  <div{{ attributes.addClass('admin-list', 'gin-layer-wrapper') }}>
+    {% for item in content %}
+      {% set description_id = item.title|render|clean_id ~ '-desc' %}
+      <div{{ create_attribute({class: item_classes}) }}>
+        {{ item.link }}
+        <div class="admin-item__title" aria-details="{{ description_id }}">{{ item.title }}</div>
+        {% if item.description %}
+          <div class="admin-item__description" id="{{ description_id }}">{{ item.description }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

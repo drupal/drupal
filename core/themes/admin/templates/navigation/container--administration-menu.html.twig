@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Specific container for Gin Toolbar module, which relies on this markup.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - children: The rendered child elements of the container.
+ * - has_parent: A flag to indicate that the container has one or more parent
+     containers.
+ *
+ * @see template_preprocess_container()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    has_parent ? 'js-form-wrapper',
+    has_parent ? 'form-wrapper',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>{{ children }}</div>
