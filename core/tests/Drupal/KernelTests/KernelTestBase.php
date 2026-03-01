@@ -675,7 +675,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    if ($this->container) {
+    if ($this->container?->get('request_stack')->getCurrentRequest() !== NULL) {
       // Clean up mock session started in DrupalKernel::preHandle().
       /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
       $session = $this->container->get('request_stack')->getSession();
