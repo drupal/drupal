@@ -1056,8 +1056,6 @@ class ContainerTest extends TestCase {
 
 /**
  * Helper interface to test Container::get() with configurator.
- *
- * @group DependencyInjection
  */
 interface MockConfiguratorInterface {
 
@@ -1074,8 +1072,6 @@ interface MockConfiguratorInterface {
 
 /**
  * Helper class to test Container::get() method for varying number of parameters.
- *
- * @group DependencyInjection
  */
 class MockInstantiationService {
 
@@ -1106,8 +1102,6 @@ class MockInstantiationService {
 
 /**
  * Helper class to test Container::get() method.
- *
- * @group DependencyInjection
  */
 class MockService {
 

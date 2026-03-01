@@ -85,7 +85,7 @@ if (!Composer::upgradePHPUnitCheck(Version::id())) {
 }
 
 if ($args['list']) {
-  // Display all available tests organized by one @group annotation.
+  // Display all available tests organized by one #[Group()] attribute.
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
   $test_discovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath($args['phpunit-configuration']);
@@ -378,7 +378,7 @@ All arguments are long options.
 
               One or more tests to be run. By default, these are interpreted
               as the names of test groups which are derived from test class
-              @group annotations.
+              #[Group()] attributes.
               These group names typically correspond to module names like "User"
               or "Profile" or "System", but there is also a group "Database".
               If --class is specified then these are interpreted as the names of
@@ -865,7 +865,7 @@ function simpletest_script_get_test_list() {
       echo (string) $e;
       exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
     }
-    // Ensure that tests marked explicitly as @group #slow are run at the
+    // Ensure that tests marked explicitly as #[Group('#slow')] are run at the
     // beginning of each job.
     if (key($groups) === '#slow') {
       $slow_tests = array_shift($groups);
@@ -890,8 +890,8 @@ function simpletest_script_get_test_list() {
     }
     else {
       // Sort all tests by the number of test cases on the test class.
-      // This is used in combination with @group #slow to start the slowest
-      // tests first and distribute tests between test runners.
+      // This is used in combination with #[Group('#slow')] to start the
+      // slowest tests first and distribute tests between test runners.
       sort_tests_by_public_method_count($slow_tests);
       sort_tests_by_public_method_count($not_slow_tests);
       $all_tests_list = array_merge($slow_tests, $not_slow_tests);
