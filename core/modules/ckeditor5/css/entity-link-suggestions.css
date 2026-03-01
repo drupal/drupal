@@ -3,10 +3,14 @@
  * Styles for Entity Link Suggestions in CKEditor 5.
  */
 
-/* Override the default jQuery UI theme */
-.entity-link-suggestions-ui-autocomplete {
+/* Override the default jQuery UI theme and CKEditor defaults */
+.ck-reset_all .entity-link-suggestions-ui-autocomplete {
   overflow: auto;
   max-height: calc((100vh - 80px) / 2);
+  &.ck-reset_all-excluded {
+    max-width: 500px;
+    white-space: break-spaces;
+  }
 }
 
 .entity-link-suggestions-ui-autocomplete.ui-widget {
@@ -45,7 +49,9 @@
 
 .entity-link-suggestions-result-line--title {
   display: block;
+  margin-bottom: 3px;
   font-weight: 600;
+  line-height: 1.3;
 }
 
 .entity-link-suggestions-result-line--description {
