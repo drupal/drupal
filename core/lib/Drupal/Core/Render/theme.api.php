@@ -789,7 +789,7 @@ function hook_theme_suggestions_HOOK_alter(array &$suggestions, array &$variable
  */
 function hook_themes_installed($theme_list): void {
   foreach ($theme_list as $theme) {
-    block_theme_initialize($theme);
+    // ...perform some action based on the $theme.
   }
 }
 
