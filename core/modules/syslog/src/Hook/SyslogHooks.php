@@ -2,6 +2,7 @@
 
 namespace Drupal\syslog\Hook;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
@@ -15,6 +16,10 @@ use Drupal\Core\Hook\Attribute\Hook;
 class SyslogHooks {
 
   use StringTranslationTrait;
+
+  public function __construct(
+    protected readonly ModuleHandlerInterface $moduleHandler,
+  ) {}
 
   /**
    * Implements hook_help().
@@ -43,31 +48,48 @@ class SyslogHooks {
    */
   #[Hook('form_system_logging_settings_alter')]
   public function formSystemLoggingSettingsAlter(&$form, FormStateInterface $form_state) : void {
-    $config = \Drupal::configFactory()->getEditable('syslog.settings');
-    $help = \Drupal::moduleHandler()->moduleExists('help') ? ' ' . Link::fromTextAndUrl($this->t('More information'), Url::fromRoute('help.page', ['name' => 'syslog']))->toString() . '.' : NULL;
+    $help = $this->moduleHandler->moduleExists('help') ? ' ' . Link::fromTextAndUrl($this->t('More information'), Url::fromRoute('help.page', ['name' => 'syslog']))->toString() . '.' : '';
     $form['syslog_identity'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Syslog identity'),
-      '#default_value' => $config->get('identity'),
+      '#config_target' => 'syslog.settings:identity',
       '#description' => $this->t('A string that will be prepended to every message logged to Syslog. If you have multiple sites logging to the same Syslog log file, a unique identity per site makes it easy to tell the log entries apart.') . $help,
     ];
     if (defined('LOG_LOCAL0')) {
       $form['syslog_facility'] = [
         '#type' => 'select',
         '#title' => $this->t('Syslog facility'),
-        '#default_value' => $config->get('facility'),
-        '#options' => syslog_facility_list(),
+        '#config_target' => 'syslog.settings:facility',
+        '#options' => $this->facilityList(),
         '#description' => $this->t('Depending on the system configuration, Syslog and other logging tools use this code to identify or filter messages from within the entire system log.') . $help,
       ];
     }
     $form['syslog_format'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Syslog format'),
-      '#default_value' => $config->get('format'),
       '#required' => TRUE,
+      '#config_target' => 'syslog.settings:format',
       '#description' => $this->t('Specify the format of the syslog entry. Available variables are: <dl><dt><code>!base_url</code></dt><dd>Base URL of the site.</dd><dt><code>!timestamp</code></dt><dd>Unix timestamp of the log entry.</dd><dt><code>!type</code></dt><dd>The category to which this message belongs.</dd><dt><code>!ip</code></dt><dd>IP address of the user triggering the message.</dd><dt><code>!request_uri</code></dt><dd>The requested URI.</dd><dt><code>!referer</code></dt><dd>HTTP Referer if available.</dd><dt><code>!severity</code></dt><dd>The severity level of the event; ranges from 0 (Emergency) to 7 (Debug).</dd><dt><code>!uid</code></dt><dd>User ID.</dd><dt><code>!link</code></dt><dd>A link to associate with the message.</dd><dt><code>!message</code></dt><dd>The message to store in the log.</dd></dl>'),
     ];
-    $form['#submit'][] = 'syslog_logging_settings_submit';
+  }
+
+  /**
+   * Lists all possible syslog facilities for UNIX/Linux.
+   *
+   * @return array<int, string>
+   *   An array of syslog facilities for UNIX/Linux.
+   */
+  protected function facilityList(): array {
+    return [
+      LOG_LOCAL0 => 'LOG_LOCAL0',
+      LOG_LOCAL1 => 'LOG_LOCAL1',
+      LOG_LOCAL2 => 'LOG_LOCAL2',
+      LOG_LOCAL3 => 'LOG_LOCAL3',
+      LOG_LOCAL4 => 'LOG_LOCAL4',
+      LOG_LOCAL5 => 'LOG_LOCAL5',
+      LOG_LOCAL6 => 'LOG_LOCAL6',
+      LOG_LOCAL7 => 'LOG_LOCAL7',
+    ];
   }
 
 }
