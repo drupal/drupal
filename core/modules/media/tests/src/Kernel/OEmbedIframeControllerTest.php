@@ -8,6 +8,9 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\media\Controller\OEmbedIframeController;
 use Drupal\media\OEmbed\Provider;
 use Drupal\media\OEmbed\Resource;
+use Drupal\media\OEmbed\ResourceException;
+use Drupal\media\OEmbed\ResourceFetcherInterface;
+use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\TestTools\Random;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -114,6 +117,121 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
     $this->assertStringContainsString('test.css', $content);
     $this->assertContains('yo_there', $response->getCacheableMetadata()->getCacheTags());
     $this->assertStringContainsString('text/html', $response->headers->get('Content-Type'));
+  }
+
+  /**
+   * Tests that the response max age is set to the same value as that of the resource.
+   *
+   * @return void
+   *   No return value.
+   */
+  public function testResponseCacheMaxAge(): void {
+    $hash = $this->container->get('media.oembed.iframe_url_helper')
+      ->getHash('', 0, 0);
+
+    $url_resolver = $this->prophesize(UrlResolverInterface::class);
+    $resource_fetcher = $this->prophesize(ResourceFetcherInterface::class);
+
+    $provider = new Provider('YouTube', 'https://youtube.com', [
+      [
+        'url' => 'https://youtube.com/foo',
+      ],
+    ]);
+    $resource = Resource::rich(
+      '<iframe src="https://youtube.com/watch?feature=oembed"></iframe>',
+      320,
+      240,
+      $provider,
+      cache_age: 1234
+    );
+
+    $resource_fetcher->fetchResource(Argument::cetera())->willReturn($resource);
+
+    $this->container->set('media.oembed.url_resolver', $url_resolver->reveal());
+    $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
+
+    $response = OEmbedIframeController::create($this->container)
+      ->render(new Request([
+        'url' => '',
+        'hash' => $hash,
+      ]));
+    assert($response instanceof HtmlResponse);
+
+    $this->assertEquals(1234, $response->getCacheableMetadata()->getCacheMaxAge());
+  }
+
+  /**
+   * Tests that the response max age is set to 0 when a ResourceException is raised while fetching the resource.
+   *
+   * @return void
+   *   No return value.
+   */
+  public function testResponseCacheMaxAgeUponResourceException(): void {
+    $hash = $this->container->get('media.oembed.iframe_url_helper')
+      ->getHash('', 0, 0);
+
+    $url_resolver = $this->prophesize(UrlResolverInterface::class);
+    $resource_fetcher = $this->prophesize(ResourceFetcherInterface::class);
+
+    $resource_fetcher->fetchResource(Argument::cetera())->willThrow(new ResourceException(
+      'Error while fetching resource.',
+      'https://youtube.com/foo',
+    ));
+
+    $this->container->set('media.oembed.url_resolver', $url_resolver->reveal());
+    $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
+
+    $response = OEmbedIframeController::create($this->container)
+      ->render(new Request([
+        'url' => '',
+        'hash' => $hash,
+      ]));
+    assert($response instanceof HtmlResponse);
+
+    $this->assertEquals(0, $response->getCacheableMetadata()->getCacheMaxAge());
+  }
+
+  /**
+   * Tests that the response max age is 5 years when the max age returned by the provider is greater than 5 years.
+   *
+   * @return void
+   *   No return value.
+   */
+  public function testResponseCacheMaxAgeGreaterThanFiveYears(): void {
+    $hash = $this->container->get('media.oembed.iframe_url_helper')
+      ->getHash('', 0, 0);
+
+    $url_resolver = $this->prophesize(UrlResolverInterface::class);
+    $resource_fetcher = $this->prophesize(ResourceFetcherInterface::class);
+
+    $provider = new Provider('YouTube', 'https://youtube.com', [
+      [
+        'url' => 'https://youtube.com/foo',
+      ],
+    ]);
+    $resource = Resource::rich(
+      '<iframe src="https://youtube.com/watch?feature=oembed"></iframe>',
+      320,
+      240,
+      $provider,
+      // Five years and one second.
+      cache_age: 157680001
+    );
+
+    $resource_fetcher->fetchResource(Argument::cetera())->willReturn($resource);
+
+    $this->container->set('media.oembed.url_resolver', $url_resolver->reveal());
+    $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
+
+    $response = OEmbedIframeController::create($this->container)
+      ->render(new Request([
+        'url' => '',
+        'hash' => $hash,
+      ]));
+    assert($response instanceof HtmlResponse);
+
+    // The max age should be 5 years.
+    $this->assertEquals(157680000, $response->getCacheableMetadata()->getCacheMaxAge());
   }
 
 }
