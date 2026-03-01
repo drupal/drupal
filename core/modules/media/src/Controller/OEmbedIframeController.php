@@ -5,11 +5,11 @@ namespace Drupal\media\Controller;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Url;
 use Drupal\media\IFrameMarkup;
 use Drupal\media\IFrameUrlHelper;
 use Drupal\media\OEmbed\ResourceException;
@@ -18,7 +18,6 @@ use Drupal\media\OEmbed\UrlResolverInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Controller which renders an oEmbed resource in a bare page (without blocks).
@@ -124,12 +123,18 @@ class OEmbedIframeController implements ContainerInjectionInterface {
    */
   public function render(Request $request) {
     // @todo Move domain check logic to a separate method.
-    $allowed_domain = \Drupal::config('media.settings')->get('iframe_domain');
+    $media_settings = \Drupal::config('media.settings');
+
+    // The response will vary based on the module's settings and the request
+    // url's scheme and host.
+    $cache = (new CacheableMetadata())->addCacheableDependency($media_settings)->addCacheContexts(['url.site']);
+
+    $allowed_domain = $media_settings->get('iframe_domain');
     if ($allowed_domain) {
       $allowed_host = parse_url($allowed_domain, PHP_URL_HOST);
       $host = parse_url($request->getSchemeAndHttpHost(), PHP_URL_HOST);
       if ($allowed_host !== $host) {
-        throw new BadRequestHttpException('This resource is not available');
+        throw new CacheableBadRequestHttpException($cache, 'This resource is not available');
       }
     }
 
@@ -137,20 +142,23 @@ class OEmbedIframeController implements ContainerInjectionInterface {
     $max_width = $request->query->getInt('max_width');
     $max_height = $request->query->getInt('max_height');
 
+    // The hash parameter is generated using the whole URL, so add it as a cache
+    // context.
+    $cache->addCacheContexts(['url']);
+
     // Hash the URL and max dimensions, and ensure it is equal to the hash
     // parameter passed in the query string.
     $hash = $this->iFrameUrlHelper->getHash($url, $max_width, $max_height);
     if (!hash_equals($hash, $request->query->get('hash', ''))) {
-      throw new BadRequestHttpException('This resource is not available');
+      throw new CacheableBadRequestHttpException($cache, 'This resource is not available');
     }
 
     // Return a response instead of a render array so that the frame content
     // will not have all the blocks and page elements normally rendered by
     // Drupal.
-    $response = new HtmlResponse('', HtmlResponse::HTTP_OK, [
+    $response = (new HtmlResponse('', HtmlResponse::HTTP_OK, [
       'Content-Type' => 'text/html; charset=utf-8',
-    ]);
-    $response->addCacheableDependency(Url::createFromRequest($request));
+    ]))->addCacheableDependency($cache);
 
     try {
       $resource_url = $this->urlResolver->getResourceUrl($url, $max_width, $max_height);
@@ -207,7 +215,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
     }
     catch (ResourceException $e) {
       // Prevent the response from being cached.
-      $response->setMaxAge(0);
+      $response->getCacheableMetadata()->setCacheMaxAge(0);
 
       // The oEmbed system makes heavy use of exception wrapping, so log the
       // entire exception chain to help with troubleshooting.
