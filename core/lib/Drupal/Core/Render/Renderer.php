@@ -219,7 +219,7 @@ class Renderer implements RendererInterface {
 
     $context = $this->getCurrentRenderContext();
     if (!isset($context)) {
-      throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
+      throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderInIsolation() call. Use renderInIsolation()/renderRoot() or #lazy_builder/#pre_render instead.");
     }
 
     if ($is_root_call) {
