@@ -178,4 +178,38 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
 
   }
 
+  /**
+   * Tests that when max-age is set to 0 the cacher does not cache the normalization.
+   */
+  public function testResourceObjectMaxAge0IsHandledByCacher(): void {
+    $this->installEntitySchema('entity_test_computed_field');
+
+    // Use EntityTestComputedField since ComputedTestCacheableStringItemList has
+    // a max age of 800.
+    $entity = EntityTestComputedField::create([]);
+    $entity->save();
+    $resource_type = $this->resourceTypeRepository->get($entity->getEntityTypeId(), $entity->bundle());
+    $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
+    // Not yet cached, so this should return false.
+    $this->assertFalse($this->cacher->get($resource_object));
+
+    // Save the normalization to cache, this is done at TerminateEvent.
+    $http_kernel = $this->prophesize(HttpKernelInterface::class);
+    $request = $this->prophesize(Request::class);
+    $response = $this->prophesize(Response::class);
+    $event = new TerminateEvent($http_kernel->reveal(), $request->reveal(), $response->reveal());
+    $this->cacher->saveOnTerminate($resource_object, ['base' => [], 'fields' => []]);
+    $this->cacher->onTerminate($event);
+    $this->assertNotFalse($this->cacher->get($resource_object));
+
+    // Set max-age to 0 and see if we not skip caching.
+    $entity->mergeCacheMaxAge(0);
+    $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
+    $this->cacher->saveOnTerminate($resource_object, ['base' => [], 'fields' => []]);
+    $this->cacher->onTerminate($event);
+
+    // The cacher should not cache the normalization since max-age is 0.
+    $this->assertFalse($this->cacher->get($resource_object));
+  }
+
 }
