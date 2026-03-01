@@ -138,4 +138,27 @@ module.exports = {
       .assert.elementPresent(scriptSelector)
       .assert.elementPresent(cssSelector);
   },
+
+  'Boosted Body': (browser) => {
+    // Load the route htmx will use for the request on click and confirm the
+    // markup we will be looking for is present in the source markup.
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/replace')
+      .waitForElementVisible('body', 1000)
+      .assert.elementPresent(elementInitSelector);
+    // Now load the page with the htmx enhanced link and verify the absence
+    // of the markup to be inserted. Click the link
+    // and check for inserted javascript and markup.
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/body')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('a.htmx-test-link', 1000)
+      .click('a.htmx-test-link')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
 };

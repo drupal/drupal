@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\test_htmx\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Htmx\Htmx;
 use Drupal\Core\Url;
 
@@ -31,7 +30,7 @@ final class HtmxTestAttachmentsController extends ControllerBase {
    *   A render array.
    */
   public function before(): array {
-    return self::generateHtmxButton('beforebegin');
+    return self::generateHtmxButton(swap: 'beforebegin');
   }
 
   /**
@@ -41,7 +40,7 @@ final class HtmxTestAttachmentsController extends ControllerBase {
    *   A render array.
    */
   public function after(): array {
-    return self::generateHtmxButton('afterend');
+    return self::generateHtmxButton(swap: 'afterend');
   }
 
   /**
@@ -51,7 +50,24 @@ final class HtmxTestAttachmentsController extends ControllerBase {
    *   A render array.
    */
   public function withWrapperFormat(): array {
-    return self::generateHtmxButton('', TRUE);
+    return self::generateHtmxButton(swap: '', useWrapperFormat: TRUE);
+  }
+
+  /**
+   * Tests body targeting and swapping.
+   *
+   * @return mixed[]
+   *   A render array.
+   */
+  public function selectBody(): array {
+    return [
+      '#title' => $this->t('Boosted body'),
+      '#type' => 'link',
+      '#url' => Url::fromRoute('test_htmx.attachments.replace'),
+      '#attributes' => [
+        'class' => ['htmx-test-link'],
+      ],
+    ];
   }
 
   /**
@@ -92,15 +108,7 @@ final class HtmxTestAttachmentsController extends ControllerBase {
    *   The render array.
    */
   public static function generateHtmxButton(string $swap = '', bool $useWrapperFormat = FALSE): array {
-    $options = [];
-    if ($useWrapperFormat) {
-      $options = [
-        'query' => [
-          MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_htmx',
-        ],
-      ];
-    }
-    $url = Url::fromRoute('test_htmx.attachments.replace', [], $options);
+    $url = Url::fromRoute('test_htmx.attachments.replace');
     $build['replace'] = [
       '#type' => 'html_tag',
       '#tag' => 'button',
