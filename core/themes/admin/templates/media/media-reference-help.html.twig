@@ -1,0 +1,73 @@
+{#
+/**
+ * @file
+ * Theme override for media reference fields.
+ *
+ * @see template_preprocess_field_multiple_value_form()
+ */
+#}
+{%
+  set classes = [
+    'media-library-new-widget',
+    'js-form-item',
+    'form-item',
+    'js-form-wrapper',
+    'form-wrapper',
+    'fieldset',
+  ]
+%}
+<fieldset{{ attributes.addClass(classes) }}>
+  {%
+    set legend_classes = [
+      'fieldset__legend',
+      'fieldset__legend--visible',
+    ]
+  %}
+  {%
+    set legend_span_classes = [
+      'fieldset__label',
+      required ? 'js-form-required',
+      required ? 'form-required',
+    ]
+  %}
+  {# Always wrap fieldset legends in a <span> for CSS positioning. #}
+  <legend{{ legend_attributes.addClass(legend_classes) }}>
+    <span{{ legend_span_attributes.addClass(legend_span_classes) }}>{{ original_label }}</span>
+  </legend>
+
+  <div class="js-form-item fieldset__wrapper">
+    {% if media_add_help %}
+      <h4{{ header_attributes.addClass('label') }}>
+        {% trans %}
+          Create new media
+        {% endtrans %}
+      </h4>
+      <div class="description">
+        {{ media_add_help }}
+      </div>
+    {% endif %}
+
+    {% if multiple %}
+      {{ table }}
+    {% else %}
+      {% for element in elements %}
+        {{ element }}
+      {% endfor %}
+    {% endif %}
+
+    <div{{ description.attributes.addClass('description') }}>
+      {% if multiple and description.content %}
+        <ul>
+          <li>{{ media_list_help }} {{ media_list_link }} {{ allowed_types_help }}</li>
+          <li>{{ description.content }}</li>
+        </ul>
+      {% else %}
+        {{ media_list_help }} {{ media_list_link }} {{ allowed_types_help }}
+      {% endif %}
+      {% if multiple and button %}
+        <div class="clearfix">{{ button }}</div>
+      {% endif %}
+    </div>
+
+  </div>
+</fieldset>

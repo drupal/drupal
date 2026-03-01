@@ -1,0 +1,49 @@
+/**
+ * @file
+ * Icon link component.
+ */
+
+:root {
+  /* default */
+  --icon-link-bg-color: var(--color-white);
+  --icon-link-border-color: var(--color-gray-200);
+  /* active */
+  --icon-link--active-bg-color: var(--color-absolutezero);
+  --icon-link--active-border-color: var(--color-absolutezero);
+  /* hover */
+  --icon-link--hover-bg-color: var(--color-bgblue-hover);
+  --icon-link--hover-border-color: var(--color-gray-200-o-80);
+}
+
+.icon-link {
+  display: flex;
+  padding: 0;
+  border: 1px solid var(--icon-link-border-color);
+  border-radius: 50%;
+  background-color: var(--icon-link-bg-color);
+
+  &:hover {
+    border-color: var(--icon-link--hover-border-color);
+    background-color: var(--icon-link--hover-bg-color);
+  }
+
+  &:focus {
+    box-shadow:
+      0 0 0 1.5px var(--color-white),
+      0 0 0 3.5px var(--color-focus);
+  }
+
+  &:active,
+  .open > & {
+    border-color: var(--icon-link--active-border-color);
+    background-color: var(--icon-link--active-bg-color);
+  }
+}
+
+.icon-link--small {
+  &:focus {
+    box-shadow:
+      0 0 0 1px var(--color-white),
+      0 0 0 3px var(--color-focus);
+  }
+}

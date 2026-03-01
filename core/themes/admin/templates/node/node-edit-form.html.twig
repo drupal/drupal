@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Theme override for a node edit form.
+ *
+ * Two column template for the node add/edit form.
+ *
+ * This template will be used when a node edit form specifies 'node_edit_form'
+ * as its #theme callback.  Otherwise, by default, node add/edit forms will be
+ * themed by form.html.twig.
+ *
+ * Available variables:
+ * - form: The node add/edit form.
+ *
+ * @see gin_form_node_form_alter()
+ */
+#}
+{% if form.is_ajax_request %}
+  {% block main %}
+    {{ form|without('advanced', 'footer', 'actions') }}
+  {% endblock %}
+
+  {% block secondary %}
+    {{ form.advanced }}
+  {% endblock %}
+
+  {% block footer %}
+    {{ form.footer }}
+    {{ form.actions }}
+  {% endblock %}
+{% else %}
+  <div class="layout-node-form clearfix">
+    <div class="layout-region layout-region-node-main layout-region--main">
+      {{ form|without('advanced', 'footer', 'gin_actions', 'gin_sidebar', 'gin_sidebar_toggle') }}
+    </div>
+    <div class="layout-region layout-region-node-secondary layout-region--secondary" id="gin_sidebar" tabindex="0">
+      <span class="gin-sidebar-draggable" id="gin-sidebar-draggable"></span>
+      <div class="layout-region__content">
+        {{ form.advanced }}
+        {{ form.gin_sidebar_toggle }}
+      </div>
+    </div>
+  </div>
+{% endif %}

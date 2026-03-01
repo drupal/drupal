@@ -1,0 +1,106 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the project status report.
+ *
+ * Available variables:
+ * - title: The project title.
+ * - url: The project URL.
+ * - status: The project status.
+ *   - label: The project status label.
+ *   - attributes: HTML attributes for the project status.
+ *   - reason: The reason you should update the project.
+ *   - icon: The project status version indicator icon.
+ * - existing_version: The version of the installed project.
+ * - versions: The available versions of the project.
+ * - install_type: The type of project (e.g., dev).
+ * - datestamp: The date/time of a project version's release.
+ * - extras: HTML attributes and additional information about the project.
+ *   - attributes: HTML attributes for the extra item.
+ *   - label: The label for an extra item.
+ *   - data: The data about an extra item.
+ * - includes: The projects within the project.
+ * - disabled: The currently disabled projects in the project.
+ *
+ * @see template_preprocess_update_project_status()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set status_classes = [
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_SECURE') ? 'project-update__status--security-error gin-status gin-status--danger',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::REVOKED') ? 'project-update__status--revoked gin-status gin-status--danger',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_SUPPORTED') ? 'project-update__status--not-supported gin-status gin-status--danger',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_CURRENT') ? 'project-update__status--not-current gin-status gin-status--warning',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::CURRENT') ? 'project-update__status--current gin-status gin-status--success',
+  ]
+%}
+<div{{ status.attributes.addClass('project-update__status', status_classes) }}>
+  <span class="gin-status-icon">
+    {{ status.icon }}
+  </span>
+  {%- if status.label -%}
+    <span>{{ status.label }}</span>
+  {%- else -%}
+    {{ status.reason }}
+  {%- endif %}
+</div>
+
+<div class="project-update__title">
+  {%- if url -%}
+    <a href="{{ url }}">{{ title }}</a>
+  {%- else -%}
+    {{ title }}
+  {%- endif %}
+  {{ existing_version }}
+  {% if install_type == 'dev' and datestamp %}
+    <span class="project-update__version-date">({{ datestamp }})</span>
+  {% endif %}
+</div>
+
+{% if versions %}
+  {% for version in versions %}
+    {{ version }}
+  {% endfor %}
+{% endif %}
+
+{%
+  set extra_classes = [
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_SECURE') ? 'project-not-secure',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::REVOKED') ? 'project-revoked',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_SUPPORTED') ? 'project-not-supported',
+  ]
+%}
+<div class="project-update__details">
+  {% if extras %}
+    <div class="extra">
+      {% for extra in extras %}
+        <div{{ extra.attributes.addClass(extra_classes) }}>
+          {{ extra.label }}: {{ extra.data }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% set includes = includes|join(', ') %}
+  {% if disabled %}
+    {{ 'Includes:'|t }}
+    <ul>
+      <li>
+        {% trans %}
+          Enabled: {{ includes|placeholder }}
+        {% endtrans %}
+      </li>
+      <li>
+        {% set disabled = disabled|join(', ') %}
+        {% trans %}
+          Disabled: {{ disabled|placeholder }}
+        {% endtrans %}
+      </li>
+    </ul>
+  {% else %}
+    {% trans %}
+      Includes: {{ includes|placeholder }}
+    {% endtrans %}
+  {% endif %}
+</div>

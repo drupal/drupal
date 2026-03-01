@@ -1,0 +1,228 @@
+#gin-sidebar-draggable {
+  position: absolute;
+  z-index: 104;
+  display: block;
+  width: 2px;
+  height: 100%;
+  padding: 0;
+  cursor: ew-resize;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #gin-sidebar-draggable {
+    transition: var(--gin-transition-fast);
+  }
+}
+
+#gin-sidebar-draggable:hover {
+  background-color: var(--gin-border-color-table);
+}
+
+#gin-sidebar-draggable:active {
+  background-color: var(--gin-border-color);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .layout-region--secondary {
+    transition: transform var(--gin-transition-fast);
+  }
+}
+
+@media (max-width: 60.99em) {
+  .layout-region--secondary {
+    --gin-sidebar-width: var(--gin-sidebar-small-width);
+  }
+}
+
+@media (max-width: 63.99em) {
+  .layout-region--secondary {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+body[data-meta-sidebar="closed"] {
+  --gin-sidebar-offset: 0px;
+}
+
+body[data-meta-sidebar="closed"] .layout-region--secondary {
+  visibility: hidden;
+  transform: translateX(var(--gin-sidebar-width));
+}
+
+[dir="rtl"] body[data-meta-sidebar="closed"] .layout-region--secondary {
+  transform: translateX(calc(var(--gin-sidebar-width) * -1));
+}
+
+@media (max-width: 63.99em) {
+  body[data-meta-sidebar="open"] .layout-region--secondary {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close,
+.meta-sidebar__close {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: var(--gin-border-m);
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close,
+  .meta-sidebar__close {
+    transition: background var(--gin-transition-fast);
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close::before,
+.meta-sidebar__close::before {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background-color: var(--gin-icon-color);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close:hover,
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close:focus,
+.meta-sidebar__close:hover,
+.meta-sidebar__close:focus {
+  background-color: var(--gin-color-primary-light);
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close:hover::before,
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close:focus::before,
+.meta-sidebar__close:hover::before,
+.meta-sidebar__close:focus::before {
+  background-color: var(--gin-color-primary);
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close.is-active,
+.meta-sidebar__close.is-active {
+  background-color: var(--gin-color-primary-light-hover);
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close.is-active::before,
+.meta-sidebar__close.is-active::before {
+  background-color: var(--gin-color-primary-active);
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger,
+.meta-sidebar__trigger {
+  display: block;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: var(--gin-border-m);
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger,
+  .meta-sidebar__trigger {
+    transition: background var(--gin-transition-fast);
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger::before,
+.meta-sidebar__trigger::before {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  border-radius: 50%;
+  background-color: var(--gin-icon-color);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-image: url("../../media/sprite.svg#sidebar-view");
+  mask-image: url("../../media/sprite.svg#sidebar-view");
+  -webkit-mask-size: var(--gin-icon-size-sidebar-toggle) var(--gin-icon-size-sidebar-toggle);
+  mask-size: var(--gin-icon-size-sidebar-toggle) var(--gin-icon-size-sidebar-toggle);
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger:hover,
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger:focus,
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger.is-active,
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger.is-active:hover,
+.meta-sidebar__trigger:hover,
+.meta-sidebar__trigger:focus,
+.meta-sidebar__trigger.is-active,
+.meta-sidebar__trigger.is-active:hover {
+  background-color: var(--gin-color-primary-light);
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger:hover::before,
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger:focus::before,
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger.is-active::before,
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger.is-active:hover::before,
+.meta-sidebar__trigger:hover::before,
+.meta-sidebar__trigger:focus::before,
+.meta-sidebar__trigger.is-active::before,
+.meta-sidebar__trigger.is-active:hover::before {
+  background-color: var(--gin-color-primary);
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger.is-active,
+.meta-sidebar__trigger.is-active {
+  background-color: var(--gin-bg-item-hover);
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close,
+.meta-sidebar__close {
+  position: absolute;
+  z-index: 104;
+  inset-block-start: 18px;
+  inset-inline-end: var(--gin-spacing-m);
+}
+
+@media (min-width: 64em) {
+  :is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close,
+  .meta-sidebar__close {
+    display: none;
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close::before,
+.meta-sidebar__close::before {
+  -webkit-mask-image: url("../../media/sprite.svg#close-view");
+  mask-image: url("../../media/sprite.svg#close-view");
+  -webkit-mask-size: 16px 16px;
+  mask-size: 16px 16px;
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__overlay,
+.meta-sidebar__overlay {
+  position: fixed;
+  z-index: 102;
+  visibility: hidden;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background: var(--gin-bg-layer2);
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+body[data-meta-sidebar="open"] :is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__overlay,
+body[data-meta-sidebar="open"] .meta-sidebar__overlay {
+  visibility: visible;
+  opacity: 0.9;
+}
+
+@media (min-width: 64em) {
+  :is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__overlay,
+  .meta-sidebar__overlay {
+    display: none;
+  }
+}

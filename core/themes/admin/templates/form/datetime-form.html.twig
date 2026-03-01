@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Theme override of a datetime form element.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the datetime form element.
+ * - content: The datelist form element to be output.
+ *
+ * @see \Drupal\Core\Datetime\DatePreprocess::preprocessDatetimeForm()
+ */
+#}
+<div{{ attributes.addClass('form-items-inline') }}>
+  {{ content }}
+</div>

@@ -1,0 +1,306 @@
+@media (min-width: 64em) {
+  .gin--edit-form {
+    padding-inline-end: var(--gin-sidebar-offset);
+  }
+}
+
+@media (min-width: 64em) and (prefers-reduced-motion: no-preference) {
+  .gin--edit-form .dialog-off-canvas-main-canvas {
+    transition: padding-inline-start var(--gin-transition-fast);
+  }
+}
+
+@media (min-width: 64em) {
+  .gin--edit-form.js-off-canvas-dialog-open {
+    padding-inline-end: 0;
+  }
+
+  .gin--edit-form.js-off-canvas-dialog-open .layout-region.layout-region--secondary {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+.gin--edit-form .tabs [data-drupal-link-system-path*="/delete"] {
+  display: none;
+}
+
+.gin--edit-form .gin-secondary-toolbar .toolbar-secondary .toolbar-bar .contextual-toolbar-tab {
+  display: none;
+}
+
+.gin--edit-form .layout-node-form {
+  display: block;
+  overflow: inherit;
+}
+
+.gin--edit-form .layout-region--main,
+.gin--edit-form .layout-region--secondary .layout-region-node-footer {
+  float: none;
+}
+
+.gin--edit-form .layout-region--main,
+.gin--edit-form .layout-region-node-footer {
+  width: 100%;
+  padding-inline-end: 0;
+}
+
+@media (min-width: 64em) {
+  .gin--edit-form .layout-region--main,
+  .gin--edit-form .layout-region-node-footer {
+    flex-basis: 40%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 63.99em) {
+  .gin--edit-form .page-wrapper__node-edit-form .region-sticky #edit-actions {
+    width: 100%;
+  }
+
+  .gin--edit-form .page-wrapper__node-edit-form .region-sticky #edit-gin-actions {
+    flex-grow: 1;
+  }
+}
+
+@media (min-width: 108.125em) {
+  .gin--edit-form .page-wrapper__node-edit-form .block-page-title-block {
+    width: 100%;
+  }
+}
+
+@media (min-width: 64em) {
+  .gin--edit-form .page-wrapper__node-edit-form .block-page-title-block .page-title {
+    overflow: hidden;
+    width: auto;
+    margin: 0;
+  }
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .block-local-tasks-block,
+.gin--edit-form .page-wrapper__node-edit-form .block-system-main-block,
+.gin--edit-form .page-wrapper__node-edit-form .messages-list,
+.gin--edit-form .page-wrapper__node-edit-form .node-form,
+.gin--edit-form .page-wrapper__node-edit-form .node-confirm-form,
+.gin--edit-form .page-wrapper__node-edit-form .admin-list,
+.gin--edit-form .page-wrapper__node-edit-form .help {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary {
+  position: fixed;
+  z-index: 103;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: var(--gin-sidebar-width);
+  min-width: var(--gin-sidebar-min-width);
+  max-width: var(--gin-sidebar-max-width);
+  height: calc(100% - var(--gin-toolbar-y-offset));
+  margin: 0;
+  border-inline-start: 1px solid var(--gin-border-color-layer);
+  background: var(--gin-bg-layer);
+  inset-block-start: var(--gin-toolbar-y-offset);
+  inset-inline-end: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary {
+    transition: all var(--gin-transition-fast);
+  }
+}
+
+.gin--dark-mode .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary {
+  box-shadow: 0 0 4px rgb(0, 0, 0, 0.1);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .gin-sidebar .form-actions {
+  margin: 0;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .gin-sidebar .form-actions .action-link {
+  margin-block-start: var(--gin-spacing-xs);
+  margin-block-end: 0;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .field--name-revision-log,
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .field--name-revision-log-message {
+  margin-block-start: var(--gin-spacing-s);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .accordion {
+  border: 0 none;
+  background: none;
+  box-shadow: none;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__header {
+  padding: var(--gin-spacing-m) 1.5rem;
+  color: var(--gin-color-text);
+  border: 0 none;
+  background-color: var(--gin-bg-layer);
+}
+
+@media (max-width: 60.99em) {
+  .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__header {
+    padding-block-start: calc(var(--gin-spacing-l) - var(--gin-spacing-xxs));
+    padding-inline-end: var(--gin-spacing-l);
+  }
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__header .form-type--item,
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__header .form-item__label {
+  font-size: var(--gin-font-size-s);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__header .form-item {
+  margin-block: var(--gin-spacing-xxs);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__title {
+  color: var(--gin-color-title);
+  text-shadow: none;
+  font-weight: var(--gin-font-weight-semibold);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__revision {
+  margin-block-start: var(--gin-spacing-m);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__last-saved,
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__author {
+  margin-block: var(--gin-spacing-xxs);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__last-saved,
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__last-saved .form-item__label,
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__author,
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta__author .form-item__label {
+  font-size: var(--gin-font-size-s);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion > .accordion__item,
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item {
+  border-radius: 0;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item {
+  margin: 0;
+  border: 0 none;
+  border-block-end: 1px solid var(--gin-border-color-layer);
+  border-radius: 0;
+}
+
+.gin--dark-mode .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item {
+  border-color: var(--gin-border-color);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item > .gin-details__summary {
+  display: block;
+  padding-inline-start: 3rem;
+  font-size: var(--gin-font-size-s);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item > .gin-details__summary .details-title {
+  position: static;
+  padding-inline-start: 0;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item > .gin-details__summary::before {
+  inset-block-start: var(--gin-spacing-xl);
+  inset-inline-start: 1.5rem;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item > .gin-details__summary:focus::after {
+  border-radius: 6px;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .gin-details__content {
+  margin-inline: 1.5rem;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .gin-details__content .gin-details__wrapper {
+  margin: var(--gin-spacing-l);
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .redirect-table__path {
+  width: 47%;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-type--entity-autocomplete .gin-autocomplete {
+  width: 100%;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-items-inline {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 26.25em) {
+  .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-items-inline {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (min-width: 64em) and (max-width: 79.99em) {
+  .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-items-inline {
+    flex-wrap: wrap;
+  }
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-type--date {
+  display: block;
+  flex-basis: 100%;
+  flex-grow: 1;
+}
+
+@media (min-width: 26.25em) {
+  .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-type--date {
+    flex-basis: 50%;
+  }
+}
+
+@media (min-width: 64em) and (max-width: 79.99em) {
+  .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-type--date {
+    flex-basis: 100%;
+  }
+}
+
+@media (min-width: 26.25em) {
+  .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-type--date:first-of-type {
+    margin-inline-end: var(--gin-spacing-xs);
+  }
+}
+
+@media (min-width: 64em) and (max-width: 79.99em) {
+  .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-type--date:first-of-type {
+    margin-inline-end: 0;
+  }
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-type--date:nth-of-type(2) {
+  flex-basis: 134px;
+}
+
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item .form-datetime-wrapper .form-type--date .form-element {
+  width: 100%;
+  min-width: 0;
+}
+
+.gin--edit-form .revision-current {
+  background-color: var(--gin-color-primary-light-active);
+}
+
+.gin--edit-form .field--name-title .form-element {
+  width: 100%;
+  letter-spacing: -0.025em;
+  font-size: var(--gin-font-size-h3);
+  font-weight: 475;
+  line-height: normal;
+  padding-block: var(--gin-spacing-s);
+}

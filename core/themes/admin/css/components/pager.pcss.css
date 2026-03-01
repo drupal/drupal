@@ -1,0 +1,144 @@
+/**
+ * @file
+ * Styles for Claro's Pagination.
+ */
+.pager {
+  --pager-size: 2rem; /* --space-m Ã— 2 */
+  --pager-border-width: 0.125rem; /* 2px */
+  --pager-fg-color: var(--color-gray-800);
+  --pager-bg-color: var(--color-white);
+  --pager-hover-bg-color: var(--color-bgblue-active);
+  --pager-focus-bg-color: var(--color-focus);
+  --pager-active-fg-color: var(--color-white);
+  --pager-active-bg-color: var(--color-absolutezero);
+  --pager-border-radius--action: var(--pager-border-width);
+
+  margin-block: var(--space-m);
+}
+
+.pager__items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  margin: var(--space-m) 0;
+  list-style: none;
+  text-align: center;
+  font-weight: bold;
+}
+
+.pager__item {
+  display: inline-block;
+  margin-inline: calc(var(--space-xs) / 2);
+  vertical-align: top;
+}
+
+.pager__link,
+.pager__item--current {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: var(--pager-size);
+  block-size: var(--pager-size);
+  padding-inline: var(--space-xs);
+  text-decoration: none;
+  color: var(--pager-fg-color);
+  border-radius: var(--space-m); /* Pager size ÷ 2 */
+  background: var(--pager-bg-color); /* Make sure that the text is visible on dark background. */
+  line-height: 1;
+}
+.pager__link:hover,
+.pager__link:focus,
+.pager__link:active {
+  text-decoration: none;
+}
+.pager__link:hover,
+.pager__link.is-active:hover {
+  color: var(--pager-fg-color);
+  background: var(--pager-hover-bg-color);
+}
+.pager__link--action-link {
+  border-radius: var(--pager-border-radius--action);
+}
+/* Active number link. */
+.pager__link.is-active,
+.pager__item--current {
+  color: var(--pager-active-fg-color);
+  border: var(--pager-border-width) solid transparent;
+  background: var(--pager-active-bg-color);
+}
+.pager__item--first .pager__link::before {
+  --background-image: url(../../images/icons/545560/pager-first.svg);
+}
+.pager__item--previous .pager__link::before {
+  --background-image: url(../../images/icons/545560/pager-prev.svg);
+}
+.pager__item--next .pager__link::after {
+  --background-image: url(../../images/icons/545560/pager-next.svg);
+}
+.pager__item--last .pager__link::after {
+  --background-image: url(../../images/icons/545560/pager-last.svg);
+}
+.pager__item--first .pager__link::before,
+.pager__item--previous .pager__link::before,
+.pager__item--next .pager__link::after,
+.pager__item--last .pager__link::after {
+  position: relative;
+  display: inline-block;
+  inline-size: 1rem;
+  block-size: 1rem;
+  content: "";
+  background-image: var(--background-image);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+@media (forced-colors: active) {
+  .pager__item--first .pager__link::before,
+  .pager__item--previous .pager__link::before,
+  .pager__item--next .pager__link::after,
+  .pager__item--last .pager__link::after {
+    background-color: linktext;
+    background-image: none;
+    mask-image: var(--background-image);
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+}
+
+[dir="rtl"] .pager__item--first .pager__link::before,
+[dir="rtl"] .pager__item--previous .pager__link::before,
+[dir="rtl"] .pager__item--next .pager__link::after,
+[dir="rtl"] .pager__item--last .pager__link::after {
+  transform: scaleX(-1);
+}
+
+.pager__item--mini {
+  margin-inline: calc(var(--space-m) / 2);
+}
+.pager__link--mini {
+  border-radius: 50%;
+}
+
+/**
+* On the mini pager, remove margins for the previous and next icons.
+* Margins are not needed here as there is no accompanying text.
+*/
+.pager__link--mini::before {
+  margin-inline: 0;
+}
+
+.pager__item-title--backwards {
+  margin-inline-start: 0.5rem;
+}
+
+.pager__item-title--forward {
+  margin-inline-end: 0.5rem;
+}
+
+@media (forced-colors: active) {
+  .pager__item a:hover {
+    text-decoration: underline;
+  }
+}

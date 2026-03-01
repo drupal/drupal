@@ -1,0 +1,21 @@
+<div class="gin--layout-form clearfix">
+  <div class="layout-region layout-region--main">
+    <div class="layout-region__content">
+      {% block main %}
+      {% endblock %}
+    </div>
+  </div>
+  <div class="layout-region layout-region--secondary" id="gin_sidebar" tabindex="0">
+    <div class="layout-region__content">
+      <span class="gin-sidebar-draggable" id="gin-sidebar-draggable"></span>
+      {% block secondary %}
+      {% endblock %}
+    </div>
+  </div>
+  <div class="layout-region layout-region--footer">
+    <div class="layout-region__content">
+      {% block footer %}
+      {% endblock %}
+    </div>
+  </div>
+</div>

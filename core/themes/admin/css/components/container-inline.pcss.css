@@ -1,0 +1,14 @@
+/**
+ * @file
+ * Inline items.
+ */
+
+.container-inline .form-radios {
+  & label::after {
+    content: "";
+  }
+
+  & .form-type-radio {
+    margin-inline-end: 1em;
+  }
+}

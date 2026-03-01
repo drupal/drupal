@@ -1,0 +1,39 @@
+#gin-toolbar-bar.js-settings-tray-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
+  color: var(--gin-bg-app);
+}
+
+#gin-toolbar-bar.js-settings-tray-edit-mode {
+  background: var(--gin-color-primary);
+}
+
+#gin-toolbar-bar.js-settings-tray-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
+  background: var(--gin-color-primary-hover);
+}
+
+#gin-toolbar-bar {
+  position: fixed;
+}
+
+#gin-toolbar-bar .contextual-toolbar-tab {
+  order: 100;
+}
+
+#toolbar-bar.toolbar-bar.js-settings-tray-edit-mode {
+  border-radius: var(--gin-border-s);
+  background-color: transparent;
+}
+
+#toolbar-bar.toolbar-bar.js-settings-tray-edit-mode .toolbar-item,
+#toolbar-bar.toolbar-bar.js-settings-tray-edit-mode .toolbar-item.is-active:hover {
+  border-radius: var(--gin-border-s);
+  background: var(--gin-switch);
+}
+
+#toolbar-bar.toolbar-bar.js-settings-tray-edit-mode .toolbar-item::before,
+#toolbar-bar.toolbar-bar.js-settings-tray-edit-mode .toolbar-item.is-active:hover::before {
+  background-color: #fff;
+}
+
+#toolbar-bar.toolbar-bar.js-settings-tray-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
+  background-image: none;
+}

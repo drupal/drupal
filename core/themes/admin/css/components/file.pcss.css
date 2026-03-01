@@ -1,0 +1,21 @@
+/**
+ * @file
+ * Extends styles of the file link.
+ */
+
+.file {
+  --file-offset: 0.0625rem;
+  --file-font-size: var(--font-size-s);
+  --file-size-color: var(--color-gray-800);
+
+  min-block-size: calc(var(--space-m) + var(--file-offset));
+  padding-inline-start: var(--space-l);
+  background-position: left var(--file-offset);
+  background-size: var(--space-m) var(--space-m);
+  font-size: var(--file-font-size);
+  line-height: calc(18rem / 16);
+}
+
+.file__size {
+  color: var(--file-size-color);
+}

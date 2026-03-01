@@ -1,0 +1,372 @@
+/* cspell:ignore navigationcreate, toolsextra, xxxs */
+:root {
+  --gin-toolbar-height: 48px;
+  --gin-toolbar-secondary-height: 48px;
+  --gin-scroll-offset: 72px;
+  --gin-toolbar-y-offset: var(--gin-toolbar-height);
+  --gin-toolbar-x-offset: 0px;
+  --gin-sticky-offset: 0px;
+  --gin-icon-size-toolbar: 20px;
+}
+
+@media (min-width: 61em) {
+  :root {
+    --gin-toolbar-height: 0px;
+    --gin-toolbar-secondary-height: 52px;
+    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 64px);
+    --gin-scroll-offset: 130px;
+    --gin-sticky-offset: var(--gin-height-sticky);
+  }
+}
+
+@media (min-width: 61em) {
+  html.admin-toolbar-expanded {
+    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 264px);
+  }
+}
+
+body.gin--navigation {
+  --admin-toolbar-sidebar-width: 4rem;
+}
+
+[data-admin-toolbar="expanded"] body.gin--navigation {
+  --admin-toolbar-sidebar-width: 16.5rem;
+}
+
+@media (--admin-toolbar-tablet) {
+  [data-admin-toolbar="expanded"] body.gin--navigation {
+    --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  --admin-toolbar-font-family: var(--gin-font);
+  --admin-toolbar-color-white: var(--gin-bg-layer);
+  --admin-toolbar-color-gray-050: var(--gin-bg-layer2);
+  --admin-toolbar-color-gray-100: var(--gin-border-color-layer);
+  --admin-toolbar-color-gray-200: var(--gin-border-color-layer2);
+  --admin-toolbar-color-gray-800: var(--gin-color-text);
+  --admin-toolbar-color-gray-990: var(--gin-color-primary-active);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar-control-bar {
+  background-color: var(--admin-toolbar-color-white);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link:hover::before {
+  inline-size: var(--gin-spacing-xxs);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar {
+  top: 0;
+  height: 100%;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__header {
+  padding-block-start: var(--gin-spacing-xs);
+}
+
+@media (min-width: 64em) {
+  :is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__header {
+    padding-block-start: 0;
+  }
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__content {
+  margin-block-start: calc(var(--gin-spacing-xxs) * -1);
+  padding: var(--admin-toolbar-sidebar-header) var(--gin-spacing-s) var(--gin-spacing-s) var(--gin-spacing-s);
+}
+
+@media (min-width: 64em) {
+  :is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__content {
+    margin-block-start: 0;
+    padding: var(--gin-spacing-s);
+  }
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__footer {
+  padding: var(--gin-spacing-s);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__footer,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__content .toolbar-block:nth-last-child(n + 2)::after {
+  border-block-start-color: var(--gin-border-color-secondary);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__logo {
+  border-radius: 10px;
+  line-height: 0;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__logo svg rect {
+  fill: var(--gin-color-primary);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__logo svg path {
+  fill: var(--gin-bg-app);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__logo:hover svg rect {
+  fill: var(--gin-color-primary-hover);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__logo:active svg rect,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__logo:focus svg rect {
+  fill: var(--gin-color-primary-active);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) #navigation-link-navigationcreate {
+  margin-block-start: var(--gin-spacing-xxs);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-block__list {
+  gap: 0;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button {
+  min-height: unset;
+  padding-inline: 10px;
+  padding-block: calc(var(--gin-spacing-xs) + 1px);
+  margin-block-end: var(--gin-spacing-xxxs);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button--primary {
+  color: var(--gin-color-button-text) !important;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button {
+  min-height: auto;
+  padding: var(--gin-spacing-xs) var(--gin-spacing-s);
+  border: 0 none;
+  border-radius: var(--gin-border-m);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button {
+    transition: var(--gin-transition);
+  }
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--primary {
+  --toolbar-button-color: var(--gin-color-button-text);
+  --toolbar-button-bg: var(--gin-color-primary);
+  --toolbar-button-hover-color: var(--gin-color-button-text);
+  --toolbar-button-hover-bg: var(--gin-color-primary-hover);
+  --toolbar-button-focus-color: var(--gin-color-button-text);
+  --toolbar-button-focus-bg: var(--gin-color-primary-active);
+  --toolbar-button-icon-size: var(--gin-font-size-s);
+}
+
+[dir="ltr"] :is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--primary {
+  box-shadow: 0.1em 0.25em 0.5em var(--gin-color-primary-light);
+}
+
+[dir="rtl"] :is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--primary {
+  box-shadow: -0.1em 0.25em 0.5em var(--gin-color-primary-light);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots {
+  display: block;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--gin-color-text);
+  border-radius: var(--gin-border-m);
+  background: transparent;
+  margin-inline: calc(var(--gin-spacing-xxs) * -1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots {
+    transition: background var(--gin-transition-fast);
+  }
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots:hover,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots:focus {
+  background: var(--gin-color-primary-light);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots:hover::before,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots:focus::before {
+  background: var(--gin-color-primary);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots[aria-expanded="true"],
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots.is-active {
+  background-color: var(--gin-color-primary-light-hover);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots[aria-expanded="true"]::before,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots.is-active::before {
+  background-color: var(--gin-color-primary-active);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link {
+  color: var(--gin-color-text);
+  font-weight: var(--gin-font-weight-semibold);
+  font-variation-settings: unset;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button:hover,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button:active,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link:hover,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link:active {
+  outline: none;
+  box-shadow: none;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button:hover,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link:hover {
+  color: var(--gin-color-primary);
+  background-color: var(--gin-bg-item-hover);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button:active,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).admin-toolbar .toolbar-button:hover:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link:active,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link:hover:focus {
+  color: var(--gin-color-primary-hover);
+  background-color: var(--gin-color-primary-light);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button--large {
+  font-weight: var(--gin-font-weight-bold);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) *:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .button:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .local-actions__item *:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]).gin--navigation-top-bar .toolbar-button.toolbar-button:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .local-actions__item *:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__logo:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button.toolbar-button:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__expand-button:focus {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-menu__link:focus {
+  outline: none;
+  box-shadow:
+    inset 0 0 0 1px var(--gin-color-focus-border),
+    inset 0 0 0 3px var(--gin-color-focus);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button.current {
+  background-color: var(--gin-bg-item-hover);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button.current:hover {
+  background-color: var(--gin-color-primary-light);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button.current:active,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button.current:focus,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button.current:hover:focus {
+  background-color: var(--gin-color-primary-light);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button.current.is-active,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button:has(+ .toolbar-popover__wrapper .is-active) {
+  color: var(--gin-color-primary);
+  background-color: var(--gin-color-primary-light);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button.current.is-active::before,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button:has(+ .toolbar-popover__wrapper .is-active)::before {
+  color: var(--gin-color-primary) !important;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button__icon {
+  margin: -1px;
+  color: var(--gin-icon-color);
+  stroke-width: 0.03125rem;
+  stroke: currentColor;
+  inline-size: 22px;
+  block-size: 22px;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button--icon--announcements-feed-announcement .toolbar-button__icon path:not(:first-of-type) {
+  stroke-width: 1.325rem;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-button--icon--dots path {
+  stroke-width: 0.5rem;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) #navigation-link-navigationcreate:first-child {
+  margin-block-end: var(--admin-toolbar-space-8);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) #navigation-link-navigationcreate:first-child::after {
+  display: block;
+  margin-block-start: var(--admin-toolbar-space-12);
+  content: "";
+  border-block-end: 1px solid var(--gin-border-color-secondary);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__expand-button {
+  margin-block-start: calc(var(--gin-spacing-xs) * -1);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__expand-button,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__expand-button:hover {
+  color: var(--gin-color-text-light);
+  border-color: var(--gin-border-color);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-popover--expanded {
+  background-color: transparent;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-popover--expanded > .toolbar-button {
+  background-color: var(--gin-bg-item-hover);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .gin--dark-mode .toolbar-popover__wrapper {
+  border-inline-start: 2px solid var(--gin-border-color-secondary);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .admin-toolbar__tooltip {
+  color: #fff;
+  background-color: var(--gin-tooltip-bg);
+  font-size: var(--gin-font-size-xs);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-block__list-item[id*="navigation-link-admin-toolbar-toolsextra-links"] {
+  display: none;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) #toolbar-item-shortcuts,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) #toolbar-item-announcement {
+  display: none;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .gin-secondary-toolbar .toolbar-id--toolbar-icon-user {
+  display: none !important;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .gin-secondary-toolbar .toolbar-menu {
+  gap: 0;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .gin-secondary-toolbar .toolbar-menu__trigger {
+  display: none;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .gin-secondary-toolbar .toolbar-tray .menu-item + .menu-item {
+  border-inline-start: none;
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-loading #toolbar-item-shortcuts-tray,
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-loading #toolbar-item-shortcuts {
+  visibility: hidden;
+}

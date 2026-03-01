@@ -1,0 +1,68 @@
+/**
+ * @file
+ * Styling for the shortcut module.
+ */
+
+:root {
+  /**
+  * Shortcut action.
+  */
+  --shortcut-bg-color: var(--color-gray-800);
+  --shortcut-border-radius-size: var(--base-border-radius);
+  --shortcut-padding-size: calc(0.5 * var(--space-xs)) var(--space-m);
+  --shortcut-icon-size: var(--space-l);
+}
+
+/**
+ * Add/remove links.
+ */
+.shortcut-action {
+  display: inline-block;
+  margin-inline-start: var(--space-xs);
+
+  &:hover .shortcut-action__message,
+  &:focus .shortcut-action__message {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.shortcut-action__message {
+  display: inline-block;
+  margin-inline-start: var(--space-s);
+  padding: var(--shortcut-padding-size);
+  transition: var(--transition);
+  transform: translateY(calc(-1 * var(--space-xs)));
+  vertical-align: top;
+  opacity: 0;
+  color: var(--color-white);
+  border-radius: var(--shortcut-border-radius-size);
+  background: var(--shortcut-bg-color);
+  font-size: var(--font-size-label);
+  backface-visibility: hidden;
+}
+
+.shortcut-action__icon {
+  display: inline-block;
+  width: var(--shortcut-icon-size);
+  height: var(--shortcut-icon-size);
+  vertical-align: -0.0625rem;
+  background: transparent url(../../images/shortcut/favstar.svg) left top / calc(var(--shortcut-icon-size) * 4) var(--shortcut-icon-size) no-repeat;
+
+  .shortcut-action--add:hover &,
+  .shortcut-action--add:focus & {
+    background-position: calc(-1 * var(--shortcut-icon-size)) top;
+  }
+
+  .shortcut-action--remove & {
+    background-position: calc(-2 * var(--shortcut-icon-size)) top;
+  }
+
+  .shortcut-action--remove:focus &,
+  .shortcut-action--remove:hover & {
+    background-position: calc(-3 * var(--shortcut-icon-size)) top;
+  }
+
+  [dir="rtl"] & {
+    background-image: url(../../images/shortcut/favstar-rtl.svg);
+  }
+}

@@ -1,0 +1,219 @@
+name: Admin
+type: theme
+base theme: false
+description: Admin theme with a strong focus on improving the editorial experience. Learn more about <a href="https://www.drupal.org/docs/contributed-themes/gin-admin-theme/specific-settings-within-gin" target="_blank">the available settings</a> and <a href="https://www.drupal.org/docs/contributed-themes/gin-admin-theme/custom-theming" target="_blank">how to customize the theme</a>.
+alt text: Screenshot of Admin, Drupal administration theme.
+package: Core
+version: VERSION
+experimental: true
+
+libraries:
+  - core/drupal.message
+  - core/normalize
+  - admin/global-styling
+
+libraries-override:
+  core/drupal.tabledrag:
+    css:
+      component:
+        misc/components/tabledrag.module.css: css/components/tabledrag.css
+    js:
+      misc/tabledrag.js: migration/js/tabledrag.js
+
+  core/drupal.ajax:
+    css:
+      component:
+        misc/components/ajax-progress.module.css: css/components/ajax-progress.module.css
+
+  core/drupal.autocomplete:
+    css:
+      component:
+        misc/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
+
+  system/status.report: admin/status.report
+
+  system/admin:
+    css:
+      theme:
+        css/system.admin.css: false
+
+  core/drupal.dropbutton:
+    css:
+      component:
+        misc/dropbutton/dropbutton.css: css/components/dropbutton.css
+
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        misc/vertical-tabs.css: false
+
+  core/internal.jquery_ui:
+    css:
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
+
+  core/drupal.dialog:
+    css:
+      component:
+        assets/vendor/jquery.ui/themes/base/dialog.css: false
+
+  user/drupal.user:
+    css:
+      component:
+        css/user.module.css: false
+
+  field_ui/drupal.field_ui:
+    css:
+      theme:
+        css/field_ui.admin.css: css/theme/field-ui.admin.css
+
+  node/drupal.node:
+    css:
+      layout:
+        css/node.module.css: false
+
+  node/form:
+    css:
+      layout:
+        css/node.module.css: false
+
+  toolbar/toolbar:
+    css:
+      component:
+        css/toolbar.module.css: css/components/toolbar.module.css
+      theme:
+        css/toolbar.theme.css: css/theme/toolbar.theme.css
+        css/toolbar.icons.theme.css: css/theme/toolbar.icons.theme.css
+
+  toolbar/toolbar.menu:
+    css:
+      state:
+        css/toolbar.menu.css: css/state/toolbar.menu.css
+
+  views_ui/admin.styling:
+    css:
+      component:
+        css/views_ui.admin.css: css/components/views_ui.admin.css
+      theme:
+        css/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
+
+  # Admin overrides: replace
+  media_library/view:
+    js:
+      js/media_library.view.js: migration/js/media_library.view.js
+
+  core/drupal.tableselect:
+    js:
+      misc/tableselect.js: migration/js/tableselect.js
+
+  # Admin overrides: disable
+  # needed override to overcome dialog styling issues
+  admin/admin.drupal.dialog:
+    css:
+      theme:
+        css/components/dialog.css: false
+
+  core/drupal.dialog.off_canvas:
+    css:
+      base:
+        misc/dialog/off-canvas.base.css: false
+        misc/dialog/off-canvas.css: false
+        misc/dialog/off-canvas.theme.css: false
+
+  admin/global-styling:
+    css:
+      layout:
+        css/layout/local-actions.css: false
+      theme:
+        css/theme/colors.css: false
+
+  core/drupal.tableheader:
+    js:
+      misc/tableheader.js: false
+    css:
+      component:
+        css/components/sticky-header.module.css: false
+        misc/components/sticky-header.module.css: false
+
+libraries-extend:
+  core/drupal.collapse:
+    - admin/details-focus
+  core/drupal.dialog:
+    - admin/admin.drupal.dialog
+    - admin/dialog
+  core/drupal.dropbutton:
+    - admin/dropbutton
+  core/drupal.checkbox:
+    - admin/checkbox
+  core/drupal.message:
+    - admin/messages
+  core/drupal.progress:
+    - admin/progress
+  core/drupal.tabbingmanager:
+    - admin/tabbingmanager
+  core/drupal.tabledrag:
+    - admin/admin.tabledrag
+  core/drupal.tableselect:
+    - admin/tableselect
+  core/drupal.tablesort:
+    - admin/drupal.tablesort
+  core/drupal.vertical-tabs:
+    - admin/vertical-tabs
+  file/drupal.file:
+    - admin/file
+  filter/drupal.filter.admin:
+    - admin/filter
+  filter/drupal.filter:
+    - admin/filter
+  system/admin:
+    - admin/system.admin
+  core/drupal.autocomplete:
+    - admin/autocomplete
+  shortcut/drupal.shortcut:
+    - admin/drupal.shortcut
+  core/drupal.ajax:
+    - admin/ajax
+  user/drupal.user:
+    - admin/form.password-confirm
+  node/drupal.node.preview:
+    - admin/drupal.node.preview
+  system/status.report:
+    - admin/status.report
+  views/views.module:
+    - admin/views
+  views_ui/admin.styling:
+    - admin/views_ui
+  media/media_embed_ckeditor_theme:
+    - admin/media_embed_ckeditor_theme
+  media_library/ui:
+    - admin/media_library.ui
+  media_library/view:
+    - admin/media_library.theme
+    - admin/media_library
+  media_library/widget:
+    - admin/media_library.theme
+    - admin/media_library
+  image/admin:
+    - admin/image.admin
+  core/drupal.tableheader:
+    - admin/tableheader
+  core/ckeditor5:
+    - admin/ckeditor5
+  contextual/drupal.contextual-links:
+    - admin/contextual_links
+
+ckeditor5-stylesheets: false
+
+# Regions
+regions:
+  header: Header
+  pre_content: Pre-content
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: Page top
+  page_bottom: Page bottom
+  sidebar_first: First sidebar
+regions_hidden:
+  - sidebar_first

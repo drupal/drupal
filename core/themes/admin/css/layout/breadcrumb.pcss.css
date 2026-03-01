@@ -1,0 +1,8 @@
+/**
+ * @file
+ * Breadcrumb region.
+ */
+
+.region-breadcrumb {
+  min-height: var(--breadcrumb-height);
+}

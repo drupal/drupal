@@ -1,0 +1,139 @@
+/**
+ * @file
+ * Replacement styles for Field UI admin.
+ */
+
+/* 'Manage fields' and 'Manage display' overviews */
+.field-ui-overview .region-title td {
+  font-weight: bold;
+}
+.field-ui-overview .region-message td {
+  font-style: italic;
+}
+
+/* 'Manage form display' and 'Manage display' overview */
+.field-plugin-summary {
+  float: left; /* LTR */
+  font-size: var(--font-size-s);
+}
+[dir="rtl"] .field-plugin-summary {
+  float: right;
+}
+.field-plugin-summary-cell .warning {
+  display: block;
+  float: left; /* LTR */
+  margin-right: 0.5em; /* LTR */
+}
+[dir="rtl"] .field-plugin-summary-cell .warning {
+  float: right;
+  margin-right: 0;
+  margin-left: 0.5em;
+}
+
+/* Settings edit. */
+.field-plugin-settings-edit-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.field-plugin-settings-edit {
+  width: var(--space-m);
+  margin: 0;
+  padding: 1px 8px;
+}
+
+.field-plugin-settings-edit-wrapper .ajax-progress--throbber {
+  position: absolute;
+  inset-block-start: 25px;
+  margin-inline: 0;
+}
+
+/* Settings editing subform. */
+.draggable.field-plugin-settings-editing,
+.draggable.drag-previous.field-plugin-settings-editing {
+  background: var(--color-blue-050);
+}
+
+.field-plugin-settings-editing td {
+  vertical-align: top;
+}
+.field-plugin-settings-editing .field-plugin-type {
+  display: none;
+}
+.field-plugin-settings-edit-form .plugin-name {
+  font-weight: bold;
+}
+
+.field-settings-summary-cell.field-settings-summary-cell li,
+.storage-settings-summary-cell.storage-settings-summary-cell li {
+  margin: 0;
+  list-style-type: none;
+}
+.field-settings-summary-cell li {
+  font-size: 0.9em;
+}
+.field-settings-summary-cell li:first-child {
+  font-size: 1em;
+}
+
+.allowed-values-table .form-item:where(:not(.hidden)) {
+  display: inline-table;
+}
+
+.field-label-wrapper {
+  white-space: nowrap;
+}
+
+.field-label-wrapper .field-label-text,
+.field-label-wrapper .field-ui-secondary-text {
+  display: inline;
+  white-space: nowrap;
+}
+
+.field-machine-name {
+  margin-left: 0.25rem;
+  font-family: monospace;
+}
+
+.field-label-container .field-label-text {
+  font-weight: 600;
+}
+
+.field-ui-secondary-text {
+  margin-top: 0;
+  color: var(--color-gray-600);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.field-settings-summary-container {
+  gap: 0;
+}
+
+.field-settings-summary-items {
+  gap: 0;
+}
+
+.field-details-container {
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.field-ui-pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  letter-spacing: 0.025em;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.75rem;
+  background-color: var(--color-white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.field-ui-overview td[data-drupal-selector*="details"] {
+  text-align: left;
+}

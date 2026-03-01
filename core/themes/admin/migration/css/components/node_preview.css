@@ -1,0 +1,151 @@
+.node-preview-container.node-preview-container {
+  position: sticky;
+  z-index: 501; /* on top of the Drupal world */
+  width: 100%;
+  height: var(--gin-toolbar-secondary-height);
+  padding: 0;
+  border-block-end: 1px solid var(--gin-border-color-layer);
+  background: rgb(255, 255, 255, 0.98);
+  font-size: var(--gin-font-size-xs);
+  inset-block-start: 0;
+}
+
+@supports ((-webkit-backdrop-filter: blur()) or (backdrop-filter: blur())) {
+  .node-preview-container.node-preview-container {
+    opacity: 0.999; /* Fix Chrome issue with mask */
+    background: rgb(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+.gin--dark-mode .node-preview-container.node-preview-container {
+  background: rgb(27, 27, 29, 0.98);
+}
+
+@supports ((-webkit-backdrop-filter: blur()) or (backdrop-filter: blur())) {
+  .gin--dark-mode .node-preview-container.node-preview-container {
+    background: rgb(22, 22, 23, 0.9);
+  }
+}
+
+.gin--high-contrast-mode .node-preview-container.node-preview-container {
+  background: var(--gin-bg-app);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.gin--navigation .node-preview-container.node-preview-container {
+  width: calc(100% - var(--gin-toolbar-x-offset));
+  margin-inline-start: var(--gin-toolbar-x-offset);
+}
+
+.node-preview-container.node-preview-container .gin-layout-container {
+  box-sizing: border-box;
+}
+
+.node-preview-container.node-preview-container .node-preview-backlink,
+.node-preview-container.node-preview-container .node-preview-form-select label {
+  color: var(--gin-color-text-light);
+}
+
+.node-preview-container.node-preview-container .node-preview-backlink {
+  position: relative;
+  padding-inline-start: 1.75em;
+  text-decoration: none;
+  color: var(--gin-color-text-light);
+  border-radius: var(--gin-border-xxs);
+  font-weight: var(--gin-font-weight-normal);
+  all: revert;
+}
+
+.node-preview-container.node-preview-container .node-preview-backlink:hover {
+  color: var(--gin-color-primary-hover);
+}
+
+.node-preview-container.node-preview-container .node-preview-backlink:active {
+  color: var(--gin-color-primary-active);
+}
+
+.node-preview-container.node-preview-container .node-preview-backlink::before {
+  position: absolute;
+  display: inline-block;
+  width: var(--gin-icon-size-toolbar-secondary);
+  height: var(--gin-icon-size-toolbar-secondary);
+  content: "";
+  transform: translateY(-50%);
+  background-color: var(--gin-icon-color);
+  inset-block-start: calc(50% - 1px);
+  inset-inline-start: 0;
+  -webkit-mask-image: url("../../media/sprite.svg#back-to-site-view");
+  mask-image: url("../../media/sprite.svg#back-to-site-view");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+}
+
+.node-preview-container.node-preview-container .form-item {
+  all: revert;
+}
+
+.node-preview-container.node-preview-container .form-item__label {
+  margin: 0;
+  color: var(--gin-color-title);
+  font-size: var(--gin-font-size-s);
+  font-weight: var(--gin-font-weight-normal);
+}
+
+.node-preview-container.node-preview-container .node-preview-form-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: auto;
+  height: 100%;
+  margin: 0 var(--gin-spacing-m);
+  padding: var(--gin-spacing-s) 0;
+}
+
+@media (min-width: 48em) {
+  .node-preview-container.node-preview-container .node-preview-form-select {
+    margin: 0 var(--gin-spacing-xl);
+  }
+}
+
+@media (min-width: 61em) {
+  .node-preview-container.node-preview-container .node-preview-form-select {
+    margin: 0 min(5vw, var(--gin-spacing-xxl));
+  }
+}
+
+.node-preview-container.node-preview-container .node-preview-form-select label {
+  padding-inline-end: 0.5em;
+}
+
+.node-preview-container.node-preview-container .form-element {
+  box-sizing: border-box;
+  color: var(--gin-color-text);
+  border: 1px solid var(--gin-border-color-form-element);
+  border-radius: var(--gin-border-s);
+  background-color: var(--gin-bg-input);
+  font-size: var(--gin-font-size-s);
+  line-height: 1.5;
+  all: revert;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .node-preview-container.node-preview-container .form-element {
+    transition: var(--gin-transition);
+  }
+}
+
+.node-preview-container.node-preview-container .js-hide {
+  display: none;
+}
+
+.node-preview-container.node-preview-container *:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--gin-color-focus-border),
+    0 0 0 4px var(--gin-color-focus);
+}

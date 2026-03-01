@@ -1,0 +1,21 @@
+:where(*),
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  .admin-toolbar__tooltip {
+    position: absolute;
+    z-index: 601;
+    padding: var(--gin-spacing-xs) var(--gin-spacing-s);
+    white-space: nowrap;
+    color: white;
+    border-radius: var(--gin-border-s);
+    background-color: var(--gin-tooltip-bg);
+    box-shadow: var(--gin-shadow-l2);
+    font-size: var(--gin-font-size-xxs);
+    font-weight: var(--gin-font-weight-semibold);
+    inset-block-start: var(--space-xs);
+    font-variation-settings: initial;
+  }
+
+  html:not(.admin-toolbar-expanded) .toolbar-menu__item--level-1:not(.toolbar-menu__item--has-dropdown) .toolbar-link span {
+    display: none;
+  }
+}

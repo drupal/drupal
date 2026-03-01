@@ -1,0 +1,83 @@
+/**
+ * @file
+ * Installation styling.
+ *
+ * Unfortunately we have to make our styling quite strong, to override the
+ * .maintenance-page styling.
+ */
+
+.install-page {
+  min-height: 100%;
+  background-color: var(--color-gray-100);
+
+  & h1,
+  & h2 {
+    font-size: var(--font-size-h3);
+  }
+
+  & h3 {
+    font-size: var(--font-size-h4);
+  }
+
+  & .site-name {
+    margin-top: var(--space-s);
+    color: var(--color-gray);
+    font-size: var(--font-size-xl);
+  }
+
+  & .title {
+    margin-top: 0;
+    font-size: var(--font-size-h3);
+  }
+
+  & .content {
+    color: var(--color-gray);
+  }
+
+  & .site-name,
+  & .title,
+  & .content {
+    max-width: 34rem;
+  }
+}
+
+/**
+ * Password widget
+ */
+.install-page .password-parent,
+.install-page .confirm-parent {
+  width: auto;
+}
+.install-page .form-item .password-suggestions {
+  float: none;
+  width: auto;
+}
+.install-page table td {
+  word-break: break-all;
+}
+
+.install-page .site-version {
+  vertical-align: super;
+  color: var(--color-gray-500);
+  font-size: 0.5em;
+  font-weight: 500;
+}
+
+@media all and (max-width: 1010px) and (min-width: 48em) {
+  .install-page .password-strength,
+  .install-page .confirm-parent {
+    width: 100%;
+  }
+  .install-configure-form .form-type-password {
+    width: 100%;
+  }
+  .password-confirm,
+  .password-field {
+    float: none;
+  }
+  .password-confirm-match {
+    float: none;
+    width: auto;
+    max-width: 100%;
+  }
+}

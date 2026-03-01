@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Theme implementation for text filter guidelines.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - children: The rendered child elements of the container.
+ * - has_parent: A flag to indicate that the container has one or more parent
+ *   containers.
+ *
+ * @see \Drupal\Core\Theme\ThemePreprocess::preprocessContainer()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    has_parent ? 'js-form-wrapper',
+    has_parent ? 'form-wrapper',
+    'filter-guidelines',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>{{ children }}</div>

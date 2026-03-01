@@ -1,0 +1,108 @@
+/**
+ * @file
+ * Styles for the system status counter component.
+ */
+.system-status-counter {
+  --system-status-counter-status-icon: #e6e4df;
+  --system-status-counter-status-icon-error: url(../../../../misc/icons/dc2323/error.svg);
+  --system-status-counter-status-icon-warning: url(../../images/core/e29700/warning.svg);
+  --system-status-counter-status-icon-checked: url(../../images/core/73b355/check.svg);
+
+  display: inline-block;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  inline-size: 100%;
+  white-space: nowrap;
+}
+
+.system-status-counter__status-icon {
+  display: inline-block;
+  block-size: 65px;
+  inline-size: 60px;
+  vertical-align: middle;
+
+  &::before {
+    display: block;
+    block-size: 100%;
+    inline-size: 100%;
+    content: "";
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 40px;
+
+    [dir="rtl"] & {
+      background-position: left center;
+    }
+
+    @media (forced-colors: active) {
+      background-color: canvastext;
+      background-image: none;
+      mask-repeat: no-repeat;
+      mask-position: right center;
+      mask-size: 40px;
+    }
+  }
+}
+
+.system-status-counter__status-icon--error::before {
+  background-image: var(--system-status-counter-status-icon-error);
+}
+
+.system-status-counter__status-icon--warning::before {
+  background-image: var(--system-status-counter-status-icon-warning);
+}
+
+.system-status-counter__status-icon--checked::before {
+  background-image: var(--system-status-counter-status-icon-checked);
+}
+
+@media (forced-colors: active) {
+  .system-status-counter__status-icon--error::before {
+    mask-image: var(--system-status-counter-status-icon-error);
+  }
+
+  .system-status-counter__status-icon--warning::before {
+    mask-image: var(--system-status-counter-status-icon-warning);
+  }
+
+  .system-status-counter__status-icon--checked::before {
+    mask-image: var(--system-status-counter-status-icon-checked);
+  }
+}
+
+.system-status-counter__status-title {
+  display: inline-block;
+  padding: 0 18px;
+  vertical-align: middle;
+  font-size: 1.125em;
+  font-weight: bold;
+  line-height: 1em;
+}
+
+.system-status-counter__title-count {
+  display: block;
+  margin-block-end: 8px;
+}
+
+.system-status-counter__details {
+  display: block;
+  text-transform: none;
+  font-size: var(--font-size-s);
+  font-weight: normal;
+  line-height: 1.5;
+}
+
+@media screen and (min-width: 61rem) {
+  .system-status-report-counters__item {
+    padding-block: var(--space-s);
+  }
+
+  .system-status-counter__status-icon,
+  .system-status-counter {
+    block-size: 65px;
+  }
+
+  .system-status-counter__status-icon {
+    inline-size: 65px;
+  }
+}

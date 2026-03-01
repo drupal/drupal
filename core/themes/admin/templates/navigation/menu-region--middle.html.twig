@@ -1,0 +1,68 @@
+{% import _self as menus %}
+<div class="admin-toolbar__item toolbar-block">
+  {% set menu_heading_id = 'menu--' ~ menu_name %}
+  <h2 id="{{ menu_heading_id }}" class="toolbar-block__title visually-hidden focusable">{{ title }}</h2>
+  <ul class="toolbar-menu toolbar-menu toolbar-block__content toolbar-block__content--{{ menu_name }}" aria-toolbar-link__labelledby="{{ menu_heading_id }}">
+    {{ menus.menu_items(items, attribute) }}
+  </ul>
+</div>
+
+{% macro menu_items(items, attributes) %}
+  {% for key, item in items %}
+    {% set item_class = 'toolbar-link--' ~ item.class|clean_class %}
+    <li id="{{ item_id }}" class="{{ item.below ? 'toolbar-menu__item--has-dropdown' }} toolbar-menu__item toolbar-menu__item--level-1" data-url="{{ item.url }}">
+      {% if item.below is empty %}
+        {% if item.url %}
+          <a href="{{ item.url }}" class="toolbar-link toolbar-link--has-icon {{ item_class }}">
+            <span>{{ item.title }}</span>
+          </a>
+        {% else %}
+          <button class="toolbar-link toolbar-link--has-icon {{ item_class }}">
+            <span>{{ item.title }}</span>
+          </button>
+        {% endif %}
+      {% endif %}
+    {% if item.below %}
+      <button class="toolbar-link toolbar-link--has-icon {{ item_class }}">
+        <span class="toolbar-link__action">{{ 'Extend'|t }}</span>
+        <span class="toolbar-link__label">{{ item.title }}</span>
+      </button>
+      <div class="toolbar-menu__submenu">
+        <div class="toolbar-menu__arrow-ref"></div>
+        <ul class="toolbar-menu">
+          <li class="toolbar-menu__item toolbar-menu__item--to-title">
+            <a class="toolbar-link toolbar-link--has-icon {{ item_class }}" href="{{ item.url }}" data-url="{{ item.url }}">
+              <span class="toolbar-link__action">{{ 'Extend'|t }}</span>
+              <span class="toolbar-link__label">{{ item.title }}</span>
+            </a>
+          </li>
+          {% for item in item.below %}
+            <li class="{{ item.below ? 'toolbar-menu__item--has-dropdown'}} toolbar-menu__item toolbar-menu__item--level-2">
+              {% if item.below is empty %}
+                <a href="{{ item.url }}" class="toolbar-link">
+                <span>{{ item.title }}</span>
+              </a>
+              {% endif %}
+              {% if item.below %}
+                <button class="toolbar-link" aria-expanded="false" data-url="{{ item.url }}">
+                  <span class="toolbar-link__action">{{ 'Extend'|t }}</span>
+                  <span class="toolbar-link__label">{{ item.title }}</span>
+                </button>
+                <ul class="toolbar-menu">
+                  {% for item in item.below %}
+                    <li class="toolbar-menu__item toolbar-menu__item--level-3">
+                      <a href="{{ item.url }}" class="toolbar-link">
+                        <span class="toolbar-link__label">{{ item.title }}</span>
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </li>
+  {% endfor %}
+{% endmacro %}

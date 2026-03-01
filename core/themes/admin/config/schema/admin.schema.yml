@@ -1,0 +1,32 @@
+# Schema for the configuration files of the admin theme.
+admin.settings:
+  type: theme_settings
+  label: 'Admin settings'
+  mapping:
+    preset_accent_color:
+      type: string
+      label: 'Preset accent color'
+    preset_focus_color:
+      type: string
+      label: 'Preset focus color'
+    enable_dark_mode:
+      type: string
+      label: 'The dark mode'
+    high_contrast_mode:
+      type: boolean
+      label: 'High contrast mode'
+    accent_color:
+      type: string
+      label: 'The accent color'
+    focus_color:
+      type: string
+      label: 'The focus color'
+    layout_density:
+      type: string
+      label: 'Layout density'
+    show_description_toggle:
+      type: boolean
+      label: 'Display help icon to toggle form description'
+    show_user_theme_settings:
+      type: boolean
+      label: 'Let user override theme'

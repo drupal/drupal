@@ -1,0 +1,50 @@
+/**
+ * @file
+ * Tablesort indicator styles.
+ */
+
+.tablesort {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 1rem;
+  width: 14px;
+  height: var(--space-m);
+  margin-block-start: -8px;
+  opacity: 0.5;
+  background-image: url(../../images/icons/000f33/sort--inactive.svg);
+  background-repeat: no-repeat;
+  background-position: 0 50%;
+  background-size: auto;
+
+  [dir="rtl"] & {
+    /* Horizontally flip the element. */
+    transform: scaleX(-1);
+  }
+
+  @media (forced-colors: active) {
+    background: linktext;
+    mask-image: url(../../images/icons/000f33/sort--inactive.svg);
+    mask-repeat: no-repeat;
+    mask-position: 0 50%;
+  }
+}
+
+.tablesort--asc {
+  opacity: 1;
+  background-image: url(../../images/icons/003ecc/sort--asc.svg);
+
+  @media (forced-colors: active) {
+    background: linktext;
+    mask-image: url(../../images/icons/003ecc/sort--asc.svg);
+  }
+}
+
+.tablesort--desc {
+  opacity: 1;
+  background-image: url(../../images/icons/003ecc/sort--desc.svg);
+
+  @media (forced-colors: active) {
+    background: linktext;
+    mask-image: url(../../images/icons/003ecc/sort--desc.svg);
+  }
+}

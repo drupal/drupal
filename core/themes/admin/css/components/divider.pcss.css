@@ -1,0 +1,8 @@
+/**
+ * Divider.
+ */
+
+.divider {
+  height: 1px;
+  background-color: var(--color-divider);
+}
