@@ -16,8 +16,15 @@ use Drupal\block\Hook\BlockHooks;
  *
  * @param string $theme
  *   The name of a theme.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. No
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3566783
  */
 function block_theme_initialize($theme): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. No replacement is provided. See https://www.drupal.org/node/3566783', E_USER_DEPRECATED);
+
   // Initialize theme's blocks if none already registered.
   $has_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $theme]);
   if (!$has_blocks) {
