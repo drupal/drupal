@@ -2,32 +2,29 @@
 
 namespace Drupal\editor;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Defines a service for Text Editor's render elements.
  */
 class Element implements TrustedCallbackInterface {
 
-  /**
-   * The Text Editor plugin manager service.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $pluginManager;
-
-  /**
-   * Constructs a new Element object.
-   *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
-   *   The Text Editor plugin manager service.
-   */
-  public function __construct(PluginManagerInterface $plugin_manager) {
-    $this->pluginManager = $plugin_manager;
+  public function __construct(
+    protected PluginManagerInterface $pluginManager,
+    protected ?ModuleHandlerInterface $moduleHandler = NULL,
+  ) {
+    if (!$moduleHandler) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleHandler argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3568146', E_USER_DEPRECATED);
+      $this->moduleHandler = \Drupal::moduleHandler();
+    }
   }
 
   /**
@@ -108,7 +105,7 @@ class Element implements TrustedCallbackInterface {
       $format = FilterFormat::load($element['format']['format']['#value']);
 
       // Ensure XSS-safety for the current text format/editor.
-      $filtered = editor_filter_xss($original, $format);
+      $filtered = $this->filterXss($original, $format);
       if ($filtered !== FALSE) {
         $element['value']['#value'] = $filtered;
       }
@@ -124,6 +121,81 @@ class Element implements TrustedCallbackInterface {
     }
 
     return $element;
+  }
+
+  /**
+   * Applies text editor XSS filtering.
+   *
+   * @param string $html
+   *   The HTML string that will be passed to the text editor.
+   * @param \Drupal\filter\FilterFormatInterface|null $format
+   *   The text format whose text editor will be used or NULL if the previously
+   *   defined text format is now disabled.
+   * @param \Drupal\filter\FilterFormatInterface|null $original_format
+   *   (optional) The original text format (i.e. when switching text formats,
+   *   $format is the text format that is going to be used, $original_format is
+   *   the one that was being used initially, the one that is stored in the
+   *   database when editing).
+   *
+   * @return string|false
+   *   The XSS filtered string or FALSE when no XSS filtering needs to be
+   *   applied, because one of the next conditions might occur:
+   *   - No text editor is associated with the text format,
+   *   - The previously defined text format is now disabled,
+   *   - The text editor is safe from XSS,
+   *   - The text format does not use any XSS protection filters.
+   *
+   * @see https://www.drupal.org/node/2099741
+   */
+  public function filterXss(string $html, ?FilterFormatInterface $format = NULL, ?FilterFormatInterface $original_format = NULL): string|false {
+    $editor = $format ? Editor::load($format->id()) : NULL;
+
+    // If no text editor is associated with this text format or the previously
+    // defined text format is now disabled, then we don't need text editor XSS
+    // filtering either.
+    if (!isset($editor)) {
+      return FALSE;
+    }
+
+    // If the text editor associated with this text format guarantees security,
+    // then we also don't need text editor XSS filtering.
+    $definition = $this->pluginManager->getDefinition($editor->getEditor());
+    if ($definition['is_xss_safe'] === TRUE) {
+      return FALSE;
+    }
+
+    // If there is no filter preventing XSS attacks in the text format being
+    // used, then no text editor XSS filtering is needed either. (Because then
+    // the editing user can already be attacked by merely viewing the content.)
+    // E.g., an admin user creates content in Full HTML and then edits it, no
+    // text format switching happens; in this case, no text editor XSS filtering
+    // is desirable, because it would strip style attributes, amongst others.
+    $current_filter_types = $format->getFilterTypes();
+    if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $current_filter_types, TRUE)) {
+      if ($original_format === NULL) {
+        return FALSE;
+      }
+      // Unless we are switching from another text format, in which case we must
+      // first check whether a filter preventing XSS attacks is used in that
+      // text format, and if so, we must still apply XSS filtering. E.g., an
+      // anonymous user creates content in Restricted HTML, an admin user edits
+      // it (then no XSS filtering is applied because no text editor is used),
+      // and switches to Full HTML (for which a text editor is used). Then we
+      // must apply XSS filtering to protect the admin user.
+      else {
+        $original_filter_types = $original_format->getFilterTypes();
+        if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $original_filter_types, TRUE)) {
+          return FALSE;
+        }
+      }
+    }
+
+    // Otherwise, apply the text editor XSS filter. We use the default one
+    // unless a module tells us to use a different one.
+    $editor_xss_filter_class = Standard::class;
+    $this->moduleHandler->alter('editor_xss_filter', $editor_xss_filter_class, $format, $original_format);
+
+    return call_user_func($editor_xss_filter_class . '::filterXss', $html, $format, $original_format);
   }
 
 }

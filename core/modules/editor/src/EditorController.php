@@ -13,6 +13,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class EditorController extends ControllerBase {
 
+  public function __construct(protected ?Element $editorElement = NULL) {
+    if (!$editorElement) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $editorElement argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3568146', E_USER_DEPRECATED);
+      $this->editorElement = \Drupal::service('editor.element');
+    }
+  }
+
   /**
    * Apply the necessary XSS filtering for using a certain text format's editor.
    *
@@ -27,7 +34,7 @@ class EditorController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown if no value to filter is specified.
    *
-   * @see editor_filter_xss()
+   * @see \Drupal\editor\Element::filterXss()
    */
   public function filterXss(Request $request, FilterFormatInterface $filter_format) {
     $value = $request->request->get('value');
@@ -44,7 +51,7 @@ class EditorController extends ControllerBase {
         ->load($original_format_id);
     }
 
-    return new JsonResponse(editor_filter_xss($value, $filter_format, $original_format));
+    return new JsonResponse($this->editorElement->filterXss($value, $filter_format, $original_format));
   }
 
 }
