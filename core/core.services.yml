@@ -949,7 +949,19 @@ services:
   Symfony\Component\HttpKernel\HttpKernelInterface: '@http_kernel'
   http_kernel.basic:
     class: Symfony\Component\HttpKernel\HttpKernel
-    arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack', '@http_kernel.controller.argument_resolver', true]
+    # A NULL value is passed to the request stack because Drupal populates the
+    # request stack before HttpKernel::handle() calls push() and needs the
+    # request stack to work after it calls pop(). This also prevents both
+    # Drupal and Symfony pushing the same request to the request_stack service
+    # twice and only popping the request once. The Symfony HTTP kernel creates
+    # an internal request stack and pushes and pops request objects to that
+    # instead of Drupal's request stack. Note that the request objects are the
+    # same, so any changes to the request object will be reflected.
+    #
+    # Drupal pushes to the request stack in DrupalKernel::preHandle(), called
+    # from KernelPreHandle::handle(). Drupal pops main requests in
+    # DrupalKernel::terminate() and sub requests in KernelPreHandle::handle().
+    arguments: ['@event_dispatcher', '@controller_resolver', null, '@http_kernel.controller.argument_resolver', true]
   http_kernel.controller.argument_resolver:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver
     arguments: ['@http_kernel.controller.argument_metadata_factory', ['@argument_resolver.request_attribute', '@argument_resolver.request', '@argument_resolver.psr7_request', '@argument_resolver.route_match', '@argument_resolver.query_parameter', '@argument_resolver.default']]
@@ -997,7 +1009,7 @@ services:
       - { name: http_middleware, priority: 300 }
   http_middleware.kernel_pre_handle:
     class: Drupal\Core\StackMiddleware\KernelPreHandle
-    arguments: ['@kernel']
+    arguments: ['@kernel', '@request_stack']
     tags:
       - { name: http_middleware, priority: 100 }
   http_middleware.session:

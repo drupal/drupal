@@ -4,3 +4,17 @@ http_kernel_test.empty:
     _controller: '\Drupal\http_kernel_test\Controller\TestController::get'
   requirements:
     _access: 'TRUE'
+
+http_kernel_test.sub_request:
+  path: '/http-kernel-test-sub-request'
+  defaults:
+    _controller: '\Drupal\http_kernel_test\Controller\TestController::subRequest'
+  requirements:
+    _access: 'TRUE'
+
+http_kernel_test.sub_sub_request:
+  path: '/http-kernel-test-sub-sub-request'
+  defaults:
+    _controller: '\Drupal\http_kernel_test\Controller\TestController::get'
+  requirements:
+    _access: 'TRUE'

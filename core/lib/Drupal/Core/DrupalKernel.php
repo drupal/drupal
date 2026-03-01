@@ -618,7 +618,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Initialize legacy request globals.
     $this->initializeRequestGlobals($request);
 
-    // Put the request on the stack.
+    // Put the request on the stack. Main requests will be popped in
+    // \Drupal\Core\DrupalKernel::terminate() and sub requests will be popped in
+    // \Drupal\Core\StackMiddleware\KernelPreHandle::handle().
     $this->container->get('request_stack')->push($request);
 
     // Set the allowed protocols.
@@ -726,6 +728,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
           $service = $this->container->get($id);
           $service->destruct();
         }
+      }
+
+      // Pop the request added in \Drupal\Core\DrupalKernel::preHandle() from
+      // request stack at the end of the execution cycle.
+      if ($this->prepared === TRUE) {
+        $this->container->get('request_stack')->pop();
       }
     }
   }
