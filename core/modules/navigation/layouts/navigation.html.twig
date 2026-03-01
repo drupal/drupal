@@ -45,7 +45,9 @@
   {# This lil' div will get the Drupal.displace() attributes added to it via JS. #}
   <div class="admin-toolbar__displace-placeholder"></div>
 
-  <nav class="admin-toolbar__scroll-wrapper" aria-label="{{ 'Administrative sidebar'|t }}">
+  {% set nav_id = 'admin-toolbar__scroll-wrapper-' ~ random() %}
+  <nav class="admin-toolbar__scroll-wrapper" aria-labelledby="{{ nav_id }}">
+    <h2 id="{{ nav_id }}" class="visually-hidden">{{ 'Administrative sidebar'|t }}</h2>
     {% set title_menu = 'admin-toolbar-title'|clean_unique_id %}
     {# @todo - We should get rid of this ID below. #}
     <div{{ region_attributes.content
