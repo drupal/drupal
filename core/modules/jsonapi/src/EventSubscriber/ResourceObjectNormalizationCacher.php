@@ -102,6 +102,10 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
       return FALSE;
     }
 
+    if ($object->getCacheMaxAge() === 0) {
+      return FALSE;
+    }
+
     $cached = $this->variationCache->get($this->generateCacheKeys($object), new CacheableMetadata());
     if (!$cached) {
       return FALSE;
@@ -147,6 +151,9 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
    *   The normalization parts to cache.
    */
   public function saveOnTerminate(ResourceObject $object, array $normalization_parts) {
+    if ($object->getCacheMaxAge() === 0) {
+      return;
+    }
     assert(
       array_keys($normalization_parts) === [
         static::RESOURCE_CACHE_SUBSET_BASE,
