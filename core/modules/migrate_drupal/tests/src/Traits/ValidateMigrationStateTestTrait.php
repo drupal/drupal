@@ -15,8 +15,6 @@ use Drupal\migrate_drupal\MigrationState;
  * This test checks that the discovered upgrade paths, which are based on the
  * source_module and destination_module definition matches the declared
  * upgrade paths in all the migrate_drupal.yml files.
- *
- * @group migrate_drupal
  */
 trait ValidateMigrationStateTestTrait {
 
