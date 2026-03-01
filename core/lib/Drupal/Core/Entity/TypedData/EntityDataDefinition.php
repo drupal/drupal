@@ -10,6 +10,11 @@ use Drupal\Core\TypedData\ComplexDataDefinitionBase;
 class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDataDefinitionInterface {
 
   /**
+   * The data type for this entity.
+   */
+  protected ?string $dataType;
+
+  /**
    * Creates a new entity definition.
    *
    * @param string $entity_type_id
@@ -98,6 +103,9 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
    * {@inheritdoc}
    */
   public function getDataType() {
+    if (isset($this->dataType)) {
+      return $this->dataType;
+    }
     $type = 'entity';
     if ($entity_type = $this->getEntityTypeId()) {
       $type .= ':' . $entity_type;
@@ -110,6 +118,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
         }
       }
     }
+    $this->dataType = $type;
     return $type;
   }
 
@@ -147,6 +156,14 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
       unset($this->definition['constraints']['Bundle']);
     }
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep(): array {
+    $this->dataType = NULL;
+    return parent::__sleep();
   }
 
 }
