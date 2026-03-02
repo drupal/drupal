@@ -5,7 +5,7 @@ description: Admin theme with a strong focus on improving the editorial experien
 alt text: Screenshot of Admin, Drupal administration theme.
 package: Core
 version: VERSION
-experimental: true
+lifecycle: experimental
 
 libraries:
   - core/drupal.message
