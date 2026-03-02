@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheOptionalInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\VariationCacheInterface;
+use Drupal\Core\Utility\FiberResumeType;
 
 /**
  * Processes access policies into permissions for an account.
@@ -39,6 +40,42 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
    * {@inheritdoc}
    */
   public function processAccessPolicies(AccountInterface $account, string $scope = AccessPolicyInterface::SCOPE_DRUPAL): CalculatedPermissionsInterface {
+    if (!\Fiber::getCurrent()) {
+      return $this->doProcessAccessPolicies($account, $scope);
+    }
+
+    // If running in a fiber, prevent the current user switch from escaping to
+    // outside the fiber by resuming the fiber if it was suspended.
+    $fiber = new \Fiber([$this, 'doProcessAccessPolicies']);
+    $fiber->start($account, $scope);
+    while (!$fiber->isTerminated()) {
+      if ($fiber->isSuspended()) {
+        $resume_type = $fiber->resume();
+        if (!$fiber->isTerminated() && $resume_type !== FiberResumeType::Immediate) {
+          usleep(500);
+        }
+      }
+    }
+
+    return $fiber->getReturn();
+  }
+
+  /**
+   * Processes the access policies for an account within a given scope.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account for which to calculate the permissions.
+   * @param string $scope
+   *   The scope to calculate the permissions.
+   *
+   * @return \Drupal\Core\Session\CalculatedPermissionsInterface
+   *   The access policies' permissions within the given scope.
+   *
+   * @throws \Drupal\Core\Session\AccessPolicyScopeException
+   *   Thrown if an access policy returns permissions for a scope other than the
+   *   one passed in.
+   */
+  public function doProcessAccessPolicies(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $persistent_cache_contexts = $this->getPersistentCacheContexts($scope);
     $initial_cacheability = (new CacheableMetadata())->addCacheContexts($persistent_cache_contexts);
     $cache_keys = ['access_policies', $scope];
