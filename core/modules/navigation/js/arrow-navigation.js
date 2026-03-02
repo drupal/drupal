@@ -231,8 +231,17 @@
           sidebar.addEventListener('keydown', (e) => {
             switch (e.key) {
               case 'Escape':
-                closePopover(e.target);
-                focusClosestPopoverTrigger(e.target);
+                // Inside a popover AND
+                //  (popover is open OR not on the trigger)
+                if (
+                  !!e.target.closest('[data-toolbar-popover]') &&
+                  (!e.target.hasAttribute('data-toolbar-popover-control') ||
+                    e.target.getAttribute('aria-expanded') === 'true')
+                ) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  closeNonInteractiveElement(e.target);
+                }
                 break;
 
               case 'ArrowLeft':

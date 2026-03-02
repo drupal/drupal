@@ -25,7 +25,7 @@
 }}>
   <div class="admin-toolbar-control-bar__content">
     {% include 'navigation:toolbar-button' with {
-      attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar', 'type': 'button'}),
+      attributes: create_attribute({'data-drupal-selector': 'admin-toolbar-mobile-trigger', 'aria-expanded': 'false', 'aria-controls': 'admin-toolbar', 'type': 'button'}),
       icon: { icon_id: 'burger' },
       text: 'Expand sidebar'|t,
       modifiers: ['small-offset'],
