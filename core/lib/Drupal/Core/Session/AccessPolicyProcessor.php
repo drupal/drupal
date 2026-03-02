@@ -75,7 +75,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
    *   Thrown if an access policy returns permissions for a scope other than the
    *   one passed in.
    */
-  public function doProcessAccessPolicies(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
+  protected function doProcessAccessPolicies(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
     $persistent_cache_contexts = $this->getPersistentCacheContexts($scope);
     $initial_cacheability = (new CacheableMetadata())->addCacheContexts($persistent_cache_contexts);
     $cache_keys = ['access_policies', $scope];
