@@ -34,6 +34,13 @@
     const mobileMediaQuery = window.matchMedia('(max-width: 1023px)');
 
     /**
+     * Selector for primary mobile toolbar trigger.
+     * @type {string}
+     */
+    const mobileTriggerSelector =
+      '[data-drupal-selector="admin-toolbar-mobile-trigger"]';
+
+    /**
      * Creates a focus trap for the admin toolbar by adding an `inert` attribute
      * to direct children of the `<body>` other than the admin toolbar.
      *
@@ -101,6 +108,11 @@
           }),
         );
 
+        // If sidebar is closed manually, move focus to trigger button.
+        if (newState === false && isUserInput) {
+          document.querySelector(mobileTriggerSelector).focus();
+        }
+
         if (isUserInput) {
           document.documentElement.setAttribute(
             'data-admin-toolbar-animating',
@@ -115,6 +127,15 @@
         }, 200);
 
         Drupal.displace(true);
+      });
+
+      doc.addEventListener('keydown', (e) => {
+        if (
+          e.key === 'Escape' &&
+          doc.getAttribute('data-admin-toolbar') === 'expanded'
+        ) {
+          document.querySelector(mobileTriggerSelector).click();
+        }
       });
     }
 
