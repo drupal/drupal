@@ -168,7 +168,7 @@
 
         const triggers = once(
           'admin-toolbar-trigger',
-          '[aria-controls="admin-toolbar"]',
+          '[aria-controls="admin-toolbar"], [admin-toolbar-trigger]',
           context,
         );
 
@@ -179,7 +179,12 @@
          */
         const toggleTriggers = (toState) => {
           triggers.forEach((trigger) => {
-            trigger.setAttribute('aria-expanded', toState);
+            // We should only set `aria-expanded` on `<button>` elements.
+            // This excludes the overlay `<div>`, which should not have
+            // ARIA attributes.
+            if (trigger.matches('button')) {
+              trigger.setAttribute('aria-expanded', toState);
+            }
             const text =
               trigger.querySelector('[data-toolbar-text]') ||
               trigger.querySelector('[data-toolbar-action]');
