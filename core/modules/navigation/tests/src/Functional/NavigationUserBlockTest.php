@@ -79,7 +79,7 @@ class NavigationUserBlockTest extends PageCacheTagsTestBase {
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
     // We should see the users name in the navigation menu.
-    $rendered_user_name = $this->cssSelect('[aria-controls="navigation-link-navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
+    $rendered_user_name = $this->cssSelect('[aria-controls*="navigation-link--navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
     $this->assertEquals($this->normalUser->getDisplayName(), $rendered_user_name);
 
     // We should see all three user links in the page.
@@ -97,7 +97,7 @@ class NavigationUserBlockTest extends PageCacheTagsTestBase {
     $this->drupalLogin($this->adminUser);
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    $rendered_user_name = $this->cssSelect('[aria-controls="navigation-link-navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
+    $rendered_user_name = $this->cssSelect('[aria-controls*="navigation-link--navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
     $this->assertEquals($this->adminUser->getDisplayName(), $rendered_user_name);
     // The Edit profile link should link to the users edit profile page.
     $links = $this->getSession()->getPage()->findAll('named', ['link', 'Edit profile']);

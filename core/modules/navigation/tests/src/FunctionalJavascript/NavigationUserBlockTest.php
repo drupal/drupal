@@ -78,10 +78,10 @@ class NavigationUserBlockTest extends WebDriverTestBase {
 
     // Wait for the default 'My Account' text to be replaced.
     $this->getSession()->getPage()->waitFor(10, function (Element $page) {
-      return $page->find('css', '[aria-controls="navigation-link-navigationuser-linksuserwrapper"] > .toolbar-button__label')->getText() !== 'My Account';
+      return $page->find('css', '[aria-controls*="navigation-link--navigationuser-linksuserwrapper"] > .toolbar-button__label')->getText() !== 'My Account';
     });
     // We should see the users name in the navigation menu.
-    $rendered_user_name = $this->cssSelect('[aria-controls="navigation-link-navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
+    $rendered_user_name = $this->cssSelect('[aria-controls*="navigation-link--navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
     $this->assertEquals($this->normalUser->getDisplayName(), $rendered_user_name);
 
     // Login as an admin access user, and verify that the username is displayed
@@ -90,10 +90,10 @@ class NavigationUserBlockTest extends WebDriverTestBase {
     $this->drupalGet($test_page_url);
     // Wait for the default 'My Account' text to be replaced.
     $this->getSession()->getPage()->waitFor(10, function (Element $page) {
-      return $page->find('css', '[aria-controls="navigation-link-navigationuser-linksuserwrapper"] > .toolbar-button__label')->getText() !== 'My Account';
+      return $page->find('css', '[aria-controls*="navigation-link--navigationuser-linksuserwrapper"] > .toolbar-button__label')->getText() !== 'My Account';
     });
     // We should see the users name in the navigation menu.
-    $rendered_user_name = $this->cssSelect('[aria-controls="navigation-link-navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
+    $rendered_user_name = $this->cssSelect('[aria-controls*="navigation-link--navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
     $this->assertEquals($this->adminUser->getDisplayName(), $rendered_user_name);
 
     // Change the users name, assert that the changes reflect in the navigation.
@@ -102,10 +102,10 @@ class NavigationUserBlockTest extends WebDriverTestBase {
     $this->submitForm(['name' => $new_username], 'Save');
     // Wait for the default 'My Account' text to be replaced.
     $this->getSession()->getPage()->waitFor(10, function (Element $page) {
-      return $page->find('css', '[aria-controls="navigation-link-navigationuser-linksuserwrapper"] > .toolbar-button__label')->getText() !== 'My Account';
+      return $page->find('css', '[aria-controls*="navigation-link--navigationuser-linksuserwrapper"] > .toolbar-button__label')->getText() !== 'My Account';
     });
     // We should see the users name in the navigation menu.
-    $rendered_user_name = $this->cssSelect('[aria-controls="navigation-link-navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
+    $rendered_user_name = $this->cssSelect('[aria-controls*="navigation-link--navigationuser-linksuserwrapper"] > .toolbar-button__label')[0]->getText();
     $this->assertEquals($new_username, $rendered_user_name);
   }
 
