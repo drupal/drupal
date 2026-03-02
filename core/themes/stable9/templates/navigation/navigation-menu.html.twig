@@ -22,7 +22,7 @@
       {% set item_link_attributes = create_attribute(item.url.options.attributes) %}
     {% endif %}
 
-    {% set item_id = ('navigation-link--' ~ item.original_link.pluginId)|clean_unique_id %}
+    {% set item_id = 'navigation-link--' ~ (item.original_link.pluginId ? item.original_link.pluginId|clean_class ~ '-') ~ random() %}
     {% if menu_level == 0 %}
       {% if item.below is empty %}
         <li id="{{ item_id }}" class="toolbar-block__list-item">
