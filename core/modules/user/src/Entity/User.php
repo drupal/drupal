@@ -210,7 +210,7 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasRole($rid) {
+  public function hasRole(string $rid) {
     return in_array($rid, $this->getRoles());
   }
 
