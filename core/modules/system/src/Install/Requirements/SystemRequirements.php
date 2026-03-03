@@ -44,6 +44,8 @@ class SystemRequirements implements InstallRequirementsInterface {
     'forum' => 'Forum',
     'hal' => 'HAL',
     'history' => 'History',
+    'migrate_drupal_ui' => 'Migrate Drupal UI',
+    'migrate_drupal' => 'Migrate Drupal',
     'quickedit' => 'Quick Edit',
     'rdf' => 'RDF',
     'statistics' => 'Statistics',

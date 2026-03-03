@@ -54,13 +54,9 @@ class MigrateSourceDiscoveryTest extends KernelTestBase {
     ksort($source_plugins);
     $this->assertSame($expected, array_keys($source_plugins));
 
-    // Install migrate_drupal and now the source plugins from the file modules
-    // should be found.
-    $expected = [
-      'config_entity',
-      'embedded_data',
-      'empty',
-    ];
+    // Install migrate_multiple_provider_test and now the source plugins from
+    // the file modules hh should be found.
+    array_push($expected, 'test_empty');
     $this->enableModules(['migrate_multiple_provider_test']);
     $source_plugins = \Drupal::service('plugin.manager.migrate.source')->getDefinitions();
     $this->assertSame(array_diff($expected, array_keys($source_plugins)), []);

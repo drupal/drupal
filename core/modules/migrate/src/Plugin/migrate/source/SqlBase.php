@@ -50,10 +50,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Drupal Database API supports multiple database connections. The connection
  * parameters are defined in $databases array in settings.php or
  * settings.local.php. It is also possible to modify the $databases array in
- * runtime. For example, Migrate Drupal, which provides the migrations from
- * Drupal 6 / 7, asks for the source database connection parameters in the UI
- * and then adds the $databases['migrate'] connection in runtime before the
- * migrations are executed.
+ * runtime.
  *
  * As described above, the default source database is $databases['migrate']. If
  * the source plugin needs another source connection, the database connection
@@ -65,7 +62,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * https://www.drupal.org/docs/8/api/migrate-api/migrating-data-from-sql-source
  *
  * @see https://www.drupal.org/docs/drupal-apis/database-api
- * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
  */
 abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {
 

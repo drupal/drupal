@@ -1,0 +1,11 @@
+id: has_source_config_migration
+source:
+  plugin: simple_source
+  variables:
+    - foo
+    - bar
+  source_module: a_different_module
+process:
+  foo: foo
+destination:
+  plugin: null

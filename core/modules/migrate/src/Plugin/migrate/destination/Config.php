@@ -64,8 +64,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * with the machine name "system.maintenance" as "system.maintenance.message",
  * coupled with the relevant langcode as obtained from the
  * "d6_variable_translation" source plugin.
- *
- * @see \Drupal\migrate_drupal\Plugin\migrate\source\d6\VariableTranslation
  */
 #[MigrateDestination('config')]
 class Config extends DestinationBase implements ContainerFactoryPluginInterface, DependentPluginInterface {

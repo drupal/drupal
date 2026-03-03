@@ -342,7 +342,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
       'locale',
       'menu_ui',
       'migrate',
-      'migrate_drupal',
       'node',
       'options',
       'page_cache',

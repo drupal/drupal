@@ -22,7 +22,12 @@ class GenericTestExistsTest extends UnitTestCase {
    *
    * @var string[]
    */
-  protected $modulesNoTest = ['help_topics', 'sdc', 'migrate_drupal_ui'];
+  protected $modulesNoTest = [
+    'help_topics',
+    'sdc',
+    'migrate_drupal',
+    'migrate_drupal_ui',
+  ];
 
   /**
    * Tests that the Generic module test exists for all modules.

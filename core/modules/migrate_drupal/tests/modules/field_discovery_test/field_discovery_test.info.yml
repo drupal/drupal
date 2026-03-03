@@ -1,5 +1,0 @@
-name: 'Migrate drupal field discovery tet'
-type: module
-description: 'Module containing a test class exposing protected field discovery methods'
-package: Testing
-version: VERSION

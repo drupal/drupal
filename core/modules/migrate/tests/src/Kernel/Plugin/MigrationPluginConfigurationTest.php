@@ -24,10 +24,8 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
    */
   protected static $modules = [
     'migrate',
-    'migrate_drupal',
     // Test with a simple migration.
     'migrate_plugin_config_test',
-    'locale',
   ];
 
   /**
@@ -82,25 +80,25 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
       ],
       // New configuration.
       [
-        'locale_settings',
+        'has_source_config_migration',
         [
           'source' => [
-            'plugin' => 'variable',
+            'plugin' => 'simple_source',
             'variables' => [
-              'locale_cache_strings',
-              'locale_js_directory',
+              'foo',
+              'bar',
             ],
-            'source_module' => 'locale',
+            'source_module' => 'custom',
           ],
         ],
         // Expected final source and process configuration.
         [
-          'plugin' => 'variable',
+          'plugin' => 'simple_source',
           'variables' => [
-            'locale_cache_strings',
-            'locale_js_directory',
+            'foo',
+            'bar',
           ],
-          'source_module' => 'locale',
+          'source_module' => 'custom',
         ],
       ],
     ];
