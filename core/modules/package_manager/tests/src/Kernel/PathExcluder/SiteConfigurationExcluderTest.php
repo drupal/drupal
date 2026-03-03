@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @internal
  */
 #[Group('package_manager')]
+#[Group('#slow')]
 #[CoversClass(SiteConfigurationExcluder::class)]
 #[RunTestsInSeparateProcesses]
 class SiteConfigurationExcluderTest extends PackageManagerKernelTestBase {

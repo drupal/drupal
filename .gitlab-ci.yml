@@ -444,7 +444,7 @@ default:
 
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer, *test-setup ]
-  parallel: 5
+  parallel: 4
   variables:
     TESTSUITE: PHPUnit-Kernel
     KUBERNETES_CPU_REQUEST: "8"

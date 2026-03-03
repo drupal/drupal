@@ -21,6 +21,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @internal
  */
 #[Group('package_manager')]
+#[Group('#slow')]
 #[CoversClass(ComposerValidator::class)]
 #[RunTestsInSeparateProcesses]
 class ComposerValidatorTest extends PackageManagerKernelTestBase {

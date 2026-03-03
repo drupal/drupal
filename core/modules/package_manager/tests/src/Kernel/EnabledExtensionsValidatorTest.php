@@ -22,6 +22,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @internal
  */
 #[Group('package_manager')]
+#[Group('#slow')]
 #[CoversClass(EnabledExtensionsValidator::class)]
 #[RunTestsInSeparateProcesses]
 class EnabledExtensionsValidatorTest extends PackageManagerKernelTestBase {

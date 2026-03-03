@@ -20,6 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @internal
  */
 #[Group('package_manager')]
+#[Group('#slow')]
 #[CoversClass(DuplicateInfoFileValidator::class)]
 #[RunTestsInSeparateProcesses]
 class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
