@@ -1213,9 +1213,6 @@ function hook_page_bottom(array &$page_bottom): void {
  *     renderable element or element tree to pass to the template. This name is
  *     used as the name of the variable that holds the renderable element or
  *     tree in preprocess and process functions.
- *   - file: The file that any preprocess implementations reside in. This file
- *     will be included prior to the template being rendered, to make sure that
- *     the preprocess function (as needed) is actually loaded.
  *   - path: If specified, overrides the path to the directory that contains the
  *     file to be used. This path should be relative to the Drupal root
  *     directory. If not provided, the path will be set to the module or theme's
@@ -1243,8 +1240,7 @@ function hook_page_bottom(array &$page_bottom): void {
  *     can specify a different pattern if required.
  *   - initial preprocess: A string or array callback supported by
  *     \Drupal\Core\Utility\CallableResolver to set up the initial and default
- *     variables for the template. Replaces automatically discovered
- *     template_preprocess_HOOK functions. Can be set as
+ *     variables for the template. Can be set as
  *     static::class . ':preprocessSomething' on hook classes.
  *   - preprocess functions: A list of functions used to preprocess this data.
  *     Ordinarily this won't be used; it's automatically filled in. For
@@ -1327,8 +1323,8 @@ function hook_theme($existing, $type, $theme, $path): array {
  *   'variables' => [
  *     'bundles' => NULL,
  *   ],
+ *   'initial preprocess => '\Drupal\system\Hook\SystemThemeHooks::preprocessEntityAddList',
  *   'preprocess functions' => [
- *     1 => 'template_preprocess_entity_add_list',
  *     2 => 'contextual_preprocess',
  *     3 => 'claro_preprocess_entity_add_list',
  *   ],

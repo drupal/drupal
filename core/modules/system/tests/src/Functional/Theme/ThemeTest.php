@@ -134,7 +134,7 @@ class ThemeTest extends BrowserTestBase {
   /**
    * Tests that the page variable is not prematurely flattened.
    *
-   * Some modules check the page array in template_preprocess_html(), so we
+   * Some modules check the page array in html template preprocess hooks, so we
    * ensure that it has not been rendered prematurely.
    */
   public function testPreprocessHtml(): void {

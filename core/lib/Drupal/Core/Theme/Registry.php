@@ -53,13 +53,6 @@ class Registry implements DestructableInterface {
   protected $theme;
 
   /**
-   * The lock backend that should be used.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
    * The complete theme registry.
    *
    * @var array
@@ -102,20 +95,6 @@ class Registry implements DestructableInterface {
   protected $registry = [];
 
   /**
-   * The cache backend to use for the complete theme registry data.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * The module handler to use to load modules.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * An array of incomplete, runtime theme registries, keyed by theme name.
    *
    * @var \Drupal\Core\Utility\ThemeRegistry[]
@@ -123,60 +102,11 @@ class Registry implements DestructableInterface {
   protected $runtimeRegistry = [];
 
   /**
-   * Stores whether the registry was already initialized.
-   *
-   * @var bool
-   */
-  protected $initialized = FALSE;
-
-  /**
-   * The name of the theme for which to construct the registry, if given.
-   *
-   * @var string|null
-   */
-  protected $themeName;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The theme initialization.
-   *
-   * @var \Drupal\Core\Theme\ThemeInitializationInterface
-   */
-  protected $themeInitialization;
-
-  /**
    * The theme manager.
    *
    * @var \Drupal\Core\Theme\ThemeManagerInterface
    */
   protected $themeManager;
-
-  /**
-   * The runtime cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $runtimeCache;
-
-  /**
-   * The module list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleList;
 
   /**
    * Preprocess suggestions discovered in modules.
@@ -197,54 +127,16 @@ class Registry implements DestructableInterface {
    */
   protected ?array $themeHookList = NULL;
 
-  /**
-   * The key value factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
-   */
-  protected $keyValueFactory;
-
-  /**
-   * Constructs a \Drupal\Core\Theme\Registry object.
-   *
-   * @param string $root
-   *   The app root.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache backend interface to use for the complete theme registry data.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock backend.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to use to load modules.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
-   * @param \Drupal\Core\Theme\ThemeInitializationInterface $theme_initialization
-   *   The theme initialization.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $runtime_cache
-   *   The cache backend interface to use for the runtime theme registry data.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
-   *   The module list.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
-   *   The kernel.
-   * @param string $theme_name
-   *   (optional) The name of the theme for which to construct the registry.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface|null $key_value_factory
-   *   The key value factory.
-   */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, $theme_name = NULL, ?KeyValueFactoryInterface $key_value_factory = NULL) {
-    $this->root = $root;
-    $this->cache = $cache;
-    $this->lock = $lock;
-    $this->moduleHandler = $module_handler;
-    $this->themeHandler = $theme_handler;
-    $this->themeInitialization = $theme_initialization;
-    $this->runtimeCache = $runtime_cache;
-    $this->moduleList = $module_list;
-    $this->themeName = $theme_name;
-    if (!$key_value_factory) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $key_value_factory argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3550627', E_USER_DEPRECATED);
-      $key_value_factory = \Drupal::service('keyvalue');
-    }
-    $this->keyValueFactory = $key_value_factory;
+  public function __construct(
+    protected CacheBackendInterface $cache,
+    protected LockBackendInterface $lock,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ThemeHandlerInterface $themeHandler,
+    protected CacheBackendInterface $runtimeCache,
+    protected ModuleExtensionList $moduleList,
+    protected HttpKernelInterface $kernel,
+    protected KeyValueFactoryInterface $keyValueFactory,
+  ) {
   }
 
   /**
@@ -258,27 +150,10 @@ class Registry implements DestructableInterface {
   }
 
   /**
-   * Initializes a theme with a certain name.
-   *
-   * This function does to much magic, so it should be replaced by another
-   * services which holds the current active theme information.
-   *
-   * @param string $theme_name
-   *   (optional) The name of the theme for which to construct the registry.
+   * Fetches the active theme.
    */
-  protected function init($theme_name = NULL) {
-    if ($this->initialized) {
-      return;
-    }
-    // Unless instantiated for a specific theme, use globals.
-    if (!isset($theme_name)) {
-      $this->theme = $this->themeManager->getActiveTheme();
-    }
-    // Instead of the active theme, a specific theme was requested.
-    else {
-      $this->theme = $this->themeInitialization->getActiveThemeByName($theme_name);
-      $this->themeInitialization->loadActiveTheme($this->theme);
-    }
+  protected function init() {
+    $this->theme = $this->themeManager->getActiveTheme();
   }
 
   /**
@@ -290,7 +165,7 @@ class Registry implements DestructableInterface {
    * @see Registry::$registry
    */
   public function get() {
-    $this->init($this->themeName);
+    $this->init();
     if ($cached = $this->cacheGet()) {
       return $cached;
     }
@@ -363,7 +238,7 @@ class Registry implements DestructableInterface {
    *   lightweight than the full registry.
    */
   public function getRuntime() {
-    $this->init($this->themeName);
+    $this->init();
     if (!isset($this->runtimeRegistry[$this->theme->getName()])) {
       $this->runtimeRegistry[$this->theme->getName()] = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->runtimeCache ?: $this->cache, $this->lock, [], $this->moduleHandler->isLoaded());
     }
@@ -387,7 +262,7 @@ class Registry implements DestructableInterface {
    *   The name of the base hook or FALSE.
    */
   public function getBaseHook($hook) {
-    $this->init($this->themeName);
+    $this->init();
     $base_hook = $hook;
     // Iteratively strip everything after the last '__' delimiter, until a
     // base hook definition is found. Recursive base hooks of base hooks are
@@ -600,30 +475,6 @@ class Registry implements DestructableInterface {
           $result[$hook]['incomplete preprocess functions'] = TRUE;
         }
 
-        if (isset($cache[$hook]['includes'])) {
-          $result[$hook]['includes'] = $cache[$hook]['includes'];
-        }
-
-        // Load the includes, as they may contain preprocess functions.
-        if (isset($info['includes'])) {
-          @trigger_error('Providing includes for theme hook ' . $hook . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3549500', E_USER_DEPRECATED);
-          foreach ($info['includes'] as $include_file) {
-            include_once $this->root . '/' . $include_file;
-          }
-        }
-
-        // If the theme implementation defines a file, then also use the path
-        // that it defined. Otherwise use the default path. This allows
-        // system.module to declare theme functions on behalf of core .include
-        // files.
-        if (isset($info['file'])) {
-          $include_file = $info['path'] ?? $path;
-          $include_file .= '/' . $info['file'];
-          include_once $this->root . '/' . $include_file;
-          $result[$hook]['includes'][] = $include_file;
-          @trigger_error('Providing a file for theme hook ' . $hook . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3549500', E_USER_DEPRECATED);
-        }
-
         // Provide a default naming convention for 'template' based on the
         // hook used. If the template does not exist, the theme engine used
         // should throw an exception at runtime when attempting to include
@@ -649,34 +500,7 @@ class Registry implements DestructableInterface {
         if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
           $info['preprocess functions'] = [];
           if ($type == 'module') {
-            // Add template_preprocess_HOOK function, if no initial preprocess
-            // callback is defined.
-            if (empty($info['initial preprocess']) && function_exists('template_preprocess_' . $hook)) {
-              if (!isset($info['deprecated'])) {
-                // Do not trigger a deprecation if the whole definition is
-                // deprecated.
-                @trigger_error('Providing template_preprocess_' . $hook . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
-              }
-              $info['preprocess functions'][] = 'template_preprocess_' . $hook;
-            }
             $info['preprocess functions'] = array_merge($info['preprocess functions'], $this->collectModulePreprocess($cache, 'preprocess_' . $hook));
-          }
-          elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
-            // Theme engines get an extra set that come before the normally
-            // named variable preprocessors.
-            $prefixes = [];
-            $prefixes[] = $name . '_engine';
-
-            foreach ($prefixes as $prefix) {
-              foreach ([$prefix . '_preprocess', $prefix . '_preprocess_' . $hook] as $function) {
-                if (function_exists($function)) {
-                  if ($prefix !== $theme) {
-                    @trigger_error(sprintf('Providing %s() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3547356', $function), E_USER_DEPRECATED);
-                  }
-                  $info['preprocess functions'][] = $function;
-                }
-              }
-            }
           }
           else {
             // This applies when the theme manually registers their own variable

@@ -38,13 +38,6 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
   ];
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * A list of all core modules.
    *
    * @var string[]
@@ -57,9 +50,9 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system', 'user']);
-    $this->themeHandler = $this->container->get('theme_handler');
 
     $this->container->get('theme_installer')->install(['stable9']);
+    $this->config('system.theme')->set('default', 'stable9')->save();
 
     $this->installAllModules();
   }
@@ -95,8 +88,7 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
    * Ensures that Stable 9 overrides all relevant core templates.
    */
   public function testStable9TemplateOverrides(): void {
-    $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $this->themeHandler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), \Drupal::service('extension.list.module'), \Drupal::service('kernel'), 'stable9', \Drupal::service('keyvalue'));
-    $registry->setThemeManager(\Drupal::theme());
+    $registry = \Drupal::service(Registry::class);
 
     $registry_full = $registry->get();
 

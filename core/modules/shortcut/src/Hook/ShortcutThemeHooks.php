@@ -42,8 +42,9 @@ class ShortcutThemeHooks {
     if (shortcut_set_edit_access()->isAllowed() && $this->themeSettingsProvider->getSetting('third_party_settings.shortcut.module_link') && !\Drupal::request()->attributes->has('exception')) {
       $link = Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath();
       $route_match = \Drupal::routeMatch();
-      // Replicate template_preprocess_html()'s processing to get the title in
-      // string form, so we can set the default name for the shortcut.
+      // Replicate \Drupal\Core\Theme\ThemePreprocess::preprocessHtml()'s
+      // processing to get the title in string form, so we can set the default
+      // name for the shortcut.
       $name = $variables['title'] ?? '';
       if (is_array($name)) {
         $name = \Drupal::service('renderer')->render($name);

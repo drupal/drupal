@@ -239,24 +239,10 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    // Include a file if the variable preprocessor is held elsewhere.
-    if (!empty($info['includes'])) {
-      foreach ($info['includes'] as $include_file) {
-        include_once $this->root . '/' . $include_file;
-      }
-    }
-
     // Invoke the variable preprocessors, if any.
     if (isset($info['base hook'])) {
       $base_hook = $info['base hook'];
       $base_hook_info = $theme_registry->get($base_hook);
-      // Include files required by the base hook, since its variable
-      // preprocessors might reside there.
-      if (!empty($base_hook_info['includes'])) {
-        foreach ($base_hook_info['includes'] as $include_file) {
-          include_once $this->root . '/' . $include_file;
-        }
-      }
       if (isset($base_hook_info['preprocess functions'])) {
         // Set a variable for the 'theme_hook_suggestion'. This is used to
         // maintain backwards compatibility with template engines.

@@ -56,13 +56,6 @@ class RegistryTest extends UnitTestCase {
   protected $themeHandler;
 
   /**
-   * The mocked theme initialization.
-   *
-   * @var \Drupal\Core\Theme\ThemeInitializationInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $themeInitialization;
-
-  /**
    * The mocked cache backend.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -114,14 +107,13 @@ class RegistryTest extends UnitTestCase {
     $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->themeHandler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
-    $this->themeInitialization = $this->createMock('Drupal\Core\Theme\ThemeInitializationInterface');
     $this->runtimeCache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
     $this->kernel = $this->createMock(HttpKernelInterface::class);
     $this->keyValueFactory = new KeyValueMemoryFactory();
 
-    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList, $this->kernel, NULL, $this->keyValueFactory);
+    $this->registry = new Registry($this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->runtimeCache, $this->moduleList, $this->kernel, $this->keyValueFactory);
     $this->registry->setThemeManager($this->themeManager);
   }
 

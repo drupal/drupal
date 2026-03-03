@@ -12,13 +12,15 @@ use Drupal\Core\Render\Attribute\RenderElement;
  * without overriding all links theming. If the #subtype property is provided in
  * your render array with value 'foo', #theme is set to links__dropbutton__foo;
  * if not, it's links__dropbutton; both of these can be overridden by setting
- * the #theme property in your render array. See template_preprocess_links()
- * for documentation on the other properties used in theming; for instance, use
- * element property #links to provide $variables['links'] for theming.
+ * the #theme property in your render array. See
+ * \Drupal\Core\Theme\ThemePreprocess::preprocessLinks() for documentation on
+ * the other properties used in theming; for instance, use element property
+ * #links to provide $variables['links'] for theming.
  *
  * Properties:
- * - #links: An array of links to actions. See template_preprocess_links() for
- *   documentation the properties of links in this array.
+ * - #links: An array of links to actions. See
+ *   \Drupal\Core\Theme\ThemePreprocess::preprocessLinks() for documentation the
+ *   properties of links in this array.
  * - #dropbutton_type: A string defining a type of dropbutton variant for
  *   styling proposes. Renders as class `dropbutton--#dropbutton_type`.
  *

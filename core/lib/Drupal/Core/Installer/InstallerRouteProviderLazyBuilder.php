@@ -15,9 +15,10 @@ class InstallerRouteProviderLazyBuilder extends RouteProviderLazyBuilder {
    */
   public function getRouteByName($name) {
     if ($name === '<none>' || $name === '<front>') {
-      // During the installer template_preprocess_page() uses the routing system
-      // to determine the front page. At this point building the router for this
-      // is unnecessary work.
+      // During the installer
+      // \Drupal\Core\Theme\ThemePreprocess::preprocessPage() uses the routing
+      // system to determine the front page. At this point building the router
+      // for this is unnecessary work.
       return new Route('/');
     }
     return parent::getRouteByName($name);

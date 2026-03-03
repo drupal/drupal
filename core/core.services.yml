@@ -1632,7 +1632,7 @@ services:
   Drupal\Core\Theme\ThemeInitializationInterface: '@theme.initialization'
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', '@cache.bootstrap', '@extension.list.module', '@kernel', ~, '@keyvalue']
+    arguments: ['@cache.default', '@lock', '@module_handler', '@theme_handler', '@cache.bootstrap', '@extension.list.module', '@kernel', '@keyvalue']
     tags:
       - { name: needs_destruction }
     calls:
