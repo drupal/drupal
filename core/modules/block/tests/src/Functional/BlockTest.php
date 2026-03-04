@@ -643,4 +643,23 @@ class BlockTest extends BlockTestBase {
     $this->assertEquals("$title (disabled)", $elements[0]->getText());
   }
 
+  /**
+   * Tests a combined page title, content, and messages block.
+   */
+  public function testTitleContentMessagesSingleBlock(): void {
+    // Place block which implements MainContentBlockPluginInterface,
+    // TitleBlockPluginInterface, and MessagesBlockPluginInterface.
+    $this->drupalPlaceBlock('test_title_content_message_block');
+    $this->drupalGet('');
+
+    // Ensure the block's setTitle function was called.
+    $this->assertSession()->pageTextContains('Page title has been placed in the block.');
+
+    // Ensure the block's setMainContent function was called.
+    $this->assertSession()->pageTextContains('Main content has been placed in the block.');
+
+    // Ensure the status message is shown.
+    $this->assertSession()->statusMessageContains('This is a status message.', 'status');
+  }
+
 }
