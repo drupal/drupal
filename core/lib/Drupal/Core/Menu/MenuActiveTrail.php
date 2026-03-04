@@ -41,7 +41,7 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
    *   The cache backend.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
-   * @param \Drupal\Core\Path\PathMatcherInterface|null $pathMatcher
+   * @param \Drupal\Core\Path\PathMatcherInterface $pathMatcher
    *   The path.matcher service.
    */
   public function __construct(
@@ -49,15 +49,11 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
     RouteMatchInterface $route_match,
     CacheBackendInterface $cache,
     LockBackendInterface $lock,
-    protected ?PathMatcherInterface $pathMatcher = NULL,
+    protected PathMatcherInterface $pathMatcher,
   ) {
     parent::__construct(NULL, $cache, $lock);
     $this->menuLinkManager = $menu_link_manager;
     $this->routeMatch = $route_match;
-    if ($this->pathMatcher === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $pathMatcher argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3523495', E_USER_DEPRECATED);
-      $this->pathMatcher = \Drupal::service('path.matcher');
-    }
   }
 
   /**

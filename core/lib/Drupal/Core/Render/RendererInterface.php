@@ -62,14 +62,6 @@ interface RendererInterface {
   public function renderInIsolation(&$elements);
 
   /**
-   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\Core\Render\RendererInterface::renderInIsolation() instead.
-   *
-   * @see https://www.drupal.org/node/3407994
-   */
-  public function renderPlain(&$elements);
-
-  /**
    * Renders final HTML for a placeholder.
    *
    * Renders the placeholder in isolation.
@@ -319,9 +311,6 @@ interface RendererInterface {
    *
    * @param array $elements
    *   The structured array describing the data to be rendered.
-   * @param bool $is_root_call
-   *   (Internal use only.) Whether this is a recursive call or not. See
-   *   ::renderRoot().
    *
    * @return \Drupal\Component\Render\MarkupInterface|string
    *   The rendered HTML.
@@ -340,7 +329,7 @@ interface RendererInterface {
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    * @see \Drupal\Core\Render\RendererInterface::renderRoot()
    */
-  public function render(/* array */&$elements, $is_root_call = FALSE);
+  public function render(array &$elements);
 
   /**
    * Checks whether a render context is active.

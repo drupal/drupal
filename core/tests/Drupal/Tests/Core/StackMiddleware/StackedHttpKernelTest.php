@@ -8,7 +8,6 @@ use Drupal\Core\StackMiddleware\StackedHttpKernel;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -20,25 +19,6 @@ use Symfony\Component\HttpKernel\TerminableInterface;
 #[CoversClass(StackedHttpKernel::class)]
 #[Group('StackMiddleware')]
 class StackedHttpKernelTest extends UnitTestCase {
-
-  /**
-   * Tests that stacked kernel is constructed with a list of middlewares.
-   */
-  #[IgnoreDeprecations]
-  public function testDeprecatedMiddlewaresArgument(): void {
-    $request = new Request();
-    $expected = new Response();
-    $basicKernel = $this->createMock(HttpKernelInterface::class);
-    $basicKernel->expects($this->once())
-      ->method('handle')
-      ->with($request, HttpKernelInterface::MAIN_REQUEST, TRUE)
-      ->willReturn($expected);
-
-    $this->expectDeprecation('Calling Drupal\Core\StackMiddleware\StackedHttpKernel::__construct() with an array of $middlewares is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. Pass in a lazy iterator instead. See https://www.drupal.org/node/3538740');
-    $stack = new StackedHttpKernel($basicKernel, [$basicKernel]);
-    $actual = $stack->handle($request);
-    $this->assertSame($expected, $actual);
-  }
 
   /**
    * Tests that stacked kernel is constructed with a list of closures.

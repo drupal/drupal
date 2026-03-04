@@ -61,18 +61,14 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
    *   The string translation.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager, MenuParentFormSelectorInterface $menu_parent_selector, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
+  public function __construct(MenuLinkManagerInterface $menu_link_manager, MenuParentFormSelectorInterface $menu_parent_selector, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, protected ModuleExtensionList $moduleExtensionList) {
     $this->menuLinkManager = $menu_link_manager;
     $this->menuParentSelector = $menu_parent_selector;
     $this->stringTranslation = $string_translation;
     $this->moduleHandler = $module_handler;
-    if ($this->moduleExtensionList === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
-      $this->moduleExtensionList = \Drupal::service('extension.list.module');
-    }
   }
 
   /**

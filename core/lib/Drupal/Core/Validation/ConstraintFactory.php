@@ -19,9 +19,6 @@ class ConstraintFactory extends ContainerFactory {
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = []) {
-    $options_not_passed_as_array = !empty($configuration['_options_not_passed_as_array']);
-    unset($configuration['_options_not_passed_as_array']);
-
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
 
@@ -47,12 +44,6 @@ class ConstraintFactory extends ContainerFactory {
 
     // If the plugin is a Symfony Constraint, use the correct constructor.
     if (is_subclass_of($plugin_class, Constraint::class)) {
-      $configuration_is_list = !empty($configuration) && array_is_list($configuration);
-      if ($options_not_passed_as_array || $configuration_is_list) {
-        @trigger_error(sprintf('Passing any non-associative-array options to configure constraint plugin "%s" is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746', $plugin_id), E_USER_DEPRECATED);
-        return new $plugin_class($configuration);
-      }
-
       $reflection_class = new \ReflectionClass($plugin_class);
       $reflection_constructor = $reflection_class->getConstructor();
       // If configuration is empty, an empty first parameter is passed to any

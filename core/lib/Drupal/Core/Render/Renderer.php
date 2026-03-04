@@ -145,14 +145,6 @@ class Renderer implements RendererInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function renderPlain(&$elements) {
-    @trigger_error('Renderer::renderPlain() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Instead, you should use ::renderInIsolation(). See https://www.drupal.org/node/3407994', E_USER_DEPRECATED);
-    return $this->renderInIsolation($elements);
-  }
-
-  /**
    * Renders a placeholder into markup.
    *
    * @param array $placeholder_element
@@ -210,21 +202,10 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function render(/* array */&$elements, $is_root_call = FALSE) {
-
-    if (!is_array($elements)) {
-      trigger_error('Calling ' . __METHOD__ . ' with NULL is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Either pass an array or skip the call. See https://www.drupal.org/node/3534020.');
-      return '';
-    }
-
+  public function render(array &$elements) {
     $context = $this->getCurrentRenderContext();
     if (!isset($context)) {
       throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderInIsolation() call. Use renderInIsolation()/renderRoot() or #lazy_builder/#pre_render instead.");
-    }
-
-    if ($is_root_call) {
-      trigger_error(__METHOD__ . ' with $is_root_call is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::renderRoot() instead.  See https://www.drupal.org/node/3497318.');
-      return $this->doRenderRoot($elements, $context);
     }
 
     return $this->doRender($elements, $context);

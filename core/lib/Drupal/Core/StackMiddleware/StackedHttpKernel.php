@@ -41,7 +41,7 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
    */
   public function __construct(HttpKernelInterface $http_kernel, iterable $middlewares) {
     if (is_array($middlewares)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an array of $middlewares is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. Pass in a lazy iterator instead. See https://www.drupal.org/node/3538740', E_USER_DEPRECATED);
+      throw new \TypeError('The middlewares argument must be a lazy iterator, ' . gettype($middlewares) . ' given.');
     }
     $this->httpKernel = $http_kernel;
     $this->middlewares = $middlewares;

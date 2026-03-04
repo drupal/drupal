@@ -62,38 +62,4 @@ class StatusReport extends RenderElementBase {
     return $element;
   }
 
-  /**
-   * Gets the severities.
-   *
-   * @return array
-   *   An associative array of the requirements severities. The keys are the
-   *   requirement constants defined in install.inc.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3410939
-   */
-  public static function getSeverities() {
-    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
-    return [
-      RequirementSeverity::Info->value => [
-        'title' => t('Checked', [], ['context' => 'Examined']),
-        'status' => 'checked',
-      ],
-      RequirementSeverity::OK->value => [
-        'title' => t('OK'),
-        'status' => 'ok',
-      ],
-      RequirementSeverity::Warning->value => [
-        'title' => t('Warnings found'),
-        'status' => 'warning',
-      ],
-      RequirementSeverity::Error->value => [
-        'title' => t('Errors found'),
-        'status' => 'error',
-      ],
-    ];
-  }
-
 }

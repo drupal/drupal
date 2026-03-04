@@ -79,18 +79,13 @@ class ConstraintManager extends DefaultPluginManager {
    * @return \Symfony\Component\Validator\Constraint
    *   A validation constraint plugin.
    */
-  public function create($name, /* ?array */$options) {
+  public function create($name, ?array $options) {
     if (!is_array($options)) {
       // Plugins need an array as configuration, so make sure we have one.
       // The constraint classes support passing the options as part of the
-      // 'value' key also. Add a boolean flag property noting that the options
-      // were not passed as an array for deprecation purposes in
-      // ConstraintFactory::createInstance().
+      // 'value' key also.
       // @phpstan-ignore isset.variable
-      $options = isset($options) ? ['value' => $options, '_options_not_passed_as_array' => TRUE] : [];
-    }
-    if (!empty($options) && (isset($options['_options_not_passed_as_array']) || array_is_list($options))) {
-      @trigger_error(sprintf('Passing any non-associative-array options to configure constraint plugin "%s" is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746', $name), E_USER_DEPRECATED);
+      $options = isset($options) ? ['value' => $options] : [];
     }
     return $this->createInstance($name, $options);
   }
