@@ -6,7 +6,6 @@ namespace Drupal\file\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -26,7 +25,6 @@ class FileExtensionConstraint extends SymfonyConstraint {
    */
   public string $extensions;
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     ?string $extensions = NULL,

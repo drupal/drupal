@@ -6,7 +6,6 @@ namespace Drupal\Core\Extension\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -25,7 +24,6 @@ class ExtensionAvailableConstraint extends SymfonyConstraint {
    */
   public string $type;
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     ?string $type = NULL,

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\file\Validation\Constraint;
 
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint;
 
 /**
@@ -17,7 +16,6 @@ class UploadedFileConstraint extends Constraint {
    */
   public ?int $maxSize = NULL;
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     ?int $maxSize = NULL,

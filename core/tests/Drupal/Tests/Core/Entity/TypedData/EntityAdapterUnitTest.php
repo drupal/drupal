@@ -18,6 +18,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Validator\Constraint;
 
 /**
  * Tests Drupal\Core\Entity\Plugin\DataType\EntityAdapter.
@@ -175,7 +176,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
       ->getMock();
     $validation_constraint_manager->expects($this->any())
       ->method('create')
-      ->willReturn([]);
+      ->willReturn($this->createStub(Constraint::class));
     $this->typedDataManager->expects($this->any())
       ->method('getValidationConstraintManager')
       ->willReturn($validation_constraint_manager);

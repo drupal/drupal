@@ -7,7 +7,6 @@ namespace Drupal\Core\Menu\Plugin\Validation\Constraint;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\RangeConstraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 
 /**
  * Validates the link depth of a menu tree.
@@ -25,7 +24,6 @@ class MenuLinkDepthConstraint extends RangeConstraint {
    * @param array<string, mixed> $args
    *   Additional arguments to pass to parent constructor.
    */
-  #[HasNamedArguments]
   public function __construct(public readonly string|int $baseLevel = 0, ...$args) {
     parent::__construct(...$args);
   }

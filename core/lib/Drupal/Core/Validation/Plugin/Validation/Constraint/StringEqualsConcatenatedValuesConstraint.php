@@ -6,7 +6,6 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\Validation\Attribute\Constraint;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -39,7 +38,6 @@ class StringEqualsConcatenatedValuesConstraint extends SymfonyConstraint {
    * @param mixed|null $payload
    *   Domain-specific data attached to a constraint.
    */
-  #[HasNamedArguments]
   public function __construct(
     ?array $options = NULL,
     public ?string $separator = NULL,

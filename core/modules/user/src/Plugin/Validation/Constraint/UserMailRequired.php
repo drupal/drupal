@@ -4,7 +4,6 @@ namespace Drupal\user\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -30,7 +29,6 @@ class UserMailRequired extends SymfonyConstraint {
    */
   public $message = '@name field is required.';
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     ?string $message = NULL,

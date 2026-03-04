@@ -590,7 +590,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
-  public function addConstraint($constraint_name, /* ?array */$options = NULL) {
+  public function addConstraint(string $constraint_name, ?array $options = NULL): static {
     $this->constraints[$constraint_name] = $options;
     return $this;
   }

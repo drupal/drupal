@@ -6,7 +6,6 @@ namespace Drupal\file\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -33,7 +32,6 @@ class FileImageDimensionsConstraint extends SymfonyConstraint {
    */
   public string | int $maxDimensions = 0;
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     string|int|null $minDimensions = NULL,

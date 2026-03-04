@@ -6,7 +6,6 @@ namespace Drupal\image_field_property_constraint_validation\Plugin\Validation\Co
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -18,7 +17,6 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 final class AltTextContainsLlamasConstraint extends SymfonyConstraint {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public string $message = 'Alternative text must contain some llamas.',

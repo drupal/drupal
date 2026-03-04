@@ -7,7 +7,6 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -29,7 +28,6 @@ class ValidKeysConstraint extends SymfonyConstraint {
    */
   public array|string $allowedKeys;
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     array|string|null $allowedKeys = NULL,

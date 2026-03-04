@@ -159,7 +159,7 @@ interface ContextDefinitionInterface {
    *
    * @return $this
    */
-  public function addConstraint($constraint_name, ?array $options = NULL);
+  public function addConstraint(string $constraint_name, ?array $options = NULL): static;
 
   /**
    * Gets a validation constraint.

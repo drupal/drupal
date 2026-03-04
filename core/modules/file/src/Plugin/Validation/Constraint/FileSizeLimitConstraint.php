@@ -4,7 +4,6 @@ namespace Drupal\file\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -31,7 +30,6 @@ class FileSizeLimitConstraint extends SymfonyConstraint {
    */
   public int $userLimit = 0;
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     ?int $fileLimit = NULL,

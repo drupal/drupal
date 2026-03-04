@@ -4,7 +4,6 @@ namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -18,7 +17,6 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class ReferenceAccessConstraint extends SymfonyConstraint {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public $message = 'You do not have access to the referenced entity (%type: %id).',

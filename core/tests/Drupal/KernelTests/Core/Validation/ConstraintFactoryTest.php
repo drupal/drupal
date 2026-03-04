@@ -24,7 +24,7 @@ class ConstraintFactoryTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'file'];
+  protected static $modules = ['entity_test'];
 
   /**
    * Tests create instance.

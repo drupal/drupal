@@ -76,18 +76,14 @@ class ConstraintManager extends DefaultPluginManager {
    *   The options to pass to the constraint class. Required and supported
    *   options depend on the constraint class.
    *
-   * @return \Symfony\Component\Validator\Constraint
+   * @return \Symfony\Component\Validator\Constraint|object|\Drupal\Core\Plugin\ContainerFactoryPluginInterface
    *   A validation constraint plugin.
    */
-  public function create($name, ?array $options) {
-    if (!is_array($options)) {
-      // Plugins need an array as configuration, so make sure we have one.
-      // The constraint classes support passing the options as part of the
-      // 'value' key also.
-      // @phpstan-ignore isset.variable
-      $options = isset($options) ? ['value' => $options] : [];
+  public function create(string $name, ?array $options) {
+    if ($options && array_is_list($options)) {
+      throw new \InvalidArgumentException('$options must be an associative array or NULL.');
     }
-    return $this->createInstance($name, $options);
+    return $this->createInstance($name, $options ?? []);
   }
 
   /**

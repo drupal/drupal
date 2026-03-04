@@ -303,7 +303,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function addConstraint($constraint_name, /* ?array */$options = NULL) {
+  public function addConstraint(string $constraint_name, ?array $options = NULL): static {
     $this->definition['constraints'][$constraint_name] = $options;
     return $this;
   }

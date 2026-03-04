@@ -126,7 +126,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
    * {@inheritdoc}
    */
   public function getEntityTypeId() {
-    return $this->definition['constraints']['EntityType']['type'] ?? ($this->definition['constraints']['EntityType'] ?? NULL);
+    return $this->definition['constraints']['EntityType']['type'] ?? NULL;
   }
 
   /**

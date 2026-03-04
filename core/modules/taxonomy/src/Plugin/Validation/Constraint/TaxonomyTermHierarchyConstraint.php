@@ -5,7 +5,6 @@ namespace Drupal\taxonomy\Plugin\Validation\Constraint;
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 
 /**
  * Validation constraint for changing the term hierarchy in pending revisions.
@@ -16,7 +15,6 @@ use Symfony\Component\Validator\Attribute\HasNamedArguments;
 )]
 class TaxonomyTermHierarchyConstraint extends CompositeConstraintBase {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public string $message = 'You can only change the hierarchy for the <em>published</em> version of this term.',

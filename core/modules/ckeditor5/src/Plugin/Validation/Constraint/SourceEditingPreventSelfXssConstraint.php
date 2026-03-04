@@ -6,7 +6,6 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -20,7 +19,6 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class SourceEditingPreventSelfXssConstraint extends SymfonyConstraint {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public $message = 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: %dangerous_tag.',

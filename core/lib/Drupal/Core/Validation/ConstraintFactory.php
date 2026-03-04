@@ -3,7 +3,6 @@
 namespace Drupal\Core\Validation;
 
 use Drupal\Core\Plugin\Factory\ContainerFactory;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 
@@ -19,6 +18,9 @@ class ConstraintFactory extends ContainerFactory {
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = []) {
+    if ($configuration && array_is_list($configuration)) {
+      throw new \InvalidArgumentException('$configuration must be an associative array.');
+    }
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
 
@@ -44,28 +46,7 @@ class ConstraintFactory extends ContainerFactory {
 
     // If the plugin is a Symfony Constraint, use the correct constructor.
     if (is_subclass_of($plugin_class, Constraint::class)) {
-      $reflection_class = new \ReflectionClass($plugin_class);
-      $reflection_constructor = $reflection_class->getConstructor();
-      // If configuration is empty, an empty first parameter is passed to any
-      // plugin class constructor that has a required parameter. Otherwise,
-      // create a new plugin class instance without any constructor parameters.
-      // For an example of a constraint that has a required parameter:
-      // @see Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionNameConstraint
-      if (empty($configuration)) {
-        return ($reflection_constructor?->getNumberOfRequiredParameters() > 0) ? new $plugin_class($configuration) : new $plugin_class();
-      }
-
-      // If the plugin class has the HasNamedArguments attribute on its
-      // constructor, then passing named parameters to the constructor will be
-      // required.
-      $has_named_arguments = (bool) $reflection_constructor->getAttributes(HasNamedArguments::class);
-      if ($has_named_arguments) {
-        // If the configuration array is associative, use the spread operator to
-        // pass the values as named parameters.
-        return array_is_list($configuration) ? new $plugin_class($configuration) : new $plugin_class(...$configuration);
-      }
-
-      return new $plugin_class($configuration);
+      return new $plugin_class(...$configuration);
     }
 
     // Otherwise, create the plugin as normal.

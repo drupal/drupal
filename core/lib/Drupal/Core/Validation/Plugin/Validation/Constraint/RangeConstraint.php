@@ -4,7 +4,6 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraints\Range;
 
 /**
@@ -24,7 +23,6 @@ class RangeConstraint extends Range {
   /**
    * {@inheritdoc}
    */
-  #[HasNamedArguments]
   public function __construct(
     ?array $options = NULL,
     ?string $notInRangeMessage = NULL,

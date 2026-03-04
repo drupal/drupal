@@ -59,7 +59,7 @@ class EntityReferenceUuidItem extends EntityReferenceItem {
       // We can add a constraint for the target entity type. The list of
       // referenceable bundles is a field setting, so the corresponding
       // constraint is added dynamically in ::getConstraints().
-      ->addConstraint('EntityType', $settings['target_type']);
+      ->addConstraint('EntityType', ['type' => $settings['target_type']]);
 
     return $properties;
   }
@@ -150,7 +150,7 @@ class EntityReferenceUuidItem extends EntityReferenceItem {
     }
     elseif ($property_name === 'target_uuid') {
       $property = $this->get('entity');
-      $entity_type = $property->getDataDefinition()->getConstraint('EntityType');
+      $entity_type = $property->getDataDefinition()->getConstraint('EntityType')['type'];
       $entities = \Drupal::entityTypeManager()->getStorage($entity_type)->loadByProperties(['uuid' => $this->get('target_uuid')->getValue()]);
       if ($entity = array_shift($entities)) {
         assert($entity instanceof EntityInterface);

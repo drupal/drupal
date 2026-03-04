@@ -5,7 +5,6 @@ namespace Drupal\comment\Plugin\Validation\Constraint;
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 
 /**
  * Supports validating comment author names.
@@ -17,7 +16,6 @@ use Symfony\Component\Validator\Attribute\HasNamedArguments;
 )]
 class CommentNameConstraint extends CompositeConstraintBase {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public $messageNameTaken = 'The name you used (%name) belongs to a registered user.',

@@ -7,7 +7,6 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
 use Drupal\Core\Validation\CompositeConstraintInterface;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraints\Optional;
 
 /**
@@ -18,11 +17,6 @@ use Symfony\Component\Validator\Constraints\Optional;
   label: new TranslatableMarkup('Mark a field as optional in a Collection constraint', [], ['context' => 'Validation'])
 )]
 class OptionalConstraint extends Optional implements CompositeConstraintInterface {
-
-  #[HasNamedArguments]
-  public function __construct(...$args) {
-    parent::__construct(...$args);
-  }
 
   /**
    * {@inheritdoc}

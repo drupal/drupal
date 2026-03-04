@@ -6,7 +6,6 @@ namespace Drupal\file\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -25,7 +24,6 @@ class FileEncodingConstraint extends SymfonyConstraint {
    */
   public array $encodings;
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     ?array $encodings = NULL,

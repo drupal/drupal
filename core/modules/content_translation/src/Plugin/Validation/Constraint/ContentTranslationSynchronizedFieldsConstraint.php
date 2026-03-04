@@ -4,7 +4,6 @@ namespace Drupal\content_translation\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -19,7 +18,6 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class ContentTranslationSynchronizedFieldsConstraint extends SymfonyConstraint {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public string $defaultRevisionMessage = 'Non-translatable field elements can only be changed when updating the current revision.',

@@ -6,7 +6,6 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -20,7 +19,6 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class CKEditor5MediaAndFilterSettingsInSyncConstraint extends SymfonyConstraint {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public $message = 'The CKEditor 5 "%cke5_media_plugin_label" plugin\'s "%cke5_allow_view_mode_override_label" setting should be in sync with the "%filter_media_plugin_label" filter\'s "%filter_media_allowed_view_modes_label" setting: when checked, two or more view modes must be allowed by the filter.',

@@ -4,7 +4,6 @@ namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -25,7 +24,6 @@ class EntityHasFieldConstraint extends SymfonyConstraint {
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $field_name;
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     ?string $field_name = NULL,

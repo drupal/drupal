@@ -4,7 +4,6 @@ namespace Drupal\Core\Path\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -16,7 +15,6 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class UniquePathAliasConstraint extends SymfonyConstraint {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public $message = 'The alias %alias is already in use in this language.',

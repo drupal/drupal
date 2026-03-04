@@ -58,11 +58,6 @@ class PluginExistsConstraint extends SymfonyConstraint implements ContainerFacto
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    if (isset($configuration['value'])) {
-      $configuration['manager'] ??= $configuration['value'];
-      unset($configuration['value']);
-      @trigger_error('Passing the "value" option in configuration to ' . __METHOD__ . ' is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746', E_USER_DEPRECATED);
-    }
     $configuration['manager'] ??= NULL;
     $plugin_manager_id = $configuration['manager'];
     if ($plugin_manager_id === NULL) {

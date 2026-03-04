@@ -6,7 +6,6 @@ namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -29,7 +28,6 @@ class ConfigExistsConstraint extends SymfonyConstraint {
    */
   public string $prefix = '';
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     ?string $prefix = NULL,

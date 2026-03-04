@@ -6,7 +6,6 @@ namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -19,7 +18,6 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class LangcodeRequiredIfTranslatableValuesConstraint extends SymfonyConstraint {
 
-  #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
     public string $missingMessage = "The @name config object must specify a language code, because it contains translatable values.",
