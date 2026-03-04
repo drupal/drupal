@@ -77,7 +77,6 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
     // Use performance-optimized extension lists.
     $container->getDefinition('extension.list.module')->setClass(InstallerModuleExtensionList::class);
     $container->getDefinition('extension.list.theme')->setClass(InstallerThemeExtensionList::class);
-    $container->getDefinition('extension.list.theme_engine')->setClass(InstallerThemeEngineExtensionList::class);
 
     // Don't register the lazy route provider in the super early installer.
     if (static::class === NormalInstallerServiceProvider::class) {

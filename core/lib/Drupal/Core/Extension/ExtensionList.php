@@ -475,7 +475,7 @@ abstract class ExtensionList {
    * only returned if the file exists.
    *
    * This function plays a key role in allowing Drupal's extensions (modules,
-   * themes, profiles, theme_engines, etc.) to be located in different places
+   * themes, profiles, etc.) to be located in different places
    * depending on a site's configuration. For example, a module 'foo' may
    * legally be located in any of these four places:
    *

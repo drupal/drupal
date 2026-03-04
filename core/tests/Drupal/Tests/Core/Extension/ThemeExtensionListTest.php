@@ -10,7 +10,6 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\ThemeEngineExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Lock\NullLockBackend;
@@ -40,18 +39,12 @@ class ThemeExtensionListTest extends UnitTestCase {
         'test_subtheme'  => new Extension($this->root, 'theme', 'core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml', 'test_subtheme.info.yml'),
         'test_base_theme' => new Extension($this->root, 'theme', 'core/modules/system/tests/themes/test_base_theme/test_base_theme.info.yml', 'test_base_theme.info.yml'),
       ]);
-    $extension_discovery
-      ->scan('theme_engine')
-      ->willReturn([
-        'twig' => new Extension($this->root, 'theme_engine', 'core/themes/engines/twig/twig.info.yml', 'twig.engine'),
-      ]);
 
     // Verify that info parser is called with the specified paths.
     $argument_condition = function ($path) {
       return in_array($path, [
         'core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml',
         'core/modules/system/tests/themes/test_base_theme/test_base_theme.info.yml',
-        'core/themes/engines/twig/twig.info.yml',
       ], TRUE);
     };
     $info_parser = $this->prophesize(InfoParserInterface::class);
@@ -80,14 +73,10 @@ class ThemeExtensionListTest extends UnitTestCase {
         'disabled' => [
           'theme' => [],
         ],
-        'theme_engine' => '',
       ],
     ]);
 
-    $theme_engine_list = new TestThemeEngineExtensionList($this->root, 'theme_engine', new NullBackend('test'), $info_parser->reveal(), $module_handler->reveal(), $state, $config_factory);
-    $theme_engine_list->setExtensionDiscovery($extension_discovery->reveal());
-
-    $theme_list = new TestThemeExtensionList($this->root, 'theme', new NullBackend('test'), $info_parser->reveal(), $module_handler->reveal(), $state, $config_factory, $theme_engine_list, 'testing');
+    $theme_list = new TestThemeExtensionList($this->root, new NullBackend('test'), $info_parser->reveal(), $module_handler->reveal(), $state, $config_factory, 'testing');
     $theme_list->setExtensionDiscovery($extension_discovery->reveal());
 
     $theme_data = $theme_list->reset()->getList();
@@ -101,15 +90,6 @@ class ThemeExtensionListTest extends UnitTestCase {
     $this->assertEquals('test_base_theme', $info_base_theme->getName());
     $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info_subtheme);
     $this->assertEquals('test_subtheme', $info_subtheme->getName());
-
-    // Test the parent/child-theme properties.
-    $info_subtheme->info['base theme'] = 'test_base_theme';
-    $info_base_theme->sub_themes = ['test_subtheme'];
-
-    $this->assertEquals('core/themes/engines/twig/twig.engine', $info_base_theme->owner);
-    $this->assertEquals('twig', $info_base_theme->prefix);
-    $this->assertEquals('core/themes/engines/twig/twig.engine', $info_subtheme->owner);
-    $this->assertEquals('twig', $info_subtheme->prefix);
   }
 
   /**
@@ -129,8 +109,7 @@ class ThemeExtensionListTest extends UnitTestCase {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $state = new State(new KeyValueMemoryFactory(), new NullBackend('bin'), new NullLockBackend());
     $config_factory = $this->getConfigFactoryStub([]);
-    $theme_engine_list = $this->prophesize(ThemeEngineExtensionList::class);
-    $theme_listing = new ThemeExtensionList($this->root, 'theme', new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, $theme_engine_list->reveal(), 'test');
+    $theme_listing = new ThemeExtensionList($this->root, new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, 'test');
 
     $this->expectDeprecation("\Drupal\Core\Extension\ThemeExtensionList::getBaseThemes() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3413187");
     $base_themes = $theme_listing->getBaseThemes($themes, $theme);
@@ -154,8 +133,7 @@ class ThemeExtensionListTest extends UnitTestCase {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $state = new State(new KeyValueMemoryFactory(), new NullBackend('bin'), new NullLockBackend());
     $config_factory = $this->getConfigFactoryStub([]);
-    $theme_engine_list = $this->prophesize(ThemeEngineExtensionList::class);
-    $theme_listing = new ThemeExtensionList($this->root, 'theme', new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, $theme_engine_list->reveal(), 'test');
+    $theme_listing = new ThemeExtensionList($this->root, new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, 'test');
 
     $method_to_test = (new \ReflectionObject($theme_listing))->getMethod('doGetBaseThemes');
     $base_themes = $method_to_test->invoke($theme_listing, $themes, $theme);
@@ -278,15 +256,6 @@ trait SettableDiscoveryExtensionListTrait {
  * Test theme extension list class.
  */
 class TestThemeExtensionList extends ThemeExtensionList {
-
-  use SettableDiscoveryExtensionListTrait;
-
-}
-
-/**
- * Test theme engine extension list class.
- */
-class TestThemeEngineExtensionList extends ThemeEngineExtensionList {
 
   use SettableDiscoveryExtensionListTrait;
 

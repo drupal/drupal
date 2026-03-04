@@ -348,19 +348,6 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     if ($theme) {
-      // Call engine-specific settings.
-      $function = $themes[$theme]->prefix . '_engine_settings';
-      if (function_exists($function)) {
-        @trigger_error('The theme-engine-specific settings function ' . $function . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Implement hook_form_system_theme_settings_alter() in a module instead. See https://www.drupal.org/node/3547356', E_USER_DEPRECATED);
-        $form['engine_specific'] = [
-          '#type' => 'details',
-          '#title' => $this->t('Theme-engine-specific settings'),
-          '#open' => TRUE,
-          '#description' => $this->t('These settings only exist for the themes based on the %engine theme engine.', ['%engine' => $themes[$theme]->prefix]),
-        ];
-        $function($form, $form_state);
-      }
-
       // Create a list which includes the current theme and all its base themes.
       if (isset($themes[$theme]->base_themes)) {
         $theme_keys = array_keys($themes[$theme]->base_themes);

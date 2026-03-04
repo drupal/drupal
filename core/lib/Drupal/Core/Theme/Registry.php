@@ -418,7 +418,7 @@ class Registry implements DestructableInterface {
    * @see \Drupal\Core\Theme\ThemeManagerInterface::render()
    * @see hook_theme()
    * @see \Drupal\Core\Extension\ThemeHandler::listInfo()
-   * @see twig_render_template()
+   * @see \Drupal\Core\Template\TwigThemeEngine::renderTemplate()
    *
    * @throws \BadFunctionCallException
    */
@@ -447,16 +447,12 @@ class Registry implements DestructableInterface {
     elseif ($type === 'theme' || $type === 'base_theme') {
       $result = $this->themeManager->invoke($name, 'theme', $args);
     }
-    else {
-      // @todo Simplify in Drupal 12 in https://www.drupal.org/project/drupal/issues/3555931
-      $function = $name . '_theme';
-      if (in_array($type, ['theme_engine', 'base_theme_engine'], TRUE) && $theme_engine = $this->themeManager->getThemeEngine($name)) {
-        $function = [$theme_engine, 'theme'];
-      }
-      if (is_callable($function)) {
-        $result = $function(... $args);
+    elseif ($type === 'theme_engine' || $type === 'base_theme_engine') {
+      if ($theme_engine = $this->themeManager->getThemeEngine($name)) {
+        $result = $theme_engine->theme(... $args);
       }
     }
+
     if ($result) {
       foreach ($result as $hook => $info) {
         // When a theme or engine overrides a module's theme function
@@ -518,8 +514,8 @@ class Registry implements DestructableInterface {
           }
         }
         // Check for the override flag and prevent the cached variable
-        // preprocessors from being used. This allows themes or theme engines
-        // to remove variable preprocessors set earlier in the registry build.
+        // preprocessors from being used. This allows themes to remove variable
+        // preprocessors set earlier in the registry build.
         if (!empty($info['override preprocess functions'])) {
           // Flag not needed inside the registry.
           unset($result[$hook]['override preprocess functions']);
@@ -542,7 +538,7 @@ class Registry implements DestructableInterface {
         if ($hook == self::PREPROCESS_INVOKES) {
           continue;
         }
-        // Check only if not registered by the theme or engine.
+        // Check only if not registered by the theme.
         if (empty($result[$hook])) {
           if (!isset($info['preprocess functions'])) {
             $cache[$hook]['preprocess functions'] = [];
@@ -646,9 +642,6 @@ class Registry implements DestructableInterface {
     $prefixes = array_keys((array) $this->moduleHandler->getModuleList());
     foreach (array_reverse($theme->getBaseThemeExtensions()) as $base) {
       $prefixes[] = $base->getName();
-    }
-    if ($theme->getEngine()) {
-      $prefixes[] = $theme->getEngine() . '_engine';
     }
     $prefixes[] = $theme->getName();
 

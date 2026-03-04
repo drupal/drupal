@@ -41,14 +41,6 @@ class ActiveTheme {
   protected $engine;
 
   /**
-   * The path to the theme engine for root themes.
-   *
-   * @var string
-   */
-  protected $owner;
-
-
-  /**
    * An array of base theme extension objects keyed by name.
    *
    * @var \Drupal\Core\Extension\Extension[]
@@ -100,7 +92,6 @@ class ActiveTheme {
     $values += [
       'path' => '',
       'engine' => 'twig',
-      'owner' => 'twig',
       'logo' => '',
       'libraries' => [],
       'extension' => 'html.twig',
@@ -114,7 +105,6 @@ class ActiveTheme {
     $this->logo = $values['logo'];
     $this->path = $values['path'];
     $this->engine = $values['engine'];
-    $this->owner = $values['owner'];
     $this->libraries = $values['libraries'];
     $this->extension = $values['extension'];
     $this->baseThemeExtensions = $values['base_theme_extensions'];
@@ -151,19 +141,6 @@ class ActiveTheme {
    */
   public function getEngine() {
     return $this->engine;
-  }
-
-  /**
-   * Returns the path to the theme engine for root themes.
-   *
-   * @return mixed
-   *   The path to the theme engine for root themes.
-   *
-   * @see \Drupal\Core\Extension\ThemeExtensionList::doList()
-   */
-  public function getOwner() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Theme engines are now tagged services instead of extensions. See https://www.drupal.org/node/3547356', E_USER_DEPRECATED);
-    return $this->owner;
   }
 
   /**

@@ -5,6 +5,7 @@ namespace Drupal\Core\Extension;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\State\StateInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a list of available themes.
@@ -63,46 +64,27 @@ class ThemeExtensionList extends ExtensionList {
   protected $configFactory;
 
   /**
-   * The theme engine list needed by this theme list.
-   *
-   * @var \Drupal\Core\Extension\ThemeEngineExtensionList
-   */
-  protected $engineList;
-
-  /**
    * The list of installed themes.
    *
    * @var string[]
    */
   protected $installedThemes;
 
-  /**
-   * Constructs a new ThemeExtensionList instance.
-   *
-   * @param string $root
-   *   The app root.
-   * @param string $type
-   *   The extension type.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache.
-   * @param \Drupal\Core\Extension\InfoParserInterface $info_parser
-   *   The info parser.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   * @param \Drupal\Core\Extension\ThemeEngineExtensionList $engine_list
-   *   The theme engine extension listing.
-   * @param string $install_profile
-   *   The install profile used by the site.
-   */
-  public function __construct($root, $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, ConfigFactoryInterface $config_factory, ThemeEngineExtensionList $engine_list, $install_profile) {
-    parent::__construct($root, $type, $cache, $info_parser, $module_handler, $state, $install_profile);
+  public function __construct(
+    #[Autowire(param: 'app.root')]
+    $root,
+    #[Autowire(service: 'cache.bootstrap')]
+    CacheBackendInterface $cache,
+    InfoParserInterface $info_parser,
+    ModuleHandlerInterface $module_handler,
+    StateInterface $state,
+    ConfigFactoryInterface $config_factory,
+    #[Autowire(param: 'install_profile')]
+    $install_profile,
+  ) {
+    parent::__construct($root, 'theme', $cache, $info_parser, $module_handler, $state, $install_profile);
 
     $this->configFactory = $config_factory;
-    $this->engineList = $engine_list;
   }
 
   /**
@@ -112,7 +94,6 @@ class ThemeExtensionList extends ExtensionList {
     // Find themes.
     $themes = parent::doList();
 
-    $engines = $this->engineList->getList();
     // Always get the freshest list of themes (rather than the already cached
     // list in $this->installedThemes) when building the theme listing because a
     // theme could have just been installed or uninstalled.
@@ -121,12 +102,6 @@ class ThemeExtensionList extends ExtensionList {
     $sub_themes = [];
     // Read info files for each theme.
     foreach ($themes as $name => $theme) {
-      // Defaults to 'twig' (see self::defaults above).
-      $engine = $theme->info['engine'];
-      if (isset($engines[$engine])) {
-        $theme->owner = $engines[$engine]->getExtensionPathname();
-        $theme->prefix = $engines[$engine]->getName();
-      }
       // Add this theme as a sub-theme if it has a base theme.
       if (!empty($theme->info['base theme'])) {
         $sub_themes[] = $name;

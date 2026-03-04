@@ -430,9 +430,8 @@ function drupal_flush_all_caches($kernel = NULL): void {
   // Wipe the Twig PHP Storage cache.
   \Drupal::service('twig')->invalidate();
 
-  // Rebuild profile, profile, theme_engine and theme data.
+  // Rebuild profile and theme data.
   \Drupal::service('extension.list.profile')->reset();
-  \Drupal::service('extension.list.theme_engine')->reset();
   \Drupal::service('theme_handler')->refreshInfo();
   // In case the active theme gets requested later in the same request we need
   // to reset the theme manager.

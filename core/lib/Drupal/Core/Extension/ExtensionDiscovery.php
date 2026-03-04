@@ -158,8 +158,7 @@ class ExtensionDiscovery {
    * compatible with the current version of Drupal core.
    *
    * @param string $type
-   *   The extension type to search for. One of 'profile', 'module', 'theme', or
-   *   'theme_engine'.
+   *   The extension type to search for. One of 'profile', 'module', 'theme'.
    * @param bool $include_tests
    *   (optional) Whether to explicitly include or exclude test extensions. By
    *   default, test extensions are only discovered when in a test environment.
@@ -493,14 +492,7 @@ class ExtensionDiscovery {
       $pathname = $dir_prefix . $fileinfo->getSubPathname();
 
       // Determine whether the extension has a main extension file.
-      // For theme engines, the file extension is .engine.
-      if ($type == 'theme_engine') {
-        $filename = $name . '.engine';
-      }
-      // For profiles/modules/themes, it is the extension type.
-      else {
-        $filename = $name . '.' . $type;
-      }
+      $filename = $name . '.' . $type;
       if (!file_exists($this->root . '/' . dirname($pathname) . '/' . $filename)) {
         $filename = NULL;
       }

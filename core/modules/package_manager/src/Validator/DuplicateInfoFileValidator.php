@@ -100,7 +100,6 @@ final class DuplicateInfoFileValidator implements EventSubscriberInterface {
       array_keys($duplicate_aware_extension_discovery->scan('module', FALSE)),
       array_keys($duplicate_aware_extension_discovery->scan('theme', FALSE)),
       array_keys($duplicate_aware_extension_discovery->scan('profile', FALSE)),
-      array_keys($duplicate_aware_extension_discovery->scan('theme_engine', FALSE)),
     );
 
     $info_files = [];

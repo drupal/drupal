@@ -703,19 +703,15 @@ services:
   Drupal\Core\Extension\ProfileExtensionList: '@extension.list.profile'
   extension.list.theme:
     class: Drupal\Core\Extension\ThemeExtensionList
-    arguments: ['%app.root%', 'theme', '@cache.bootstrap', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
+    autowire: true
   Drupal\Core\Extension\ThemeExtensionList: '@extension.list.theme'
-  extension.list.theme_engine:
-    class: Drupal\Core\Extension\ThemeEngineExtensionList
-    arguments: ['%app.root%', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
-  Drupal\Core\Extension\ThemeEngineExtensionList: '@extension.list.theme_engine'
   extension.list.database_driver:
     class: Drupal\Core\Extension\DatabaseDriverList
     arguments: ['%app.root%', 'database_driver', '@cache.default']
   Drupal\Core\Extension\DatabaseDriverList: '@extension.list.database_driver'
   extension.path.resolver:
     class: Drupal\Core\Extension\ExtensionPathResolver
-    arguments: ['@extension.list.module', '@extension.list.profile', '@extension.list.theme', '@extension.list.theme_engine']
+    arguments: ['@extension.list.module', '@extension.list.profile', '@extension.list.theme']
   Drupal\Core\Extension\ExtensionPathResolver: '@extension.path.resolver'
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
