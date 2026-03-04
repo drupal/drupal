@@ -42,7 +42,7 @@ class PreprocessPagerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $pager->method('getTotalPages')->willReturn(2);
+    $pager->method('getTotalPages')->willReturn(3);
     $pager->method('getCurrentPage')->willReturn(1);
 
     $url_generator->method('generateFromRoute')->willReturn('');
@@ -83,7 +83,7 @@ class PreprocessPagerTest extends UnitTestCase {
     ];
     $this->pagerPreprocess->preprocessPager($variables);
 
-    $this->assertEquals(['first', 'previous'], array_keys($variables['items']));
+    $this->assertEquals(['first', 'previous', 'next', 'last'], array_keys($variables['items']));
   }
 
   /**
@@ -103,7 +103,7 @@ class PreprocessPagerTest extends UnitTestCase {
     ];
     $this->pagerPreprocess->preprocessPager($variables);
 
-    $this->assertEquals(['first', 'previous', 'pages'], array_keys($variables['items']));
+    $this->assertEquals(['first', 'previous', 'pages', 'next', 'last'], array_keys($variables['items']));
     /** @var \Drupal\Core\Template\AttributeString $attribute */
     $attribute = $variables['items']['pages']['2']['attributes']->offsetGet('aria-current');
     $this->assertInstanceOf(AttributeString::class, $attribute);
@@ -208,7 +208,7 @@ class PreprocessPagerTest extends UnitTestCase {
     ];
     $this->pagerPreprocess->preprocessPager($variables);
 
-    foreach (['first', 'previous'] as $key) {
+    foreach (['first', 'previous', 'next', 'last'] as $key) {
       $attributes = $variables['items'][$key]['attributes']->toArray();
       $this->assertEquals(['use-ajax'], $attributes['class']);
     }
