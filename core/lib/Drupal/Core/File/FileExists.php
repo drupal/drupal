@@ -16,26 +16,4 @@ enum FileExists {
   /* Do nothing and return FALSE. */
   case Error;
 
-  /**
-   * Provide backwards compatibility with legacy integer values.
-   *
-   * @param int $legacyInt
-   *   The legacy constant value from \Drupal\Core\File\FileSystemInterface.
-   * @param string $methodName
-   *   The method name for the deprecation message.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\Core\File\FileExists enum directly instead.
-   *
-   * @see https://www.drupal.org/node/3426517
-   */
-  public static function fromLegacyInt(int $legacyInt, string $methodName): self {
-    @trigger_error("Passing the \$fileExists argument as an integer to $methodName() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\FileExists enum instead. See https://www.drupal.org/node/3426517", E_USER_DEPRECATED);
-    return match ($legacyInt) {
-      0 => FileExists::Rename,
-      2 => FileExists::Error,
-      default => FileExists::Replace,
-    };
-  }
-
 }

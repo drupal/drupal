@@ -15,9 +15,6 @@ services:
   Drupal\file\FileUsage\FileUsageInterface: '@file.usage'
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
-  Drupal\file\Upload\FileUploadHandler:
-    alias: 'file.upload_handler'
-    deprecated: 'The "%alias_id%" service alias is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use Drupal\file\Upload\FileUploadHandlerInterface instead.'
   Drupal\file\Upload\FileUploadHandlerInterface: '@file.upload_handler'
   file.repository:
     class: Drupal\file\FileRepository

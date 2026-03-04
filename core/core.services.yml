@@ -1873,8 +1873,6 @@ services:
     public: false
   Drupal\Core\File\MimeType\MimeTypeMapInterface:
     factory: ['@Drupal\Core\File\MimeType\MimeTypeMapFactory', create]
-  Drupal\Core\File\EventSubscriber\LegacyMimeTypeMapLoadedSubscriber:
-    autowire: true
   # Currently needs to be public as it is called by
   # \Drupal\Core\Render\Element\StatusMessages.
   # @todo Consider making this service private again after

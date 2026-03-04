@@ -4,7 +4,6 @@ namespace Drupal\Core\File;
 
 use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\File\Exception\DirectoryNotReadyException;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileExistsException;
@@ -21,15 +20,6 @@ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
  * Provides helpers to operate on files and stream wrappers.
  */
 class FileSystem implements FileSystemInterface {
-
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected array $deprecatedProperties = [
-    'logger' => 'logger.channel.file',
-  ];
 
   /**
    * Default mode for new directories. See self::chmod().
@@ -292,11 +282,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function copy($source, $destination, /* FileExists */$fileExists = FileExists::Rename) {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  public function copy($source, $destination, FileExists $fileExists = FileExists::Rename) {
     $this->prepareDestination($source, $destination, $fileExists);
 
     if (!@copy($source, $destination)) {
@@ -386,11 +372,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function move($source, $destination, /* FileExists */$fileExists = FileExists::Rename) {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  public function move($source, $destination, FileExists $fileExists = FileExists::Rename) {
     $this->prepareDestination($source, $destination, $fileExists);
 
     // Ensure compatibility with Windows.
@@ -438,20 +420,13 @@ class FileSystem implements FileSystemInterface {
    *   A URI containing the destination that $source should be moved/copied to.
    *   The URI may be a bare filepath (without a scheme) and in that case the
    *   default scheme (file://) will be used.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   Replace behavior when the destination file already exists.
-   *
-   * @throws \TypeError
-   *   Thrown when the $fileExists parameter is not an enum or legacy int.
    *
    * @see \Drupal\Core\File\FileSystemInterface::copy()
    * @see \Drupal\Core\File\FileSystemInterface::move()
    */
-  protected function prepareDestination($source, &$destination, /* FileExists */$fileExists) {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  protected function prepareDestination($source, &$destination, FileExists $fileExists) {
     $original_source = $source;
 
     if (!file_exists($source)) {
@@ -493,11 +468,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function saveData($data, $destination, /* FileExists */$fileExists = FileExists::Rename) {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  public function saveData($data, $destination, FileExists $fileExists = FileExists::Rename) {
     // Write the data to a temporary file.
     $temp_name = $this->tempnam('temporary://', 'file');
     if (file_put_contents($temp_name, $data) === FALSE) {
@@ -547,11 +518,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDestinationFilename($destination, /* FileExists */$fileExists) {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  public function getDestinationFilename($destination, FileExists $fileExists) {
     $basename = basename($destination);
     if (!Unicode::validateUtf8($basename)) {
       throw new FileException(sprintf("Invalid filename '%s'", $basename));

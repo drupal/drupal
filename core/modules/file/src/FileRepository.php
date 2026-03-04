@@ -30,11 +30,7 @@ class FileRepository implements FileRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function writeData(string $data, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  public function writeData(string $data, string $destination, FileExists $fileExists = FileExists::Rename): FileInterface {
     if (!$this->streamWrapperManager->isValidUri($destination)) {
       throw new InvalidStreamWrapperException("Invalid stream wrapper: {$destination}");
     }
@@ -78,11 +74,7 @@ class FileRepository implements FileRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function copy(FileInterface $source, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  public function copy(FileInterface $source, string $destination, FileExists $fileExists = FileExists::Rename): FileInterface {
     if (!$this->streamWrapperManager->isValidUri($destination)) {
       throw new InvalidStreamWrapperException("Invalid stream wrapper: {$destination}");
     }
@@ -116,11 +108,7 @@ class FileRepository implements FileRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function move(FileInterface $source, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  public function move(FileInterface $source, string $destination, FileExists $fileExists = FileExists::Rename): FileInterface {
     if (!$this->streamWrapperManager->isValidUri($destination)) {
       throw new InvalidStreamWrapperException("Invalid stream wrapper: {$destination}");
     }

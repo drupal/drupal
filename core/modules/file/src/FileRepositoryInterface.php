@@ -20,7 +20,7 @@ interface FileRepositoryInterface {
    * @param string $destination
    *   A string containing the destination URI. This must be a stream
    *   wrapper URI.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   (optional) The replace behavior when the destination file already exists.
    *
    * @return \Drupal\file\FileInterface
@@ -38,7 +38,7 @@ interface FileRepositoryInterface {
    *
    * @see \Drupal\Core\File\FileSystemInterface::saveData()
    */
-  public function writeData(string $data, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface;
+  public function writeData(string $data, string $destination, FileExists $fileExists = FileExists::Rename): FileInterface;
 
   /**
    * Copies a file to a new location and adds a file record to the database.
@@ -62,7 +62,7 @@ interface FileRepositoryInterface {
    * @param string $destination
    *   A string containing the destination that $source should be
    *   copied to. This must be a stream wrapper URI.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   (optional) Replace behavior when the destination file already exists.
    *
    * @return \Drupal\file\FileInterface
@@ -81,7 +81,7 @@ interface FileRepositoryInterface {
    * @see \Drupal\Core\File\FileSystemInterface::copy()
    * @see hook_file_copy()
    */
-  public function copy(FileInterface $source, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface;
+  public function copy(FileInterface $source, string $destination, FileExists $fileExists = FileExists::Rename): FileInterface;
 
   /**
    * Moves a file to a new location and update the file's database entry.
@@ -97,7 +97,7 @@ interface FileRepositoryInterface {
    * @param string $destination
    *   A string containing the destination that $source should be moved
    *   to. This must be a stream wrapper URI.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   (optional) The replace behavior when the destination file already exists.
    *
    * @return \Drupal\file\FileInterface
@@ -116,7 +116,7 @@ interface FileRepositoryInterface {
    * @see \Drupal\Core\File\FileSystemInterface::move()
    * @see hook_file_move()
    */
-  public function move(FileInterface $source, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface;
+  public function move(FileInterface $source, string $destination, FileExists $fileExists = FileExists::Rename): FileInterface;
 
   /**
    * Loads the first File entity found with the specified URI.

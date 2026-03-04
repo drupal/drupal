@@ -20,7 +20,7 @@ interface FileUploadHandlerInterface {
    *   The validators to run against the uploaded file.
    * @param string $destination
    *   The destination directory.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   The behavior when the destination file already exists.
    *
    * @return \Drupal\file\Upload\FileUploadResult
@@ -36,9 +36,7 @@ interface FileUploadHandlerInterface {
    *    Thrown when file validation fails and $throws is TRUE.
    * @throws \Drupal\Core\Lock\LockAcquiringException
    *   Thrown when a lock cannot be acquired.
-   * @throws \ValueError
-   *   Thrown if $fileExists is a legacy int and not a valid value.
    */
-  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', $fileExists = FileExists::Replace): FileUploadResult;
+  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', FileExists $fileExists = FileExists::Replace): FileUploadResult;
 
 }

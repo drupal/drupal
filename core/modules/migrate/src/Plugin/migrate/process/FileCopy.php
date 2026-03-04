@@ -165,18 +165,14 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    *   The source path or URI.
    * @param string $destination
    *   The destination path or URI.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   (optional) FileExists::Replace (default) or
    *   FileExists::Rename.
    *
    * @return string|false
    *   File destination on success, FALSE on failure.
    */
-  protected function writeFile($source, $destination, FileExists|int $fileExists = FileExists::Replace) {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  protected function writeFile($source, $destination, FileExists $fileExists = FileExists::Replace) {
     // Check if there is a destination available for copying. If there isn't,
     // it already exists at the destination and the replace flag tells us to not
     // replace it. In that case, return the original destination.

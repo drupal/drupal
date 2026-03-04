@@ -69,11 +69,7 @@ class FileUploadHandler implements FileUploadHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', /*FileExists*/$fileExists = FileExists::Replace): FileUploadResult {
-    if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore staticMethod.deprecated
-      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-    }
+  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', FileExists $fileExists = FileExists::Replace): FileUploadResult {
     $result = new FileUploadResult();
 
     $violations = $uploadedFile->validate($this->validatorFactory->createValidator());

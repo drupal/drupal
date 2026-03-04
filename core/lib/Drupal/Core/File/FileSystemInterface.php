@@ -8,36 +8,6 @@ namespace Drupal\Core\File;
 interface FileSystemInterface {
 
   /**
-   * Flag for dealing with existing files: Appends number until name is unique.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   * \Drupal\Core\File\FileExists::Rename instead.
-   *
-   * @see https://www.drupal.org/node/3426517
-   */
-  const EXISTS_RENAME = 0;
-
-  /**
-   * Flag for dealing with existing files: Replace the existing file.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   * \Drupal\Core\File\FileExists::Replace instead.
-   *
-   * @see https://www.drupal.org/node/3426517
-   */
-  const EXISTS_REPLACE = 1;
-
-  /**
-   * Flag for dealing with existing files: Do nothing and return FALSE.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   *  \Drupal\Core\File\FileExists::Error instead.
-   *
-   * @see https://www.drupal.org/node/3426517
-   */
-  const EXISTS_ERROR = 2;
-
-  /**
    * Flag used by ::prepareDirectory() -- create directory if not present.
    */
   const CREATE_DIRECTORY = 1;
@@ -298,7 +268,7 @@ interface FileSystemInterface {
    * @param string $destination
    *   A URI containing the destination that $source should be copied to. The
    *   URI may be a bare filepath (without a scheme).
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   The behavior when the destination file already exists.
    *
    * @return string
@@ -306,10 +276,8 @@ interface FileSystemInterface {
    *
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
-   * @throws \ValueError
-   *   Thrown if $fileExists is a legacy int and not a valid value.
    */
-  public function copy($source, $destination, /* FileExists */$fileExists = FileExists::Rename);
+  public function copy($source, $destination, FileExists $fileExists = FileExists::Rename);
 
   /**
    * Deletes a file without database changes or hook invocations.
@@ -368,7 +336,7 @@ interface FileSystemInterface {
    *   A URI containing the destination that $source should be moved to. The
    *   URI may be a bare filepath (without a scheme) and in that case the
    *   default scheme (public://) will be used.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   Replace behavior when the destination file already exists.
    *
    * @return string
@@ -376,13 +344,11 @@ interface FileSystemInterface {
    *
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
-   * @throws \ValueError
-   *   Thrown if $fileExists is a legacy int and not a valid value.
    *
    * @see \Drupal\Core\File\FileSystemInterface::createFilename()
    * @see https://bugs.php.net/bug.php?id=60456
    */
-  public function move($source, $destination, /* FileExists */$fileExists = FileExists::Rename);
+  public function move($source, $destination, FileExists $fileExists = FileExists::Rename);
 
   /**
    * Saves a file to the specified destination without invoking file API.
@@ -396,7 +362,7 @@ interface FileSystemInterface {
    * @param string $destination
    *   A string containing the destination location. This must be a stream
    *   wrapper URI.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   Replace behavior when the destination file already exists.
    *
    * @return string
@@ -404,12 +370,10 @@ interface FileSystemInterface {
    *
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
-   * @throws \ValueError
-   *   Thrown if $fileExists is a legacy int and not a valid value.
    *
    * @see \Drupal\file\FileRepositoryInterface::writeData()
    */
-  public function saveData($data, $destination, /* FileExists */$fileExists = FileExists::Rename);
+  public function saveData($data, $destination, FileExists $fileExists = FileExists::Rename);
 
   /**
    * Checks that the directory exists and is writable.
@@ -456,7 +420,7 @@ interface FileSystemInterface {
    *
    * @param string $destination
    *   The desired final URI or filepath.
-   * @param \Drupal\Core\File\FileExists|int $fileExists
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   Replace behavior when the destination file already exists.
    *
    * @return string|false
@@ -465,10 +429,8 @@ interface FileSystemInterface {
    *
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
-   * @throws \ValueError
-   *   Thrown if $fileExists is a legacy int and not a valid value.
    */
-  public function getDestinationFilename($destination, /* FileExists */$fileExists);
+  public function getDestinationFilename($destination, FileExists $fileExists);
 
   /**
    * Gets the path of the configured temporary directory.

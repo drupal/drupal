@@ -15,30 +15,9 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\file\Element\ManagedFile;
 use Drupal\file\FileInterface;
-use Drupal\file\Hook\FileFormHooks;
-use Drupal\file\Hook\FileThemeHooks;
 use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\file\Upload\FormUploadedFile;
-
-/**
- * Examines a file entity and returns appropriate content headers for download.
- *
- * @param \Drupal\file\FileInterface $file
- *   A file entity.
- *
- * @return array
- *   An associative array of headers, as expected by
- *   \Symfony\Component\HttpFoundation\StreamedResponse.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use Drupal\file\Entity\FileInterface::getDownloadHeaders() instead.
- * @see https://www.drupal.org/node/3494172
- */
-function file_get_content_headers(FileInterface $file) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.  Use Drupal\file\Entity\FileInterface::getDownloadHeaders() instead. See https://www.drupal.org/node/3494172', E_USER_DEPRECATED);
-  return $file->getDownloadHeaders();
-}
 
 /**
  * Saves form file uploads.
@@ -54,16 +33,13 @@ function file_get_content_headers(FileInterface $file) {
  * @param null|int $delta
  *   (optional) The delta of the file to return the file entity.
  *   Defaults to NULL.
- * @param \Drupal\Core\File\FileExists|int $fileExists
+ * @param \Drupal\Core\File\FileExists $fileExists
  *   (optional) The replace behavior when the destination file already exists.
  *
  * @return array|\Drupal\file\FileInterface|null|false
  *   An array of file entities or a single file entity if $delta != NULL. Each
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
- *
- * @throws \ValueError
- *    Thrown if $fileExists is a legacy int and not a valid value.
  *
  * @internal
  *   This function is internal, and may be removed in a minor version release.
@@ -74,11 +50,7 @@ function file_get_content_headers(FileInterface $file) {
  * @see https://www.drupal.org/project/drupal/issues/3069020
  * @see https://www.drupal.org/project/drupal/issues/2482783
  */
-function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
-  if (!$fileExists instanceof FileExists) {
-    // @phpstan-ignore staticMethod.deprecated
-    $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-  }
+function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists $fileExists = FileExists::Rename) {
   // Get all errors set before calling this method. This will also clear them
   // from the messenger service.
   $errors_before = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
@@ -155,7 +127,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  * @param null|int $delta
  *   (optional) The delta of the file to return the file entity.
  *   Defaults to NULL.
- * @param \Drupal\Core\File\FileExists|int $fileExists
+ * @param \Drupal\Core\File\FileExists $fileExists
  *   (optional) The replace behavior when the destination file already exists.
  *
  * @return array|\Drupal\file\FileInterface|null|false
@@ -163,16 +135,9 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
  *
- * @throws \ValueError
- *   Thrown if $fileExists is a legacy int and not a valid value.
- *
  * @see _file_save_upload_from_form()
  */
-function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
-  if (!$fileExists instanceof FileExists) {
-    // @phpstan-ignore staticMethod.deprecated
-    $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
-  }
+function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists $fileExists = FileExists::Rename) {
   static $upload_cache;
 
   $all_files = \Drupal::request()->files->get('files', []);
@@ -270,21 +235,6 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
 }
 
 /**
- * Form submission handler for upload / remove buttons of managed_file elements.
- *
- * @see \Drupal\file\Element\ManagedFile::processManagedFile()
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
- *   Drupal\file\Element\ManagedFile::submit() instead.
- *
- * @see https://www.drupal.org/node/3534091
- */
-function file_managed_file_submit($form, FormStateInterface $form_state): void {
-  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use Drupal\file\Element\ManagedFile::submit() instead. See https://www.drupal.org/node/3534091', E_USER_DEPRECATED);
-  ManagedFile::submit($form, $form_state);
-}
-
-/**
  * Saves any files that have been uploaded into a managed_file element.
  *
  * @param array $element
@@ -331,89 +281,6 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
   }
 
   return [];
-}
-
-/**
- * Prepares variables for file form widget templates.
- *
- * Default template: file-managed-file.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: A render element representing the file.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
- * template_preprocess functions are registered directly in hook_theme().
- *
- * @see https://www.drupal.org/node/3504125
- */
-function template_preprocess_file_managed_file(&$variables): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
-  \Drupal::service(FileThemeHooks::class)->preprocessManagedFile($variables);
-}
-
-/**
- * Prepares variables for file link templates.
- *
- * Default template: file-link.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - file: A File entity to which the link will be created.
- *   - icon_directory: (optional) A path to a directory of icons to be used for
- *     files. Defaults to the value of the "icon.directory" variable.
- *   - description: A description to be displayed instead of the filename.
- *   - attributes: An associative array of attributes to be placed in the a tag.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
- *    template_preprocess functions are registered directly in hook_theme().
- *
- * @see https://www.drupal.org/node/3504125
- */
-function template_preprocess_file_link(&$variables): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
-  \Drupal::service(FileThemeHooks::class)->preprocessFileLink($variables);
-}
-
-/**
- * Prepares variables for multi file form widget templates.
- *
- * Default template: file-widget-multiple.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: A render element representing the widgets.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
- * template_preprocess functions are registered directly in hook_theme().
- *
- * @see https://www.drupal.org/node/3504125
- */
-function template_preprocess_file_widget_multiple(&$variables): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
-  \Drupal::service(FileThemeHooks::class)->preprocessFileWidgetMultiple($variables);
-}
-
-/**
- * Prepares variables for file upload help text templates.
- *
- * Default template: file-upload-help.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - description: The normal description for this field, specified by the
- *     user.
- *   - upload_validators: An array of upload validators as used in
- *     $element['#upload_validators'].
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial
- *   template_preprocess functions are registered directly in hook_theme().
- *
- * @see https://www.drupal.org/node/3504125
- */
-function template_preprocess_file_upload_help(&$variables): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Initial template_preprocess functions are registered directly in hook_theme(). See https://www.drupal.org/node/3504125', E_USER_DEPRECATED);
-  \Drupal::service(FileThemeHooks::class)->preprocessFileUploadHelp($variables);
 }
 
 /**
@@ -531,17 +398,4 @@ function file_field_find_file_reference_column(FieldDefinitionInterface $field) 
     }
   }
   return FALSE;
-}
-
-/**
- * Form submission handler for file system settings form.
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use
- *  \Drupal\file\Hook\FileHooks::settingsSubmit() instead.
- *
- * @see https://www.drupal.org/node/3534099
- */
-function file_system_settings_submit(array &$form, FormStateInterface $form_state): void {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal\file\Hook\FileHooks::settingsSubmit() instead. See https://www.drupal.org/node/3534099', E_USER_DEPRECATED);
-  \Drupal::service(FileFormHooks::class)->settingsSubmit($form, $form_state);
 }

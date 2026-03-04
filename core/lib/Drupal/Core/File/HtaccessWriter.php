@@ -21,18 +21,14 @@ class HtaccessWriter implements HtaccessWriterInterface {
    *   The logger.
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
    *   The stream wrapper manager.
-   * @param \Drupal\Core\Site\Settings|null $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *   The settings.
    */
   public function __construct(
     protected LoggerInterface $logger,
     protected StreamWrapperManagerInterface $streamWrapperManager,
-    protected ?Settings $settings = NULL,
+    protected Settings $settings,
   ) {
-    if (!$settings) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $settings argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3249817', E_USER_DEPRECATED);
-      $this->settings = \Drupal::service('settings');
-    }
   }
 
   /**

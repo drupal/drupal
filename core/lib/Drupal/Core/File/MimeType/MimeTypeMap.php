@@ -984,35 +984,4 @@ class MimeTypeMap implements MimeTypeMapInterface {
     return $extensions;
   }
 
-  /**
-   * Gets the underlying mapping array.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
-   *   replacement for this method.
-   *
-   * @see https://www.drupal.org/node/3494040
-   * @see \Drupal\Core\File\EventSubscriber\LegacyMimeTypeMapLoadedSubscriber
-   */
-  public function getMapping(): array {
-    // We do not trigger a deprecation error as this method is needed for
-    // calling the deprecated hook_file_mimetype_mapping_alter() in
-    // LegacyMimeTypeMapLoadedSubscriber::onMimeTypeMapLoaded().
-    return $this->mapping;
-  }
-
-  /**
-   * Sets the underlying mapping array.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
-   *   replacement for this method.
-   *
-   * @see https://www.drupal.org/node/3494040
-   */
-  public function setMapping(array $mapping): void {
-    // We do not trigger a deprecation error as this method is needed for
-    // calling the deprecated hook_file_mimetype_mapping_alter() in
-    // LegacyMimeTypeMapLoadedSubscriber::onMimeTypeMapLoaded().
-    $this->mapping = $mapping;
-  }
-
 }
