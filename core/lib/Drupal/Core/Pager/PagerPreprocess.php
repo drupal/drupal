@@ -160,7 +160,7 @@ class PagerPreprocess {
       }
 
       $items['last'] = [];
-      $items['last']['attributes'] = new Attribute();
+      $items['last']['attributes'] = new Attribute($link_attributes);
       $options = [
         'query' => $this->pagerManager->getUpdatedParameters($parameters, $element, $pager_max - 1),
       ];
