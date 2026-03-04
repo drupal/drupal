@@ -239,9 +239,15 @@ class EntityController implements ContainerInjectionInterface {
    *   The title for the entity edit page, if an entity was found.
    */
   public function editTitle(RouteMatchInterface $route_match, ?EntityInterface $_entity = NULL) {
-    if ($entity = $this->doGetEntity($route_match, $_entity)) {
-      return $this->t('Edit %label', ['%label' => $entity->label()]);
+    $entity = $this->doGetEntity($route_match, $_entity);
+    if ($entity === NULL) {
+      return NULL;
     }
+    $label = $entity->label();
+    if ($label === NULL) {
+      return $this->t('Edit');
+    }
+    return $this->t('Edit %label', ['%label' => $label]);
   }
 
   /**
@@ -258,7 +264,14 @@ class EntityController implements ContainerInjectionInterface {
    */
   public function deleteTitle(RouteMatchInterface $route_match, ?EntityInterface $_entity = NULL) {
     $entity = $this->doGetEntity($route_match, $_entity);
-    return $entity ? $this->t('Delete %label', ['%label' => $entity->label()]) : '';
+    if ($entity === NULL) {
+      return '';
+    }
+    $label = $entity->label();
+    if ($label === NULL) {
+      return $this->t('Delete');
+    }
+    return $this->t('Delete %label', ['%label' => $label]);
   }
 
   /**
