@@ -9,11 +9,11 @@ dependencies:
     - comment
     - contextual
     - file
-    - navigation
     - node
     - path
     - system
     - taxonomy
+    - toolbar
 id: content_editor
 label: 'Content editor'
 weight: 2
@@ -23,7 +23,7 @@ permissions:
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
-  - 'access navigation'
+  - 'access toolbar'
   - 'administer url aliases'
   - 'create article content'
   - 'create page content'

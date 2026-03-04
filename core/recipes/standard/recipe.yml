@@ -28,7 +28,7 @@ install:
   - datetime
   - menu_ui
   - options
-  - navigation
+  - toolbar
   - field_ui
   - views_ui
 config:
@@ -45,11 +45,6 @@ config:
     image:
       - image.style.large
       - image.style.thumbnail
-    navigation:
-      - navigation.block_layout
-      - navigation.settings
-      - system.menu.content
-      - system.menu.navigation-user-links
     node:
       - views.view.archive
       - views.view.content
@@ -84,7 +79,7 @@ config:
         - 'access content overview'
         - 'access contextual links'
         - 'access files overview'
-        - 'access navigation'
+        - 'access toolbar'
         - 'administer url aliases'
         - 'create terms in tags'
         - 'create url aliases'
