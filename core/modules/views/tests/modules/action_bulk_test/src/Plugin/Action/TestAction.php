@@ -32,7 +32,7 @@ class TestAction extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute(): void {
+  public function execute(?object $object = NULL): void {
   }
 
 }

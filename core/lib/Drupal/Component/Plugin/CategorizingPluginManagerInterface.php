@@ -26,8 +26,6 @@ interface CategorizingPluginManagerInterface extends PluginManagerInterface {
    *
    * @return array[]
    *   An array of plugin definitions, sorted by category and label.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/3354672
    */
   public function getSortedDefinitions(?array $definitions = NULL, string $label_key = 'label');
 
@@ -46,8 +44,6 @@ interface CategorizingPluginManagerInterface extends PluginManagerInterface {
    * @return array[]
    *   Keys are category names, and values are arrays of which the keys are
    *   plugin IDs and the values are plugin definitions.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/3354672
    */
   public function getGroupedDefinitions(?array $definitions = NULL, string $label_key = 'label');
 
