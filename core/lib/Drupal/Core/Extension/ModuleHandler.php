@@ -459,11 +459,12 @@ class ModuleHandler implements ModuleHandlerInterface {
       }
     }
     // First we get the the modules in moduleList order, this order is module
-    // weight then alphabetical. Then we apply legacy ordering using
-    // hook_module_implements_alter(). Finally we order using order attributes.
+    // weight then alphabetical. Finally we order using order attributes.
     $modules = array_keys($identifiers_by_module);
-    $modules = $this->reOrderModulesForAlter($modules, $hooks[0]);
-    // Create a flat list of identifiers, using the new module order.
+    // Order by module order first, this preserves expected order for alter
+    // hooks implemented on behalf of other modules.
+    $modules = array_intersect(array_keys($this->moduleList), $modules);
+    // Create a flat list of identifiers.
     $identifiers = array_merge(...array_map(
       fn (string $module) => $identifiers_by_module[$module],
       $modules,
@@ -552,32 +553,6 @@ class ModuleHandler implements ModuleHandlerInterface {
       OrderOperation::unpack(...),
       $this->packedOrderOperations[$hook] ?? [],
     );
-  }
-
-  /**
-   * Reorder modules for alters.
-   *
-   * @param list<string> $modules
-   *   A list of module names.
-   * @param string $hook
-   *   The hook being worked on, for example form_alter.
-   *
-   * @return list<string>
-   *   The list, potentially reordered and changed by
-   *   hook_module_implements_alter().
-   */
-  protected function reOrderModulesForAlter(array $modules, string $hook): array {
-    // Order by module order first.
-    $modules = array_intersect(array_keys($this->moduleList), $modules);
-    // Alter expects the module list to be in the keys.
-    $implementations = array_fill_keys($modules, FALSE);
-    // Let modules adjust the order solely based on the primary hook. This
-    // ensures the same module order regardless of whether this block
-    // runs. Calling $this->alter() recursively in this way does not
-    // result in an infinite loop, because this call is for a single
-    // $type, so we won't end up in this method again.
-    $this->alter('module_implements', $implementations, $hook);
-    return array_keys($implementations);
   }
 
   /**

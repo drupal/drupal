@@ -81,9 +81,6 @@ class HookCollectorPassTest extends KernelTestBase {
         'module_handler_test_all1_hook' => 'module_handler_test_all1',
         'module_handler_test_all2_hook' => 'module_handler_test_all2',
       ],
-      'module_implements_alter' => [
-        'module_handler_test_all1_module_implements_alter' => 'module_handler_test_all1',
-      ],
       'order1' => [
         'module_handler_test_all2_order1' => 'module_handler_test_all2',
         ModuleHandlerTestAll1Hooks::class . '::order' => 'module_handler_test_all1',
@@ -93,25 +90,6 @@ class HookCollectorPassTest extends KernelTestBase {
         'module_handler_test_all2_order2' => 'module_handler_test_all2',
       ],
     ], $container);
-  }
-
-  /**
-   * Test LegacyModuleImplementsAlter.
-   */
-  public function testLegacyModuleImplementsAlter(): void {
-    $container = new ContainerBuilder();
-    $module_filenames = [
-      'module_implements_alter_test_legacy' => ['pathname' => "core/tests/Drupal/Tests/Core/Extension/modules/module_implements_alter_test_legacy/module_implements_alter_test_legacy.info.yml"],
-    ];
-    include_once 'core/tests/Drupal/Tests/Core/Extension/modules/module_implements_alter_test_legacy/module_implements_alter_test_legacy.module';
-    $container->setParameter('container.modules', $module_filenames);
-    $keyvalue = new KeyValueMemoryFactory();
-    $container->set('keyvalue', $keyvalue);
-    $container->set('cache.bootstrap', new NullBackend('bootstrap'));
-    (new HookCollectorPass())->process($container);
-
-    // This test will also fail if the deprecation notice shows up.
-    $this->assertFalse(isset($GLOBALS['ShouldNotRunLegacyModuleImplementsAlter']));
   }
 
   /**

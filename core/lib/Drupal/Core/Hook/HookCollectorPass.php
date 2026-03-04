@@ -11,7 +11,6 @@ use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\HookAttributeInterface;
 use Drupal\Core\Hook\Attribute\LegacyHook;
-use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
 use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
 use Drupal\Core\Hook\Attribute\RemoveHook;
@@ -76,15 +75,6 @@ class HookCollectorPass implements CompilerPassInterface {
    * @var array<string, list<string>>
    */
   protected array $removeHookIdentifiers = [];
-
-  /**
-   * A list of functions implementing hook_module_implements_alter().
-   *
-   * (This is required only for BC.)
-   *
-   * @var list<callable-string>
-   */
-  protected array $moduleImplementsAlters = [];
 
   /**
    * Preprocess suggestions discovered in modules.
@@ -199,10 +189,6 @@ class HookCollectorPass implements CompilerPassInterface {
 
     $implementationsByHook = [];
     foreach ($moduleImplementsMap as $hook => $moduleImplements) {
-      // Process all hook_module_implements_alter() for build time ordering.
-      foreach ($this->moduleImplementsAlters as $alter) {
-        $alter($moduleImplements, $hook);
-      }
       foreach ($moduleImplements as $module => $v) {
         if (is_string($hook) && str_starts_with($hook, 'preprocess_') && str_contains($hook, '__')) {
           $this->preprocessForSuggestions[$module . '_' . $hook] = 'module';
@@ -233,13 +219,13 @@ class HookCollectorPass implements CompilerPassInterface {
       ksort($order_operations_by_weight);
       $order_operations = array_merge(...$order_operations_by_weight);
       foreach ($order_operations as $key => $operation) {
-        if (!isset($implementationsByHook[$hook][$operation->identify()])) {
+        if (!isset($implementationsByHook[$hook][$operation->identify()]) || !in_array($implementationsByHook[$hook][$operation->identify()], $this->modules)) {
           unset($order_operations[$key]);
         }
       }
       $operations_by_hook[$hook] = array_values($order_operations);
     }
-    return $operations_by_hook;
+    return array_filter($operations_by_hook);
   }
 
   /**
@@ -437,7 +423,7 @@ class HookCollectorPass implements CompilerPassInterface {
               break;
             }
 
-            $legacy_attributes = [LegacyHook::class, LegacyModuleImplementsAlter::class, LegacyRequirementsHook::class];
+            $legacy_attributes = [LegacyHook::class, LegacyRequirementsHook::class];
             if (!static::hasAnyAttribute($attributes, $legacy_attributes) && (preg_match($current_module_preg, $function, $matches) || preg_match($all_modules_preg, $function, $matches))) {
               // Skip hooks that are not supported by the new hook system, they
               // do not need to be added to the BC layer. Note that is different
@@ -467,7 +453,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $procedural_hook_file_cache->set($filename, $implementations);
         }
         foreach ($implementations as $implementation) {
-          $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module']);
+          $this->addProceduralImplementation($implementation['hook'], $implementation['module']);
         }
       }
     }
@@ -518,23 +504,16 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Adds a procedural hook implementation.
    *
-   * @param \SplFileInfo $fileinfo
-   *   The file this procedural implementation is in.
    * @param string $hook
    *   The name of the hook.
    * @param string $module
    *   The module implementing the hook, or on behalf of which the hook is
    *   implemented.
    */
-  protected function addProceduralImplementation(\SplFileInfo $fileinfo, string $hook, string $module): void {
+  protected function addProceduralImplementation(string $hook, string $module): void {
     $function = $module . '_' . $hook;
-    if ($hook === 'module_implements_alter') {
-      $message = "$function without a #[LegacyModuleImplementsAlter] attribute is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3496788";
-      @trigger_error($message, E_USER_DEPRECATED);
-      $this->moduleImplementsAlters[] = $function;
-      include_once $fileinfo->getPathname();
-    }
-    elseif (in_array($hook, ['requirements', 'requirements_alter'])) {
+
+    if (in_array($hook, ['requirements', 'requirements_alter'])) {
       $message = "$function without a #[LegacyRequirementsHook] attribute is deprecated in drupal:11.3.0 and removed in drupal:13.0.0. See https://www.drupal.org/node/3549685";
       @trigger_error($message, E_USER_DEPRECATED);
     }
@@ -554,7 +533,6 @@ class HookCollectorPass implements CompilerPassInterface {
       'install',
       'install_tasks',
       'install_tasks_alter',
-      'module_implements_alter',
       'removed_post_updates',
       'requirements',
       'schema',

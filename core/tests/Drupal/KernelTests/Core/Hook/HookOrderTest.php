@@ -196,17 +196,9 @@ class HookOrderTest extends KernelTestBase {
     );
 
     // Uninstall the B module, which contains the reorder targets.
-    $this->expectException(\TypeError::class);
-    $old_request = \Drupal::request();
-    try {
-      $this->disableModules(['bbb_hook_order_test']);
-    }
-    finally {
-      // Restore a request and session, to avoid error during tearDown().
-      /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
-      $request_stack = $this->container->get('request_stack');
-      $request_stack->push($old_request);
-    }
+    // This originally caused a TypeError, if this test completes successfully,
+    // then there is no TypeError.
+    $this->disableModules(['bbb_hook_order_test']);
   }
 
   /**

@@ -69,9 +69,6 @@ use Drupal\Core\Hook\Order\OrderInterface;
  *
  * The following hooks can only have procedural hook implementations:
  *
- * Legacy meta hooks:
- * - hook_module_implements_alter()
- *
  * Install hooks:
  * - hook_install()
  * - hook_install_tasks()

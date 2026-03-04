@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\common_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Order\Order;
 
 /**
  * Hook implementations for common_test.
@@ -47,11 +48,10 @@ class CommonTestHooks {
    * Implements hook_TYPE_alter().
    *
    * This is to verify that
-   * \Drupal::moduleHandler()->alter([TYPE1, TYPE2], ...) allows
-   * hook_module_implements_alter() to affect the order in which module
-   * implementations are executed.
+   * \Drupal::moduleHandler()->alter([TYPE1, TYPE2], ...) allows the order
+   * parameter to affect the order in which hook implementations are executed.
    */
-  #[Hook('drupal_alter_foo_alter', module: 'block')]
+  #[Hook('drupal_alter_foo_alter', module: 'block', order: Order::Last)]
   public function blockDrupalAlterFooAlter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
     $data['foo'] .= ' block';
   }

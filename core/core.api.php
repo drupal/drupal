@@ -1621,8 +1621,7 @@
  * - Module weight.
  * - Alphabetical by module name.
  * - This order can be modified by using the order parameter on the #[Hook]
- *   attribute, using the #[ReorderHook] attribute, or implementing the legacy
- *   hook_module_implements_alter.
+ *   attribute, using the #[ReorderHook] attribute.
  *
  * @section implementing Implementing a hook
  *
@@ -1671,10 +1670,6 @@
  *
  * The following hooks can not be implemented as a class method, and must be
  * implemented as procedural:
- *
- * Legacy meta hooks:
- * - hook_module_implements_alter()
- * @see \Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter
  *
  * Install hooks:
  * - hook_install()

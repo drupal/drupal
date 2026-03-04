@@ -7,7 +7,6 @@ namespace Drupal\KernelTests\Core\Hook;
 use Drupal\aaa_hook_order_test\Hook\AAlterHooks;
 use Drupal\aaa_hook_order_test\Hook\ACrossHookReorderAlter;
 use Drupal\aaa_hook_order_test\Hook\AMissingTargetAlter;
-use Drupal\aaa_hook_order_test\Hook\ModuleImplementsAlter;
 use Drupal\bbb_hook_order_test\Hook\BAlterHooks;
 use Drupal\bbb_hook_order_test\Hook\BCrossHookReorderAlter;
 use Drupal\bbb_hook_order_test\Hook\BMissingTargetAlter;
@@ -40,122 +39,6 @@ class HookAlterOrderTest extends KernelTestBase {
     'ccc_hook_order_test',
     'ddd_hook_order_test',
   ];
-
-  /**
-   * Tests procedural implementations of module implements alter ordering.
-   */
-  public function testProceduralModuleImplementsAlterOrder(): void {
-    $this->assertAlterCallOrder($main_unaltered = [
-      'aaa_hook_order_test_procedural_alter',
-      'bbb_hook_order_test_procedural_alter',
-      'ccc_hook_order_test_procedural_alter',
-    ], 'procedural');
-
-    $this->assertAlterCallOrder($sub_unaltered = [
-      'aaa_hook_order_test_procedural_subtype_alter',
-      'bbb_hook_order_test_procedural_subtype_alter',
-      'ccc_hook_order_test_procedural_subtype_alter',
-    ], 'procedural_subtype');
-
-    $this->assertAlterCallOrder($combined_unaltered = [
-      'aaa_hook_order_test_procedural_alter',
-      'aaa_hook_order_test_procedural_subtype_alter',
-      'bbb_hook_order_test_procedural_alter',
-      'bbb_hook_order_test_procedural_subtype_alter',
-      'ccc_hook_order_test_procedural_alter',
-      'ccc_hook_order_test_procedural_subtype_alter',
-    ], ['procedural', 'procedural_subtype']);
-
-    $move_b_down = function (array &$implementations): void {
-      // Move module bbb_hook_order_test to the end, no matter which hook.
-      $group = $implementations['bbb_hook_order_test'];
-      unset($implementations['bbb_hook_order_test']);
-      $implementations['bbb_hook_order_test'] = $group;
-    };
-    $modules = ['aaa_hook_order_test', 'bbb_hook_order_test', 'ccc_hook_order_test'];
-
-    // Test with module bbb_hook_order_test moved to the end for
-    // 'procedural_alter' and 'procedural_subtype_alter' hooks.
-    ModuleImplementsAlter::set(
-      function (array &$implementations, string $hook) use ($modules, $move_b_down): void {
-        if (!in_array($hook, ['procedural_alter', 'procedural_subtype_alter'])) {
-          return;
-        }
-        $this->assertSame($modules, array_keys($implementations));
-        $move_b_down($implementations);
-      },
-    );
-    \Drupal::service('kernel')->rebuildContainer();
-
-    $this->assertAlterCallOrder($main_altered = [
-      'aaa_hook_order_test_procedural_alter',
-      'ccc_hook_order_test_procedural_alter',
-      // The implementation in module bbb_hook_order_test has been moved.
-      'bbb_hook_order_test_procedural_alter',
-    ], 'procedural');
-
-    $this->assertAlterCallOrder($sub_altered = [
-      'aaa_hook_order_test_procedural_subtype_alter',
-      'ccc_hook_order_test_procedural_subtype_alter',
-      // The implementation in module bbb_hook_order_test has been moved.
-      'bbb_hook_order_test_procedural_subtype_alter',
-    ], 'procedural_subtype');
-
-    $this->assertAlterCallOrder($combined_altered = [
-      'aaa_hook_order_test_procedural_alter',
-      'aaa_hook_order_test_procedural_subtype_alter',
-      'ccc_hook_order_test_procedural_alter',
-      'ccc_hook_order_test_procedural_subtype_alter',
-      // The implementation in module bbb_hook_order_test has been moved.
-      'bbb_hook_order_test_procedural_alter',
-      'bbb_hook_order_test_procedural_subtype_alter',
-    ], ['procedural', 'procedural_subtype']);
-
-    // If the altered hook is not the first one, implementations are back in
-    // their unaltered order.
-    $this->assertAlterCallOrder($main_unaltered, ['other_main_type', 'procedural']);
-    $this->assertAlterCallOrder($sub_unaltered, ['other_main_type', 'procedural_subtype']);
-    $this->assertAlterCallOrder($combined_unaltered, ['other_main_type', 'procedural', 'procedural_subtype']);
-
-    // Test with module bbb_hook_order_test moved to the end for the main hook.
-    ModuleImplementsAlter::set(
-      function (array &$implementations, string $hook) use ($modules, $move_b_down): void {
-        if (!in_array($hook, ['procedural_alter', 'procedural_subtype_alter'])) {
-          return;
-        }
-        $this->assertSame($modules, array_keys($implementations));
-        if ($hook !== 'procedural_alter') {
-          return;
-        }
-        $move_b_down($implementations);
-      },
-    );
-    \Drupal::service('kernel')->rebuildContainer();
-
-    $this->assertAlterCallOrder($main_altered, 'procedural');
-    $this->assertAlterCallOrder($sub_unaltered, 'procedural_subtype');
-    $this->assertAlterCallOrder($combined_altered, ['procedural', 'procedural_subtype']);
-
-    // Test with module bbb_hook_order_test moved to the end for the subtype
-    // hook.
-    ModuleImplementsAlter::set(
-      function (array &$implementations, string $hook) use ($modules, $move_b_down): void {
-        if (!in_array($hook, ['procedural_alter', 'procedural_subtype_alter'])) {
-          return;
-        }
-        $this->assertSameCallList($modules, array_keys($implementations));
-        if ($hook !== 'procedural_subtype_alter') {
-          return;
-        }
-        $move_b_down($implementations);
-      },
-    );
-    \Drupal::service('kernel')->rebuildContainer();
-
-    $this->assertAlterCallOrder($main_unaltered, 'procedural');
-    $this->assertAlterCallOrder($sub_altered, 'procedural_subtype');
-    $this->assertAlterCallOrder($combined_unaltered, ['procedural', 'procedural_subtype']);
-  }
 
   /**
    * Test ordering alter calls.
@@ -385,18 +268,9 @@ class HookAlterOrderTest extends KernelTestBase {
     );
 
     // Uninstall the B module, which contains the reorder targets.
-    // Currently this causes a TypeError.
-    $this->expectException(\TypeError::class);
-    $old_request = \Drupal::request();
-    try {
-      $this->disableModules(['bbb_hook_order_test']);
-    }
-    finally {
-      // Restore a request and session, to avoid error during tearDown().
-      /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
-      $request_stack = $this->container->get('request_stack');
-      $request_stack->push($old_request);
-    }
+    // This originally caused a TypeError, if this test completes successfully,
+    // then there is no TypeError.
+    $this->disableModules(['bbb_hook_order_test']);
   }
 
   /**

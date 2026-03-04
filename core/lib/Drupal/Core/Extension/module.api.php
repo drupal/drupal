@@ -61,50 +61,6 @@ use Drupal\Core\Utility\UpdateException;
  */
 
 /**
- * Alter the registry of modules implementing a hook.
- *
- * This hook will be removed in 12.0.0. It is not deprecated in order to
- * support the "#[LegacyModuleImplementsAlter]" attribute, used for
- * compatibility with versions prior to Drupal 11.2.0.
- *
- * Only procedural implementations are supported for this hook.
- *
- * This hook is invoked in \Drupal::moduleHandler()->getImplementationInfo().
- * A module may implement this hook in order to reorder the implementing
- * modules, which are otherwise ordered by the module's system weight.
- *
- * Note that hooks invoked using \Drupal::moduleHandler->alter() can have
- * multiple variations(such as hook_form_alter() and hook_form_FORM_ID_alter()).
- * \Drupal::moduleHandler->alter() will call all such variants defined by a
- * single module in turn. For the purposes of hook_module_implements_alter(),
- * these variants are treated as a single hook. Thus, to ensure that your
- * implementation of hook_form_FORM_ID_alter() is called at the right time,
- * you will have to change the order of hook_form_alter() implementation in
- * hook_module_implements_alter().
- *
- * @param array<string, string|false> $implementations
- *   An array keyed by the module's name. The value of each item corresponds
- *   to a $group, which is usually FALSE, unless the implementation is in a
- *   file named $module.$group.inc.
- * @param string $hook
- *   The name of the module hook being implemented.
- *
- * @see \Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter
- */
-function hook_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'form_alter') {
-    // Move my_module_form_alter() to the end of the list.
-    // \Drupal::moduleHandler()->getImplementationInfo()
-    // iterates through $implementations with a foreach loop which PHP iterates
-    // in the order that the items were added, so to move an item to the end of
-    // the array, we remove it and then add it.
-    $group = $implementations['my_module'];
-    unset($implementations['my_module']);
-    $implementations['my_module'] = $group;
-  }
-}
-
-/**
  * Alter the information parsed from module and theme .info.yml files.
  *
  * This hook is invoked in \Drupal\Core\Extension\ExtensionList::doList(). A

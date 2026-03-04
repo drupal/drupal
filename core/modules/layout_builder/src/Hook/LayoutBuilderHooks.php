@@ -147,11 +147,10 @@ class LayoutBuilderHooks {
    * implementations of hook_entity_view_alter() to add the rendered output of
    * the extra fields they provide, so we cannot get the rendered output of
    * extra fields before this point in the view process.
-   * layout_builder_module_implements_alter() moves this implementation of
-   * hook_entity_view_alter() to the end of the list.
+   * Hook ordering moves this implementation of hook_entity_view_alter() to the
+   * end of the list.
    *
    * @see \Drupal\layout_builder\Plugin\Block\ExtraFieldBlock::build()
-   * @see layout_builder_module_implements_alter()
    */
   #[Hook('entity_view_alter', order: Order::Last)]
   public function entityViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
