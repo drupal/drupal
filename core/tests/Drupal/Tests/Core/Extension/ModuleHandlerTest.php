@@ -225,7 +225,7 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   #[IgnoreDeprecations]
   public function testLoadAllIncludes(): void {
-    $this->expectDeprecation('ModuleHandler::loadAllIncludes() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3536432');
+    $this->expectUserDeprecationMessage('ModuleHandler::loadAllIncludes() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3536432');
     $this->assertTrue(TRUE);
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([

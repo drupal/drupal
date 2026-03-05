@@ -102,7 +102,7 @@ class DrupalComponentTest extends TestCase {
     preg_match_all('/^.*Drupal\\\Core.*$/m', $contents, $matches);
     $matches = array_filter($matches[0], function ($line) {
       // Filter references that don't really matter.
-      return preg_match('/@see|E_USER_DEPRECATED|expectDeprecation/', $line) === 0;
+      return preg_match('/@see|E_USER_DEPRECATED|expectUserDeprecationMessage/', $line) === 0;
     });
     $this->assertEmpty($matches, "Checking for invalid reference to 'Drupal\\Core' namespace in $class_path");
   }

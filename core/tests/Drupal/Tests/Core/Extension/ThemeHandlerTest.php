@@ -76,7 +76,7 @@ class ThemeHandlerTest extends UnitTestCase {
    */
   #[IgnoreDeprecations]
   public function testRebuildThemeData(): void {
-    $this->expectDeprecation("\Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal::service('extension.list.theme')->reset()->getList() instead. See https://www.drupal.org/node/3413196");
+    $this->expectUserDeprecationMessage("\Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal::service('extension.list.theme')->reset()->getList() instead. See https://www.drupal.org/node/3413196");
     $this->themeList->expects($this->once())
       ->method('reset')
       ->willReturnSelf();

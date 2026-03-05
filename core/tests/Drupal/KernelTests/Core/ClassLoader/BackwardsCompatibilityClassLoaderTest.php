@@ -45,7 +45,7 @@ class BackwardsCompatibilityClassLoaderTest extends KernelTestBase {
   #[IgnoreDeprecations]
   public function testModuleMovedClass():  void {
     // @phpstan-ignore class.notFound
-    $this->expectDeprecation('Class ' . Foo::class . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0, use Drupal\Component\Utility\Random instead. See https://example.com/change_record');
+    $this->expectUserDeprecationMessage('Class ' . Foo::class . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0, use Drupal\Component\Utility\Random instead. See https://example.com/change_record');
     // @phpstan-ignore class.notFound
     $object = new Foo();
     $this->assertInstanceOf(Random::class, $object);
@@ -59,7 +59,7 @@ class BackwardsCompatibilityClassLoaderTest extends KernelTestBase {
     // @phpstan-ignore class.notFound
     $this->expectException(DoctrineAnnotationException::class);
     $this->expectExceptionMessage('[Syntax Error] test');
-    $this->expectDeprecation('Class Doctrine\Common\Annotations\AnnotationException is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0, use Drupal\Component\Annotation\Doctrine\AnnotationException instead. See https://www.drupal.org/node/3551049');
+    $this->expectUserDeprecationMessage('Class Doctrine\Common\Annotations\AnnotationException is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0, use Drupal\Component\Annotation\Doctrine\AnnotationException instead. See https://www.drupal.org/node/3551049');
     throw AnnotationException::syntaxError('test');
   }
 

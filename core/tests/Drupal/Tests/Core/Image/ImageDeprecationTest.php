@@ -24,7 +24,7 @@ class ImageDeprecationTest extends UnitTestCase {
    * Tests ImageToolkitOperationBase::__construct().
    */
   public function testToolkitArgumentInImageToolkitOperationConstructor(): void {
-    $this->expectDeprecation('The $toolkit argument of Drupal\Core\ImageToolkit\ImageToolkitOperationBase::__construct is deprecated in drupal:11.4.0 and the argument is removed from drupal:13.0.0. Use ::setToolkit() instead. See https://www.drupal.org/node/3562304');
+    $this->expectUserDeprecationMessage('The $toolkit argument of Drupal\Core\ImageToolkit\ImageToolkitOperationBase::__construct is deprecated in drupal:11.4.0 and the argument is removed from drupal:13.0.0. Use ::setToolkit() instead. See https://www.drupal.org/node/3562304');
     new CreateNew([], '', [], $this->createStub(GDToolkit::class), $this->createStub(LoggerInterface::class));
   }
 
