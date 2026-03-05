@@ -29,6 +29,7 @@ class Tag extends CachePluginBase {
    * {@inheritdoc}
    */
   protected function cacheExpire($type) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3576855', E_USER_DEPRECATED);
     return FALSE;
   }
 
