@@ -86,7 +86,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'filter_format' => 7,
       'image_style' => 4,
       'language_content_settings' => 4,
-      'menu' => 8,
+      'menu' => 10,
       'menu_link_content' => 6,
       'node' => 1,
       'node_type' => 2,
