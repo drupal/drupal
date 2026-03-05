@@ -14126,12 +14126,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/dynamic_page_cache/src/EventSubscriber/DynamicPageCacheSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function editor_form_filter_admin_form_ajax\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/editor/editor.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\editor\\\\Ajax\\\\EditorDialogSave\\:\\:render\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
