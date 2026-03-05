@@ -52,7 +52,7 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
    */
   #[IgnoreDeprecations]
   public function testPreviewModeValidation(): void {
-    $this->expectDeprecation('Calling Drupal\node\Entity\NodeType::setPreviewMode with an integer $preview_mode parameter is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use the \Drupal\node\NodePreviewMode enum instead. See https://www.drupal.org/node/3538666');
+    $this->expectUserDeprecationMessage('Calling Drupal\node\Entity\NodeType::setPreviewMode with an integer $preview_mode parameter is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use the \Drupal\node\NodePreviewMode enum instead. See https://www.drupal.org/node/3538666');
     $this->entity->setPreviewMode(38);
     $this->assertValidationErrors(['preview_mode' => 'The value you selected is not a valid choice.']);
 

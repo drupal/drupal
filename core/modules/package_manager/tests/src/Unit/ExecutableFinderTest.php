@@ -119,10 +119,10 @@ class ExecutableFinderTest extends UnitTestCase {
     $reflector = new \ReflectionProperty($finder, 'composerPackagePath');
     $reflector->setValue($finder, FALSE);
 
-    $this->expectDeprecation("Storing the path to Composer in configuration is deprecated in drupal:11.2.4 and not supported in drupal:12.0.0. Add composer/composer directly to your project's dependencies instead. See https://www.drupal.org/node/3540264");
+    $this->expectUserDeprecationMessage("Storing the path to Composer in configuration is deprecated in drupal:11.2.4 and not supported in drupal:12.0.0. Add composer/composer directly to your project's dependencies instead. See https://www.drupal.org/node/3540264");
     $finder->find('composer');
 
-    $this->expectDeprecation("Storing the path to rsync in configuration is deprecated in drupal:11.2.4 and not supported in drupal:12.0.0. Move it to the <code>package_manager_rsync_path</code> setting instead. See https://www.drupal.org/node/3540264");
+    $this->expectUserDeprecationMessage("Storing the path to rsync in configuration is deprecated in drupal:11.2.4 and not supported in drupal:12.0.0. Move it to the <code>package_manager_rsync_path</code> setting instead. See https://www.drupal.org/node/3540264");
     $finder->find('rsync');
   }
 

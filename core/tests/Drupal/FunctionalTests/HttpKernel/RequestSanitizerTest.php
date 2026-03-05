@@ -45,7 +45,7 @@ class RequestSanitizerTest extends BrowserTestBase {
     $request_options[RequestOptions::HEADERS] = [
       'X-Http-Method-Override' => 'GET',
     ];
-    $this->expectDeprecation('Since symfony/http-foundation 7.4: HTTP method override is deprecated for methods GET, HEAD, CONNECT and TRACE; it will be ignored in Symfony 8.0.');
+    $this->expectUserDeprecationMessage('Since symfony/http-foundation 7.4: HTTP method override is deprecated for methods GET, HEAD, CONNECT and TRACE; it will be ignored in Symfony 8.0.');
     $response = $this->makeApiRequest('POST', $url, $request_options);
     $this->assertSame(200, $response->getStatusCode());
     $this->assertSame('HIT', $response->getHeader('X-Drupal-Cache')[0]);

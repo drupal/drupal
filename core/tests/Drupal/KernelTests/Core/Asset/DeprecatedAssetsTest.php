@@ -39,7 +39,7 @@ class DeprecatedAssetsTest extends KernelTestBase {
     // this test.
     ini_set('serialize_precision', -1);
 
-    $this->expectDeprecation("The $extension/$name " . $deprecation_suffix);
+    $this->expectUserDeprecationMessage("The $extension/$name " . $deprecation_suffix);
     $library_definition = $library_discovery->getLibraryByName($extension, $name);
     $this->assertEquals($expected_hashed_library_definition, md5(serialize($library_definition)));
   }
