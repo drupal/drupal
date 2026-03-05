@@ -123,7 +123,7 @@ class TestThemeHooks {
    * Tests a theme overriding a default hook with a suggestion.
    */
   #[Hook('preprocess_theme_test_preprocess_suggestions__suggestion')]
-  public function preprocessThemeTestPreprocessSuggestions__suggestion(array &$variables): void {
+  public function preprocessThemeTestPreprocessSuggestionsSuggestion(array &$variables): void {
     $variables['foo'] = 'Suggestion';
   }
 
@@ -133,7 +133,7 @@ class TestThemeHooks {
    * Tests a theme overriding a default hook with a suggestion.
    */
   #[Hook('preprocess_theme_test_preprocess_suggestions__kitten')]
-  public function preprocessThemeTestPreprocessSuggestions__kitten(array &$variables): void {
+  public function preprocessThemeTestPreprocessSuggestionsKitten(array &$variables): void {
     $variables['foo'] = 'Kitten';
   }
 
@@ -143,7 +143,7 @@ class TestThemeHooks {
    * Tests a theme overriding a default hook with a suggestion.
    */
   #[Hook('preprocess_theme_test_preprocess_suggestions__kitten__flamingo')]
-  public function preprocessThemeTestPreprocessSuggestions__kitten__flamingo(array &$variables): void {
+  public function preprocessThemeTestPreprocessSuggestionsKittenFlamingo(array &$variables): void {
     $variables['bar'] = 'Flamingo';
   }
 
@@ -153,7 +153,7 @@ class TestThemeHooks {
    * Tests a preprocess function with suggestions.
    */
   #[Hook('preprocess_theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose')]
-  public function preprocessThemeTestPreprocessSuggestions__kitten__meerkat__tarsier__moose(array &$variables): void {
+  public function preprocessThemeTestPreprocessSuggestionsKittenMeerkatTarsierMoose(array &$variables): void {
     $variables['bar'] = 'Moose';
   }
 
