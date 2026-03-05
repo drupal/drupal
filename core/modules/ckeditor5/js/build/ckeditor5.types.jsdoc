@@ -2044,6 +2044,18 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-indent/src/integrations/indentblocklistcommand.js
+ *
+ * @typedef {module:indent/integrations/indentblocklistcommand} module:indent/integrations/indentblocklistcommand~IndentBlockListCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-indent/src/integrations/indentblocklistitemcommand.js
+ *
+ * @typedef {module:indent/integrations/indentblocklistitemcommand} module:indent/integrations/indentblocklistitemcommand~IndentBlockListItemCommand
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-language/src/textpartlanguage.js
  *
  * @typedef {module:language/textpartlanguage} module:language/textpartlanguage~TextPartLanguage
@@ -2150,6 +2162,13 @@
  * Declared in file @ckeditor/ckeditor5-link/src/utils/automaticdecorators.js
  *
  * @typedef {module:link/utils/automaticdecorators} module:link/utils/automaticdecorators~AutomaticLinkDecorators
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-link/src/utils/conflictingdecorators.js
+ *
+ * @typedef {module:link/utils/conflictingdecorators} module:link/utils/conflictingdecorators~areDecoratorsConflicting
+ * @typedef {module:link/utils/conflictingdecorators} module:link/utils/conflictingdecorators~resolveConflictingDecorators
  */
 
 /**
