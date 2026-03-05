@@ -8,7 +8,6 @@ use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
-use PHPUnit\Framework\Attributes\Before;
 
 /**
  * Resource test base for the user entity.
@@ -53,19 +52,18 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   protected static $secondCreatedEntityId = 5;
 
   /**
-   * Marks some tests as skipped because XML cannot be deserialized.
+   * {@inheritdoc}
    */
-  #[Before]
-  public function userResourceTestBaseSkipTests(): void {
+  protected function setUp(): void {
     if (in_array($this->name(), ['testPatchDxForSecuritySensitiveBaseFields', 'testPatchSecurityOtherUser'], TRUE)) {
       if (static::$format === 'xml') {
         $this->markTestSkipped('Deserialization of the XML format is not supported.');
       }
-
       if (static::$auth === FALSE) {
         $this->markTestSkipped('The anonymous user is never allowed to modify itself.');
       }
     }
+    parent::setUp();
   }
 
   /**

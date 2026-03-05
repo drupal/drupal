@@ -181,6 +181,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    if (static::$format === 'xml' && in_array($this->name(), ['testPatch', 'testPost'], TRUE)) {
+      $this->markTestSkipped('Deserialization of the XML format is not supported.');
+    }
     parent::setUp();
 
     // Calculate REST Resource config entity ID.
