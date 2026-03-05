@@ -29,6 +29,9 @@ class TestingSiteConfigHooks {
     protected $kernel,
   ) {}
 
+  /**
+   * Implements hook_user_load().
+   */
   #[Hook('user_load')]
   public function userLoad(): void {
     assert(isset($this->kernel));
