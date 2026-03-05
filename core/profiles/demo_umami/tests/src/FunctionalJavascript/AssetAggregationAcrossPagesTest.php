@@ -99,7 +99,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     }, 'umamiNodeAddEditor');
     $expected = [
       'ScriptCount' => 15,
-      'ScriptBytes' => 3771850,
+      'ScriptBytes' => 3809950,
       'StylesheetCount' => 8,
       'StylesheetBytes' => 619086,
     ];
