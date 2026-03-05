@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Flood\PrefixFloodInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Session\UserSessionRepositoryInterface;
 use Drupal\user\Form\UserCancelForm;
 use Drupal\user\ProfileForm;
 use Drupal\user\ProfileTranslationHandler;
@@ -136,11 +137,11 @@ class User extends ContentEntityBase implements UserInterface {
     parent::postSave($storage, $update);
 
     if ($update) {
-      $session_manager = \Drupal::service('session_manager');
+      $session_repository = \Drupal::service(UserSessionRepositoryInterface::class);
       // If the password has been changed, delete all open sessions for the
       // user and recreate the current one.
       if ($this->pass->value != $this->getOriginal()->pass->value) {
-        $session_manager->delete($this->id());
+        $session_repository->deleteAll($this->id());
         if ($this->id() == \Drupal::currentUser()->id()) {
           \Drupal::service('session')->migrate();
         }
@@ -160,7 +161,7 @@ class User extends ContentEntityBase implements UserInterface {
 
       // If the user was blocked, delete the user's sessions to force a logout.
       if ($this->getOriginal()->status->value != $this->status->value && $this->status->value == 0) {
-        $session_manager->delete($this->id());
+        $session_repository->deleteAll($this->id());
       }
 
       // Send emails after we have the new user object.

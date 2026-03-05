@@ -1710,6 +1710,11 @@ services:
     class: Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag
     public: false
   Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface: '@session.attribute_bag'
+  Drupal\Core\Session\UserSessionRepositoryInterface:
+    class: Drupal\Core\Session\UserSessionRepository
+    autowire: true
+    tags:
+      - { name: backend_overridable }
   session_handler:
     alias: session_handler.storage
   session_handler.storage:
@@ -1724,11 +1729,7 @@ services:
   Drupal\Core\Session\WriteSafeSessionHandlerInterface: '@session_handler.write_safe'
   session_manager:
     class: Drupal\Core\Session\SessionManager
-    arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@session_configuration', '@datetime.time', '@session_handler']
-    tags:
-      - { name: backend_overridable }
-    calls:
-      - [setWriteSafeHandler, ['@session_handler.write_safe']]
+    arguments: ['@request_stack', '@session_handler', '@session_manager.metadata_bag', '@session_configuration', '@datetime.time', '@Drupal\Core\Session\UserSessionRepositoryInterface']
   Drupal\Core\Session\SessionManagerInterface: '@session_manager'
   session_manager.metadata_bag:
     class: Drupal\Core\Session\MetadataBag
