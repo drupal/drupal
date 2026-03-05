@@ -34,7 +34,7 @@ class ExtensionMimeTypeGuesserDeprecationTest extends KernelTestBase {
    */
   #[IgnoreDeprecations]
   public function testConstructorDeprecation(): void {
-    $this->expectDeprecation(
+    $this->expectUserDeprecationMessage(
       'Calling Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::__construct() with the $map argument as an instance of \Drupal\Core\Extension\ModuleHandlerInterface is deprecated in drupal:11.2.0 and an instance of \Drupal\Core\File\MimeType\MimeTypeMapInterface is required in drupal:12.0.0. See https://www.drupal.org/node/3494040'
     );
 

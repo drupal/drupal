@@ -64,7 +64,7 @@ class WebDriverTestBaseTest extends UnitTestCase {
     $this->assertSame($expected, $method->invoke($object));
 
     if ($deprecated) {
-      $this->expectDeprecation('The "w3c" option for Chrome is deprecated in drupal:11.4.0 and will be forced to TRUE in drupal:12.0.0. See https://www.drupal.org/node/3460567');
+      $this->expectUserDeprecationMessage('The "w3c" option for Chrome is deprecated in drupal:11.4.0 and will be forced to TRUE in drupal:12.0.0. See https://www.drupal.org/node/3460567');
     }
   }
 

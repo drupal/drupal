@@ -401,7 +401,7 @@ class FetchTest extends DatabaseTestBase {
       $this->markTestSkipped('This test is for StatementPrefetchIterator statements only.');
     }
 
-    $this->expectDeprecation('Drupal\Core\Database\StatementPrefetchIterator::fetchColumn() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ::fetchField() instead. See https://www.drupal.org/node/3490312');
+    $this->expectUserDeprecationMessage('Drupal\Core\Database\StatementPrefetchIterator::fetchColumn() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ::fetchField() instead. See https://www.drupal.org/node/3490312');
     $statement->fetchColumn();
   }
 

@@ -480,7 +480,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $html_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->assertStringContainsString('data-test1="test1"', $html_output);
     $this->assertStringContainsString('data-test2="test2"', $html_output);
-    $this->expectDeprecation('Usage of #item_attributes is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use #attributes instead. See https://www.drupal.org/node/3554585');
+    $this->expectUserDeprecationMessage('Usage of #item_attributes is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use #attributes instead. See https://www.drupal.org/node/3554585');
   }
 
   /**

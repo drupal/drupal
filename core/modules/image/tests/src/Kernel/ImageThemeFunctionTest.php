@@ -196,7 +196,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
       ],
     ];
     $renderer->renderRoot($element);
-    $this->expectDeprecation('Usage of #item_attributes is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use #attributes instead. See https://www.drupal.org/node/3554585');
+    $this->expectUserDeprecationMessage('Usage of #item_attributes is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use #attributes instead. See https://www.drupal.org/node/3554585');
   }
 
   /**

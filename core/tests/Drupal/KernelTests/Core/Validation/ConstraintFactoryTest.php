@@ -91,7 +91,7 @@ class ConstraintFactoryTest extends KernelTestBase {
     $constraint = $constraint_manager->create($plugin_id, $options);
     $this->assertInstanceOf($plugin_class, $constraint);
     $this->assertSame($expected_value, $constraint->$expected_property);
-    $this->expectDeprecation(sprintf('Passing any non-associative-array options to configure constraint plugin "%s" is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746', $plugin_id));
+    $this->expectUserDeprecationMessage(sprintf('Passing any non-associative-array options to configure constraint plugin "%s" is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746', $plugin_id));
   }
 
   /**
@@ -137,8 +137,8 @@ class ConstraintFactoryTest extends KernelTestBase {
     $constraint = $constraint_manager->create('PluginExists', 'entity_type.manager');
     $this->assertInstanceOf(PluginExistsConstraint::class, $constraint);
     $this->assertSame($constraint->pluginManager, \Drupal::entityTypeManager());
-    $this->expectDeprecation('Passing any non-associative-array options to configure constraint plugin "PluginExists" is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
-    $this->expectDeprecation('Passing the "value" option in configuration to Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint::create is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
+    $this->expectUserDeprecationMessage('Passing any non-associative-array options to configure constraint plugin "PluginExists" is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
+    $this->expectUserDeprecationMessage('Passing the "value" option in configuration to Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint::create is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
 
     $constraint = $constraint_manager->create('ComplexData', ['value' => ['NotBlank' => []]]);
     $this->assertInstanceOf(ComplexDataConstraint::class, $constraint);

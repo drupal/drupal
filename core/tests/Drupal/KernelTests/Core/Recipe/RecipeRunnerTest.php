@@ -297,7 +297,7 @@ config:
         label: 'Created by recipe'
 YAML;
     $recipe = $this->createRecipe($recipe_data);
-    $this->expectDeprecation('The plugin ID "entity_create:ensure_exists" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/node/3458273.');
+    $this->expectUserDeprecationMessage('The plugin ID "entity_create:ensure_exists" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/node/3458273.');
     RecipeRunner::processRecipe($recipe);
   }
 

@@ -56,7 +56,7 @@ class StatusReportTest extends KernelTestBase {
       ],
     ];
 
-    $this->expectDeprecation('Calling Drupal\Core\Render\Element\StatusReport::preRenderGroupRequirements() with an array of $requirements with \'severity\' with values not of type Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3410939');
+    $this->expectUserDeprecationMessage('Calling Drupal\Core\Render\Element\StatusReport::preRenderGroupRequirements() with an array of $requirements with \'severity\' with values not of type Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3410939');
 
     $element = StatusReport::preRenderGroupRequirements($element);
     $groups = $element['#grouped_requirements'];

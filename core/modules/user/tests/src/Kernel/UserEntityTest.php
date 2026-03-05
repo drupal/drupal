@@ -121,7 +121,7 @@ class UserEntityTest extends KernelTestBase {
 
     $user->password = 'password';
 
-    $this->expectDeprecation('Getting the password property is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3569185');
+    $this->expectUserDeprecationMessage('Getting the password property is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3569185');
     $this->assertEquals('password', $user->password);
   }
 

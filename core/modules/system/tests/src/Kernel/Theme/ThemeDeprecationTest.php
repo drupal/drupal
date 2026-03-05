@@ -26,10 +26,10 @@ class ThemeDeprecationTest extends KernelTestBase {
    * Tests deprecations around template_preprocess functions and include files.
    */
   public function testTemplatePreprocessIncludes(): void {
-    $this->expectDeprecation('Providing a file for theme hook module_test_procedural_preprocess_theme is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3549500');
-    $this->expectDeprecation('Providing template_preprocess_module_test_procedural_preprocess_theme() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3504125');
-    $this->expectDeprecation('Providing includes for theme hook module_test_procedural_preprocess_includes is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3549500');
-    $this->expectDeprecation('Providing template_preprocess_module_test_procedural_preprocess_includes() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3504125');
+    $this->expectUserDeprecationMessage('Providing a file for theme hook module_test_procedural_preprocess_theme is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3549500');
+    $this->expectUserDeprecationMessage('Providing template_preprocess_module_test_procedural_preprocess_theme() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3504125');
+    $this->expectUserDeprecationMessage('Providing includes for theme hook module_test_procedural_preprocess_includes is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3549500');
+    $this->expectUserDeprecationMessage('Providing template_preprocess_module_test_procedural_preprocess_includes() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use initial preprocess for template_preprocess instead. See https://www.drupal.org/node/3504125');
 
     $registry = $this->container->get('theme.registry');
 

@@ -29,8 +29,8 @@ class EntityQueryServiceDeprecationTest extends KernelTestBase {
     if ($running_driver === 'pgsql') {
       $this->markTestSkipped('The service is not deprecated for pgsql database driver.');
     }
-    $this->expectDeprecation('The "pgsql.entity.query.sql" service is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Install the pgsql module to replace this service. See https://www.drupal.org/node/3488580');
-    $this->expectDeprecation('\Drupal\Core\Entity\Query\Sql\pgsql\QueryFactory is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. The PostgreSQL override of the entity query has been moved to the pgsql module. See https://www.drupal.org/node/3488580');
+    $this->expectUserDeprecationMessage('The "pgsql.entity.query.sql" service is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Install the pgsql module to replace this service. See https://www.drupal.org/node/3488580');
+    $this->expectUserDeprecationMessage('\Drupal\Core\Entity\Query\Sql\pgsql\QueryFactory is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. The PostgreSQL override of the entity query has been moved to the pgsql module. See https://www.drupal.org/node/3488580');
     $service = $this->container->get('pgsql.entity.query.sql');
     $this->assertInstanceOf(DeprecatedQueryFactory::class, $service);
   }

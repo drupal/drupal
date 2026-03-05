@@ -238,7 +238,7 @@ class ViewsTest extends UnitTestCase {
    */
   #[IgnoreDeprecations]
   public function testPluginManagerDeprecation(): void {
-    $this->expectDeprecation('Drupal\views\Views::pluginManager() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'plugin.manager.views.{type}\') for specific plugin types or \Drupal::service(\'views.plugin_managers\')->get($type) for dynamic types. See https://www.drupal.org/node/3566982');
+    $this->expectUserDeprecationMessage('Drupal\views\Views::pluginManager() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'plugin.manager.views.{type}\') for specific plugin types or \Drupal::service(\'views.plugin_managers\')->get($type) for dynamic types. See https://www.drupal.org/node/3566982');
 
     $plugin_manager = $this->createMock(ViewsPluginManager::class);
 
@@ -258,7 +258,7 @@ class ViewsTest extends UnitTestCase {
    */
   #[IgnoreDeprecations]
   public function testHandlerManagerDeprecation(): void {
-    $this->expectDeprecation('Drupal\views\Views::handlerManager() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'plugin.manager.views.{type}\') for specific handler types or \Drupal::service(\'views.plugin_managers\')->get($type) for dynamic types. See https://www.drupal.org/node/3566982');
+    $this->expectUserDeprecationMessage('Drupal\views\Views::handlerManager() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'plugin.manager.views.{type}\') for specific handler types or \Drupal::service(\'views.plugin_managers\')->get($type) for dynamic types. See https://www.drupal.org/node/3566982');
 
     $handler_manager = $this->createMock(ViewsHandlerManager::class);
 

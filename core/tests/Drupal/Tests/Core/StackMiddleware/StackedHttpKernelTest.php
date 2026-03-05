@@ -34,7 +34,7 @@ class StackedHttpKernelTest extends UnitTestCase {
       ->with($request, HttpKernelInterface::MAIN_REQUEST, TRUE)
       ->willReturn($expected);
 
-    $this->expectDeprecation('Calling Drupal\Core\StackMiddleware\StackedHttpKernel::__construct() with an array of $middlewares is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. Pass in a lazy iterator instead. See https://www.drupal.org/node/3538740');
+    $this->expectUserDeprecationMessage('Calling Drupal\Core\StackMiddleware\StackedHttpKernel::__construct() with an array of $middlewares is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. Pass in a lazy iterator instead. See https://www.drupal.org/node/3538740');
     $stack = new StackedHttpKernel($basicKernel, [$basicKernel]);
     $actual = $stack->handle($request);
     $this->assertSame($expected, $actual);

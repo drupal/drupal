@@ -31,7 +31,7 @@ class PageCacheLegacyTest extends UnitTestCase {
     $requestPolicy = $this->createStub(RequestPolicyInterface::class);
     $responsePolicy = $this->createStub(ResponsePolicyInterface::class);
 
-    $this->expectDeprecation('Calling Drupal\page_cache\StackMiddleware\PageCache::__construct() without a service closure $http_kernel argument is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. See https://www.drupal.org/node/3538740');
+    $this->expectUserDeprecationMessage('Calling Drupal\page_cache\StackMiddleware\PageCache::__construct() without a service closure $http_kernel argument is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. See https://www.drupal.org/node/3538740');
     new PageCache($kernel, $cache, $requestPolicy, $responsePolicy);
   }
 

@@ -681,7 +681,7 @@ class EntityViewsDataTest extends KernelTestBase {
   public function testDeprecations(): void {
     $this->baseEntityType->setHandlerClass('views_data', EntityViewsDataWithDeprecations::class);
     $this->setUpEntityType($this->baseEntityType, $this->commonBaseFields);
-    $this->expectDeprecation('Drupal\views\EntityViewsData::getFieldStorageDefinitions() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3240278');
+    $this->expectUserDeprecationMessage('Drupal\views\EntityViewsData::getFieldStorageDefinitions() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3240278');
     $this->entityTypeManager->getHandler('entity_test', 'views_data')->getViewsData();
   }
 

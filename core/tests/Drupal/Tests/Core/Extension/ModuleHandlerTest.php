@@ -225,7 +225,7 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   #[IgnoreDeprecations]
   public function testLoadAllIncludes(): void {
-    $this->expectDeprecation('ModuleHandler::loadAllIncludes() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3536432');
+    $this->expectUserDeprecationMessage('ModuleHandler::loadAllIncludes() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3536432');
     $this->assertTrue(TRUE);
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
@@ -391,7 +391,7 @@ class ModuleHandlerTest extends UnitTestCase {
   #[IgnoreDeprecations]
   public function testGroupIncludes(): void {
     self::setupGroupIncludes();
-    $this->expectDeprecation('Autoloading hooks in the file (vfs://drupal_root/test_module.tokens.inc) is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765');
+    $this->expectUserDeprecationMessage('Autoloading hooks in the file (vfs://drupal_root/test_module.tokens.inc) is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765');
     $moduleHandler = $this->getModuleHandler([], ['token_info' => ['test_module_token_info' => 'test_module']], [], ['token_info' => self::GROUP_INCLUDES['token_info']]);
     $this->assertFalse(function_exists('_test_module_helper'));
     $moduleHandler->invokeAll('token_info');

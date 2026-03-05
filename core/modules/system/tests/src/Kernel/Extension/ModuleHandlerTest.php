@@ -439,7 +439,7 @@ class ModuleHandlerTest extends KernelTestBase {
    */
   #[IgnoreDeprecations]
   public function testAutoloadHookInfoFiles(): void {
-    $this->expectDeprecation('Autoloading hooks in the file (core/modules/system/tests/modules/module_test/module_test.tokens.inc) is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765');
+    $this->expectUserDeprecationMessage('Autoloading hooks in the file (core/modules/system/tests/modules/module_test/module_test.tokens.inc) is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765');
     $this->moduleInstaller()->install(['module_test']);
     $testToken = [];
     $testToken['types']['token_info_invoked'] = [

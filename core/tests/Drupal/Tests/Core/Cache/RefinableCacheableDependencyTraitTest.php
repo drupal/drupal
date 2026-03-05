@@ -23,7 +23,7 @@ class RefinableCacheableDependencyTraitTest extends UnitTestCase implements Refi
  */
   #[IgnoreDeprecations]
   public function testNonCacheableDependencyAddDeprecation(): void {
-    $this->expectDeprecation("Calling Drupal\Core\Cache\RefinableCacheableDependencyTrait::addCacheableDependency() with an object that doesn't implement Drupal\Core\Cache\CacheableDependencyInterface is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3232020");
+    $this->expectUserDeprecationMessage("Calling Drupal\Core\Cache\RefinableCacheableDependencyTrait::addCacheableDependency() with an object that doesn't implement Drupal\Core\Cache\CacheableDependencyInterface is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3232020");
     $this->addCacheableDependency(new \stdClass());
   }
 

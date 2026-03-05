@@ -37,7 +37,7 @@ class TwigDeprecationsTest extends KernelTestBase {
     ];
     // Both 'foo' and 'bar' are deprecated in theme_test_hook_theme(),
     // but 'bar' is not used in theme-test-deprecations-hook-theme.html.twig.
-    $this->expectDeprecation($this->getDeprecationMessage('foo'));
+    $this->expectUserDeprecationMessage($this->getDeprecationMessage('foo'));
     $this->assertEquals('foo', $this->container->get('renderer')->renderRoot($element));
   }
 
@@ -69,7 +69,7 @@ class TwigDeprecationsTest extends KernelTestBase {
         'foo' => $this->getDeprecationMessage('foo'),
       ],
     ];
-    $this->expectDeprecation($this->getDeprecationMessage('foo'));
+    $this->expectUserDeprecationMessage($this->getDeprecationMessage('foo'));
     $this->assertRendered('foo|set_var|bar', $preprocess);
   }
 
@@ -83,7 +83,7 @@ class TwigDeprecationsTest extends KernelTestBase {
         'foo' => $this->getDeprecationMessage('foo'),
       ],
     ];
-    $this->expectDeprecation($this->getDeprecationMessage('foo'));
+    $this->expectUserDeprecationMessage($this->getDeprecationMessage('foo'));
     $this->assertRendered('|set_var|bar', $preprocess);
   }
 
@@ -97,8 +97,8 @@ class TwigDeprecationsTest extends KernelTestBase {
         'bar' => $this->getDeprecationMessage('bar'),
       ],
     ];
-    $this->expectDeprecation($this->getDeprecationMessage('foo'));
-    $this->expectDeprecation($this->getDeprecationMessage('bar'));
+    $this->expectUserDeprecationMessage($this->getDeprecationMessage('foo'));
+    $this->expectUserDeprecationMessage($this->getDeprecationMessage('bar'));
     $this->assertRendered('foo|set_var|bar', $preprocess);
   }
 

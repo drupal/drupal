@@ -187,7 +187,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   public function testWeightCannotBeNull(): void {
     $this->entity->set('weight', NULL);
     $this->assertNull($this->entity->getWeight());
-    $this->expectDeprecation('Saving a block with a non-integer weight is deprecated in drupal:11.1.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3462474');
+    $this->expectUserDeprecationMessage('Saving a block with a non-integer weight is deprecated in drupal:11.1.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3462474');
     $this->entity->save();
   }
 

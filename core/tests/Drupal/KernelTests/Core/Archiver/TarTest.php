@@ -27,7 +27,7 @@ class TarTest extends ArchiverTestBase {
    * Tests that the Tar archive is created if it does not exist.
    */
   public function testCreateArchive(): void {
-    $this->expectDeprecation('\Drupal\Core\Archiver\Tar is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3556927');
+    $this->expectUserDeprecationMessage('\Drupal\Core\Archiver\Tar is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3556927');
 
     $textFile = current($this->getTestFiles('text'));
     $archiveFilename = $this->fileSystem->realpath('public://' . $this->randomMachineName() . '.tar');
