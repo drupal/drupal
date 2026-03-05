@@ -746,9 +746,10 @@ function simpletest_script_setup_test_run_results_storage($new = FALSE) {
  * Execute a batch of tests.
  */
 function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_run_results_storage, $test_classes) {
-  global $args, $test_ids;
+  global $args, $test_ids, $total_time;
 
   $total_status = SIMPLETEST_SCRIPT_EXIT_SUCCESS;
+  $total_time = 0;
 
   $process_runner = PhpUnitTestRunner::create(\Drupal::getContainer())->setConfigurationFilePath($args['phpunit-configuration']);
 
@@ -803,6 +804,7 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
       if ($child['process']->isTerminated()) {
         // The child exited.
         $child['test_run']->end(microtime(TRUE));
+        $total_time += $child['test_run']->duration();
         $process_outcome = $process_runner->processPhpUnitOnSingleTestClassOutcome(
           $child['process'],
           $child['test_run'],
@@ -1313,10 +1315,18 @@ function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInter
  * Stop the test timer.
  */
 function simpletest_script_reporter_timer_stop(): void {
+  global $args, $total_time;
+
   echo "\n";
   $end = Timer::stop('run-tests');
-  echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval((int) ($end['time'] / 1000));
-  echo "\n\n";
+  $wall_seconds = $end['time'] / 1000;
+  $formatter = \Drupal::service('date.formatter');
+  echo "Wall time: " . $formatter->formatInterval((int) $wall_seconds) . "\n";
+  echo "Total time:  " . $formatter->formatInterval((int) $total_time) . "\n";
+  if ($wall_seconds > 0) {
+    echo sprintf("Speedup:   %.2fx (concurrency %d)\n", $total_time / $wall_seconds, $args['concurrency']);
+  }
+  echo "\n";
 }
 
 /**

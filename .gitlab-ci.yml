@@ -206,7 +206,7 @@ default:
   script:
     - sudo -u www-data -E -H composer run-script drupal-phpunit-upgrade-check
     # Need to pass this along directly.
-    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --debug-discovery --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite ":memory:" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_NODE_INDEX --ci-parallel-node-total $CI_NODE_TOTAL
+    - time sudo -u www-data -E -H php ./core/scripts/run-tests.sh --phpunit-configuration $PHPUNIT_CONFIGURATION_FILE_PATH --debug-discovery --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite ":memory:" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_NODE_INDEX --ci-parallel-node-total $CI_NODE_TOTAL
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
   artifacts:
@@ -413,7 +413,7 @@ default:
   parallel: 3
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 5
+    CONCURRENCY: "12"
     KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
@@ -437,7 +437,7 @@ default:
   parallel: 8
   variables:
     TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: "5"
+    CONCURRENCY: "24"
     KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
@@ -448,7 +448,7 @@ default:
   variables:
     TESTSUITE: PHPUnit-Kernel
     KUBERNETES_CPU_REQUEST: "8"
-    CONCURRENCY: 12
+    CONCURRENCY: "24"
   services:
     - <<: *with-database
 
