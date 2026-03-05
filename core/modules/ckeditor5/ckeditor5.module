@@ -29,12 +29,13 @@ function ckeditor5_filter_format_edit_form_submit(array $form, FormStateInterfac
 /**
  * AJAX callback handler for filter_format_form().
  *
- * Used instead of editor_form_filter_admin_form_ajax from the editor module.
+ * Used instead of editor module's EditorHooks::editorFormFilterAdminFormAjax().
  *
  * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
  *   \Drupal\ckeditor5\Hook\Ckeditor5Hooks::updateCkeditor5HtmlFilter() instead.
  *
  * @see https://www.drupal.org/node/3566774
+ * @see \Drupal\editor\Hook\EditorHooks::editorFormFilterAdminFormAjax()
  */
 function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_state) {
   @trigger_error(__FUNCTION__ . 'is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\ckeditor5\Hook\Ckeditor5Hooks::updateCkeditor5HtmlFilter() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);

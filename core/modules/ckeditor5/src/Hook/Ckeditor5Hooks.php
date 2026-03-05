@@ -522,7 +522,7 @@ class Ckeditor5Hooks {
   /**
    * AJAX callback handler for filter_format_form().
    *
-   * Used instead of editor_form_filter_admin_form_ajax from the editor module.
+   * Used instead of EditorHooks::editorFormFilterAdminFormAjax().
    *
    * @param array $form
    *   The form render array.
@@ -531,6 +531,8 @@ class Ckeditor5Hooks {
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The Ajax response.
+   *
+   * @see \Drupal\editor\Hook\EditorHooks::editorFormFilterAdminFormAjax()
    */
   public function updateCkeditor5HtmlFilter(array $form, FormStateInterface $form_state): AjaxResponse {
     $response = new AjaxResponse();
