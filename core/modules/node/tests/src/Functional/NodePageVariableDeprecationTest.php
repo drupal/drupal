@@ -44,7 +44,7 @@ class NodePageVariableDeprecationTest extends NodeTestBase {
     // Create a dummy node to skip node--1.html.twig in test_theme.
     $this->drupalCreateNode();
     $node = $this->drupalCreateNode(['type' => 'test_page_variable']);
-    $this->expectUserDeprecationMessage("'page' is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3458593");
+    $this->expectDeprecation("'page' is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3458593");
     $this->drupalGet($node->toUrl());
     $this->assertSession()->pageTextContains('The page variable is set');
 

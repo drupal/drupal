@@ -388,7 +388,7 @@ class RouterTest extends BrowserTestBase {
 
     // Check an aliased route with a deprecation message.
     $deprecated_route_url = Url::fromRoute('router_test.deprecated');
-    $this->expectUserDeprecationMessage('The "router_test.deprecated" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "router_test.1" route instead.');
+    $this->expectDeprecation('The "router_test.deprecated" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "router_test.1" route instead.');
     $this->drupalGet($deprecated_route_url);
     $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1'));
 

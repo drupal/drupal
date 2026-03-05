@@ -221,7 +221,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
    */
   #[IgnoreDeprecations]
   public function testDeprecatedInstall(): void {
-    $this->expectUserDeprecationMessage("The module 'deprecated_module' is deprecated. See http://example.com/deprecated");
+    $this->expectDeprecation("The module 'deprecated_module' is deprecated. See http://example.com/deprecated");
     \Drupal::service('module_installer')->install(['deprecated_module']);
     $this->assertTrue(\Drupal::service('module_handler')->moduleExists('deprecated_module'));
   }
@@ -234,7 +234,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
    */
   #[IgnoreDeprecations]
   public function testUninstallValidatorsBC(): void {
-    $this->expectUserDeprecationMessage('The "module_installer.uninstall_validators" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject "!tagged_iterator module_install.uninstall_validator" instead. See https://www.drupal.org/node/3432595');
+    $this->expectDeprecation('The "module_installer.uninstall_validators" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject "!tagged_iterator module_install.uninstall_validator" instead. See https://www.drupal.org/node/3432595');
     $module_installer = new ModuleInstaller(
       $this->container->getParameter('app.root'),
       $this->container->get('module_handler'),
@@ -244,7 +244,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
       $this->container->get('logger.channel.default'),
     );
 
-    $this->expectUserDeprecationMessage('Drupal\Core\Extension\ModuleInstaller::addUninstallValidator is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject the uninstall validators into the constructor instead. See https://www.drupal.org/node/3432595');
+    $this->expectDeprecation('Drupal\Core\Extension\ModuleInstaller::addUninstallValidator is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject the uninstall validators into the constructor instead. See https://www.drupal.org/node/3432595');
     $module_installer->addUninstallValidator($this->createMock(ModuleUninstallValidatorInterface::class));
   }
 

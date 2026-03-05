@@ -111,7 +111,7 @@ class FileSystemTest extends UnitTestCase {
   #[IgnoreDeprecations]
   #[DataProvider('providerTestBasename')]
   public function testBasename($uri, $expected, $suffix = NULL): void {
-    $this->expectUserDeprecationMessage("Calling FileSystem::basename() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use PHP native basename() instead. See https://www.drupal.org/node/3530869");
+    $this->expectDeprecation("Calling FileSystem::basename() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use PHP native basename() instead. See https://www.drupal.org/node/3530869");
     $this->assertSame($expected, $this->fileSystem->basename($uri, $suffix));
   }
 

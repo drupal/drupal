@@ -132,7 +132,7 @@ class ThemeExtensionListTest extends UnitTestCase {
     $theme_engine_list = $this->prophesize(ThemeEngineExtensionList::class);
     $theme_listing = new ThemeExtensionList($this->root, 'theme', new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, $theme_engine_list->reveal(), 'test');
 
-    $this->expectUserDeprecationMessage("\Drupal\Core\Extension\ThemeExtensionList::getBaseThemes() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3413187");
+    $this->expectDeprecation("\Drupal\Core\Extension\ThemeExtensionList::getBaseThemes() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3413187");
     $base_themes = $theme_listing->getBaseThemes($themes, $theme);
 
     $this->assertEquals($expected, $base_themes);

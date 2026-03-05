@@ -158,7 +158,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
   public function testSaveBlockWithDeprecatedItemsPerPageSetting(): void {
     $this->container->get(ThemeInstallerInterface::class)->install(['stark']);
 
-    $this->expectUserDeprecationMessage('Saving a views block with "none" items per page is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. To use the items per page defined by the view, use NULL. See https://www.drupal.org/node/3522240');
+    $this->expectDeprecation('Saving a views block with "none" items per page is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. To use the items per page defined by the view, use NULL. See https://www.drupal.org/node/3522240');
     $block = $this->placeBlock('views_block:test_view_block-block_1', [
       'items_per_page' => 'none',
     ]);

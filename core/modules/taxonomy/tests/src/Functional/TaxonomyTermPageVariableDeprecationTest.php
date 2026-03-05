@@ -43,7 +43,7 @@ class TaxonomyTermPageVariableDeprecationTest extends TaxonomyTestBase {
    */
   public function testPageVariableDeprecation(): void {
     $term = $this->createTerm(Vocabulary::load('test_page_variable'));
-    $this->expectUserDeprecationMessage("'page' is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3542527");
+    $this->expectDeprecation("'page' is deprecated in drupal:11.3.0 and is removed in drupal:13.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3542527");
     $this->drupalGet($term->toUrl());
     $this->assertSession()->pageTextContains('The page variable is set');
 

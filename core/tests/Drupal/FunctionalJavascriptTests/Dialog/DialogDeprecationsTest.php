@@ -44,7 +44,7 @@ class DialogDeprecationsTest extends WebDriverTestBase {
 
     $this->assertNotNull($assert_session->waitForElement('css', '.ui-dialog-content'));
     $this->getSession()->executeScript("window.jQuery('.ui-dialog-content').trigger('dialogButtonsChange');");
-    $this->expectUserDeprecationMessage('Javascript Deprecation: jQuery event dialogButtonsChange is deprecated in 11.2.0 and is removed from Drupal:12.0.0. See https://www.drupal.org/node/3464202');
+    $this->expectDeprecation('Javascript Deprecation: jQuery event dialogButtonsChange is deprecated in 11.2.0 and is removed from Drupal:12.0.0. See https://www.drupal.org/node/3464202');
   }
 
 }

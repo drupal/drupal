@@ -114,7 +114,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $class_loader->register(TRUE);
     $this->layoutPluginManager = new LayoutPluginManager($namespaces, $this->cacheBackend->reveal(), $this->moduleHandler->reveal(), $this->themeHandler->reveal());
 
-    $this->expectUserDeprecationMessage('Using @Layout annotation for plugin with ID plugin_provided_by_annotation_layout is deprecated and is removed from drupal:13.0.0. Use a Drupal\Core\Layout\Attribute\Layout attribute instead. See https://www.drupal.org/node/3395575');
+    $this->expectDeprecation('Using @Layout annotation for plugin with ID plugin_provided_by_annotation_layout is deprecated and is removed from drupal:13.0.0. Use a Drupal\Core\Layout\Attribute\Layout attribute instead. See https://www.drupal.org/node/3395575');
   }
 
   /**
@@ -289,7 +289,7 @@ EOS;
    * @legacy-covers ::processDefinition
    */
   public function testProcessDefinitionWithMissingLayoutLabel(): void {
-    $this->expectUserDeprecationMessage('A layout plugin not having a label is deprecated in drupal:11.4.0 and having a label will be enforced in drupal:12.0.0. See https://www.drupal.org/node/3464076');
+    $this->expectDeprecation('A layout plugin not having a label is deprecated in drupal:11.4.0 and having a label will be enforced in drupal:12.0.0. See https://www.drupal.org/node/3464076');
     $module_a_label_less_layout = <<<'EOS'
 module_a_label_less_layout:
   description: A layout that doesn't have a label.

@@ -1645,7 +1645,7 @@ PHP,
       $this->expectExceptionMessage($expected_message);
     }
     if ($expected_deprecation_message) {
-      $this->expectUserDeprecationMessage($expected_deprecation_message);
+      $this->expectDeprecation($expected_deprecation_message);
     }
 
     $container = $this->mockModuleInVfs('ckeditor5_derived_plugin', $yaml, $additional_files);

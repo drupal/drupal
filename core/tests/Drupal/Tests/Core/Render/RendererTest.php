@@ -1216,7 +1216,7 @@ class RendererTest extends RendererTestBase {
       '#access' => 'bar',
     ];
 
-    $this->expectUserDeprecationMessage('Using a #access value other than a boolean or an AccessResultInterface object is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3549344');
+    $this->expectDeprecation('Using a #access value other than a boolean or an AccessResultInterface object is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3549344');
     $this->renderer->renderRoot($build);
   }
 

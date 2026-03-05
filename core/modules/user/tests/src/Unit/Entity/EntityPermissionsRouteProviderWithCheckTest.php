@@ -36,7 +36,7 @@ class EntityPermissionsRouteProviderWithCheckTest extends UnitTestCase {
       ->willReturn($entity_type);
     $entity_type_manager = $prophecy->reveal();
 
-    $this->expectUserDeprecationMessage('Drupal\user\Entity\EntityPermissionsRouteProviderWithCheck is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use EntityPermissionsRouteProvider instead. See https://www.drupal.org/node/3384745');
+    $this->expectDeprecation('Drupal\user\Entity\EntityPermissionsRouteProviderWithCheck is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use EntityPermissionsRouteProvider instead. See https://www.drupal.org/node/3384745');
     (new EntityPermissionsRouteProviderWithCheck($entity_type_manager))
       ->getRoutes($entity_type);
   }
