@@ -1,0 +1,7 @@
+text-summary-override:
+  js:
+    js/text-summary-override.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupal.text

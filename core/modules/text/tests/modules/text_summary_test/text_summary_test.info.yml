@@ -1,0 +1,7 @@
+name: 'Text summary test'
+type: module
+description: 'Provides test hook implementations for text summary tests'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:text
