@@ -92,12 +92,7 @@ class ViewsUiHooks {
    */
   #[Hook('contextual_links_view_alter')]
   public function contextualLinksViewAlter(&$element, $items): void {
-    // Remove contextual links from being rendered, when so desired, such as
-    // within a View preview.
-    if (views_ui_contextual_links_suppress()) {
-      $element['#links'] = [];
-    }
-    elseif (!empty($element['#links']['entityviewedit-form'])) {
+    if (!empty($element['#links']['entityviewedit-form'])) {
       $display_id = $items['entity.view.edit_form']['metadata']['display_id'];
       $route_parameters = $element['#links']['entityviewedit-form']['url']->getRouteParameters() + ['display_id' => $display_id];
       $element['#links']['entityviewedit-form']['url'] = Url::fromRoute('entity.view.edit_display_form', $route_parameters);

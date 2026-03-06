@@ -98,14 +98,13 @@ function views_ui_view_preview_section_rows_links(ViewExecutable $view): array {
 /**
  * Sets a static variable for controlling whether contextual links are rendered.
  *
- * @see views_ui_contextual_links_view_alter()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3039250
  */
 function views_ui_contextual_links_suppress($set = NULL) {
-  $suppress = &drupal_static(__FUNCTION__);
-  if (isset($set)) {
-    $suppress = $set;
-  }
-  return $suppress;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3039250', E_USER_DEPRECATED);
 }
 
 /**
@@ -118,19 +117,25 @@ function views_ui_contextual_links_suppress($set = NULL) {
  * during a View preview, when it is not desired for nodes in the Views result
  * to have contextual links.
  *
- * @see views_ui_contextual_links_suppress_pop()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3039250
  */
 function views_ui_contextual_links_suppress_push(): void {
-  views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress()) + 1);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3039250', E_USER_DEPRECATED);
 }
 
 /**
  * Decrements the views_ui_contextual_links_suppress() static variable.
  *
- * @see views_ui_contextual_links_suppress_push()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3039250
  */
 function views_ui_contextual_links_suppress_pop(): void {
-  views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress()) - 1);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3039250', E_USER_DEPRECATED);
 }
 
 /**
