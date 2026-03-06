@@ -12,66 +12,6 @@ use Drupal\file\FileInterface;
 use Drupal\locale\Gettext;
 
 /**
- * Prepare a batch to import all translations.
- *
- * @param array $options
- *   An array with options that can have the following elements:
- *   - 'langcode': The language code. Optional, defaults to NULL, which means
- *     that the language will be detected from the name of the files.
- *   - 'overwrite_options': Overwrite options array as defined in
- *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
- *   - 'customized': Flag indicating whether the strings imported from $file
- *     are customized translations or come from a community source. Use
- *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
- *     LOCALE_NOT_CUSTOMIZED.
- *   - 'finish_feedback': Whether or not to give feedback to the user when the
- *     batch is finished. Optional, defaults to TRUE.
- * @param bool $force
- *   (optional) Import all available files, even if they were imported before.
- *
- * @return array|bool
- *   The batch structure, or FALSE if no files are used to build the batch.
- *
- * @todo Integrate with update status to identify projects needed and integrate
- *   l10n_update functionality to feed in translation files alike.
- *   https://www.drupal.org/node/1191488
- */
-function locale_translate_batch_import_files(array $options, $force = FALSE) {
-  $options += [
-    'overwrite_options' => [],
-    'customized' => LOCALE_NOT_CUSTOMIZED,
-    'finish_feedback' => TRUE,
-  ];
-
-  if (!empty($options['langcode'])) {
-    $langcodes = [$options['langcode']];
-  }
-  else {
-    // If langcode was not provided, make sure to only import files for the
-    // languages we have added.
-    $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
-  }
-
-  $files = locale_translate_get_interface_translation_files([], $langcodes);
-
-  if (!$force) {
-    $result = \Drupal::database()->select('locale_file', 'lf')
-      ->fields('lf', ['langcode', 'uri', 'timestamp'])
-      ->condition('langcode', $langcodes)
-      ->execute()
-      ->fetchAllAssoc('uri');
-    foreach ($result as $uri => $info) {
-      if (isset($files[$uri]) && filemtime($uri) <= $info->timestamp) {
-        // The file is already imported and not changed since the last import.
-        // Remove it from file list and don't import it again.
-        unset($files[$uri]);
-      }
-    }
-  }
-  return locale_translate_batch_build($files, $options);
-}
-
-/**
  * Get interface translation files present in the translations directory.
  *
  * @param array $projects

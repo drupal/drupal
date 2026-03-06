@@ -19,7 +19,7 @@ use Drupal\locale\LocaleFetch;
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  * @param array $options
- *   Array of import options. See locale_translate_batch_import_files().
+ *   Array of import options. See locale_translate_batch_build().
  *
  * @return array
  *   Batch definition array.
@@ -45,7 +45,7 @@ function locale_translation_batch_update_build($projects = [], $langcodes = [], 
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  * @param array $options
- *   Array of import options. See locale_translate_batch_import_files().
+ *   Array of import options. See locale_translate_batch_build().
  *
  * @return array
  *   Batch definition array.
