@@ -611,13 +611,6 @@ class ViewUI implements ViewEntityInterface {
       $request->setSession($request_stack->getSession());
       $request_stack->push($request);
 
-      // Suppress contextual links of entities within the result set during a
-      // Preview.
-      // @todo We'll want to add contextual links specific to editing the View,
-      //   so the suppression may need to be moved deeper into the Preview
-      //   pipeline.
-      views_ui_contextual_links_suppress_push();
-
       $show_additional_queries = $config->get('ui.show.additional_queries');
 
       Timer::start('entity.view.preview_form');
@@ -634,8 +627,6 @@ class ViewUI implements ViewEntityInterface {
       }
 
       $this->render_time = Timer::stop('entity.view.preview_form')['time'];
-
-      views_ui_contextual_links_suppress_pop();
 
       // Prepare the query information and statistics to show either above or
       // below the view preview.
