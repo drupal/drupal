@@ -18,7 +18,6 @@ use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterEventSubscribersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
-use Drupal\Core\DependencyInjection\Compiler\RegisterStreamWrappersPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
 use Drupal\Core\DependencyInjection\Compiler\SuperUserAccessPolicyPass;
@@ -91,7 +90,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     // Collect tagged handler services as method calls on consumer services.
     $container->addCompilerPass(new TaggedHandlersPass());
-    $container->addCompilerPass(new RegisterStreamWrappersPass());
     $container->addCompilerPass(new TwigExtensionPass());
 
     // Add a compiler pass for registering event subscribers.

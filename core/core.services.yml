@@ -1554,6 +1554,7 @@ services:
   Drupal\Core\Render\ElementInfoManagerInterface: '@plugin.manager.element_info'
   stream_wrapper_manager:
     class: Drupal\Core\StreamWrapper\StreamWrapperManager
+    autowire: true
   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface: '@stream_wrapper_manager'
   stream_wrapper.assets:
     class: Drupal\Core\StreamWrapper\AssetsStream
