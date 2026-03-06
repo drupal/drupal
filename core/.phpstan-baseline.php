@@ -30394,12 +30394,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument_default/Tid.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\argument_default\\\\Tid\\:\\:getCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument_default/Tid.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\argument_default\\\\Tid\\:\\:submitOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
