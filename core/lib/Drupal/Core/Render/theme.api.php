@@ -1373,5 +1373,20 @@ function hook_template_preprocess_default_variables_alter(&$variables) {
 }
 
 /**
+ * Alter icon pack definitions.
+ *
+ * Allows modules to modify icon pack definitions.
+ *
+ * @param array $icon_packs
+ *   The array of icon pack definitions, keyed by icon pack ID.
+ */
+function hook_icon_pack_alter(array &$icon_packs): void {
+  // Example: Change the label of an icon pack.
+  if (isset($icon_packs['navigation'])) {
+    $icon_packs['navigation']['label'] = 'Custom navigation icons';
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
