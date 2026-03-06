@@ -492,8 +492,9 @@ condition.plugin:
     negate:
       type: boolean
       label: 'Negate'
+    uuid:
+      type: uuid
     context_mapping:
-      requiredKey: false
       type: sequence
       label: 'Context assignments'
       sequence:
