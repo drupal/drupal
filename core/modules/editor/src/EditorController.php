@@ -16,7 +16,7 @@ class EditorController extends ControllerBase {
   public function __construct(protected ?Element $editorElement = NULL) {
     if (!$editorElement) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $editorElement argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3568146', E_USER_DEPRECATED);
-      $this->editorElement = \Drupal::service('editor.element');
+      $this->editorElement = \Drupal::service(Element::class);
     }
   }
 
