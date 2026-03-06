@@ -25,7 +25,6 @@ services:
     arguments: ['@tempstore.private']
     tags:
       - { name: paramconverter }
-    lazy: true
   cache_context.user.node_grants:
     class: Drupal\node\Cache\NodeAccessGrantsCacheContext
     arguments: ['@current_user', '@entity_type.manager']

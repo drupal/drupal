@@ -897,7 +897,6 @@ services:
     tags:
       - { name: paramconverter }
     arguments: ['@plugin.manager.menu.link']
-    lazy: true
   menu.tree_storage:
     class: Drupal\Core\Menu\MenuTreeStorage
     arguments: ['@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']
@@ -1226,8 +1225,7 @@ services:
       - { name: route_filter, priority: 5 }
   paramconverter_manager:
     class: Drupal\Core\ParamConverter\ParamConverterManager
-    tags:
-      - { name: service_collector, tag: paramconverter, call: addConverter }
+    autowire: true
   Drupal\Core\ParamConverter\ParamConverterManagerInterface: '@paramconverter_manager'
   paramconverter_subscriber:
     class: Drupal\Core\EventSubscriber\ParamConverterSubscriber
@@ -1248,7 +1246,6 @@ services:
       # Use a higher priority than EntityConverter, see the class for details.
       - { name: paramconverter, priority: 5 }
     arguments: ['@entity_type.manager', '@config.factory', '@router.admin_context', '@entity.repository']
-    lazy: true
   route_subscriber.module:
     class: Drupal\Core\EventSubscriber\ModuleRouteSubscriber
     arguments: ['@module_handler']
