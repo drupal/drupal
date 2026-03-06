@@ -62,6 +62,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->testCacheInvalidation();
     $this->testLogin();
     $this->testLoginBlock();
+    $this->testAdmin();
   }
 
   /**
@@ -540,6 +541,75 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 10,
     ];
     $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Tests performance of a logged-in admin user with the navigation toolbar.
+   */
+  protected function testAdmin(): void {
+    $admin_user = $this->drupalCreateUser();
+    $admin_user->addRole('administrator');
+    $admin_user->save();
+
+    // Ensure no user is logged in and clear the render cache bin before
+    // starting the warm-up, since prior sub-tests may leave an active session
+    // and stale render cache entries.
+    $this->drupalLogout();
+    \Drupal::cache('render')->deleteAll();
+
+    $this->drupalLogin($admin_user);
+    // Request the front page twice to ensure all cache collectors are fully
+    // warmed. The exact contents of cache collectors depends on the order in
+    // which requests complete so this ensures that the second request completes
+    // after asset aggregates are served.
+    $this->drupalGet('');
+    sleep(1);
+    $this->drupalGet('');
+    // Flush the dynamic page cache to simulate visiting a page that is not
+    // already fully cached.
+    \Drupal::cache('dynamic_page_cache')->deleteAll();
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('');
+    }, 'testAdmin');
+
+    $expected_queries = [
+      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
+      'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "3" AND "u"."default_langcode" = 1',
+      'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "3"',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
+    ];
+    $recorded_queries = $performance_data->getQueries();
+    $this->assertSame($expected_queries, $recorded_queries);
+
+    $expected = [
+      'QueryCount' => 4,
+      'CacheGetCount' => 45,
+      'CacheGetCountByBin' => [
+        'config' => 10,
+        'data' => 4,
+        'discovery' => 9,
+        'bootstrap' => 8,
+        'dynamic_page_cache' => 1,
+        'render' => 12,
+        'menu' => 1,
+      ],
+      'CacheSetCount' => 2,
+      'CacheSetCountByBin' => [
+        'dynamic_page_cache' => 2,
+      ],
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 7,
+      'ScriptCount' => 3,
+      'ScriptBytes' => 141352,
+      'StylesheetCount' => 2,
+      'StylesheetBytes' => 42533,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+
+    // The navigation toolbar must be cached under low-cardinality contexts,
+    // not per-user, to ensure it scales for authenticated admins.
+    $this->assertIsObject(\Drupal::cache('render')->get('navigation:navigation:[languages:language_interface]=en:[theme]=stark:[user.permissions]=is-admin'));
   }
 
   /**
