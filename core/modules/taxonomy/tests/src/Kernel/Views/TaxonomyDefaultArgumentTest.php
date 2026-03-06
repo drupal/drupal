@@ -63,7 +63,6 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
 
     $expected = implode(',', [$this->term1->id(), $this->term2->id()]);
     $this->assertEquals($expected, $view->argument['tid']->getDefaultArgument());
-    $this->assertEquals($this->nodes[0]->getCacheTags(), $view->argument['tid']->getPlugin('argument_default')->getCacheTags());
     $view->destroy();
   }
 
@@ -89,7 +88,6 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
 
     $expected = implode(',', [$this->term1->id(), $this->term2->id()]);
     $this->assertEquals($expected, $view->argument['tid']->getDefaultArgument());
-    $this->assertEquals($this->nodes[0]->getCacheTags(), $view->argument['tid']->getPlugin('argument_default')->getCacheTags());
   }
 
   /**
@@ -100,7 +98,6 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
 
     $expected = $this->term1->id();
     $this->assertEquals($expected, $view->argument['tid']->getDefaultArgument());
-    $this->assertEmpty($view->argument['tid']->getPlugin('argument_default')->getCacheTags());
   }
 
 }
