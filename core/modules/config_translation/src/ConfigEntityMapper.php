@@ -134,7 +134,7 @@ class ConfigEntityMapper extends ConfigNamesMapper implements ConfigEntityMapper
     // Add the list of configuration IDs belonging to this entity. We add on a
     // possibly existing list of names. This allows modules to alter the entity
     // page with more names if form altering added more configuration to an
-    // entity. This is not a Drupal 8 best practice (ideally the configuration
+    // entity. This is not a Drupal best practice (ideally the configuration
     // would have pluggable components), but this may happen as well.
     /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $entity_type_info */
     $entity_type_info = $this->entityTypeManager->getDefinition($this->entityType);

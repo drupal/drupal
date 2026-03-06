@@ -33,12 +33,9 @@ class MockBlockManager extends PluginManagerBase {
     // object.
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
 
-    // The plugin definitions that follow are based on work that is in progress
-    // for the Drupal 8 Blocks and Layouts initiative
-    // (http://groups.drupal.org/node/213563). As stated above, we set
-    // definitions here, because this is for unit testing. Real plugin managers
-    // use a discovery implementation that allows for any module to add new
-    // plugins to the system.
+    // As stated above, we set definitions here, because this is for unit
+    // testing. Real plugin managers use a discovery implementation that allows
+    // for any module to add new plugins to the system.
 
     // A simple plugin: the user login block.
     $this->discovery->setDefinition('user_login', [

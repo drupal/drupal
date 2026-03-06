@@ -404,7 +404,7 @@ class Url implements TrustedCallbackInterface {
     // Both PathValidator::getUrlIfValidWithoutAccessCheck() and 'base:' URIs
     // only accept/contain paths without a leading slash, unlike 'internal:'
     // URIs, for which the leading slash means "relative to Drupal root" and
-    // "relative to Symfony app root" (just like in Symfony/Drupal 8 routes).
+    // "relative to Symfony app root" (just like in Symfony/Drupal routes).
     if (empty($uri_parts['path'])) {
       $uri_parts['path'] = '<none>';
     }

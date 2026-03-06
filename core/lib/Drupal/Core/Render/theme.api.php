@@ -27,13 +27,13 @@ use Drupal\Core\Extension\ThemeSettingsProvider;
  * arrays and rendering.
  *
  * @section sec_twig_theme Twig Templating Engine
- * Drupal 8 uses the templating engine Twig. Twig offers developers a fast,
- * secure, and flexible method for building templates for Drupal 8 sites. Twig
+ * Drupal uses the templating engine Twig. Twig offers developers a fast,
+ * secure, and flexible method for building templates for Drupal sites. Twig
  * also offers substantial usability improvements over PHPTemplate, and does
  * not require front-end developers to know PHP to build and manipulate Drupal
- * 8 themes.
+ * themes.
  *
- * For further information on theming in Drupal 8 see
+ * For further information on theming in Drupal see
  * https://www.drupal.org/docs/develop/theming-drupal
  *
  * For further Twig documentation see

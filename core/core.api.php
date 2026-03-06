@@ -563,7 +563,7 @@
  *
  * Drupal is a content management system, so naturally you want changes to your
  * content to be reflected everywhere, immediately. That's why we made sure that
- * every entity type in Drupal 8 automatically has support for cache tags: when
+ * every entity type in Drupal automatically has support for cache tags: when
  * you save an entity, you can be sure that the cache items that have the
  * corresponding cache tags will be invalidated.
  * This also is the case when you define your own entity types: you'll get the

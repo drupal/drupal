@@ -53,7 +53,7 @@ use Drupal\Core\Render\Element;
  *     option. But people are used to this being the behavior of select
  *     controls.
  *
- *     @todo Address the above issue in Drupal 8.
+ *     @todo Address the above issue in https://www.drupal.org/node/3361217.
  *   - If #required is not TRUE and this value is set (most commonly to an
  *     empty string), then an extra option (see #empty_option above)
  *     representing a "non-selection" is added with this as its value.
