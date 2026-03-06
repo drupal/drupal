@@ -217,7 +217,7 @@ function locale_translation_batch_fetch_download($project, $langcode, &$context)
  * @param array $context
  *   The batch context.
  *
- * @see locale_translate_batch_import_files()
+ * @see locale_translate_batch_build()
  * @see locale_translation_batch_fetch_download()
  */
 function locale_translation_batch_fetch_import($project, $langcode, $options, &$context): void {
