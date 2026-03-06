@@ -159,6 +159,13 @@ class ProjectCoreCompatibilityTest extends UnitTestCase {
         'core_compatibility_message' => 'Requires Drupal core: 8.9.0, 8.9.2, 9.0.1 to 9.0.2',
       ],
     ];
+
+    // Ensure that invalid version strings like "main" are filtered out and
+    // do not cause exceptions.
+    $test_cases['with invalid version string in releases'] = $test_cases['with 9 full releases, supported'];
+    $test_cases['with invalid version string in releases']['supported_branches'][] = 'main';
+    $test_cases['with invalid version string in releases']['core_releases']['main'] = [];
+
     return $test_cases;
   }
 

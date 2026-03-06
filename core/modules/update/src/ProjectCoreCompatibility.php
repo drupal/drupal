@@ -86,7 +86,15 @@ final class ProjectCoreCompatibility {
       // versions after the existing version.
       return [];
     }
-    $supported_versions = array_filter(array_keys($core_releases), function ($version) use ($supported_branches) {
+    $version_parser = new VersionParser();
+    $supported_versions = array_filter(array_keys($core_releases), function ($version) use ($supported_branches, $version_parser) {
+      // Filter out invalid semantic versions from external sources.
+      try {
+        $version_parser->normalize($version);
+      }
+      catch (\UnexpectedValueException) {
+        return FALSE;
+      }
       foreach ($supported_branches as $supported_branch) {
         if (strpos($version, $supported_branch) === 0) {
           return TRUE;
@@ -94,8 +102,13 @@ final class ProjectCoreCompatibility {
       }
       return FALSE;
     });
-    $possible_core_update_versions = Semver::satisfiedBy($supported_versions, '>= ' . $this->existingCoreVersion);
-    $possible_core_update_versions = Semver::sort($possible_core_update_versions);
+    try {
+      $possible_core_update_versions = Semver::satisfiedBy($supported_versions, '>= ' . $this->existingCoreVersion);
+      $possible_core_update_versions = Semver::sort($possible_core_update_versions);
+    }
+    catch (\UnexpectedValueException) {
+      return [];
+    }
     $possible_core_update_versions = array_filter($possible_core_update_versions, function ($version) {
       return VersionParser::parseStability($version) === 'stable';
     });
@@ -218,7 +231,13 @@ final class ProjectCoreCompatibility {
   protected function getCompatibilityRanges($core_compatibility_constraint) {
     $compatibility_ranges = [];
     foreach ($this->possibleCoreUpdateVersions as $possible_core_update_version) {
-      if (Semver::satisfies($possible_core_update_version, $core_compatibility_constraint)) {
+      try {
+        $satisfies = Semver::satisfies($possible_core_update_version, $core_compatibility_constraint);
+      }
+      catch (\UnexpectedValueException) {
+        continue;
+      }
+      if ($satisfies) {
         if (empty($range)) {
           $range[] = $possible_core_update_version;
         }
