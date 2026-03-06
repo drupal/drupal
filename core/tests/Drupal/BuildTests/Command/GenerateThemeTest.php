@@ -121,14 +121,14 @@ class GenerateThemeTest extends QuickStartTestBase {
     // Ensure that a new theme cannot be generated when the destination
     // directory already exists.
     $theme_path_absolute = $this->getWorkspaceDirectory() . "/$theme_path_relative";
-    $this->assertFileExists($theme_path_absolute . '/test_custom_theme.theme');
-    unlink($theme_path_absolute . '/test_custom_theme.theme');
+    $this->assertFileExists($theme_path_absolute . '/src/Hook/TestCustomThemeHooks.php');
+    unlink($theme_path_absolute . '/src/Hook/TestCustomThemeHooks.php');
     $process = $this->generateThemeFromStarterkit();
     $result = $process->run();
     $this->assertStringContainsString('Theme could not be generated because the destination directory', $process->getErrorOutput());
     $this->assertStringContainsString($theme_path_relative, $process->getErrorOutput());
     $this->assertSame(1, $result);
-    $this->assertFileDoesNotExist($theme_path_absolute . '/test_custom_theme.theme');
+    $this->assertFileDoesNotExist($theme_path_absolute . '/src/Hook/TestCustomThemeHooks.php');
   }
 
   /**
@@ -171,8 +171,8 @@ YAML
     $this->assertSame(0, $exit_code);
 
     // Confirm new .theme file.
-    $dot_theme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/generated_from_another_theme.theme';
-    $this->assertStringContainsString('function generated_from_another_theme_preprocess_image_widget(array &$variables): void {', file_get_contents($dot_theme_file));
+    $dot_theme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/src/Hook/GeneratedFromAnotherThemeHooks.php';
+    $this->assertStringContainsString('public function preprocessImageWidget(array &$variables): void {', file_get_contents($dot_theme_file));
   }
 
   /**
@@ -395,7 +395,6 @@ SH;
     $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
     self::assertDirectoryExists($theme_path_absolute);
     self::assertFileDoesNotExist($theme_path_absolute . '/src/StarterKit.php');
-    self::assertDirectoryDoesNotExist($theme_path_absolute . '/src');
   }
 
   public function testNoEditMissingFilesWarning(): void {
