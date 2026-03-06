@@ -26,6 +26,7 @@ class PhpRequirementsTest extends UnitTestCase {
   public function testPhpEolDates(): void {
     $reflected = new \ReflectionClass(PhpRequirements::class);
     $php_eol_dates = $reflected->getStaticPropertyValue('phpEolDates');
+    $this->assertArrayHasKey(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, $php_eol_dates, 'The current PHP version end of life is known.');
 
     foreach ($php_eol_dates as $version => $eol_date) {
       // Ensure that all of the version numbers are defined in a superset of
