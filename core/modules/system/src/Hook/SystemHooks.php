@@ -2,7 +2,6 @@
 
 namespace Drupal\system\Hook;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Core\Site\Settings;
@@ -485,19 +484,6 @@ class SystemHooks {
       }
     }
     return NULL;
-  }
-
-  /**
-   * Implements hook_entity_form_mode_presave().
-   *
-   * Transforms empty description into null.
-   */
-  #[Hook('entity_form_mode_presave')]
-  public function systemEntityFormModePresave(EntityInterface $entity): void {
-    if ($entity->get('description') !== NULL && trim($entity->get('description')) === '') {
-      @trigger_error("Setting description to an empty string is deprecated in drupal:11.2.0 and it must be null in drupal:12.0.0. See https://www.drupal.org/node/3452144", E_USER_DEPRECATED);
-      $entity->set('description', NULL);
-    }
   }
 
 }

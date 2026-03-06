@@ -208,7 +208,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
  * Converts theme settings to configuration.
  *
  * @param array $theme_settings
- *   An array of theme settings from system setting form or a Drupal 7 variable.
+ *   An array of theme settings from system setting form.
  * @param \Drupal\Core\Config\Config $config
  *   The configuration object to update.
  *

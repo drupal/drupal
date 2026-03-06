@@ -1316,17 +1316,17 @@ function hook_theme($existing, $type, $theme, $path): array {
  * For example:
  * @code
  * $theme_registry['entity_add_list'] = [
+ *   'variables' => [
+ *     'bundles' => [],
+ *     'add_bundle_message' => NULL,
+ *   ],
  *   'template' => 'entity-add-list',
- *   'path' => 'core/themes/claro/templates',
+ *   'initial preprocess' => 'Drupal\\system\\Hook\\SystemThemeHooks:preprocessEntityAddList',
  *   'type' => 'theme_engine',
  *   'theme path' => 'core/themes/claro',
- *   'variables' => [
- *     'bundles' => NULL,
- *   ],
- *   'initial preprocess => '\Drupal\system\Hook\SystemThemeHooks::preprocessEntityAddList',
+ *   'path' => 'core/themes/claro/templates',
  *   'preprocess functions' => [
- *     2 => 'contextual_preprocess',
- *     3 => 'claro_preprocess_entity_add_list',
+ *     0 => 'claro_preprocess_entity_add_list',
  *   ],
  * ];
  * @endcode

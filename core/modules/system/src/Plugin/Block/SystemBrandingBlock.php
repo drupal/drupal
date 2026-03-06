@@ -31,13 +31,9 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     $plugin_id,
     $plugin_definition,
     protected ConfigFactoryInterface $configFactory,
-    protected ?ThemeSettingsProvider $themeSettingsProvider = NULL,
+    protected ThemeSettingsProvider $themeSettingsProvider,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if ($themeSettingsProvider === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $themeSettingsProvider argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3035289', E_USER_DEPRECATED);
-      $this->themeSettingsProvider = \Drupal::service(ThemeSettingsProvider::class);
-    }
   }
 
   /**

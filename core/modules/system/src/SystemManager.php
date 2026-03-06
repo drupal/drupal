@@ -108,27 +108,6 @@ class SystemManager {
   }
 
   /**
-   * Extracts the highest severity from the requirements array.
-   *
-   * @param array $requirements
-   *   An array of requirements, in the same format as is returned by
-   *   hook_requirements().
-   *
-   * @return int
-   *   The highest severity in the array.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3410939
-   */
-  public function getMaxSeverity(&$requirements) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ' . RequirementSeverity::class . '::maxSeverityFromRequirements() instead. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
-    return RequirementSeverity::maxSeverityFromRequirements($requirements)->value;
-  }
-
-  /**
    * Loads the contents of a menu block.
    *
    * This function is often a destination for these blocks.
