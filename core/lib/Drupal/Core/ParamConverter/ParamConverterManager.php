@@ -3,7 +3,9 @@
 namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Contracts\Service\ServiceCollectionInterface;
 
 /**
  * Manages converter services for converting request parameters to full objects.
@@ -14,30 +16,25 @@ use Symfony\Component\Routing\RouteCollection;
 class ParamConverterManager implements ParamConverterManagerInterface {
 
   /**
-   * Array of loaded converter services keyed by their ids.
+   * Constructs a new ParamConverterManager.
    *
-   * @var array
+   * @param \Symfony\Contracts\Service\ServiceCollectionInterface $converters
+   *   The param converter services, keyed by service ID.
    */
-  protected $converters = [];
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addConverter(ParamConverterInterface $param_converter, $id) {
-    $this->converters[$id] = $param_converter;
-    return $this;
-  }
+  public function __construct(
+    #[AutowireLocator('paramconverter')]
+    protected ServiceCollectionInterface $converters,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public function getConverter($converter) {
-    if (isset($this->converters[$converter])) {
-      return $this->converters[$converter];
+    if ($this->converters->has($converter)) {
+      return $this->converters->get($converter);
     }
-    else {
-      throw new \InvalidArgumentException(sprintf('No converter has been registered for %s', $converter));
-    }
+
+    throw new \InvalidArgumentException(sprintf('No converter has been registered for %s', $converter));
   }
 
   /**
@@ -57,8 +54,8 @@ class ParamConverterManager implements ParamConverterManagerInterface {
           continue;
         }
 
-        foreach (array_keys($this->converters) as $converter) {
-          if ($this->getConverter($converter)->applies($definition, $name, $route)) {
+        foreach ($this->converters->getIterator() as $converter => $service) {
+          if ($service->applies($definition, $name, $route)) {
             $definition['converter'] = $converter;
             break;
           }

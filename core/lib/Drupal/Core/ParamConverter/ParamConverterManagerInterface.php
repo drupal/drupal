@@ -10,18 +10,6 @@ use Symfony\Component\Routing\RouteCollection;
 interface ParamConverterManagerInterface {
 
   /**
-   * Registers a parameter converter with the manager.
-   *
-   * @param \Drupal\Core\ParamConverter\ParamConverterInterface $param_converter
-   *   The added param converter instance.
-   * @param string $id
-   *   The parameter converter service id to register.
-   *
-   * @return $this
-   */
-  public function addConverter(ParamConverterInterface $param_converter, $id);
-
-  /**
    * Lazy-loads converter services.
    *
    * @param string $id
