@@ -19,6 +19,7 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\Utility\FiberResumeType;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -518,7 +519,7 @@ class BigPipe {
             if ($iterations) {
               $fiber = \Fiber::getCurrent();
               if ($fiber !== NULL) {
-                $fiber->suspend();
+                $fiber->suspend(FiberResumeType::Immediate);
               }
             }
             continue;
