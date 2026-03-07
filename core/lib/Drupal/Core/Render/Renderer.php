@@ -647,7 +647,7 @@ class Renderer implements RendererInterface {
         // before returning here.
         if (\Fiber::getCurrent() !== NULL) {
           $this->setCurrentRenderContext($previous_context);
-          \Fiber::suspend();
+          \Fiber::suspend(FiberResumeType::Immediate);
           $this->setCurrentRenderContext($context);
         }
         $resume_type = $fiber->resume();
@@ -783,7 +783,7 @@ class Renderer implements RendererInterface {
           if ($iterations) {
             $fiber = \Fiber::getCurrent();
             if ($fiber !== NULL) {
-              $fiber->suspend();
+              $fiber->suspend(FiberResumeType::Immediate);
             }
           }
           continue;
