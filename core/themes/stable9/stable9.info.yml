@@ -224,18 +224,10 @@ libraries-override:
       base:
         css/base/layout-builder.css: css/navigation/layout-builder.css
 
-  node/drupal.node:
-    css:
-      layout:
-        css/node.module.css: css/node/node.module.css
   node/drupal.node.preview:
     css:
       theme:
         css/node.preview.css: css/node/node.preview.css
-  node/form:
-    css:
-      layout:
-        css/node.module.css: css/node/node.module.css
   node/drupal.node.admin:
     css:
       theme:

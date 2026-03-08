@@ -37,6 +37,8 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
     'workspaces_ui/drupal.workspaces_ui.toolbar',
     // This library will be removed in https://www.drupal.org/i/3207233.
     'workspaces_ui/drupal.workspaces_ui.overview',
+    // This library will be removed in https://www.drupal.org/i/3573705.
+    'node/form',
   ];
 
   /**
