@@ -49,6 +49,57 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
+   * Tests HTML tags with whitespace characters are parsed correctly.
+   */
+  public function testHTMLTagsWithWhitespace(): void {
+    $this->config('search.settings')->set('index.minimum_word_size', 3)->save();
+
+    $search_index = \Drupal::service('search.index');
+    assert($search_index instanceof SearchIndexInterface);
+    $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+
+    // Test case 1: inline anchor tag.
+    $search_index->index(static::SEARCH_TYPE, 101, $langcode,
+      '<a href="https://example.com/">Drupal Rocks</a>');
+
+    // Test case 2: anchor tag with newlines.
+    $search_index->index(static::SEARCH_TYPE, 102, $langcode,
+      '<a' . "\n" . '  href="https://example.com/"' . "\n" . '>Drupal Rocks</a>');
+
+    // Test case 3: anchor tag with tab character.
+    $search_index->index(static::SEARCH_TYPE, 103, $langcode,
+      '<a' . "\t" . 'href="https://example.com/">Drupal Rocks</a>');
+
+    // Test case 4: no tag (control).
+    $search_index->index(static::SEARCH_TYPE, 104, $langcode, 'Drupal Rocks');
+
+    // Perform search for 'rocks'.
+    $connection = Database::getConnection();
+    $result = $connection->select('search_index', 'i')
+      ->extend(SearchQuery::class)
+      ->searchExpression('rocks', static::SEARCH_TYPE)
+      ->execute();
+
+    $set = $result ? $result->fetchAll() : [];
+
+    // Build scores map.
+    $scores = [];
+    foreach ($set as $item) {
+      $scores[$item->sid] = $item->calculated_score;
+    }
+
+    // Verify all items found.
+    $this->assertCount(4, $scores);
+
+    // Items with anchor tags should have same score.
+    $this->assertEquals($scores[101], $scores[102]);
+    $this->assertEquals($scores[101], $scores[103]);
+
+    // Anchor tag items should score higher than no-tag item.
+    $this->assertGreaterThan($scores[104], $scores[101]);
+  }
+
+  /**
    * Set up a small index of items to test against.
    */
   public function _setup(): void {

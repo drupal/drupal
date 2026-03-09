@@ -83,7 +83,7 @@ class SearchIndex implements SearchIndexInterface {
     foreach ($split as $value) {
       if ($tag) {
         // Increase or decrease score per word based on tag.
-        [$tagname] = explode(' ', $value, 2);
+        [$tagname] = preg_split('/\s+/', $value, 2);
         $tagname = mb_strtolower($tagname);
         // Closing or opening tag?
         if ($tagname[0] == '/') {
