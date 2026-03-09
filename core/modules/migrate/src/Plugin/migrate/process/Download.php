@@ -156,6 +156,12 @@ class Download extends FileProcessBase implements ContainerFactoryPluginInterfac
       $this->httpClient->get($source, $this->configuration['guzzle_options']);
     }
     catch (\Exception $e) {
+      // Since the destination file stream was used as the sink for the Guzzle
+      // request, invalid file content from the failed request may be stored in
+      // a newly created file. Clean up the file if it exists since the request
+      // failed.
+      $this->fileSystem->delete($final_destination);
+
       throw new MigrateException("{$e->getMessage()} ($source)");
     }
 
