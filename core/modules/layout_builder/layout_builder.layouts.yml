@@ -11,8 +11,10 @@ layout_twocol_section:
   regions:
     first:
       label: First
+      translation context: 'Layout region'
     second:
       label: Second
+      translation context: 'Layout region'
 
 layout_threecol_section:
   label: 'Three column'
@@ -27,10 +29,13 @@ layout_threecol_section:
   regions:
     first:
       label: First
+      translation context: 'Layout region'
     second:
       label: Second
+      translation context: 'Layout region'
     third:
       label: Third
+      translation context: 'Layout region'
 
 layout_fourcol_section:
   label: 'Four column'
@@ -44,9 +49,13 @@ layout_fourcol_section:
   regions:
     first:
       label: First
+      translation context: 'Layout region'
     second:
       label: Second
+      translation context: 'Layout region'
     third:
       label: Third
+      translation context: 'Layout region'
     fourth:
       label: Fourth
+      translation context: 'Layout region'
