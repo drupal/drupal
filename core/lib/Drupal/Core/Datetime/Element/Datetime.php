@@ -20,11 +20,6 @@ class Datetime extends DateElementBase {
   use DoTrustedCallbackTrait;
 
   /**
-   * @var \DateTimeInterface
-   */
-  protected static $dateExample;
-
-  /**
    * {@inheritdoc}
    */
   public function getInfo() {
@@ -255,9 +250,6 @@ class Datetime extends DateElementBase {
       }
       $date_value = !empty($date) ? $date->format($date_format, $format_settings) : $element['#value']['date'];
 
-      // Creating format examples on every individual date item is messy, and
-      // placeholders are invalid for HTML5 date and datetime, so an example
-      // format is appended to the title to appear in tooltips.
       $extra_attributes = [
         'type' => $element['#date_date_element'],
       ];
