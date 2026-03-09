@@ -30,6 +30,9 @@ class AutomatedCron implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onTerminate(TerminateEvent $event): void {
+    if (PHP_SAPI === 'cli') {
+      return;
+    }
     $interval = $this->configFactory->get('automated_cron.settings')->get('interval');
     if ($interval > 0) {
       $cron_next = $this->state->get('system.cron_last', 0) + $interval;
