@@ -186,6 +186,13 @@ class ContentTranslationFormLanguageHooks {
             if (isset($bundle_settings['columns'][$field_name]) && !array_filter($bundle_settings['columns'][$field_name])) {
               $translatable = FALSE;
             }
+            // Skip fields for bundles that are not translatable and were not
+            // previously enabled for translation. This prevents unnecessary
+            // BaseFieldOverride config entities from being created when
+            // getConfig() is called on base field definitions.
+            if (empty($bundle_settings['translatable']) && !$content_translation_manager->isEnabled($entity_type_id, $bundle)) {
+              continue;
+            }
             $field_config = $fields[$field_name]->getConfig($bundle);
             if ($field_config->isTranslatable() != $translatable) {
               $field_config
