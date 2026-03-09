@@ -567,7 +567,7 @@ class DateTimePlus {
    * @return bool
    *   TRUE if the datetime parts contain valid values, otherwise FALSE.
    */
-  public static function checkArray($array) {
+  protected static function checkArray($array) {
     $valid_time = TRUE;
     // Check for a valid date using checkdate(). Only values that
     // meet that test are valid. An empty value, either a string or a 0, is not

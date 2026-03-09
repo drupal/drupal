@@ -123,10 +123,10 @@ class DateTimePlusTest extends TestCase {
    */
   #[DataProvider('providerTestCheckArray')]
   public function testCheckArray(array $array, $expected): void {
-    $this->assertSame(
-      $expected,
-      DateTimePlus::checkArray($array)
-    );
+    $method = new \ReflectionMethod(DateTimePlus::class, 'checkArray');
+    $result = $method->invoke(NULL, $array);
+
+    $this->assertSame($expected, $result);
   }
 
   /**
