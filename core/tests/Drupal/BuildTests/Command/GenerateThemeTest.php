@@ -19,6 +19,7 @@ use Symfony\Component\Process\Process;
  * Tests the generate-theme commands.
  */
 #[Group('Command')]
+#[Group('#slow')]
 #[RequiresPhpExtension('pdo_sqlite')]
 class GenerateThemeTest extends QuickStartTestBase {
 

@@ -327,7 +327,7 @@ END;
     $this->webRoot = 'project/' . $data['extra']['drupal-scaffold']['locations']['web-root'];
 
     // Install Drupal.
-    $this->installQuickStart('standard');
+    $this->installQuickStart('minimal');
     $this->formLogin($this->adminUsername, $this->adminPassword);
 
     // When checking for updates, we need to be able to make sub-requests, but
@@ -357,6 +357,7 @@ END;
 
     // Install helpful modules.
     $this->installModules([
+      'automated_cron',
       'package_manager_test_api',
       'package_manager_test_event_logger',
       'package_manager_test_release_history',
