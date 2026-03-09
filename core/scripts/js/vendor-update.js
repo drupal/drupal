@@ -97,10 +97,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
-      pack: 'js-cookie',
-      files: [{ from: 'dist/js.cookie.min.js', to: 'js.cookie.min.js' }],
-    },
-    {
       pack: 'normalize.css',
       folder: 'normalize-css',
       library: 'normalize',

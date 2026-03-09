@@ -523,7 +523,6 @@ drupal.debounce:
 drupal.dialog:
   version: VERSION
   js:
-    misc/dialog/dialog-deprecation.js: {}
     misc/dialog/dialog.js: {}
     misc/dialog/dialog.position.js: {}
     misc/dialog/dialog.jquery-ui.js: {}
@@ -606,15 +605,6 @@ drupal.fieldgroup:
   css:
     component:
       misc/components/fieldgroup.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 11.2.0
-      removed_version: 12.0.0
-      deprecation_link: https://www.drupal.org/node/3432346
-      css:
-        component:
-          css/components/fieldgroup.module.css:
-            base: core/misc/components/fieldgroup.module.css
 
 drupal.form:
   version: VERSION
@@ -650,15 +640,6 @@ drupal.item-list:
   css:
     component:
       misc/components/item-list.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 11.3.0
-      removed_version: 12.0.0
-      deprecation_link: https://www.drupal.org/node/3530832
-      css:
-        component:
-          css/components/item-list.module.css:
-            base: misc/components/item-list.module.css
 
 drupal.machine-name:
   version: VERSION
@@ -698,30 +679,12 @@ drupal.textarea-resize:
   css:
     component:
       misc/components/resize.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 11.2.0
-      removed_version: 12.0.0
-      deprecation_link: https://www.drupal.org/node/3432346
-      css:
-        component:
-          css/components/resize.module.css:
-            component: misc/components/resize.module.css
 
 drupal.reset-appearance:
   version: VERSION
   css:
     component:
       misc/components/reset-appearance.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 11.3.0
-      removed_version: 12.0.0
-      deprecation_link: https://www.drupal.org/node/3432346
-      css:
-        component:
-          css/components/reset-appearance.module.css:
-            component: misc/components/reset-appearance.module.css
 
 drupal.states:
   version: VERSION
@@ -796,15 +759,6 @@ drupal.tablesort:
   css:
     component:
       misc/components/tablesort.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 11.2.0
-      removed_version: 12.0.0
-      deprecation_link: https://www.drupal.org/node/3432346
-      css:
-        component:
-          css/components/tablesort.module.css:
-            base: misc/components/tablesort.module.css
 
 drupal.time-diff:
   version: VERSION
@@ -998,17 +952,6 @@ drupal.dialog.off_canvas:
     - core/drupal.dialog
     - core/drupal.dialog.ajax
     - core/drupal.touchevents-test
-
-js-cookie:
-  remote: https://github.com/js-cookie/js-cookie
-  version: "3.0.5"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.5/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/js-cookie/js.cookie.min.js: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.1.0 and will be removed in Drupal 11.0.0. There is no replacement. See https://www.drupal.org/node/3322720
 
 drupal.fieldListKeyboardNavigation:
   version: VERSION

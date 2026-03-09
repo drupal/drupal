@@ -79,7 +79,6 @@
     "htmx.org": "2.0.8",
     "jquery": "^4.0.0",
     "jquery-ui": "^1.14.1",
-    "js-cookie": "^3.0.5",
     "jsdom": "^27.1.0",
     "loadjs": "^4.3.0",
     "minimist": "^1.2.8",

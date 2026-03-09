@@ -3077,7 +3077,6 @@ __metadata:
     htmx.org: "npm:2.0.8"
     jquery: "npm:^4.0.0"
     jquery-ui: "npm:^1.14.1"
-    js-cookie: "npm:^3.0.5"
     jsdom: "npm:^27.1.0"
     loadjs: "npm:^4.3.0"
     minimist: "npm:^1.2.8"
@@ -6939,13 +6938,6 @@ __metadata:
   version: 4.0.0
   resolution: "jquery@npm:4.0.0"
   checksum: 10c0/06d8d0f51121af5a691f8b59c74823157bb5b60eea915b30eaa920d6c0ffd91e60ba81e9b97bd8203f331f9dd8d0ec9a4b010935ea314bdd2f15453c29bc780b
-  languageName: node
-  linkType: hard
-
-"js-cookie@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "js-cookie@npm:3.0.5"
-  checksum: 10c0/04a0e560407b4489daac3a63e231d35f4e86f78bff9d792011391b49c59f721b513411cd75714c418049c8dc9750b20fcddad1ca5a2ca616c3aca4874cce5b3a
   languageName: node
   linkType: hard
 
