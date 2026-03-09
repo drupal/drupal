@@ -71,7 +71,6 @@ services:
   Drupal\package_manager\Validator\DuplicateInfoFileValidator: {}
   Drupal\package_manager\Validator\EnabledExtensionsValidator: {}
   Drupal\package_manager\Validator\OverwriteExistingPackagesValidator: {}
-  Drupal\package_manager\Validator\AllowedScaffoldPackagesValidator: {}
   Drupal\package_manager\Validator\SandboxDatabaseUpdatesValidator: {}
   Drupal\package_manager\PathExcluder\TestSiteExcluder: {}
   Drupal\package_manager\PathExcluder\VendorHardeningExcluder: {}
