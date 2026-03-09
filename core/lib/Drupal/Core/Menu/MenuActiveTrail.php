@@ -140,7 +140,6 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
     // service in the container.
     // The menu links coming from the storage are already sorted by depth,
     // weight and ID.
-    $found = NULL;
     $links = [];
 
     $route_name = $this->routeMatch->getRouteName();
@@ -163,11 +162,14 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
       $links = array_merge($links, $this->menuLinkManager->loadLinksByRoute('<front>', [], $menu_name));
     }
 
-    // Select the first matching link.
-    if ($links) {
-      $found = reset($links);
+    // Select the first enabled matching link.
+    foreach ($links as $link) {
+      if ($link->isEnabled()) {
+        return $link;
+      }
     }
-    return $found;
+
+    return NULL;
   }
 
 }
