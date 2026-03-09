@@ -57,6 +57,15 @@ final class NavigationUserBlock extends BlockBase {
     // Load the current user so that they can be added as a cacheable dependency
     // of the final render array.
     $account = User::load(\Drupal::currentUser()->id());
+    if (!$account) {
+      // In certain edge case, the user load may fail, such as a late lazy
+      // builder in tests when it was already deleted.
+      return [
+        '#cache' => [
+          'contexts' => ['user'],
+        ],
+      ];
+    }
 
     $menu_definition = [
       'menu_name' => static::NAVIGATION_LINKS_MENU,
