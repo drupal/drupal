@@ -11,11 +11,16 @@ layout_oneplusfourgrid_section:
   regions:
     first:
       label: First
+      translation context: 'Layout region'
     second:
       label: Second
+      translation context: 'Layout region'
     third:
       label: Third
+      translation context: 'Layout region'
     fourth:
       label: Fourth
+      translation context: 'Layout region'
     fifth:
       label: Fifth
+      translation context: 'Layout region'
