@@ -284,27 +284,6 @@ EOS;
   }
 
   /**
-   * Tests ::processDefinition() with a layout that doesn't have a label.
-   *
-   * @legacy-covers ::processDefinition
-   */
-  public function testProcessDefinitionWithMissingLayoutLabel(): void {
-    $this->expectUserDeprecationMessage('A layout plugin not having a label is deprecated in drupal:11.4.0 and having a label will be enforced in drupal:12.0.0. See https://www.drupal.org/node/3464076');
-    $module_a_label_less_layout = <<<'EOS'
-module_a_label_less_layout:
-  description: A layout that doesn't have a label.
-EOS;
-    vfsStream::create([
-      'modules' => [
-        'module_a' => [
-          'module_a.layouts.yml' => $module_a_label_less_layout,
-        ],
-      ],
-    ]);
-    $this->layoutPluginManager->getDefinitions();
-  }
-
-  /**
    * Tests ::processDefinition() with a layout that doesn't have a category.
    *
    * @legacy-covers ::processDefinition

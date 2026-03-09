@@ -128,22 +128,6 @@ class ThemeHandler implements ThemeHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function rebuildThemeData() {
-    @trigger_error("\Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal::service('extension.list.theme')->reset()->getList() instead. See https://www.drupal.org/node/3413196", E_USER_DEPRECATED);
-    return $this->themeList->reset()->getList();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBaseThemes(array $themes, $theme) {
-    @trigger_error("\Drupal\Core\Extension\ThemeHandlerInterface::getBaseThemes() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3413187", E_USER_DEPRECATED);
-    return $this->themeList->getBaseThemes($themes, $theme);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getName($theme) {
     return $this->themeList->getName($theme);
   }

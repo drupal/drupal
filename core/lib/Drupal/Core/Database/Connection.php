@@ -1434,7 +1434,7 @@ abstract class Connection {
     // The namespace for Drupal modules is Drupal\MODULE_NAME, and the module
     // name must be all lowercase. Second-level namespaces containing uppercase
     // letters (e.g., "Core", "Component", "Driver") are not modules.
-    // @see \Drupal\Core\DrupalKernel::getModuleNamespacesPsr4()
+    // @see \Drupal\Core\DrupalKernel::getExtensionNamespacesPsr4()
     // @see https://www.drupal.org/docs/8/creating-custom-modules/naming-and-placing-your-drupal-8-module#s-name-your-module
     return ($first === 'Drupal' && strtolower($second) === $second) ? $second : 'core';
   }

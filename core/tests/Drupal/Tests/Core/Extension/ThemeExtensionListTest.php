@@ -18,7 +18,6 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Prophecy\Argument;
 
 /**
@@ -90,31 +89,6 @@ class ThemeExtensionListTest extends UnitTestCase {
     $this->assertEquals('test_base_theme', $info_base_theme->getName());
     $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info_subtheme);
     $this->assertEquals('test_subtheme', $info_subtheme->getName());
-  }
-
-  /**
-   * Tests getting the base themes for a set a defines themes.
-   *
-   * @param array $themes
-   *   An array of available themes, keyed by the theme name.
-   * @param string $theme
-   *   The theme name to find all its base themes.
-   * @param array $expected
-   *   The expected base themes.
-   */
-  #[DataProvider('providerTestDoGetBaseThemes')]
-  #[IgnoreDeprecations]
-  public function testGetBaseThemes(array $themes, $theme, array $expected): void {
-    // Mocks and stubs.
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $state = new State(new KeyValueMemoryFactory(), new NullBackend('bin'), new NullLockBackend());
-    $config_factory = $this->getConfigFactoryStub([]);
-    $theme_listing = new ThemeExtensionList($this->root, new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, 'test');
-
-    $this->expectUserDeprecationMessage("\Drupal\Core\Extension\ThemeExtensionList::getBaseThemes() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3413187");
-    $base_themes = $theme_listing->getBaseThemes($themes, $theme);
-
-    $this->assertEquals($expected, $base_themes);
   }
 
   /**

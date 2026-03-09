@@ -97,23 +97,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
     #[Autowire(service: 'logger.channel.default')]
     protected LoggerInterface $logger,
     #[AutowireIterator(tag: 'module_install.uninstall_validator')]
-    protected ?\Traversable $uninstallValidators = NULL,
+    protected \Traversable $uninstallValidators,
   ) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
     $this->connection = $connection;
     $this->updateRegistry = $update_registry;
-    if ($this->uninstallValidators === NULL) {
-      $this->uninstallValidators = \Drupal::service('module_installer.uninstall_validators');
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addUninstallValidator(ModuleUninstallValidatorInterface $uninstall_validator) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject the uninstall validators into the constructor instead. See https://www.drupal.org/node/3432595', E_USER_DEPRECATED);
   }
 
   /**

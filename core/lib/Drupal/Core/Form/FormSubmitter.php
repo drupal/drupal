@@ -15,22 +15,12 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FormSubmitter implements FormSubmitterInterface {
 
-  /**
-   * The callable resolver.
-   */
-  protected CallableResolver $callableResolver;
-
   public function __construct(
     protected RequestStack $requestStack,
     protected UrlGeneratorInterface $urlGenerator,
     protected RedirectResponseSubscriber $redirectResponseSubscriber,
-    ?CallableResolver $callableResolver = NULL,
+    protected CallableResolver $callableResolver,
   ) {
-    if (!$callableResolver) {
-      @trigger_error(sprintf('Calling %s() without the $callableResolver param is deprecated in drupal:11.3.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3548821', __METHOD__), E_USER_DEPRECATED);
-      $callableResolver = \Drupal::service(CallableResolver::class);
-    }
-    $this->callableResolver = $callableResolver;
   }
 
   /**

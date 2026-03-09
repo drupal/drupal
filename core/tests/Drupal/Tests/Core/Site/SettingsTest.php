@@ -284,7 +284,7 @@ class SettingsTest extends UnitTestCase {
   #[DataProvider('providerTestRealDeprecatedSettings')]
   #[IgnoreDeprecations]
   public function testRealDeprecatedSettings(string $legacy_setting, string $expected_deprecation): void {
-
+    $this->markTestSkipped('No settings to test real deprecated settings with.');
     $settings_file_content = "<?php\n\$settings['$legacy_setting'] = 'foo';\n";
     $class_loader = NULL;
     $vfs_root = vfsStream::setup('root');
@@ -305,8 +305,8 @@ class SettingsTest extends UnitTestCase {
   public static function providerTestRealDeprecatedSettings(): array {
     return [
       [
-        'state_cache',
-        'The "state_cache" setting is deprecated in drupal:11.0.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3177901.',
+        '',
+        '',
       ],
     ];
   }

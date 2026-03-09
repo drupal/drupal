@@ -18,57 +18,15 @@ class FormValidator implements FormValidatorInterface {
 
   use StringTranslationTrait;
 
-  /**
-   * The CSRF token generator to validate the form token.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The form error handler.
-   *
-   * @var \Drupal\Core\Form\FormErrorHandlerInterface
-   */
-  protected $formErrorHandler;
-
-  /**
-   * The callable resolver.
-   */
-  protected CallableResolver $callableResolver;
-
   public function __construct(
-    RequestStack $request_stack,
+    protected RequestStack $requestStack,
     TranslationInterface $string_translation,
-    CsrfTokenGenerator $csrf_token,
-    LoggerInterface $logger,
-    FormErrorHandlerInterface $form_error_handler,
-    ?CallableResolver $callableResolver = NULL,
+    protected CsrfTokenGenerator $csrfToken,
+    protected LoggerInterface $logger,
+    protected FormErrorHandlerInterface $formErrorHandler,
+    protected CallableResolver $callableResolver,
   ) {
-    $this->requestStack = $request_stack;
     $this->stringTranslation = $string_translation;
-    $this->csrfToken = $csrf_token;
-    $this->logger = $logger;
-    $this->formErrorHandler = $form_error_handler;
-    if (!$callableResolver) {
-      @trigger_error(sprintf('Calling %s() without the $callableResolver param is deprecated in drupal:11.3.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3548821', __METHOD__), E_USER_DEPRECATED);
-      $callableResolver = \Drupal::service(CallableResolver::class);
-    }
-    $this->callableResolver = $callableResolver;
   }
 
   /**

@@ -689,10 +689,6 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     autowire: true
   Drupal\Core\Extension\ModuleInstallerInterface: '@module_installer'
-  module_installer.uninstall_validators:
-    class: \IteratorIterator
-    arguments: [!tagged_iterator module_install.uninstall_validator]
-    deprecated: The "%service_id%" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject "!tagged_iterator module_install.uninstall_validator" instead. See https://www.drupal.org/node/3432595
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
     arguments: ['%app.root%', 'module', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.profile', '%install_profile%', '%container.modules%']

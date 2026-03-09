@@ -18,37 +18,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
 
-  /**
-   * The main content to AJAX Response renderer.
-   *
-   * @var \Drupal\Core\Render\MainContent\MainContentRendererInterface
-   */
-  protected $ajaxRenderer;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The callable resolver service.
-   */
-  protected CallableResolver $callableResolver;
-
   public function __construct(
-    MainContentRendererInterface $ajax_renderer,
-    RouteMatchInterface $route_match,
-    ?CallableResolver $callableResolver = NULL,
+    protected MainContentRendererInterface $ajaxRenderer,
+    protected RouteMatchInterface $routeMatch,
+    protected CallableResolver $callableResolver,
   ) {
-    $this->ajaxRenderer = $ajax_renderer;
-    $this->routeMatch = $route_match;
-    if (!$callableResolver) {
-      @trigger_error(sprintf('Calling %s() without the $callableResolver param is deprecated in drupal:11.3.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3548821', __METHOD__), E_USER_DEPRECATED);
-      $callableResolver = \Drupal::service(CallableResolver::class);
-    }
-    $this->callableResolver = $callableResolver;
   }
 
   /**

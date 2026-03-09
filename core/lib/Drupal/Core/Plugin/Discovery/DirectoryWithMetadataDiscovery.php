@@ -32,14 +32,9 @@ class DirectoryWithMetadataDiscovery extends YamlDirectoryDiscovery {
    * @param string $file_cache_key_suffix
    *   The file cache key suffix. This should be unique for each type of
    *   discovery.
-   * @param \Drupal\Core\File\FileSystemInterface|null $fileSystem
-   *   The file system service.
    */
-  public function __construct(array $directories, string $file_cache_key_suffix, ?FileSystemInterface $fileSystem = NULL) {
+  public function __construct(array $directories, string $file_cache_key_suffix) {
     parent::__construct($directories, $file_cache_key_suffix);
-    if ($fileSystem) {
-      @trigger_error(sprintf('Passing the $fileSystem parameter to %s() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. The class no longer uses the file system service. See https://www.drupal.org/node/3530869', __METHOD__), E_USER_DEPRECATED);
-    }
   }
 
   /**

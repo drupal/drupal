@@ -70,43 +70,6 @@ interface ThemeHandlerInterface {
   public function reset();
 
   /**
-   * Scans and collects theme extension data and their engines.
-   *
-   * @return \Drupal\Core\Extension\Extension[]
-   *   An associative array of theme extensions.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal::service('extension.list.theme')->reset()->getList() instead.
-   *
-   * @see https://www.drupal.org/node/3413196
-   * @see \Drupal\Core\Extension\ThemeExtensionList::reset()
-   * @see \Drupal\Core\Extension\ThemeExtensionList::getList()
-   */
-  public function rebuildThemeData();
-
-  /**
-   * Finds all the base themes for the specified theme.
-   *
-   * Themes can inherit templates and function implementations from earlier
-   * themes.
-   *
-   * @param \Drupal\Core\Extension\Extension[] $themes
-   *   An array of available themes.
-   * @param string $theme
-   *   The name of the theme whose base we are looking for.
-   *
-   * @return array
-   *   Returns an array of all of the theme's ancestors; the first element's
-   *   value will be NULL if an error occurred.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There
-   *    is no direct replacement.
-   *
-   * @see https://www.drupal.org/node/3413187
-   */
-  public function getBaseThemes(array $themes, $theme);
-
-  /**
    * Gets the human readable name of a given theme.
    *
    * @param string $theme

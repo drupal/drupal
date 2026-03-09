@@ -64,18 +64,10 @@ class ThemeManager implements ThemeManagerInterface {
     protected CallableResolver $callableResolver,
     #[AutowireLocator('theme_engine', 'engine_name')]
     protected ServiceCollectionInterface $themeEngines,
-    protected ?KeyValueFactoryInterface $keyValueFactory = NULL,
+    protected KeyValueFactoryInterface $keyValueFactory,
     #[Autowire(service: 'cache.bootstrap')]
-    protected ?CacheBackendInterface $cache = NULL,
+    protected CacheBackendInterface $cache,
   ) {
-    if ($this->keyValueFactory === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $keyValueFactory argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3551652', E_USER_DEPRECATED);
-      $this->keyValueFactory = \Drupal::service('keyvalue');
-    }
-    if ($this->cache === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $cache argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3551652', E_USER_DEPRECATED);
-      $this->cache = \Drupal::service('cache.bootstrap');
-    }
   }
 
   /**

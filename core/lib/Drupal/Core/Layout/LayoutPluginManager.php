@@ -95,7 +95,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
     }
 
     if (empty($definition->getLabel())) {
-      @trigger_error('A layout plugin not having a label is deprecated in drupal:11.4.0 and having a label will be enforced in drupal:12.0.0. See https://www.drupal.org/node/3464076', E_USER_DEPRECATED);
+      throw new InvalidPluginDefinitionException($plugin_id, sprintf('The "%s" layout definition must have a label.', $plugin_id));
     }
 
     // Ensure that every plugin has a category.

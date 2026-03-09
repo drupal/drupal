@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterCallback;
 use Drupal\Core\Site\Settings;
@@ -78,18 +77,6 @@ class ExtensionDiscovery {
   protected $root;
 
   /**
-   * The file cache object.
-   *
-   * @var \Drupal\Component\FileCache\FileCacheInterface
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
-   *   direct replacement.
-   *
-   * @see https://www.drupal.org/node/3490431
-   */
-  protected $fileCache;
-
-  /**
    * The site path.
    *
    * @var string
@@ -121,8 +108,6 @@ class ExtensionDiscovery {
    */
   public function __construct(string $root, $use_info_parser = TRUE, ?array $profile_directories = NULL, ?string $site_path = NULL) {
     $this->root = $root;
-    // @phpstan-ignore property.deprecated
-    $this->fileCache = $use_info_parser ? FileCacheFactory::get('extension_discovery') : NULL;
     $this->profileDirectories = $profile_directories;
     $this->sitePath = $site_path;
     $this->infoParser = $use_info_parser ? new InfoParser($root) : NULL;

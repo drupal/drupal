@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -41,12 +40,8 @@ class ThemeInstaller implements ThemeInstallerInterface {
     protected Registry $themeRegistry,
     protected ThemeExtensionList $themeExtensionList,
     #[Autowire(service: 'kernel')]
-    protected DrupalKernelInterface|CachedDiscoveryInterface|null $kernel = NULL,
+    protected DrupalKernelInterface $kernel,
   ) {
-    if (!$this->kernel instanceof DrupalKernelInterface) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $kernel argument is deprecated in drupal:11.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3551652', E_USER_DEPRECATED);
-      $this->kernel = \Drupal::service('kernel');
-    }
   }
 
   /**
