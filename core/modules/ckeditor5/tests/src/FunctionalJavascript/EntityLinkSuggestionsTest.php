@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * For testing the drupalEntityLinkSuggestions plugin.
  */
 #[Group('ckeditor5')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 

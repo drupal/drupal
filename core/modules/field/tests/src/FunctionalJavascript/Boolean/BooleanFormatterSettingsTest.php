@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests the Boolean field formatter settings.
  */
 #[Group('field')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class BooleanFormatterSettingsTest extends WebDriverTestBase {
 

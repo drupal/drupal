@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests Standard installation profile expectations.
  */
 #[Group('standard')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class StandardTest extends BrowserTestBase {
   use StandardTestTrait;

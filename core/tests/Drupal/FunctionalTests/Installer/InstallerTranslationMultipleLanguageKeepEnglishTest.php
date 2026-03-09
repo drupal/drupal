@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests that keeping English in a foreign language install works.
  */
 #[Group('Installer')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class InstallerTranslationMultipleLanguageKeepEnglishTest extends InstallerTranslationMultipleLanguageForeignTest {
 

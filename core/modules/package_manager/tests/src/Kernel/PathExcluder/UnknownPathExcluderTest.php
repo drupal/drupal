@@ -22,6 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @internal
  */
 #[Group('package_manager')]
+#[Group('#slow')]
 #[CoversClass(UnknownPathExcluder::class)]
 #[RunTestsInSeparateProcesses]
 class UnknownPathExcluderTest extends PackageManagerKernelTestBase {

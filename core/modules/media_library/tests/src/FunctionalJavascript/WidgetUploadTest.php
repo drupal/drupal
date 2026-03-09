@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *   https://www.drupal.org/node/3066447 is addressed.
  */
 #[Group('media_library')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class WidgetUploadTest extends MediaLibraryTestBase {
 

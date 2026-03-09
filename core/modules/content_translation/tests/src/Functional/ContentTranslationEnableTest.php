@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Test enabling content translation module.
  */
 #[Group('content_translation')]
+#[Group('#slow')]
 #[CoversClass(ContentLanguageSettingsForm::class)]
 #[CoversClass(ContentTranslationFormLanguageHooks::class)]
 #[RunTestsInSeparateProcesses]

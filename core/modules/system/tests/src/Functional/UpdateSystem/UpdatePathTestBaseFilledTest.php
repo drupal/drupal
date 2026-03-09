@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Runs UpdatePathTestBase with a dump filled with content.
  */
 #[Group('Update')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
 

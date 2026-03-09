@@ -19,6 +19,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Basic tests for Media configuration in the standard profile.
  */
 #[Group('media')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class MediaStandardProfileTest extends MediaJavascriptTestBase {
 
