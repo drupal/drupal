@@ -20,7 +20,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -71,8 +70,6 @@ class EntityLinksTest extends KernelTestBase {
     // @see ::testMenuLinkContentEntity
     'link',
     'menu_link_content',
-    // @see ::testShortcutEntity
-    'shortcut',
   ];
 
   /**
@@ -101,10 +98,6 @@ class EntityLinksTest extends KernelTestBase {
 
     // @see ::testMenuLinkContentEntity
     $this->installEntitySchema('menu_link_content');
-
-    // @see ::testShortcutEntity
-    $this->installEntitySchema('shortcut');
-    $this->installConfig(['shortcut']);
 
     // Add Swedish, Danish and Finnish.
     ConfigurableLanguage::createFromLangcode('sv')->save();
@@ -335,34 +328,6 @@ class EntityLinksTest extends KernelTestBase {
       (new FilterProcessResult())
         ->setProcessedText(sprintf('<a href="%s?query=string#fragment">Link text</a>', $link))
         ->setCacheTags(['menu_link_content:1'])
-        ->setCacheContexts([])
-        ->setCacheMaxAge(Cache::PERMANENT)
-    );
-  }
-
-  /**
-   * @legacy-covers ::getUrl
-   * @legacy-covers \Drupal\shortcut\Entity\ShortcutLinkTarget
-   */
-  public function testShortcutEntity(): void {
-    // cspell:disable-next-line
-    $path = '/user/logout?token=fzL0Ox4jS6qafdt6gzGzjWGb_hsR6kJ8L8E0D4hC5Mo';
-    $shortcut = Shortcut::create([
-      'shortcut_set' => 'default',
-      'title' => 'Comments',
-      'weight' => -20,
-      'link' => [
-        'uri' => "internal:$path",
-      ],
-    ]);
-    $shortcut->save();
-
-    $this->assertFilterProcessResult(
-      sprintf('<a data-entity-type="shortcut" data-entity-uuid="%s" href="something?query=string#fragment">Link text</a>', $shortcut->uuid()),
-      'en',
-      (new FilterProcessResult())
-        ->setProcessedText(sprintf('<a href="%s?query=string#fragment">Link text</a>', $path))
-        ->setCacheTags(['config:shortcut.set.default'])
         ->setCacheContexts([])
         ->setCacheMaxAge(Cache::PERMANENT)
     );

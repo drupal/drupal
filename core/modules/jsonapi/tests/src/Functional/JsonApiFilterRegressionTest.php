@@ -10,7 +10,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
-use Drupal\shortcut\Entity\Shortcut;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\taxonomy\Entity\Term;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
@@ -83,26 +83,22 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testFilterByIdFromIssue3015759(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['shortcut'], TRUE), 'Installed modules.');
+    $this->assertTrue($this->container->get('module_installer')->install(['menu_link_content'], TRUE), 'Installed modules.');
     $this->rebuildAll();
 
     // Create data.
-    $shortcut = Shortcut::create([
-      'shortcut_set' => 'default',
+    $menu_link = MenuLinkContent::create([
       'title' => $this->randomMachineName(),
-      'weight' => -20,
-      'link' => [
-        'uri' => 'internal:/user/logout',
-      ],
+      'link' => ['uri' => 'internal:/user/login'],
+      'menu_name' => 'main',
     ]);
-    $shortcut->save();
+    $menu_link->save();
 
     // Test.
     $user = $this->drupalCreateUser([
-      'access shortcuts',
-      'customize shortcut links',
+      'administer menu',
     ]);
-    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/shortcut/default?filter[drupal_internal__id]=' . $shortcut->id()), [
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/menu_link_content/menu_link_content?filter[drupal_internal__id]=' . $menu_link->id()), [
       RequestOptions::AUTH => [
         $user->getAccountName(),
         $user->pass_raw,
@@ -111,9 +107,9 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
     $doc = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
     $this->assertNotEmpty($doc['data']);
-    $this->assertSame($doc['data'][0]['id'], $shortcut->uuid());
-    $this->assertSame($doc['data'][0]['attributes']['drupal_internal__id'], (int) $shortcut->id());
-    $this->assertSame($doc['data'][0]['attributes']['title'], $shortcut->label());
+    $this->assertSame($doc['data'][0]['id'], $menu_link->uuid());
+    $this->assertSame($doc['data'][0]['attributes']['drupal_internal__id'], (int) $menu_link->id());
+    $this->assertSame($doc['data'][0]['attributes']['title'], $menu_link->label());
   }
 
   /**

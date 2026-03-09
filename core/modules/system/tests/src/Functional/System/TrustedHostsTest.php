@@ -85,37 +85,6 @@ class TrustedHostsTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that shortcut module works together with host verification.
-   */
-  public function testShortcut(): void {
-    $this->container->get('module_installer')->install(['block', 'shortcut']);
-    $this->rebuildContainer();
-
-    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = $this->container->get('entity_type.manager');
-    $shortcut_storage = $entity_type_manager->getStorage('shortcut');
-
-    $shortcut = $shortcut_storage->create([
-      'title' => 'Test Shortcut Label',
-      'link' => 'internal:/admin/reports/status',
-      'shortcut_set' => 'default',
-    ]);
-    $shortcut_storage->save($shortcut);
-
-    // Grant the current user access to see the shortcuts.
-    $role_storage = $entity_type_manager->getStorage('user_role');
-    $roles = $this->loggedInUser->getRoles(TRUE);
-    /** @var \Drupal\user\RoleInterface $role */
-    $role = $role_storage->load(reset($roles));
-    $role->grantPermission('access shortcuts')->save();
-
-    $this->drupalPlaceBlock('shortcuts');
-
-    $this->drupalGet('');
-    $this->assertSession()->linkExists($shortcut->label());
-  }
-
-  /**
    * Tests that the request bags have the correct classes.
    *
    * @todo Remove this when Symfony 4 is no longer supported.

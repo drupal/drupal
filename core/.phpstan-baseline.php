@@ -22598,42 +22598,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/navigation/src/Plugin/SectionStorage/NavigationSectionStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\FunctionalJavascript\\\\NavigationBlockUiTest\\:\\:clickContextualLink\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25898,6 +25862,42 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/shortcut/src/ShortcutSetStorageInterface.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\Rest\\\\ShortcutJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -26076,6 +26076,18 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/ShortcutTranslationUITest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\FunctionalJavascript\\\\NavigationBlockUiTest\\:\\:clickContextualLink\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/tests/src/FunctionalJavascript/NavigationBlockUiTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\FunctionalJavascript\\\\NavigationBlockUiTest\\:\\:toggleContextualTriggerVisibility\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/shortcut/tests/src/FunctionalJavascript/NavigationBlockUiTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Unit\\\\Menu\\\\ShortcutLocalTasksTest\\:\\:getShortcutPageRoutes\\(\\) has no return type specified\\.$#',

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\navigation\Functional;
+namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests for \Drupal\navigation\Plugin\Block\NavigationShortcutsBlock.
  */
-#[Group('navigation')]
+#[Group('shortcut')]
 #[RunTestsInSeparateProcesses]
 class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
 

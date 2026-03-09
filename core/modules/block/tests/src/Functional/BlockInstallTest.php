@@ -30,7 +30,7 @@ class BlockInstallTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:block_list');
 
     // Install the block module, and place the "Powered by Drupal" block.
-    $this->container->get('module_installer')->install(['block', 'shortcut']);
+    $this->container->get('module_installer')->install(['block']);
     $this->rebuildContainer();
     $this->drupalPlaceBlock('system_powered_by_block');
 

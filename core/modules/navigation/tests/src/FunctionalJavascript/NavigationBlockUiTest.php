@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\FunctionalJavascript;
 
-use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
@@ -37,7 +36,6 @@ class NavigationBlockUiTest extends WebDriverTestBase {
     'layout_builder_form_block_test',
     'node',
     'field_ui',
-    'shortcut',
     'off_canvas_test',
     'navigation_test',
   ];
@@ -65,9 +63,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
       'configure navigation layout',
       'access administration pages',
       'access navigation',
-      'access shortcuts',
       'access contextual links',
-      'administer shortcuts',
       'administer site configuration',
       'access administration pages',
     ]);
@@ -108,101 +104,6 @@ class NavigationBlockUiTest extends WebDriverTestBase {
     $this->getSession()->getPage()->pressButton('Save');
     $this->assertSession()->statusMessageNotContains($unexpected_save_message);
     $this->assertSession()->statusMessageContains($expected_save_message);
-  }
-
-  /**
-   * Tests navigation block admin page exists and functions correctly.
-   */
-  public function testNavigationBlockAdminUiPage(): void {
-    $layout_url = '/admin/config/user-interface/navigation-block';
-    $this->drupalGet($layout_url);
-    $this->assertSession()->pageTextContains('Access denied');
-    // Add at least one shortcut.
-    $shortcut_set = \Drupal::entityTypeManager()
-      ->getStorage('shortcut_set')
-      ->getDisplayedToUser($this->adminUser);
-    $shortcut = \Drupal::entityTypeManager()->getStorage('shortcut')->create([
-      'title' => 'Run cron',
-      'shortcut_set' => $shortcut_set->id(),
-      'link' => [
-        'uri' => 'internal:/admin/config/system/cron',
-      ],
-    ]);
-    $shortcut->save();
-    $this->drupalLogin($this->adminUser);
-    $this->drupalGet($layout_url);
-    $page = $this->getSession()->getPage();
-    $this->getSession()->getPage()->pressButton('Enable edit mode');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-
-    // Add section should not be present.
-    $this->assertSession()->linkNotExists('Add section');
-    // Configure section should not be present.
-    $this->assertSession()->linkNotExists('Configure Section 1');
-    // Remove section should not be present.
-    $this->assertSession()->linkNotExists('Remove Section 1');
-
-    // Remove the shortcut block.
-    $this->assertSession()->pageTextContains('Shortcuts');
-    $this->clickContextualLink('.layout-builder .block-navigation-shortcuts', 'Remove block');
-    $this->assertOffCanvasFormAfterWait('layout_builder_remove_block');
-    $this->assertSession()->pageTextContains('Are you sure you want to remove the Shortcuts block?');
-    $this->assertSession()->pageTextContains('This action cannot be undone.');
-    $page->pressButton('Remove');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->assertNoElementAfterWait('css', '#drupal-off-canvas');
-
-    $this->assertSession()->elementNotExists('css', '.layout-builder .block-navigation-shortcuts');
-
-    // Add a new block.
-    $this->getSession()->getPage()->uncheckField('toggle_content_preview');
-    $this->openAddBlockForm('Navigation Shortcuts');
-
-    $page->fillField('settings[label]', 'New Shortcuts');
-    $page->checkField('settings[label_display]');
-
-    // Save the new block, and ensure it is displayed on the page.
-    $page->pressButton('Add block');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->assertNoElementAfterWait('css', '#drupal-off-canvas');
-    $this->assertSession()->addressEquals($layout_url);
-    $this->assertSession()->pageTextContains('Shortcuts');
-    $this->assertSession()->pageTextContains('New Shortcuts');
-
-    // Until the layout is saved, the new block is not visible on the node page.
-    $front = Url::fromRoute('<front>');
-    $this->drupalGet($front);
-    $this->assertSession()->pageTextNotContains('New Shortcuts');
-
-    // When returning to the layout page, the new block is not visible.
-    $this->drupalGet($layout_url);
-    $this->assertSession()->pageTextNotContains('New Shortcuts');
-
-    // When returning to the layout edit mode, the new block is visible.
-    $this->getSession()->getPage()->pressButton('Enable edit mode');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->pageTextContains('New Shortcuts');
-
-    // Save the layout, and the new block is visible in the front page.
-    $page->pressButton('Save');
-    $this->drupalGet($front);
-    $this->assertSession()->pageTextContains('New Shortcuts');
-
-    // Reconfigure a block and ensure that the layout content is updated.
-    $this->drupalGet($layout_url);
-    $this->getSession()->getPage()->pressButton('Enable edit mode');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->clickContextualLink('.layout-builder .block-navigation-shortcuts', 'Configure');
-    $this->assertOffCanvasFormAfterWait('layout_builder_update_block');
-
-    $page->fillField('settings[label]', 'Newer Shortcuts');
-    $page->pressButton('Update');
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->assertNoElementAfterWait('css', '#drupal-off-canvas');
-
-    $this->assertSession()->addressEquals($layout_url);
-    $this->assertSession()->pageTextContains('Newer Shortcuts');
-    $this->assertSession()->elementTextNotContains('css', 'form', 'New Shortcuts');
   }
 
   /**
