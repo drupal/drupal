@@ -18,7 +18,7 @@ class UpdateCompilerPass implements CompilerPassInterface {
   /**
    * {@inheritdoc}
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $process_aliases = FALSE;
     // Loop over the defined services and remove any with unmet dependencies.
     // The kernel cannot be booted if the container has such services. This

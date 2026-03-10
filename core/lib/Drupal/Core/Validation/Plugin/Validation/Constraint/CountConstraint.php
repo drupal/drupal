@@ -29,9 +29,8 @@ class CountConstraint extends Count {
     ?string $divisibleByMessage = NULL,
     ?array $groups = NULL,
     mixed $payload = NULL,
-    ?array $options = NULL,
   ) {
-    parent::__construct($exactly, $min, $max, $divisibleBy, $exactMessage, $minMessage, $maxMessage, $divisibleByMessage, $groups, $payload, $options);
+    parent::__construct($exactly, $min, $max, $divisibleBy, $exactMessage, $minMessage, $maxMessage, $divisibleByMessage, $groups, $payload);
   }
 
   /**

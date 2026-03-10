@@ -36,9 +36,8 @@ class LengthConstraint extends Length {
     ?string $charsetMessage = NULL,
     ?array $groups = NULL,
     mixed $payload = NULL,
-    ?array $options = NULL,
   ) {
-    parent::__construct($exactly, $min, $max, $charset, $normalizer, $countUnit, $exactMessage, $minMessage, $maxMessage, $charsetMessage, $groups, $payload, $options);
+    parent::__construct($exactly, $min, $max, $charset, $normalizer, $countUnit, $exactMessage, $minMessage, $maxMessage, $charsetMessage, $groups, $payload);
   }
 
   /**

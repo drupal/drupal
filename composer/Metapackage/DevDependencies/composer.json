@@ -31,11 +31,11 @@
         "phpstan/phpstan": "^2.1.38",
         "phpstan/phpstan-phpunit": "^2.0.12",
         "phpunit/phpunit": "^11.5.50",
-        "symfony/browser-kit": "^7.4",
-        "symfony/css-selector": "^7.4",
-        "symfony/dom-crawler": "^7.4",
-        "symfony/error-handler": "^7.4",
-        "symfony/lock": "^7.4",
-        "symfony/var-dumper": "^7.4"
+        "symfony/browser-kit": "^8.0",
+        "symfony/css-selector": "^8.0",
+        "symfony/dom-crawler": "^8.0",
+        "symfony/error-handler": "^8.0",
+        "symfony/lock": "^8.0",
+        "symfony/var-dumper": "^8.0"
     }
 }

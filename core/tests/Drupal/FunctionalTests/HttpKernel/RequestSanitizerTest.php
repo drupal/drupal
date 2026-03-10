@@ -9,7 +9,6 @@ use Drupal\Tests\ApiRequestTrait;
 use Drupal\Tests\BrowserTestBase;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -22,7 +21,7 @@ class RequestSanitizerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  protected static $modules = ['system', 'system_test'];
 
   /**
    * {@inheritdoc}
@@ -31,28 +30,52 @@ class RequestSanitizerTest extends BrowserTestBase {
 
   /**
    * Tests X-Http-Method-Override header handling.
+   *
+   * Drupal checks the X-HTTP-Method-Override header directly and rejects any
+   * OPTIONS override. Symfony 8 silently ignores overrides to
+   * GET/HEAD/CONNECT/TRACE in getMethod(), so the page cache sees the original
+   * POST method (not cacheable).
    */
-  #[IgnoreDeprecations]
   public function testRequestSanitizer(): void {
-    $url = new Url('<front>');
+    $url = new Url('system_test.method');
     $response = $this->makeApiRequest('GET', $url, []);
     $this->assertSame(200, $response->getStatusCode());
+    $this->assertSame('GET', (string) $response->getBody());
 
     $response = $this->makeApiRequest('POST', $url, []);
     $this->assertSame(200, $response->getStatusCode());
+    $this->assertSame('POST', (string) $response->getBody());
 
-    $request_options = [];
+    // A POST with X-Http-Method-Override: GET is accepted. The page cache serves
+    // with a 200. The header is ignored and isMethodCacheable() sees POST.
     $request_options[RequestOptions::HEADERS] = [
       'X-Http-Method-Override' => 'GET',
     ];
-    $this->expectUserDeprecationMessage('Since symfony/http-foundation 7.4: HTTP method override is deprecated for methods GET, HEAD, CONNECT and TRACE; it will be ignored in Symfony 8.0.');
     $response = $this->makeApiRequest('POST', $url, $request_options);
     $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame('HIT', $response->getHeader('X-Drupal-Cache')[0]);
+    $this->assertSame('POST', (string) $response->getBody());
 
-    // Clear the page cache.
+    // A POST with X-Http-Method-Override: OPTIONS is rejected with a 400 by
+    // the request sanitizer.
+    $request_options[RequestOptions::HEADERS] = [
+      'X-Http-Method-Override' => 'OPTIONS',
+    ];
+    $response = $this->makeApiRequest('POST', $url, $request_options);
+    $this->assertSame(400, $response->getStatusCode());
+
+    // Verify the result is the same after clearing the page cache.
     $this->rebuildAll();
 
+    $request_options[RequestOptions::HEADERS] = [
+      'X-Http-Method-Override' => 'GET',
+    ];
+    $response = $this->makeApiRequest('POST', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertSame('POST', (string) $response->getBody());
+
+    $request_options[RequestOptions::HEADERS] = [
+      'X-Http-Method-Override' => 'OPTIONS',
+    ];
     $response = $this->makeApiRequest('POST', $url, $request_options);
     $this->assertSame(400, $response->getStatusCode());
   }

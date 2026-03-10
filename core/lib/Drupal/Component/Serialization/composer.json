@@ -8,7 +8,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.5.0",
-        "symfony/yaml": "^7.4"
+        "symfony/yaml": "^8.0"
     },
     "autoload": {
         "psr-4": {

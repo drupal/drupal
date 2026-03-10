@@ -175,6 +175,19 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   }
 
   /**
+   * Controller to return the HTTP method for testing.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response.
+   */
+  public function getMethod(Request $request): Response {
+    return new Response($request->getMethod());
+  }
+
+  /**
    * Controller to return $_GET['destination'] for testing.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

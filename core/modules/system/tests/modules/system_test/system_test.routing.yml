@@ -104,6 +104,13 @@ system_test.configure:
   requirements:
     _access: 'TRUE'
 
+system_test.method:
+  path: '/system-test/method'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::getMethod'
+  requirements:
+    _access: 'TRUE'
+
 system_test.request_destination:
   path: '/system-test/request-destination'
   defaults:

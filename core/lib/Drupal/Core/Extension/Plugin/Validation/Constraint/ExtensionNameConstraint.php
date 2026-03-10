@@ -25,11 +25,10 @@ class ExtensionNameConstraint extends RegexConstraint {
     ?callable $normalizer = NULL,
     ?array $groups = NULL,
     mixed $payload = NULL,
-    ?array $options = NULL,
   ) {
     // Always use the regular expression that ExtensionDiscovery uses to find
     // valid extensions.
-    parent::__construct(ExtensionDiscovery::PHP_FUNCTION_PATTERN, $message, $htmlPattern, $match, $normalizer, $groups, $payload, $options);
+    parent::__construct(ExtensionDiscovery::PHP_FUNCTION_PATTERN, $message, $htmlPattern, $match, $normalizer, $groups, $payload);
   }
 
 }
