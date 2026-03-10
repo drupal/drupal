@@ -112,7 +112,6 @@ class EntityOperationsCacheabilityTest extends EntityKernelTestBase {
       FALSE,
       TRUE,
     ];
-    yield [['shortcut'], 'shortcut_set', [], [], ['user.permissions'], FALSE, TRUE];
     yield [['taxonomy'], 'taxonomy_vocabulary', [], [], ['user.permissions'], FALSE, TRUE];
     yield [['user'], 'user_role', [], [], ['user.permissions'], FALSE, TRUE];
     yield [['user'], 'user', ['name' => 'test'], [], ['user', 'user.permissions']];

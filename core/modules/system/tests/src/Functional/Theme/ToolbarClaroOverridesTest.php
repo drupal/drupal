@@ -22,7 +22,7 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['toolbar', 'test_page_test', 'shortcut', 'node'];
+  protected static $modules = ['toolbar', 'test_page_test', 'node'];
 
   /**
    * {@inheritdoc}
@@ -53,12 +53,8 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
     $this->themeManager = $this->container->get('theme.manager');
     $this->themeInstaller->install(['claro']);
 
-    // Create user with sufficient permissions to have the shortcut toolbar menu
-    // be available.
     $this->drupalLogin($this->drupalCreateUser([
       'access toolbar',
-      'access shortcuts',
-      'administer shortcuts',
       'access content overview',
     ]));
 

@@ -7,7 +7,6 @@ namespace Drupal\Tests\config_translation\Functional;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\BrowserTestBase;
@@ -36,7 +35,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     'field_ui',
     'menu_ui',
     'node',
-    'shortcut',
     'taxonomy',
     'image',
     'responsive_image',
@@ -72,7 +70,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'administer menu',
       'administer node fields',
       'administer permissions',
-      'administer shortcuts',
       'administer site configuration',
       'administer taxonomy',
       'administer account settings',
@@ -270,30 +267,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the shortcut listing for the translate operation.
-   */
-  public function doShortcutListTest(): void {
-    // Create a test shortcut to decouple looking for translate operations
-    // link so this does not test more than necessary.
-    $shortcut = ShortcutSet::create([
-      'id' => $this->randomMachineName(16),
-      'label' => $this->randomString(),
-    ]);
-    $shortcut->save();
-
-    // Get the shortcut listing.
-    $this->drupalGet('admin/config/user-interface/shortcut');
-
-    $translate_link = 'admin/config/user-interface/shortcut/manage/' . $shortcut->id() . '/translate';
-    // Test if the link to translate the shortcut is on the page.
-    $this->assertSession()->linkByHrefExists($translate_link);
-
-    // Test if the link to translate actually goes to the translate page.
-    $this->drupalGet($translate_link);
-    $this->assertSession()->responseContains('<th>Language</th>');
-  }
-
-  /**
    * Tests the role listing for the translate operation.
    */
   public function doUserRoleListTest(): void {
@@ -464,7 +437,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->doCustomContentTypeListTest();
     $this->doContentTypeListTest();
     $this->doFormatsListTest();
-    $this->doShortcutListTest();
     $this->doUserRoleListTest();
     $this->doLanguageListTest();
     $this->doImageStyleListTest();

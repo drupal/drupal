@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\shortcut\Functional\Jsonapi;
 
 use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\shortcut\Entity\ShortcutSet;
+use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "ShortcutSet" config entity type.
  */
-#[Group('jsonapi')]
+#[Group('shortcut')]
 #[RunTestsInSeparateProcesses]
 class ShortcutSetTest extends ConfigEntityResourceTestBase {
 
