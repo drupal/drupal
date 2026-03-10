@@ -237,7 +237,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     }
     // Always register an IP-based failed login event.
     $this->userFloodControl->register('user.failed_login_ip', $flood_config->get('ip_window'));
-    throw new BadRequestHttpException('Sorry, unrecognized username or password.');
+    throw new BadRequestHttpException('Unrecognized username or password.');
   }
 
   /**
