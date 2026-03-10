@@ -118,7 +118,7 @@ class WorkspacePublisherTest extends KernelTestBase {
     $messenger = \Drupal::service('messenger');
 
     $workspaceOperationFactory = $this->createMock(WorkspaceOperationFactory::class);
-    $entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $entityTypeManager = $this->createStub(EntityTypeManagerInterface::class);
     $logger = $this->createMock(LoggerInterface::class);
     /** @var \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory */
     $loggerFactory = \Drupal::service('logger.factory');
@@ -128,7 +128,6 @@ class WorkspacePublisherTest extends KernelTestBase {
     $workspacePublisher = $this->createMock(WorkspacePublisherInterface::class);
 
     $workspace
-      ->expects($this->any())
       ->method('label');
 
     $workspace

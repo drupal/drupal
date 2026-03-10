@@ -73,7 +73,7 @@ class FiberPlaceholderTest extends UnitTestCase {
       $session->reveal(),
       $request_stack->reveal(),
       $this->prophesize(HttpKernelInterface::class)->reveal(),
-      $this->createMock(EventDispatcherInterface::class),
+      $this->createStub(EventDispatcherInterface::class),
       $this->prophesize(ConfigFactoryInterface::class)->reveal(),
       $this->prophesize(MessengerInterface::class)->reveal(),
       $this->prophesize(RequestContext::class)->reveal(),

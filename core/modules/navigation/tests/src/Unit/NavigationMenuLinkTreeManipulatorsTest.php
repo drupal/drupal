@@ -28,15 +28,15 @@ class NavigationMenuLinkTreeManipulatorsTest extends UnitTestCase {
    * Tests the addSecondLevelOverviewLinks() tree manipulator.
    */
   public function testAddSecondLevelOverviewLinks(): void {
-    $routeProvider = $this->createMock(RouteProviderInterface::class);
+    $routeProvider = $this->createStub(RouteProviderInterface::class);
     // For only the route named 'child_list', return a route object with the
     // SystemController::systemAdminMenuBlockPage as the controller.
     $childListRoute = new Route('/test-child-list', ['_controller' => SystemController::class . '::systemAdminMenuBlockPage']);
-    $routeProvider->expects($this->any())
+    $routeProvider
       ->method('getRouteByName')
       ->willReturnCallback(static fn ($name) => $name === 'child_list' ? $childListRoute : new Route("/$name"));
-    $overrides = $this->createMock(StaticMenuLinkOverridesInterface::class);
-    $translation = $this->createMock(TranslationInterface::class);
+    $overrides = $this->createStub(StaticMenuLinkOverridesInterface::class);
+    $translation = $this->createStub(TranslationInterface::class);
     $translation
       ->method('translateString')
       ->willReturnCallback(static fn ($string) => $string);

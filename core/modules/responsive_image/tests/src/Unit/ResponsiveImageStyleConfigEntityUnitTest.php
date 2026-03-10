@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\responsive_image\Unit;
 
+use Drupal\breakpoint\BreakpointManagerInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
@@ -22,21 +26,21 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\Stub
    */
   protected $entityType;
 
   /**
    * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\Stub
    */
   protected $entityTypeManager;
 
   /**
    * The breakpoint manager used for testing.
    *
-   * @var \Drupal\breakpoint\BreakpointManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\breakpoint\BreakpointManagerInterface|\PHPUnit\Framework\MockObject\Stub
    */
   protected $breakpointManager;
 
@@ -46,18 +50,17 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->entityType = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
-    $this->entityType->expects($this->any())
+    $this->entityType = $this->createStub(EntityTypeInterface::class);
+    $this->entityType
       ->method('getProvider')
       ->willReturn('responsive_image');
 
-    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
-    $this->entityTypeManager->expects($this->any())
+    $this->entityTypeManager = $this->createStub(EntityTypeManagerInterface::class);
+    $this->entityTypeManager
       ->method('getDefinition')
-      ->with('responsive_image_style')
       ->willReturn($this->entityType);
 
-    $this->breakpointManager = $this->createMock('\Drupal\breakpoint\BreakpointManagerInterface');
+    $this->breakpointManager = $this->createStub(BreakpointManagerInterface::class);
 
     $container = new ContainerBuilder();
     $container->set('entity_type.manager', $this->entityTypeManager);
@@ -72,25 +75,24 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
     // Set up image style loading mock.
     $styles = [];
     foreach (['fallback', 'small', 'medium', 'large'] as $style) {
-      $mock = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
-      $mock->expects($this->any())
+      $mock = $this->createStub(ConfigEntityInterface::class);
+      $mock
         ->method('getConfigDependencyName')
         ->willReturn('image.style.' . $style);
       $styles[$style] = $mock;
     }
-    $storage = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
-    $storage->expects($this->any())
+    $storage = $this->createMock(ConfigEntityStorageInterface::class);
+    $storage->expects($this->once())
       ->method('loadMultiple')
       ->with(array_keys($styles))
       ->willReturn($styles);
 
-    $this->entityTypeManager->expects($this->any())
+    $this->entityTypeManager
       ->method('getStorage')
-      ->with('image_style')
       ->willReturn($storage);
 
     $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
-    $entity_type_repository->expects($this->any())
+    $entity_type_repository->expects($this->once())
       ->method('getEntityTypeFromClass')
       ->with('Drupal\image\Entity\ImageStyle')
       ->willReturn('image_style');
@@ -113,9 +115,8 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
       ],
     ]);
 
-    $this->breakpointManager->expects($this->any())
+    $this->breakpointManager
       ->method('getGroupProviders')
-      ->with('test_group')
       ->willReturn(['olivero' => 'theme', 'toolbar' => 'module']);
 
     \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
