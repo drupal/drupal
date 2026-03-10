@@ -10,7 +10,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for implementing system configuration forms.
@@ -46,16 +45,6 @@ abstract class ConfigFormBase extends FormBase {
     protected TypedConfigManagerInterface $typedConfigManager,
   ) {
     $this->setConfigFactory($config_factory);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('config.typed')
-    );
   }
 
   /**

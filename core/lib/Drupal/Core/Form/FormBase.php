@@ -3,6 +3,7 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\AutowireTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Htmx\HtmxRequestInfoTrait;
@@ -10,7 +11,6 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -44,6 +44,7 @@ use Drupal\Core\Messenger\MessengerTrait;
  */
 abstract class FormBase implements FormInterface, ContainerInjectionInterface {
 
+  use AutowireTrait;
   use DependencySerializationTrait;
   use HtmxRequestInfoTrait;
   use LoggerChannelTrait;
@@ -76,13 +77,6 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   protected $routeMatch;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static();
-  }
 
   /**
    * {@inheritdoc}
