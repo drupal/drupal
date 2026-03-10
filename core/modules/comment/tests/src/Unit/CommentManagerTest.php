@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentManager;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -27,16 +30,13 @@ class CommentManagerTest extends UnitTestCase {
   public function testGetFields(): void {
     // Set up a content entity type.
     $entity_type = $this->createMock('Drupal\Core\Entity\ContentEntityTypeInterface');
-    $entity_type->expects($this->any())
-      ->method('getClass')
-      ->willReturn('Node');
-    $entity_type->expects($this->any())
+    $entity_type->expects($this->once())
       ->method('entityClassImplements')
       ->with(FieldableEntityInterface::class)
       ->willReturn(TRUE);
 
     $entity_field_manager = $this->createMock(EntityFieldManagerInterface::class);
-    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager = $this->createStub(EntityTypeManagerInterface::class);
 
     $entity_field_manager->expects($this->once())
       ->method('getFieldMapByFieldType')
@@ -48,18 +48,18 @@ class CommentManagerTest extends UnitTestCase {
         ],
       ]);
 
-    $entity_type_manager->expects($this->any())
+    $entity_type_manager
       ->method('getDefinition')
       ->willReturn($entity_type);
 
     $comment_manager = new CommentManager(
       $entity_type_manager,
-      $this->createMock('Drupal\Core\Config\ConfigFactoryInterface'),
-      $this->createMock('Drupal\Core\StringTranslation\TranslationInterface'),
-      $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface'),
-      $this->createMock(AccountInterface::class),
+      $this->createStub(ConfigFactoryInterface::class),
+      $this->createStub(TranslationInterface::class),
+      $this->createStub(ModuleHandlerInterface::class),
+      $this->createStub(AccountInterface::class),
       $entity_field_manager,
-      $this->prophesize(EntityDisplayRepositoryInterface::class)->reveal()
+      $this->createStub(EntityDisplayRepositoryInterface::class)
     );
     $comment_fields = $comment_manager->getFields('node');
     $this->assertArrayHasKey('field_foobar', $comment_fields);

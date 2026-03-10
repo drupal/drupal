@@ -9,7 +9,6 @@ use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\views\Traits\ViewsLoggerTestTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -34,7 +33,7 @@ class LinkReplyTest extends UnitTestCase {
     parent::setUp();
     $this->setUpMockLoggerWithMissingEntity();
     $container = \Drupal::getContainer();
-    $container->set('string_translation', $this->createMock(TranslationInterface::class));
+    $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
   }
 
@@ -43,9 +42,9 @@ class LinkReplyTest extends UnitTestCase {
    */
   public function testRenderNullEntity(): void {
     $row = new ResultRow();
-    $field = new LinkReply(['entity_type' => 'foo', 'entity field' => 'bar'], '', [], $this->createMock(AccessManagerInterface::class), $this->createMock(EntityTypeManagerInterface::class), $this->createMock(EntityRepositoryInterface::class), $this->createMock(LanguageManagerInterface::class));
-    $view = $this->createMock(ViewExecutable::class);
-    $display = $this->createMock(DisplayPluginBase::class);
+    $field = new LinkReply(['entity_type' => 'foo', 'entity field' => 'bar'], '', [], $this->createStub(AccessManagerInterface::class), $this->createStub(EntityTypeManagerInterface::class), $this->createStub(EntityRepositoryInterface::class), $this->createStub(LanguageManagerInterface::class));
+    $view = $this->createStub(ViewExecutable::class);
+    $display = $this->createStub(DisplayPluginBase::class);
     $field->init($view, $display);
     $this->assertEmpty($field->render($row));
   }
