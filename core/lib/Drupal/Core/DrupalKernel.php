@@ -991,6 +991,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->containerNeedsDumping = FALSE;
     $session_started = FALSE;
     $all_messages = [];
+    $config_is_syncing = FALSE;
+    $source_storage = NULL;
     if (isset($this->container)) {
       // Save the id of the currently logged in user.
       if ($this->container->initialized('current_user')) {
@@ -1014,6 +1016,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
 
       $all_messages = $this->container->get('messenger')->all();
+      $config_is_syncing = $this->container->get('config.installer')->isSyncing();
+      $source_storage = $this->container->get('config.installer')->getSourceStorage();
     }
 
     // If the module list hasn't already been set in updateModules and we are
@@ -1073,6 +1077,15 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     foreach ($all_messages as $type => $messages) {
       foreach ($messages as $message) {
         $this->container->get('messenger')->addMessage($message, $type);
+      }
+    }
+
+    // Restore syncing flag, as this is often set when modules or themes
+    // are installed which triggers a container rebuild.
+    if ($config_is_syncing) {
+      $this->container->get('config.installer')->setSyncing(TRUE);
+      if ($source_storage) {
+        $this->container->get('config.installer')->setSourceStorage($source_storage);
       }
     }
 
