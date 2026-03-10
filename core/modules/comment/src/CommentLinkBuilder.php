@@ -74,8 +74,8 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
         continue;
       }
       $links = [];
-      $commenting_status = $entity->get($field_name)->status;
-      if ($commenting_status != CommentItemInterface::HIDDEN) {
+      $commenting_status = CommentingStatus::tryFrom((int) $entity->get($field_name)->status);
+      if ($commenting_status != CommentingStatus::Hidden) {
         // Entity has commenting status open or closed.
         $field_definition = $entity->getFieldDefinition($field_name);
         if ($view_mode == 'teaser') {
@@ -93,7 +93,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
             }
           }
           // Provide a link to new comment form.
-          if ($commenting_status == CommentItemInterface::OPEN) {
+          if ($commenting_status == CommentingStatus::Open) {
             $comment_form_location = $field_definition->getSetting('form_location');
             if ($this->currentUser->hasPermission('post comments')) {
               $links['comment-add'] = [
@@ -124,7 +124,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
           // Entity in other view modes: add a "post comment" link if the user
           // is allowed to post comments and if this entity is allowing new
           // comments.
-          if ($commenting_status == CommentItemInterface::OPEN) {
+          if ($commenting_status == CommentingStatus::Open) {
             $comment_form_location = $field_definition->getSetting('form_location');
             if ($this->currentUser->hasPermission('post comments')) {
               // Show the "post comment" link if the form is on another page, or

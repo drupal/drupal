@@ -2,7 +2,7 @@
 
 namespace Drupal\comment\Plugin\Field\FieldWidget;
 
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\comment\CommentingStatus;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -32,18 +32,14 @@ class CommentWidget extends WidgetBase {
       '#title_display' => 'invisible',
       '#default_value' => $items->status,
       '#required ' => TRUE,
-      '#options' => [
-        CommentItemInterface::OPEN => $this->t('Open'),
-        CommentItemInterface::CLOSED => $this->t('Closed'),
-        CommentItemInterface::HIDDEN => $this->t('Hidden'),
-      ],
-      CommentItemInterface::OPEN => [
+      '#options' => CommentingStatus::asOptions(),
+      CommentingStatus::Open->value => [
         '#description' => $this->t('Users with the "Post comments" permission can post comments.'),
       ],
-      CommentItemInterface::CLOSED => [
+      CommentingStatus::Closed->value => [
         '#description' => $this->t('Users cannot post comments, but existing comments will be displayed.'),
       ],
-      CommentItemInterface::HIDDEN => [
+      CommentingStatus::Hidden->value => [
         '#description' => $this->t('Comments and the comment form are hidden from view.'),
       ],
     ];
@@ -53,8 +49,9 @@ class CommentWidget extends WidgetBase {
     // default value widget on the field settings form.
     if (!$this->isDefaultValueWidget($form_state) && !$items->comment_count) {
       // Only hide the option when it's not the currently selected option.
-      if ($element['status']['#default_value'] !== CommentItemInterface::CLOSED) {
-        $element['status'][CommentItemInterface::CLOSED]['#access'] = FALSE;
+      if ($element['status']['#default_value'] !== CommentingStatus::Closed->value) {
+        $element['status'][CommentingStatus::Closed->value]['#access'] = FALSE;
+
       }
     }
     // If the advanced settings tabs-set is available (normally rendered in the
