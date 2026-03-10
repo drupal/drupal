@@ -4,7 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   shortcut.lazy_builders:
     class: Drupal\shortcut\ShortcutLazyBuilders
-    arguments: ['@renderer', '@entity_type.manager', '@current_user']
   Drupal\shortcut\ShortcutLazyBuilders: '@shortcut.lazy_builders'

@@ -6,6 +6,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   announcements_feed.fetcher:
     class: Drupal\announcements_feed\AnnounceFetcher
     arguments: ['@http_client', '@config.factory', '@keyvalue.expirable', '@logger.channel.announcements_feed', '%announcements_feed.feed_json_url%']
@@ -16,7 +17,6 @@ services:
     public: false
   announcements_feed.lazy_builders:
     class: Drupal\announcements_feed\LazyBuilders
-    arguments: [ '@plugin.manager.element_info']
   Drupal\announcements_feed\LazyBuilders: '@announcements_feed.lazy_builders'
   announcements_feed.renderer:
     class: Drupal\announcements_feed\AnnounceRenderer

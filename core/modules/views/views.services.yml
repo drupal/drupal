@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   views.plugin_managers:
     class: Symfony\Component\DependencyInjection\ServiceLocator
     arguments:
@@ -94,11 +95,9 @@ services:
   Drupal\views\ViewsData: '@views.views_data'
   views.field_data_provider:
     class: Drupal\views\FieldViewsDataProvider
-    arguments: ['@entity_type.manager', '@plugin.manager.field.field_type', '@entity_field.manager']
   Drupal\views\FieldViewsDataProvider: '@views.field_data_provider'
   views.views_data_helper:
     class: Drupal\views\ViewsDataHelper
-    arguments: ['@views.views_data']
   Drupal\views\ViewsDataHelper: '@views.views_data_helper'
   views.executable:
     class: Drupal\views\ViewExecutableFactory
@@ -106,11 +105,9 @@ services:
   Drupal\views\ViewExecutableFactory: '@views.executable'
   views.analyzer:
     class: Drupal\views\Analyzer
-    arguments: ['@module_handler']
   Drupal\views\Analyzer: '@views.analyzer'
   views.route_subscriber:
     class: Drupal\views\EventSubscriber\RouteSubscriber
-    arguments: ['@entity_type.manager', '@state']
   views.exposed_form_cache:
     class: Drupal\views\ExposedFormCache
   Drupal\views\ExposedFormCache: '@views.exposed_form_cache'
@@ -119,16 +116,13 @@ services:
     arguments: ['@entity_type.manager', '@logger.channel.default']
   views.date_sql:
     class: Drupal\views\Plugin\views\query\MysqlDateSql
-    arguments: ['@database']
     tags:
       - { name: backend_overridable }
   pgsql.views.date_sql:
     class: Drupal\views\Plugin\views\query\PostgresqlDateSql
-    arguments: ['@database']
     public: false
   sqlite.views.date_sql:
     class: Drupal\views\Plugin\views\query\SqliteDateSql
-    arguments: ['@database']
     public: false
   views.cast_sql:
     class: Drupal\views\Plugin\views\query\CastSql

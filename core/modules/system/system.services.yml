@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   access_check.cron:
     class: Drupal\system\Access\CronAccessCheck
     tags:
@@ -24,7 +25,6 @@ services:
       - { name: access_check, applies_to: _access_admin_overview_page }
   system.manager:
     class: Drupal\system\SystemManager
-    arguments: ['@module_handler', '@request_stack', '@menu.link_tree', '@menu.active_trail']
   Drupal\system\SystemManager: '@system.manager'
   system.breadcrumb.default:
     class: Drupal\system\PathBasedBreadcrumbBuilder
@@ -39,12 +39,10 @@ services:
     class: Drupal\system\EventSubscriber\AdminRouteSubscriber
   theme.negotiator.system.batch:
     class: Drupal\system\Theme\BatchNegotiator
-    arguments: ['@batch.storage', '@request_stack']
     tags:
       - { name: theme_negotiator, priority: 1000 }
   theme.negotiator.system.db_update:
     class: Drupal\system\Theme\DbUpdateNegotiator
-    arguments: ['@config.factory', '@theme_handler']
     tags:
       - { name: theme_negotiator, priority: 100 }
   Drupal\system\Theme\SystemAdminThemePreprocess:
@@ -52,16 +50,12 @@ services:
     autowire: true
   system.config_subscriber:
     class: Drupal\system\SystemConfigSubscriber
-    arguments: ['@router.builder']
   system.config_cache_tag:
     class: Drupal\system\EventSubscriber\ConfigCacheTag
-    arguments: ['@theme_handler', '@cache_tags.invalidator', '@theme.registry']
   system.timezone_resolver:
     class: Drupal\system\TimeZoneResolver
-    arguments: ['@current_user', '@config.factory']
   system.file_event.subscriber:
     class: Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber
-    arguments: ['@config.factory']
   logger.channel.system:
     parent: logger.channel_base
     arguments: ['system']
@@ -71,7 +65,6 @@ services:
   Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher: '@system.sa_fetcher'
   system.advisories_config_subscriber:
     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber
-    arguments: ['@system.sa_fetcher']
   Drupal\system\Routing\MenuLinksetRoutes: '@system.menus.route_subscriber'
   system.menus.route_subscriber:
     class: Drupal\system\Routing\MenuLinksetRoutes

@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   serializer:
     class: Drupal\serialization\Serializer\Serializer
     arguments: [{  }, {  }]
@@ -11,17 +12,14 @@ services:
     class: Drupal\serialization\Normalizer\ConfigEntityNormalizer
     tags:
       - { name: normalizer }
-    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.content_entity:
     class: Drupal\serialization\Normalizer\ContentEntityNormalizer
     tags:
       - { name: normalizer }
-    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.entity:
     class: Drupal\serialization\Normalizer\EntityNormalizer
     tags:
       - { name: normalizer }
-    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.primitive_data:
     class: Drupal\serialization\Normalizer\PrimitiveDataNormalizer
     tags:
@@ -38,7 +36,6 @@ services:
       # this modules generic field item normalizer.
       # @todo Find a better way for this in https://www.drupal.org/node/2575761.
       - { name: normalizer, priority: 8 }
-    arguments: ['@entity.repository']
   serialization.normalizer.field_item:
     class: Drupal\serialization\Normalizer\FieldItemNormalizer
     tags:
@@ -65,13 +62,11 @@ services:
       - { name: normalizer, priority: 8 }
   serializer.normalizer.timestamp:
     class: Drupal\serialization\Normalizer\TimestampNormalizer
-    arguments: ['@config.factory']
     tags:
       # Priority must be higher than serializer.normalizer.primitive_data.
       - { name: normalizer, priority: 20 }
   serializer.normalizer.datetimeiso8601:
     class: \Drupal\serialization\Normalizer\DateTimeIso8601Normalizer
-    arguments: ['@config.factory']
     tags:
       # Priority must be higher than serializer.normalizer.primitive_data.
       - { name: normalizer, priority: 20 }
@@ -103,7 +98,6 @@ services:
     class: Drupal\serialization\EntityResolver\UuidResolver
     tags:
       - { name: entity_resolver}
-    arguments: ['@entity.repository']
   serialization.entity_resolver.target_id:
     class: Drupal\serialization\EntityResolver\TargetIdResolver
     tags:

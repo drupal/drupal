@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   block_content.uuid_lookup:
     class: \Drupal\block_content\BlockContentUuidLookup
     arguments: ['@cache.bootstrap', '@lock', '@entity_type.manager']
@@ -12,7 +13,6 @@ services:
   Drupal\block_content\BlockContentUuidLookup: '@block_content.uuid_lookup'
   block_content.bc_subscriber:
     class: Drupal\block_content\Routing\RouteSubscriber
-    arguments: ['@entity_type.manager', '@module_handler']
   access_check.block_content_reusable:
     class: Drupal\block_content\Access\BlockContentIsReusableAccessCheck
     tags:

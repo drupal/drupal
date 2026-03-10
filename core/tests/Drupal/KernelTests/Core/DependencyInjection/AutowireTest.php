@@ -56,9 +56,7 @@ class AutowireTest extends KernelTestBase {
     $services = [];
     $aliases = [];
 
-    $filenames = array_map(fn(array $module): string => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
-    $filenames[] = 'core/core.services.yml';
-    foreach (array_filter($filenames, 'file_exists') as $filename) {
+    foreach ($this->getCoreServiceFiles() as $filename) {
       foreach ((Yaml::decode(file_get_contents($filename))['services'] ?? []) as $id => $service) {
         if (is_string($service)) {
           $aliases[$id] = substr($service, 1);
@@ -141,9 +139,7 @@ class AutowireTest extends KernelTestBase {
   public function testCoreControllerAutowiring(): void {
     $aliases = [];
 
-    $filenames = array_map(fn(array $module): string => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
-    $filenames[] = 'core/core.services.yml';
-    foreach (array_filter($filenames, 'file_exists') as $filename) {
+    foreach ($this->getCoreServiceFiles() as $filename) {
       foreach ((Yaml::decode(file_get_contents($filename))['services'] ?? []) as $id => $service) {
         if (is_string($service)) {
           $aliases[$id] = substr($service, 1);
@@ -152,8 +148,7 @@ class AutowireTest extends KernelTestBase {
     }
 
     $controllers = [];
-    $filenames = array_map(fn(array $module): string => "core/modules/{$module[0]}/{$module[0]}.routing.yml", $this->coreModuleListDataProvider());
-    foreach (array_filter($filenames, 'file_exists') as $filename) {
+    foreach ($this->getCoreServiceFiles() as $filename) {
       foreach (Yaml::decode(file_get_contents($filename)) as $route) {
         if (isset($route['defaults']['_controller'])) {
           [$class] = explode('::', $route['defaults']['_controller'], 2);
@@ -184,6 +179,63 @@ class AutowireTest extends KernelTestBase {
     }
 
     $this->assertEmpty($autowire, 'The following core controllers can be autowired. Remove the create() method:' . PHP_EOL . implode(PHP_EOL, $autowire));
+  }
+
+  /**
+   * Tests that core services have aliases correctly defined where possible.
+   */
+  public function testCoreAutowiring(): void {
+    $services = [];
+    $aliases = [];
+    foreach ($this->getCoreServiceFiles() as $filename) {
+      foreach ((Yaml::decode(file_get_contents($filename))['services'] ?? []) as $id => $service) {
+        if (is_string($service)) {
+          $aliases[$id] = substr($service, 1);
+        }
+        elseif (isset($service['class']) && isset($service['arguments'])) {
+          if ($filename === 'core/core.services.yml') {
+            // @todo Remove this skip in https://www.drupal.org/i/3295751
+            continue;
+          }
+          $services[$id] = $service;
+        }
+      }
+    }
+
+    $autowire = [];
+    foreach ($services as $id => $service) {
+      if (!method_exists($service['class'], '__construct')) {
+        continue;
+      }
+
+      $constructor = new \ReflectionMethod($service['class'], '__construct');
+      foreach ($constructor->getParameters() as $pos => $parameter) {
+        $interface = (string) $parameter->getType();
+        if (!isset($aliases[$interface])) {
+          // There is no service to autowire.
+          continue 2;
+        }
+        if ($aliases[$interface] !== substr($service['arguments'][$pos], 1)) {
+          // The service is different.
+          continue 2;
+        }
+      }
+      $autowire[] = $id;
+    }
+
+    $this->assertEmpty($autowire, 'The following core services can be autowired. Remove their arguments from the services.yml file:' . PHP_EOL . implode(PHP_EOL, $autowire));
+  }
+
+  /**
+   * Return a list of core service YAML files.
+   *
+   * @return string[]
+   *   An array of filenames.
+   */
+  private function getCoreServiceFiles() {
+    $filenames = array_map(fn($module) => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
+    $filenames[] = 'core/core.services.yml';
+    return array_filter($filenames, 'file_exists');
   }
 
 }

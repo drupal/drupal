@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   locale.default.config.storage:
     class: Drupal\locale\LocaleDefaultConfigStorage
     arguments: ['@config.storage', '@language_manager', '%install_profile%']
@@ -21,11 +22,9 @@ services:
   Drupal\locale\StringStorageInterface: '@locale.storage'
   locale.project:
     class: Drupal\locale\LocaleProjectStorage
-    arguments: ['@keyvalue']
   Drupal\locale\LocaleProjectStorageInterface: '@locale.project'
   locale.plural.formula:
     class: Drupal\locale\PluralFormula
-    arguments: ['@language_manager', '@state']
   Drupal\locale\PluralFormulaInterface: '@locale.plural.formula'
   string_translator.locale.lookup:
     class: Drupal\locale\LocaleTranslation
@@ -39,13 +38,8 @@ services:
       - { name: stream_wrapper, scheme: translations }
   locale.config_subscriber:
     class: Drupal\locale\LocaleConfigSubscriber
-    arguments: ['@config.factory', '@locale.config_manager']
   locale.locale_translation_cache_tag:
     class: Drupal\locale\EventSubscriber\LocaleTranslationCacheTag
-    arguments: ['@cache_tags.invalidator']
-  Drupal\locale\EventSubscriber\ConfigSubscriber:
-    autowire: true
-  Drupal\locale\LocaleSource:
-    autowire: true
-  Drupal\locale\LocaleFetch:
-    autowire: true
+  Drupal\locale\EventSubscriber\ConfigSubscriber: ~
+  Drupal\locale\LocaleSource: ~
+  Drupal\locale\LocaleFetch: ~

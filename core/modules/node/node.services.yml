@@ -4,35 +4,30 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   node.route_subscriber:
     class: Drupal\node\Routing\RouteSubscriber
   node.grant_storage:
     class: Drupal\node\NodeGrantDatabaseStorage
-    autowire: true
     tags:
       - { name: backend_overridable }
   Drupal\node\NodeGrantDatabaseStorageInterface: '@node.grant_storage'
   access_check.node.preview:
     class: Drupal\node\Access\NodePreviewAccessCheck
-    arguments: ['@entity_type.manager']
     tags:
       - { name: access_check, applies_to: _node_preview_access }
   node.admin_path.route_subscriber:
     class: Drupal\node\EventSubscriber\NodeAdminRouteSubscriber
-    arguments: ['@config.factory', '@router.builder']
   node_preview:
     class: Drupal\node\ParamConverter\NodePreviewConverter
-    arguments: ['@tempstore.private']
     tags:
       - { name: paramconverter }
   cache_context.user.node_grants:
     class: Drupal\node\Cache\NodeAccessGrantsCacheContext
-    arguments: ['@current_user', '@entity_type.manager']
     tags:
       - { name: cache.context }
   node.node_route_context:
     class: Drupal\node\ContextProvider\NodeRouteContext
-    arguments: ['@current_route_match']
     tags:
       - { name: 'context_provider' }
   node.view_all_nodes_memory_cache:

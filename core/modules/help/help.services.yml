@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   plugin.manager.help_section:
     class: Drupal\help\HelpSectionManager
     parent: default_plugin_manager
@@ -29,6 +30,5 @@ services:
     public: false
   help_twig.extension:
     class: Drupal\help\HelpTwigExtension
-    arguments: ['@access_manager', '@plugin.manager.help_topic', '@string_translation']
     tags:
       - { name: twig.extension }

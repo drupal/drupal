@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   workspaces.manager:
     class: Drupal\workspaces\WorkspaceManager
     autowire: true
@@ -45,22 +46,17 @@ services:
 
   access_check.workspaces.active_workspace:
     class: Drupal\workspaces\Access\ActiveWorkspaceCheck
-    arguments: ['@workspaces.manager']
     tags:
       - { name: access_check, applies_to: _has_active_workspace }
 
   workspaces.entity_schema_listener:
     class: Drupal\workspaces\EventSubscriber\EntitySchemaSubscriber
-    arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@workspaces.information']
   workspaces.workspace_subscriber:
     class: Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
-    arguments: ['@router.route_provider', '@workspaces.manager']
-  Drupal\workspaces\EventSubscriber\WorkspaceSwitchSubscriber:
-    autowire: true
+  Drupal\workspaces\EventSubscriber\WorkspaceSwitchSubscriber: ~
 
   cache_context.workspace:
     class: Drupal\workspaces\WorkspaceCacheContext
-    arguments: ['@workspaces.manager']
     tags:
       - { name: cache.context }
   logger.channel.workspaces:
@@ -76,7 +72,6 @@ services:
   workspaces.entity.query.sql:
     decorates: entity.query.sql
     class: Drupal\workspaces\EntityQuery\QueryFactory
-    arguments: ['@database', '@workspaces.manager', '@workspaces.information']
     public: false
     decoration_priority: 50
     tags:

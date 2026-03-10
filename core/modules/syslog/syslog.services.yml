@@ -4,8 +4,8 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   logger.syslog:
     class: Drupal\syslog\Logger\SysLog
-    arguments: ['@config.factory', '@logger.log_message_parser']
     tags:
       - { name: logger }

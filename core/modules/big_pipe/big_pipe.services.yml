@@ -4,12 +4,11 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   html_response.big_pipe_subscriber:
     class: Drupal\big_pipe\EventSubscriber\HtmlResponseBigPipeSubscriber
-    arguments: ['@big_pipe']
   placeholder_strategy.big_pipe:
     class: Drupal\big_pipe\Render\Placeholder\BigPipeStrategy
-    arguments: ['@session_configuration', '@request_stack', '@current_route_match']
     tags:
       - { name: placeholder_strategy, priority: 0 }
   big_pipe:

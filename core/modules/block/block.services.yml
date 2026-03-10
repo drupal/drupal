@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   theme.negotiator.block.admin_demo:
     class: Drupal\block\Theme\AdminDemoNegotiator
     tags:
@@ -12,6 +13,5 @@ services:
     class: Drupal\block\EventSubscriber\BlockPageDisplayVariantSubscriber
   block.repository:
     class: Drupal\block\BlockRepository
-    arguments: ['@entity_type.manager', '@theme.manager', '@context.handler']
   Drupal\block\BlockRepositoryInterface: '@block.repository'
   Drupal\block\BlockConfigUpdater: ~

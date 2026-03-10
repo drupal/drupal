@@ -5,6 +5,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+    autowire: true
   plugin.manager.media.source:
     class: Drupal\media\MediaSourceManager
     parent: default_plugin_manager
@@ -22,9 +23,7 @@ services:
   Drupal\media\OEmbed\ResourceFetcherInterface: '@media.oembed.resource_fetcher'
   media.oembed.iframe_url_helper:
     class: Drupal\media\IFrameUrlHelper
-    arguments: ['@router.request_context', '@private_key']
   Drupal\media\IFrameUrlHelper: '@media.oembed.iframe_url_helper'
   media.config_subscriber:
     class: Drupal\media\EventSubscriber\MediaConfigSubscriber
-    arguments: ['@router.builder', '@cache_tags.invalidator', '@entity_type.manager']
   Drupal\media\EventSubscriber\DefaultContentSubscriber: ~
