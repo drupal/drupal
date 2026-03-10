@@ -169,7 +169,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
       $this->logger->info('%theme theme installed.', ['%theme' => $key]);
     }
 
-    $this->cssCollectionOptimizer->deleteAll();
     // Add new themes to the list of installed themes.
     $register_themes = array_merge(array_keys($installed_themes), $themes_installed);
     // Get list of extensions for the new list of themes.
