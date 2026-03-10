@@ -116,6 +116,53 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   }
 
   /**
+   * Tests the available link appears to users with the right permissions.
+   */
+  public function testAvailableUpdateLink(): void {
+    // Test that a user with the correct permissions is shown the available
+    // updates link.
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+      'view update notifications',
+      'administer themes',
+      'access administration pages',
+    ]));
+
+    $this->setProjectInstalledVersion('8.0.0');
+    // Instead of using refreshUpdateStatus(), set these manually.
+    $this->config('update.settings')
+      ->set('fetch.url', Url::fromRoute('update_test.update_test')
+        ->setAbsolute()
+        ->toString())
+      ->save();
+    // Use update XML that has no information to simulate a broken response from
+    // the update server.
+    $this->config('update_test.settings')
+      ->set('xml_map', ['drupal' => 'broken'])
+      ->save();
+
+    // This will retrieve broken updates.
+    $this->cronRun();
+
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkExists('available updates');
+
+    // Test that a user without the correct permissions is not shown the
+    // available updates link.
+    $this->drupalLogin($this->drupalCreateUser([
+      'view update notifications',
+      'administer themes',
+      'access administration pages',
+    ]));
+
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkNotExists('available updates');
+    $this->assertSession()->pageTextContains('available updates');
+  }
+
+  /**
    * Tests when a dev release does not have a date.
    */
   public function testDevNoReleaseDate(): void {

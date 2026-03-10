@@ -201,7 +201,7 @@ class UpdateHooks {
     $language = \Drupal::languageManager()->getLanguage($langcode);
     $message['subject'] .= $this->t('New release(s) available for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name')], ['langcode' => $langcode]);
     foreach ($params as $msg_type => $msg_reason) {
-      $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
+      $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode, TRUE);
     }
     $message['body'][] = $this->t('See the available updates page for more information:',
       [],
