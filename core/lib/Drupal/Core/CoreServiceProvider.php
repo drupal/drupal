@@ -31,7 +31,6 @@ use Drupal\Core\Hook\ThemeHookCollectorPass;
 use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Core\Queue\QueueFactoryInterface;
-use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -85,8 +84,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new StackedKernelPass());
 
     $container->addCompilerPass(new StackedSessionHandlerPass());
-
-    $container->addCompilerPass(new MainContentRenderersPass());
 
     // Collect tagged handler services as method calls on consumer services.
     $container->addCompilerPass(new TaggedHandlersPass());

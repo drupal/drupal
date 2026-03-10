@@ -1311,7 +1311,7 @@ services:
   # Main content view subscriber plus the renderers it uses.
   main_content_view_subscriber:
     class: Drupal\Core\EventSubscriber\MainContentViewSubscriber
-    arguments: ['@class_resolver', '@current_route_match', '%main_content_renderers%']
+    autowire: true
   renderer_non_html:
     class: Drupal\Core\EventSubscriber\RenderArrayNonHtmlSubscriber
   main_content_renderer.html:
