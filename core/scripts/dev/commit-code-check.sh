@@ -27,7 +27,6 @@ contains_element() {
 
 MEMORY_UNLIMITED=0
 CACHED=0
-DRUPALCI=0
 BRANCH=""
 while test $# -gt 0; do
   case "$1" in
@@ -38,7 +37,6 @@ while test $# -gt 0; do
       echo "-h, --help                show brief help"
       echo "--branch BRANCH           creates list of files to check by comparing against a branch"
       echo "--cached                  checks staged files"
-      echo "--drupalci                a special mode for DrupalCI"
       echo "--memory-unlimited        bypass PHP memory limit for PHPStan and PHPCS"
       echo " "
       echo "Example usage: sh ./core/scripts/dev/commit-code-check.sh --branch 9.2.x"
@@ -54,10 +52,6 @@ while test $# -gt 0; do
       ;;
     --cached)
       CACHED=1
-      shift
-      ;;
-    --drupalci)
-      DRUPALCI=1
       shift
       ;;
     --memory-unlimited)
@@ -78,29 +72,18 @@ if [[ "$MEMORY_UNLIMITED" == "1" ]]; then
   phpcs_memory_limit="-d memory_limit=-1"
 fi
 
-# Set up variables to make colored output simple. Color output is disabled on
-# DrupalCI because it is breaks reporting.
-# @todo https://www.drupal.org/project/drupalci_testbot/issues/3181869
-if [[ "$DRUPALCI" == "1" ]]; then
-  red=""
-  green=""
-  reset=""
-  DRUPAL_VERSION=$(php -r "include 'vendor/autoload.php'; print preg_replace('#\.[0-9]+-dev#', '.x', \Drupal::VERSION);")
-  GIT="sudo -u www-data git"
-else
-  red=$(tput setaf 1 && tput bold)
-  blue=$(tput setaf 4 && tput bold)
-  green=$(tput setaf 2)
-  reset=$(tput sgr0)
-  GIT="git"
-fi
+# Set up variables to make colored output simple.
+red=$(tput setaf 1 && tput bold)
+blue=$(tput setaf 4 && tput bold)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+GIT="git"
 
 # Gets list of files to check.
 if [[ "$BRANCH" != "" ]]; then
   FILES=$($GIT diff --name-only $BRANCH HEAD);
 elif [[ "$CACHED" == "0" ]]; then
-  # For DrupalCI patch testing or when running without --cached or --branch,
-  # list of all changes in the working directory.
+  # List of all changes in the working directory.
   FILES=$($GIT ls-files --other --modified --exclude-standard --exclude=vendor)
 else
   # Check staged files only.
@@ -112,14 +95,6 @@ else
     AGAINST=4b825dc642cb6eb9a060e54bf8d69288fbee4904
   fi
   FILES=$($GIT diff --cached --name-only $AGAINST);
-fi
-
-if [[ "$FILES" == "" ]] && [[ "$DRUPALCI" == "1" ]]; then
-  # If the FILES is empty we might be testing a merge request on DrupalCI. We
-  # need to diff against the Drupal branch or tag related to the Drupal version.
-  printf "Creating list of files to check by comparing branch to %s\n" "$DRUPAL_VERSION"
-  # On DrupalCI there's a merge commit so we can compare to HEAD~1.
-  FILES=$($GIT diff --name-only HEAD~1 HEAD);
 fi
 
 TOP_LEVEL=$($GIT rev-parse --show-toplevel)
@@ -254,9 +229,9 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-# Run PHPStan on all files on DrupalCI or when phpstan files are changed.
+# Run PHPStan on all files when phpstan files are changed.
 # APCu is disabled to ensure that the composer classmap is not corrupted.
-if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
+if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]]; then
   printf "\nRunning PHPStan on *all* files.\n"
   php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist" $memory_limit
 else
@@ -278,8 +253,8 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-# Run PHPCS on all files on DrupalCI or when phpcs files are changed.
-if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
+# Run PHPCS on all files when phpcs files are changed.
+if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]]; then
   # Test all files with phpcs rules.
   vendor/bin/phpcs $phpcs_memory_limit -ps --parallel="$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
   PHPCS=$?
@@ -333,27 +308,6 @@ if [[ $STYLELINT_CONFIG_FILE_CHANGED == "1" ]]; then
   printf "\n"
 fi
 
-# When a Drupal-specific CKEditor 5 plugin changed ensure that it is compiled
-# properly. Only check on DrupalCI, since we're concerned about the build being
-# run with the expected package versions and making sure the result of the build
-# is in sync and conform to expectations.
-if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
-  cd "$TOP_LEVEL/core"
-  yarn run check:ckeditor5
-  if [ "$?" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\nDrupal-specific CKEditor 5 plugins: ${red}failed${reset}\n"
-  else
-    printf "\nDrupal-specific CKEditor 5 plugins: ${green}passed${reset}\n"
-  fi
-  cd $TOP_LEVEL
-  # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
-fi
-
 # When JavaScript packages change, then rerun all JavaScript style checks.
 if [[ "$JAVASCRIPT_PACKAGES_CHANGED" == "1" ]]; then
   cd "$TOP_LEVEL/core"
@@ -373,18 +327,83 @@ if [[ "$JAVASCRIPT_PACKAGES_CHANGED" == "1" ]]; then
   printf "\n"
 fi
 
+# Build file type lists for batch checks.
+PHP_FILES=""
+JS_FILES=""
+CSS_FILES=""
 for FILE in $FILES; do
-  STATUS=0;
-  # Print a line to separate spellcheck output from per file output.
-  printf "Checking %s\n" "$FILE"
-  printf "\n"
+  if [[ -f "$TOP_LEVEL/$FILE" ]]; then
+    if [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]]; then
+      PHP_FILES="$PHP_FILES $TOP_LEVEL/$FILE"
+    fi
+    if [[ $FILE =~ \.(yml|js)$ ]]; then
+      JS_FILES="$JS_FILES $TOP_LEVEL/$FILE"
+    fi
+    if [[ $FILE =~ \.css$ ]]; then
+      BASENAME=${FILE%.css}
+      if [[ $FILE =~ \.pcss\.css$ ]] || [[ ! -f "$TOP_LEVEL/$BASENAME.pcss.css" ]]; then
+        CSS_FILES="$CSS_FILES $TOP_LEVEL/$FILE"
+      fi
+    fi
+  fi
+done
 
+# Run PHPCS on changed PHP and YAML files.
+if [[ "$PHP_FILES" != "" ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]]; then
+  vendor/bin/phpcs $phpcs_memory_limit --standard="$TOP_LEVEL/core/phpcs.xml.dist" $PHP_FILES
+  if [ "$?" -ne "0" ]; then
+    FINAL_STATUS=1
+    printf "\nPHPCS: ${red}failed${reset}\n"
+  else
+    printf "\nPHPCS: ${green}passed${reset}\n"
+  fi
+  # Add a separator line to make the output easier to read.
+  printf "\n"
+  printf -- '-%.0s' {1..100}
+  printf "\n"
+fi
+
+# Run ESLint on changed YAML and JavaScript files.
+if [[ "$JS_FILES" != "" ]] && [[ $ESLINT_CONFIG_PASSING_FILE_CHANGED == "0" ]]; then
+  cd "$TOP_LEVEL/core"
+  node ./node_modules/eslint/bin/eslint.js --quiet --resolve-plugins-relative-to . --config=.eslintrc.passing.json $JS_FILES
+  if [ "$?" -ne "0" ]; then
+    FINAL_STATUS=1
+    printf "\nESLint: ${red}failed${reset}\n"
+  else
+    printf "\nESLint: ${green}passed${reset}\n"
+  fi
+  cd "$TOP_LEVEL"
+  # Add a separator line to make the output easier to read.
+  printf "\n"
+  printf -- '-%.0s' {1..100}
+  printf "\n"
+fi
+
+# Run Stylelint on changed CSS files.
+if [[ "$CSS_FILES" != "" ]] && [[ $STYLELINT_CONFIG_FILE_CHANGED == "0" ]] && [[ -f "core/node_modules/.bin/stylelint" ]]; then
+  cd "$TOP_LEVEL/core"
+  node_modules/.bin/stylelint --allow-empty-input $CSS_FILES
+  if [ "$?" -ne "0" ]; then
+    FINAL_STATUS=1
+    printf "\nStylelint: ${red}failed${reset}\n"
+  else
+    printf "\nStylelint: ${green}passed${reset}\n"
+  fi
+  cd "$TOP_LEVEL"
+  # Add a separator line to make the output easier to read.
+  printf "\n"
+  printf -- '-%.0s' {1..100}
+  printf "\n"
+fi
+
+for FILE in $FILES; do
   # Ensure the file still exists (i.e. is not being deleted).
   if [ -a $FILE ]; then
     if [ ${FILE: -3} != ".sh" ]; then
       if [ -x $FILE ]; then
         printf "${red}check failed:${reset} file $FILE should not be executable\n"
-        STATUS=1
+        FINAL_STATUS=1
       fi
     fi
   fi
@@ -392,62 +411,13 @@ for FILE in $FILES; do
   # Don't commit changes to vendor.
   if [[ "$FILE" =~ ^vendor/ ]]; then
     printf "${red}check failed:${reset} file in vendor directory being committed ($FILE)\n"
-    STATUS=1
+    FINAL_STATUS=1
   fi
 
   # Don't commit changes to core/node_modules.
   if [[ "$FILE" =~ ^core/node_modules/ ]]; then
     printf "${red}check failed:${reset} file in core/node_modules directory being committed ($FILE)\n"
-    STATUS=1
-  fi
-
-  ############################################################################
-  ### PHP AND YAML FILES
-  ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]] && [[ "$DRUPALCI" == "0" ]]; then
-    # Test files with phpcs rules.
-    vendor/bin/phpcs $phpcs_memory_limit "$TOP_LEVEL/$FILE" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
-    PHPCS=$?
-    if [ "$PHPCS" -ne "0" ]; then
-      # If there are failures set the status to a number other than 0.
-      STATUS=1
-    else
-      printf "PHPCS: $FILE ${green}passed${reset}\n"
-    fi
-  fi
-
-  ############################################################################
-  ### YAML FILES
-  ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.yml$ ]]; then
-    # Test files with ESLint.
-    cd "$TOP_LEVEL/core"
-    node ./node_modules/eslint/bin/eslint.js --quiet --resolve-plugins-relative-to . "$TOP_LEVEL/$FILE"
-    YAMLLINT=$?
-    if [ "$YAMLLINT" -ne "0" ]; then
-      # If there are failures set the status to a number other than 0.
-      STATUS=1
-    else
-      printf "ESLint: $FILE ${green}passed${reset}\n"
-    fi
-    cd $TOP_LEVEL
-  fi
-
-  ############################################################################
-  ### JAVASCRIPT FILES
-  ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]]; then
-    cd "$TOP_LEVEL/core"
-    # Check the coding standards.
-    node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
-    JSLINT=$?
-    if [ "$JSLINT" -ne "0" ]; then
-      # No need to write any output the node command will do this for us.
-      STATUS=1
-    else
-      printf "ESLint: $FILE ${green}passed${reset}\n"
-    fi
-    cd $TOP_LEVEL
+    FINAL_STATUS=1
   fi
 
   ############################################################################
@@ -481,7 +451,7 @@ for FILE in $FILES; do
       if [ "$CORRECTCSS" -ne "0" ]; then
         # If the CSS does not match the PCSS, set the status to a number other
         # than 0.
-        STATUS=1
+        FINAL_STATUS=1
         printf "\n${red}ERROR: The compiled CSS from"
         printf "\n       ${BASENAME}.pcss.css"
         printf "\n       does not match its CSS file. Recompile the CSS with:"
@@ -490,34 +460,6 @@ for FILE in $FILES; do
       cd $TOP_LEVEL
     fi
   fi
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.css$ ]] && [[ -f "core/node_modules/.bin/stylelint" ]]; then
-    BASENAME=${FILE%.css}
-    # We only need to use stylelint on the .pcss.css file. So if this CSS file
-    # has a corresponding .pcss don't do stylelint.
-    if [[ $FILE =~ \.pcss\.css$ ]] || [[ ! -f "$TOP_LEVEL/$BASENAME.pcss.css" ]]; then
-      cd "$TOP_LEVEL/core"
-      node_modules/.bin/stylelint --allow-empty-input "$TOP_LEVEL/$FILE"
-      if [ "$?" -ne "0" ]; then
-        STATUS=1
-      else
-        printf "STYLELINT: $FILE ${green}passed${reset}\n"
-      fi
-      cd $TOP_LEVEL
-    fi
-  fi
-
-  if [[ "$STATUS" == "1" ]]; then
-    FINAL_STATUS=1
-    # There is no need to print a failure message. The fail will be described
-    # already.
-  else
-    printf "%s ${green}passed${reset}\n" "$FILE"
-  fi
-
-  # Print a line to separate each file's checks.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
 done
 
 if [[ "$MAINTAINERS_TXT_CHANGED" == "1" ]]; then
@@ -531,13 +473,4 @@ if [[ "$MAINTAINERS_TXT_CHANGED" == "1" ]]; then
   printf "\n"
 fi
 
-if [[ "$FINAL_STATUS" == "1" ]] && [[ "$DRUPALCI" == "1" ]]; then
-  printf "${red}Drupal code quality checks failed.${reset}\n"
-  printf "To reproduce this output locally:\n"
-  printf "* Apply the change as a patch\n"
-  printf "* Run this command locally: sh ./core/scripts/dev/commit-code-check.sh\n"
-  printf "OR:\n"
-  printf "* From the merge request branch\n"
-  printf "* Run this command locally: sh ./core/scripts/dev/commit-code-check.sh --branch %s\n" "$DRUPAL_VERSION"
-fi
 exit $FINAL_STATUS
