@@ -43,8 +43,7 @@ final class SimpleConfigUpdate implements ConfigActionPluginInterface, Container
    */
   public function apply(string $configName, mixed $value): void {
     if ($this->configManager->getEntityTypeIdByName($configName)) {
-      // @todo Make this an exception in https://www.drupal.org/node/3515544.
-      @trigger_error('Using the simpleConfigUpdate config action on config entities is deprecated in drupal:11.2.0 and throws an exception in drupal:12.0.0. Use the setProperties action instead. See https://www.drupal.org/node/3515543', E_USER_DEPRECATED);
+      throw new ConfigActionException('Using the simpleConfigUpdate config action on config entities is not supported. Use the setProperties action instead. See https://www.drupal.org/node/3515543');
     }
 
     $config = $this->configFactory->getEditable($configName);
