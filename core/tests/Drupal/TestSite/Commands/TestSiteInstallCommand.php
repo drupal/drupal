@@ -193,7 +193,7 @@ class TestSiteInstallCommand extends Command {
    * @param string $root
    *   The Drupal root.
    */
-  protected function ensureDirectory($root) {
+  protected function ensureDirectory(string $root) {
     if (!is_writable($root . '/sites/simpletest')) {
       if (!@mkdir($root . '/sites/simpletest')) {
         throw new \RuntimeException($root . '/sites/simpletest must exist and be writable to install a test site');

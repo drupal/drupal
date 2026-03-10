@@ -26,7 +26,7 @@ class FormStateTest extends UnitTestCase {
    * Tests the getRedirect() method.
    */
   #[DataProvider('providerTestGetRedirect')]
-  public function testGetRedirect($form_state_additions, $expected): void {
+  public function testGetRedirect(array $form_state_additions, $expected): void {
     $form_state = (new FormState())->setFormState($form_state_additions);
     $redirect = $form_state->getRedirect();
     $this->assertEquals($expected, $redirect);
@@ -68,7 +68,7 @@ class FormStateTest extends UnitTestCase {
    * Tests the getError() method.
    */
   #[DataProvider('providerTestGetError')]
-  public function testGetError($errors, $parents, $error = NULL): void {
+  public function testGetError(array $errors, array $parents, ?string $error = NULL): void {
     $element['#parents'] = $parents;
     $form_state = (new FormState())->setFormState([
       'errors' => $errors,
@@ -95,7 +95,7 @@ class FormStateTest extends UnitTestCase {
    * Tests set error by name.
    */
   #[DataProvider('providerTestSetErrorByName')]
-  public function testSetErrorByName($limit_validation_errors, $expected_errors): void {
+  public function testSetErrorByName(?array $limit_validation_errors, array $expected_errors): void {
     $form_state = new FormState();
     $form_state->setLimitValidationErrors($limit_validation_errors);
     $form_state->clearErrors();

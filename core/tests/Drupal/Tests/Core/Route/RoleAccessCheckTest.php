@@ -144,7 +144,7 @@ class RoleAccessCheckTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Route\RouterRoleTest::roleAccessProvider
    */
   #[DataProvider('roleAccessProvider')]
-  public function testRoleAccess($path, $grant_accounts, $deny_accounts): void {
+  public function testRoleAccess(string $path, array $grant_accounts, array $deny_accounts): void {
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
     $cache_contexts_manager->reveal();

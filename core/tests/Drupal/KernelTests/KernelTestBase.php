@@ -535,7 +535,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * @see \Drupal\KernelTests\KernelTestBase::bootKernel()
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     // Keep the container object around for tests.
     $this->container = $container;
 

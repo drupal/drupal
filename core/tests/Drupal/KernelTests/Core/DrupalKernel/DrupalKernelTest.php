@@ -239,7 +239,7 @@ class DrupalKernelTest extends KernelTestBase {
   #[DataProvider('providerClassLoaderAutoDetect')]
   #[PreserveGlobalState(FALSE)]
   #[RunInSeparateProcess]
-  public function testClassLoaderAutoDetect($value): void {
+  public function testClassLoaderAutoDetect(bool $value): void {
     // Create a virtual file system containing items that should be
     // excluded. Exception being modules directory.
     vfsStream::setup('root', NULL, [

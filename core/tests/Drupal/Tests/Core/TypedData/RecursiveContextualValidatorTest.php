@@ -130,7 +130,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
     $typed_data = $this->typedDataManager->create(
       DataDefinition::create('string')
         ->addConstraint('Callback', [
-          'callback' => function ($value, ExecutionContextInterface $context): void {
+          'callback' => function (string $value, ExecutionContextInterface $context): void {
             $context->addViolation('test violation: ' . $value);
           },
         ])
@@ -253,7 +253,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
    * Tests validate property with invalid objects.
    */
   #[DataProvider('providerTestValidatePropertyWithInvalidObjects')]
-  public function testValidatePropertyWithInvalidObjects($object): void {
+  public function testValidatePropertyWithInvalidObjects(object $object): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->recursiveValidator->validateProperty($object, 'key1', NULL);
   }
@@ -295,7 +295,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
    * @legacy-covers ::validatePropertyValue
    */
   #[DataProvider('providerTestValidatePropertyWithInvalidObjects')]
-  public function testValidatePropertyValueWithInvalidObjects($object): void {
+  public function testValidatePropertyValueWithInvalidObjects(object $object): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->recursiveValidator->validatePropertyValue($object, 'key1', [], NULL);
   }

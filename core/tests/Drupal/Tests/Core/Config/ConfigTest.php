@@ -78,7 +78,7 @@ class ConfigTest extends UnitTestCase {
    * Tests set name.
    */
   #[DataProvider('setNameProvider')]
-  public function testSetName($name): void {
+  public function testSetName(string $name): void {
     // Set the name.
     $this->config->setName($name);
 
@@ -124,7 +124,7 @@ class ConfigTest extends UnitTestCase {
    * Tests set data.
    */
   #[DataProvider('nestedDataProvider')]
-  public function testSetData($data): void {
+  public function testSetData(array $data): void {
     $this->config->setData($data);
     $this->assertEquals($data, $this->config->getRawData());
     $this->assertConfigDataEquals($data);
@@ -134,7 +134,7 @@ class ConfigTest extends UnitTestCase {
    * Tests save new.
    */
   #[DataProvider('nestedDataProvider')]
-  public function testSaveNew($data): void {
+  public function testSaveNew(array $data): void {
     $this->cacheTagsInvalidator->expects($this->never())
       ->method('invalidateTags');
 
@@ -160,7 +160,7 @@ class ConfigTest extends UnitTestCase {
    * Tests save existing.
    */
   #[DataProvider('nestedDataProvider')]
-  public function testSaveExisting($data): void {
+  public function testSaveExisting(array $data): void {
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
       ->with(['config:config.test']);
@@ -256,7 +256,7 @@ class ConfigTest extends UnitTestCase {
    * Tests set value.
    */
   #[DataProvider('nestedDataProvider')]
-  public function testSetValue($data): void {
+  public function testSetValue(array $data): void {
     foreach ($data as $key => $value) {
       $this->config->set($key, $value);
     }
@@ -288,7 +288,7 @@ class ConfigTest extends UnitTestCase {
    * Tests init with data.
    */
   #[DataProvider('nestedDataProvider')]
-  public function testInitWithData($data): void {
+  public function testInitWithData(array $data): void {
     $config = $this->config->initWithData($data);
 
     // Should return the Config object.
@@ -311,7 +311,7 @@ class ConfigTest extends UnitTestCase {
    * Tests clear.
    */
   #[DataProvider('simpleDataProvider')]
-  public function testClear($data): void {
+  public function testClear(array $data): void {
     foreach ($data as $key => $value) {
       // Check that values are cleared.
       $this->config->set($key, $value);
@@ -327,7 +327,7 @@ class ConfigTest extends UnitTestCase {
    * @legacy-covers ::clear
    */
   #[DataProvider('nestedDataProvider')]
-  public function testNestedClear($data): void {
+  public function testNestedClear(array $data): void {
     foreach ($data as $key => $value) {
       // Check that values are cleared.
       $this->config->set($key, $value);
@@ -390,7 +390,7 @@ class ConfigTest extends UnitTestCase {
    * Tests merge.
    */
   #[DataProvider('mergeDataProvider')]
-  public function testMerge($data, $data_to_merge, $merged_data): void {
+  public function testMerge(array $data, array $data_to_merge, array $merged_data): void {
     // Set initial data.
     $this->config->setData($data);
 
@@ -423,7 +423,7 @@ class ConfigTest extends UnitTestCase {
    * Tests validate name exception.
    */
   #[DataProvider('validateNameProvider')]
-  public function testValidateNameException($name, $exception_message): void {
+  public function testValidateNameException($name, string $exception_message): void {
     $this->expectException('\Drupal\Core\Config\ConfigNameException');
     $this->expectExceptionMessage($exception_message);
     $this->config->validateName($name);
@@ -441,7 +441,7 @@ class ConfigTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Config\ConfigTest::testValidateNameException()
    */
-  public static function validateNameProvider() {
+  public static function validateNameProvider(): array {
     $return = [
       // Name missing namespace (dot).
       [

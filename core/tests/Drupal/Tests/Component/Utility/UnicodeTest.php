@@ -21,7 +21,7 @@ class UnicodeTest extends TestCase {
    * Tests multibyte ucfirst.
    */
   #[DataProvider('providerUcfirst')]
-  public function testUcfirst($text, $expected): void {
+  public function testUcfirst(string $text, string $expected): void {
     $this->assertEquals($expected, Unicode::ucfirst($text));
   }
 
@@ -50,7 +50,7 @@ class UnicodeTest extends TestCase {
    * Tests multibyte lcfirst.
    */
   #[DataProvider('providerLcfirst')]
-  public function testLcfirst($text, $expected): void {
+  public function testLcfirst(string $text, string $expected): void {
     $this->assertEquals($expected, Unicode::lcfirst($text));
   }
 
@@ -79,7 +79,7 @@ class UnicodeTest extends TestCase {
    * Tests multibyte ucwords.
    */
   #[DataProvider('providerUcwords')]
-  public function testUcwords($text, $expected): void {
+  public function testUcwords(string $text, string $expected): void {
     $this->assertEquals($expected, Unicode::ucwords($text));
   }
 
@@ -207,7 +207,7 @@ EOF;
    *   The expected return from Unicode::truncateBytes().
    */
   #[DataProvider('providerTestTruncateBytes')]
-  public function testTruncateBytes($text, $max_length, $expected): void {
+  public function testTruncateBytes(string $text, int $max_length, string $expected): void {
     $this->assertEquals($expected, Unicode::truncateBytes($text, $max_length), 'The string was not correctly truncated.');
   }
 
@@ -240,7 +240,7 @@ EOF;
    *   The message to display on failure.
    */
   #[DataProvider('providerTestValidateUtf8')]
-  public function testValidateUtf8($text, $expected, $message): void {
+  public function testValidateUtf8(string $text, bool $expected, string $message): void {
     $this->assertEquals($expected, Unicode::validateUtf8($text), $message);
   }
 
@@ -278,7 +278,7 @@ EOF;
    *   The expected result.
    */
   #[DataProvider('providerTestConvertToUtf8')]
-  public function testConvertToUtf8($data, $encoding, $expected): void {
+  public function testConvertToUtf8(string $data, string $encoding, string $expected): void {
     $this->assertEquals($expected, Unicode::convertToUtf8($data, $encoding));
   }
 

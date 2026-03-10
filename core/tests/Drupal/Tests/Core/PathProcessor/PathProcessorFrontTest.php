@@ -25,7 +25,7 @@ class PathProcessorFrontTest extends UnitTestCase {
    * Tests basic inbound processing functionality.
    */
   #[DataProvider('providerProcessInbound')]
-  public function testProcessInbound($frontpage_path, $path, $expected, array $expected_query = [], array $request_query = []): void {
+  public function testProcessInbound(string $frontpage_path, string $path, string $expected, array $expected_query = [], array $request_query = []): void {
     $config_factory = $this->prophesize(ConfigFactoryInterface::class);
     $config = $this->prophesize(ImmutableConfig::class);
     $config_factory->get('system.site')

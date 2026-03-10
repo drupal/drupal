@@ -173,7 +173,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    *   When the button exists.
    */
-  public function buttonNotExists($button, ?TraversableElement $container = NULL): void {
+  public function buttonNotExists(string $button, ?TraversableElement $container = NULL): void {
     $container = $container ?: $this->session->getPage();
     $node = $container->findButton($button);
 
@@ -531,7 +531,7 @@ class WebAssert extends MinkWebAssert {
    * @param string $raw
    *   Raw (HTML) string to look for.
    */
-  public function assertNoEscaped($raw): void {
+  public function assertNoEscaped(string $raw): void {
     $this->responseNotContains(Html::escape($raw));
   }
 
@@ -543,7 +543,7 @@ class WebAssert extends MinkWebAssert {
    * @param string $raw
    *   Raw (HTML) string to look for.
    */
-  public function assertEscaped($raw): void {
+  public function assertEscaped(string $raw): void {
     $this->responseContains(Html::escape($raw));
   }
 
@@ -606,7 +606,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  public function fieldDisabled($field, ?TraversableElement $container = NULL) {
+  public function fieldDisabled(string $field, ?TraversableElement $container = NULL) {
     $container = $container ?: $this->session->getPage();
     $node = $container->findField($field);
 
@@ -635,7 +635,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  public function fieldEnabled($field, ?TraversableElement $container = NULL) {
+  public function fieldEnabled(string $field, ?TraversableElement $container = NULL) {
     $container = $container ?: $this->session->getPage();
     $node = $container->findField($field);
 

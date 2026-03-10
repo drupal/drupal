@@ -138,7 +138,7 @@ class VariationCacheTest extends UnitTestCase {
     $house_orientation = &$this->houseOrientation;
     $solar_type = &$this->solarType;
     $this->cacheContextsManager->convertTokensToKeys(Argument::any())
-      ->will(function ($args) use (&$housing_type, &$garden_type, &$house_orientation, &$solar_type) {
+      ->will(function ($args) use (&$housing_type, &$garden_type, &$house_orientation, &$solar_type): ContextCacheKeys {
         $keys = [];
         foreach ($args[0] as $context_id) {
           switch ($context_id) {

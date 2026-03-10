@@ -766,7 +766,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
    * Implements hook_entity_preload().
    */
   #[Hook('entity_preload')]
-  public function entityPreload(array $entities, $type): void {
+  public function entityPreload(array $entities, string $type): void {
     $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_preload called for type ' . $type;
   }
 
@@ -774,7 +774,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
    * Implements hook_entity_load().
    */
   #[Hook('entity_load')]
-  public function entityLoad(array $entities, $type): void {
+  public function entityLoad(array $entities, string $type): void {
     $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_load called for type ' . $type;
   }
 

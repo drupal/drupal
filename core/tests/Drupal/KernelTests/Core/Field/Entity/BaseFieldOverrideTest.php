@@ -42,7 +42,7 @@ class BaseFieldOverrideTest extends KernelTestBase {
    * Tests get class.
    */
   #[DataProvider('getClassTestCases')]
-  public function testGetClass($field_type, $base_field_class, $expected_override_class): void {
+  public function testGetClass(string $field_type, bool|string $base_field_class, string $expected_override_class): void {
     $base_field = BaseFieldDefinition::create($field_type)
       ->setName('Test Field')
       ->setTargetEntityTypeId('entity_test');

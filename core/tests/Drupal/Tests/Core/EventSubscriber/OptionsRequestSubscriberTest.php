@@ -84,7 +84,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
     $this->assertEquals($expected_header, $response->headers->get('Allow'));
   }
 
-  public static function providerTestOnRequestWithOptionsRequest() {
+  public static function providerTestOnRequestWithOptionsRequest(): array {
     $data = [];
 
     foreach (['GET', 'POST', 'PATCH', 'PUT', 'DELETE'] as $method) {

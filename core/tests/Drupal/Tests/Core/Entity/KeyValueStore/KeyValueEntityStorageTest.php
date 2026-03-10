@@ -326,7 +326,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @legacy-covers ::save
    * @legacy-covers ::doSave
    */
-  public function testSaveConfigEntity() {
+  public function testSaveConfigEntity(): MockObject {
     $this->setUpKeyValueEntityStorage();
 
     $entity = $this->getMockEntity('Drupal\Core\Config\Entity\ConfigEntityBase', [['id' => 'foo']], [

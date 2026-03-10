@@ -56,7 +56,7 @@ class ControllerResolverTest extends UnitTestCase {
    * Tests createController().
    */
   #[DataProvider('providerTestCreateController')]
-  public function testCreateController($controller, $class, $output): void {
+  public function testCreateController(string $controller, string $class, string $output): void {
     $this->container->set('some_service', new MockController());
     $result = $this->controllerResolver->getControllerFromDefinition($controller);
     $this->assertCallableController($result, $class, $output);
@@ -108,7 +108,7 @@ class ControllerResolverTest extends UnitTestCase {
    * Tests getController().
    */
   #[DataProvider('providerTestGetController')]
-  public function testGetController($attributes, $class, $output = NULL): void {
+  public function testGetController(array $attributes, string|bool $class, ?string $output = NULL): void {
     $request = new Request([], [], $attributes);
     $result = $this->controllerResolver->getController($request);
     if ($class) {
@@ -139,7 +139,7 @@ class ControllerResolverTest extends UnitTestCase {
    * Tests getControllerFromDefinition().
    */
   #[DataProvider('providerTestGetControllerFromDefinition')]
-  public function testGetControllerFromDefinition($definition, $output): void {
+  public function testGetControllerFromDefinition(string|MockInvokeController|array $definition, string $output): void {
     $this->container->set('invoke_service', new MockInvokeController());
     $controller = $this->controllerResolver->getControllerFromDefinition($definition);
     $this->assertCallableController($controller, NULL, $output);

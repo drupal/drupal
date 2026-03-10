@@ -182,7 +182,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @legacy-covers ::setAttachments
    */
   #[DataProvider('providerTestAddAttachments')]
-  public function testAddAttachments(BubbleableMetadata $initial, $attachments, BubbleableMetadata $expected): void {
+  public function testAddAttachments(BubbleableMetadata $initial, array $attachments, BubbleableMetadata $expected): void {
     $test = $initial;
     $test->addAttachments($attachments);
     $this->assertEquals($expected, $test);
@@ -493,7 +493,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Tests html_head asset merging.
    */
   #[DataProvider('providerTestMergeAttachmentsHtmlHeadMerging')]
-  public function testMergeAttachmentsHtmlHeadMerging($a, $b, $expected): void {
+  public function testMergeAttachmentsHtmlHeadMerging(array $a, array $b, array $expected): void {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 
@@ -564,7 +564,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Tests html_head_link asset merging.
    */
   #[DataProvider('providerTestMergeAttachmentsHtmlHeadLinkMerging')]
-  public function testMergeAttachmentsHtmlHeadLinkMerging($a, $b, $expected): void {
+  public function testMergeAttachmentsHtmlHeadLinkMerging(array $a, array $b, array $expected): void {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 
@@ -628,7 +628,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Tests http_header asset merging.
    */
   #[DataProvider('providerTestMergeAttachmentsHttpHeaderMerging')]
-  public function testMergeAttachmentsHttpHeaderMerging($a, $b, $expected): void {
+  public function testMergeAttachmentsHttpHeaderMerging(array $a, array $b, array $expected): void {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 
@@ -693,7 +693,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
    */
   #[DataProvider('providerTestMerge')]
-  public function testAddCacheableDependency(BubbleableMetadata $a, $b, BubbleableMetadata $expected): void {
+  public function testAddCacheableDependency(BubbleableMetadata $a, CacheableMetadata $b, BubbleableMetadata $expected): void {
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();

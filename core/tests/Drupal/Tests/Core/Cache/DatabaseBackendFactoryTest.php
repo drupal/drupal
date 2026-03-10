@@ -30,7 +30,7 @@ class DatabaseBackendFactoryTest extends UnitTestCase {
    * @legacy-covers ::get
    */
   #[DataProvider('getProvider')]
-  public function testGet(array $settings, $expected_max_rows_foo, $expected_max_rows_bar): void {
+  public function testGet(array $settings, int $expected_max_rows_foo, int $expected_max_rows_bar): void {
     $database_backend_factory = new DatabaseBackendFactory(
       $this->prophesize(Connection::class)->reveal(),
       $this->prophesize(CacheTagsChecksumInterface::class)->reveal(),

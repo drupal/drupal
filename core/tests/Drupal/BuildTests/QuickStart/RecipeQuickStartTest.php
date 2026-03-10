@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\BuildTests\QuickStart;
 
-use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\Tests\BrowserTestBase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
@@ -162,7 +162,7 @@ class RecipeQuickStartTest extends BuildTestBase {
    *
    * @see \Drupal\Core\File\FileSystemInterface::deleteRecursive()
    */
-  protected function fileUnmanagedDeleteRecursive($path, $callback = NULL): bool {
+  protected function fileUnmanagedDeleteRecursive(string $path, $callback = NULL): bool {
     if (isset($callback)) {
       call_user_func($callback, $path);
     }

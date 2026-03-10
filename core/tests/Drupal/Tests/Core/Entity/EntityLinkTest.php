@@ -64,7 +64,7 @@ class EntityLinkTest extends UnitTestCase {
    * Tests for the EntityBase::toLink() method.
    */
   #[DataProvider('providerTestLink')]
-  public function testToLink($entity_label, $link_text, $expected_text, $link_rel = 'canonical', array $link_options = []): void {
+  public function testToLink($entity_label, $link_text, $expected_text, string $link_rel = 'canonical', array $link_options = []): void {
     $language = new Language(['id' => 'es']);
     $link_options += ['language' => $language];
     $this->languageManager->expects($this->any())

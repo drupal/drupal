@@ -51,7 +51,7 @@ class DiffFormatterTest extends TestCase {
    * @legacy-covers ::format
    */
   #[DataProvider('provideTestDiff')]
-  public function testDiff($expected, $from, $to): void {
+  public function testDiff(string $expected, array $from, array $to): void {
     $diff = new Diff($from, $to);
     $formatter = new DiffFormatter();
     $output = $formatter->format($diff);

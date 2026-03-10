@@ -359,7 +359,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * Confirms that generated routes will have aliased paths with options.
    */
   #[DataProvider('providerTestAliasGenerationWithOptions')]
-  public function testAliasGenerationWithOptions($route_name, $route_parameters, $options, $expected): void {
+  public function testAliasGenerationWithOptions(string $route_name, array $route_parameters, array $options, string $expected): void {
     $this->assertGenerateFromRoute($route_name, $route_parameters, $options, $expected, (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
   }
 
@@ -502,7 +502,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * @legacy-covers ::generateFromRoute
    */
   #[DataProvider('providerTestNoPath')]
-  public function testNoPath($options, $expected_url): void {
+  public function testNoPath(array $options, string $expected_url): void {
     $url = $this->generator->generateFromRoute('<none>', [], $options);
     $this->assertEquals($expected_url, $url);
   }
@@ -536,7 +536,7 @@ class UrlGeneratorTest extends UnitTestCase {
     $path_processor = $this->createMock(OutboundPathProcessorInterface::CLASS);
     $path_processor->expects($this->atLeastOnce())
       ->method('processOutbound')
-      ->willReturnCallback(function ($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
+      ->willReturnCallback(function ($path, array &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
         $options['query'] = ['zoo' => 5];
         $options['fragment'] = 'foo';
         return $path;

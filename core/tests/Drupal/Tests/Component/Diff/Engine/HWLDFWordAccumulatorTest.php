@@ -47,7 +47,7 @@ class HWLDFWordAccumulatorTest extends TestCase {
    * Tests add words.
    */
   #[DataProvider('provideAddWords')]
-  public function testAddWords($expected, $words, $tag): void {
+  public function testAddWords(array $expected, array $words, string $tag): void {
     $acc = new HWLDFWordAccumulator();
     $acc->addWords($words, $tag);
     $this->assertEquals($expected, $acc->getLines());

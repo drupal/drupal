@@ -602,7 +602,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
 
     $this->assertContains('Test deprecation message', $deprecation_messages);
-    $test_deprecation_messages = array_filter($deprecation_messages, function ($message) {
+    $test_deprecation_messages = array_filter($deprecation_messages, function (string $message): bool {
       return $message === 'Test deprecation message';
     });
     $this->assertCount(1, $test_deprecation_messages);

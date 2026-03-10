@@ -152,7 +152,7 @@ class EntityConverterTest extends UnitTestCase {
   public function testApplies(array $definition, $name, Route $route, $applies): void {
     $this->entityTypeManager->expects($this->any())
       ->method('hasDefinition')
-      ->willReturnCallback(function ($entity_type) {
+      ->willReturnCallback(function ($entity_type): bool {
         return 'entity_test' == $entity_type;
       });
     $this->assertEquals($applies, $this->entityConverter->applies($definition, $name, $route));

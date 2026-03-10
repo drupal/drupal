@@ -63,7 +63,7 @@ class TrustedRedirectResponseTest extends UnitTestCase {
    * Tests create from redirect response.
    */
   #[DataProvider('providerCreateFromRedirectResponse')]
-  public function testCreateFromRedirectResponse($redirect_response): void {
+  public function testCreateFromRedirectResponse(RedirectResponse $redirect_response): void {
     $trusted_redirect_response = TrustedRedirectResponse::createFromRedirectResponse($redirect_response);
 
     // The trusted redirect response is always a CacheableResponseInterface

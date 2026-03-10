@@ -334,7 +334,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestEntityTranslationAPI($entity_type): void {
+  protected function doTestEntityTranslationAPI(string $entity_type): void {
     $default_langcode = $this->langcodes[0];
     $langcode = $this->langcodes[1];
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');

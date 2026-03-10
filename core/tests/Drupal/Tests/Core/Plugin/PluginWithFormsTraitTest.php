@@ -28,7 +28,7 @@ class PluginWithFormsTraitTest extends UnitTestCase {
    * @legacy-covers ::hasFormClass
    */
   #[DataProvider('providerGetFormClass')]
-  public function testGetFormClass(PluginWithFormsInterface $block_plugin, $operation, $expected_class): void {
+  public function testGetFormClass(PluginWithFormsInterface $block_plugin, string $operation, ?string $expected_class): void {
     $this->assertSame($expected_class, $block_plugin->getFormClass($operation));
     $this->assertSame($expected_class !== NULL, $block_plugin->hasFormClass($operation));
   }

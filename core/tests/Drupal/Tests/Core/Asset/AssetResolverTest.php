@@ -105,7 +105,7 @@ class AssetResolverTest extends UnitTestCase {
       ->getMock();
     $this->libraryDiscovery->expects($this->any())
       ->method('getLibraryByName')
-      ->willReturnCallback(function ($extension, $name) {
+      ->willReturnCallback(function (string $extension, string $name) {
         return $this->libraries[$extension . '/' . $name];
       });
     $this->libraries = [
@@ -206,10 +206,10 @@ class AssetResolverTest extends UnitTestCase {
    * Tests get css assets.
    */
   #[DataProvider('providerAttachedCssAssets')]
-  public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_css_cache_item_count): void {
+  public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, int $expected_css_cache_item_count): void {
     $this->libraryDiscovery->expects($this->any())
       ->method('getLibraryByName')
-      ->willReturnCallback(function ($extension, $name) {
+      ->willReturnCallback(function (string $extension, string $name) {
         return $this->libraries[$extension . '/' . $name];
       });
     $this->assetResolver->getCssAssets($assets_a, FALSE, $this->english);
@@ -236,10 +236,10 @@ class AssetResolverTest extends UnitTestCase {
    * Tests get js assets.
    */
   #[DataProvider('providerAttachedJsAssets')]
-  public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_js_cache_item_count, $expected_multilingual_js_cache_item_count): void {
+  public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, int $expected_js_cache_item_count, int $expected_multilingual_js_cache_item_count): void {
     $this->libraryDiscovery->expects($this->any())
       ->method('getLibraryByName')
-      ->willReturnCallback(function ($extension, $name) {
+      ->willReturnCallback(function (string $extension, string $name) {
         return $this->libraries[$extension . '/' . $name];
       });
     $this->assetResolver->getJsAssets($assets_a, FALSE, $this->english);
@@ -310,7 +310,7 @@ if (!defined('JS_DEFAULT')) {
  */
 class TestMemoryBackend extends MemoryBackend {
 
-  public function getAllCids() {
+  public function getAllCids(): array {
     return array_keys($this->cache);
   }
 

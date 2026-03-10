@@ -85,7 +85,7 @@ class ContextTypedDataTest extends KernelTestBase {
    * Tests has context value.
    */
   #[DataProvider('providerHasContextValue')]
-  public function testHasContextValue($has_context_value, $default_value): void {
+  public function testHasContextValue(bool $has_context_value, bool|int|float|string|array|null $default_value): void {
     $definition = new ContextDefinition('any');
     $definition->setDefaultValue($default_value);
 

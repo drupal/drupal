@@ -67,7 +67,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
       'drupal.dialog',
     ];
 
-    $this->coreLibrariesWithJqueryUiAssets = array_filter($core_libraries, function ($key) use ($libraries_to_check) {
+    $this->coreLibrariesWithJqueryUiAssets = array_filter($core_libraries, function ($key) use ($libraries_to_check): bool {
       return in_array($key, $libraries_to_check);
     }, ARRAY_FILTER_USE_KEY);
 
@@ -85,7 +85,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
         }
       }
     }
-    $this->weightGroupedAssets = array_map(function ($item) {
+    $this->weightGroupedAssets = array_map(function ($item): array {
       return array_unique($item);
     }, $this->weightGroupedAssets);
     ksort($this->weightGroupedAssets);
@@ -188,7 +188,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    * Confirms that jQuery UI assets load on the page in the configured order.
    */
   #[DataProvider('providerTestAssetLoading')]
-  public function testLibraryAssetLoadingOrder($library, array $expected_css, array $expected_js): void {
+  public function testLibraryAssetLoadingOrder(string $library, array $expected_css, array $expected_js): void {
     $this->drupalGet("jqueryui_library_assets_test/$library");
     $this->assertSession()->statusCodeEquals(200);
 
@@ -268,7 +268,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    *   The jQuery UI JavaScript files expected to load.
    */
   #[DataProvider('providerTestAssetLoading')]
-  public function testAssetLoadingUnchanged($library, array $expected_css, array $expected_js): void {
+  public function testAssetLoadingUnchanged(string $library, array $expected_css, array $expected_js): void {
     $this->drupalGet("jqueryui_library_assets_test/$library");
     $this->assertSession()->statusCodeEquals(200);
 

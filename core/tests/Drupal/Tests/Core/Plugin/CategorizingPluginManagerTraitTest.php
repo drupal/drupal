@@ -43,7 +43,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
     $module_extension_list = $this->createMock(ModuleExtensionList::class);
     $module_extension_list->expects($this->any())
       ->method('getName')
-      ->willReturnCallback(function ($argument) {
+      ->willReturnCallback(function ($argument): string {
         if ($argument == 'node') {
           return 'Node';
         }

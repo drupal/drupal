@@ -69,7 +69,7 @@ class SvgExtractorTest extends UnitTestCase {
    * @return \Generator
    *   The test cases, icons files returned by IconFinder::getFilesFromSources.
    */
-  public static function providerDiscoverIconsSvg() {
+  public static function providerDiscoverIconsSvg(): \Iterator {
     yield 'empty files' => [
       [],
       TRUE,
@@ -174,7 +174,7 @@ class SvgExtractorTest extends UnitTestCase {
    * @return \Generator
    *   The test cases, icons data returned by SvgExtractor::discoverIcons.
    */
-  public static function providerLoadIconSvg() {
+  public static function providerLoadIconSvg(): \Iterator {
     yield 'svg file empty' => [
       [
         [

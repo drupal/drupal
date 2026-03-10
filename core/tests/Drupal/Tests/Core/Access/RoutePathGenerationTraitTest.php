@@ -57,10 +57,10 @@ class RoutePathGenerationTraitTest extends UnitTestCase {
       ->getMock();
     // Make CsrfTokenGenerator mock use a simple hash of the value passed as
     // parameter, as it is enough for the sake of our tests.
-    $this->csrfToken->method('get')->willReturnCallback(function ($value) {
+    $this->csrfToken->method('get')->willReturnCallback(function ($value): string {
       return hash('sha256', $value);
     });
-    $this->csrfToken->method('validate')->willReturnCallback(function ($token, $value) {
+    $this->csrfToken->method('validate')->willReturnCallback(function ($token, $value): bool {
       return $token === hash('sha256', $value);
     });
     $this->requestStack = $this->createMock(RequestStack::class);
@@ -78,7 +78,7 @@ class RoutePathGenerationTraitTest extends UnitTestCase {
    * null, undefined).
    */
   #[DataProvider('providerTestCsrfTokenCompleteLifeCycle')]
-  public function testCsrfTokenCompleteLifeCycle($params): void {
+  public function testCsrfTokenCompleteLifeCycle(array $params): void {
 
     // Mock a route.
     $route = $this->createMock(Route::class);

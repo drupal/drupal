@@ -33,7 +33,7 @@ abstract class PhpStorageTestBase extends TestCase {
   /**
    * Assert that a PHP storage's load/save/delete operations work.
    */
-  public function assertCRUD($php): void {
+  public function assertCRUD(PhpStorageInterface $php): void {
     // Random generator.
     $random_generator = new Random();
 

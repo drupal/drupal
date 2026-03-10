@@ -67,7 +67,7 @@ class StorageReplaceDataWrapperTest extends ConfigStorageTestBase {
    *   The collection name.
    */
   #[DataProvider('providerCollections')]
-  public function testCreateCollection($collection): void {
+  public function testCreateCollection(string $collection): void {
     $initial_collection_name = $this->storage->getCollectionName();
 
     // Create new storage with given collection and check it is set correctly.

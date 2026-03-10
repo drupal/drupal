@@ -59,7 +59,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * Tests that subscriber sets trusted headers when reverse proxy is set.
    */
   #[DataProvider('reverseProxyEnabledProvider')]
-  public function testReverseProxyEnabled($provided_settings, $expected_trusted_header_set): void {
+  public function testReverseProxyEnabled(array $provided_settings, int $expected_trusted_header_set): void {
     // Enable reverse proxy and add test values.
     $settings = new Settings(['reverse_proxy' => 1] + $provided_settings);
     $this->trustedHeadersAreSet($settings, $expected_trusted_header_set);

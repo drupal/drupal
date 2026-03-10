@@ -45,7 +45,7 @@ class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
     $this->fileUrlGenerator->expects($this->any())
       ->method('generateString')
       ->with($this->isString())
-      ->willReturnCallback(function ($uri) {
+      ->willReturnCallback(function (string $uri): string {
         return 'generated-relative-url:' . $uri;
       });
     $this->optimizer = new CssOptimizer($this->fileUrlGenerator);
@@ -57,7 +57,7 @@ class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
   public function testCssImport(): void {
     $mock_grouper = $this->createMock(AssetCollectionGrouperInterface::class);
     $mock_grouper->method('group')
-      ->willReturnCallback(function ($assets) {
+      ->willReturnCallback(function ($assets): array {
         return [
           [
             'items' => $assets,
@@ -115,7 +115,7 @@ class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
   public function testCssLicenseAggregation(): void {
     $mock_grouper = $this->createMock(AssetCollectionGrouperInterface::class);
     $mock_grouper->method('group')
-      ->willReturnCallback(function ($assets) {
+      ->willReturnCallback(function ($assets): array {
         return [
           [
             'items' => $assets,

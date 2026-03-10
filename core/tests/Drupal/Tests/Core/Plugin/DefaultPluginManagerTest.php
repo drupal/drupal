@@ -345,7 +345,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
     $cache_contexts = $plugin_manager->getCacheContexts();
     $this->assertIsArray($cache_contexts);
-    array_map(function ($cache_context): void {
+    array_map(function (string $cache_context): void {
       $this->assertIsString($cache_context);
     }, $cache_contexts);
   }
@@ -358,7 +358,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
     $cache_tags = $plugin_manager->getCacheTags();
     $this->assertIsArray($cache_tags);
-    array_map(function ($cache_tag): void {
+    array_map(function (string $cache_tag): void {
       $this->assertIsString($cache_tag);
     }, $cache_tags);
   }
@@ -413,7 +413,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $this->assertEquals($expected, $definition);
   }
 
-  public static function providerTestProcessDefinition() {
+  public static function providerTestProcessDefinition(): array {
     $data = [];
 
     $data['merge'][] = [

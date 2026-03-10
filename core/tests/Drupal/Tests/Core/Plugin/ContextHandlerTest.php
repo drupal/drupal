@@ -15,6 +15,7 @@ use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\ContextDefinitionInterface;
 use Drupal\Core\Plugin\Context\ContextHandler;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Test\TestKernel;
@@ -24,6 +25,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
 
 /**
@@ -55,7 +57,7 @@ class ContextHandlerTest extends UnitTestCase {
     $cache_backend = new NullBackend('cache');
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $class_resolver = $this->prophesize(ClassResolverInterface::class);
-    $class_resolver->getInstanceFromDefinition(Argument::type('string'))->will(function ($arguments) {
+    $class_resolver->getInstanceFromDefinition(Argument::type('string'))->will(function ($arguments): object {
       $class_name = $arguments[0];
       return new $class_name();
     });
@@ -73,8 +75,8 @@ class ContextHandlerTest extends UnitTestCase {
    * Tests check requirements.
    */
   #[DataProvider('providerTestCheckRequirements')]
-  public function testCheckRequirements($contexts, $requirements, $expected): void {
-    $contexts = array_map(function ($context) {
+  public function testCheckRequirements($contexts, array $requirements, $expected): void {
+    $contexts = array_map(function ($context): MockObject {
       $mock = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
       $mock->expects($this->atLeastOnce())
         ->method('getContextDefinition')
@@ -123,8 +125,8 @@ class ContextHandlerTest extends UnitTestCase {
    * Tests get matching contexts.
    */
   #[DataProvider('providerTestGetMatchingContexts')]
-  public function testGetMatchingContexts($contexts, $requirement, $expected = NULL): void {
-    $contexts = array_map(function ($context) {
+  public function testGetMatchingContexts($contexts, ContextDefinitionInterface $requirement, $expected = NULL): void {
+    $contexts = array_map(function ($context): MockObject {
       $mock = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
       $mock->expects($this->atLeastOnce())
         ->method('getContextDefinition')
@@ -173,7 +175,7 @@ class ContextHandlerTest extends UnitTestCase {
    * Tests filter plugin definitions by contexts.
    */
   #[DataProvider('providerTestFilterPluginDefinitionsByContexts')]
-  public function testFilterPluginDefinitionsByContexts($has_context, $definitions, $expected): void {
+  public function testFilterPluginDefinitionsByContexts($has_context, array $definitions, $expected): void {
     if ($has_context) {
       $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
       $expected_context_definition = (new ContextDefinition('string'))->setConstraints(['Blank' => []]);

@@ -56,7 +56,7 @@ class TranslationManagerTest extends UnitTestCase {
  * Tests format plural.
  */
   #[DataProvider('providerTestFormatPlural')]
-  public function testFormatPlural($count, $singular, $plural, array $args, array $options, $expected): void {
+  public function testFormatPlural(int $count, string $singular, string $plural, array $args, array $options, string $expected): void {
     $langcode = empty($options['langcode']) ? 'fr' : $options['langcode'];
     $translator = $this->createMock('\Drupal\Core\StringTranslation\Translator\TranslatorInterface');
     $translator->expects($this->once())
@@ -83,7 +83,7 @@ class TranslationManagerTest extends UnitTestCase {
    *   The expected translated string value.
    */
   #[DataProvider('providerTestTranslatePlaceholder')]
-  public function testTranslatePlaceholder($string, array $args, $expected_string): void {
+  public function testTranslatePlaceholder(string $string, array $args, string $expected_string): void {
     $actual = $this->translationManager->translate($string, $args);
     $this->assertInstanceOf(MarkupInterface::class, $actual);
     $this->assertEquals($expected_string, (string) $actual);

@@ -99,7 +99,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * @legacy-covers ::deleteAll
    */
   #[DataProvider('writeMethodsProvider')]
-  public function testWriteOperations($method, $arguments, $fixture): void {
+  public function testWriteOperations(string $method, $arguments, $fixture): void {
     $this->setRandomFixtureConfig($fixture);
 
     // Create an independent memory storage as a backup.

@@ -73,7 +73,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    * Tests the method for checking access to routes.
    */
   #[DataProvider('providerTestAccess')]
-  public function testAccess($entity_bundle, $requirement, $access, $expected, $expect_permission_context = TRUE): void {
+  public function testAccess(string $entity_bundle, string $requirement, bool $access, bool $expected, bool $expect_permission_context = TRUE): void {
 
     // Set up the access result objects for allowing or denying access.
     $access_result = $access ? AccessResult::allowed()->cachePerPermissions() : AccessResult::neutral()->cachePerPermissions();

@@ -19,6 +19,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Unit tests for TestDiscovery.
@@ -35,7 +36,7 @@ class TestDiscoveryTest extends UnitTestCase {
    */
   #[DataProvider('infoParserProvider')]
   #[RunInSeparateProcess]
-  public function testTestInfoParser($expected, $classname, $doc_comment = NULL): void {
+  public function testTestInfoParser(array $expected, $classname, $doc_comment = NULL): void {
     try {
       $info = TestDiscovery::getTestInfo($classname, $doc_comment);
       $this->assertEquals($expected, $info);
@@ -410,7 +411,7 @@ EOF;
   /**
    * Mock a TestDiscovery object to return specific extension values.
    */
-  protected function getTestDiscoveryMock($app_root, $extensions) {
+  protected function getTestDiscoveryMock($app_root, $extensions): MockObject {
     $class_loader = $this->prophesize(ClassLoader::class);
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
 

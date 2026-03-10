@@ -68,7 +68,7 @@ class LazyBuilderPlaceholderTest extends KernelTestBase {
       $strings[$pos] = $item;
     }
     ksort($strings);
-    $ordered = implode(', ', array_map(function ($item) {
+    $ordered = implode(', ', array_map(function ($item): string {
       return "'$item'";
     }, $items));
     $this->assertSame($items, array_values($strings), "Found strings, ordered as: $ordered.");

@@ -130,7 +130,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
    * Creates content with a link field pointing to an alias of another language.
    */
   #[DataProvider('providerLanguage')]
-  public function testLinkTranslationWithAlias($source_langcode): void {
+  public function testLinkTranslationWithAlias(string $source_langcode): void {
     $source_url_options = [
       'language' => ConfigurableLanguage::load($source_langcode),
     ];

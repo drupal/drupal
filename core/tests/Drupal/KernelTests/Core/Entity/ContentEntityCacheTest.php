@@ -316,11 +316,11 @@ class ContentEntityCacheTest extends KernelTestBase {
     $persistent_cache = \Drupal::cache('entity');
     $memory_cache = \Drupal::service('entity.memory_cache');
 
-    $assert_cache_exists = function ($cid) use ($persistent_cache, $memory_cache) {
+    $assert_cache_exists = function ($cid) use ($persistent_cache, $memory_cache): void {
       $this->assertNotFalse($persistent_cache->get($cid));
       $this->assertNotFalse($memory_cache->get($cid));
     };
-    $assert_cache_not_exists = function ($cid) use ($persistent_cache, $memory_cache) {
+    $assert_cache_not_exists = function ($cid) use ($persistent_cache, $memory_cache): void {
       $this->assertFalse($persistent_cache->get($cid));
       $this->assertFalse($memory_cache->get($cid));
     };

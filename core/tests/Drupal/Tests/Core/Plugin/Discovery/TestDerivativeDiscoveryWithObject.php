@@ -22,7 +22,7 @@ class TestDerivativeDiscoveryWithObject implements DeriverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions($base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition): array {
     $plugins = [];
     for ($i = 0; $i < 2; $i++) {
       $plugins['test_discovery_' . $i] = $base_plugin_definition;

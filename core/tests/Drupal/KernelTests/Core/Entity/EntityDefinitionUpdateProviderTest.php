@@ -71,7 +71,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
    * Tests deleting a base field when it has existing data.
    */
   #[DataProvider('baseFieldDeleteWithExistingDataTestCases')]
-  public function testBaseFieldDeleteWithExistingData($entity_type_id, $create_entity_revision, $base_field_revisionable, $create_entity_translation): void {
+  public function testBaseFieldDeleteWithExistingData(string $entity_type_id, bool $create_entity_revision, bool $base_field_revisionable, bool $create_entity_translation): void {
     // Enable an additional language.
     ConfigurableLanguage::createFromLangcode('ro')->save();
 
@@ -292,7 +292,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
    * Tests adding a base field with initial values inherited from another field.
    */
   #[DataProvider('initialValueFromFieldTestCases')]
-  public function testInitialValueFromField($default_initial_value, $expected_value): void {
+  public function testInitialValueFromField(string|array|null $default_initial_value, ?string $expected_value): void {
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
     $db_schema = $this->database->schema();
 

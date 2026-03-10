@@ -24,7 +24,7 @@ class ColorTest extends TestCase {
    * @legacy-covers \Drupal\Component\Utility\Color::validateHex
    */
   #[DataProvider('providerTestValidateHex')]
-  public function testValidateHex($expected, $value): void {
+  public function testValidateHex(bool $expected, string|int $value): void {
     $this->assertSame($expected, Color::validateHex($value));
   }
 
@@ -153,7 +153,7 @@ class ColorTest extends TestCase {
    *     - The rgb color array value.
    *     - The hex color value.
    */
-  public static function providerTestRbgToHex() {
+  public static function providerTestRbgToHex(): array {
     // Input using named RGB array (e.g., as returned by Color::hexToRgb()).
     $tests = [
       [['red' => 0, 'green' => 0, 'blue' => 0], '#000000'],

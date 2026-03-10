@@ -183,7 +183,7 @@ class ThemeInstallerTest extends KernelTestBase {
    * Tests installing a theme with unmet module dependencies.
    */
   #[DataProvider('providerTestInstallThemeWithUnmetModuleDependencies')]
-  public function testInstallThemeWithUnmetModuleDependencies($theme_name, $installed_modules, $message): void {
+  public function testInstallThemeWithUnmetModuleDependencies(string $theme_name, array $installed_modules, string $message): void {
     $this->moduleInstaller()->install($installed_modules);
     $themes = $this->themeHandler()->listInfo();
     $this->assertEmpty($themes);

@@ -46,7 +46,7 @@ class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
    * For testing we define an integer with a set of allowed values.
    */
   #[DataProvider('dataProvider')]
-  public function testValidation($type, $value, $at_least_one_of_constraints, $expectedViolations, $extra_constraints = []): void {
+  public function testValidation(string $type, int|string $value, array $at_least_one_of_constraints, array $expectedViolations, array $extra_constraints = []): void {
     // Create a definition that specifies some AllowedValues.
     $definition = DataDefinition::create($type);
 

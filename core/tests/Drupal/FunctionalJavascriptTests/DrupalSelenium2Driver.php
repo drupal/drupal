@@ -83,10 +83,10 @@ class DrupalSelenium2Driver extends Selenium2Driver {
   /**
    * {@inheritdoc}
    */
-  public function click($xpath): void {
+  public function click(string $xpath): void {
     /** @var \Exception $not_clickable_exception */
     $not_clickable_exception = NULL;
-    $result = $this->waitFor(10, function () use (&$not_clickable_exception, $xpath) {
+    $result = $this->waitFor(10, function () use (&$not_clickable_exception, $xpath): ?true {
       try {
         parent::click($xpath);
         return TRUE;
@@ -108,10 +108,10 @@ class DrupalSelenium2Driver extends Selenium2Driver {
   /**
    * {@inheritdoc}
    */
-  public function setValue($xpath, $value): void {
+  public function setValue(string $xpath, $value): void {
     /** @var \Exception $not_clickable_exception */
     $not_clickable_exception = NULL;
-    $result = $this->waitFor(10, function () use (&$not_clickable_exception, $xpath, $value) {
+    $result = $this->waitFor(10, function () use (&$not_clickable_exception, $xpath, $value): ?true {
       try {
         $element = $this->getWebDriverSession()->element('xpath', $xpath);
         // \Behat\Mink\Driver\Selenium2Driver::setValue() will call .blur() on
@@ -171,7 +171,7 @@ JS);
    * @return mixed
    *   The result of the callback.
    */
-  private function waitFor($timeout, callable $callback) {
+  private function waitFor(int $timeout, callable $callback) {
     $start = microtime(TRUE);
     $end = $start + $timeout;
 
@@ -191,7 +191,7 @@ JS);
   /**
    * {@inheritdoc}
    */
-  public function dragTo($sourceXpath, $destinationXpath): void {
+  public function dragTo(string $sourceXpath, string $destinationXpath): void {
     // Ensure both the source and destination exist at this point.
     $this->getWebDriverSession()->element('xpath', $sourceXpath);
     $this->getWebDriverSession()->element('xpath', $destinationXpath);

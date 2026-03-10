@@ -45,7 +45,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
    * @legacy-covers ::check
    */
   #[DataProvider('providerTestHttpMethod')]
-  public function testHttpMethod($expected_result, $method): void {
+  public function testHttpMethod(?string $expected_result, string $method): void {
     $this->policy->expects($this->once())
       ->method('isCli')
       ->willReturn(FALSE);

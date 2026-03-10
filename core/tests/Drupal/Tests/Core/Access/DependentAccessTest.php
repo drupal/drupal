@@ -50,7 +50,7 @@ class DependentAccessTest extends UnitTestCase {
    * Tests that the previous dependency is replaced when using set.
    */
   #[DataProvider('providerTestSetFirst')]
-  public function testSetAccessDependency($use_set_first): void {
+  public function testSetAccessDependency(bool $use_set_first): void {
     $testRefinable = new RefinableDependentAccessTraitTestClass();
 
     if ($use_set_first) {
@@ -76,7 +76,7 @@ class DependentAccessTest extends UnitTestCase {
    * Tests merging a new dependency with existing non-group access dependency.
    */
   #[DataProvider('providerTestSetFirst')]
-  public function testMergeNonGroup($use_set_first): void {
+  public function testMergeNonGroup(bool $use_set_first): void {
     $testRefinable = new RefinableDependentAccessTraitTestClass();
     if ($use_set_first) {
       $testRefinable->setAccessDependency($this->forbidden);
@@ -107,7 +107,7 @@ class DependentAccessTest extends UnitTestCase {
    * Tests merging a new dependency with an existing access group dependency.
    */
   #[DataProvider('providerTestSetFirst')]
-  public function testMergeGroup($use_set_first): void {
+  public function testMergeGroup(bool $use_set_first): void {
     $andGroup = new AccessGroupAnd();
     $andGroup->addDependency($this->forbidden);
     $testRefinable = new RefinableDependentAccessTraitTestClass();

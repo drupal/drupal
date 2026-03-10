@@ -21,7 +21,7 @@ class ArgumentsResolverTest extends TestCase {
    * Tests the getArgument() method.
    */
   #[DataProvider('providerTestGetArgument')]
-  public function testGetArgument($callable, $scalars, $objects, $wildcards, $expected): void {
+  public function testGetArgument(callable $callable, $scalars, $objects, $wildcards, $expected): void {
     $arguments = (new ArgumentsResolver($scalars, $objects, $wildcards))->getArguments($callable);
     $this->assertSame($expected, $arguments);
   }
@@ -169,7 +169,7 @@ class ArgumentsResolverTest extends TestCase {
    * Tests handleUnresolvedArgument() for missing arguments.
    */
   #[DataProvider('providerTestHandleUnresolvedArgument')]
-  public function testHandleUnresolvedArgument($callable): void {
+  public function testHandleUnresolvedArgument(callable $callable): void {
     $resolver = new ArgumentsResolver([], [], []);
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('requires a value for the "$foo" argument.');

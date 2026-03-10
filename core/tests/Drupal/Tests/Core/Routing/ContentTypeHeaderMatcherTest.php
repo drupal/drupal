@@ -48,7 +48,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
    * Tests that routes are not filtered on safe requests.
    */
   #[DataProvider('providerTestSafeRequestFilter')]
-  public function testSafeRequestFilter($method): void {
+  public function testSafeRequestFilter(string $method): void {
     $collection = $this->fixtures->sampleRouteCollection();
     $collection->addCollection($this->fixtures->contentRouteCollection());
 

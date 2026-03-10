@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\Core\Entity\Sql\DefaultTableMapping.
@@ -350,7 +351,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   The expected table name.
    */
   #[DataProvider('providerTestGetFieldTableName')]
-  public function testGetFieldTableName($table_names, $expected): void {
+  public function testGetFieldTableName(array $table_names, $expected): void {
     $field_name = 'test';
     $columns = ['test'];
 
@@ -451,7 +452,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @legacy-covers ::getDedicatedRevisionTableName
    */
   #[DataProvider('providerTestGetDedicatedTableName')]
-  public function testGetDedicatedTableName($info, $expected_data_table, $expected_revision_table): void {
+  public function testGetDedicatedTableName(array $info, $expected_data_table, $expected_revision_table): void {
     $entity_type_id = $info['entity_type_id'];
     $field_name = $info['field_name'];
 
@@ -584,7 +585,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
    *   A mock field storage definition with configured field properties.
    */
-  protected function setUpDefinition($name, array $column_names, $base_field = TRUE) {
+  protected function setUpDefinition($name, array $column_names, $base_field = TRUE): MockObject {
     $definition = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
     $definition->expects($this->any())
       ->method('isBaseField')

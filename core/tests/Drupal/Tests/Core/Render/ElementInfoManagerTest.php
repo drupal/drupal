@@ -77,7 +77,7 @@ class ElementInfoManagerTest extends UnitTestCase {
    * @legacy-covers ::buildInfo
    */
   #[DataProvider('providerTestGetInfoElementPlugin')]
-  public function testGetInfoElementPlugin($plugin_class, $expected_info): void {
+  public function testGetInfoElementPlugin(string $plugin_class, $expected_info): void {
     $this->moduleHandler->expects($this->once())
       ->method('alter')
       ->with('element_info', $this->anything())

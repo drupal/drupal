@@ -41,7 +41,7 @@ class PlainTextOutputTest extends TestCase {
   /**
    * Data provider for ::testRenderFromHtml()
    */
-  public static function providerRenderFromHtml() {
+  public static function providerRenderFromHtml(): array {
     $prophet = new Prophet();
     $data = [];
 

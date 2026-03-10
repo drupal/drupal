@@ -115,7 +115,7 @@ class LinkGeneratorTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Utility\LinkGeneratorTest::providerTestGenerate()
    */
   #[DataProvider('providerTestGenerateHrefs')]
-  public function testGenerateHrefs($route_name, array $parameters, $absolute, $expected_url): void {
+  public function testGenerateHrefs(string $route_name, array $parameters, bool $absolute, string $expected_url): void {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with($route_name, $parameters, ['absolute' => $absolute] + $this->defaultOptions)
@@ -456,7 +456,7 @@ class LinkGeneratorTest extends UnitTestCase {
   public function testGenerateActive(): void {
     $this->urlGenerator->expects($this->exactly(5))
       ->method('generateFromRoute')
-      ->willReturnCallback(function ($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
+      ->willReturnCallback(function ($name, array $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
         switch ($name) {
           case 'test_route_1':
             return (new GeneratedUrl())->setGeneratedUrl('/test-route-1');
@@ -599,7 +599,7 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('alter')
-      ->willReturnCallback(function ($hook, &$options): void {
+      ->willReturnCallback(function ($hook, array &$options): void {
         $options['url'] = (new Url('test_route_1'))->setUrlGenerator($this->urlGenerator);
       });
 

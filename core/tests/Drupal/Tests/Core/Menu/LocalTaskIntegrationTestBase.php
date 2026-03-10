@@ -90,7 +90,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     // Set all the modules as being existent.
     $module_handler->expects($this->any())
       ->method('moduleExists')
-      ->willReturnCallback(function ($module) use ($module_dirs) {
+      ->willReturnCallback(function ($module) use ($module_dirs): bool {
         return isset($module_dirs[$module]);
       });
 

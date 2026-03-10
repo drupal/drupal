@@ -55,7 +55,7 @@ class AttributesTest extends UnitTestCase {
    * @see \Drupal\Core\Template\Attribute::__toString()
    */
   #[DataProvider('providerTestAttributeData')]
-  public function testDrupalAttributes($attributes, $expected, $message): void {
+  public function testDrupalAttributes(array $attributes, string $expected, string $message): void {
     $this->assertSame($expected, (string) new Attribute($attributes), $message);
   }
 

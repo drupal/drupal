@@ -96,7 +96,7 @@ abstract class DriverSpecificConnectionUnitTestBase extends DriverSpecificKernel
    */
   protected function assertNoConnection(int $id): void {
     // Wait up to 100ms to give the database engine sufficient time to react.
-    $this->assertTrue($this->waitFor(0.1, function () use ($id) {
+    $this->assertTrue($this->waitFor(0.1, function () use ($id): bool {
       $key = $this->monitor->query($this->getQuery()['processlist'])->fetchAllKeyed(0, 0);
       return !array_key_exists($id, $key);
     }));

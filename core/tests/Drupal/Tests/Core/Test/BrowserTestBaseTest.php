@@ -11,6 +11,7 @@ use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\Tests\BrowserTestBase.
@@ -19,7 +20,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Test')]
 class BrowserTestBaseTest extends UnitTestCase {
 
-  protected function mockBrowserTestBaseWithDriver($driver) {
+  protected function mockBrowserTestBaseWithDriver($driver): MockObject {
     $session = $this->getMockBuilder(Session::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getDriver'])

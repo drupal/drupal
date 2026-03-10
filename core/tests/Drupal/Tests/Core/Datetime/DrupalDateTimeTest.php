@@ -33,7 +33,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *   The expected result of the DrupalDateTime::diff operation.
    */
   #[DataProvider('providerTestDateDiff')]
-  public function testDateDiff($input1, $input2, $absolute, \DateInterval $expected): void {
+  public function testDateDiff(DrupalDateTime $input1, DrupalDateTime|\DateTime|bool $input2, bool $absolute, \DateInterval $expected): void {
     $interval = $input1->diff($input2, $absolute);
     $this->assertEquals($interval, $expected);
   }
@@ -49,7 +49,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *   Absolute flag for DateTimePlus::diff method.
    */
   #[DataProvider('providerTestInvalidDateDiff')]
-  public function testInvalidDateDiff($input1, $input2, $absolute): void {
+  public function testInvalidDateDiff(DrupalDateTime $input1, ?string $input2, bool $absolute): void {
     $this->expectException(\BadMethodCallException::class);
     $this->expectExceptionMessage('Method Drupal\Component\Datetime\DateTimePlus::diff expects parameter 1 to be a \DateTime or \Drupal\Component\Datetime\DateTimePlus object');
     $input1->diff($input2, $absolute);

@@ -109,7 +109,7 @@ class BuilderTest extends TestCase {
    * Tests all of the various kinds of builders.
    */
   #[DataProvider('builderTestData')]
-  public function testBuilder($builderClass, $expected): void {
+  public function testBuilder(string $builderClass, array $expected): void {
     $fixtures = new Fixtures();
     $drupalCoreInfo = $fixtures->drupalCoreComposerFixture();
 

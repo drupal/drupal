@@ -87,7 +87,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
       return Markup::create('<drupal-render-placeholder callback="Drupal\Tests\Core\Render\PlaceholdersTest::callback" arguments="0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>');
     };
 
-    $extract_placeholder_render_array = function ($placeholder_render_array) {
+    $extract_placeholder_render_array = function ($placeholder_render_array): array {
       return array_intersect_key($placeholder_render_array, ['#lazy_builder' => TRUE, '#cache' => TRUE]);
     };
 
@@ -1183,7 +1183,7 @@ HTML;
   protected function setupThemeManagerForDetails(): InvocationMocker {
     return $this->themeManager->expects($this->any())
       ->method('render')
-      ->willReturnCallback(function ($theme, array $vars) {
+      ->willReturnCallback(function ($theme, array $vars): array|string {
         $output = <<<'EOS'
 <details>
   <summary>{{ title }}</summary>

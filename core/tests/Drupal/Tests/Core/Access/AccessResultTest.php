@@ -870,7 +870,7 @@ class AccessResultTest extends UnitTestCase {
    * @legacy-covers ::inheritCacheability
    */
   #[DataProvider('andOrCacheabilityPropagationProvider')]
-  public function testAndOrCacheabilityPropagation(AccessResultInterface $first, $op, AccessResultInterface $second, $implements_cacheable_dependency_interface, $is_cacheable): void {
+  public function testAndOrCacheabilityPropagation(AccessResultInterface $first, string $op, AccessResultInterface $second, bool $implements_cacheable_dependency_interface, ?bool $is_cacheable): void {
     if ($op === 'OR') {
       $result = $first->orIf($second);
     }

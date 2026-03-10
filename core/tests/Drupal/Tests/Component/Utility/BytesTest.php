@@ -33,7 +33,7 @@ class BytesTest extends TestCase {
    *   \Drupal\Component\Utility\Bytes::toNumber().
    */
   #[DataProvider('providerTestToNumber')]
-  public function testToNumber($size, float $expected_number): void {
+  public function testToNumber(string|float $size, float $expected_number): void {
     $this->assertSame($expected_number, Bytes::toNumber($size));
   }
 
@@ -88,7 +88,7 @@ class BytesTest extends TestCase {
    * @legacy-covers ::validateConstraint
    */
   #[DataProvider('providerTestValidate')]
-  public function testValidate($string, bool $expected_result): void {
+  public function testValidate(string|int|float $string, bool $expected_result): void {
     $this->assertSame($expected_result, Bytes::validate($string));
 
     $execution_context = $this->prophesize(ExecutionContextInterface::class);

@@ -52,7 +52,7 @@ class JSWebAssert extends WebAssert {
    *   When the request is not completed. If left blank, a default message will
    *   be displayed.
    */
-  public function assertExpectedAjaxRequest(?int $count = NULL, $timeout = 10000, $message = 'Unable to complete AJAX request.'): void {
+  public function assertExpectedAjaxRequest(?int $count = NULL, int $timeout = 10000, $message = 'Unable to complete AJAX request.'): void {
     // Wait for a very short time to allow page state to update after clicking.
     usleep(5000);
     $condition = <<<JS
@@ -142,7 +142,7 @@ JS);
    *
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
-  public function waitForElement($selector, $locator, $timeout = 10000) {
+  public function waitForElement(string $selector, $locator, int $timeout = 10000) {
     return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return $page->find($selector, $locator);
     });
@@ -164,8 +164,8 @@ JS);
    *
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
-  public function waitForElementRemoved($selector, $locator, $timeout = 10000): bool {
-    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+  public function waitForElementRemoved(string $selector, $locator, int $timeout = 10000): bool {
+    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator): bool {
       return !$page->find($selector, $locator);
     });
   }
@@ -186,7 +186,7 @@ JS);
    *
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
-  public function waitForElementVisible($selector, $locator, $timeout = 10000) {
+  public function waitForElementVisible(string $selector, $locator, int $timeout = 10000) {
     return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       $element = $page->find($selector, $locator);
       if (!empty($element) && $element->isVisible()) {
@@ -207,8 +207,8 @@ JS);
    * @return bool
    *   TRUE if found, FALSE if not found.
    */
-  public function waitForText($text, $timeout = 10000): bool {
-    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
+  public function waitForText($text, int $timeout = 10000): bool {
+    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($text): bool {
       $actual = preg_replace('/\s+/u', ' ', $page->getText());
       $regex = '/' . preg_quote($text, '/') . '/ui';
       return (bool) preg_match($regex, $actual);
@@ -323,7 +323,7 @@ JS);
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    *   When the element is not visible in the viewport.
    */
-  public function assertVisibleInViewport($selector_type, $selector, $corner = FALSE, $message = 'Element is not visible in the viewport.'): void {
+  public function assertVisibleInViewport(string $selector_type, $selector, $corner = FALSE, $message = 'Element is not visible in the viewport.'): void {
     $node = $this->session->getPage()->find($selector_type, $selector);
     if ($node === NULL) {
       if (is_array($selector)) {
@@ -367,7 +367,7 @@ JS);
    *
    * @see \Drupal\FunctionalJavascriptTests\JSWebAssert::assertVisibleInViewport()
    */
-  public function assertNotVisibleInViewport($selector_type, $selector, $corner = FALSE, $message = 'Element is visible in the viewport.'): void {
+  public function assertNotVisibleInViewport(string $selector_type, $selector, $corner = FALSE, $message = 'Element is visible in the viewport.'): void {
     $node = $this->session->getPage()->find($selector_type, $selector);
     if ($node === NULL) {
       if (is_array($selector)) {
@@ -555,7 +555,7 @@ JS;
    * @throws \Behat\Mink\Exception\ElementHtmlException
    *   When an element still exists on the page.
    */
-  public function assertNoElementAfterWait($selector_type, $selector, $timeout = 10000, $message = 'Element exists on the page.'): void {
+  public function assertNoElementAfterWait(string $selector_type, $selector, $timeout = 10000, $message = 'Element exists on the page.'): void {
     $start = microtime(TRUE);
     $end = $start + ($timeout / 1000);
     $page = $this->session->getPage();
@@ -741,7 +741,7 @@ JS;
   public function statusMessageNotContains(string $message, ?string $type = NULL): void {
     $selector = $this->buildStatusMessageSelector($message, $type);
     // Wait for a second for the message to not exist.
-    $this->waitForHelper(1000, function (Element $page) use ($selector) {
+    $this->waitForHelper(1000, function (Element $page) use ($selector): bool {
       return !$page->find('xpath', $selector);
     });
     parent::statusMessageNotContains($message, $type);

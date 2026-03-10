@@ -30,9 +30,9 @@ class ImplementationListTest extends UnitTestCase {
    */
   public function testPublicMethods(): void {
     $listeners = [
-      fn () => 'a0',
-      fn () => 'b',
-      fn () => 'a1',
+      fn (): string => 'a0',
+      fn (): string => 'b',
+      fn (): string => 'a1',
     ];
     $modules = [
       'module_a',

@@ -21,7 +21,7 @@ class OpenOffCanvasDialogCommandTest extends UnitTestCase {
    * Tests render.
    */
   #[DataProvider('dialogPosition')]
-  public function testRender($position): void {
+  public function testRender(string $position): void {
     $command = new OpenOffCanvasDialogCommand('Title', '<p>Text!</p>', ['url' => 'example'], NULL, $position);
 
     $expected = [

@@ -91,7 +91,7 @@ class ScaffoldTest extends TestCase {
    * @return string
    *   The path to the created System-Under-Test.
    */
-  protected function createSut($fixture_name, array $replacements = []): string {
+  protected function createSut(string $fixture_name, array $replacements = []): string {
     $sut = $this->fixturesDir . '/' . $fixture_name;
     // Erase just our sut, to ensure it is clean. Recopy all of the fixtures.
     $this->fileSystem->remove($sut);
@@ -170,7 +170,7 @@ class ScaffoldTest extends TestCase {
    *   Whether or not symlinking should be used.
    */
   #[DataProvider('scaffoldExpectedExceptionTestValues')]
-  public function testScaffoldWithExpectedException($fixture_name, $expected_exception_message, $is_link): void {
+  public function testScaffoldWithExpectedException(string $fixture_name, string $expected_exception_message, bool $is_link): void {
     // Test scaffold. Expect an error.
     $this->expectException(\Exception::class);
     $this->expectExceptionMessage($expected_exception_message);
@@ -229,7 +229,7 @@ class ScaffoldTest extends TestCase {
    *   Whether the named fixture has a relocated document root.
    */
   #[DataProvider('scaffoldOverridingSettingsExcludingHtaccessValues')]
-  public function testScaffoldOverridingSettingsExcludingHtaccess($fixture_name, $is_link, $relocated_docroot): void {
+  public function testScaffoldOverridingSettingsExcludingHtaccess(string $fixture_name, bool $is_link, bool $relocated_docroot): void {
     $result = $this->scaffoldSut($fixture_name, $is_link, $relocated_docroot);
 
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), $is_link);

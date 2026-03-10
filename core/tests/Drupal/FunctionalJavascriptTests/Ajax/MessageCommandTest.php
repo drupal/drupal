@@ -73,7 +73,7 @@ class MessageCommandTest extends WebDriverTestBase {
     $this->drupalGet('ajax-test/message');
     for ($i = 1; $i < 7; $i++) {
       $page->pressButton('Make Message In Alternate Location');
-      $expected_count = $page->waitFor(10, function () use ($i, $page) {
+      $expected_count = $page->waitFor(10, function () use ($i, $page): bool {
         return count($page->findAll('css', '#alternate-message-container .messages')) === $i;
       });
       $this->assertTrue($expected_count);
@@ -181,7 +181,7 @@ class MessageCommandTest extends WebDriverTestBase {
    * @param string $type
    *   The expected type.
    */
-  protected function waitForMessageVisible($message, $selector = '[data-drupal-messages]', $type = 'status'): void {
+  protected function waitForMessageVisible(string $message, ?string $selector = '[data-drupal-messages]', string $type = 'status'): void {
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', $selector . ' .messages--' . $type . ':contains("' . $message . '")'));
   }
 
@@ -195,7 +195,7 @@ class MessageCommandTest extends WebDriverTestBase {
    * @param string $type
    *   The expected type.
    */
-  protected function waitForMessageRemoved($message, $selector = '[data-drupal-messages]', $type = 'status'): void {
+  protected function waitForMessageRemoved(string $message, string $selector = '[data-drupal-messages]', string $type = 'status'): void {
     $this->assertNotEmpty($this->assertSession()->waitForElementRemoved('css', $selector . ' .messages--' . $type . ':contains("' . $message . '")'));
   }
 

@@ -138,7 +138,7 @@ class SubformStateTest extends UnitTestCase {
    * Tests get value.
    */
   #[DataProvider('providerTestGetValue')]
-  public function testGetValue($parents, $key, $expected, $default = NULL): void {
+  public function testGetValue(array $parents, $key, $expected, $default = NULL): void {
     $parent_form_state = new FormState();
     $parent_form_state->setValues(static::$formStateValues);
 
@@ -194,7 +194,7 @@ class SubformStateTest extends UnitTestCase {
    * Tests set values.
    */
   #[DataProvider('providerTestSetValues')]
-  public function testSetValues($parents, $new_values, $expected): void {
+  public function testSetValues(array $parents, array $new_values, $expected): void {
     $parent_form_state = new FormState();
     $parent_form_state->setValues(static::$formStateValues);
 

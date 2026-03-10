@@ -74,7 +74,7 @@ class FormattableMarkupTest extends TestCase {
    * @legacy-covers ::__toString
    */
   #[DataProvider('providerTestUnexpectedPlaceholder')]
-  public function testUnexpectedPlaceholder($string, $arguments, $error_number, $error_message): void {
+  public function testUnexpectedPlaceholder(string $string, array $arguments, ?int $error_number, string $error_message): void {
     // We set a custom error handler because of
     // https://github.com/sebastianbergmann/phpunit/issues/487
     set_error_handler([$this, 'errorHandler']);

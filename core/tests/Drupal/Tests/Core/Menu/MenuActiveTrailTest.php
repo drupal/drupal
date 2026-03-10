@@ -254,7 +254,7 @@ class MenuActiveTrailTest extends UnitTestCase {
     ]);
     $this->menuLinkManager
       ->method('loadLinksByRoute')
-      ->willReturnCallback(function ($route_name) use ($home_link) {
+      ->willReturnCallback(function ($route_name) use ($home_link): array {
         return match ($route_name) {
           'link_1' => [],
           '<front>' => [$home_link],

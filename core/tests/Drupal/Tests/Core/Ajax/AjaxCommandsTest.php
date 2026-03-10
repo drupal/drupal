@@ -123,7 +123,7 @@ class AjaxCommandsTest extends UnitTestCase {
    * @legacy-covers \Drupal\Core\Ajax\AddCssCommand
    */
   #[DataProvider('providerCss')]
-  public function testAddCssCommand($css, $expected): void {
+  public function testAddCssCommand(array $css, array $expected): void {
     $command = new AddCssCommand($css);
 
     $this->assertEquals($expected, $command->render());
@@ -169,7 +169,7 @@ class AjaxCommandsTest extends UnitTestCase {
    * @legacy-covers \Drupal\Core\Ajax\AnnounceCommand
    */
   #[DataProvider('announceCommandProvider')]
-  public function testAnnounceCommand($message, $priority, array $expected): void {
+  public function testAnnounceCommand(string $message, ?string $priority, array $expected): void {
     if ($priority === NULL) {
       $command = new AnnounceCommand($message);
     }

@@ -66,7 +66,7 @@ class PoItemTest extends TestCase {
   }
 
   #[DataProvider('providerStrings')]
-  public function testFormat($source, $context, $translation, $expected): void {
+  public function testFormat(string|array $source, ?string $context, string|array|null $translation, string $expected): void {
     $item = new PoItem();
 
     $item->setSource($source);

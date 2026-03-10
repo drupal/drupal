@@ -41,7 +41,7 @@ class CacheCollectorTest extends KernelTestBase {
    * Tests setting and invalidating.
    */
   #[DataProvider('providerTestInvalidCharacters')]
-  public function testCacheCollector($cid, $key, $value): void {
+  public function testCacheCollector(string $cid, string $key, string $value): void {
     $collector = new CacheCollectorHelper($cid, $this->container->get('cache.default'), $this->container->get('lock'));
     $this->assertNull($collector->get($key));
     $collector->set($key, $value);

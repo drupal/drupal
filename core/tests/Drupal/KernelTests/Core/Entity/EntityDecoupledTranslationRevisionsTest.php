@@ -484,7 +484,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    * @return string
    *   The formatted message.
    */
-  protected function formatMessage($message): mixed {
+  protected function formatMessage(string $message): mixed {
     $args = func_get_args();
     array_shift($args);
     $params = array_merge($args, $this->stepInfo);

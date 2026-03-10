@@ -100,7 +100,7 @@ class DrupalComponentTest extends TestCase {
   protected function assertNoCoreUsage(string $class_path): void {
     $contents = file_get_contents($class_path);
     preg_match_all('/^.*Drupal\\\Core.*$/m', $contents, $matches);
-    $matches = array_filter($matches[0], function ($line) {
+    $matches = array_filter($matches[0], function (string $line): bool {
       // Filter references that don't really matter.
       return preg_match('/@see|E_USER_DEPRECATED|expectUserDeprecationMessage/', $line) === 0;
     });
@@ -142,7 +142,7 @@ class DrupalComponentTest extends TestCase {
    * @legacy-covers \Drupal\Tests\Component\DrupalComponentTest::assertNoCoreUsage
    */
   #[DataProvider('providerAssertNoCoreUsage')]
-  public function testAssertNoCoreUsage($expected_pass, $file_data): void {
+  public function testAssertNoCoreUsage(bool $expected_pass, string $file_data): void {
     // Set up a virtual file to read.
     $vfs_root = vfsStream::setup('root');
     vfsStream::newFile('Test.php')->at($vfs_root)->setContent($file_data);

@@ -35,7 +35,7 @@ class ContextDefinitionTest extends UnitTestCase {
    * Tests get data definition.
    */
   #[DataProvider('providerGetDataDefinition')]
-  public function testGetDataDefinition($is_multiple): void {
+  public function testGetDataDefinition(bool $is_multiple): void {
     $data_type = 'valid';
     $mock_data_definition = $this->createMock(ContextDefinitionInterface::class);
     $mock_data_definition->expects($this->once())
@@ -107,7 +107,7 @@ class ContextDefinitionTest extends UnitTestCase {
    * Tests get data definition invalid type.
    */
   #[DataProvider('providerGetDataDefinition')]
-  public function testGetDataDefinitionInvalidType($is_multiple): void {
+  public function testGetDataDefinitionInvalidType(bool $is_multiple): void {
     // Since we're trying to make getDataDefinition() throw an exception in
     // isolation, we use a data type which is not valid.
     $data_type = 'not_valid';
@@ -172,7 +172,7 @@ class ContextDefinitionTest extends UnitTestCase {
    * Tests get constraint.
    */
   #[DataProvider('providerGetConstraint')]
-  public function testGetConstraint($expected, $constraint_array, $constraint): void {
+  public function testGetConstraint(?string $expected, array $constraint_array, string $constraint): void {
     $mock_context_definition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinition')
       ->disableOriginalConstructor()
       ->onlyMethods([

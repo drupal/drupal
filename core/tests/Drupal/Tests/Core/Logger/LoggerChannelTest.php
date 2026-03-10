@@ -116,7 +116,7 @@ class LoggerChannelTest extends UnitTestCase {
   public function testNullIp(): void {
     // Create a logger that will fail if $context['ip'] is not an empty string.
     $logger = $this->createMock(LoggerInterface::class);
-    $expected = function ($context) {
+    $expected = function (array $context): bool {
       return $context['channel'] == 'test' && $context['ip'] === '';
     };
     $logger->expects($this->once())
@@ -149,7 +149,7 @@ class LoggerChannelTest extends UnitTestCase {
   public static function providerTestLog(): \Generator {
     // No request or account.
     yield [
-      function ($context) {
+      function (array $context): bool {
         return $context['channel'] == 'test' && empty($context['uid']) && $context['ip'] === '';
       },
       FALSE,
@@ -159,7 +159,7 @@ class LoggerChannelTest extends UnitTestCase {
     // With account but not request. Since the request is not available the
     // current user should not be used.
     yield [
-      function ($context) {
+      function (array $context): bool {
         return $context['uid'] === 0 && $context['ip'] === '';
       },
       FALSE,
@@ -168,7 +168,7 @@ class LoggerChannelTest extends UnitTestCase {
 
     // With request but not account.
     yield [
-      function ($context) {
+      function (array $context): bool {
         return $context['ip'] === '127.0.0.1' && empty($context['uid']);
       },
       TRUE,
@@ -177,7 +177,7 @@ class LoggerChannelTest extends UnitTestCase {
 
     // Both request and account.
     yield [
-      function ($context) {
+      function (array $context): bool {
         return $context['ip'] === '127.0.0.1' && $context['uid'] === 1;
       },
       TRUE,

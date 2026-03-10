@@ -41,7 +41,7 @@ class RowCountExceptionTest extends UnitTestCase {
    * @legacy-covers ::__construct
    */
   #[DataProvider('providerTestExceptionMessage')]
-  public function testExceptionMessage($expected, $message): void {
+  public function testExceptionMessage(string $expected, string $message): void {
     $e = new RowCountException($message);
     $this->assertSame($expected, $e->getMessage());
   }

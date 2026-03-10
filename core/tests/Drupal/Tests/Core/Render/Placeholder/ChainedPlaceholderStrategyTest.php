@@ -25,7 +25,7 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
    * @legacy-covers ::processPlaceholders
    */
   #[DataProvider('providerProcessPlaceholders')]
-  public function testProcessPlaceholders($strategies, $placeholders, $result): void {
+  public function testProcessPlaceholders($strategies, array $placeholders, $result): void {
     $chained_placeholder_strategy = new ChainedPlaceholderStrategy();
 
     foreach ($strategies as $strategy) {

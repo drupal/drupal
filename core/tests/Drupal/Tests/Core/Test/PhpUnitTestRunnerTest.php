@@ -155,7 +155,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * Tests summarize results.
    */
   #[DataProvider('providerTestSummarizeResults')]
-  public function testSummarizeResults($results, $has_status): void {
+  public function testSummarizeResults(array $results, string $has_status): void {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $summary = $runner->summarizeResults($results);
 

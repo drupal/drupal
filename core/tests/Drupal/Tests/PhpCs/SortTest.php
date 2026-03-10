@@ -62,7 +62,7 @@ class SortTest extends TestCase {
     foreach ($rules as $item) {
       if (array_key_exists('exclude', $item)) {
         $excluded = $item['exclude'];
-        $excluded = array_filter($excluded, static function ($item) {
+        $excluded = array_filter($excluded, static function ($item): bool {
           return is_array($item) && array_key_exists('@name', $item);
         });
         $this->assertSorted($excluded, '@name');
@@ -85,12 +85,12 @@ class SortTest extends TestCase {
     $input_sorted = $input;
 
     if ($column === NULL) {
-      usort($input_sorted, static function ($a, $b) {
+      usort($input_sorted, static function ($a, $b): int {
         return strcmp($a, $b);
       });
     }
     else {
-      usort($input_sorted, static function ($a, $b) use ($column) {
+      usort($input_sorted, static function (array $a, array $b) use ($column): int {
         return strcmp($a[$column], $b[$column]);
       });
     }

@@ -75,7 +75,7 @@ COMPOUND
    * Tests parse contents.
    */
   #[DataProvider('provideTestFileContents')]
-  public function testParseContents($expected, $contents): void {
+  public function testParseContents(array $expected, string $contents): void {
     $parser = new TestFileParser();
 
     $ref_parse = new \ReflectionMethod($parser, 'parseContents');

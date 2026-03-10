@@ -158,7 +158,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @legacy-covers ::getBaseTable
    */
   #[DataProvider('providerTestGetBaseTable')]
-  public function testGetBaseTable($base_table, $expected): void {
+  public function testGetBaseTable(?string $base_table, string $expected): void {
     $this->entityType->expects($this->once())
       ->method('getBaseTable')
       ->willReturn($base_table);
@@ -199,7 +199,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @legacy-covers ::getRevisionTable
    */
   #[DataProvider('providerTestGetRevisionTable')]
-  public function testGetRevisionTable($revision_table, $expected): void {
+  public function testGetRevisionTable(?string $revision_table, string $expected): void {
     $this->entityType->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
@@ -269,7 +269,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @legacy-covers ::getRevisionDataTable
    */
   #[DataProvider('providerTestGetRevisionDataTable')]
-  public function testGetRevisionDataTable($revision_data_table, $expected): void {
+  public function testGetRevisionDataTable(?string $revision_data_table, string $expected): void {
     $this->entityType->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);

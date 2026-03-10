@@ -28,7 +28,7 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
  * Tests markup interface empty.
  */
   #[DataProvider('providerTestMarkupInterfaceEmpty')]
-  public function testMarkupInterfaceEmpty($expected, $variable): void {
+  public function testMarkupInterfaceEmpty(string $expected, MarkupInterface|string $variable): void {
     $this->assertSame($expected, (string) $this->renderObjectWithTwig($variable));
   }
 

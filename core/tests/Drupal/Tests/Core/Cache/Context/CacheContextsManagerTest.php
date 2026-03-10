@@ -13,6 +13,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 
 // cspell:ignore cnenzrgre
@@ -143,7 +144,7 @@ class CacheContextsManagerTest extends UnitTestCase {
    * @legacy-covers ::convertTokensToKeys
    */
   #[DataProvider('providerTestInvalidCalculatedContext')]
-  public function testInvalidCalculatedContext($context_token): void {
+  public function testInvalidCalculatedContext(string $context_token): void {
     $container = $this->getMockContainer();
     $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
 
@@ -179,7 +180,7 @@ class CacheContextsManagerTest extends UnitTestCase {
     return ['foo', 'baz'];
   }
 
-  protected function getMockContainer() {
+  protected function getMockContainer(): MockObject {
     $container = $this->getMockBuilder('Drupal\Core\DependencyInjection\Container')
       ->disableOriginalConstructor()
       ->getMock();
@@ -239,7 +240,7 @@ class CacheContextsManagerTest extends UnitTestCase {
    * @legacy-covers ::validateTokens
    */
   #[DataProvider('validateTokensProvider')]
-  public function testValidateContexts(array $contexts, $expected_exception_message): void {
+  public function testValidateContexts(array $contexts, bool|string $expected_exception_message): void {
     $container = new ContainerBuilder();
     $cache_contexts_manager = new CacheContextsManager($container, ['foo', 'foo.bar', 'baz']);
     if ($expected_exception_message !== FALSE) {

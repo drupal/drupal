@@ -32,7 +32,7 @@ trait HookOrderTestTrait {
         return '[]';
       }
       $parts = array_map(
-        static function (string $call_string) {
+        static function (string $call_string): string {
           if (preg_match('@^(\w+\\\\)*(\w+)::(\w+)@', $call_string, $matches)) {
             [,, $class_shortname, $method] = $matches;
             return $class_shortname . '::class . ' . var_export('::' . $method, TRUE);

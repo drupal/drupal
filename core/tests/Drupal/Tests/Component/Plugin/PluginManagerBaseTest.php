@@ -9,6 +9,7 @@ use Drupal\Component\Plugin\Mapper\MapperInterface;
 use Drupal\Component\Plugin\PluginManagerBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -40,7 +41,7 @@ class PluginManagerBaseTest extends TestCase {
   /**
    * Generates a mocked FactoryInterface object with known properties.
    */
-  public function getMockFactoryInterface($expects_count) {
+  public function getMockFactoryInterface(int $expects_count): MockObject {
     $mock_factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $mock_factory->expects($this->exactly($expects_count))
       ->method('createInstance')

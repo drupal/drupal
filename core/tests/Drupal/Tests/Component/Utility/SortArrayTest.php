@@ -31,7 +31,7 @@ class SortArrayTest extends TestCase {
    * @legacy-covers ::sortByKeyInt
    */
   #[DataProvider('providerSortByWeightElement')]
-  public function testSortByWeightElement($a, $b, $expected): void {
+  public function testSortByWeightElement(array $a, array $b, int $expected): void {
     $result = SortArray::sortByWeightElement($a, $b);
     $this->assertBothNegativePositiveOrZero($expected, $result);
   }
@@ -107,7 +107,7 @@ class SortArrayTest extends TestCase {
    * @legacy-covers ::sortByKeyInt
    */
   #[DataProvider('providerSortByWeightProperty')]
-  public function testSortByWeightProperty($a, $b, $expected): void {
+  public function testSortByWeightProperty($a, $b, int $expected): void {
     $result = SortArray::sortByWeightProperty($a, $b);
     $this->assertBothNegativePositiveOrZero($expected, $result);
   }
@@ -183,7 +183,7 @@ class SortArrayTest extends TestCase {
    * @legacy-covers ::sortByKeyString
    */
   #[DataProvider('providerSortByTitleElement')]
-  public function testSortByTitleElement($a, $b, $expected): void {
+  public function testSortByTitleElement($a, $b, int $expected): void {
     $result = SortArray::sortByTitleElement($a, $b);
     $this->assertBothNegativePositiveOrZero($expected, $result);
   }
@@ -252,7 +252,7 @@ class SortArrayTest extends TestCase {
    * @legacy-covers ::sortByKeyString
    */
   #[DataProvider('providerSortByTitleProperty')]
-  public function testSortByTitleProperty($a, $b, $expected): void {
+  public function testSortByTitleProperty($a, $b, int $expected): void {
     $result = SortArray::sortByTitleProperty($a, $b);
     $this->assertBothNegativePositiveOrZero($expected, $result);
   }

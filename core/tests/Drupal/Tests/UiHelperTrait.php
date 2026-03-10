@@ -229,7 +229,7 @@ trait UiHelperTrait {
    * @return \Drupal\Tests\WebAssert
    *   A new web-assert option for asserting the presence of elements with.
    */
-  public function assertSession($name = NULL) {
+  public function assertSession($name = NULL): WebAssert {
     $this->addToAssertionCount(1);
     return new WebAssert($this->getSession($name), $this->baseUrl);
   }
@@ -422,7 +422,7 @@ trait UiHelperTrait {
    * @param string $css_selector
    *   The CSS selector identifying the element to click.
    */
-  protected function click($css_selector) {
+  protected function click(string $css_selector) {
     $starting_url = $this->getSession()->getCurrentUrl();
     $this->getSession()->getDriver()->click($this->cssSelectToXpath($css_selector));
     // Log only for WebDriverTestBase tests because for BrowserKitDriver we log
@@ -528,7 +528,7 @@ trait UiHelperTrait {
    * @return string
    *   The equivalent XPath of a CSS expression.
    */
-  protected function cssSelectToXpath($selector, $html = TRUE, $prefix = 'descendant-or-self::'): string {
+  protected function cssSelectToXpath(string $selector, $html = TRUE, string $prefix = 'descendant-or-self::'): string {
     return (new CssSelectorConverter($html))->toXPath($selector, $prefix);
   }
 

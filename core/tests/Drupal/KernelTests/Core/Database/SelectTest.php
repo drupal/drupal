@@ -525,7 +525,7 @@ class SelectTest extends DatabaseTestBase {
    * Tests that filter by 'REGEXP' and 'NOT REGEXP' works as expected.
    */
   #[DataProvider('providerRegularExpressionCondition')]
-  public function testRegularExpressionCondition($expected, $column, $pattern, $operator): void {
+  public function testRegularExpressionCondition(array $expected, string $column, string $pattern, string $operator): void {
     $database = $this->container->get('database');
     $database->insert('test')
       ->fields([
@@ -620,7 +620,7 @@ class SelectTest extends DatabaseTestBase {
    * Tests thrown exception for non array operator conditions with array value.
    */
   #[DataProvider('providerNonArrayOperatorWithArrayValueCondition')]
-  public function testNonArrayOperatorWithArrayValueCondition($operator, $operator_in_exception_message): void {
+  public function testNonArrayOperatorWithArrayValueCondition(?string $operator, string $operator_in_exception_message): void {
     $this->expectException(InvalidQueryException::class);
     $this->expectExceptionMessage("Query condition 'age " . $operator_in_exception_message . " 26, 27' must have an array compatible operator.");
 

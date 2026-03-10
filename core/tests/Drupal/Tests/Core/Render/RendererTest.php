@@ -6,6 +6,8 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -23,6 +25,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\MockObject\MockObject;
 
 // cspell:ignore fooalert
+
 /**
  * Tests Drupal\Core\Render\Renderer.
  */
@@ -55,7 +58,7 @@ class RendererTest extends RendererTestBase {
    * @legacy-covers ::doRender
    */
   #[DataProvider('providerTestRenderBasic')]
-  public function testRenderBasic($build, $expected, ?callable $setup_code = NULL): void {
+  public function testRenderBasic(string|array|null $build, $expected, ?callable $setup_code = NULL): void {
     if (isset($setup_code)) {
       $setup_code = $setup_code->bindTo($this);
       $setup_code($this->themeManager, $this);
@@ -234,7 +237,7 @@ class RendererTest extends RendererTestBase {
       [
         '#markup' => 'foo',
         '#pre_render' => [
-          function ($elements) {
+          function (array $elements): array {
             $elements['#markup'] .= '<script>alert("bar");</script>';
             return $elements;
           },
@@ -248,7 +251,7 @@ class RendererTest extends RendererTestBase {
         '#markup' => 'foo',
         '#allowed_tags' => ['script'],
         '#pre_render' => [
-          function ($elements) {
+          function (array $elements): array {
             $elements['#markup'] .= '<script>alert("bar");</script>';
             return $elements;
           },
@@ -262,7 +265,7 @@ class RendererTest extends RendererTestBase {
       [
         '#plain_text' => 'foo',
         '#pre_render' => [
-          function ($elements) {
+          function (array $elements): array {
             $elements['#plain_text'] .= '<script>alert("bar");</script>';
             return $elements;
           },
@@ -285,7 +288,7 @@ class RendererTest extends RendererTestBase {
       $themeManager->expects($testCase->exactly(2))
         ->method('render')
         ->with(static::logicalOr('common_test_foo', 'container'))
-        ->willReturnCallback(function ($theme, $vars) {
+        ->willReturnCallback(function ($theme, array $vars): string {
           if ($theme == 'container') {
             return '<div' . (string) (new Attribute($vars['#attributes'])) . '>' . $vars['#children'] . "</div>\n";
           }
@@ -312,7 +315,7 @@ class RendererTest extends RendererTestBase {
       $themeManager->expects($testCase->exactly(2))
         ->method('render')
         ->with(static::logicalOr('link', 'container'))
-        ->willReturnCallback(function ($theme, $vars) {
+        ->willReturnCallback(function ($theme, array $vars): string {
           if ($theme == 'container') {
             return '<div' . (string) (new Attribute($vars['#attributes'])) . '>' . $vars['#children'] . "</div>\n";
           }
@@ -355,7 +358,7 @@ class RendererTest extends RendererTestBase {
       $themeManager->expects($testCase->exactly(2))
         ->method('render')
         ->with('container')
-        ->willReturnCallback(function ($theme, $vars) {
+        ->willReturnCallback(function ($theme, array $vars): string {
           return '<div' . (string) (new Attribute($vars['#attributes'])) . '>' . $vars['#children'] . "</div>\n";
         });
     };
@@ -370,7 +373,7 @@ class RendererTest extends RendererTestBase {
       $themeManager->expects($testCase->once())
         ->method('render')
         ->with(['container'])
-        ->willReturnCallback(function ($theme, $vars) {
+        ->willReturnCallback(function ($theme, array $vars): string {
           return '<div' . (string) (new Attribute($vars['#attributes'])) . '>' . $vars['#children'] . "</div>\n";
         });
     };
@@ -607,7 +610,7 @@ class RendererTest extends RendererTestBase {
    * @legacy-covers ::doRender
    */
   #[DataProvider('providerAccessValues')]
-  public function testRenderWithPresetAccess($access): void {
+  public function testRenderWithPresetAccess(bool|AccessResultForbidden|AccessResultAllowed $access): void {
     $build = [
       '#access' => $access,
     ];
@@ -622,9 +625,9 @@ class RendererTest extends RendererTestBase {
    * @legacy-covers ::doRender
    */
   #[DataProvider('providerAccessValues')]
-  public function testRenderWithAccessCallbackCallable($access): void {
+  public function testRenderWithAccessCallbackCallable(bool|AccessResultForbidden|AccessResultAllowed $access): void {
     $build = [
-      '#access_callback' => function () use ($access) {
+      '#access_callback' => function () use ($access): bool|AccessResultAllowed|AccessResultForbidden {
         return $access;
       },
     ];
@@ -639,10 +642,10 @@ class RendererTest extends RendererTestBase {
    * @legacy-covers ::doRender
    */
   #[DataProvider('providerAccessValues')]
-  public function testRenderWithAccessPropertyAndCallback($access): void {
+  public function testRenderWithAccessPropertyAndCallback(bool|AccessResultForbidden|AccessResultAllowed $access): void {
     $build = [
       '#access' => $access,
-      '#access_callback' => function () {
+      '#access_callback' => function (): true {
         return TRUE;
       },
     ];
@@ -657,7 +660,7 @@ class RendererTest extends RendererTestBase {
    * @legacy-covers ::doRender
    */
   #[DataProvider('providerAccessValues')]
-  public function testRenderWithAccessControllerResolved($access): void {
+  public function testRenderWithAccessControllerResolved(bool|AccessResultForbidden|AccessResultAllowed $access): void {
 
     switch ($access) {
       case AccessResult::allowed():
@@ -711,7 +714,7 @@ class RendererTest extends RendererTestBase {
    * @legacy-covers ::doRender
    */
   #[DataProvider('providerRenderTwice')]
-  public function testRenderTwice($build): void {
+  public function testRenderTwice(array $build): void {
     $this->assertEquals('kittens', $this->renderer->renderRoot($build));
     $this->assertEquals('kittens', $build['#markup']);
     $this->assertEquals(['kittens-147'], $build['#cache']['tags']);
@@ -848,7 +851,7 @@ class RendererTest extends RendererTestBase {
     $this->themeManager->expects($this->once())
       ->method('render')
       ->with('common_test_foo', $this->defaultThemeVars + $element)
-      ->willReturnCallback(function ($hook, $vars) {
+      ->willReturnCallback(function ($hook, array $vars): string {
         return $vars['#foo'] . $vars['#bar'];
       });
 
@@ -898,7 +901,7 @@ class RendererTest extends RendererTestBase {
    * @legacy-covers \Drupal\Core\Render\RenderCache::set
    */
   #[DataProvider('providerRenderCache')]
-  public function testRenderCache($child_access, $expected_tags): void {
+  public function testRenderCache(?AccessResultForbidden $child_access, array $expected_tags): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 
@@ -949,7 +952,7 @@ class RendererTest extends RendererTestBase {
    * @legacy-covers \Drupal\Core\Render\RenderCache::set
    */
   #[DataProvider('providerTestRenderCacheMaxAge')]
-  public function testRenderCacheMaxAge($max_age, $is_render_cached, $render_cache_item_expire): void {
+  public function testRenderCacheMaxAge(int $max_age, bool $is_render_cached, ?int $render_cache_item_expire): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 
@@ -1060,7 +1063,7 @@ class RendererTest extends RendererTestBase {
    * Tests add cacheable dependency.
    */
   #[DataProvider('providerTestAddCacheableDependency')]
-  public function testAddCacheableDependency(array $build, $object, array $expected): void {
+  public function testAddCacheableDependency(array $build, TestCacheableDependency|CacheableMetadata $object, array $expected): void {
     $this->renderer->addCacheableDependency($build, $object);
     $this->assertEquals($build, $expected);
   }
@@ -1160,7 +1163,7 @@ class RendererTest extends RendererTestBase {
         // multiple nested calls to ::executeInRenderContext() doesn't
         // allow render context to get out of sync. This simulates similar
         // conditions to BigPipe placeholder rendering.
-        $fiber_suspend_pre_render = function ($elements) {
+        $fiber_suspend_pre_render = function (array $elements): array {
           $fiber_suspend = function ($elements) {
             \Fiber::suspend();
             return $elements;
@@ -1257,7 +1260,7 @@ class TestAccessClass implements TrustedCallbackInterface {
  */
 class TestCallables implements TrustedCallbackInterface {
 
-  public function preRenderPrinted($elements) {
+  public function preRenderPrinted(array $elements): array {
     $elements['#printed'] = TRUE;
     return $elements;
   }

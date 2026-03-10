@@ -65,7 +65,7 @@ class PhpTransliterationTest extends UnitTestCase {
    * @return array
    *   An array of test data for testPhpTransliterationWithAlter.
    */
-  public static function providerTestPhpTransliterationWithAlter() {
+  public static function providerTestPhpTransliterationWithAlter(): array {
     $random_generator = new Random();
     $random = $random_generator->string(10);
     // Make some strings with two, three, and four-byte characters for testing.

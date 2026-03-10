@@ -271,7 +271,7 @@ class AttributeTest extends UnitTestCase {
    * @legacy-covers ::addClass
    */
   #[DataProvider('providerTestAttributeClassHelpers')]
-  public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []): void {
+  public function testTwigAddRemoveClasses(string $template, string $expected, array $seed_attributes = []): void {
     $loader = new StringLoader();
     $twig = new Environment($loader);
     $data = ['attributes' => new Attribute($seed_attributes)];
@@ -496,7 +496,7 @@ class AttributeTest extends UnitTestCase {
    * Tests has attribute.
    */
   #[DataProvider('providerTestHasAttribute')]
-  public function testHasAttribute(array $test_data, $test_attribute, $expected): void {
+  public function testHasAttribute(array $test_data, string $test_attribute, bool $expected): void {
     $attributes = new Attribute($test_data);
     $this->assertSame($expected, $attributes->hasAttribute($test_attribute));
   }
@@ -536,7 +536,7 @@ class AttributeTest extends UnitTestCase {
    * Tests merge.
    */
   #[DataProvider('providerTestMerge')]
-  public function testMerge($original, $merge, $expected): void {
+  public function testMerge(Attribute $original, Attribute $merge, Attribute $expected): void {
     $this->assertEquals($expected, $original->merge($merge));
   }
 

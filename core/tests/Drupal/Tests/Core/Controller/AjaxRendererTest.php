@@ -50,7 +50,7 @@ class AjaxRendererTest extends UnitTestCase {
     $renderer = $this->createMock(RendererInterface::class);
     $renderer->expects($this->any())
       ->method('renderRoot')
-      ->willReturnCallback(function (&$elements, $is_root_call = FALSE) {
+      ->willReturnCallback(function (array &$elements, $is_root_call = FALSE) {
         $elements += ['#attached' => []];
         if (isset($elements['#markup'])) {
           return $elements['#markup'];

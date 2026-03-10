@@ -94,7 +94,7 @@ YAML;
  * Tests exceptions.
  */
   #[DataProvider('providerTestExceptions')]
-  public function testExceptions($yml, $message): void {
+  public function testExceptions(string $yml, string $message): void {
     vfsStream::setup('drupal', NULL, [
       'modules' => [
         'example' => [

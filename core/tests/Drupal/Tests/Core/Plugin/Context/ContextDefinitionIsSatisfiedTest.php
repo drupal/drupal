@@ -43,7 +43,7 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
 
     $class_resolver = $this->prophesize(ClassResolverInterface::class);
-    $class_resolver->getInstanceFromDefinition(Argument::type('string'))->will(function ($arguments) {
+    $class_resolver->getInstanceFromDefinition(Argument::type('string'))->will(function ($arguments): object {
       $class_name = $arguments[0];
       return new $class_name();
     });
@@ -85,7 +85,7 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
   /**
    * Provides test data for ::testIsSatisfiedBy().
    */
-  public static function providerTestIsSatisfiedBy() {
+  public static function providerTestIsSatisfiedBy(): array {
     $data = [];
 
     // Simple data types.

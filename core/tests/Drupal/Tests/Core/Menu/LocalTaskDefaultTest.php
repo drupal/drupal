@@ -231,7 +231,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * Tests get weight.
    */
   #[DataProvider('providerTestGetWeight')]
-  public function testGetWeight($plugin_definition, $plugin_id, $expected_weight): void {
+  public function testGetWeight(array $plugin_definition, string $plugin_id, int $expected_weight): void {
     $this->pluginDefinition = $plugin_definition;
     $this->pluginId = $plugin_id;
     $this->setupLocalTaskDefault();

@@ -614,7 +614,7 @@ class IconFinderTest extends UnitTestCase {
     $this->fileUrlGenerator
       ->expects($this->any())
       ->method('generateString')
-      ->willReturnCallback(function ($uri) {
+      ->willReturnCallback(function (string $uri): string {
         return self::TEST_RELATIVE_URL . $uri;
       });
 

@@ -30,7 +30,7 @@ class NumberTest extends TestCase {
    *   Expected return value from Number::validStep().
    */
   #[DataProvider('providerTestValidStep')]
-  public function testValidStep($value, $step, $expected): void {
+  public function testValidStep(float|int $value, float|int $step, bool $expected): void {
     $return = Number::validStep($value, $step);
     $this->assertEquals($expected, $return);
   }
@@ -48,7 +48,7 @@ class NumberTest extends TestCase {
    *   Expected return value from Number::validStep().
    */
   #[DataProvider('providerTestValidStepOffset')]
-  public function testValidStepOffset($value, $step, $offset, $expected): void {
+  public function testValidStepOffset(float|int $value, float|int $step, int|float $offset, bool $expected): void {
     $return = Number::validStep($value, $step, $offset);
     $this->assertEquals($expected, $return);
   }
@@ -127,7 +127,7 @@ class NumberTest extends TestCase {
    * @legacy-covers ::alphadecimalToInt
    */
   #[DataProvider('providerTestConversions')]
-  public function testConversions($value, $expected): void {
+  public function testConversions(int $value, string $expected): void {
     $this->assertSame(Number::intToAlphadecimal($value), $expected);
     $this->assertSame($value, Number::alphadecimalToInt($expected));
   }

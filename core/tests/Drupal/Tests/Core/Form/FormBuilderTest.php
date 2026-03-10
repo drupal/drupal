@@ -185,7 +185,7 @@ class FormBuilderTest extends FormTestBase {
    * Tests the handling of FormStateInterface::$response.
    */
   #[DataProvider('formStateResponseProvider')]
-  public function testHandleFormStateResponse($class, $form_state_key): void {
+  public function testHandleFormStateResponse(string $class, string $form_state_key): void {
     $form_id = 'test_form_id';
     $expected_form = self::buildTestFormStructure();
 
@@ -357,7 +357,7 @@ class FormBuilderTest extends FormTestBase {
    *   The corresponding submitted input value.
    */
   #[DataProvider('providerTestBuildFormWithTriggeringElement')]
-  public function testBuildFormWithTriggeringElement($element_value, $input_value): void {
+  public function testBuildFormWithTriggeringElement(string $element_value, string $input_value): void {
     $form_id = 'test_form_id';
     $expected_form = self::buildTestFormStructure();
 
@@ -713,7 +713,7 @@ class FormBuilderTest extends FormTestBase {
    * @legacy-covers ::buildForm
    */
   #[DataProvider('providerTestChildAccessInheritance')]
-  public function testChildAccessInheritance($element, $access_checks): void {
+  public function testChildAccessInheritance(array $element, $access_checks): void {
     $form_arg = new TestFormWithPredefinedForm();
     $form_arg->setForm($element);
 
@@ -976,7 +976,7 @@ class FormBuilderTest extends FormTestBase {
    * @legacy-covers ::prepareForm
    */
   #[DataProvider('providerTestFormTokenCacheability')]
-  public function testFormTokenCacheability($token, $is_authenticated, $method, $opted_in_for_cache): void {
+  public function testFormTokenCacheability(bool|string|null $token, bool $is_authenticated, string $method, bool $opted_in_for_cache): void {
     $user = $this->prophesize(AccountProxyInterface::class);
     $user->isAuthenticated()
       ->willReturn($is_authenticated);

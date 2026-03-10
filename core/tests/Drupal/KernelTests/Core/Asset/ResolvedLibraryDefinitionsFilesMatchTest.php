@@ -120,7 +120,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   public function testCoreLibraryCompleteness(): void {
     // Enable all core modules.
     $all_modules = $this->container->get('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module) {
+    $all_modules = array_filter($all_modules, function ($module): bool {
       // Filter contrib, hidden, already enabled modules and modules in the
       // Testing package.
       if ($module->origin !== 'core'

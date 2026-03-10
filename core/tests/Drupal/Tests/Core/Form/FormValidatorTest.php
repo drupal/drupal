@@ -220,7 +220,7 @@ class FormValidatorTest extends UnitTestCase {
    * Tests handle errors with limited validation.
    */
   #[DataProvider('providerTestHandleErrorsWithLimitedValidation')]
-  public function testHandleErrorsWithLimitedValidation($sections, $triggering_element, $values, $expected): void {
+  public function testHandleErrorsWithLimitedValidation(array $sections, array $triggering_element, array $values, array $expected): void {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler, $this->callableResolver);
 
     $triggering_element['#limit_validation_errors'] = $sections;
@@ -352,7 +352,7 @@ class FormValidatorTest extends UnitTestCase {
    * @legacy-covers ::doValidateForm
    */
   #[DataProvider('providerTestRequiredErrorMessage')]
-  public function testRequiredErrorMessage($element, $expected_message): void {
+  public function testRequiredErrorMessage(array $element, string $expected_message): void {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([
         new RequestStack(),
@@ -448,7 +448,7 @@ class FormValidatorTest extends UnitTestCase {
    * Tests perform required validation.
    */
   #[DataProvider('providerTestPerformRequiredValidation')]
-  public function testPerformRequiredValidation($element, $expected_message, $call_watchdog): void {
+  public function testPerformRequiredValidation(array $element, string $expected_message, bool $call_watchdog): void {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler, $this->callableResolver);
 
     if ($call_watchdog) {

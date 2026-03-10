@@ -110,7 +110,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
    * @legacy-covers ::checkRedirectUrl
    */
   #[DataProvider('providerTestDestinationRedirect')]
-  public function testDestinationRedirect(Request $request, $expected): void {
+  public function testDestinationRedirect(Request $request, bool|string $expected): void {
     $dispatcher = new EventDispatcher();
     $kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $response = new RedirectResponse('http://example.com/drupal');
@@ -152,7 +152,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
  * Tests destination redirect to external url.
  */
   #[DataProvider('providerTestDestinationRedirectToExternalUrl')]
-  public function testDestinationRedirectToExternalUrl($request, $expected): void {
+  public function testDestinationRedirectToExternalUrl(Request $request, string $expected): void {
     $dispatcher = new EventDispatcher();
     $kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $response = new RedirectResponse('http://other-example.com');
@@ -236,7 +236,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * Data provider for testDestinationRedirectWithInvalidUrl().
    */
-  public static function providerTestDestinationRedirectWithInvalidUrl() {
+  public static function providerTestDestinationRedirectWithInvalidUrl(): array {
     $data = [];
     $data[] = [new Request(['destination' => '//example:com'])];
     $data[] = [new Request(['destination' => '//example:com/test'])];

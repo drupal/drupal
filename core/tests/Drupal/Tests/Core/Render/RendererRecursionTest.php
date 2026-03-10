@@ -112,7 +112,7 @@ class RendererRecursionTest extends RendererTestBase {
 
     $complex_child = $complex_child_template;
 
-    $callable = function ($elements) use ($renderer, $complex_child) {
+    $callable = function (array $elements) use ($renderer, $complex_child): array {
       $elements['#markup'] = $renderer->renderInIsolation($complex_child);
       $this->assertEquals('<p>This is a rendered placeholder!</p>', $elements['#markup'], 'Rendered complex child output as expected, with the placeholder replaced.');
       return $elements;

@@ -33,7 +33,7 @@ class UrlConversionTest extends UnitTestCase {
    * @legacy-covers ::convertDbUrlToConnectionInfo
    */
   #[DataProvider('providerConvertDbUrlToConnectionInfo')]
-  public function testDbUrlToConnectionConversion($url, $database_array, $include_test_drivers): void {
+  public function testDbUrlToConnectionConversion(string $url, array $database_array, bool $include_test_drivers): void {
     $result = Database::convertDbUrlToConnectionInfo($url, $include_test_drivers);
     $this->assertEquals($database_array, $result);
   }
@@ -281,7 +281,7 @@ class UrlConversionTest extends UnitTestCase {
    * Tests ::convertDbUrlToConnectionInfo() exception for invalid arguments.
    */
   #[DataProvider('providerInvalidArgumentsUrlConversion')]
-  public function testGetInvalidArgumentExceptionInUrlConversion($url, $expected_exception_message): void {
+  public function testGetInvalidArgumentExceptionInUrlConversion(string $url, string $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
     Database::convertDbUrlToConnectionInfo($url);
@@ -330,7 +330,7 @@ class UrlConversionTest extends UnitTestCase {
    * Tests get connection info as url.
    */
   #[DataProvider('providerGetConnectionInfoAsUrl')]
-  public function testGetConnectionInfoAsUrl(array $info, $expected_url): void {
+  public function testGetConnectionInfoAsUrl(array $info, string $expected_url): void {
     Database::addConnectionInfo('default', 'default', $info);
     $url = Database::getConnectionInfoAsUrl();
     $this->assertEquals($expected_url, $url);
@@ -480,7 +480,7 @@ class UrlConversionTest extends UnitTestCase {
    * @legacy-covers ::getConnectionInfoAsUrl
    */
   #[DataProvider('providerInvalidArgumentGetConnectionInfoAsUrl')]
-  public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, $expected_exception_message): void {
+  public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, string $expected_exception_message): void {
     Database::addConnectionInfo('default', 'default', $connection_options);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);

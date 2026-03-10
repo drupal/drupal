@@ -10,6 +10,7 @@ use Drupal\Core\RouteProcessor\RouteProcessorManager;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -73,7 +74,7 @@ class RouteProcessorManagerTest extends UnitTestCase {
    * @return \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mock processor object.
    */
-  protected function getMockProcessor($route_name, $route, $parameters) {
+  protected function getMockProcessor($route_name, $route, $parameters): MockObject {
     $processor = $this->createMock('Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface');
     $processor->expects($this->once())
       ->method('processOutbound')

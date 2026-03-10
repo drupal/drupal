@@ -180,7 +180,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    * Tests generate u r i.
    */
   #[DataProvider('providerGenerateURI')]
-  public function testGenerateURI($filepath, $expected): void {
+  public function testGenerateURI(string $filepath, string $expected): void {
     // Disable file_test.module's hook_file_url_alter() implementation.
     \Drupal::state()->set('file_test.hook_file_url_alter', NULL);
 

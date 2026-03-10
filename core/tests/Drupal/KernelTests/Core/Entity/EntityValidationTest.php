@@ -48,13 +48,6 @@ class EntityValidationTest extends EntityKernelTestBase {
   protected $entityFieldText;
 
   /**
-   * An array of plugin managers with clearable cached definitions.
-   *
-   * @var array
-   */
-  protected array $cachedDiscoveries;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -118,11 +111,8 @@ class EntityValidationTest extends EntityKernelTestBase {
     // Use the protected property on the cache_clearer first to check whether
     // the constraint manager is added there.
     $plugin_cache_clearer = \Drupal::service('plugin.cache_clearer');
-    $get_cached_discoveries = function () {
-      return $this->cachedDiscoveries;
-    };
-    $get_cached_discoveries = $get_cached_discoveries->bindTo($plugin_cache_clearer, $plugin_cache_clearer);
-    $cached_discoveries = $get_cached_discoveries();
+    $reflected_property = (new \ReflectionClass($plugin_cache_clearer))->getProperty('cachedDiscoveries');
+    $cached_discoveries = $reflected_property->getValue($plugin_cache_clearer);
     $cached_discovery_classes = [];
     foreach ($cached_discoveries as $cached_discovery) {
       $cached_discovery_classes[] = get_class($cached_discovery);

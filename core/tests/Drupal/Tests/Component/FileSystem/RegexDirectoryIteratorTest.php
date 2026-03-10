@@ -22,12 +22,12 @@ class RegexDirectoryIteratorTest extends TestCase {
    * @legacy-covers ::accept
    */
   #[DataProvider('providerTestRegexDirectoryIterator')]
-  public function testRegexDirectoryIterator(array $directory, $regex, array $expected): void {
+  public function testRegexDirectoryIterator(array $directory, string $regex, array $expected): void {
     vfsStream::setup('root', NULL, $directory);
     $iterator = new RegexDirectoryIterator(vfsStream::url('root'), $regex);
 
     // Create an array of filenames to assert against.
-    $file_list = array_map(function (\SplFileInfo $file) {
+    $file_list = array_map(function (\SplFileInfo $file): string {
       return $file->getFilename();
     }, array_values(iterator_to_array($iterator)));
 

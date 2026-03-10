@@ -70,7 +70,7 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
    *   The route name that should be filtered out during matching.
    */
   #[DataProvider('acceptFilterProvider')]
-  public function testAcceptFiltering($accept_header, $format, $included_route, $excluded_route): void {
+  public function testAcceptFiltering(string $accept_header, string $format, string $included_route, string $excluded_route): void {
     $collection = $this->fixtures->sampleRouteCollection();
 
     $request = Request::create('path/two', 'GET');

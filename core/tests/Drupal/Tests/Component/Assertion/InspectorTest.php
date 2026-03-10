@@ -130,7 +130,7 @@ class InspectorTest extends TestCase {
       'strchr',
       [$this, 'callMe'],
       [__CLASS__, 'callMeStatic'],
-      function () {
+      function (): true {
         return TRUE;
       },
     ]));
@@ -139,7 +139,7 @@ class InspectorTest extends TestCase {
       'strchr',
       [$this, 'callMe'],
       [__CLASS__, 'callMeStatic'],
-      function () {
+      function (): true {
         return TRUE;
       },
       "I'm not callable",
@@ -225,7 +225,7 @@ class StringObject {
   /**
    * {@inheritdoc}
    */
-  public function __toString() {
+  public function __toString(): string {
     return 'foo';
   }
 

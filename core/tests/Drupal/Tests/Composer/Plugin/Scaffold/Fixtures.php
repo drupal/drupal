@@ -46,7 +46,7 @@ class Fixtures extends FixturesBase {
    *
    * @see \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath::sourcePath()
    */
-  public function sourcePath($project_name, $source) {
+  public function sourcePath(string $project_name, $source) {
     $package_name = "fixtures/{$project_name}";
     $source_rel_path = "assets/{$source}";
     $package_path = $this->projectFixtureDir($project_name);

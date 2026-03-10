@@ -574,7 +574,7 @@ class TableDragTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The toggle element.
    */
-  protected function findWeightsToggle($expected_text): NodeElement {
+  protected function findWeightsToggle(string $expected_text): NodeElement {
     $toggle = $this->getSession()->getPage()->findButton($expected_text);
     $this->assertNotEmpty($toggle);
     return $toggle;
@@ -656,7 +656,7 @@ JS;
    *   Thrown when the dragging operations are not completed on time.
    */
   protected function waitUntilDraggingCompleted(NodeElement $handle): void {
-    $class_removed = $this->getSession()->getPage()->waitFor(1, function () use ($handle) {
+    $class_removed = $this->getSession()->getPage()->waitFor(1, function () use ($handle): bool {
       return !$handle->hasClass($this::DRAGGING_CSS_CLASS);
     });
 

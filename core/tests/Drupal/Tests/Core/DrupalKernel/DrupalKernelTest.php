@@ -28,7 +28,7 @@ class DrupalKernelTest extends UnitTestCase {
    * @legacy-covers ::setupTrustedHosts
    */
   #[DataProvider('providerTestTrustedHosts')]
-  public function testTrustedHosts($host, $server_name, $message, $expected = FALSE): void {
+  public function testTrustedHosts($host, $server_name, string $message, $expected = FALSE): void {
     $request = new Request();
 
     $trusted_host_patterns = [

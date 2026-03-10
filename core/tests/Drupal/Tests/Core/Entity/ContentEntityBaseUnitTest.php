@@ -561,7 +561,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * Tests get.
    */
   #[DataProvider('providerGet')]
-  public function testGet($expected, $field_name, $active_langcode, $fields): void {
+  public function testGet(string $expected, string $field_name, string $active_langcode, array $fields): void {
     // Mock ContentEntityBase.
     $mock_base = $this->getMockBuilder(ContentEntityBaseMockableClass::class)
       ->disableOriginalConstructor()
@@ -621,7 +621,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * Tests get fields.
    */
   #[DataProvider('providerGetFields')]
-  public function testGetFields($expected, $include_computed, $is_computed, $field_definitions): void {
+  public function testGetFields(array $expected, bool $include_computed, bool $is_computed, array $field_definitions): void {
     // Mock ContentEntityBase.
     $mock_base = $this->getMockBuilder(ContentEntityBaseMockableClass::class)
       ->disableOriginalConstructor()

@@ -223,7 +223,7 @@ class VendorHardeningPluginTest extends TestCase {
    * Tests find bin overlap.
    */
   #[DataProvider('providerFindBinOverlap')]
-  public function testFindBinOverlap($expected, $binaries, $clean_paths): void {
+  public function testFindBinOverlap(array $expected, array $binaries, array $clean_paths): void {
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
       ->disableOriginalConstructor()
       ->getMock();

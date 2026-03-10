@@ -132,12 +132,12 @@ class UpdateHookRegistryTest extends UnitTestCase {
 
     $this->keyValueStore
       ->method('getAll')
-      ->willReturnCallback(static function () use (&$versions) {
+      ->willReturnCallback(static function () use (&$versions): array {
         return $versions;
       });
     $this->keyValueStore
       ->method('get')
-      ->willReturnCallback(static function ($key) use (&$versions) {
+      ->willReturnCallback(static function ($key) use (&$versions): int {
         return $versions[$key];
       });
     $this->keyValueStore

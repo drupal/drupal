@@ -55,7 +55,7 @@ class RedirectDestinationTest extends UnitTestCase {
   protected function setupUrlGenerator(): void {
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
-      ->willReturnCallback(function ($route, $parameters, $options) {
+      ->willReturnCallback(function ($route, $parameters, array $options): string {
         $query_string = '';
         if (!empty($options['query'])) {
           $query_string = '?' . UrlHelper::buildQuery($options['query']);

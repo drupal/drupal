@@ -181,7 +181,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
     $renderer->expects($this->once())
       ->method('renderRoot')
       ->with()
-      ->willReturnCallback(function (&$elements) use ($rendered_output) {
+      ->willReturnCallback(function (array &$elements) use ($rendered_output): string {
         $elements['#attached'] = [];
         return $rendered_output;
       });

@@ -72,7 +72,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    * @legacy-covers ::validate
    */
   #[DataProvider('providerTestEntityWithStringIdWithViolation')]
-  public function testEntityWithStringIdWithViolation($id): void {
+  public function testEntityWithStringIdWithViolation(string|int|null $id): void {
     $this->installEntitySchema('entity_test_string_id');
 
     $value = $this->randomString();

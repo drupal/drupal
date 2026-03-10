@@ -26,7 +26,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    * Tests \Drupal\Core\ParamConverter\ParamConverterManager::getConverter().
    */
   #[DataProvider('providerTestGetConverter')]
-  public function testGetConverter($name, $class): void {
+  public function testGetConverter(string $name, string $class): void {
     $converter = $this->getMockBuilder('Drupal\Core\ParamConverter\ParamConverterInterface')
       ->setMockClassName($class)
       ->getMock();
@@ -69,7 +69,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    * Tests set route parameter converters.
    */
   #[DataProvider('providerTestSetRouteParameterConverters')]
-  public function testSetRouteParameterConverters($path, $parameters = NULL, $expected = NULL): void {
+  public function testSetRouteParameterConverters(string $path, ?array $parameters = NULL, ?string $expected = NULL): void {
     $converter = $this->createMock('Drupal\Core\ParamConverter\ParamConverterInterface');
     $converter->expects($this->any())
       ->method('applies')

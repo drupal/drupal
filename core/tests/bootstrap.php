@@ -24,7 +24,7 @@ use Symfony\Component\ErrorHandler\DebugClassLoader;
  *   An associative array of extension directories found within the scanned
  *   directory, keyed by extension name.
  */
-function drupal_phpunit_find_extension_directories($scan_directory) {
+function drupal_phpunit_find_extension_directories($scan_directory): array {
   $extensions = [];
   $dirs = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($scan_directory, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS));
   foreach ($dirs as $dir) {
@@ -83,7 +83,7 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL): array {
  * @return array
  *   An associative array of extension directories, keyed by their namespace.
  */
-function drupal_phpunit_get_extension_namespaces($dirs) {
+function drupal_phpunit_get_extension_namespaces($dirs): array {
   $namespaces = [];
   foreach ($dirs as $extension => $dir) {
     if (is_dir($dir . '/src')) {

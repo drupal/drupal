@@ -135,12 +135,12 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    *   (optional) An additional value to base the token on.
    */
   #[DataProvider('providerTestValidateParameterTypes')]
-  public function testValidateParameterTypes($token, $value): void {
+  public function testValidateParameterTypes(bool|int|array $token, string $value): void {
     $this->setupDefaultExpectations();
 
     // The following check might throw PHP fatal errors and notices, so we
     // disable error assertions.
-    set_error_handler(function () {
+    set_error_handler(function (): true {
       return TRUE;
     });
     $this->assertFalse($this->generator->validate($token, $value));
@@ -167,12 +167,12 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    * @param mixed $token
    *   The token to be validated.
    * @param mixed $value
-   *   (optional) An additional value to base the token on.
+   *   An additional value to base the token on.
    *
    * @legacy-covers ::validate
    */
   #[DataProvider('providerTestInvalidParameterTypes')]
-  public function testInvalidParameterTypes($token, $value = ''): void {
+  public function testInvalidParameterTypes(int|string|array|null $token, \stdClass|array $value): void {
     $this->setupDefaultExpectations();
 
     $this->expectException(\InvalidArgumentException::class);

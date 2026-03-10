@@ -268,7 +268,7 @@ JS;
    */
   protected function assertWaitPageContains(string $expected): void {
     $page = $this->getSession()->getPage();
-    $this->assertTrue($page->waitFor(10, function () use ($page, $expected) {
+    $this->assertTrue($page->waitFor(10, function () use ($page, $expected): bool {
       // Clear content from empty styles and "processed" classes after effect.
       $content = str_replace([' class="processed"', ' processed', ' style=""'], '', $page->getContent());
       return stripos($content, $expected) !== FALSE;

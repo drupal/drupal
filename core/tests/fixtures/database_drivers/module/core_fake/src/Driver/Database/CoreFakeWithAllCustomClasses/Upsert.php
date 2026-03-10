@@ -17,7 +17,7 @@ class Upsert extends QueryUpsert {
   /**
    * {@inheritdoc}
    */
-  public function __toString() {
+  public function __toString(): string {
     throw new \BadMethodCallException('Upsert not implemented');
   }
 

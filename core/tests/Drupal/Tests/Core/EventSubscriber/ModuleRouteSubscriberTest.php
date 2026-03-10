@@ -58,7 +58,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    * @legacy-covers ::onAlterRoutes
    */
   #[DataProvider('providerTestRemoveRoute')]
-  public function testRemoveRoute($route_name, array $requirements, $removed): void {
+  public function testRemoveRoute(string $route_name, array $requirements, bool $removed): void {
     $collection = new RouteCollection();
     $route = new Route('', [], $requirements);
     $collection->add($route_name, $route);

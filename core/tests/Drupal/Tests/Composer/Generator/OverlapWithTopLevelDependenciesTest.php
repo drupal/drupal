@@ -35,7 +35,7 @@ class OverlapWithTopLevelDependenciesTest extends TestCase {
    *   The path of the project template to test.
    */
   #[DataProvider('templateProjectPathProvider')]
-  public function testOverlapWithTemplateProject($template_project_path): void {
+  public function testOverlapWithTemplateProject(string $template_project_path): void {
     $root = dirname(__DIR__, 6);
     // Read template project composer.json.
     $top_level_composer_json = json_decode(file_get_contents("$root/$template_project_path/composer.json"), TRUE);

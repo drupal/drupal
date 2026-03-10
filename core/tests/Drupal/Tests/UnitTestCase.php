@@ -8,8 +8,8 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\Extension\Dump\DebugDump;
 use PHPUnit\Framework\Attributes\BeforeClass;
@@ -153,7 +153,7 @@ abstract class UnitTestCase extends TestCase {
     $translation = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
     $translation->expects($this->any())
       ->method('translate')
-      ->willReturnCallback(function ($string, array $args = [], array $options = []) use ($translation) {
+      ->willReturnCallback(function ($string, array $args = [], array $options = []) use ($translation): TranslatableMarkup {
         // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         return new TranslatableMarkup($string, $args, $options, $translation);
       });
@@ -164,7 +164,7 @@ abstract class UnitTestCase extends TestCase {
       });
     $translation->expects($this->any())
       ->method('formatPlural')
-      ->willReturnCallback(function ($count, $singular, $plural, array $args = [], array $options = []) use ($translation) {
+      ->willReturnCallback(function ($count, $singular, $plural, array $args = [], array $options = []) use ($translation): PluralTranslatableMarkup {
         $wrapper = new PluralTranslatableMarkup($count, $singular, $plural, $args, $options, $translation);
         return $wrapper;
       });

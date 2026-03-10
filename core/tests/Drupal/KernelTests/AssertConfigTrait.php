@@ -26,7 +26,7 @@ trait AssertConfigTrait {
    * @throws \Exception
    *   Thrown when a configuration is different.
    */
-  protected function assertConfigDiff(Diff $result, $config_name, array $skipped_config) {
+  protected function assertConfigDiff(Diff $result, string $config_name, array $skipped_config) {
     foreach ($result->getEdits() as $op) {
       switch (get_class($op)) {
         case 'Drupal\Component\Diff\Engine\DiffOpCopy':

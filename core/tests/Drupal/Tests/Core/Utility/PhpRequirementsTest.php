@@ -42,7 +42,7 @@ class PhpRequirementsTest extends UnitTestCase {
     // Ensure that the EOL list is sorted in an ascending order by the date. If
     // there are multiple versions EOL on the same day, sort by the PHP
     // version.
-    uksort($php_eol_dates, function ($a, $b) use ($php_eol_dates) {
+    uksort($php_eol_dates, function ($a, $b) use ($php_eol_dates): int {
       $a_date = strtotime($php_eol_dates[$a]);
       $b_date = strtotime($php_eol_dates[$b]);
       if ($a_date === $b_date) {

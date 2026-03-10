@@ -161,7 +161,7 @@ class DrupalTestBrowser extends AbstractBrowser {
    * @param string $array_name
    *   Internal parameter used by recursive calls.
    */
-  protected function addPostFiles(array $files, array &$multipart, $array_name = '') {
+  protected function addPostFiles(array $files, array &$multipart, ?string $array_name = '') {
     if (empty($files)) {
       return;
     }
@@ -210,7 +210,7 @@ class DrupalTestBrowser extends AbstractBrowser {
    * @param string $array_name
    *   Internal parameter used by recursive calls.
    */
-  public function addPostFields(array $formParams, array &$multipart, $array_name = ''): void {
+  public function addPostFields(array $formParams, array &$multipart, ?string $array_name = ''): void {
     foreach ($formParams as $name => $value) {
       if (!empty($array_name)) {
         $name = $array_name . '[' . $name . ']';

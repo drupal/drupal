@@ -39,7 +39,7 @@ class TestDatabaseTest extends UnitTestCase {
    * @legacy-covers ::getPhpErrorLogPath
    */
   #[DataProvider('providerTestConstructor')]
-  public function testConstructor($db_prefix, $expected_db_prefix, $expected_site_path): void {
+  public function testConstructor(string $db_prefix, string $expected_db_prefix, string $expected_site_path): void {
     $test_db = new TestDatabase($db_prefix);
     $this->assertEquals($expected_db_prefix, $test_db->getDatabasePrefix());
     $this->assertEquals($expected_site_path, $test_db->getTestSitePath());

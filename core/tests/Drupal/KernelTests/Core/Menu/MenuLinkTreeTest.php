@@ -185,8 +185,8 @@ class MenuLinkTreeTest extends KernelTestBase {
     $parameters = new MenuTreeParameters();
     $tree = $this->linkTree->load('mock', $parameters);
 
-    $count = function (array $tree) {
-      $sum = function ($carry, MenuLinkTreeElement $item) {
+    $count = function (array $tree): float|int|null {
+      $sum = function ($carry, MenuLinkTreeElement $item): float|int|array {
         return $carry + $item->count();
       };
       return array_reduce($tree, $sum);
@@ -217,7 +217,7 @@ class MenuLinkTreeTest extends KernelTestBase {
     $this->menuLinkManager->addDefinition($logout_menu_link->getPluginId(), $logout_menu_link->getPluginDefinition());
 
     // Returns the accessible links from transformed 'mock' menu tree.
-    $get_accessible_links = function () {
+    $get_accessible_links = function (): array {
       $parameters = new MenuTreeParameters();
       $manipulators = [
         ['callable' => 'menu.default_tree_manipulators:checkAccess'],
@@ -227,7 +227,7 @@ class MenuLinkTreeTest extends KernelTestBase {
       $this->linkTree->transform($tree, $manipulators);
 
       return array_keys(
-        array_filter($tree, function (MenuLinkTreeElement $element) {
+        array_filter($tree, function (MenuLinkTreeElement $element): bool {
           return !$element->link instanceof InaccessibleMenuLink;
         })
       );

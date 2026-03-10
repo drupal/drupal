@@ -91,7 +91,7 @@ class FormHelperTest extends UnitTestCase {
    * Tests process states.
    */
   #[DataProvider('providerElements')]
-  public function testProcessStates($elements, $key): void {
+  public function testProcessStates(array $elements, string $key): void {
     $json = Json::encode($elements['#states']);
     FormHelper::processStates($elements);
     $this->assertEquals(['core/drupal.states'], $elements['#attached']['library']);

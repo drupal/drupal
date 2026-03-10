@@ -194,7 +194,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @param \Drupal\Core\Entity\EntityTypeInterface[]|\Prophecy\Prophecy\ProphecyInterface[] $definitions
    *   (optional) An array of entity type definitions.
    */
-  protected function setUpEntityTypeDefinitions($definitions = []): void {
+  protected function setUpEntityTypeDefinitions(array $definitions = []): void {
     foreach ($definitions as $key => $entity_type) {
       // \Drupal\Core\Entity\EntityTypeInterface::getLinkTemplates() is called
       // by \Drupal\Core\Entity\EntityTypeManager::processDefinition() so it
@@ -324,7 +324,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->will(function ($arguments) use ($definitions): void {
         [, $callback] = $arguments;
         $callback(
-          function () use ($definitions) {
+          function () use ($definitions): array {
             return $definitions;
           },
           'example_module',
@@ -347,7 +347,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @legacy-covers ::buildBaseFieldDefinitions
    */
   #[DataProvider('providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode')]
-  public function testGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode($default_langcode_key): void {
+  public function testGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode(string $default_langcode_key): void {
     $this->setUpEntityWithFieldDefinition(FALSE, 'id', [
       'langcode' => 'langcode',
       'default_langcode' => $default_langcode_key,
@@ -386,7 +386,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @legacy-covers ::buildBaseFieldDefinitions
    */
   #[DataProvider('providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode')]
-  public function testGetBaseFieldDefinitionsTranslatableEntityTypeLangcode($provide_key, $provide_field, $translatable): void {
+  public function testGetBaseFieldDefinitionsTranslatableEntityTypeLangcode(bool $provide_key, bool $provide_field, bool $translatable): void {
     $keys = $provide_key ? ['langcode' => 'langcode'] : [];
     $this->setUpEntityWithFieldDefinition(FALSE, 'id', $keys);
 
@@ -498,7 +498,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->will(function ($arguments) use ($definitions): void {
         [, $callback] = $arguments;
         $callback(
-          function () use ($definitions) {
+          function () use ($definitions): array {
             return $definitions;
           },
           'example_module',
@@ -580,7 +580,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->will(function ($arguments) use ($field_definition, $module): void {
         [, $callback] = $arguments;
         $callback(
-          function () use ($field_definition) {
+          function () use ($field_definition): array {
             return [$field_definition->reveal()];
           },
           $module,

@@ -38,7 +38,7 @@ class FormValuesTest extends WebDriverTestBase {
    * Submits forms with select and checkbox elements via Ajax.
    */
   #[DataProvider('formModeProvider')]
-  public function testSimpleAjaxFormValue($form_mode): void {
+  public function testSimpleAjaxFormValue(string $form_mode): void {
     $this->drupalGet('ajax_forms_test_get_form');
 
     $session = $this->getSession();
@@ -119,7 +119,7 @@ class FormValuesTest extends WebDriverTestBase {
   /**
    * Data provider for testSimpleAjaxFormValue.
    */
-  public static function formModeProvider() {
+  public static function formModeProvider(): array {
     return [
       ['direct'],
       ['dialog'],

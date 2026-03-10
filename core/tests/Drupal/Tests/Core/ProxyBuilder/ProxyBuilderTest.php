@@ -148,7 +148,7 @@ namespace {{ namespace }} {
 
 EOS;
 
-    $expected_methods_body = implode("\n", array_map(function ($value) {
+    $expected_methods_body = implode("\n", array_map(function ($value): string {
       if ($value === '') {
         return $value;
       }

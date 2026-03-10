@@ -70,7 +70,7 @@ class UuidTest extends TestCase {
    *   The message to display on failure.
    */
   #[DataProvider('providerTestValidation')]
-  public function testValidation($uuid, $is_valid, $message): void {
+  public function testValidation(string $uuid, bool $is_valid, string $message): void {
     $this->assertSame($is_valid, Uuid::isValid($uuid), $message);
   }
 

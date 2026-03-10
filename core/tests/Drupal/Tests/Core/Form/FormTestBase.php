@@ -236,7 +236,7 @@ abstract class FormTestBase extends UnitTestCase {
    * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Form\FormInterface
    *   The mocked form object.
    */
-  protected function getMockForm($form_id, $expected_form = NULL, $count = 1) {
+  protected function getMockForm($form_id, $expected_form = NULL, int $count = 1) {
     $form = $this->createMock('Drupal\Core\Form\FormInterface');
     $form->expects($this->once())
       ->method('getFormId')

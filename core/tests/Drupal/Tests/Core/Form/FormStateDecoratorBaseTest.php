@@ -76,7 +76,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set always process.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetAlwaysProcess($always_process): void {
+  public function testSetAlwaysProcess(bool $always_process): void {
     $this->decoratedFormState->setAlwaysProcess($always_process)
       ->shouldBeCalled();
 
@@ -87,7 +87,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests get always process.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testGetAlwaysProcess($always_process): void {
+  public function testGetAlwaysProcess(bool $always_process): void {
     $this->decoratedFormState->getAlwaysProcess()
       ->willReturn($always_process)
       ->shouldBeCalled();
@@ -128,7 +128,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set cached.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetCached($cache): void {
+  public function testSetCached(bool $cache): void {
     $this->decoratedFormState->setCached($cache)
       ->shouldBeCalled();
 
@@ -139,7 +139,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests is cached.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsCached($cache): void {
+  public function testIsCached(bool $cache): void {
     $this->decoratedFormState->isCached()
       ->willReturn($cache)
       ->shouldBeCalled();
@@ -150,7 +150,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set cached with logic exception.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetCachedWithLogicException($cache): void {
+  public function testSetCachedWithLogicException(bool $cache): void {
     $this->decoratedFormState->setCached($cache)
       ->willThrow(\LogicException::class);
     $this->expectException(\LogicException::class);
@@ -185,7 +185,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   return value.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsExecuted($executed): void {
+  public function testIsExecuted(bool $executed): void {
     $this->decoratedFormState->isExecuted()
       ->willReturn($executed)
       ->shouldBeCalled();
@@ -231,7 +231,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set has file element.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetHasFileElement($has_file_element): void {
+  public function testSetHasFileElement(bool $has_file_element): void {
     $this->decoratedFormState->setHasFileElement($has_file_element)
       ->shouldBeCalled();
 
@@ -242,7 +242,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests has file element.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testHasFileElement($has_file_element): void {
+  public function testHasFileElement(bool $has_file_element): void {
     $this->decoratedFormState->hasFileElement()
       ->willReturn($has_file_element)
       ->shouldBeCalled();
@@ -254,7 +254,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set limit validation errors.
    */
   #[DataProvider('providerLimitValidationErrors')]
-  public function testSetLimitValidationErrors($limit_validation_errors): void {
+  public function testSetLimitValidationErrors(?array $limit_validation_errors): void {
     $this->decoratedFormState->setLimitValidationErrors($limit_validation_errors)
       ->shouldBeCalled();
 
@@ -265,7 +265,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests get limit validation errors.
    */
   #[DataProvider('providerLimitValidationErrors')]
-  public function testGetLimitValidationErrors($limit_validation_errors): void {
+  public function testGetLimitValidationErrors(?array $limit_validation_errors): void {
     $this->decoratedFormState->getLimitValidationErrors()
       ->willReturn($limit_validation_errors)
       ->shouldBeCalled();
@@ -291,7 +291,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set method.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetMethod($method): void {
+  public function testSetMethod(bool $method): void {
     $this->decoratedFormState->setMethod($method)
       ->shouldBeCalled();
 
@@ -302,7 +302,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests is method type.
    */
   #[DataProvider('providerIsMethodType')]
-  public function testIsMethodType($expected_return_value, $method_type): void {
+  public function testIsMethodType(bool $expected_return_value, string $method_type): void {
     $this->decoratedFormState->isMethodType($method_type)
       ->willReturn($expected_return_value)
       ->shouldBeCalled();
@@ -326,7 +326,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set request method.
    */
   #[DataProvider('providerSetRequestMethod')]
-  public function testSetRequestMethod($method): void {
+  public function testSetRequestMethod(string $method): void {
     $this->decoratedFormState->setRequestMethod($method)
       ->shouldBeCalled();
 
@@ -347,7 +347,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set validation enforced.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetValidationEnforced($must_validate): void {
+  public function testSetValidationEnforced(bool $must_validate): void {
     $this->decoratedFormState->setValidationEnforced($must_validate)
       ->shouldBeCalled();
 
@@ -358,7 +358,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests is validation enforced.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsValidationEnforced($must_validate): void {
+  public function testIsValidationEnforced(bool $must_validate): void {
     $this->decoratedFormState->isValidationEnforced()
       ->willReturn($must_validate)
       ->shouldBeCalled();
@@ -370,7 +370,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests disable redirect.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testDisableRedirect($no_redirect): void {
+  public function testDisableRedirect(bool $no_redirect): void {
     $this->decoratedFormState->disableRedirect($no_redirect)
       ->shouldBeCalled();
 
@@ -381,7 +381,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests is redirect disabled.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsRedirectDisabled($no_redirect): void {
+  public function testIsRedirectDisabled(bool $no_redirect): void {
     $this->decoratedFormState->isRedirectDisabled()
       ->willReturn($no_redirect)
       ->shouldBeCalled();
@@ -393,7 +393,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set process input.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetProcessInput($process_input): void {
+  public function testSetProcessInput(bool $process_input): void {
     $this->decoratedFormState->setProcessInput($process_input)
       ->shouldBeCalled();
 
@@ -404,7 +404,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests is processing input.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsProcessingInput($process_input): void {
+  public function testIsProcessingInput(bool $process_input): void {
     $this->decoratedFormState->isProcessingInput()
       ->willReturn($process_input)
       ->shouldBeCalled();
@@ -416,7 +416,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set programmed.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetProgrammed($programmed): void {
+  public function testSetProgrammed(bool $programmed): void {
     $this->decoratedFormState->setProgrammed($programmed)
       ->shouldBeCalled();
 
@@ -427,7 +427,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests is programmed.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsProgrammed($programmed): void {
+  public function testIsProgrammed(bool $programmed): void {
     $this->decoratedFormState->isProgrammed()
       ->willReturn($programmed)
       ->shouldBeCalled();
@@ -439,7 +439,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set programmed bypass access check.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetProgrammedBypassAccessCheck($programmed_bypass_access_check): void {
+  public function testSetProgrammedBypassAccessCheck(bool $programmed_bypass_access_check): void {
     $this->decoratedFormState->setProgrammedBypassAccessCheck($programmed_bypass_access_check)
       ->shouldBeCalled();
 
@@ -450,7 +450,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests is bypassing programmed access checks.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsBypassingProgrammedAccessChecks($programmed_bypass_access_check): void {
+  public function testIsBypassingProgrammedAccessChecks(bool $programmed_bypass_access_check): void {
     $this->decoratedFormState->isBypassingProgrammedAccessChecks()
       ->willReturn($programmed_bypass_access_check)
       ->shouldBeCalled();
@@ -581,7 +581,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   value.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsSubmitted($submitted): void {
+  public function testIsSubmitted(bool $submitted): void {
     $this->decoratedFormState->isSubmitted()
       ->willReturn($submitted);
 
@@ -630,7 +630,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   argument.
    */
   #[DataProvider('providerSetTemporaryValue')]
-  public function testSetTemporaryValue($key, $value): void {
+  public function testSetTemporaryValue(string $key, ?string $value): void {
     $this->decoratedFormState->setTemporaryValue($key, $value)
       ->shouldBeCalled();
 
@@ -698,7 +698,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   argument.
    */
   #[DataProvider('providerHasTemporaryValue')]
-  public function testHasTemporaryValue($exists, $key): void {
+  public function testHasTemporaryValue(bool $exists, string $key): void {
     $this->decoratedFormState->hasTemporaryValue($key)
       ->willReturn($exists)
       ->shouldBeCalled();
@@ -788,7 +788,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   argument.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetValidationComplete($complete): void {
+  public function testSetValidationComplete(bool $complete): void {
     $this->decoratedFormState->setValidationComplete($complete)
       ->shouldBeCalled();
 
@@ -804,7 +804,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   value.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsValidationComplete($complete): void {
+  public function testIsValidationComplete(bool $complete): void {
     $this->decoratedFormState->isValidationComplete()
       ->willReturn($complete)
       ->shouldBeCalled();
@@ -829,7 +829,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   $name argument.
    */
   #[DataProvider('providerLoadInclude')]
-  public function testLoadInclude($expected, $module, $type, $name): void {
+  public function testLoadInclude(string|bool $expected, string $module, string $type, string $name): void {
     $this->decoratedFormState->loadInclude($module, $type, $name)
       ->willReturn($expected)
       ->shouldBeCalled();
@@ -913,7 +913,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   argument.
    */
   #[DataProvider('providerSet')]
-  public function testSet($key, $value): void {
+  public function testSet(string $key, ?string $value): void {
     $this->decoratedFormState->set($key, $value)
       ->shouldBeCalled();
 
@@ -941,7 +941,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   \Drupal\Core\Form\FormStateInterface::get()'s return value.
    */
   #[DataProvider('providerGet')]
-  public function testGet($key, $value = NULL): void {
+  public function testGet(string $key, ?string $value = NULL): void {
 
     // Use PHPUnit for mocking, because Prophecy cannot mock methods that return
     // by reference. See \Prophecy\Doubler\Generator\Node::getCode().
@@ -977,7 +977,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   argument.
    */
   #[DataProvider('providerHas')]
-  public function testHas($exists, $key): void {
+  public function testHas(bool $exists, string $key): void {
     $this->decoratedFormState->has($key)
       ->willReturn($exists)
       ->shouldBeCalled();
@@ -1257,7 +1257,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   return value.
    */
   #[DataProvider('providerGetRedirect')]
-  public function testGetRedirect($expected): void {
+  public function testGetRedirect(bool|Url|RedirectResponse|null $expected): void {
     $this->decoratedFormState->getRedirect()
       ->willReturn($expected)
       ->shouldBeCalled();
@@ -1353,7 +1353,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   $rebuild argument.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetRebuild($rebuild): void {
+  public function testSetRebuild(bool $rebuild): void {
     $this->decoratedFormState->setRebuild($rebuild)
       ->shouldBeCalled();
 
@@ -1364,7 +1364,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests is rebuilding.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testIsRebuilding($rebuild): void {
+  public function testIsRebuilding(bool $rebuild): void {
     $this->decoratedFormState->isRebuilding()
       ->willReturn($rebuild)
       ->shouldBeCalled();
@@ -1376,7 +1376,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests set invalid token.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testSetInvalidToken($expected): void {
+  public function testSetInvalidToken(bool $expected): void {
     $this->decoratedFormState->setInvalidToken($expected)
       ->shouldBeCalled();
 
@@ -1387,7 +1387,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests has invalid token.
    */
   #[DataProvider('providerSingleBooleanArgument')]
-  public function testHasInvalidToken($expected): void {
+  public function testHasInvalidToken(bool $expected): void {
     $this->decoratedFormState->hasInvalidToken()
       ->willReturn($expected)
       ->shouldBeCalled();
@@ -1399,7 +1399,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * Tests prepare callback.
    */
   #[DataProvider('providerPrepareCallback')]
-  public function testPrepareCallback($unprepared_callback, callable $prepared_callback): void {
+  public function testPrepareCallback(string|\Closure|array $unprepared_callback, callable $prepared_callback): void {
     $this->decoratedFormState->prepareCallback(Argument::is($unprepared_callback))
       ->willReturn($prepared_callback)
       ->shouldBeCalled();

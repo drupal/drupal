@@ -47,7 +47,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * @return \Drupal\Core\Extension\ModuleHandler
    *   The module handler to test.
    */
-  protected function getModuleHandler($modules = [], $implementations = [], $loadAll = TRUE): ModuleHandler {
+  protected function getModuleHandler(array $modules = [], array $implementations = [], bool $loadAll = TRUE): ModuleHandler {
     // This only works if there's a single $hook.
     $modules['module_handler_test'] = 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test';
     $moduleList = [];
@@ -304,7 +304,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = $this->getModuleHandler([], $implementations);
     $module_handler->setModuleList(['some_module' => TRUE]);
     $r = new \ReflectionObject($module_handler);
-    $get_lists = fn () => $r->getProperty('hookImplementationLists')->getValue($module_handler);
+    $get_lists = fn (): mixed => $r->getProperty('hookImplementationLists')->getValue($module_handler);
 
     $this->assertSame([], $get_lists());
     $this->assertTrue($module_handler->hasImplementations('some_hook'));

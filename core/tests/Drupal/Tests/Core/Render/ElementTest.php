@@ -178,7 +178,7 @@ class ElementTest extends UnitTestCase {
    * Tests the setAttributes() method.
    */
   #[DataProvider('providerTestSetAttributes')]
-  public function testSetAttributes($element, $map, $expected_element): void {
+  public function testSetAttributes(array $element, array $map, array $expected_element): void {
     Element::setAttributes($element, $map);
     $this->assertSame($expected_element, $element);
   }
@@ -207,7 +207,7 @@ class ElementTest extends UnitTestCase {
    * Tests is empty.
    */
   #[DataProvider('providerTestIsEmpty')]
-  public function testIsEmpty(array $element, $expected): void {
+  public function testIsEmpty(array $element, bool $expected): void {
     $this->assertSame(Element::isEmpty($element), $expected);
   }
 
@@ -253,7 +253,7 @@ class ElementTest extends UnitTestCase {
    * Tests is render array.
    */
   #[DataProvider('dataProviderIsRenderArray')]
-  public function testIsRenderArray($build, $expected): void {
+  public function testIsRenderArray(?array $build, bool $expected): void {
     $this->assertSame(
       $expected,
       Element::isRenderArray($build)

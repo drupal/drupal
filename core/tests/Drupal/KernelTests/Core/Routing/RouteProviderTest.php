@@ -233,7 +233,7 @@ class RouteProviderTest extends KernelTestBase {
    * Confirms that we find routes using a case-insensitive path match.
    */
   #[DataProvider('providerMixedCaseRoutePaths')]
-  public function testMixedCasePaths($path, $expected_route_name, $method = 'GET'): void {
+  public function testMixedCasePaths(string $path, ?string $expected_route_name, string $method = 'GET'): void {
     $connection = Database::getConnection();
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
 
@@ -276,7 +276,7 @@ class RouteProviderTest extends KernelTestBase {
    * Confirms that we find all routes with the same path.
    */
   #[DataProvider('providerDuplicateRoutePaths')]
-  public function testDuplicateRoutePaths($path, $number, $expected_route_name = NULL): void {
+  public function testDuplicateRoutePaths(string $path, int $number, ?string $expected_route_name = NULL): void {
     $connection = Database::getConnection();
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
 

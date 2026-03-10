@@ -52,7 +52,7 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
    */
   protected function enableVisibleAndStableCoreModules(): void {
     $all_modules = $this->container->get('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module) {
+    $all_modules = array_filter($all_modules, function ($module): bool {
       // Filter contrib, hidden, experimental, deprecated, and already enabled
       // modules, and modules in the Testing package.
       if ($module->origin !== 'core'

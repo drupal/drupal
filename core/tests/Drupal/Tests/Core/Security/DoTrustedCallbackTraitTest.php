@@ -37,7 +37,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
    * Data provider for ::testTrustedCallbacks().
    */
   public static function providerTestTrustedCallbacks(): array {
-    $closure = function () {
+    $closure = function (): string {
       return 'test';
     };
 
@@ -154,7 +154,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
  * Tests exception.
  */
   #[DataProvider('errorTypeProvider')]
-  public function testException($callback): void {
+  public function testException(callable $callback): void {
     $this->expectException(UntrustedCallbackException::class);
     $this->expectExceptionMessage('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
     $this->doTrustedCallback($callback, [], '%s is not trusted');
@@ -165,7 +165,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
  */
   #[DataProvider('errorTypeProvider')]
   #[IgnoreDeprecations]
-  public function testSilencedDeprecation($callback): void {
+  public function testSilencedDeprecation(callable $callback): void {
     $this->expectUserDeprecationMessage('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
     $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION);
   }

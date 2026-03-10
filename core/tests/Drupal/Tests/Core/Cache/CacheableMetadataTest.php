@@ -127,7 +127,7 @@ class CacheableMetadataTest extends UnitTestCase {
    * Tests valid and invalid values as max age.
    */
   #[DataProvider('providerSetCacheMaxAge')]
-  public function testSetCacheMaxAge($data, $expect_exception): void {
+  public function testSetCacheMaxAge(int|string|\stdClass|float|array $data, bool $expect_exception): void {
     $metadata = new CacheableMetadata();
     if ($expect_exception) {
       $this->expectException('\InvalidArgumentException');

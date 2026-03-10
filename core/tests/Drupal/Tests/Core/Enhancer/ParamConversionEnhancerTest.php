@@ -90,7 +90,7 @@ class ParamConversionEnhancerTest extends UnitTestCase {
     $this->paramConverterManager->expects($this->any())
       ->method('convert')
       ->with($this->isArray())
-      ->willReturnCallback(function ($defaults) {
+      ->willReturnCallback(function (array $defaults): array {
         // Convert the mirrored default to another value.
         $defaults['bar'] = '2';
 

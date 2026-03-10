@@ -41,7 +41,7 @@ class EntityTypeTest extends UnitTestCase {
    * Tests get.
    */
   #[DataProvider('providerTestGet')]
-  public function testGet(array $definition, $key, $expected): void {
+  public function testGet(array $definition, string $key, ?string $expected): void {
     $entity_type = $this->setUpEntityType($definition);
     $this->assertSame($expected, $entity_type->get($key));
   }
@@ -53,7 +53,7 @@ class EntityTypeTest extends UnitTestCase {
    * @legacy-covers ::get
    */
   #[DataProvider('providerTestSet')]
-  public function testSet($key, $value): void {
+  public function testSet(string $key, ?string $value): void {
     $entity_type = $this->setUpEntityType([]);
     $this->assertInstanceOf('Drupal\Core\Entity\EntityTypeInterface', $entity_type->set($key, $value));
     $this->assertSame($value, $entity_type->get($key));
@@ -64,7 +64,7 @@ class EntityTypeTest extends UnitTestCase {
    * Tests the getKeys() method.
    */
   #[DataProvider('providerTestGetKeys')]
-  public function testGetKeys($entity_keys, $expected): void {
+  public function testGetKeys(array $entity_keys, array $expected): void {
     $entity_type = $this->setUpEntityType(['entity_keys' => $entity_keys]);
     $expected += [
       'default_langcode' => 'default_langcode',
@@ -77,7 +77,7 @@ class EntityTypeTest extends UnitTestCase {
    * Tests the getKey() method.
    */
   #[DataProvider('providerTestGetKeys')]
-  public function testGetKey($entity_keys, $expected): void {
+  public function testGetKey(array $entity_keys, array $expected): void {
     $entity_type = $this->setUpEntityType(['entity_keys' => $entity_keys]);
     $this->assertSame($expected['bundle'], $entity_type->getKey('bundle'));
     $this->assertFalse($entity_type->getKey('bananas'));
@@ -87,7 +87,7 @@ class EntityTypeTest extends UnitTestCase {
    * Tests the hasKey() method.
    */
   #[DataProvider('providerTestGetKeys')]
-  public function testHasKey($entity_keys, $expected): void {
+  public function testHasKey(array $entity_keys, array $expected): void {
     $entity_type = $this->setUpEntityType(['entity_keys' => $entity_keys]);
     $this->assertSame(!empty($expected['bundle']), $entity_type->hasKey('bundle'));
     $this->assertSame(!empty($expected['id']), $entity_type->hasKey('id'));
@@ -492,7 +492,7 @@ class EntityTypeTest extends UnitTestCase {
    * Tests the ::getBundleLabel() method.
    */
   #[DataProvider('providerTestGetBundleLabel')]
-  public function testGetBundleLabel($definition, $expected): void {
+  public function testGetBundleLabel(array $definition, string $expected): void {
     $entity_type = $this->setUpEntityType($definition);
     $entity_type->setStringTranslation($this->getStringTranslationStub());
     $this->assertEquals($expected, $entity_type->getBundleLabel());

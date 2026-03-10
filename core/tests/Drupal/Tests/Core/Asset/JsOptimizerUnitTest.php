@@ -73,7 +73,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    * Tests cleaning of a JS asset group containing 'type' => 'file'.
    */
   #[DataProvider('providerTestClean')]
-  public function testClean($js_asset, $expected): void {
+  public function testClean(string|bool $js_asset, string|bool $expected): void {
     $this->assertEquals($expected, $this->optimizer->clean($js_asset));
   }
 
@@ -138,7 +138,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    * Tests cleaning of a JS asset group containing 'type' => 'file'.
    */
   #[DataProvider('providerTestOptimize')]
-  public function testOptimize($js_asset, $expected): void {
+  public function testOptimize(array $js_asset, string|bool $expected): void {
     $this->assertEquals($expected, $this->optimizer->optimize($js_asset));
   }
 

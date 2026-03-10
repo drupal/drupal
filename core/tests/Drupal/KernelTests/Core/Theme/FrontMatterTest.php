@@ -97,7 +97,7 @@ class FrontMatterTest extends KernelTestBase {
    * @legacy-covers \Drupal\Core\Template\TwigEnvironment::getTemplateMetadata
    */
   #[DataProviderExternal(ComponentFrontMatterTest::class, 'providerFrontMatterData')]
-  public function testFrontMatter($yaml, $line, $content = ComponentFrontMatterTest::SOURCE): void {
+  public function testFrontMatter(?array $yaml, $line, $content = ComponentFrontMatterTest::SOURCE): void {
     // Create a temporary Twig template.
     $source = ComponentFrontMatterTest::createFrontMatterSource($yaml, $content);
     $file = $this->createTwigTemplate($source);

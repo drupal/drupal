@@ -50,7 +50,7 @@ class ClientFactoryTest extends UnitTestCase {
    * @legacy-covers ::fromOptions
    */
   #[DataProvider('providerTestCreateFromOptions')]
-  public function testCreateFromOptions($settings_config, $parameter_config, $expected_config_keys): void {
+  public function testCreateFromOptions(array $settings_config, array $parameter_config, array $expected_config_keys): void {
     if ($settings_config) {
       new Settings(['http_client_config' => $settings_config]);
     }

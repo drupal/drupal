@@ -105,7 +105,7 @@ class FormSubmitterTest extends UnitTestCase {
    * @legacy-covers ::doSubmitForm
    */
   #[DataProvider('providerTestHandleFormSubmissionWithResponses')]
-  public function testHandleFormSubmissionWithResponses($class, $form_state_key): void {
+  public function testHandleFormSubmissionWithResponses(string $class, string $form_state_key): void {
     $response = $this->getMockBuilder($class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -161,7 +161,7 @@ class FormSubmitterTest extends UnitTestCase {
    * @legacy-covers ::redirectForm
    */
   #[DataProvider('providerTestRedirectWithUrl')]
-  public function testRedirectWithUrl(Url $redirect_value, $result, $status = 303): void {
+  public function testRedirectWithUrl(Url $redirect_value, string $result, $status = 303): void {
     $container = new ContainerBuilder();
     $container->set('url_generator', $this->urlGenerator);
     \Drupal::setContainer($container);

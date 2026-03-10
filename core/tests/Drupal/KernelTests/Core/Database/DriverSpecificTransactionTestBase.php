@@ -111,7 +111,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
    * @param bool $ddl_statement
    *   Whether to execute a DDL statement during the inner transaction.
    */
-  protected function transactionOuterLayer($suffix, $rollback = FALSE, $ddl_statement = FALSE) {
+  protected function transactionOuterLayer(string $suffix, $rollback = FALSE, $ddl_statement = FALSE) {
     $depth = $this->connection->transactionManager()->stackDepth();
     $txn = $this->connection->startTransaction();
 
@@ -152,7 +152,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
    * @param bool $ddl_statement
    *   Whether to execute a DDL statement during the transaction.
    */
-  protected function transactionInnerLayer($suffix, $rollback = FALSE, $ddl_statement = FALSE) {
+  protected function transactionInnerLayer(string $suffix, $rollback = FALSE, $ddl_statement = FALSE) {
     $depth = $this->connection->transactionManager()->stackDepth();
     // Start a transaction. If we're being called from ->transactionOuterLayer,
     // then we're already in a transaction. Normally, that would make starting

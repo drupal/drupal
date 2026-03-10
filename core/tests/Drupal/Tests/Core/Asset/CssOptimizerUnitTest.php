@@ -39,7 +39,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
     $this->fileUrlGenerator->expects($this->any())
       ->method('generateString')
       ->with($this->isString())
-      ->willReturnCallback(function ($uri) {
+      ->willReturnCallback(function (string $uri): string {
         return 'generated-relative-url:' . $uri;
       });
     $this->optimizer = new CssOptimizer($this->fileUrlGenerator);
@@ -239,7 +239,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * Tests optimizing a CSS asset group containing 'type' => 'file'.
    */
   #[DataProvider('providerTestOptimize')]
-  public function testOptimize($css_asset, $expected): void {
+  public function testOptimize(array $css_asset, string|bool $expected): void {
     global $base_path;
     $original_base_path = $base_path;
     $base_path = '/';

@@ -72,7 +72,7 @@ class DateTimePlusTest extends TestCase {
    *   The expected result of the DateTimePlus::diff operation.
    */
   #[DataProvider('providerTestDateDiff')]
-  public function testDateDiff($input1, $input2, $absolute, \DateInterval $expected): void {
+  public function testDateDiff(DateTimePlus $input1, DateTimePlus|\DateTime|bool $input2, bool $absolute, \DateInterval $expected): void {
     $interval = $input1->diff($input2, $absolute);
     $this->assertEquals($interval, $expected);
   }
@@ -88,7 +88,7 @@ class DateTimePlusTest extends TestCase {
    *   Absolute flag for DateTimePlus::diff method.
    */
   #[DataProvider('providerTestInvalidDateDiff')]
-  public function testInvalidDateDiff($input1, $input2, $absolute): void {
+  public function testInvalidDateDiff(DateTimePlus $input1, ?string $input2, bool $absolute): void {
     $this->expectException(\BadMethodCallException::class);
     $this->expectExceptionMessage('Method Drupal\Component\Datetime\DateTimePlus::diff expects parameter 1 to be a \DateTime or \Drupal\Component\Datetime\DateTimePlus object');
     $input1->diff($input2, $absolute);
@@ -105,7 +105,7 @@ class DateTimePlusTest extends TestCase {
    *   The Exception subclass to expect to be thrown.
    */
   #[DataProvider('providerTestInvalidDateArrays')]
-  public function testInvalidDateArrays($input, $timezone, $class): void {
+  public function testInvalidDateArrays(array $input, string $timezone, string $class): void {
     $this->expectException($class);
     $this->assertInstanceOf(
       '\Drupal\Component\DateTimePlus',
@@ -122,7 +122,7 @@ class DateTimePlusTest extends TestCase {
    *   The expected result of DateTimePlus::checkArray().
    */
   #[DataProvider('providerTestCheckArray')]
-  public function testCheckArray(array $array, $expected): void {
+  public function testCheckArray(array $array, bool $expected): void {
     $method = new \ReflectionMethod(DateTimePlus::class, 'checkArray');
     $result = $method->invoke(NULL, $array);
 
@@ -157,7 +157,7 @@ class DateTimePlusTest extends TestCase {
    *      DateTimePlus::getOffset(), after timezone transform.
    */
   #[DataProvider('providerTestTimestamp')]
-  public function testTimestamp($input, array $initial, array $transform): void {
+  public function testTimestamp(int $input, array $initial, array $transform): void {
     // Initialize a new date object.
     $date = DateTimePlus::createFromTimestamp($input, $initial['timezone']);
     $this->assertDateTimestamp($date, $input, $initial, $transform);
@@ -174,7 +174,7 @@ class DateTimePlusTest extends TestCase {
    *   @see testTimestamp()
    */
   #[DataProvider('providerTestDateTimestamp')]
-  public function testDateTimestamp($input, array $initial, array $transform): void {
+  public function testDateTimestamp(string $input, array $initial, array $transform): void {
     // Initialize a new date object.
     $date = new DateTimePlus($input, $initial['timezone']);
     $this->assertDateTimestamp($date, $input, $initial, $transform);
@@ -238,7 +238,7 @@ class DateTimePlusTest extends TestCase {
    *   Expected output from DateTimePlus::format().
    */
   #[DataProvider('providerTestDateFormat')]
-  public function testDateFormat($input, $timezone, $format, $format_date, $expected): void {
+  public function testDateFormat(string $input, $timezone, string $format, string $format_date, string $expected): void {
     $date = DateTimePlus::createFromFormat($format, $input, $timezone);
     $value = $date->format($format_date);
     $this->assertEquals($expected, $value, sprintf("Test new DateTimePlus(%s, %s, %s): should be %s, found %s.", $input, $timezone, $format, $expected, $value));
@@ -259,7 +259,7 @@ class DateTimePlusTest extends TestCase {
    *   The Exception subclass to expect to be thrown.
    */
   #[DataProvider('providerTestInvalidDates')]
-  public function testInvalidDates($input, $timezone, $format, $message, $class): void {
+  public function testInvalidDates(string $input, $timezone, string $format, string $message, string $class): void {
     $this->expectException($class);
     DateTimePlus::createFromFormat($format, $input, $timezone);
   }
@@ -279,7 +279,7 @@ class DateTimePlusTest extends TestCase {
    *   Message to print on test failure.
    */
   #[DataProvider('providerTestDateTimezone')]
-  public function testDateTimezone($input, $timezone, $expected_timezone, $message): void {
+  public function testDateTimezone(string|DateTimePlus $input, string|\DateTimeZone|null $timezone, string $expected_timezone, string $message): void {
     $date = new DateTimePlus($input, $timezone);
     $timezone = $date->getTimezone()->getName();
     $this->assertEquals($timezone, $expected_timezone, $message);
@@ -933,7 +933,7 @@ class DateTimePlusTest extends TestCase {
    * @legacy-covers ::__construct
    */
   #[DataProvider('providerTestInvalidConstructor')]
-  public function testInvalidConstructor($time, array $errors): void {
+  public function testInvalidConstructor(string $time, array $errors): void {
     $date = new DateTimePlus($time);
 
     $this->assertEquals(TRUE, $date->hasErrors());

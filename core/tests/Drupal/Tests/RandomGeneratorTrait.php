@@ -30,7 +30,7 @@ trait RandomGeneratorTrait {
    *
    * @see \Drupal\Component\Utility\Random::string()
    */
-  public function randomString($length = 8): string {
+  public function randomString(int $length = 8): string {
     return Random::string($length);
   }
 
@@ -48,7 +48,7 @@ trait RandomGeneratorTrait {
    *
    * @see \Drupal\Component\Utility\Random::name()
    */
-  protected function randomMachineName($length = 8): string {
+  protected function randomMachineName(int $length = 8): string {
     return Random::machineName($length);
   }
 
@@ -64,7 +64,7 @@ trait RandomGeneratorTrait {
    *
    * @see \Drupal\Component\Utility\Random::object()
    */
-  public function randomObject($size = 4): \stdClass {
+  public function randomObject(int $size = 4): \stdClass {
     return Random::object($size);
   }
 

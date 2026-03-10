@@ -16,6 +16,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -77,7 +78,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @legacy-covers ::getControllerClass
    */
   #[DataProvider('providerTestSetRouteOptionsWithStandardRoute')]
-  public function testSetRouteOptionsWithStandardRoute($controller): void {
+  public function testSetRouteOptionsWithStandardRoute(string $controller): void {
     $route = new Route('/example', [
       '_controller' => $controller,
     ]);
@@ -105,7 +106,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @legacy-covers ::getControllerClass
    */
   #[DataProvider('providerTestSetRouteOptionsWithStandardRouteWithArgument')]
-  public function testSetRouteOptionsWithStandardRouteWithArgument($controller): void {
+  public function testSetRouteOptionsWithStandardRouteWithArgument(string $controller): void {
     $route = new Route('/example/{argument}', [
       '_controller' => $controller,
       'argument' => 'test',
@@ -134,7 +135,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @legacy-covers ::getControllerClass
    */
   #[DataProvider('providerTestSetRouteOptionsWithContentController')]
-  public function testSetRouteOptionsWithContentController($controller): void {
+  public function testSetRouteOptionsWithContentController(string $controller): void {
     $route = new Route('/example/{argument}', [
       '_controller' => $controller,
       'argument' => 'test',
@@ -165,7 +166,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @legacy-covers ::setParametersFromReflection
    */
   #[DataProvider('providerTestSetRouteOptionsWithEntityTypeNoUpcasting')]
-  public function testSetRouteOptionsWithEntityTypeNoUpcasting($controller): void {
+  public function testSetRouteOptionsWithEntityTypeNoUpcasting(string $controller): void {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', [
@@ -197,7 +198,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @legacy-covers ::setParametersFromReflection
    */
   #[DataProvider('providerTestSetRouteOptionsWithEntityTypeUpcasting')]
-  public function testSetRouteOptionsWithEntityTypeUpcasting($controller): void {
+  public function testSetRouteOptionsWithEntityTypeUpcasting(string $controller): void {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', [
@@ -230,7 +231,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @legacy-covers ::setParametersFromReflection
    */
   #[DataProvider('providerTestSetRouteOptionsWithUnionEntityType')]
-  public function testSetRouteOptionsWithUnionEntityType($controller): void {
+  public function testSetRouteOptionsWithUnionEntityType(string $controller): void {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', [
@@ -497,7 +498,7 @@ class EntityResolverManagerTest extends UnitTestCase {
       ]);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
-      ->willReturnCallback(function ($entity_type) use ($definition, $revisionable_definition) {
+      ->willReturnCallback(function ($entity_type) use ($definition, $revisionable_definition): ?MockObject {
         if ($entity_type == 'entity_test') {
           return $definition;
         }

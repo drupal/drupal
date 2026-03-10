@@ -71,7 +71,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public static function providerTestGetAddPageRoute() {
+  public static function providerTestGetAddPageRoute(): array {
     $data = [];
 
     $entity_type1 = static::getEntityType();
@@ -118,7 +118,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public static function providerTestGetAddFormRoute() {
+  public static function providerTestGetAddFormRoute(): array {
     $prophet = new Prophet();
     $data = [];
 
@@ -229,7 +229,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public static function providerTestGetCanonicalRoute() {
+  public static function providerTestGetCanonicalRoute(): array {
     $prophet = new Prophet();
     $data = [];
 
@@ -285,7 +285,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public static function providerTestGetCollectionRoute() {
+  public static function providerTestGetCollectionRoute(): array {
     $data = [];
 
     $entity_type1 = static::getEntityType();

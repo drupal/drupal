@@ -219,7 +219,7 @@ class ExtensionListTest extends UnitTestCase {
    * Tests check incompatibility.
    */
   #[DataProvider('providerCheckIncompatibility')]
-  public function testCheckIncompatibility($additional_settings, $expected): void {
+  public function testCheckIncompatibility(array $additional_settings, bool $expected): void {
     $test_extension_list = $this->setupTestExtensionList(['test_name'], $additional_settings);
     $this->assertSame($expected, $test_extension_list->checkIncompatibility('test_name'));
   }

@@ -232,7 +232,7 @@ trait AssertContentTrait {
    *   The return value of the XPath search performed after converting the CSS
    *   selector to an XPath selector.
    */
-  protected function cssSelect($selector) {
+  protected function cssSelect(string $selector) {
     return $this->xpath((new CssSelectorConverter())->toXPath($selector));
   }
 
@@ -788,7 +788,7 @@ trait AssertContentTrait {
    *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
    *   a string. If left blank, a default message will be displayed.
    */
-  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '') {
+  protected function assertThemeOutput(string $callback, array $variables = [], $expected = '', $message = '') {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -1172,7 +1172,7 @@ trait AssertContentTrait {
    *
    * @see https://www.drupal.org/node/3476110
    */
-  protected function assertOptionByText($id, $text, $message = '') {
+  protected function assertOptionByText(string $id, string $text, $message = '') {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $options = $this->xpath('//select[@id=:id]//option[normalize-space(text())=:text]', [':id' => $id, ':text' => $text]);
     $this->assertTrue(isset($options[0]), $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
@@ -1440,7 +1440,7 @@ trait AssertContentTrait {
    * @return string
    *   XPath for specified values.
    */
-  protected function constructFieldXpath($attribute, $value) {
+  protected function constructFieldXpath(string $attribute, $value) {
     $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
     return $this->buildXPathQuery($xpath, [':value' => $value]);
   }

@@ -44,9 +44,9 @@ class ConditionTest extends UnitTestCase {
    * @legacy-covers ::compile
    */
   #[DataProvider('providerSimpleCondition')]
-  public function testSimpleCondition($expected, $field_name): void {
+  public function testSimpleCondition(string $expected, string $field_name): void {
     $connection = $this->prophesize(Connection::class);
-    $connection->escapeField($field_name)->will(function ($args) {
+    $connection->escapeField($field_name)->will(function ($args): string|array|null {
       return preg_replace('/[^A-Za-z0-9_.]+/', '', $args[0]);
     });
     $connection->mapConditionOperator('=')->willReturn(['operator' => '=']);
@@ -56,7 +56,7 @@ class ConditionTest extends UnitTestCase {
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
     $counter = 0;
-    $query_placeholder->nextPlaceholder()->will(function () use (&$counter) {
+    $query_placeholder->nextPlaceholder()->will(function () use (&$counter): int {
       return $counter++;
     });
     $query_placeholder->uniqueIdentifier()->willReturn(4);
@@ -87,7 +87,7 @@ class ConditionTest extends UnitTestCase {
   #[DataProvider('dataProviderTestCompileWithKnownOperators')]
   public function testCompileWithKnownOperators($expected, $field, $value, $operator, $expected_arguments = NULL): void {
     $connection = $this->prophesize(Connection::class);
-    $connection->escapeField(Argument::any())->will(function ($args) {
+    $connection->escapeField(Argument::any())->will(function ($args): string|array|null {
       return preg_replace('/[^A-Za-z0-9_.]+/', '', $args[0]);
     });
     $connection->mapConditionOperator(Argument::any())->willReturn(NULL);
@@ -97,7 +97,7 @@ class ConditionTest extends UnitTestCase {
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
     $counter = 0;
-    $query_placeholder->nextPlaceholder()->will(function () use (&$counter) {
+    $query_placeholder->nextPlaceholder()->will(function () use (&$counter): int {
       return $counter++;
     });
     $query_placeholder->uniqueIdentifier()->willReturn(4);
@@ -190,7 +190,7 @@ class ConditionTest extends UnitTestCase {
   #[DataProvider('providerTestCompileWithSqlInjectionForOperator')]
   public function testCompileWithSqlInjectionForOperator($operator): void {
     $connection = $this->prophesize(Connection::class);
-    $connection->escapeField(Argument::any())->will(function ($args) {
+    $connection->escapeField(Argument::any())->will(function ($args): string|array|null {
       return preg_replace('/[^A-Za-z0-9_.]+/', '', $args[0]);
     });
     $connection->mapConditionOperator(Argument::any())->willReturn(NULL);
@@ -200,7 +200,7 @@ class ConditionTest extends UnitTestCase {
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
     $counter = 0;
-    $query_placeholder->nextPlaceholder()->will(function () use (&$counter) {
+    $query_placeholder->nextPlaceholder()->will(function () use (&$counter): int {
       return $counter++;
     });
     $query_placeholder->uniqueIdentifier()->willReturn(4);

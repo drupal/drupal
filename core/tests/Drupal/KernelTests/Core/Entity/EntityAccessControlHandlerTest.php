@@ -303,7 +303,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    * Tests the default access handling for the ID and UUID fields.
    */
   #[DataProvider('providerTestFieldAccess')]
-  public function testFieldAccess($entity_class, array $entity_create_values, $expected_id_create_access): void {
+  public function testFieldAccess(string $entity_class, array $entity_create_values, bool $expected_id_create_access): void {
     // Set up a non-admin user that is allowed to create and update test
     // entities.
     \Drupal::currentUser()->setAccount($this->createUser(['administer entity_test content'], NULL, FALSE, ['uid' => 2]));

@@ -212,7 +212,7 @@ class TestMailManager extends MailManager {
   /**
    * {@inheritdoc}
    */
-  public function doMail($module, $key, $to, $langcode, $params = [], $reply = NULL, $send = TRUE) {
+  public function doMail($module, $key, $to, $langcode, $params = [], $reply = NULL, $send = TRUE): array {
     // Build a simplified message array and return it.
     $message = [
       'id' => $module . '_' . $key,

@@ -260,7 +260,7 @@ class NestedArrayTest extends TestCase {
    * Tests filter.
    */
   #[DataProvider('providerTestFilter')]
-  public function testFilter($array, $callable, $expected): void {
+  public function testFilter(array $array, ?callable $callable, $expected): void {
     $this->assertEquals($expected, NestedArray::filter($array, $callable));
   }
 
@@ -271,7 +271,7 @@ class NestedArrayTest extends TestCase {
     ];
     $data['1d-array-callable'] = [
       [0, 1, '', TRUE],
-      function ($element) {
+      function ($element): bool {
         return $element === '';
       },
       [2 => ''],
@@ -281,7 +281,7 @@ class NestedArrayTest extends TestCase {
     ];
     $data['2d-array-callable'] = [
       [[0, 1, '', TRUE], [0, 1, 2, 3]],
-      function ($element) {
+      function ($element): bool {
         return is_array($element) || $element === 3;
       },
       [0 => [], 1 => [3 => 3]],

@@ -167,8 +167,8 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
    * @return string[]
    *   Filtered statement list.
    */
-  protected function getStatementsForTable(array $statements, $table_name): array {
-    return array_filter($statements, function ($statement) use ($table_name) {
+  protected function getStatementsForTable(array $statements, string $table_name): array {
+    return array_filter($statements, function (string $statement) use ($table_name): bool {
       return $this->isStatementRelatedToTable($statement, $table_name);
     });
   }

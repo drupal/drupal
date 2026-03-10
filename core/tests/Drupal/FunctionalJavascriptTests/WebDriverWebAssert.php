@@ -15,7 +15,7 @@ class WebDriverWebAssert extends JSWebAssert {
    * @param int $code
    *   The status code.
    */
-  public function statusCodeEquals($code): void {
+  public function statusCodeEquals(int $code): void {
     @trigger_error('WebDriverWebAssert::statusCodeEquals() is deprecated in drupal:8.4.0 and is removed in drupal:12.0.0. See https://www.drupal.org/node/2857562', E_USER_DEPRECATED);
     parent::statusCodeEquals($code);
   }
@@ -26,7 +26,7 @@ class WebDriverWebAssert extends JSWebAssert {
    * @param int $code
    *   The status code.
    */
-  public function statusCodeNotEquals($code): void {
+  public function statusCodeNotEquals(int $code): void {
     @trigger_error('WebDriverWebAssert::statusCodeNotEquals() is deprecated in drupal:8.4.0 and is removed in drupal:12.0.0. See https://www.drupal.org/node/2857562', E_USER_DEPRECATED);
     parent::statusCodeNotEquals($code);
   }
@@ -52,7 +52,7 @@ class WebDriverWebAssert extends JSWebAssert {
    * @param string $value
    *   The value to check the header against.
    */
-  public function responseHeaderNotEquals($name, $value): void {
+  public function responseHeaderNotEquals(string $name, string $value): void {
     @trigger_error('WebDriverWebAssert::responseHeaderNotEquals() is deprecated in drupal:8.4.0 and is removed in drupal:12.0.0. See https://www.drupal.org/node/2857562', E_USER_DEPRECATED);
     parent::responseHeaderNotEquals($name, $value);
   }
@@ -65,7 +65,7 @@ class WebDriverWebAssert extends JSWebAssert {
    * @param string $value
    *   The value to check the header against.
    */
-  public function responseHeaderContains($name, $value): void {
+  public function responseHeaderContains(string $name, string $value): void {
     @trigger_error('WebDriverWebAssert::responseHeaderContains() is deprecated in drupal:8.4.0 and is removed in drupal:12.0.0. See https://www.drupal.org/node/2857562', E_USER_DEPRECATED);
     parent::responseHeaderContains($name, $value);
   }
@@ -78,7 +78,7 @@ class WebDriverWebAssert extends JSWebAssert {
    * @param string $value
    *   The value to check the header against.
    */
-  public function responseHeaderNotContains($name, $value): void {
+  public function responseHeaderNotContains(string $name, string $value): void {
     @trigger_error('WebDriverWebAssert::responseHeaderNotContains() is deprecated in drupal:8.4.0 and is removed in drupal:12.0.0. See https://www.drupal.org/node/2857562', E_USER_DEPRECATED);
     parent::responseHeaderNotContains($name, $value);
   }
@@ -91,7 +91,7 @@ class WebDriverWebAssert extends JSWebAssert {
    * @param string $regex
    *   The value to check the header against.
    */
-  public function responseHeaderMatches($name, $regex): void {
+  public function responseHeaderMatches(string $name, string $regex): void {
     @trigger_error('WebDriverWebAssert::responseHeaderMatches() is deprecated in drupal:8.4.0 and is removed in drupal:12.0.0. See https://www.drupal.org/node/2857562', E_USER_DEPRECATED);
     parent::responseHeaderMatches($name, $regex);
   }
@@ -104,7 +104,7 @@ class WebDriverWebAssert extends JSWebAssert {
    * @param string $regex
    *   The value to check the header against.
    */
-  public function responseHeaderNotMatches($name, $regex): void {
+  public function responseHeaderNotMatches(string $name, string $regex): void {
     @trigger_error('WebDriverWebAssert::responseHeaderNotMatches() is deprecated in drupal:8.4.0 and is removed in drupal:12.0.0. See https://www.drupal.org/node/2857562', E_USER_DEPRECATED);
     parent::responseHeaderNotMatches($name, $regex);
   }

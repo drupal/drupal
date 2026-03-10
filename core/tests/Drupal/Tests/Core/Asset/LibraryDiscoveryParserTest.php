@@ -733,7 +733,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    *   The expected exception message.
    */
   #[DataProvider('providerTestCssAssert')]
-  public function testCssAssert($extension, $exception_message): void {
+  public function testCssAssert(string $extension, string $exception_message): void {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with($extension)

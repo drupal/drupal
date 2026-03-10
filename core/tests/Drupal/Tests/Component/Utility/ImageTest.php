@@ -21,7 +21,7 @@ class ImageTest extends TestCase {
    * Tests all control flow branches in image_dimensions_scale().
    */
   #[DataProvider('providerTestScaleDimensions')]
-  public function testScaleDimensions($input, $output): void {
+  public function testScaleDimensions(array $input, array $output): void {
     // Process the test dataset.
     $return_value = Image::scaleDimensions($input['dimensions'], $input['width'], $input['height'], $input['upscale']);
 

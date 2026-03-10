@@ -121,7 +121,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
    * @legacy-covers ::install
    */
   #[DataProvider('providerTestInvalidCoreInstall')]
-  public function testInvalidCoreInstall($module_name, $install_dependencies): void {
+  public function testInvalidCoreInstall(string $module_name, bool $install_dependencies): void {
     $this->expectException(MissingDependencyException::class);
     $this->expectExceptionMessage("Unable to install modules: module '$module_name' is incompatible with this version of Drupal core.");
     $this->container->get('module_installer')->install([$module_name], $install_dependencies);

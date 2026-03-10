@@ -138,7 +138,7 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
    * @legacy-covers ::gc
    */
   #[DataProvider('providerTestOtherMethods')]
-  public function testOtherMethods($method, $expected_result, $args): void {
+  public function testOtherMethods(string $method, bool|string|int $expected_result, array $args): void {
     $invocation = $this->wrappedSessionHandler->expects($this->exactly(2))
       ->method($method)
       ->willReturn($expected_result);

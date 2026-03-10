@@ -131,7 +131,7 @@ class HtmxRequestInfoTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function getRequest() {
+  protected function getRequest(): Request {
     return $this->request;
   }
 

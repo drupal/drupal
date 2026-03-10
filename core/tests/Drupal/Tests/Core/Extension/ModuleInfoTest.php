@@ -22,7 +22,7 @@ class ModuleInfoTest extends UnitTestCase {
    * Tests that core module info files have the expected keys.
    */
   #[DataProvider('coreModuleListDataProvider')]
-  public function testModuleInfo($module): void {
+  public function testModuleInfo(string $module): void {
     $module_directory = __DIR__ . '/../../../../../modules/' . $module;
     $info = Yaml::decode(file_get_contents($module_directory . '/' . $module . '.info.yml'));
     $this->assertArrayHasKey('version', $info);

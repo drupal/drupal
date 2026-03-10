@@ -31,14 +31,14 @@ class StaticFileCacheBackend implements FileCacheBackendInterface {
    * @param array $configuration
    *   (optional) Configuration used to configure this object.
    */
-  public function __construct($configuration) {
+  public function __construct(array $configuration) {
     $this->bin = $configuration['bin'] ?? 'file_cache';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function fetch(array $cids) {
+  public function fetch(array $cids): array {
     $result = [];
     foreach ($cids as $cid) {
       if (isset(static::$cache[$this->bin][$cid])) {

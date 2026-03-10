@@ -84,7 +84,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
    * @legacy-covers ::buildExternalUrl
    */
   #[DataProvider('providerTestAssembleWithExternalUrl')]
-  public function testAssembleWithExternalUrl($uri, array $options, $expected): void {
+  public function testAssembleWithExternalUrl(string $uri, array $options, string $expected): void {
     $this->setupRequestStack(FALSE);
     $this->assertEquals($expected, $this->unroutedUrlAssembler->assemble($uri, $options));
     $generated_url = $this->unroutedUrlAssembler->assemble($uri, $options, TRUE);
@@ -140,7 +140,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
    * @legacy-covers ::buildLocalUrl
    */
   #[DataProvider('providerTestAssembleWithLocalUri')]
-  public function testAssembleWithLocalUri($uri, array $options, $subdir, $expected): void {
+  public function testAssembleWithLocalUri(string $uri, array $options, bool $subdir, string $expected): void {
     $this->setupRequestStack($subdir);
 
     $this->assertEquals($expected, $this->unroutedUrlAssembler->assemble($uri, $options));
@@ -182,7 +182,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     $this->setupRequestStack(FALSE);
     $this->pathProcessor->expects($this->exactly(2))
       ->method('processOutbound')
-      ->willReturnCallback(function ($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
+      ->willReturnCallback(function ($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL): string {
         if ($bubbleable_metadata) {
           $bubbleable_metadata->setCacheContexts(['some-cache-context']);
         }
@@ -207,7 +207,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     $this->pathProcessor->expects($this->exactly(2))
       ->method('processOutbound')
       ->with('/test-uri', $this->anything(), $this->anything(), $this->anything())
-      ->willReturnCallback(function ($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
+      ->willReturnCallback(function ($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL): string {
         $bubbleable_metadata?->setCacheContexts(['some-cache-context']);
         return '/test-other-uri';
       });

@@ -39,7 +39,7 @@ class DiscoveryTraitTest extends TestCase {
    * Tests do get definition.
    */
   #[DataProvider('providerDoGetDefinition')]
-  public function testDoGetDefinition($expected, $definitions, $plugin_id): void {
+  public function testDoGetDefinition(?string $expected, array $definitions, string $plugin_id): void {
     $trait = new DiscoveryTraitMockableClass();
     // Un-protect the method using reflection.
     $method_ref = new \ReflectionMethod($trait, 'doGetDefinition');
@@ -68,7 +68,7 @@ class DiscoveryTraitTest extends TestCase {
    * Tests do get definition exception.
    */
   #[DataProvider('providerDoGetDefinitionException')]
-  public function testDoGetDefinitionException($expected, $definitions, $plugin_id): void {
+  public function testDoGetDefinitionException(bool $expected, array $definitions, string $plugin_id): void {
     $trait = new DiscoveryTraitMockableClass();
     // Un-protect the method using reflection.
     $method_ref = new \ReflectionMethod($trait, 'doGetDefinition');
@@ -81,7 +81,7 @@ class DiscoveryTraitTest extends TestCase {
    * Tests get definition.
    */
   #[DataProvider('providerDoGetDefinition')]
-  public function testGetDefinition($expected, $definitions, $plugin_id): void {
+  public function testGetDefinition(?string $expected, array $definitions, string $plugin_id): void {
     // Since getDefinition is a wrapper around doGetDefinition(), we can re-use
     // its data provider. We just have to tell abstract method getDefinitions()
     // to use the $definitions array.
@@ -102,7 +102,7 @@ class DiscoveryTraitTest extends TestCase {
    * Tests get definition exception.
    */
   #[DataProvider('providerDoGetDefinitionException')]
-  public function testGetDefinitionException($expected, $definitions, $plugin_id): void {
+  public function testGetDefinitionException(bool $expected, array $definitions, string $plugin_id): void {
     // Since getDefinition is a wrapper around doGetDefinition(), we can re-use
     // its data provider. We just have to tell abstract method getDefinitions()
     // to use the $definitions array.
@@ -135,7 +135,7 @@ class DiscoveryTraitTest extends TestCase {
    * Tests has definition.
    */
   #[DataProvider('providerHasDefinition')]
-  public function testHasDefinition($expected, $plugin_id): void {
+  public function testHasDefinition(bool $expected, string $plugin_id): void {
     $trait = $this->getMockBuilder(DiscoveryTraitMockableClass::class)
       ->onlyMethods(['getDefinition'])
       ->getMock();

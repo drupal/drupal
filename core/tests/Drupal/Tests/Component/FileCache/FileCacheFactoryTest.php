@@ -91,7 +91,7 @@ class FileCacheFactoryTest extends TestCase {
    * Tests get configuration overrides.
    */
   #[DataProvider('configurationDataProvider')]
-  public function testGetConfigurationOverrides($configuration, $arguments, $class): void {
+  public function testGetConfigurationOverrides($configuration, $arguments, string $class): void {
     FileCacheFactory::setConfiguration($configuration);
 
     $file_cache = FileCacheFactory::get('test_foo_settings', $arguments);

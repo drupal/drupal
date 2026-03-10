@@ -41,7 +41,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
     $file_url_generator->expects($this->any())
       ->method('generateString')
       ->with($this->isString())
-      ->willReturnCallback(function ($uri) {
+      ->willReturnCallback(function (string $uri): string {
          return 'generated-relative-url:' . $uri;
       });
     $assetQueryString->get()->willReturn('');
@@ -80,7 +80,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    * @see testRender
    */
   public static function providerTestRender(): array {
-    $create_link_element = function ($href, $media = 'all', $custom_attributes = []) {
+    $create_link_element = function ($href, $media = 'all', $custom_attributes = []): array {
       $attributes = [
         'rel' => 'stylesheet',
         'media' => $media,
@@ -93,7 +93,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       ];
     };
 
-    $create_file_css_asset = function ($data, $media = 'all', $preprocess = TRUE) {
+    $create_file_css_asset = function ($data, $media = 'all', $preprocess = TRUE): array {
       return ['group' => 0, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data];
     };
 

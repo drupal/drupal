@@ -45,7 +45,7 @@ class MenuLinkMock extends MenuLinkBase {
   /**
    * Create an instance from a definition with at least id, title, route_name.
    */
-  public static function createMock($definition): static {
+  public static function createMock(array $definition): static {
     return new static([], $definition['id'], $definition + static::$defaults);
   }
 

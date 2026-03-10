@@ -70,7 +70,7 @@ class XssTest extends TestCase {
    *   \Drupal\Component\Utility\Xss::filter().
    */
   #[DataProvider('providerTestFilterXssNormalized')]
-  public function testFilterXssNormalized($value, $expected, $message, ?array $allowed_tags = NULL): void {
+  public function testFilterXssNormalized(string $value, string $expected, string $message, ?array $allowed_tags = NULL): void {
     if ($allowed_tags === NULL) {
       $value = Xss::filter($value);
     }
@@ -137,7 +137,7 @@ class XssTest extends TestCase {
    *   \Drupal\Component\Utility\Xss::filter().
    */
   #[DataProvider('providerTestFilterXssNotNormalized')]
-  public function testFilterXssNotNormalized($value, $expected, $message, ?array $allowed_tags = NULL): void {
+  public function testFilterXssNotNormalized($value, string $expected, string $message, ?array $allowed_tags = NULL): void {
     if ($allowed_tags === NULL) {
       $value = Xss::filter($value);
     }
@@ -455,7 +455,7 @@ class XssTest extends TestCase {
    *   The assertion message to display upon failure.
    */
   #[DataProvider('providerTestInvalidMultiByte')]
-  public function testInvalidMultiByte($value, $expected, $message): void {
+  public function testInvalidMultiByte(string $value, string $expected, string $message): void {
     $this->assertEquals(Xss::filter($value), $expected, $message);
   }
 
@@ -492,7 +492,7 @@ class XssTest extends TestCase {
    * @legacy-covers ::attributes
    */
   #[DataProvider('providerTestAttributes')]
-  public function testAttribute($value, $expected, $message, $allowed_tags = NULL): void {
+  public function testAttribute(string $value, string $expected, string $message, ?array $allowed_tags = NULL): void {
     $value = Xss::filter($value, $allowed_tags);
     $this->assertEquals($expected, $value, $message);
   }
@@ -590,7 +590,7 @@ class XssTest extends TestCase {
    *   The assertion message to display upon failure.
    */
   #[DataProvider('providerTestFilterXssAdminNotNormalized')]
-  public function testFilterXssAdminNotNormalized($value, $expected, $message): void {
+  public function testFilterXssAdminNotNormalized(string $value, string $expected, string $message): void {
     $this->assertNotNormalized(Xss::filterAdmin($value), $expected, $message);
   }
 

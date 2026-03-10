@@ -24,7 +24,7 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
    * Tests the resolveConditions() method.
    */
   #[DataProvider('providerTestResolveConditions')]
-  public function testResolveConditions($conditions, $logic, $expected): void {
+  public function testResolveConditions(array $conditions, string $logic, bool $expected): void {
     $mocks['true'] = $this->createMock('Drupal\Core\Condition\ConditionInterface');
     $mocks['true']->expects($this->any())
       ->method('execute')
@@ -54,7 +54,7 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
     $this->assertEquals($expected, $trait_object->resolveConditions($conditions, $logic));
   }
 
-  public static function providerTestResolveConditions() {
+  public static function providerTestResolveConditions(): \Iterator {
     yield [[], 'and', TRUE];
     yield [[], 'or', FALSE];
     yield [['false'], 'or', FALSE];

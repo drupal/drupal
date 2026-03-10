@@ -154,7 +154,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
    * Tests that an entity annotation can mark the data definition as internal.
    */
   #[DataProvider('entityDefinitionIsInternalProvider')]
-  public function testEntityDefinitionIsInternal($internal, $expected): void {
+  public function testEntityDefinitionIsInternal(?bool $internal, bool $expected): void {
     $entity_type_id = $this->randomMachineName();
 
     $entity_type = $this->prophesize(EntityTypeInterface::class);

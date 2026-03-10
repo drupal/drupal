@@ -65,7 +65,7 @@ class ConfigTest extends TestCase {
    * @legacy-covers ::getText
    */
   #[DataProvider('provideGetMessageText')]
-  public function testGetMessageText($expected, $config): void {
+  public function testGetMessageText(array $expected, array $config): void {
     // Root package has our config.
     $root = $this->createMock(RootPackageInterface::class);
     $root->expects($this->once())

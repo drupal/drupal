@@ -69,7 +69,7 @@ class DenyNoCacheRoutesTest extends UnitTestCase {
    * @legacy-covers ::check
    */
   #[DataProvider('providerDenyNoCacheRoutesPolicy')]
-  public function testDenyNoCacheRoutesPolicy($expected_result, ?Route $route): void {
+  public function testDenyNoCacheRoutesPolicy(?string $expected_result, ?Route $route): void {
     $this->routeMatch->expects($this->once())
       ->method('getRouteObject')
       ->willReturn($route);

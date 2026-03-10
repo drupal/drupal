@@ -48,7 +48,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * @return \Drupal\Core\Config\Entity\ConfigEntityTypeInterface
    *   The ConfigEntityType object.
    */
-  protected function setUpConfigEntityType($definition): ConfigEntityType {
+  protected function setUpConfigEntityType(array $definition): ConfigEntityType {
     if (!isset($definition['id'])) {
       $definition += [
         'id' => 'example_config_entity_type',
@@ -138,7 +138,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * Tests the getConfigPrefix() method.
    */
   #[DataProvider('providerTestGetConfigPrefix')]
-  public function testGetConfigPrefix($definition, $expected): void {
+  public function testGetConfigPrefix(array $definition, string $expected): void {
     $entity_type = $this->setUpConfigEntityType($definition);
     $this->assertSame($expected, $entity_type->getConfigPrefix());
   }

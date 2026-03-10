@@ -41,7 +41,7 @@ trait XdebugRequestTrait {
     }
     elseif ($server->has('XDEBUG_CONFIG')) {
       // $_SERVER['XDEBUG_CONFIG'] has the form "key1=value1 key2=value2 ...".
-      $pairs = array_filter(explode(' ', $server->get('XDEBUG_CONFIG')), function ($value) {
+      $pairs = array_filter(explode(' ', $server->get('XDEBUG_CONFIG')), function ($value): bool {
         return str_contains($value, '=');
       });
       foreach ($pairs as $pair) {

@@ -27,7 +27,7 @@ class RouteCompilerTest extends UnitTestCase {
    *   The expected fit returned by RouteCompiler::getFit()
    */
   #[DataProvider('providerTestGetFit')]
-  public function testGetFit($path, $expected): void {
+  public function testGetFit(string $path, int $expected): void {
     $route_compiler = new RouteCompiler();
     $result = $route_compiler->getFit($path);
     $this->assertSame($expected, $result);

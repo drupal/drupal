@@ -82,7 +82,7 @@ class PluginDependencyTraitTest extends UnitTestCase {
   /**
    * Provides test data for plugin dependencies.
    */
-  public static function providerTestPluginDependencies() {
+  public static function providerTestPluginDependencies(): array {
     $prophet = new Prophet();
     $data = [];
 

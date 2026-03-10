@@ -189,7 +189,7 @@ class TokenTest extends UnitTestCase {
   public function testReplaceWithHookTokensWithBubbleableMetadata(): void {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
-      ->willReturnCallback(function ($hook_name, $args) {
+      ->willReturnCallback(function ($hook_name, $args): array {
         $cacheable_metadata = $args[4];
         $cacheable_metadata->addCacheContexts(['custom_context']);
         $cacheable_metadata->addCacheTags(['node:1']);

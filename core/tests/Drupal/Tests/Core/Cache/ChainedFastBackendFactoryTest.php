@@ -12,6 +12,7 @@ use Drupal\Core\Cache\ChainedFastBackendFactory;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\Core\Cache\ChainedFastBackendFactory.
@@ -60,7 +61,7 @@ class ChainedFastBackendFactoryTest extends UnitTestCase {
     $container->expects($this->exactly(2))
       ->method('get')
       ->willReturnCallback(
-        function ($service) use ($testFastCacheFactory, $testConsistentCacheFactory) {
+        function ($service) use ($testFastCacheFactory, $testConsistentCacheFactory): MockObject {
           return match ($service) {
             'cache.backend.test_consistent' => $testConsistentCacheFactory,
             'cache.backend.test_fast' => $testFastCacheFactory,

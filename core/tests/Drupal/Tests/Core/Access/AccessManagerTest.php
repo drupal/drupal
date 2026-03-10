@@ -167,7 +167,7 @@ class AccessManagerTest extends UnitTestCase {
     $access_check->expects($this->exactly(2))
       ->method('applies')
       ->with($this->isInstanceOf('Symfony\Component\Routing\Route'))
-      ->willReturnCallback(function (Route $route) {
+      ->willReturnCallback(function (Route $route): bool {
         return $route->getRequirement('_bar') == 2;
       });
 
@@ -242,7 +242,7 @@ class AccessManagerTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Access\AccessManagerTest::testCheckConjunctions()
    */
-  public static function providerTestCheckConjunctions() {
+  public static function providerTestCheckConjunctions(): array {
     $access_allow = AccessResult::allowed();
     $access_deny = AccessResult::neutral();
     $access_kill = AccessResult::forbidden();
@@ -292,7 +292,7 @@ class AccessManagerTest extends UnitTestCase {
    * Tests \Drupal\Core\Access\AccessManager::check() with conjunctions.
    */
   #[DataProvider('providerTestCheckConjunctions')]
-  public function testCheckConjunctions($name, $condition_one, $condition_two, $expected_access): void {
+  public function testCheckConjunctions(string $name, $condition_one, $condition_two, $expected_access): void {
     $this->setupAccessChecker();
     $this->container->register('test_access_defined', DefinedTestAccessCheck::class);
     $this->checkProvider->addCheckService('test_access_defined', 'access', ['_test_access']);
@@ -380,7 +380,7 @@ class AccessManagerTest extends UnitTestCase {
       ->willReturn(['value' => 'upcasted_value']);
 
     $this->setupAccessArgumentsResolverFactory($this->exactly(2))
-      ->with($this->callback(function ($route_match) {
+      ->with($this->callback(function ($route_match): bool {
         return $route_match->getParameters()->get('value') == 'upcasted_value';
       }));
 
@@ -430,7 +430,7 @@ class AccessManagerTest extends UnitTestCase {
       ->willReturn(['value' => 'upcasted_value']);
 
     $this->setupAccessArgumentsResolverFactory($this->exactly(2))
-      ->with($this->callback(function ($route_match) {
+      ->with($this->callback(function ($route_match): bool {
         return $route_match->getParameters()->get('value') == 'upcasted_value';
       }));
 
@@ -471,7 +471,7 @@ class AccessManagerTest extends UnitTestCase {
    * Tests that an access checker throws an exception for not allowed values.
    */
   #[DataProvider('providerCheckException')]
-  public function testCheckException($return_value): void {
+  public function testCheckException(string|int|array $return_value): void {
     $route_provider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
 
     // Setup a test route for each access configuration.
@@ -545,11 +545,11 @@ class AccessManagerTest extends UnitTestCase {
     }
     return $this->argumentsResolverFactory->expects($constraint)
       ->method('getArgumentsResolver')
-      ->willReturnCallback(function ($route_match, $account) {
+      ->willReturnCallback(function ($route_match, $account): MockObject {
         $resolver = $this->createMock('Drupal\Component\Utility\ArgumentsResolverInterface');
         $resolver->expects($this->any())
           ->method('getArguments')
-          ->willReturnCallback(function ($callable) use ($route_match) {
+          ->willReturnCallback(function ($callable) use ($route_match): array {
             return [$route_match->getRouteObject()];
           });
 

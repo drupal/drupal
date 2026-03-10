@@ -40,7 +40,7 @@ class XdebugRequestTraitTest extends UnitTestCase {
    * @return iterable
    *   Test scenarios.
    */
-  public static function extractCookiesDataProvider() {
+  public static function extractCookiesDataProvider(): \Iterator {
     yield 'no XDEBUG_CONFIG' => [[], []];
     yield 'empty string XDEBUG_CONFIG' => [['XDEBUG_CONFIG' => ''], []];
     yield 'only space string XDEBUG_CONFIG' => [['XDEBUG_CONFIG' => ' '], []];

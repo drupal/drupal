@@ -131,7 +131,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   public function testBuildResponseResponse(): void {
     $triggering_element = [
       '#ajax' => [
-        'callback' => function (array $form, FormStateInterface $form_state) {
+        'callback' => function (array $form, FormStateInterface $form_state): AjaxResponse {
           return new AjaxResponse([]);
         },
       ],
@@ -159,7 +159,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   public function testBuildResponseWithCommands(): void {
     $triggering_element = [
       '#ajax' => [
-        'callback' => function (array $form, FormStateInterface $form_state) {
+        'callback' => function (array $form, FormStateInterface $form_state): AjaxResponse {
           return new AjaxResponse([]);
         },
       ],
@@ -195,7 +195,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   public function testBuildResponseWithUpdateCommand(): void {
     $triggering_element = [
       '#ajax' => [
-        'callback' => function (array $form, FormStateInterface $form_state) {
+        'callback' => function (array $form, FormStateInterface $form_state): AjaxResponse {
           return new AjaxResponse([]);
         },
       ],
