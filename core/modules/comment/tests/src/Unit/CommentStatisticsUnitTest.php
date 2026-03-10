@@ -6,7 +6,11 @@ namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentStatistics;
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\State\StateInterface;
+use Drupal\sqlite\Driver\Database\sqlite\Statement;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -59,27 +63,22 @@ class CommentStatisticsUnitTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->statement = $this->getMockBuilder('Drupal\sqlite\Driver\Database\sqlite\Statement')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $this->statement->expects($this->any())
+    $this->statement = $this->createStub(Statement::class);
+    $this->statement
       ->method('fetchObject')
       ->willReturnCallback([$this, 'fetchObjectCallback']);
 
-    $this->select = $this->getMockBuilder('Drupal\Core\Database\Query\Select')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->select = $this->createStub(Select::class);
 
-    $this->select->expects($this->any())
+    $this->select
       ->method('fields')
       ->willReturnSelf();
 
-    $this->select->expects($this->any())
+    $this->select
       ->method('condition')
       ->willReturnSelf();
 
-    $this->select->expects($this->any())
+    $this->select
       ->method('execute')
       ->willReturn($this->statement);
 
@@ -91,7 +90,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
       ->method('select')
       ->willReturn($this->select);
 
-    $this->commentStatistics = new CommentStatistics($this->database, $this->createMock('Drupal\Core\Session\AccountInterface'), $this->createMock(EntityTypeManagerInterface::class), $this->createMock('Drupal\Core\State\StateInterface'), $this->createMock(TimeInterface::class), $this->database);
+    $this->commentStatistics = new CommentStatistics($this->database, $this->createStub(AccountInterface::class), $this->createStub(EntityTypeManagerInterface::class), $this->createStub(StateInterface::class), $this->createStub(TimeInterface::class), $this->database);
   }
 
   /**

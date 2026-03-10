@@ -36,8 +36,8 @@ class EntityLinkTest extends UnitTestCase {
   public function testRenderNullEntity(): void {
     $row = new ResultRow();
     $field = new EntityLink(['entity_type' => 'foo', 'entity field' => 'bar'], '', []);
-    $view = $this->createMock(ViewExecutable::class);
-    $display = $this->createMock(DisplayPluginBase::class);
+    $view = $this->createStub(ViewExecutable::class);
+    $display = $this->createStub(DisplayPluginBase::class);
     $field->init($view, $display);
     $this->assertEmpty($field->render($row));
   }

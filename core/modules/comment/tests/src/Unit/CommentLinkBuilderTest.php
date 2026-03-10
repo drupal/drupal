@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentLinkBuilder;
+use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -25,7 +29,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Comment manager mock.
    *
-   * @var \Drupal\comment\CommentManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\comment\CommentManagerInterface|\PHPUnit\Framework\MockObject\Stub
    */
   protected $commentManager;
 
@@ -39,7 +43,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Current user proxy mock.
    *
-   * @var \Drupal\Core\Session\AccountProxyInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Session\AccountProxyInterface|\PHPUnit\Framework\MockObject\Stub
    */
   protected $currentUser;
 
@@ -63,20 +67,19 @@ class CommentLinkBuilderTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->commentManager = $this->createMock('\Drupal\comment\CommentManagerInterface');
+    $this->commentManager = $this->createStub(CommentManagerInterface::class);
     $this->stringTranslation = $this->getStringTranslationStub();
-    $this->currentUser = $this->createMock('\Drupal\Core\Session\AccountProxyInterface');
+    $this->currentUser = $this->createStub(AccountProxyInterface::class);
     $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->stringTranslation);
-    $this->commentManager->expects($this->any())
+    $this->commentManager
       ->method('getFields')
-      ->with('node')
       ->willReturn([
         'comment' => [],
       ]);
-    $this->commentManager->expects($this->any())
+    $this->commentManager
       ->method('forbiddenMessage')
       ->willReturn("Can't let you do that Dave.");
-    $this->stringTranslation->expects($this->any())
+    $this->stringTranslation
       ->method('formatPlural')
       ->willReturnArgument(1);
   }
@@ -103,16 +106,16 @@ class CommentLinkBuilderTest extends UnitTestCase {
   #[DataProvider('getLinkCombinations')]
   public function testCommentLinkBuilder(array $node_args, $context, $has_access_comments, $has_post_comments, $is_anonymous, $expected): void {
     $node = $this->getMockNode(...$node_args);
-    $this->currentUser->expects($this->any())
+    $this->currentUser
       ->method('hasPermission')
       ->willReturnMap([
         ['access comments', $has_access_comments],
         ['post comments', $has_post_comments],
       ]);
-    $this->currentUser->expects($this->any())
+    $this->currentUser
       ->method('isAuthenticated')
       ->willReturn(!$is_anonymous);
-    $this->currentUser->expects($this->any())
+    $this->currentUser
       ->method('isAnonymous')
       ->willReturn($is_anonymous);
     $links = $this->commentLinkBuilder->buildCommentedEntityLinks($node, $context);
@@ -238,7 +241,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
   }
 
   /**
-   * Builds a mock node based on given scenario.
+   * Builds a stub node based on given scenario.
    *
    * @param bool $has_field
    *   TRUE if the node has the 'comment' field.
@@ -249,12 +252,12 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * @param int $comment_count
    *   Number of comments against the field.
    *
-   * @return \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject
-   *   Mock node for testing.
+   * @return \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\Stub
+   *   Stub node for testing.
    */
   protected function getMockNode($has_field, $comment_status, $form_location, $comment_count) {
-    $node = $this->createMock('\Drupal\node\NodeInterface');
-    $node->expects($this->any())
+    $node = $this->createStub(NodeInterface::class);
+    $node
       ->method('hasField')
       ->willReturn($has_field);
 
@@ -266,35 +269,32 @@ class CommentLinkBuilderTest extends UnitTestCase {
       'comment_count' => $comment_count,
       'last_comment_timestamp' => $this->timestamp,
     ];
-    $node->expects($this->any())
+    $node
       ->method('get')
-      ->with('comment')
       ->willReturn($field_item);
 
-    $field_definition = $this->createMock('\Drupal\Core\Field\FieldDefinitionInterface');
-    $field_definition->expects($this->any())
+    $field_definition = $this->createStub(FieldDefinitionInterface::class);
+    $field_definition
       ->method('getSetting')
-      ->with('form_location')
       ->willReturn($form_location);
-    $node->expects($this->any())
+    $node
       ->method('getFieldDefinition')
-      ->with('comment')
       ->willReturn($field_definition);
 
-    $node->expects($this->any())
+    $node
       ->method('language')
       ->willReturn('und');
 
-    $node->expects($this->any())
+    $node
       ->method('getEntityTypeId')
       ->willReturn('node');
 
-    $node->expects($this->any())
+    $node
       ->method('id')
       ->willReturn(1);
 
     $url = Url::fromRoute('node.view');
-    $node->expects($this->any())
+    $node
       ->method('toUrl')
       ->willReturn($url);
 
