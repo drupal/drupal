@@ -115,9 +115,6 @@ class UpdateRequirements {
     if ($status != UpdateManagerInterface::CURRENT) {
       $requirement['reason'] = $status;
       $requirement['severity'] = RequirementSeverity::Error;
-      // When updates are available, append the available updates link to the
-      // message from _update_message_text(), and format the two translated
-      // strings together in a single paragraph.
       $requirement['description'][] = ['#markup' => _update_message_text($type, $status)];
       if (!in_array($status, [
         UpdateFetcherInterface::UNKNOWN,
@@ -125,13 +122,17 @@ class UpdateRequirements {
         UpdateFetcherInterface::NOT_FETCHED,
         UpdateFetcherInterface::FETCH_PENDING,
       ])) {
-        $requirement['description'][] = [
-          '#prefix' => ' ',
-          '#markup' => $this->t('See the <a href=":available_updates">available updates</a> page for more information.', [
-            ':available_updates' => Url::fromRoute('update.status')
-              ->toString(),
-          ]),
-        ];
+        $url = Url::fromRoute('update.status');
+        // When updates are available, if the current user has access to the
+        // available updates report, append the available updates link to the
+        // message from _update_message_text(), and format the two translated
+        // strings together in a single paragraph.
+        if ($url->access()) {
+          $requirement['description'][] = [
+            '#prefix' => ' ',
+            '#markup' => $this->t('See the <a href=":available_updates">available updates</a> page for more information.', [':available_updates' => $url->toString()]),
+          ];
+        }
       }
     }
     switch ($status) {

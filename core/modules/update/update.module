@@ -164,11 +164,16 @@ function update_fetch_data_finished($success, $results): void {
  *   Integer constant specifying why message is generated.
  * @param string $langcode
  *   (optional) A language code to use. Defaults to NULL.
+ * @param bool $is_email
+ *   (optional) Controls if this function is used for generating mail. If TRUE,
+ *   URLs will be absolute and will be included without access checks. If FALSE,
+ *   links will be relative and will only be included if the current user can
+ *   access them. Defaults to FALSE.
  *
  * @return \Drupal\Core\StringTranslation\TranslatableMarkup
  *   The properly translated error message for the given key.
  */
-function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
+function _update_message_text($msg_type, $msg_reason, $langcode = NULL, bool $is_email = FALSE) {
   $text = '';
   switch ($msg_reason) {
     case UpdateManagerInterface::NOT_SECURE:
@@ -211,11 +216,25 @@ function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
     case UpdateFetcherInterface::NOT_CHECKED:
     case UpdateFetcherInterface::NOT_FETCHED:
     case UpdateFetcherInterface::FETCH_PENDING:
+      $url = Url::fromRoute('update.status', [], [
+        'absolute' => $is_email,
+        'language' => $langcode,
+      ]);
       if ($msg_type == 'core') {
-        $text = t('There was a problem checking <a href=":update-report">available updates</a> for Drupal.', [':update-report' => Url::fromRoute('update.status')->toString()], ['langcode' => $langcode]);
+        if ($url->access() || $is_email) {
+          return t('There was a problem checking <a href=":update-report">available updates</a> for Drupal.', [
+            ':update-report' => $url->toString(),
+          ], ['langcode' => $langcode]);
+        }
+        return t('There was a problem checking available updates for Drupal.', [], ['langcode' => $langcode]);
       }
       else {
-        $text = t('There was a problem checking <a href=":update-report">available updates</a> for your modules or themes.', [':update-report' => Url::fromRoute('update.status')->toString()], ['langcode' => $langcode]);
+        if ($url->access() || $is_email) {
+          return t('There was a problem checking <a href=":update-report">available updates</a> for your modules or themes.', [
+            ':update-report' => $url->toString(),
+          ], ['langcode' => $langcode]);
+        }
+        return t('There was a problem checking available updates for Drupal.', [], ['langcode' => $langcode]);
       }
       break;
   }
