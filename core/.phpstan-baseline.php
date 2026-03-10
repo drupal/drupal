@@ -10838,43 +10838,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\Views\\\\DisplayBlockTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\Views\\\\DisplayBlockTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\Views\\\\DisplayBlockTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\Views\\\\DisplayBlockTest\\:\\:assertNoBlockAppears\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\Views\\\\DisplayBlockTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\Views\\\\DisplayBlockTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\Views\\\\DisplayBlockTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
@@ -11912,42 +11876,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentNonNodeTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentRssTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentRssTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentRssTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentRssTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentRssTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentRssTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentRssTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentRssTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentRssTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentRssTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentRssTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentRssTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentTestBase\\:\\:deleteComment\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -12432,42 +12360,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/tests/config_transformer_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\config\\\\Functional\\\\CacheabilityMetadataConfigOverrideIntegrationTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/Functional/CacheabilityMetadataConfigOverrideIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\config\\\\Functional\\\\CacheabilityMetadataConfigOverrideIntegrationTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/Functional/CacheabilityMetadataConfigOverrideIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\config\\\\Functional\\\\CacheabilityMetadataConfigOverrideIntegrationTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/Functional/CacheabilityMetadataConfigOverrideIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\config\\\\Functional\\\\CacheabilityMetadataConfigOverrideIntegrationTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/Functional/CacheabilityMetadataConfigOverrideIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\config\\\\Functional\\\\CacheabilityMetadataConfigOverrideIntegrationTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/Functional/CacheabilityMetadataConfigOverrideIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\config\\\\Functional\\\\CacheabilityMetadataConfigOverrideIntegrationTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/Functional/CacheabilityMetadataConfigOverrideIntegrationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\config\\\\Unit\\\\Menu\\\\ConfigLocalTasksTest\\:\\:getConfigAdminRoutes\\(\\) has no return type specified\\.$#',
@@ -13382,36 +13274,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUITestBase\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUITestBase\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUITestBase\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUITestBase\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUITestBase\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUITestBase\\:\\:doTestAuthoringInfo\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -13466,12 +13328,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUITestBase\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUITestBase\\:\\:getEditValues\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -13482,42 +13338,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationWorkflowsTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationWorkflowsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationWorkflowsTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationWorkflowsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationWorkflowsTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationWorkflowsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationWorkflowsTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationWorkflowsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationWorkflowsTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationWorkflowsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationWorkflowsTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationWorkflowsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationWorkflowsTest\\:\\:getTranslatorPermissions\\(\\) has no return type specified\\.$#',
@@ -16250,42 +16070,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageAdminStylesTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageFieldDisplayTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageFieldDisplayTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageFieldDisplayTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageFieldDisplayTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageFieldDisplayTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageFieldDisplayTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageFieldTestBase\\:\\:createImageField\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -18614,42 +18398,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\InlineBlockPrivateFilesTest\\:\\:attachFileField\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19974,42 +19722,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Functional/FieldFormatter/OEmbedFormatterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\MediaAccessTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/MediaAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\MediaAccessTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/MediaAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\MediaAccessTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/MediaAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\MediaAccessTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/MediaAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\MediaAccessTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/MediaAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\MediaAccessTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/MediaAccessTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\MediaTranslationUITest\\:\\:getNewEntityValues\\(\\) has no return type specified\\.$#',
@@ -22550,78 +22262,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Routing/RouteSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeAccessCacheabilityTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeAccessCacheabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeAccessCacheabilityTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeAccessCacheabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeAccessCacheabilityTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeAccessCacheabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeAccessCacheabilityTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeAccessCacheabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeAccessCacheabilityTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeAccessCacheabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeAccessCacheabilityTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeAccessCacheabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeBlockFunctionalTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeBlockFunctionalTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeBlockFunctionalTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeBlockFunctionalTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeBlockFunctionalTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeBlockFunctionalTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeBlockFunctionalTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTestBase\\:\\:assertNodeAccess\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -22670,43 +22310,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTypeTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTypeTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTypeTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTypeTest\\:\\:assertMenuActiveTrail\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTypeTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTypeTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTypeTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
@@ -22818,42 +22422,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/Rest/NodeXmlBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:clickContextualLink\\(\\) has no return type specified\\.$#',
@@ -23052,78 +22620,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/page_cache/src/StackMiddleware/PageCache.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTagsIntegrationTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTagsIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTagsIntegrationTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTagsIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTagsIntegrationTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTagsIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTagsIntegrationTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTagsIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTagsIntegrationTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTagsIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTagsIntegrationTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTagsIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\page_cache\\\\Functional\\\\PageCacheTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/tests/src/Functional/PageCacheTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\path\\\\Form\\\\PathFilterForm\\:\\:resetForm\\(\\) has no return type specified\\.$#',
@@ -24122,78 +23618,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Rest/RestResourceConfigXmlBasicAuthTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerEntityTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerEntityTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerEntityTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerEntityTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerEntityTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerEntityTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Kernel\\\\StubRequestHandlerResourcePlugin\\:\\:delete\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -24644,24 +24068,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchNumbersTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchPageCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchPageCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchPageCacheTagsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:assertFieldDoesNotExistOnOverview\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -24669,24 +24075,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:assertFieldExistsOnOverview\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchPageCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchPageCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchPageCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchPageCacheTagsTest.php',
@@ -25190,42 +24578,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/shortcut/src/ShortcutSetStorageInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\NavigationShortcutsBlockTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/NavigationShortcutsBlockTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\Rest\\\\ShortcutJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25332,42 +24684,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/Rest/ShortcutXmlBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\ShortcutCacheTagsTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/ShortcutCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\ShortcutCacheTagsTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/ShortcutCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\ShortcutCacheTagsTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/ShortcutCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\ShortcutCacheTagsTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/ShortcutCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\ShortcutCacheTagsTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/ShortcutCacheTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\ShortcutCacheTagsTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/tests/src/Functional/ShortcutCacheTagsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\shortcut\\\\Functional\\\\ShortcutLinksTest\\:\\:assertBlockAppears\\(\\) has no return type specified\\.$#',
@@ -28738,42 +28054,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Cache/PageCacheTagsTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Common\\\\RenderWebTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Common/RenderWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Common\\\\RenderWebTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Common/RenderWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Common\\\\RenderWebTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Common/RenderWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Common\\\\RenderWebTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Common/RenderWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Common\\\\RenderWebTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Common/RenderWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Common\\\\RenderWebTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Common/RenderWebTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Entity\\\\EntityCacheTagsTestBase\\:\\:selectViewMode\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28924,82 +28204,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Module/ModuleTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Pager\\\\PagerTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Pager/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Pager\\\\PagerTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Pager/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Pager\\\\PagerTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Pager/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Pager\\\\PagerTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Pager/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Pager\\\\PagerTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Pager/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Pager\\\\PagerTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Pager/PagerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$test_meta in empty\\(\\) always exists and is not falsy\\.$#',
 	'identifier' => 'empty.variable',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/HtmlResponseAttachmentsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Render\\\\UrlBubbleableMetadataBubblingTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/UrlBubbleableMetadataBubblingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Render\\\\UrlBubbleableMetadataBubblingTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/UrlBubbleableMetadataBubblingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Render\\\\UrlBubbleableMetadataBubblingTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/UrlBubbleableMetadataBubblingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Render\\\\UrlBubbleableMetadataBubblingTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/UrlBubbleableMetadataBubblingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Render\\\\UrlBubbleableMetadataBubblingTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/UrlBubbleableMetadataBubblingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Render\\\\UrlBubbleableMetadataBubblingTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/UrlBubbleableMetadataBubblingTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Rest\\\\ActionJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
@@ -29116,42 +28324,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/SecurityAdvisories/SecurityAdvisoryTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\CronRunTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29188,42 +28360,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/DateTimeTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\PageNotFoundTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/PageNotFoundTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\PageNotFoundTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/PageNotFoundTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\PageNotFoundTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/PageNotFoundTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\PageNotFoundTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/PageNotFoundTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\PageNotFoundTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/PageNotFoundTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\PageNotFoundTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/PageNotFoundTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\SiteMaintenanceTest\\:\\:assertMailPattern\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29234,78 +28370,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/SiteMaintenanceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\TokenReplaceWebTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/TokenReplaceWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\TokenReplaceWebTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/TokenReplaceWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\TokenReplaceWebTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/TokenReplaceWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\TokenReplaceWebTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/TokenReplaceWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\TokenReplaceWebTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/TokenReplaceWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\TokenReplaceWebTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/TokenReplaceWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Theme\\\\EngineTwigTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EngineTwigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Theme\\\\EngineTwigTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EngineTwigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Theme\\\\EngineTwigTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EngineTwigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Theme\\\\EngineTwigTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EngineTwigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Theme\\\\EngineTwigTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EngineTwigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Theme\\\\EngineTwigTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EngineTwigTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$expected_required_list_items might not be defined\\.$#',
@@ -29926,42 +28990,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/Rest/VocabularyXmlBasicAuthTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermAccessTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermAccessTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermAccessTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermAccessTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermAccessTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermAccessTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermAccessTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermAccessTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermTest\\:\\:assertBreadcrumb\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -30128,42 +29156,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/toolbar/src/Controller/ToolbarController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\Functional\\\\ToolbarCacheContextsTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/Functional/ToolbarCacheContextsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\Functional\\\\ToolbarCacheContextsTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/Functional/ToolbarCacheContextsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\Functional\\\\ToolbarCacheContextsTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/Functional/ToolbarCacheContextsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\Functional\\\\ToolbarCacheContextsTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/Functional/ToolbarCacheContextsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\Functional\\\\ToolbarCacheContextsTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/Functional/ToolbarCacheContextsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\Functional\\\\ToolbarCacheContextsTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/Functional/ToolbarCacheContextsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\update\\\\Controller\\\\UpdateController\\:\\:updateStatusManually\\(\\) has no return type specified\\.$#',
@@ -31268,42 +30260,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserTranslationUITest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\Views\\\\AccessRoleTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Functional/Views/AccessRoleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\Views\\\\AccessRoleTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Functional/Views/AccessRoleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\Views\\\\AccessRoleTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Functional/Views/AccessRoleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\Views\\\\AccessRoleTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Functional/Views/AccessRoleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\Views\\\\AccessRoleTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Functional/Views/AccessRoleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\Views\\\\AccessRoleTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Functional/Views/AccessRoleTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\FunctionalJavascript\\\\UserPasswordResetTest\\:\\:assertMailPattern\\(\\) has no return type specified\\.$#',
@@ -38086,82 +37042,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/DefaultViewsTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\GlossaryTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/GlossaryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\GlossaryTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/GlossaryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\GlossaryTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/GlossaryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\GlossaryTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/GlossaryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\GlossaryTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/GlossaryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\GlossaryTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/GlossaryTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\AreaTest\\:\\:viewsData\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/AreaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\FieldWebTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FieldWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\FieldWebTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FieldWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\FieldWebTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FieldWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\FieldWebTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FieldWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\FieldWebTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FieldWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\FieldWebTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FieldWebTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\FieldWebTest\\:\\:viewsData\\(\\) has no return type specified\\.$#',
@@ -38174,78 +37058,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/HandlerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\CacheWebTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/CacheWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\CacheWebTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/CacheWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\CacheWebTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/CacheWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\CacheWebTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/CacheWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\CacheWebTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/CacheWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\CacheWebTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/CacheWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ContextualFiltersBlockContextTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ContextualFiltersBlockContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ContextualFiltersBlockContextTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ContextualFiltersBlockContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ContextualFiltersBlockContextTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ContextualFiltersBlockContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ContextualFiltersBlockContextTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ContextualFiltersBlockContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ContextualFiltersBlockContextTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ContextualFiltersBlockContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ContextualFiltersBlockContextTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ContextualFiltersBlockContextTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayFeedTest\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
@@ -38272,121 +37084,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayFeedTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayPageWebTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayPageWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayPageWebTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayPageWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayPageWebTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayPageWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayPageWebTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayPageWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayPageWebTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayPageWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayPageWebTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayPageWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ExposedFormTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ExposedFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ExposedFormTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ExposedFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ExposedFormTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ExposedFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ExposedFormTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ExposedFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ExposedFormTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ExposedFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\ExposedFormTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/ExposedFormTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\FilterTest\\:\\:viewsData\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/FilterTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\PagerTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\PagerTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\PagerTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\PagerTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\PagerTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/PagerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\PagerTest\\:\\:createTranslation\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/PagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\PagerTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/PagerTest.php',
@@ -39460,42 +38164,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/CustomBooleanTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\DisplayPathTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DisplayPathTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\DisplayPathTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DisplayPathTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\DisplayPathTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DisplayPathTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\DisplayPathTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DisplayPathTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\DisplayPathTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DisplayPathTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\DisplayPathTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DisplayPathTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\HandlerTest\\:\\:schemaDefinition\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -40162,42 +38830,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceBypassTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceCacheContextTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceCacheContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceCacheContextTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceCacheContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceCacheContextTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceCacheContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceCacheContextTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceCacheContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceCacheContextTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceCacheContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceCacheContextTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceCacheContextTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceConcurrentEditingTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -40316,42 +38948,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspacePermissionsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceSwitcherTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceSwitcherTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceSwitcherTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceSwitcherTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceSwitcherTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceSwitcherTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceSwitcherTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceSwitcherTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceSwitcherTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceSwitcherTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceSwitcherTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceSwitcherTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceSwitcherTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',
@@ -40802,42 +39398,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/BrowserTestBaseTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Entity\\\\EntityBundleListCacheTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/EntityBundleListCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Entity\\\\EntityBundleListCacheTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/EntityBundleListCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Entity\\\\EntityBundleListCacheTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/EntityBundleListCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Entity\\\\EntityBundleListCacheTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/EntityBundleListCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Entity\\\\EntityBundleListCacheTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/EntityBundleListCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Entity\\\\EntityBundleListCacheTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/EntityBundleListCacheTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Installer\\\\ConfigAfterInstallerTestBase\\:\\:assertConfigDiff\\(\\) has no return type specified\\.$#',
