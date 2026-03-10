@@ -1,17 +1,8 @@
 # Configuration file for PHPStan static code checking, see https://phpstan.org .
 # The PHPStan check is executed as a job in the CI pipeline.
+
 includes:
   - .phpstan-baseline.php
-
-services:
-  errorFormatter.multiplex:
-    class: Drupal\PHPStan\ErrorFormatter\MultiplexErrorFormatter
-    arguments:
-      basePath: ::getenv(_ARTIFACTS_DIR)
-      outputs:
-        gitlab: phpstan-gitlab.json
-        junit: phpstan-junit.xml
-        table: php://stdout
 
 parameters:
 
@@ -74,3 +65,13 @@ rules:
   - PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
   # The rule below can be removed when we increase level to 2.
   - PHPStan\Rules\Classes\AccessPrivateConstantThroughStaticRule
+
+services:
+  errorFormatter.multiplex:
+    class: Drupal\PHPStan\ErrorFormatter\MultiplexErrorFormatter
+    arguments:
+      basePath: ::getenv(_ARTIFACTS_DIR)
+      outputs:
+        gitlab: phpstan-gitlab.json
+        junit: phpstan-junit.xml
+        table: null
