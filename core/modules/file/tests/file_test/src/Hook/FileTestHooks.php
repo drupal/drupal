@@ -40,6 +40,14 @@ class FileTestHooks {
       $file = reset($files);
       return $file->getDownloadHeaders();
     }
+    if (\Drupal::keyValue('file_test')->get('file_test_active_stream_wrapper') === 'dummy-private') {
+      return ['Cache-Control' => 'private'];
+    }
+
+    if (\Drupal::keyValue('file_test')->get('file_test_active_stream_wrapper') === 'dummy-public') {
+      return ['Cache-Control' => 'public'];
+    }
+
     FileTestHelper::logCall('download', [$uri]);
     return $this->getReturn('download');
   }

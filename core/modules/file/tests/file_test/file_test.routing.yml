@@ -16,3 +16,17 @@ file.required_test:
     _form: '\Drupal\file_test\Form\FileRequiredTestForm'
   requirements:
     _access: 'TRUE'
+file_test.dummy:
+  path: '/system/dummy'
+  defaults:
+    _controller: '\Drupal\system\FileDownloadController::download'
+    scheme: dummy-private
+  requirements:
+    _access: 'TRUE'
+file_test.public:
+  path: '/system/dummy-public'
+  defaults:
+    _controller: '\Drupal\system\FileDownloadController::download'
+    scheme: dummy-public
+  requirements:
+    _access: 'TRUE'

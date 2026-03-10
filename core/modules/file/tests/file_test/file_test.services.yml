@@ -22,5 +22,13 @@ services:
     tags:
       - { name: stream_wrapper, scheme: dummy1 }
       - { name: stream_wrapper, scheme: dummy2 }
+  stream_wrapper.dummy_private:
+    class: Drupal\file_test\StreamWrapper\DummyPrivateStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: dummy-private }
+  stream_wrapper.dummy_public:
+    class: Drupal\file_test\StreamWrapper\DummyPublicStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: dummy-public }
   Drupal\file_test\EventSubscriber\DummyMimeTypeMapLoadedSubscriber:
     autowire: true
