@@ -144,7 +144,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/maintenance');
     $this->assertSession()->pageTextNotContains($admin_message);
 
-    $offline_message = 'Sorry, not online.';
+    $offline_message = 'Not online.';
     $edit = [
       'maintenance_mode_message' => $offline_message,
     ];

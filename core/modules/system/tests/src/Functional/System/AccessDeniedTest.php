@@ -159,7 +159,7 @@ class AccessDeniedTest extends BrowserTestBase {
     // Create a custom 403 page with a path alias.
     $this->drupalCreateContentType(['type' => 'page']);
     $this->drupalCreateNode([
-      'body' => "Sorry Dave, I'm afraid you can't do that.",
+      'body' => "Dave, I'm afraid you can't do that.",
       'path' => '/custom-access-denied',
     ]);
     $edit = ['site_403' => '/custom-access-denied'];
@@ -170,7 +170,7 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->assertSame('/custom-access-denied', $this->config('system.site')->get('page.403'));
     $this->drupalGet('/system-test/always-denied');
     $assert_session->statusCodeEquals(403);
-    $assert_session->pageTextContains("Sorry Dave, I'm afraid you can't do that.");
+    $assert_session->pageTextContains("Dave, I'm afraid you can't do that.");
   }
 
 }
