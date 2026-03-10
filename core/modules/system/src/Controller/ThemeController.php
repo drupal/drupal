@@ -170,6 +170,9 @@ class ThemeController extends ControllerBase {
    */
   protected function willInstallExperimentalTheme($theme) {
     $all_themes = $this->themeList->getList();
+    if (!isset($all_themes[$theme])) {
+      return FALSE;
+    }
     $dependencies = array_keys($all_themes[$theme]->requires);
     $themes_to_enable = array_merge([$theme], $dependencies);
 
