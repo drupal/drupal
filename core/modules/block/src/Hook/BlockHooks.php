@@ -119,34 +119,6 @@ class BlockHooks {
   }
 
   /**
-   * Implements hook_page_top().
-   */
-  #[Hook('page_top')]
-  public function pageTop(array &$page_top): void {
-    if (\Drupal::routeMatch()->getRouteName() === 'block.admin_demo') {
-      $theme = \Drupal::theme()->getActiveTheme()->getName();
-      $page_top['backlink'] = [
-        '#type' => 'link',
-        '#title' => $this->t('Exit block region demonstration'),
-        '#options' => [
-          'attributes' => [
-            'class' => [
-              'block-demo-backlink',
-            ],
-          ],
-        ],
-        '#weight' => -10,
-      ];
-      if (\Drupal::config('system.theme')->get('default') == $theme) {
-        $page_top['backlink']['#url'] = Url::fromRoute('block.admin_display');
-      }
-      else {
-        $page_top['backlink']['#url'] = Url::fromRoute('block.admin_display_theme', ['theme' => $theme]);
-      }
-    }
-  }
-
-  /**
    * Implements hook_modules_installed().
    *
    * @see BlockHooks::themesInstalled()

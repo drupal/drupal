@@ -6,6 +6,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -13,21 +15,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class BlockController extends ControllerBase {
 
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * Constructs a new BlockController instance.
-   *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
-   */
-  public function __construct(ThemeHandlerInterface $theme_handler) {
-    $this->themeHandler = $theme_handler;
+  public function __construct(
+    protected readonly ThemeHandlerInterface $themeHandler,
+    protected readonly ThemeManagerInterface $themeManager,
+  ) {
   }
 
   /**
@@ -89,6 +80,20 @@ class BlockController extends ControllerBase {
       ];
     }
 
+    $themeIsDefault = $this->config('system.theme')->get('default') == $this->themeManager->getActiveTheme()->getName();
+    $page['#attached']['page_top']['backlink'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Exit block region demonstration'),
+      '#url' => $themeIsDefault ? Url::fromRoute('block.admin_display') : Url::fromRoute('block.admin_display_theme', ['theme' => $theme]),
+      '#options' => [
+        'attributes' => [
+          'class' => [
+            'block-demo-backlink',
+          ],
+        ],
+      ],
+      '#weight' => -10,
+    ];
     return $page;
   }
 
