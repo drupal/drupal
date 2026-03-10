@@ -1306,6 +1306,7 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function trustData() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
     return $this->storage->trustData();
   }
 

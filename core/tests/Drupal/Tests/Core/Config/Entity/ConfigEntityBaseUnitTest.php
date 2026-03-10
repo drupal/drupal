@@ -24,6 +24,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
 
@@ -907,6 +908,17 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       'Not syncing' => [FALSE, 'new_value'],
       'Syncing' => [TRUE, 'original_value'],
     ];
+  }
+
+  /**
+   * Tests trusted data deprecations.
+   */
+  #[IgnoreDeprecations]
+  public function testTrustDataDeprecations(): void {
+    $this->expectUserDeprecationMessage('Drupal\\Core\\Config\\Entity\\ConfigEntityBase::trustData() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3348180');
+    $this->assertFalse($this->entity->hasTrustedData());
+    $this->entity->trustData();
+    $this->assertTrue($this->entity->hasTrustedData());
   }
 
 }

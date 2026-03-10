@@ -211,7 +211,7 @@ class FileTest extends ResourceTestBase {
     $this->doTestPatchIndividual();
     $this->entity = $this->resaveEntity($this->entity, $this->account);
     $this->revokePermissions();
-    $this->config('jsonapi.settings')->set('read_only', TRUE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', TRUE)->save();
     $this->doTestDeleteIndividual();
   }
 

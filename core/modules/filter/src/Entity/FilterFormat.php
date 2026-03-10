@@ -214,7 +214,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    */
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
-    if (!$this->isSyncing() && $this->hasTrustedData()) {
+    if (!$this->isSyncing()) {
       // Filters are sorted by keys to ensure config export diffs are easy to
       // read and there is a minimal changeset. If the save is not trusted then
       // the configuration will be sorted by StorableConfigBase.

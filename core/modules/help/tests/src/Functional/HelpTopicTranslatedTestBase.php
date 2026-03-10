@@ -36,7 +36,7 @@ abstract class HelpTopicTranslatedTestBase extends BrowserTestBase {
     \Drupal::service('theme_installer')->install(['claro']);
     \Drupal::configFactory()->getEditable('system.theme')
       ->set('admin', 'claro')
-      ->save(TRUE);
+      ->save();
 
     // Place various blocks.
     $settings = [

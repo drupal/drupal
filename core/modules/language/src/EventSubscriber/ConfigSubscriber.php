@@ -110,7 +110,7 @@ class ConfigSubscriber implements EventSubscriberInterface {
           $negotiation_changed = TRUE;
         }
         if ($negotiation_changed) {
-          $negotiation_config->save(TRUE);
+          $negotiation_config->save();
         }
       }
       // Trigger a container rebuild on the next request by invalidating it.

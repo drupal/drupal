@@ -123,7 +123,7 @@ function language_negotiation_url_prefixes_update(): void {
     }
     // Otherwise we keep the configured prefix.
   }
-  $config->set('url.prefixes', $prefixes)->save(TRUE);
+  $config->set('url.prefixes', $prefixes)->save();
 }
 
 /**

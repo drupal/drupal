@@ -522,7 +522,7 @@ function user_role_grant_permissions($rid, array $permissions = []): void {
     foreach ($permissions as $permission) {
       $role->grantPermission($permission);
     }
-    $role->trustData()->save();
+    $role->save();
   }
 }
 
@@ -544,7 +544,7 @@ function user_role_revoke_permissions($rid, array $permissions = []): void {
   foreach ($permissions as $permission) {
     $role->revokePermission($permission);
   }
-  $role->trustData()->save();
+  $role->save();
 }
 
 /**

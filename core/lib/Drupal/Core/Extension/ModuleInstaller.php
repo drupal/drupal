@@ -268,7 +268,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         array_fill_keys($module_list, 0),
         $installed_modules
       )))
-      ->save(TRUE);
+      ->save();
 
     // Prepare the new module list, sorted by weight, including filenames.
     // This list is used for both the ModuleHandler and DrupalKernel. It
@@ -604,7 +604,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if ($core_extension->get('profile') === $module) {
         $core_extension->clear('profile');
       }
-      $core_extension->save(TRUE);
+      $core_extension->save();
 
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild

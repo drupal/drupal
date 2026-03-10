@@ -148,11 +148,10 @@ class ThemeInstaller implements ThemeInstallerInterface {
       // configuration then stop installing.
       $this->configInstaller->checkConfigurationToInstall('theme', $key);
 
-      // The value is not used; the weight is ignored for themes currently. Do
-      // not check schema when saving the configuration.
+      // The value is not used; the weight is ignored for themes currently.
       $extension_config
         ->set("theme.$key", 0)
-        ->save(TRUE);
+        ->save();
 
       // Reset theme listing.
       $this->themeHandler->reset();
@@ -219,9 +218,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
       // Remove all configuration belonging to the theme.
       $this->configManager->uninstall('theme', $key);
     }
-    // Don't check schema when uninstalling a theme since we are only clearing
-    // keys.
-    $extension_config->save(TRUE);
+    $extension_config->save();
 
     // Refresh theme info.
     $this->themeHandler->reset();

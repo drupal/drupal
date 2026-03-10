@@ -8,7 +8,7 @@ dependencies:
     - node
     - user
 id: related_recipes
-label: Related recipes
+label: 'Related recipes'
 module: views
 description: 'Related recipes listing'
 tag: ''
@@ -154,7 +154,6 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: entity_target_id
-          target_entity_type_id: taxonomy_term
           default_action: default
           exception:
             value: all
@@ -185,6 +184,7 @@ display:
           validate_options: {  }
           break_phrase: true
           not: false
+          target_entity_type_id: taxonomy_term
       filters:
         status:
           id: status

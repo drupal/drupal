@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -95,7 +97,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
       $this->assertSame($style, $entity->get('style'), 'The loaded entity has the correct style value specified.');
     }
 
-    // Test that schema type enforcement can be overridden by trusting the data.
+    // Test that schema type enforcement.
     $entity = $this->storage->create([
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
@@ -103,11 +105,27 @@ class ConfigEntityUnitTest extends KernelTestBase {
     ]);
     $entity->save();
     $this->assertSame('999', $entity->style);
-    $entity->style = 999;
-    $entity->trustData()->save();
-    $this->assertSame(999, $entity->style);
+  }
+
+  /**
+   * Tests the legacy trusted data behavior.
+   */
+  #[IgnoreDeprecations]
+  public function testTrustedDataDeprecations(): void {
+    $this->expectUserDeprecationMessage('Drupal\\Core\\Config\\Entity\\ConfigEntityBase::trustData() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3348180');
+    $this->expectUserDeprecationMessage('Calling Drupal\\Core\\Config\\Config::save() with the $has_trusted_data argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3348180');
+    // Test that schema type enforcement.
+    $entity = $this->storage->create([
+      'id' => $this->randomMachineName(),
+      'label' => $this->randomString(),
+      'style' => 999,
+    ]);
+    $this->assertInstanceOf(ConfigEntityInterface::class, $entity);
+    $entity->trustData();
+    $this->assertTrue($entity->hasTrustedData());
     $entity->save();
-    $this->assertSame('999', $entity->style);
+    $this->assertFalse($entity->hasTrustedData());
+    $this->assertSame(999, $entity->style);
   }
 
 }

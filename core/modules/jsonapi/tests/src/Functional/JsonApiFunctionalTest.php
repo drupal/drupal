@@ -736,7 +736,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
    * Tests POST, PATCH and DELETE.
    */
   public function testWrite(): void {
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $this->createDefaultContent(0, 3, FALSE, FALSE, static::IS_NOT_MULTILINGUAL, FALSE);
     // 1. Successful post.

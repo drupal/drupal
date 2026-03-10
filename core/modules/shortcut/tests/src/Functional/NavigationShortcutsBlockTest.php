@@ -68,7 +68,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     \Drupal::configFactory()
       ->getEditable('stark.settings')
       ->set('third_party_settings.shortcut.module_link', TRUE)
-      ->save(TRUE);
+      ->save();
 
     // Add cron to the default shortcut set, now the shortcut list cache tag
     // is expected.

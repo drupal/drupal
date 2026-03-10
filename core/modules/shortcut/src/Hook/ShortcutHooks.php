@@ -124,7 +124,7 @@ class ShortcutHooks {
     // modules so to set a module-specific setting, we need to set it with
     // logic.
     if (in_array('claro', $theme_list, TRUE)) {
-      \Drupal::configFactory()->getEditable("claro.settings")->set('third_party_settings.shortcut.module_link', TRUE)->save(TRUE);
+      \Drupal::configFactory()->getEditable("claro.settings")->set('third_party_settings.shortcut.module_link', TRUE)->save();
     }
   }
 

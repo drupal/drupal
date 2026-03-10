@@ -23,7 +23,7 @@ function module_set_weight($module, $weight): void {
     $extension_config
       ->set("module.$module", (int) $weight)
       ->set('module', module_config_sort($extension_config->get('module')))
-      ->save(TRUE);
+      ->save();
 
     // Prepare the new module list, sorted by weight, including filenames.
     // @see \Drupal\Core\Extension\ModuleInstaller::install()

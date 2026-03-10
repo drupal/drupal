@@ -37,7 +37,7 @@ function navigation_update_11001(array &$sandbox): void {
       ],
     ],
   ]);
-  $settings->save(TRUE);
+  $settings->save();
 }
 
 /**

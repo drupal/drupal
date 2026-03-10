@@ -69,7 +69,8 @@ abstract class StorableConfigBase extends ConfigBase {
    * @param bool $has_trusted_data
    *   Set to TRUE if the configuration data has already been checked to ensure
    *   it conforms to schema. Generally this is only used during module and
-   *   theme installation.
+   *   theme installation. This argument is deprecated in Drupal 11.4.0 and is
+   *   removed in Drupal 13.0.0.
    *
    * @return $this
    *

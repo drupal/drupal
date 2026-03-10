@@ -52,7 +52,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
-      ->save(TRUE);
+      ->save();
 
     // Provisioning the Media REST resource without the File REST resource does
     // not make sense.
@@ -398,7 +398,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     // must revoke the additional permissions that we granted.
     $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID);
     $role->revokePermission('create camelids media');
-    $role->trustData()->save();
+    $role->save();
   }
 
   /**

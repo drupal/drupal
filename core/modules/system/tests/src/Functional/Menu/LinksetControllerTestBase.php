@@ -142,7 +142,7 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
   protected function enableEndpoint(bool $enabled) {
     $this->config('system.feature_flags')
       ->set('linkset_endpoint', $enabled)
-      ->save(TRUE);
+      ->save();
     // Using rebuildIfNeeded here to implicitly test that router is only rebuilt
     // when necessary.
     \Drupal::service('router.builder')->rebuildIfNeeded();

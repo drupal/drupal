@@ -34,7 +34,7 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
     $extension_config
       ->set('module.new_dependency_test', 0)
       ->set('module', module_config_sort($extension_config->get('module')))
-      ->save(TRUE);
+      ->save();
     \Drupal::service('update.update_hook_registry')->setInstalledVersion('new_dependency_test', \Drupal::CORE_MINIMUM_SCHEMA_VERSION);
 
     // Rebuild the container and test that the service with the optional unmet

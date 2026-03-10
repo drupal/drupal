@@ -6,7 +6,6 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
@@ -143,15 +142,12 @@ class ViewsViewsHooks {
       }
     }
     // Registers an action bulk form per entity.
-    $all_actions = \Drupal::entityTypeManager()->getStorage('action')->loadMultiple();
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $entity_info) {
-      $actions = array_filter($all_actions, function (ActionConfigEntityInterface $action) use ($entity_type) {
-          return $action->getType() == $entity_type;
-      });
-      if (empty($actions)) {
+      $base_table = $entity_info->getBaseTable();
+      if (empty($base_table)) {
         continue;
       }
-      $data[$entity_info->getBaseTable()][$entity_type . '_bulk_form'] = [
+      $data[$base_table][$entity_type . '_bulk_form'] = [
         'title' => $this->t('Bulk update'),
         'help' => $this->t('Allows users to apply an action to one or more items.'),
         'field' => [
