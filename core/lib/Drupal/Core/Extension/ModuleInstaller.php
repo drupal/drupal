@@ -714,13 +714,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The list of installed modules.
    */
   protected function updateKernel($module_filenames) {
-    // Save current state of config installer, so it can be restored after the
-    // container is rebuilt.
-    /** @var \Drupal\Core\Config\ConfigInstallerInterface $config_installer */
-    $config_installer = $this->kernel->getContainer()->get('config.installer');
-    $sync_status = $config_installer->isSyncing();
-    $source_storage = $config_installer->getSourceStorage();
-
     if (!empty($module_filenames)) {
       // This reboots the kernel to register the module's bundle and its
       // services in the service container. The $module_filenames argument is
@@ -738,13 +731,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->moduleHandler = $container->get('module_handler');
     $this->connection = $container->get('database');
     $this->updateRegistry = $container->get('update.update_hook_registry');
-
-    // Restore state of config installer.
-    if ($sync_status) {
-      $container->get('config.installer')
-        ->setSyncing(TRUE)
-        ->setSourceStorage($source_storage);
-    }
   }
 
   /**
