@@ -950,7 +950,9 @@ function hook_entity_bundle_delete($entity_type_id, $bundle): void {
 /**
  * Acts when creating a new entity.
  *
- * This hook runs after a new entity object has just been instantiated.
+ * This hook runs after a new entity object has been instantiated, but before
+ * it is stored in the database. To react to an entity being stored for the
+ * first time, use hook_entity_insert().
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -965,7 +967,9 @@ function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity): void {
 /**
  * Acts when creating a new entity of a specific type.
  *
- * This hook runs after a new entity object has just been instantiated.
+ * This hook runs after a new entity object has been instantiated, but before
+ * it is stored in the database. To react to an entity being stored for the
+ * first time, use hook_entity_insert().
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
