@@ -44,7 +44,8 @@ class BlockContentPermissions implements ContainerInjectionInterface {
    *   The block type permissions.
    */
   public function blockTypePermissions() {
-    return $this->generatePermissions($this->entityTypeManager->getStorage('block_content_type')->loadMultiple(), [$this, 'buildPermissions']);
+    return $this->generatePermissions($this->entityTypeManager->getStorage('block_content_type')->loadMultiple(),
+      [$this, 'buildPermissions']);
   }
 
   /**

@@ -159,10 +159,16 @@ function locale_translate_batch_import($file, array $options, &$context): void {
         // https://www.drupal.org/node/1089472.
         $context['finished'] = min(0.95, $report['seek'] / filesize($file->uri));
         if (isset($options['message'])) {
-          $context['message'] = t('@message (@percent%).', ['@message' => $options['message'], '@percent' => (int) ($context['finished'] * 100)]);
+          $context['message'] = t('@message (@percent%).', [
+            '@message' => $options['message'],
+            '@percent' => (int) ($context['finished'] * 100),
+          ]);
         }
         else {
-          $context['message'] = t('Importing translation file: %filename (@percent%).', ['%filename' => $file->filename, '@percent' => (int) ($context['finished'] * 100)]);
+          $context['message'] = t('Importing translation file: %filename (@percent%).', [
+            '%filename' => $file->filename,
+            '@percent' => (int) ($context['finished'] * 100),
+          ]);
         }
       }
       else {
@@ -342,7 +348,11 @@ function locale_translate_batch_finished($success, array $results): void {
         '@count translation files imported. %number translations were added, %update translations were updated and %delete translations were removed.',
         ['%number' => $additions, '%update' => $updates, '%delete' => $deletes]
       ));
-      $logger->notice('Translations imported: %number added, %update updated, %delete removed.', ['%number' => $additions, '%update' => $updates, '%delete' => $deletes]);
+      $logger->notice('Translations imported: %number added, %update updated, %delete removed.', [
+        '%number' => $additions,
+        '%update' => $updates,
+        '%delete' => $deletes,
+      ]);
 
       if ($skips) {
         if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
@@ -352,7 +362,10 @@ function locale_translate_batch_finished($success, array $results): void {
           $message = \Drupal::translation()->formatPlural($skips, 'One translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
         }
         \Drupal::messenger()->addWarning($message);
-        $logger->warning('@count disallowed HTML string(s) in files: @files.', ['@count' => $skips, '@files' => implode(',', $skipped_files)]);
+        $logger->warning('@count disallowed HTML string(s) in files: @files.', [
+          '@count' => $skips,
+          '@files' => implode(',', $skipped_files),
+        ]);
       }
     }
   }

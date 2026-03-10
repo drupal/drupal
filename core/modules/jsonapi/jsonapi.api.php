@@ -308,7 +308,10 @@ function hook_jsonapi_ENTITY_TYPE_filter_access(EntityTypeInterface $entity_type
   return ([
     JsonApiFilter::AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer llamas'),
     JsonApiFilter::AMONG_PUBLISHED => AccessResult::allowedIfHasPermission($account, 'view all published llamas'),
-    JsonApiFilter::AMONG_OWN => AccessResult::allowedIfHasPermissions($account, ['view own published llamas', 'view own unpublished llamas'], 'AND'),
+    JsonApiFilter::AMONG_OWN => AccessResult::allowedIfHasPermissions($account, [
+      'view own published llamas',
+      'view own unpublished llamas',
+    ], 'AND'),
   ]);
 }
 

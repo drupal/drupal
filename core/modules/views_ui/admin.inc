@@ -219,7 +219,10 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 
   // Add the "2 of 3" progress indicator.
   if ($form_progress = $view->getFormProgress()) {
-    $arguments = $form['#title']->getArguments() + ['@current' => $form_progress['current'], '@total' => $form_progress['total']];
+    $arguments = $form['#title']->getArguments() + [
+      '@current' => $form_progress['current'],
+      '@total' => $form_progress['total'],
+    ];
     $form['#title'] = t('Configure @type @current of @total: @item', $arguments);
   }
 

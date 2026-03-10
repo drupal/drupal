@@ -235,7 +235,10 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   - bundle: The machine name of a bundle, such as "page" or "article".
    */
   protected function getModeratedBundles() {
-    $entity_types = array_filter($this->entityTypeManager->getDefinitions(), [$this->moderationInfo, 'canModerateEntitiesOfEntityType']);
+    $entity_types = array_filter(
+      $this->entityTypeManager->getDefinitions(),
+      [$this->moderationInfo, 'canModerateEntitiesOfEntityType']
+    );
     foreach ($entity_types as $type_name => $type) {
       foreach ($this->bundleInfo->getBundleInfo($type_name) as $bundle_id => $bundle) {
         if ($this->moderationInfo->shouldModerateEntitiesOfBundle($type, $bundle_id)) {

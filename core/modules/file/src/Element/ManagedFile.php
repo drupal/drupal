@@ -114,7 +114,8 @@ class ManagedFile extends FormElementBase {
                 // submissions of the same form, so to allow that, check for the
                 // token added by $this->processManagedFile().
                 elseif (\Drupal::currentUser()->isAnonymous()) {
-                  $token = NestedArray::getValue($form_state->getUserInput(), array_merge($element['#parents'], ['file_' . $file->id(), 'fid_token']));
+                  $parents = array_merge($element['#parents'], ['file_' . $file->id(), 'fid_token']);
+                  $token = NestedArray::getValue($form_state->getUserInput(), $parents);
                   $file_hmac = Crypt::hmacBase64('file-' . $file->id(), \Drupal::service('private_key')->get() . Settings::getHashSalt());
                   if ($token === NULL || !hash_equals($file_hmac, $token)) {
                     $force_default = TRUE;
@@ -449,7 +450,8 @@ class ManagedFile extends FormElementBase {
     }
 
     // Check required property based on the FID.
-    if ($element['#required'] && empty($element['fids']['#value']) && !in_array($clicked_button, ['upload_button', 'remove_button'])) {
+    if ($element['#required'] && empty($element['fids']['#value'])
+      && !in_array($clicked_button, ['upload_button', 'remove_button'])) {
       // We expect the field name placeholder value to be wrapped in t()
       // here, so it won't be escaped again as it's already marked safe.
       $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));

@@ -341,7 +341,10 @@ function _user_cancel($edit, $account, $method): void {
       $account->block();
       $account->save();
       \Drupal::messenger()->addStatus(t('Account %name has been disabled.', ['%name' => $account->getDisplayName()]));
-      $logger->notice('Blocked user: %name %email.', ['%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>']);
+      $logger->notice('Blocked user: %name %email.', [
+        '%name' => $account->getAccountName(),
+        '%email' => '<' . $account->getEmail() . '>',
+      ]);
       break;
 
     case 'user_cancel_reassign':
@@ -352,7 +355,10 @@ function _user_cancel($edit, $account, $method): void {
       }
       $account->delete();
       \Drupal::messenger()->addStatus(t('Account %name has been deleted.', ['%name' => $account->getDisplayName()]));
-      $logger->notice('Deleted user: %name %email.', ['%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>']);
+      $logger->notice('Deleted user: %name %email.', [
+        '%name' => $account->getAccountName(),
+        '%email' => '<' . $account->getEmail() . '>',
+      ]);
       break;
   }
 

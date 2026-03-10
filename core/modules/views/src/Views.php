@@ -367,10 +367,16 @@ class Views {
         foreach ($view->get('display') as $display_id => $display) {
           if (!($id == $exclude_view_name && $display_id == $exclude_view_display)) {
             if ($optgroup) {
-              $options[$id][$id . ':' . $display['id']] = t('@view : @display', ['@view' => $id, '@display' => $display['id']]);
+              $options[$id][$id . ':' . $display['id']] = t('@view : @display', [
+                '@view' => $id,
+                '@display' => $display['id'],
+              ]);
             }
             else {
-              $options[$id . ':' . $display['id']] = t('View: @view - Display: @display', ['@view' => $id, '@display' => $display['id']]);
+              $options[$id . ':' . $display['id']] = t('View: @view - Display: @display', [
+                '@view' => $id,
+                '@display' => $display['id'],
+              ]);
             }
           }
         }

@@ -201,7 +201,11 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
       $file = $result->getFile();
       // Log security renames to help detect potential malicious uploads.
       if ($result->isSecurityRename()) {
-        \Drupal::logger('file')->notice('For security reasons, the uploaded file %original_filename has been renamed to %filename.', ['%original_filename' => $result->getOriginalFilename(), '%filename' => $file->getFilename()]);
+        \Drupal::logger('file')
+          ->notice('For security reasons, the uploaded file %original_filename has been renamed to %filename.', [
+            '%original_filename' => $result->getOriginalFilename(),
+            '%filename' => $file->getFilename(),
+          ]);
       }
       $files[$i] = $file;
     }
@@ -215,7 +219,11 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     }
     catch (FileWriteException) {
       \Drupal::messenger()->addError(t('File upload error. Could not move uploaded file.'));
-      \Drupal::logger('file')->notice('Upload error. Could not move uploaded file %file to destination %destination.', ['%file' => $uploaded_file->getClientOriginalName(), '%destination' => $destination . '/' . $uploaded_file->getClientOriginalName()]);
+      \Drupal::logger('file')
+        ->notice('Upload error. Could not move uploaded file %file to destination %destination.', [
+          '%file' => $uploaded_file->getClientOriginalName(),
+          '%destination' => $destination . '/' . $uploaded_file->getClientOriginalName(),
+        ]);
       $files[$i] = FALSE;
     }
     catch (FileException) {
@@ -257,7 +265,11 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
 
   $destination = $element['#upload_location'] ?? NULL;
   if (isset($destination) && !\Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
-    \Drupal::logger('file')->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', ['%directory' => $destination, '%name' => $element['#field_name']]);
+    \Drupal::logger('file')
+      ->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', [
+        '%directory' => $destination,
+        '%name' => $element['#field_name'],
+      ]);
     $form_state->setError($element, t('The file could not be uploaded.'));
     return FALSE;
   }

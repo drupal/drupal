@@ -40,13 +40,24 @@ function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type
     $field_name = $handler->adminLabel(TRUE);
     $links[$type . '-edit-' . $id] = [
       'title' => t('Edit @section', ['@section' => $field_name]),
-      'url' => Url::fromRoute('views_ui.form_handler', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type, 'id' => $id]),
+      'url' => Url::fromRoute('views_ui.form_handler', [
+        'js' => 'nojs',
+        'view' => $view->storage->id(),
+        'display_id' => $display['id'],
+        'type' => $type,
+        'id' => $id,
+      ]),
       'attributes' => ['class' => ['views-ajax-link']],
     ];
   }
   $links[$type . '-add'] = [
     'title' => t('Add new'),
-    'url' => Url::fromRoute('views_ui.form_add_handler', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type]),
+    'url' => Url::fromRoute('views_ui.form_add_handler', [
+      'js' => 'nojs',
+      'view' => $view->storage->id(),
+      'display_id' => $display['id'],
+      'type' => $type,
+    ]),
     'attributes' => ['class' => ['views-ajax-link']],
   ];
 
@@ -67,7 +78,12 @@ function views_ui_view_preview_section_display_category_links(ViewExecutable $vi
   $links = [
     $type . '-edit' => [
       'title' => t('Edit @section', ['@section' => $title]),
-      'url' => Url::fromRoute('views_ui.form_display', ['js' => 'nojs', 'view' => $view->storage->id(), 'display_id' => $display['id'], 'type' => $type]),
+      'url' => Url::fromRoute('views_ui.form_display', [
+        'js' => 'nojs',
+        'view' => $view->storage->id(),
+        'display_id' => $display['id'],
+        'type' => $type,
+      ]),
       'attributes' => ['class' => ['views-ajax-link']],
     ],
   ];

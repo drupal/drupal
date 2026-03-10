@@ -765,7 +765,10 @@ final class SmartDefaultSettings {
         $plugin_definition = $this->pluginManager->getDefinition($plugin_id);
         assert($plugin_definition instanceof CKEditor5PluginDefinition);
         if ($plugin_definition->hasToolbarItems()) {
-          $prospective_editor_settings['toolbar']['items'] = [...$prospective_editor_settings['toolbar']['items'], ...array_keys($plugin_definition->getToolbarItems())];
+          $prospective_editor_settings['toolbar']['items'] = [
+            ...$prospective_editor_settings['toolbar']['items'],
+            ...array_keys($plugin_definition->getToolbarItems()),
+          ];
         }
         if ($plugin_definition->isConfigurable()) {
           $prospective_editor_settings['plugins'][$plugin_id] = $this->pluginManager->createInstance($plugin_id)->defaultConfiguration();

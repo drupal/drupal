@@ -122,7 +122,10 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
     $row['data']['entity_type'] = $entity_type_id;
 
     $field_type = $this->fieldTypes[$field_storage->getType()];
-    $row['data']['type'] = $this->t('@type (module: @module)', ['@type' => $field_type['label'], '@module' => $field_type['provider']]);
+    $row['data']['type'] = $this->t('@type (module: @module)', [
+      '@type' => $field_type['label'],
+      '@module' => $field_type['provider'],
+    ]);
 
     $usage = [];
     foreach ($field_storage->getBundles() as $bundle) {

@@ -256,7 +256,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     // built.
     if ($clean_urls === FALSE && $stream_wrapper_manager::getScheme($uri) == 'public' && !file_exists($uri)) {
       $directory_path = $stream_wrapper_manager->getViaUri($uri)->getDirectoryPath();
-      return Url::fromUri('base:' . $directory_path . '/' . $stream_wrapper_manager::getTarget($uri), ['absolute' => TRUE, 'query' => $token_query])->toString();
+      return Url::fromUri('base:' . $directory_path . '/' . $stream_wrapper_manager::getTarget($uri), [
+        'absolute' => TRUE,
+        'query' => $token_query,
+      ])->toString();
     }
 
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */

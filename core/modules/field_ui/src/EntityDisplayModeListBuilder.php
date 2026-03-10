@@ -152,7 +152,10 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
         'data' => [
           '#type' => 'link',
           '#url' => Url::fromRoute($short_type == 'view' ? 'entity.entity_view_mode.add_form' : 'entity.entity_form_mode.add_form', ['entity_type_id' => $entity_type]),
-          '#title' => $this->t('Add %label for @entity-type', ['@entity-type' => $this->entityTypes[$entity_type]->getLabel(), '%label' => $this->entityType->getSingularLabel()]),
+          '#title' => $this->t('Add %label for @entity-type', [
+            '@entity-type' => $this->entityTypes[$entity_type]->getLabel(),
+            '%label' => $this->entityType->getSingularLabel(),
+          ]),
           '#button_type' => 'primary',
           '#attributes' => [
             'class' => ['button', 'use-ajax', 'button--small'],

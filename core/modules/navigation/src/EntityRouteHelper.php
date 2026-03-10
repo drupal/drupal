@@ -93,7 +93,10 @@ class EntityRouteHelper {
     }
 
     $this->contentEntityPaths = $this->doGetContentEntityPaths();
-    $this->cacheBackend->set(static::ENTITY_ROUTE_CID, $this->contentEntityPaths, CacheBackendInterface::CACHE_PERMANENT, ['entity_types', 'routes']);
+    $this->cacheBackend->set(static::ENTITY_ROUTE_CID, $this->contentEntityPaths, CacheBackendInterface::CACHE_PERMANENT, [
+      'entity_types',
+      'routes',
+    ]);
 
     return $this->contentEntityPaths;
   }

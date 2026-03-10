@@ -520,7 +520,10 @@ class TemporaryQueryGuard {
           ? static::getCommentAccessCondition($comment_entity_type, $current_user, $cacheability, $depth + 1)
           : static::alwaysFalse($comment_entity_type);
         $prefixed_comment_condition = static::addConditionFieldPrefix($nested_comment_condition, $condition_field_prefix);
-        $bundle_specific_access_conditions[$target_entity_type_id] = new EntityConditionGroup('AND', [$bundle_condition, $prefixed_comment_condition]);
+        $bundle_specific_access_conditions[$target_entity_type_id] = new EntityConditionGroup('AND', [
+          $bundle_condition,
+          $prefixed_comment_condition,
+        ]);
       }
       else {
         $target_condition = static::getAccessCondition($target_entity_type_id, $cacheability);

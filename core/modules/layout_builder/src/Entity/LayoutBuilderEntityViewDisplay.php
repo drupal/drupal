@@ -383,7 +383,10 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->getTargetEntityTypeId());
     $bundle_label = $bundle_info[$this->getTargetBundle()]['label'];
     $target_entity_type = $this->entityTypeManager()->getDefinition($this->getTargetEntityTypeId());
-    return new TranslatableMarkup('@bundle @label', ['@bundle' => $bundle_label, '@label' => $target_entity_type->getPluralLabel()]);
+    return new TranslatableMarkup('@bundle @label', [
+      '@bundle' => $bundle_label,
+      '@label' => $target_entity_type->getPluralLabel(),
+    ]);
   }
 
   /**
@@ -531,7 +534,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     foreach ($this->getSections() as $section) {
       foreach ($section->getComponents() as $component) {
         $plugin = $component->getPlugin();
-        if ($plugin instanceof DerivativeInspectionInterface && in_array($plugin->getBaseId(), ['field_block', 'extra_field_block'], TRUE)) {
+        if ($plugin instanceof DerivativeInspectionInterface
+          && in_array($plugin->getBaseId(), ['field_block', 'extra_field_block'], TRUE)) {
           // FieldBlock derivative IDs are in the format
           // [entity_type]:[bundle]:[field].
           [, , $field_block_field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin->getDerivativeId());

@@ -597,11 +597,16 @@ class Ckeditor5Hooks {
     // that switch, add an error class and attribute to the editor select,
     // otherwise remove.
     $ckeditor5_selected_but_errors = !$form_state->get('ckeditor5_is_active') && $form_state->get('ckeditor5_is_selected') && !empty($form_state->getErrors());
-    $response->addCommand(new InvokeCommand('[data-drupal-selector="edit-editor-editor"]', $ckeditor5_selected_but_errors ? 'addClass' : 'removeClass', ['error']));
-    $response->addCommand(new InvokeCommand('[data-drupal-selector="edit-editor-editor"]', $ckeditor5_selected_but_errors ? 'attr' : 'removeAttr', [
-      'data-error-switching-to-ckeditor5',
-      TRUE,
-    ]));
+    $response->addCommand(new InvokeCommand(
+      '[data-drupal-selector="edit-editor-editor"]',
+      $ckeditor5_selected_but_errors ? 'addClass' : 'removeClass',
+      ['error'],
+    ));
+    $response->addCommand(new InvokeCommand(
+      '[data-drupal-selector="edit-editor-editor"]',
+      $ckeditor5_selected_but_errors ? 'attr' : 'removeAttr',
+      ['data-error-switching-to-ckeditor5', TRUE],
+    ));
 
     /*
      * Recursively find #attach items in the form and add as attachments to the

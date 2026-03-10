@@ -67,7 +67,10 @@ trait JsonSchemaTestTrait {
     $validator = $this->getValidator();
     // Ensure the schema contains a meaningful type construct.
     if (!$accept_no_schema_type) {
-      $this->assertFalse(empty(array_filter(array_keys($defined_schema), fn($key) => in_array($key, ['type', 'allOf', 'oneOf', 'anyOf', 'not', '$ref']))));
+      $this->assertFalse(empty(array_filter(
+        array_keys($defined_schema),
+        fn($key) => in_array($key, ['type', 'allOf', 'oneOf', 'anyOf', 'not', '$ref']),
+      )));
     }
     // All associative arrays must be encoded as objects.
     $schema = json_decode(json_encode($defined_schema));
